@@ -48,7 +48,7 @@ export const InboxPsbModal = ({ modalState, setModalState, closeModalAction }: M
     setDeclineRemarks(e);
   };
 
-  const openSubmitModalAction = async (selectedPayloadId: any, response: InboxMessageResponse) => {
+  const openSubmitModalAction = async (selectedPayloadId: string, response: InboxMessageResponse) => {
     setSelectedPayloadId(selectedPayloadId); // to be used for psb patch request
     setConfirmationResponse(response); // set as accept or decline
     setConfirmationModalTitle('PSB Member Acknowledgment');

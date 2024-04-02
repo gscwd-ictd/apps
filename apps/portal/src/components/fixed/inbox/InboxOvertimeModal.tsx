@@ -77,33 +77,40 @@ export const InboxOvertimeModal = ({ modalState, setModalState, closeModalAction
                     <label className="text-md font-medium">{overtimeMessage.purpose}</label>
                   </div>
                 </div>
-              </div>
 
-              <div className={`flex flex-col gap-2`}>
-                <label className="text-slate-500 text-md">Other Employees Assigned:</label>
-                {overtimeMessage?.employeeDetails?.map((employee: OvertimeMembers, index: number) => {
-                  return (
-                    <div
-                      key={index}
-                      className={`${
-                        index != 0 ? 'border-t border-slate-200' : ''
-                      } p-2 md:p-4 flex flex-row justify-between items-center gap-8 `}
-                    >
-                      <img
-                        className="rounded-full border border-stone-100 shadow w-14"
-                        src={employee?.avatarUrl ?? ''}
-                        alt={'photo'}
-                      ></img>
-                      <div className="w-full flex flex-col md:flex-row justify-between items-start md:items-center gap-4 ">
-                        <div className="w-full flex flex-row items-center gap-4 text-sm md:text-md text-slate-500">
-                          <label className="w-full">{employee.employeeFullName}</label>
-                          <label className="w-full">{employee.position}</label>
-                          {/* <label className="w-full">{employee.assignment}</label> */}
+                <div className="flex flex-col justify-start items-start w-full px-0.5 pb-3  ">
+                  <label className="text-slate-500 text-md whitespace-nowrap pb-0.5">Other Employees Assigned:</label>
+
+                  {overtimeMessage?.employeeDetails?.length > 0 ? (
+                    overtimeMessage?.employeeDetails?.map((employee: OvertimeMembers, index: number) => {
+                      return (
+                        <div
+                          key={index}
+                          className={`${
+                            index != 0 ? 'border-t border-slate-200' : ''
+                          } p-2 md:p-4 flex flex-row justify-between items-center gap-8 `}
+                        >
+                          <img
+                            className="rounded-full border border-stone-100 shadow w-14"
+                            src={employee?.avatarUrl ?? ''}
+                            alt={'photo'}
+                          ></img>
+                          <div className="w-full flex flex-col md:flex-row justify-between items-start md:items-center gap-4 ">
+                            <div className="w-full flex flex-row items-center gap-4 text-sm md:text-md text-slate-500">
+                              <label className="w-full">{employee.employeeFullName}</label>
+                              <label className="w-full">{employee.position}</label>
+                              {/* <label className="w-full">{employee.assignment}</label> */}
+                            </div>
+                          </div>{' '}
                         </div>
-                      </div>
+                      );
+                    })
+                  ) : (
+                    <div className="w-auto ml-5">
+                      <label className="text-md font-medium">{'N/A'}</label>
                     </div>
-                  );
-                })}
+                  )}
+                </div>
               </div>
             </div>
           </div>

@@ -57,6 +57,7 @@ export const InboxTrainingModal = ({ modalState, setModalState, closeModalAction
     setConfirmModalIsOpen(false);
   };
 
+  console.log(trainingMessage);
   return (
     <>
       <Modal size={windowWidth > 1024 ? 'sm' : 'full'} open={modalState} setOpen={setModalState}>
@@ -129,6 +130,49 @@ export const InboxTrainingModal = ({ modalState, setModalState, closeModalAction
                   </div>
                 </div>
 
+                <div
+                  className={`flex flex-col justify-start items-start w-full ${
+                    trainingMessage.nomineeStatus === NomineeStatus.ACCEPTED ? 'md:w-1/2' : ''
+                  } px-0.5 pb-3`}
+                >
+                  <label className="text-slate-500 text-md whitespace-nowrap pb-0.5">Supervisor:</label>
+
+                  <div className="w-auto ml-5">
+                    <label className="text-md font-medium">{trainingMessage.supervisorName}</label>
+                  </div>
+                </div>
+
+                {trainingMessage.nomineeStatus === NomineeStatus.ACCEPTED ? (
+                  <>
+                    <div className="flex flex-col justify-start items-start w-full md:w-1/2 px-0.5 pb-3  ">
+                      <label className="text-slate-500 text-md whitespace-nowrap pb-0.5">Batch Number:</label>
+
+                      <div className="w-auto ml-5">
+                        <label className="text-md font-medium">{trainingMessage.batchNumber ?? 'N/A'}</label>
+                      </div>
+                    </div>
+
+                    <div className="flex flex-col justify-start items-start w-full md:w-1/2 px-0.5 pb-3  ">
+                      <label className="text-slate-500 text-md whitespace-nowrap pb-0.5">Batch Start:</label>
+
+                      <div className="w-auto ml-5">
+                        <label className="text-md font-medium">
+                          {trainingMessage.batchStart ? DateFormatter(trainingMessage.batchStart, 'MM-DD-YYYY') : 'N/A'}
+                        </label>
+                      </div>
+                    </div>
+                    <div className="flex flex-col justify-start items-start w-full md:w-1/2 px-0.5 pb-3  ">
+                      <label className="text-slate-500 text-md whitespace-nowrap pb-0.5">Batch End:</label>
+
+                      <div className="w-auto ml-5">
+                        <label className="text-md font-medium">
+                          {trainingMessage.batchEnd ? DateFormatter(trainingMessage.batchEnd, 'MM-DD-YYYY') : 'N/A'}
+                        </label>
+                      </div>
+                    </div>
+                  </>
+                ) : null}
+
                 <div className="flex flex-col justify-start items-start w-full md:w-1/2 px-0.5 pb-3  ">
                   <label className="text-slate-500 text-md whitespace-nowrap pb-0.5">Start Date:</label>
 
@@ -149,31 +193,32 @@ export const InboxTrainingModal = ({ modalState, setModalState, closeModalAction
                   </div>
                 </div>
 
-                <div className="flex flex-col justify-start items-start w-full px-0.5 pb-3  ">
-                  <label className="text-slate-500 text-md whitespace-nowrap pb-0.5">
-                    {' '}
-                    Remarks:{' '}
-                    {trainingMessage?.nomineeStatus === NomineeStatus.ACCEPTED ||
-                    trainingMessage?.nomineeStatus === NomineeStatus.DECLINED ? null : (
-                      <label className={`font-normal text-sm text-red-500`}>* required if declined</label>
-                    )}
-                  </label>
+                {trainingMessage?.nomineeStatus != NomineeStatus.ACCEPTED ? (
+                  <div className="flex flex-col justify-start items-start w-full px-0.5 pb-3  ">
+                    <label className="text-slate-500 text-md whitespace-nowrap pb-0.5">
+                      {' '}
+                      Remarks:{' '}
+                      {trainingMessage?.nomineeStatus != NomineeStatus.PENDING ? null : (
+                        <label className={`font-normal text-sm text-red-500`}>* required if declined</label>
+                      )}
+                    </label>
 
-                  <textarea
-                    className={'resize-none w-full p-2 rounded text-slate-500 text-md border-slate-300'}
-                    disabled={trainingMessage?.nomineeStatus === NomineeStatus.PENDING ? false : true}
-                    value={
-                      trainingMessage?.remarks
-                        ? trainingMessage?.remarks
-                        : trainingMessage?.nomineeStatus === NomineeStatus.PENDING
-                        ? declineRemarks
-                        : 'N/A'
-                    }
-                    placeholder={'If declining, please state reason.'}
-                    onChange={(e) => handleRemarks(e.target.value as unknown as string)}
-                    rows={3}
-                  ></textarea>
-                </div>
+                    <textarea
+                      className={'resize-none w-full p-2 rounded text-slate-500 text-md border-slate-300'}
+                      disabled={trainingMessage?.nomineeStatus === NomineeStatus.PENDING ? false : true}
+                      value={
+                        trainingMessage?.remarks
+                          ? trainingMessage?.remarks
+                          : trainingMessage?.nomineeStatus === NomineeStatus.PENDING
+                          ? declineRemarks
+                          : 'N/A'
+                      }
+                      placeholder={'If declining, please state reason.'}
+                      onChange={(e) => handleRemarks(e.target.value as unknown as string)}
+                      rows={3}
+                    ></textarea>
+                  </div>
+                ) : null}
               </div>
             </div>
           </div>
