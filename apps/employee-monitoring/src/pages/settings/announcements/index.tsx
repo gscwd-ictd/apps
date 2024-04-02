@@ -150,9 +150,16 @@ const Index = () => {
       enableSorting: true,
       header: () => 'URL',
       cell: (info) => (
-        <a href={info.getValue()} target="_blank" rel="noopener noreferrer" className="text-blue-500">
-          {info.getValue()}
-        </a>
+        <div className="flex w-32">
+          <a
+            href={info.getValue()}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-blue-500 overflow-hidden overflow-ellipsis"
+          >
+            {info.getValue()}
+          </a>
+        </div>
       ),
     }),
     columnHelper.accessor('photoUrl', {
@@ -163,7 +170,7 @@ const Index = () => {
           {info.getValue() ? (
             <div className="flex flex-col items-center">
               <a href={info.getValue()} target="_blank" rel="noopener noreferrer">
-                <Image src={info.getValue()} alt="Image" width={84.3} height={84.3} />
+                <Image src={info.getValue()} alt="Image" width={84.3} height={84.3} priority />
               </a>
             </div>
           ) : (

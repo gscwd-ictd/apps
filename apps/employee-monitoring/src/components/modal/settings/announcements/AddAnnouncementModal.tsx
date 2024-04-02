@@ -1,5 +1,5 @@
 /* eslint-disable @nx/enforce-module-boundaries */
-import { FunctionComponent, useEffect, useState } from 'react';
+import { FunctionComponent, useEffect } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
@@ -34,19 +34,52 @@ const yupSchema = yup
     url: yup.string().required('URL is required'),
     eventAnnouncementDate: yup.string().required('Date is required'),
     status: yup.string().required('Status is required'),
+
+    // file state is temporary since file is only used for file upload
+    file: yup
+      .mixed()
+      .test('fileExists', 'No file uploaded', async (value) => {
+        return value instanceof FileList && value.length > 0;
+      })
+      .test('type', 'Only .jpeg, .jpg, or .png file is supported', (value) => {
+        if (value instanceof FileList && value.length > 0) {
+          const isCorrectType = Array.from(value).every((file) => {
+            return ['image/jpeg', 'image/png'].includes(file.type);
+          });
+          if (!isCorrectType) {
+            return false;
+          }
+        }
+        return true;
+      })
+      .test('fileSizeAndDimensions', 'Image must be less than or equal to 5MB and 843x843 pixels', async (value) => {
+        if (value instanceof FileList && value.length > 0) {
+          const file = value[0];
+          const fileSizeInMB = file.size / (1024 * 1024);
+          if (fileSizeInMB > 5) {
+            return false;
+          }
+          return new Promise((resolve) => {
+            const img = new Image();
+            img.onload = () => {
+              const { width, height } = img;
+              resolve(width <= 843 && height <= 843);
+            };
+            img.onerror = () => resolve(false);
+            const reader = new FileReader();
+            reader.onload = (e) => {
+              img.src = e.target.result as string;
+            };
+            reader.onerror = () => resolve(false);
+            reader.readAsDataURL(file);
+          });
+        }
+        return false;
+      }),
   })
   .required();
 
 const AddAnnouncementModal: FunctionComponent<AddModalProps> = ({ modalState, setModalState, closeModalAction }) => {
-  const [photoUrl, setPhotoUrl] = useState<File | undefined>();
-
-  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (event.target.files) {
-      const file = event.target.files[0];
-      setPhotoUrl(file);
-    }
-  };
-
   // Zustand initialization
   const {
     PostAnnouncement,
@@ -80,7 +113,6 @@ const AddAnnouncementModal: FunctionComponent<AddModalProps> = ({ modalState, se
       description: '',
       url: '',
       app: 'ems',
-      photoUrl: '',
     },
     resolver: yupResolver(yupSchema),
   });
@@ -94,9 +126,14 @@ const AddAnnouncementModal: FunctionComponent<AddModalProps> = ({ modalState, se
   const handlePostResult = async (data: FormPostAnnouncement) => {
     const formData = new FormData();
 
-    formData.append('file', photoUrl, photoUrl?.name);
+    let { url } = data;
+    if (!url.startsWith('http://') && !url.startsWith('https://')) {
+      url = `https://${url}`;
+    }
+    formData.append('url', url);
+
+    formData.append('file', data.file[0]);
     formData.append('title', data.title);
-    formData.append('url', data.url);
     formData.append('description', data.description);
     formData.append('status', data.status);
     formData.append('eventAnnouncementDate', data.eventAnnouncementDate);
@@ -203,14 +240,14 @@ const AddAnnouncementModal: FunctionComponent<AddModalProps> = ({ modalState, se
                 />
               </div>
 
-              {/* current iteration*/}
-              {/* <input type="file" onChange={handleFileChange} /> */}
-
+              {/* Image input */}
               <LabelInput
-                type={'file'}
-                onChange={handleFileChange}
-                id={'photoUrl'}
+                id={'file'}
                 label={'Image'}
+                type={'file'}
+                controller={{ ...register('file') }}
+                isError={errors.file ? true : false}
+                errorMessage={errors.file?.message}
                 accept={'.jpg,.png'}
               />
 
