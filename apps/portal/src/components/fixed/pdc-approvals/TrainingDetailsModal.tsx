@@ -66,7 +66,6 @@ export const TrainingDetailsModal = ({ modalState, setModalState, closeModalActi
 
   const onSubmit: SubmitHandler<PdcAction> = (data: PdcAction) => {
     if (data.action === PdcApprovalAction.APPROVE) {
-      console.log(individualTrainingDetails);
       setOtpPdcModalIsOpen(true);
     } else {
       setConfirmTrainingModalIsOpen(true);

@@ -150,6 +150,13 @@ export const PassSlipPendingModal = ({ modalState, setModalState, closeModalActi
                     <label className=" text-md font-medium">{passSlip.purposeDestination}</label>
                   </div>
                 </div>
+                <div className="flex flex-col sm:flex-col justify-start items-start w-full px-0.5 pb-3 ">
+                  <label className="text-slate-500 text-md whitespace-nowrap pb-0.5 ">Supervisor:</label>
+
+                  <div className="w-auto ml-5">
+                    <label className=" text-md font-medium">{'---'}</label>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
