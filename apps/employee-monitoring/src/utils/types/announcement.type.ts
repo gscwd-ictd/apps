@@ -10,7 +10,7 @@ export type Announcement = {
   eventAnnouncementDate: string;
 };
 
-export type FormPostAnnouncement = Omit<Announcement, 'id'> & { app: string };
+export type FormPostAnnouncement = Omit<Announcement, 'id'> & { app: string; file: File };
 
 export type AnnouncementId = Pick<Announcement, 'id'>;
 

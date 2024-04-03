@@ -20,6 +20,7 @@ import AddAnnouncementModal from 'apps/employee-monitoring/src/components/modal/
 import EditAnnouncementModal from 'apps/employee-monitoring/src/components/modal/settings/announcements/EditAnnouncementModal';
 import DeleteAnnouncementModal from 'apps/employee-monitoring/src/components/modal/settings/announcements/DeleteAnnouncementModal';
 import Image from 'next/image';
+import ConvertFullMonthNameToDigit from 'apps/employee-monitoring/src/utils/functions/ConvertFullMonthNameToDigit';
 
 const Index = () => {
   // Add modal function
@@ -42,12 +43,6 @@ const Index = () => {
     setCurrentRowData(rowData);
   };
   const closeDeleteActionModal = () => setDeleteModalIsOpen(false);
-
-  // transform date
-  const transformDate = (date: string | Date | null) => {
-    if (date === null) return '-';
-    else return dayjs(date).format('MMMM DD, YYYY');
-  };
 
   // Current row data in the table that has been clicked
   const [currentRowData, setCurrentRowData] = useState<Announcement>({} as Announcement);
@@ -144,7 +139,7 @@ const Index = () => {
     columnHelper.accessor('eventAnnouncementDate', {
       enableSorting: true,
       header: () => 'Date',
-      cell: (info) => transformDate(info.getValue()),
+      cell: (info) => ConvertFullMonthNameToDigit(info.getValue()),
     }),
     columnHelper.accessor('url', {
       enableSorting: true,
@@ -232,20 +227,14 @@ const Index = () => {
   }, [announcements, announcementsError]);
 
   useEffect(() => {
-    if (
-      !isEmpty(PostAnnouncement) ||
-      !isEmpty(UpdateAnnouncement) ||
-      !isEmpty(DeleteAnnouncement) ||
-      !isEmpty(ErrorAnnouncement) ||
-      !isEmpty(ErrorAnnouncements)
-    ) {
+    if (!isEmpty(PostAnnouncement) || !isEmpty(UpdateAnnouncement) || !isEmpty(DeleteAnnouncement)) {
       mutateAnnouncements();
 
       setTimeout(() => {
         EmptyResponse();
       }, 5000);
     }
-  }, [PostAnnouncement, UpdateAnnouncement, DeleteAnnouncement, ErrorAnnouncement, ErrorAnnouncements]);
+  }, [PostAnnouncement, UpdateAnnouncement, DeleteAnnouncement]);
 
   return (
     <>

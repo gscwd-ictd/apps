@@ -48,7 +48,8 @@ export const postEmpMonitoring = async (url: string, data: any, config = {}) =>
 // PUT
 export const putEmpMonitoring = async (url: string, data: any, config = {}) =>
   await axiosApi
-    .put(url, { ...data }, { ...config })
+    // .put(url, { ...data }, { ...config })
+    .put(url, data, config)
     .then((response) => {
       return { error: false, result: response.data };
     })

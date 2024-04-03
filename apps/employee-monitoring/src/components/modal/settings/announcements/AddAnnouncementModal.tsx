@@ -26,12 +26,47 @@ type AddModalProps = {
   closeModalAction: () => void;
 };
 
+// URL validation
+const isValidHttpUrl = (string) => {
+  let url;
+
+  try {
+    url = new URL(string);
+  } catch (_) {
+    return false;
+  }
+
+  // Check protocol
+  if (url.protocol !== 'http:' && url.protocol !== 'https:') {
+    return false;
+  }
+
+  // Check if URL contains a proper top-level domain
+  const domainParts = url.hostname.split('.');
+  if (domainParts.length < 2 || domainParts[domainParts.length - 1] === '') {
+    return false;
+  }
+
+  return true;
+};
+
 // yup error handling initialization
 const yupSchema = yup
   .object({
     title: yup.string().required('Title is required'),
     description: yup.string().required('Description is required'),
-    url: yup.string().required('URL is required'),
+    url: yup
+      .string()
+      .required('URL is required')
+      .test('valid-url', 'Must be a valid URL', (value) => {
+        if (!value) {
+          return true;
+        }
+        if (!value.startsWith('http://') && !value.startsWith('https://')) {
+          return isValidHttpUrl('http://' + value);
+        }
+        return isValidHttpUrl(value);
+      }),
     eventAnnouncementDate: yup.string().required('Date is required'),
     status: yup.string().required('Status is required'),
 
@@ -113,6 +148,8 @@ const AddAnnouncementModal: FunctionComponent<AddModalProps> = ({ modalState, se
       description: '',
       url: '',
       app: 'ems',
+      photoUrl: '',
+      file: null,
     },
     resolver: yupResolver(yupSchema),
   });
@@ -126,6 +163,7 @@ const AddAnnouncementModal: FunctionComponent<AddModalProps> = ({ modalState, se
   const handlePostResult = async (data: FormPostAnnouncement) => {
     const formData = new FormData();
 
+    // adding protocol to url if it does not start with the protocol
     let { url } = data;
     if (!url.startsWith('http://') && !url.startsWith('https://')) {
       url = `https://${url}`;
