@@ -84,7 +84,6 @@ export const ConfirmationNominationModal = ({
         employees: finalEmployees,
       };
     }
-    console.log(data);
     handlePatchResult(data);
   };
 

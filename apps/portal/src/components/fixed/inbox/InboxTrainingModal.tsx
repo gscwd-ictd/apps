@@ -57,7 +57,6 @@ export const InboxTrainingModal = ({ modalState, setModalState, closeModalAction
     setConfirmModalIsOpen(false);
   };
 
-  console.log(trainingMessage);
   return (
     <>
       <Modal size={windowWidth > 1024 ? 'sm' : 'full'} open={modalState} setOpen={setModalState}>
