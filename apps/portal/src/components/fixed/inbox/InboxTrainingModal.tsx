@@ -192,14 +192,21 @@ export const InboxTrainingModal = ({ modalState, setModalState, closeModalAction
                   </div>
                 </div>
 
-                {trainingMessage?.nomineeStatus != NomineeStatus.ACCEPTED ? (
+                {trainingMessage?.nomineeStatus === NomineeStatus.DECLINED ? (
+                  <div className="flex flex-col justify-start items-start w-full px-0.5 pb-3  ">
+                    <label className="text-slate-500 text-md whitespace-nowrap pb-0.5">Remarks:</label>
+
+                    <div className="w-auto ml-5">
+                      <label className="text-md font-medium">{trainingMessage?.remarks}</label>
+                    </div>
+                  </div>
+                ) : null}
+
+                {trainingMessage?.nomineeStatus === NomineeStatus.PENDING ? (
                   <div className="flex flex-col justify-start items-start w-full px-0.5 pb-3  ">
                     <label className="text-slate-500 text-md whitespace-nowrap pb-0.5">
                       {' '}
-                      Remarks:{' '}
-                      {trainingMessage?.nomineeStatus != NomineeStatus.PENDING ? null : (
-                        <label className={`font-normal text-sm text-red-500`}>* required if declined</label>
-                      )}
+                      Remarks: <label className={`font-normal text-sm text-red-500`}>* required if declined</label>
                     </label>
 
                     <textarea
