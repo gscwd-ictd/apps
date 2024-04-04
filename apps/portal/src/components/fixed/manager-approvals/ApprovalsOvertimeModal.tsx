@@ -201,7 +201,17 @@ export const OvertimeModal = ({ modalState, setModalState, closeModalAction }: M
 
   return (
     <>
-      <Modal size={`${windowWidth > 1024 ? 'md' : 'full'}`} open={modalState} setOpen={setModalState}>
+      <Modal
+        size={`${
+          windowWidth > 1024 && overtimeDetails.status === OvertimeStatus.APPROVED
+            ? 'md'
+            : windowWidth > 1024 && overtimeDetails.status != OvertimeStatus.APPROVED
+            ? 'sm'
+            : 'full'
+        }`}
+        open={modalState}
+        setOpen={setModalState}
+      >
         <Modal.Header>
           <h3 className="font-semibold text-gray-700">
             <div className="px-5 flex justify-between">
@@ -312,7 +322,7 @@ export const OvertimeModal = ({ modalState, setModalState, closeModalAction }: M
                           ? 'Date Disapproved:'
                           : overtimeDetails.status === OvertimeStatus.CANCELLED
                           ? 'Date Cancelled'
-                          : ''}
+                          : 'Date Approved:'}
                       </label>
 
                       <div className="w-auto ml-5">
