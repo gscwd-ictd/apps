@@ -12,6 +12,8 @@ function UseRenderOvertimeStatus(status: OvertimeStatus | string) {
           ? 'success'
           : status === OvertimeStatus.DISAPPROVED || status === 'disapproved'
           ? 'error'
+          : status === OvertimeStatus.CANCELLED || status === 'cancelled'
+          ? 'error'
           : status === OvertimeStatus.PENDING || status === 'pending'
           ? 'warning'
           : 'default'
@@ -21,6 +23,8 @@ function UseRenderOvertimeStatus(status: OvertimeStatus | string) {
           ? 'Approved'
           : status === OvertimeStatus.DISAPPROVED
           ? 'Disapproved'
+          : status === OvertimeStatus.CANCELLED
+          ? 'Cancelled'
           : status === OvertimeStatus.PENDING
           ? 'Pending'
           : null
