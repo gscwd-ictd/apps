@@ -154,7 +154,7 @@ export const PassSlipPendingModal = ({ modalState, setModalState, closeModalActi
                   <label className="text-slate-500 text-md whitespace-nowrap pb-0.5 ">Supervisor:</label>
 
                   <div className="w-auto ml-5">
-                    <label className=" text-md font-medium">{'---'}</label>
+                    <label className=" text-md font-medium">{passSlip.supervisorName}</label>
                   </div>
                 </div>
               </div>
