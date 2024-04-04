@@ -39,6 +39,32 @@ export const InboxTabs = ({ tab }: TabsProps) => {
             onClick={() => {
               setTab(1);
             }}
+            title="Pass Slip"
+            icon={<HiMail size={26} />}
+            subtitle="Notifications"
+            notificationCount={0}
+            className="bg-indigo-500"
+          />
+
+          <TabHeader
+            tab={tab}
+            tabIndex={2}
+            onClick={() => {
+              setTab(2);
+            }}
+            title="Leaves"
+            icon={<HiMail size={26} />}
+            subtitle="Notifications"
+            notificationCount={0}
+            className="bg-indigo-500"
+          />
+
+          <TabHeader
+            tab={tab}
+            tabIndex={3}
+            onClick={() => {
+              setTab(3);
+            }}
             title="Overtime"
             icon={<HiMail size={26} />}
             subtitle="Notifications"
@@ -47,9 +73,9 @@ export const InboxTabs = ({ tab }: TabsProps) => {
           />
           <TabHeader
             tab={tab}
-            tabIndex={2}
+            tabIndex={4}
             onClick={() => {
-              setTab(2);
+              setTab(4);
             }}
             title="Training"
             icon={<HiMail size={26} />}
@@ -60,9 +86,9 @@ export const InboxTabs = ({ tab }: TabsProps) => {
           {Boolean(employeeDetails.employmentDetails.isHRMPSB) === true ? (
             <TabHeader
               tab={tab}
-              tabIndex={3}
+              tabIndex={5}
               onClick={() => {
-                setTab(3);
+                setTab(5);
               }}
               title="Personnel Selection Board"
               icon={<HiMail size={26} />}

@@ -1,7 +1,4 @@
 /* eslint-disable @nx/enforce-module-boundaries */
-import { usePassSlipStore } from '../../../store/passslip.store';
-import { PassSlip } from '../../../../../../libs/utils/src/lib/types/pass-slip.type';
-import { PassSlipStatus } from 'libs/utils/src/lib/enums/pass-slip.enum';
 import { DateFormatter } from 'libs/utils/src/lib/functions/DateFormatter';
 import { useInboxStore } from '../../../../src/store/inbox.store';
 import { OvertimeMessageContent, PsbMessageContent } from 'apps/portal/src/types/inbox.type';
@@ -44,21 +41,21 @@ export const AllInboxListTab = ({ tab }: TabProps) => {
 
   const onSelect = (messageDetails) => {
     //Overtime
-    if (tab === 1) {
+    if (tab === 3) {
       setMessageOvertime(messageDetails);
       if (!overtimeMessageModalIsOpen) {
         setOvertimeMessageModalIsOpen(true);
       }
     }
     //Training
-    else if (tab === 2) {
+    else if (tab === 4) {
       setMessageTraining(messageDetails);
       if (!trainingMessageModalIsOpen) {
         setTrainingMessageModalIsOpen(true);
       }
     }
     //PSB
-    else if (tab === 3) {
+    else if (tab === 5) {
       setMessagePsb(messageDetails);
       if (!psbMessageModalIsOpen) {
         setPsbMessageModalIsOpen(true);
@@ -68,7 +65,7 @@ export const AllInboxListTab = ({ tab }: TabProps) => {
 
   return (
     <>
-      {tab === 1 && overtimeMessages && overtimeMessages.length > 0 ? (
+      {tab === 3 && overtimeMessages && overtimeMessages.length > 0 ? (
         <ul className={'mt-4 lg:mt-0'}>
           {overtimeMessages.map((item: OvertimeMessageContent, index: number) => {
             return (
@@ -101,13 +98,13 @@ export const AllInboxListTab = ({ tab }: TabProps) => {
             );
           })}
         </ul>
-      ) : tab === 1 && overtimeMessages && overtimeMessages.length <= 0 ? (
+      ) : tab === 3 && overtimeMessages && overtimeMessages.length <= 0 ? (
         <div className="flex justify-center pt-20">
           <h1 className="text-4xl text-gray-300">No messages found at the moment</h1>
         </div>
       ) : null}
 
-      {tab === 2 && trainingMessages && trainingMessages.length > 0 ? (
+      {tab === 4 && trainingMessages && trainingMessages.length > 0 ? (
         <ul className={'mt-4 lg:mt-0'}>
           {trainingMessages.map((item: TrainingByEmployeeId, index: number) => {
             return (
@@ -141,13 +138,13 @@ export const AllInboxListTab = ({ tab }: TabProps) => {
             );
           })}
         </ul>
-      ) : tab === 2 && trainingMessages && trainingMessages.length <= 0 ? (
+      ) : tab === 4 && trainingMessages && trainingMessages.length <= 0 ? (
         <div className="flex justify-center pt-20">
           <h1 className="text-4xl text-gray-300">No messages found at the moment</h1>
         </div>
       ) : null}
 
-      {tab === 3 && psbMessages && psbMessages.length > 0 ? (
+      {tab === 5 && psbMessages && psbMessages.length > 0 ? (
         <ul className={'mt-4 lg:mt-0'}>
           {psbMessages.map((item: PsbMessageContent, index: number) => {
             return (
@@ -214,7 +211,7 @@ export const AllInboxListTab = ({ tab }: TabProps) => {
             );
           })}
         </ul>
-      ) : tab === 3 && psbMessages && psbMessages.length <= 0 ? (
+      ) : tab === 5 && psbMessages && psbMessages.length <= 0 ? (
         <div className="flex justify-center pt-20">
           <h1 className="text-4xl text-gray-300">No messages found at the moment</h1>
         </div>

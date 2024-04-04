@@ -24,7 +24,7 @@ export const InboxOvertimeModal = ({ modalState, setModalState, closeModalAction
 
   return (
     <>
-      <Modal size={windowWidth > 1024 ? 'md' : 'full'} open={modalState} setOpen={setModalState}>
+      <Modal size={windowWidth > 1024 ? 'sm' : 'full'} open={modalState} setOpen={setModalState}>
         <Modal.Header>
           <h3 className="font-semibold text-gray-700">
             <div className="px-5 flex justify-between">
@@ -88,7 +88,7 @@ export const InboxOvertimeModal = ({ modalState, setModalState, closeModalAction
                           key={index}
                           className={`${
                             index != 0 ? 'border-t border-slate-200' : ''
-                          } p-2 md:p-4 flex flex-row justify-between items-center gap-8 `}
+                          } p-2 md:p-4 flex flex-row justify-between items-center gap-8 w-full`}
                         >
                           <img
                             className="rounded-full border border-stone-100 shadow w-14"
