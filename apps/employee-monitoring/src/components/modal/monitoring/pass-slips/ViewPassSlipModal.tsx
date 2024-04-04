@@ -17,6 +17,7 @@ import { usePassSlipStore } from 'apps/employee-monitoring/src/store/pass-slip.s
 import { patchEmpMonitoring } from 'apps/employee-monitoring/src/utils/helper/employee-monitoring-axios-helper';
 import PassSlipConfirmModal from './PassSlipConfirmModal';
 import { isEmpty } from 'lodash';
+import UseConvertDayToTime from 'apps/employee-monitoring/src/utils/functions/ConvertDateToTime';
 
 const actionTaken: Array<SelectOption> = [
   { label: 'Approve', value: 'for supervisor approval' },
@@ -222,14 +223,13 @@ const ViewPassSlipModal: FunctionComponent<ViewPassSlipModalProps> = ({
 
                 {rowData.status === PassSlipStatus.FOR_HRMO_APPROVAL ||
                 rowData.status === PassSlipStatus.FOR_SUPERVISOR_APPROVAL ||
-                rowData.status === PassSlipStatus.DISAPPROVED ||
-                rowData.status === PassSlipStatus.APPROVED ? null : (
+                rowData.status === PassSlipStatus.DISAPPROVED ? null : (
                   <div className="grid px-5 sm:grid-rows-2 sm:grid-cols-1 md:grid-rows-2 md:grid-cols-1 lg:grid-rows-1 lg:grid-cols-2 sm:gap-2 md:gap:2 lg:gap-0">
                     <LabelValue
                       label="Pass Slip Time Out"
                       direction="top-to-bottom"
                       textSize="md"
-                      value={rowData.timeOut ?? 'N/A'}
+                      value={UseConvertDayToTime(rowData.timeOut) ?? '--'}
                     />
 
                     {rowData.natureOfBusiness === NatureOfBusiness.HALF_DAY ||
@@ -238,7 +238,7 @@ const ViewPassSlipModal: FunctionComponent<ViewPassSlipModalProps> = ({
                         label="Pass Slip Time In"
                         direction="top-to-bottom"
                         textSize="md"
-                        value={rowData.timeIn ?? 'N/A'}
+                        value={UseConvertDayToTime(rowData.timeIn) ?? '--'}
                       />
                     )}
                   </div>
