@@ -327,13 +327,13 @@ export default function Vacancies({
                             );
                           })
                         ) : (
-                          <div className="flex flex-col items-center justify-center w-full px-8 pb-5 overflow-y-auto bg-slate-50 md:px-0 md:w-full h-80 md:h-full md:pl-4 md:pr-20">
-                            <label className="w-full text-4xl text-center text-gray-400 ">NO VACANCIES</label>
+                          <div className="flex justify-center pt-20 px-5">
+                            <h1 className="text-4xl text-gray-300">No vacancies found</h1>
                           </div>
                         )
                       ) : (
-                        <div className="flex flex-col items-center justify-center w-full px-8 pb-5 overflow-y-auto bg-slate-50 md:px-0 md:w-full h-80 md:h-full md:pl-4 md:pr-20">
-                          <label className="w-full text-4xl text-center text-gray-400 ">NO DATA</label>
+                        <div className="flex justify-center pt-20 px-5">
+                          <h1 className="text-4xl text-gray-300">No data found</h1>
                         </div>
                       )}
                     </div>
