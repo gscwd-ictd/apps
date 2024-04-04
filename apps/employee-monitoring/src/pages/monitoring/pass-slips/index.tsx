@@ -109,13 +109,6 @@ export default function Index() {
       enableSorting: false,
       cell: (info) => UseRenderObTransportation(info.getValue()),
     }),
-
-    // columnHelper.accessor('purposeDestination', {
-    //   header: 'Purpose/Destination',
-    //   enableSorting: false,
-    //   cell: (info) => <div className="max-w-[6rem] truncate">{info.getValue()}</div>,
-    // }),
-
     columnHelper.accessor('status', {
       header: 'Status',
       enableSorting: false,
