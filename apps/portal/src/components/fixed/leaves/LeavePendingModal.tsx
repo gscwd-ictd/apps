@@ -62,6 +62,7 @@ export const LeavePendingModal = ({ modalState, setModalState, closeModalAction 
       );
 
       if (!isEmpty(data)) {
+        console.log(data);
         getLeaveIndividualDetailSuccess(false, data);
       }
     } catch (error) {

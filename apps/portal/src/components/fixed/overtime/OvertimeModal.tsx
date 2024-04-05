@@ -26,6 +26,7 @@ export const OvertimeModal = ({ modalState, setModalState, closeModalAction }: M
     cancelOvertimeModalIsOpen,
     accomplishmentOvertimeModalIsOpen,
     pdfOvertimeAuthorizationModalIsOpen,
+    overtimeSupervisorName,
     setCancelOvertimeModalIsOpen,
     setAccomplishmentOvertimeModalIsOpen,
     setOvertimeAccomplishmentEmployeeId,
@@ -37,6 +38,7 @@ export const OvertimeModal = ({ modalState, setModalState, closeModalAction }: M
     cancelOvertimeModalIsOpen: state.cancelOvertimeModalIsOpen,
     accomplishmentOvertimeModalIsOpen: state.accomplishmentOvertimeModalIsOpen,
     pdfOvertimeAuthorizationModalIsOpen: state.pdfOvertimeAuthorizationModalIsOpen,
+    overtimeSupervisorName: state.overtime.supervisorName,
     setCancelOvertimeModalIsOpen: state.setCancelOvertimeModalIsOpen,
     setAccomplishmentOvertimeModalIsOpen: state.setAccomplishmentOvertimeModalIsOpen,
     setOvertimeAccomplishmentEmployeeId: state.setOvertimeAccomplishmentEmployeeId,
@@ -203,7 +205,7 @@ export const OvertimeModal = ({ modalState, setModalState, closeModalAction }: M
                       <label className="text-slate-500 text-md whitespace-nowrap pb-0.5 ">Supervisor:</label>
 
                       <div className="w-auto ml-5">
-                        <label className=" text-md font-medium">{'---'}</label>
+                        <label className=" text-md font-medium">{overtimeSupervisorName}</label>
                       </div>
                     </div>
 

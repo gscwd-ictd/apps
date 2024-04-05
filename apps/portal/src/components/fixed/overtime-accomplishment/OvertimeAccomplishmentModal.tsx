@@ -608,25 +608,15 @@ export const OvertimeAccomplishmentModal = ({ modalState, setModalState, closeMo
                       </div>
 
                       {overtimeAccomplishmentDetails?.accomplishments ? (
-                        <>
-                          <div className={`flex flex-col justify-start items-start w-full  px-0.5 pb-3`}>
-                            <label className="text-slate-500 text-md whitespace-nowrap pb-0.5">Accomplishments:</label>
+                        <div className={`flex flex-col justify-start items-start w-full  px-0.5 pb-3`}>
+                          <label className="text-slate-500 text-md whitespace-nowrap pb-0.5">Accomplishments:</label>
 
-                            <div className="w-auto ml-5 mr-5">
-                              <label className="text-md font-medium">
-                                {overtimeAccomplishmentDetails.accomplishments}
-                              </label>
-                            </div>
+                          <div className="w-auto ml-5 mr-5">
+                            <label className="text-md font-medium">
+                              {overtimeAccomplishmentDetails.accomplishments}
+                            </label>
                           </div>
-
-                          <div className="flex flex-col sm:flex-col justify-start items-start w-full sm:w-1/2 px-0.5 pb-3 ">
-                            <label className="text-slate-500 text-md whitespace-nowrap pb-0.5 ">Supervisor:</label>
-
-                            <div className="w-auto ml-5">
-                              <label className=" text-md font-medium">{'---'}</label>
-                            </div>
-                          </div>
-                        </>
+                        </div>
                       ) : null}
 
                       {overtimeAccomplishmentDetails.status === OvertimeAccomplishmentStatus.DISAPPROVED ? (
@@ -638,6 +628,14 @@ export const OvertimeAccomplishmentModal = ({ modalState, setModalState, closeMo
                           </div>
                         </div>
                       ) : null}
+
+                      <div className="flex flex-col sm:flex-col justify-start items-start w-full sm:w-1/2 px-0.5 pb-3 ">
+                        <label className="text-slate-500 text-md whitespace-nowrap pb-0.5 ">Supervisor:</label>
+
+                        <div className="w-auto ml-5">
+                          <label className=" text-md font-medium">{overtimeAccomplishmentDetails.supervisorName}</label>
+                        </div>
+                      </div>
                     </div>
 
                     {overtimeAccomplishmentDetails.status === OvertimeAccomplishmentStatus.PENDING &&
