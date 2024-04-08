@@ -51,4 +51,5 @@ export enum LeaveName {
   OTHERS = 'Others',
   MONETIZATION = 'Monetization',
   LEAVE_WITHOUT_PAY = 'Leave Without Pay',
+  TERMINAL = 'Terminal Leave',
 }

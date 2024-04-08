@@ -326,6 +326,7 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
     let dataToSend;
     if (
       data.typeOfLeaveDetails.leaveName === LeaveName.VACATION ||
+      data.typeOfLeaveDetails.leaveName === LeaveName.FORCED ||
       data.typeOfLeaveDetails.leaveName === LeaveName.SPECIAL_PRIVILEGE
     ) {
       if (data.inPhilippinesOrAbroad === 'Philippines') {
@@ -421,6 +422,7 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
           watch('typeOfLeaveDetails.leaveName') === LeaveName.SPECIAL_LEAVE_BENEFITS_FOR_WOMEN ||
           watch('typeOfLeaveDetails.leaveName') === LeaveName.ADOPTION))
     ) {
+      console.log(dataToSend);
       handlePostResult(dataToSend);
       postLeave();
     }
@@ -774,6 +776,7 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
                       <div className="flex flex-row justify-between items-center w-full">
                         <label className="pt-2 text-slate-500 text-md font-medium">
                           {watch('typeOfLeaveDetails.leaveName') === LeaveName.VACATION ||
+                          watch('typeOfLeaveDetails.leaveName') === LeaveName.FORCED ||
                           watch('typeOfLeaveDetails.leaveName') === LeaveName.SPECIAL_PRIVILEGE ? (
                             <>
                               Location:<span className="text-red-600">*</span>
@@ -796,6 +799,7 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
 
                       <div className="flex gap-2 w-full items-center">
                         {watch('typeOfLeaveDetails.leaveName') === LeaveName.VACATION ||
+                        watch('typeOfLeaveDetails.leaveName') === LeaveName.FORCED ||
                         watch('typeOfLeaveDetails.leaveName') === LeaveName.SPECIAL_PRIVILEGE ? (
                           <>
                             <select
@@ -1027,12 +1031,14 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
                     ) : null}
 
                     {watch('typeOfLeaveDetails.leaveName') === LeaveName.VACATION ||
+                    watch('typeOfLeaveDetails.leaveName') === LeaveName.FORCED ||
                     watch('typeOfLeaveDetails.leaveName') === LeaveName.SPECIAL_PRIVILEGE ||
                     watch('typeOfLeaveDetails.leaveName') === LeaveName.SICK ||
                     watch('typeOfLeaveDetails.leaveName') === LeaveName.SPECIAL_LEAVE_BENEFITS_FOR_WOMEN ||
                     (watch('typeOfLeaveDetails.leaveName') === LeaveName.STUDY && selectedStudy === 'other') ? (
                       <textarea
                         {...(watch('typeOfLeaveDetails.leaveName') === LeaveName.VACATION ||
+                        watch('typeOfLeaveDetails.leaveName') === LeaveName.FORCED ||
                         watch('typeOfLeaveDetails.leaveName') === LeaveName.SPECIAL_PRIVILEGE
                           ? { ...register('location') }
                           : watch('typeOfLeaveDetails.leaveName') === LeaveName.SICK
@@ -1046,6 +1052,7 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
                         rows={3}
                         placeholder={`${
                           watch('typeOfLeaveDetails.leaveName') === LeaveName.VACATION ||
+                          watch('typeOfLeaveDetails.leaveName') === LeaveName.FORCED ||
                           watch('typeOfLeaveDetails.leaveName') === LeaveName.SPECIAL_PRIVILEGE
                             ? 'Specify Leave Details'
                             : watch('typeOfLeaveDetails.leaveName') === LeaveName.SICK ||

@@ -271,6 +271,7 @@ export const LeavePendingModal = ({ modalState, setModalState, closeModalAction 
                     ) : null}
 
                     {leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.VACATION ||
+                    leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.FORCED ||
                     leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.SPECIAL_PRIVILEGE ||
                     leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.SICK ||
                     leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.STUDY ||
@@ -278,6 +279,7 @@ export const LeavePendingModal = ({ modalState, setModalState, closeModalAction 
                       <div className="flex flex-col justify-start items-start w-full md:w-1/2 px-0.5 pb-3">
                         <label className="text-slate-500 text-md whitespace-nowrap pb-0.5 ">
                           {leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.VACATION ||
+                          leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.FORCED ||
                           leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.SPECIAL_PRIVILEGE
                             ? 'Location:'
                             : leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.SICK
@@ -291,6 +293,7 @@ export const LeavePendingModal = ({ modalState, setModalState, closeModalAction 
 
                         <div className="w-auto ml-5">
                           {leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.VACATION ||
+                          leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.FORCED ||
                           leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName ===
                             LeaveName.SPECIAL_PRIVILEGE ? (
                             <div className="text-md font-medium">
@@ -322,6 +325,7 @@ export const LeavePendingModal = ({ modalState, setModalState, closeModalAction 
                     ) : null}
 
                     {leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.VACATION ||
+                    leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.FORCED ||
                     leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.SPECIAL_PRIVILEGE ||
                     leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.SICK ||
                     leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName ===
@@ -333,6 +337,7 @@ export const LeavePendingModal = ({ modalState, setModalState, closeModalAction 
                         <div className="w-auto ml-5 mr-5">
                           <label className=" text-md font-medium">
                             {leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.VACATION ||
+                            leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.FORCED ||
                             leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.SPECIAL_PRIVILEGE
                               ? leaveIndividualDetail?.leaveApplicationDetails?.location
                               : leaveIndividualDetail.leaveApplicationBasicInfo?.leaveName === LeaveName.SICK
