@@ -18,7 +18,7 @@ const JobOpeningsTable: NextComponentType<NextPageContext, {}, JobOpeningsProps>
       {/* <div className="px-[5%] mt-2 flex items-center justify-center "> */}
       <div className="flex items-center justify-center px-4 py-6 mx-auto mt-2 max-w-7xl sm:px-6 lg:px-8 ">
         {!isEmpty(jobOpenings) ? (
-          <div className="border rounded-lg shadow dark:border-gray-200">
+          <div className="w-full border rounded-lg shadow dark:border-gray-200">
             <table className="min-w-full divide-y divide-gray-300">
               <thead className="bg-gray-300">
                 <tr>
