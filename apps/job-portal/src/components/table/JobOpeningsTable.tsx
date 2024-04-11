@@ -10,14 +10,13 @@ export interface JobOpeningsProps {
   jobOpenings: Array<Publication>;
 }
 
-const JobOpeningsTable: NextComponentType<
-  NextPageContext,
-  {},
-  JobOpeningsProps
-> = ({ jobOpenings }: JobOpeningsProps) => {
+const JobOpeningsTable: NextComponentType<NextPageContext, {}, JobOpeningsProps> = ({
+  jobOpenings,
+}: JobOpeningsProps) => {
   return (
     <>
-      <div className="px-[5%] mt-2 flex items-center justify-center ">
+      {/* <div className="px-[5%] mt-2 flex items-center justify-center "> */}
+      <div className="flex items-center justify-center px-4 py-6 mx-auto mt-2 max-w-7xl sm:px-6 lg:px-8 ">
         {!isEmpty(jobOpenings) ? (
           <div className="border rounded-lg shadow dark:border-gray-200">
             <table className="min-w-full divide-y divide-gray-300">
@@ -29,34 +28,19 @@ const JobOpeningsTable: NextComponentType<
                   >
                     Position Title
                   </th>
-                  <th
-                    scope="col"
-                    className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900  w-[15%]"
-                  >
+                  <th scope="col" className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900  w-[15%]">
                     Item Number
                   </th>
-                  <th
-                    scope="col"
-                    className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900  w-[10%]"
-                  >
+                  <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900  w-[10%]">
                     No. of Positions
                   </th>
-                  <th
-                    scope="col"
-                    className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900  w-[25%]"
-                  >
+                  <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900  w-[25%]">
                     Place of Assignment
                   </th>
-                  <th
-                    scope="col"
-                    className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900  w-[15%]"
-                  >
+                  <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900  w-[15%]">
                     Deadline of Submission
                   </th>
-                  <th
-                    scope="col"
-                    className="px-3 py-3.5 text-center text-sm font-semibold text-gray-900  w-[15%]"
-                  >
+                  <th scope="col" className="px-3 py-3.5 text-center text-sm font-semibold text-gray-900  w-[15%]">
                     Actions
                   </th>
                   <th scope="col" className="relative py-3.5 pl-3 pr-4 sm:pr-6">
@@ -71,19 +55,11 @@ const JobOpeningsTable: NextComponentType<
                       <td className="py-4 pl-4 pr-3 text-sm font-semibold text-gray-900 sm:pl-6">
                         {publication.positionTitle}
                       </td>
-                      <td className="px-3 py-4 text-sm text-gray-500 ">
-                        {publication.itemNumber}
-                      </td>
+                      <td className="px-3 py-4 text-sm text-gray-500 ">{publication.itemNumber}</td>
+                      <td className="px-3 py-4 text-sm ">{publication.numberOfPositions}</td>
+                      <td className="px-3 py-4 text-sm ">{publication.placeOfAssignment}</td>
                       <td className="px-3 py-4 text-sm ">
-                        {publication.numberOfPositions}
-                      </td>
-                      <td className="px-3 py-4 text-sm ">
-                        {publication.placeOfAssignment}
-                      </td>
-                      <td className="px-3 py-4 text-sm ">
-                        {dayjs(publication.postingDeadline).format(
-                          'MMMM DD, YYYY'
-                        )}
+                        {dayjs(publication.postingDeadline).format('MMMM DD, YYYY')}
                       </td>
                       <td className="px-3 py-4 text-sm ">
                         <span className="flex justify-center">
@@ -101,9 +77,7 @@ const JobOpeningsTable: NextComponentType<
             </table>
           </div>
         ) : (
-          <p className="flex justify-center w-full py-10 mt-24 text-3xl">
-            No job openings at the moment
-          </p>
+          <p className="flex justify-center w-full py-10 mt-24 text-3xl">No job openings at the moment</p>
         )}
       </div>
     </>
