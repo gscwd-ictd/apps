@@ -1,13 +1,10 @@
 /* eslint-disable @nx/enforce-module-boundaries */
 import { Menu, Transition } from '@headlessui/react';
+import { useApprovalStore } from 'apps/portal/src/store/approvals.store';
+import { isEmpty } from 'lodash';
 import { useRouter } from 'next/router';
 import { Fragment } from 'react';
-import {
-  HiBadgeCheck,
-  HiOutlineBadgeCheck,
-  HiOutlineBriefcase,
-  HiOutlineIdentification,
-} from 'react-icons/hi';
+import { HiBadgeCheck, HiOutlineBriefcase } from 'react-icons/hi';
 
 type MenuDropdownProps = {
   right?: boolean;
@@ -26,14 +23,15 @@ export const HRMenuDropdown = ({
   labelColor = 'text-white',
   right = false,
 }: MenuDropdownProps): JSX.Element => {
+  const { pendingApprovalsCount, errorPendingApprovalsCount } = useApprovalStore((state) => ({
+    pendingApprovalsCount: state.pendingApprovalsCount,
+    errorPendingApprovalsCount: state.error.errorPendingApprovalsCount,
+  }));
   const router = useRouter();
 
   return (
     <>
-      <Menu
-        as="div"
-        className={`z-20 -mt-10 -ml-6 fixed lg:relative lg:-mt-0 lg:ml-0 inline-block text-left`}
-      >
+      <Menu as="div" className={`z-20 -mt-10 -ml-6 fixed lg:relative lg:-mt-0 lg:ml-0 inline-block text-left`}>
         <div>
           <Menu.Button
             className={`${className} h-10 w-10 rounded flex justify-center items-center bg-white outline-none transition-colors ease-in-out hover:bg-slate-200 hover:text-slate-500 `}
@@ -59,15 +57,9 @@ export const HRMenuDropdown = ({
             <div>
               <Menu.Item>
                 {({ active }) => (
-                  <div
-                    className={`${
-                      active ? 'bg-slate-50' : null
-                    } cursor-pointer rounded-md p-4`}
-                  >
+                  <div className={`${active ? 'bg-slate-50' : null} cursor-pointer rounded-md p-4`}>
                     <div>
-                      <h5 className="truncate font-semibold ">
-                        HRD / RPW Actions
-                      </h5>
+                      <h5 className="truncate font-semibold ">HRD / RPW Actions</h5>
                     </div>
                   </div>
                 )}
@@ -81,14 +73,14 @@ export const HRMenuDropdown = ({
                       className={`${
                         active ? 'bg-slate-100' : 'text-gray-900'
                       } group flex w-80 items-center gap-2 px-3 py-3 text-sm`}
-                      onClick={() =>
-                        router.push(`/${router.query.id}/final-leave-approvals`)
-                      }
+                      onClick={() => router.push(`/${router.query.id}/final-leave-approvals`)}
                     >
                       <HiBadgeCheck className="w-6 h-6 text-rose-600" />
-                      <span className="text-sm tracking-tight text-gray-700 text-left">
-                        Final Leave Approvals
-                      </span>
+                      <span className="text-sm tracking-tight text-gray-700 text-left">Final Leave Approvals</span>
+
+                      {isEmpty(errorPendingApprovalsCount) && pendingApprovalsCount.forHrdmApprovalLeaves != 0 ? (
+                        <span className="absolute w-3 h-3 right-4 z-40 bg-red-600 rounded-full select-none" />
+                      ) : null}
                     </button>
                   )}
                 </Menu.Item>

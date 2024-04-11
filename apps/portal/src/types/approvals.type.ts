@@ -25,4 +25,13 @@ export type PendingApprovalsCount = {
   pendingPassSlipsCount: number;
   pendingLeavesCount: number;
   pendingOvertimesCount: number;
+  pendingTrainingNominationCount: number;
+  pendingDtrCorrectionsApprovals: number;
+  forHrdmApprovalLeaves: number;
+  pendingOvertimeApprovals: number;
+  pendingPdcSecretariatApprovalCount: number;
+  pendingPdcChairmanApprovalCount: number | null;
+  pendingGmApprovalCount: number | null;
+  prfsForApprovalCount: number;
+  pendingApplicantEndorsementsCount: number;
 };
