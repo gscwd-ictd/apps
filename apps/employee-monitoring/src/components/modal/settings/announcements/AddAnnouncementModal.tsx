@@ -7,7 +7,7 @@ import { postEmpMonitoring } from 'apps/employee-monitoring/src/utils/helper/emp
 
 // store and type
 import { useAnnouncementsStore } from 'apps/employee-monitoring/src/store/announcement.store';
-import { Announcement, FormPostAnnouncement } from 'apps/employee-monitoring/src/utils/types/announcement.type';
+import { FormPostAnnouncement } from 'apps/employee-monitoring/src/utils/types/announcement.type';
 
 import { Modal, AlertNotification, LoadingSpinner, Button, ToastNotification } from '@gscwd-apps/oneui';
 import { LabelInput } from '../../../inputs/LabelInput';
@@ -27,8 +27,8 @@ type AddModalProps = {
 };
 
 // URL validation
-const isValidHttpUrl = (string) => {
-  let url;
+const isValidHttpUrl = (string: string | URL) => {
+  let url: URL;
 
   try {
     url = new URL(string);
@@ -141,7 +141,8 @@ const AddAnnouncementModal: FunctionComponent<AddModalProps> = ({ modalState, se
     handleSubmit,
     formState: { errors, isSubmitting: postFormLoading },
   } = useForm<FormPostAnnouncement>({
-    mode: 'onChange',
+    mode: 'onSubmit',
+    reValidateMode: 'onChange',
     defaultValues: {
       title: '',
       eventAnnouncementDate: '',
@@ -149,7 +150,6 @@ const AddAnnouncementModal: FunctionComponent<AddModalProps> = ({ modalState, se
       url: '',
       app: 'ems',
       photoUrl: '',
-      file: null,
     },
     resolver: yupResolver(yupSchema),
   });
