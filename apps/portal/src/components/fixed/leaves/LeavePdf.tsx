@@ -116,6 +116,7 @@ const styles = StyleSheet.create({
     border: '1px solid #000',
     height: 12,
     width: 12,
+    marginVertical: 0.5,
     padding: 1,
     display: 'flex',
     flexDirection: 'column',
