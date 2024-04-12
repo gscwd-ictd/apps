@@ -128,24 +128,61 @@ export const OvertimeAccomplishmentModal = ({ modalState, setModalState, closeMo
   //apply every 3hrs work & 1hr break rule
   useEffect(() => {
     let numberOfBreaks = Number(encodedHours.toFixed(2)) / 4; // for 3-1 rule
-    console.log(numberOfBreaks, Math.floor(numberOfBreaks));
-    //if holiday or rest day, apply 8-1 rule first then 3-1 rule
+    // console.log(numberOfBreaks, Math.floor(numberOfBreaks));
+    //if holiday or rest day
     if (isHoliday || isRestday) {
-      if (Number(encodedHours.toFixed(2)) >= 4 && Number(encodedHours.toFixed(2)) < 12) {
-        let temporaryHours = Number(encodedHours - 1);
-        setFinalEncodedHours(Number(temporaryHours.toFixed(2)));
-      } else if (Number(encodedHours.toFixed(2)) >= 13) {
-        let temporaryHours = Number(encodedHours - Math.floor(numberOfBreaks));
-        setFinalEncodedHours(Number(temporaryHours.toFixed(2)));
-      } else {
-        setFinalEncodedHours(Number(encodedHours.toFixed(2)));
+      //if scheduled OT
+      if (overtimeAccomplishmentDetails.plannedDate > overtimeAccomplishmentDetails.dateOfOTApproval) {
+        //8-1 rule - if scheduled OT and is Holiday or Rest Day
+        if (Number(encodedHours.toFixed(2)) >= 4 && Number(encodedHours.toFixed(2)) < 12) {
+          let temporaryHours = Number(encodedHours - 1);
+          setFinalEncodedHours(Number(temporaryHours.toFixed(2)));
+        }
+        //3-1 rule beyond 9 hours
+        else if (Number(encodedHours.toFixed(2)) >= 13) {
+          let temporaryHours = Number(encodedHours - Math.floor(numberOfBreaks));
+          setFinalEncodedHours(Number(temporaryHours.toFixed(2)));
+        } else {
+          setFinalEncodedHours(Number(encodedHours.toFixed(2)));
+        }
       }
-    } else {
-      if (Number(encodedHours.toFixed(2)) >= 4) {
-        let temporaryHours = Number(encodedHours - Math.floor(numberOfBreaks));
-        setFinalEncodedHours(Number(temporaryHours.toFixed(2)));
-      } else {
-        setFinalEncodedHours(Number(encodedHours.toFixed(2)));
+      //if emergency OT
+      else {
+        // apply 3-1 rule only
+        if (Number(encodedHours.toFixed(2)) >= 4) {
+          let temporaryHours = Number(encodedHours - Math.floor(numberOfBreaks));
+          setFinalEncodedHours(Number(temporaryHours.toFixed(2)));
+        }
+        //no break time (less than 4 hours)
+        else {
+          setFinalEncodedHours(Number(encodedHours.toFixed(2)));
+        }
+      }
+    }
+    //if regular work day
+    else {
+      //if scheduled OT
+      if (overtimeAccomplishmentDetails.plannedDate > overtimeAccomplishmentDetails.dateOfOTApproval) {
+        if (Number(encodedHours.toFixed(2)) >= 4) {
+          let temporaryHours = Number(encodedHours - Math.floor(numberOfBreaks));
+          setFinalEncodedHours(Number(temporaryHours.toFixed(2)));
+        }
+        //no break time (less than 4 hours)
+        else {
+          setFinalEncodedHours(Number(encodedHours.toFixed(2)));
+        }
+      }
+      //if emergency OT
+      else {
+        // apply 3-1 rule only
+        if (Number(encodedHours.toFixed(2)) >= 4) {
+          let temporaryHours = Number(encodedHours - Math.floor(numberOfBreaks));
+          setFinalEncodedHours(Number(temporaryHours.toFixed(2)));
+        }
+        //no break time (less than 4 hours)
+        else {
+          setFinalEncodedHours(Number(encodedHours.toFixed(2)));
+        }
       }
     }
 
@@ -218,6 +255,7 @@ export const OvertimeAccomplishmentModal = ({ modalState, setModalState, closeMo
   // Upon success/fail of swr request, zustand state will be updated
   useEffect(() => {
     if (!isEmpty(swrFaceScan)) {
+      console.log(isRestday, isHoliday);
       getTimeLogsSuccess(swrFaceScanIsLoading, swrFaceScan);
     }
 
@@ -312,6 +350,18 @@ export const OvertimeAccomplishmentModal = ({ modalState, setModalState, closeMo
                         />
                       ) : null} */}
 
+                      {overtimeAccomplishmentDetails.status === OvertimeAccomplishmentStatus.PENDING ? (
+                        <AlertNotification
+                          alertType="warning"
+                          notifMessage={
+                            overtimeAccomplishmentDetails.accomplishments
+                              ? 'For Supervisor Review'
+                              : 'Awaiting Submission'
+                          }
+                          dismissible={false}
+                        />
+                      ) : null}
+
                       {/* Emergency OT and Encoded TimeIn/Out is empty - for Field, Pumping Only */}
                       {finalEncodedHours <= 0 || isNaN(finalEncodedHours) ? (
                         <AlertNotification
@@ -321,14 +371,10 @@ export const OvertimeAccomplishmentModal = ({ modalState, setModalState, closeMo
                         />
                       ) : null}
 
-                      {overtimeAccomplishmentDetails.status === OvertimeAccomplishmentStatus.PENDING ? (
+                      {isHoliday || isRestday ? (
                         <AlertNotification
                           alertType="warning"
-                          notifMessage={
-                            overtimeAccomplishmentDetails.accomplishments
-                              ? 'For Supervisor Review'
-                              : 'Awaiting Submission'
-                          }
+                          notifMessage={'This Overtime occured during a Holiday or Restday.'}
                           dismissible={false}
                         />
                       ) : null}
