@@ -191,7 +191,7 @@ export const ProfileMenuDropdown = ({
                                   </span>
                                 </div>
                                 {/* {isEmpty(errorPendingApprovalsCount) &&
-                                pendingApprovalsCount.pendingGmApprovalCount != 0 ? (
+                                pendingApprovalsCount.pendingGmApprovalCount > 0 ? (
                                   <span className="absolute w-3 h-3 right-5 z-40 bg-red-600 rounded-full select-none" />
                                 ) : null} */}
                               </button>
@@ -212,7 +212,8 @@ export const ProfileMenuDropdown = ({
                                   </span>
                                 </div>
                                 {isEmpty(errorPendingApprovalsCount) &&
-                                pendingApprovalsCount.pendingGmApprovalCount != 0 ? (
+                                pendingApprovalsCount.pendingGmApprovalCount > 0 &&
+                                pendingApprovalsCount.pendingGmApprovalCount != null ? (
                                   <span className="absolute w-3 h-3 right-5 z-40 bg-red-600 rounded-full select-none" />
                                 ) : null}
                               </button>
@@ -244,10 +245,10 @@ export const ProfileMenuDropdown = ({
                                   <span className="text-sm tracking-tight text-slate-500 text-left">Approvals</span>
                                 </div>
                                 {isEmpty(errorPendingApprovalsCount) &&
-                                (pendingApprovalsCount.pendingPassSlipsCount != 0 ||
-                                  pendingApprovalsCount.pendingLeavesCount != 0 ||
-                                  pendingApprovalsCount.pendingOvertimesCount != 0 ||
-                                  pendingApprovalsCount.pendingDtrCorrectionsApprovals != 0) ? (
+                                (pendingApprovalsCount.pendingPassSlipsCount > 0 ||
+                                  pendingApprovalsCount.pendingLeavesCount > 0 ||
+                                  pendingApprovalsCount.pendingOvertimesCount > 0 ||
+                                  pendingApprovalsCount.pendingDtrCorrectionsApprovals > 0) ? (
                                   <span className="absolute w-3 h-3 right-5 z-40 bg-red-600 rounded-full select-none" />
                                 ) : null}
                               </button>
@@ -269,7 +270,7 @@ export const ProfileMenuDropdown = ({
                                   </span>
                                 </div>
                                 {isEmpty(errorPendingApprovalsCount) &&
-                                pendingApprovalsCount.pendingTrainingNominationCount != 0 ? (
+                                pendingApprovalsCount.pendingTrainingNominationCount > 0 ? (
                                   <span className="absolute w-3 h-3 right-5 z-40 bg-red-600 rounded-full select-none" />
                                 ) : null}
                               </button>
@@ -291,7 +292,7 @@ export const ProfileMenuDropdown = ({
                                   </span>
                                 </div>
                                 {isEmpty(errorPendingApprovalsCount) &&
-                                pendingApprovalsCount.prfsForApprovalCount != 0 ? (
+                                pendingApprovalsCount.prfsForApprovalCount > 0 ? (
                                   <span className="absolute w-3 h-3 right-5 z-40 bg-red-600 rounded-full select-none" />
                                 ) : null}
                               </button>
@@ -313,7 +314,7 @@ export const ProfileMenuDropdown = ({
                                   </span>
                                 </div>
                                 {isEmpty(errorPendingApprovalsCount) &&
-                                pendingApprovalsCount.pendingApplicantEndorsementsCount != 0 ? (
+                                pendingApprovalsCount.pendingApplicantEndorsementsCount > 0 ? (
                                   <span className="absolute w-3 h-3 right-5 z-40 bg-red-600 rounded-full select-none" />
                                 ) : null}
                               </button>
@@ -363,7 +364,7 @@ export const ProfileMenuDropdown = ({
                                   </span>
                                 </div>
                                 {isEmpty(errorPendingApprovalsCount) &&
-                                pendingApprovalsCount.forHrdmApprovalLeaves != 0 ? (
+                                pendingApprovalsCount.forHrdmApprovalLeaves > 0 ? (
                                   <span className="absolute w-3 h-3 right-5 z-40 bg-red-600 rounded-full select-none" />
                                 ) : null}
                               </button>
@@ -387,8 +388,10 @@ export const ProfileMenuDropdown = ({
                                 <span className="text-sm tracking-tight text-slate-500 text-left">PDC Approvals</span>
                               </div>
                               {isEmpty(errorPendingApprovalsCount) &&
-                              (pendingApprovalsCount.pendingPdcChairmanApprovalCount != 0 ||
-                                pendingApprovalsCount.pendingPdcSecretariatApprovalCount != 0) ? (
+                              ((pendingApprovalsCount.pendingPdcChairmanApprovalCount > 0 &&
+                                pendingApprovalsCount.pendingPdcChairmanApprovalCount != null) ||
+                                (pendingApprovalsCount.pendingPdcSecretariatApprovalCount > 0 &&
+                                  pendingApprovalsCount.pendingPdcSecretariatApprovalCount != null)) ? (
                                 <span className="absolute w-3 h-3 right-5 z-40 bg-red-600 rounded-full select-none" />
                               ) : null}
                             </button>

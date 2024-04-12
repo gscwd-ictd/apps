@@ -295,7 +295,8 @@ export const OvertimeModal = ({ modalState, setModalState, closeModalAction }: M
         <Modal.Footer>
           <div className="flex justify-end gap-2 px-4">
             {overtimeDetails.status === OvertimeStatus.APPROVED ||
-            overtimeDetails.status === OvertimeStatus.DISAPPROVED ? (
+            overtimeDetails.status === OvertimeStatus.DISAPPROVED ||
+            overtimeDetails.status === OvertimeStatus.CANCELLED ? (
               <>
                 {overtimeDetails.status === OvertimeStatus.APPROVED ? (
                   <>

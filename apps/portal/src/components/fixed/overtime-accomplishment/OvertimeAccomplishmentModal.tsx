@@ -127,20 +127,22 @@ export const OvertimeAccomplishmentModal = ({ modalState, setModalState, closeMo
   // compute encoded overtime duration based on encoded time IN and OUT
   //apply every 3hrs work & 1hr break rule
   useEffect(() => {
-    let numberOfBreaks = Number(encodedHours.toFixed(2)) / 4; // for 3-1 rule
+    let numberOfBreaks; // for 3-1 rule
     // console.log(numberOfBreaks, Math.floor(numberOfBreaks));
     //if holiday or rest day
     if (isHoliday || isRestday) {
       //if scheduled OT
       if (overtimeAccomplishmentDetails.plannedDate > overtimeAccomplishmentDetails.dateOfOTApproval) {
         //8-1 rule - if scheduled OT and is Holiday or Rest Day
-        if (Number(encodedHours.toFixed(2)) >= 4 && Number(encodedHours.toFixed(2)) < 12) {
+        if (Number(encodedHours.toFixed(2)) >= 4 && Number(encodedHours.toFixed(2)) < 10) {
           let temporaryHours = Number(encodedHours - 1);
           setFinalEncodedHours(Number(temporaryHours.toFixed(2)));
         }
         //3-1 rule beyond 9 hours
-        else if (Number(encodedHours.toFixed(2)) >= 13) {
-          let temporaryHours = Number(encodedHours - Math.floor(numberOfBreaks));
+        else if (Number(encodedHours.toFixed(2)) >= 10) {
+          numberOfBreaks = (Number(encodedHours - 9) / 4).toFixed(2); // for 3-1 rule
+
+          let temporaryHours = Number(encodedHours - 1 - Math.floor(numberOfBreaks));
           setFinalEncodedHours(Number(temporaryHours.toFixed(2)));
         } else {
           setFinalEncodedHours(Number(encodedHours.toFixed(2)));
@@ -150,6 +152,7 @@ export const OvertimeAccomplishmentModal = ({ modalState, setModalState, closeMo
       else {
         // apply 3-1 rule only
         if (Number(encodedHours.toFixed(2)) >= 4) {
+          numberOfBreaks = (Number(encodedHours) / 4).toFixed(2); // for 3-1 rule
           let temporaryHours = Number(encodedHours - Math.floor(numberOfBreaks));
           setFinalEncodedHours(Number(temporaryHours.toFixed(2)));
         }
@@ -164,6 +167,7 @@ export const OvertimeAccomplishmentModal = ({ modalState, setModalState, closeMo
       //if scheduled OT
       if (overtimeAccomplishmentDetails.plannedDate > overtimeAccomplishmentDetails.dateOfOTApproval) {
         if (Number(encodedHours.toFixed(2)) >= 4) {
+          numberOfBreaks = (Number(encodedHours) / 4).toFixed(2); // for 3-1 rule
           let temporaryHours = Number(encodedHours - Math.floor(numberOfBreaks));
           setFinalEncodedHours(Number(temporaryHours.toFixed(2)));
         }
@@ -176,6 +180,7 @@ export const OvertimeAccomplishmentModal = ({ modalState, setModalState, closeMo
       else {
         // apply 3-1 rule only
         if (Number(encodedHours.toFixed(2)) >= 4) {
+          numberOfBreaks = (Number(encodedHours) / 4).toFixed(2); // for 3-1 rule
           let temporaryHours = Number(encodedHours - Math.floor(numberOfBreaks));
           setFinalEncodedHours(Number(temporaryHours.toFixed(2)));
         }
@@ -362,18 +367,9 @@ export const OvertimeAccomplishmentModal = ({ modalState, setModalState, closeMo
                         />
                       ) : null}
 
-                      {/* Emergency OT and Encoded TimeIn/Out is empty - for Field, Pumping Only */}
-                      {finalEncodedHours <= 0 || isNaN(finalEncodedHours) ? (
-                        <AlertNotification
-                          alertType="error"
-                          notifMessage={'Encoded Time In and Time Out fields are empty.'}
-                          dismissible={false}
-                        />
-                      ) : null}
-
                       {isHoliday || isRestday ? (
                         <AlertNotification
-                          alertType="warning"
+                          alertType="info"
                           notifMessage={'This Overtime occured during a Holiday or Restday.'}
                           dismissible={false}
                         />
@@ -448,6 +444,15 @@ export const OvertimeAccomplishmentModal = ({ modalState, setModalState, closeMo
                               `${dayjs().format('YYYY-MM-DD HH:mm:ss')}`
                             ).days
                           } day(s) left before deadline of submission.`}
+                          dismissible={false}
+                        />
+                      ) : null}
+
+                      {/* Emergency OT and Encoded TimeIn/Out is empty - for Field, Pumping Only */}
+                      {finalEncodedHours <= 0 || isNaN(finalEncodedHours) ? (
+                        <AlertNotification
+                          alertType="error"
+                          notifMessage={'Encoded Time In and Time Out fields are empty.'}
                           dismissible={false}
                         />
                       ) : null}

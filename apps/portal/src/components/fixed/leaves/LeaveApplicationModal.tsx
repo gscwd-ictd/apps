@@ -179,6 +179,10 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
   const [hasPendingLeave, setHasPendingLeave] = useState<boolean>(false);
   const [finalVacationAndForcedLeaveBalance, setFinalVacationAndForcedLeaveBalance] = useState<number>(0);
 
+  //LESS THIS APPLICATION FOR MONETIZATION
+  const [lessVlFl, setLessVlFL] = useState<number>(0);
+  const [lessSl, setLessSl] = useState<number>(0);
+
   // get the latest balance by last index value
   const getLatestBalance = (leaveLedger: Array<LeaveLedgerEntry>) => {
     const lastIndexValue = leaveLedger[leaveLedger.length - 1];
@@ -281,6 +285,7 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
     //reset leave monetization input values
     setLeaveCreditsInput(0);
     setSickLeaveInput(0);
+    setSelectedLeaveMonetizationType(null);
   }, [watch('typeOfLeaveDetails.leaveName')]);
 
   useEffect(() => {
@@ -917,41 +922,63 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
                         </div>
 
                         {selectedLeaveMonetizationType ? (
-                          <div className="flex flex-row justify-between items-center w-full">
+                          <>
                             <div className="flex flex-row justify-between items-center w-full">
-                              <label className="pt-2 pr-2 text-slate-500 text-md font-medium">
-                                Leave Credits to Convert:
-                              </label>
-                            </div>
+                              <div className="flex flex-row justify-between items-center w-full">
+                                <label className="pt-2 pr-2 text-slate-500 text-md font-medium">
+                                  Leave Credits to Convert:
+                                </label>
+                              </div>
 
-                            <div className="flex gap-2 w-full items-center">
-                              <div className="w-full">
-                                <input
-                                  type="number"
-                                  min={
-                                    selectedLeaveMonetizationType === LeaveMonetizationType.BY_NUMBER_OF_CREDITS
-                                      ? '10'
-                                      : '1'
-                                  }
-                                  max={
-                                    selectedLeaveMonetizationType === LeaveMonetizationType.BY_PERCENTAGE_OF_CREDITS
-                                      ? `${
-                                          (Number(vacationLeaveBalance) +
-                                            Number(forcedLeaveBalance) +
-                                            Number(sickLeaveBalance)) /
-                                          2
-                                        }`
-                                      : '20'
-                                  }
-                                  className="border-slate-300 text-slate-500 h-12 text-md w-full rounded-md"
-                                  placeholder="Leave Credits to Monetize"
-                                  onChange={(e: any) => getLeaveCreditsInput(e.target.value)}
-                                  required
-                                  value={leaveCreditsInput}
-                                />
+                              <div className="flex gap-2 w-full items-center">
+                                <div className="w-full">
+                                  <input
+                                    type="number"
+                                    min={
+                                      selectedLeaveMonetizationType === LeaveMonetizationType.BY_NUMBER_OF_CREDITS
+                                        ? '10'
+                                        : '1'
+                                    }
+                                    max={
+                                      selectedLeaveMonetizationType === LeaveMonetizationType.BY_PERCENTAGE_OF_CREDITS
+                                        ? `${
+                                            (Number(vacationLeaveBalance) +
+                                              Number(forcedLeaveBalance) +
+                                              Number(sickLeaveBalance)) /
+                                            2
+                                          }`
+                                        : '20'
+                                    }
+                                    className="border-slate-300 text-slate-500 h-12 text-md w-full rounded-md"
+                                    placeholder="Leave Credits to Monetize"
+                                    onChange={(e: any) => getLeaveCreditsInput(e.target.value)}
+                                    required
+                                    value={leaveCreditsInput}
+                                  />
+                                </div>
                               </div>
                             </div>
-                          </div>
+                            <div className="flex flex-row justify-between items-center w-full">
+                              <div className="flex flex-row justify-between items-center w-full">
+                                <label className="pt-2 pr-2 text-slate-500 text-md font-medium">
+                                  Monetization Amount:
+                                </label>
+                              </div>
+
+                              <div className="flex gap-2 w-full items-center">
+                                <div className="w-full">
+                                  <input
+                                    type="text"
+                                    className="border-slate-300 text-slate-500 h-12 text-md w-full rounded-md"
+                                    placeholder="Amount"
+                                    disabled
+                                    required
+                                    value={Number(estimatedAmount).toLocaleString()}
+                                  />
+                                </div>
+                              </div>
+                            </div>
+                          </>
                         ) : null}
 
                         {/* <div className="flex flex-row justify-between items-center w-full">
@@ -976,25 +1003,6 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
                             </div>
                           </div>
                         </div> */}
-
-                        <div className="flex flex-row justify-between items-center w-full">
-                          <div className="flex flex-row justify-between items-center w-full">
-                            <label className="pt-2 pr-2 text-slate-500 text-md font-medium">Monetization Amount:</label>
-                          </div>
-
-                          <div className="flex gap-2 w-full items-center">
-                            <div className="w-full">
-                              <input
-                                type="text"
-                                className="border-slate-300 text-slate-500 h-12 text-md w-full rounded-md"
-                                placeholder="Amount"
-                                disabled
-                                required
-                                value={Number(estimatedAmount).toLocaleString()}
-                              />
-                            </div>
-                          </div>
-                        </div>
                       </>
                     ) : null}
 
@@ -1146,40 +1154,47 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
                             <label className="block sm:hidden">Less</label>
                           </td>
                           <td className="border border-slate-200 p-1 text-center text-sm">
-                            {watch('typeOfLeaveDetails.leaveName') === LeaveName.VACATION
-                              ? leaveDates.length
-                              : //if monetization by max 20 leave credits
-                              watch('typeOfLeaveDetails.leaveName') === LeaveName.MONETIZATION &&
-                                selectedLeaveMonetizationType === LeaveMonetizationType.BY_NUMBER_OF_CREDITS &&
-                                leaveCreditsInput <= 10
-                              ? Number(leaveCreditsInput).toFixed(3)
-                              : watch('typeOfLeaveDetails.leaveName') === LeaveName.MONETIZATION &&
-                                selectedLeaveMonetizationType === LeaveMonetizationType.BY_NUMBER_OF_CREDITS &&
-                                leaveCreditsInput > 10
-                              ? 10
-                              : //if monetization by max 50% leave credits
-                              watch('typeOfLeaveDetails.leaveName') === LeaveName.MONETIZATION &&
-                                selectedLeaveMonetizationType === LeaveMonetizationType.BY_PERCENTAGE_OF_CREDITS &&
-                                leaveCreditsInput <= 20
-                              ? Number(leaveCreditsInput).toFixed(3)
-                              : watch('typeOfLeaveDetails.leaveName') === LeaveName.MONETIZATION &&
-                                selectedLeaveMonetizationType === LeaveMonetizationType.BY_PERCENTAGE_OF_CREDITS &&
-                                leaveCreditsInput > 20
-                              ? 20
-                              : 0}
+                            {/* if vacation leave */}
+                            {watch('typeOfLeaveDetails.leaveName') === LeaveName.VACATION ? leaveDates.length : null}
+
+                            {/* if monetization by max 20 leave credits */}
+                            {watch('typeOfLeaveDetails.leaveName') === LeaveName.MONETIZATION &&
+                            selectedLeaveMonetizationType === LeaveMonetizationType.BY_NUMBER_OF_CREDITS &&
+                            Number(vacationLeaveBalance) + Number(forcedLeaveBalance) >= 5
+                              ? Number(vacationLeaveBalance) + Number(forcedLeaveBalance) - leaveCreditsInput >= 5
+                                ? leaveCreditsInput
+                                : (Number(vacationLeaveBalance) + Number(forcedLeaveBalance) - 5).toFixed(3)
+                              : null}
+
+                            {/* if monetization by max 50% of total leave credits */}
+                            {watch('typeOfLeaveDetails.leaveName') === LeaveName.MONETIZATION &&
+                            selectedLeaveMonetizationType === LeaveMonetizationType.BY_PERCENTAGE_OF_CREDITS &&
+                            Number(vacationLeaveBalance) + Number(forcedLeaveBalance) >= 5
+                              ? Number(vacationLeaveBalance) + Number(forcedLeaveBalance) - leaveCreditsInput >= 5
+                                ? leaveCreditsInput
+                                : 0
+                              : null}
                           </td>
+
+                          {/* force leave td */}
                           {watch('typeOfLeaveDetails.leaveName') !== LeaveName.MONETIZATION ? (
                             <td className="border border-slate-200 p-1 text-center text-sm">
                               {watch('typeOfLeaveDetails.leaveName') === LeaveName.FORCED ? leaveDates.length : 0}
                             </td>
                           ) : null}
 
+                          {/* sick leave td */}
                           <td className="border border-slate-200 p-1 text-center text-sm">
-                            {watch('typeOfLeaveDetails.leaveName') === LeaveName.SICK
-                              ? leaveDates.length
-                              : watch('typeOfLeaveDetails.leaveName') === LeaveName.MONETIZATION
-                              ? sickLeaveInput
-                              : 0}
+                            {watch('typeOfLeaveDetails.leaveName') === LeaveName.SICK ? leaveDates.length : null}
+
+                            {/* if monetization by max 20 leave credits */}
+                            {watch('typeOfLeaveDetails.leaveName') === LeaveName.MONETIZATION &&
+                            selectedLeaveMonetizationType === LeaveMonetizationType.BY_NUMBER_OF_CREDITS &&
+                            Number(vacationLeaveBalance) + Number(forcedLeaveBalance) >= 5
+                              ? leaveCreditsInput - 5 > Number(vacationLeaveBalance) + Number(forcedLeaveBalance)
+                                ? leaveCreditsInput - 5
+                                : 0
+                              : null}
                           </td>
                           {watch('typeOfLeaveDetails.leaveName') !== LeaveName.MONETIZATION ? (
                             <td className="border border-slate-200 p-1 text-center text-sm">
@@ -1202,15 +1217,27 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
                                 ? 'bg-red-300'
                                 : finalVacationAndForcedLeaveBalance < 5 &&
                                   watch('typeOfLeaveDetails.leaveName') === LeaveName.MONETIZATION
-                                ? 'bg-red-300'
+                                ? ''
                                 : ''
                             } border border-slate-200 p-1 text-center text-sm`}
                           >
+                            {/* if vacation leave application */}
                             {watch('typeOfLeaveDetails.leaveName') === LeaveName.VACATION
                               ? finalVacationLeaveBalance.toFixed(3)
-                              : watch('typeOfLeaveDetails.leaveName') === LeaveName.MONETIZATION
-                              ? finalVacationAndForcedLeaveBalance.toFixed(3)
-                              : vacationLeaveBalance}
+                              : null}
+
+                            {/* if monetization by max 20 leave credits */}
+                            {watch('typeOfLeaveDetails.leaveName') === LeaveName.MONETIZATION &&
+                            selectedLeaveMonetizationType === LeaveMonetizationType.BY_NUMBER_OF_CREDITS &&
+                            Number(vacationLeaveBalance) + Number(forcedLeaveBalance) >= 5
+                              ? Number(vacationLeaveBalance) + Number(forcedLeaveBalance) - leaveCreditsInput >= 5
+                                ? (
+                                    Number(vacationLeaveBalance) +
+                                    Number(forcedLeaveBalance) -
+                                    leaveCreditsInput
+                                  ).toFixed(3)
+                                : 5
+                              : null}
                           </td>
                           {watch('typeOfLeaveDetails.leaveName') !== LeaveName.MONETIZATION ? (
                             <td
