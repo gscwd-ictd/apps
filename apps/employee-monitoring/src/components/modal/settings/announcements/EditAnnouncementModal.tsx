@@ -28,14 +28,39 @@ type EditModalProps = {
 };
 
 enum AnnouncementKeys {
-  ID = '_id',
+  ID = 'id',
   TITLE = 'title',
   DESCRIPTION = 'description',
-  DATE = 'date',
+  EVENTANNOUNCEMENTDATE = 'eventAnnouncementDate',
   URL = 'url',
-  IMAGE = 'image',
   STATUS = 'status',
+  PHOTOURL = 'photoUrl',
+  FILE = 'file',
 }
+
+// URL validation
+const isValidHttpUrl = (string: string | URL) => {
+  let url: URL;
+
+  try {
+    url = new URL(string);
+  } catch (_) {
+    return false;
+  }
+
+  // Check protocol
+  if (url.protocol !== 'http:' && url.protocol !== 'https:') {
+    return false;
+  }
+
+  // Check if URL contains a proper top-level domain
+  const domainParts = url.hostname.split('.');
+  if (domainParts.length < 2 || domainParts[domainParts.length - 1] === '') {
+    return false;
+  }
+
+  return true;
+};
 
 const EditAnnouncementModal: FunctionComponent<EditModalProps> = ({
   modalState,
@@ -48,63 +73,91 @@ const EditAnnouncementModal: FunctionComponent<EditModalProps> = ({
     UpdateAnnouncementResponse,
     SetUpdateAnnouncement,
 
+    ErrorAnnouncement,
     SetErrorAnnouncement,
+
     EmptyResponse,
   } = useAnnouncementsStore((state) => ({
     UpdateAnnouncementResponse: state.updateAnnouncement,
     SetUpdateAnnouncement: state.setUpdateAnnouncement,
 
+    ErrorAnnouncement: state.errorAnnouncement,
     SetErrorAnnouncement: state.setErrorAnnouncement,
+
     EmptyResponse: state.emptyResponse,
   }));
+
+  const [hasExistingPhotoUrl, setHasExistingPhotoUrl] = useState(rowData.photoUrl);
+
+  useEffect(() => {
+    setHasExistingPhotoUrl(rowData.photoUrl);
+  }, [rowData.photoUrl]);
 
   // yup error handling initialization
   const yupSchema = yup
     .object({
       title: yup.string().required('Title is required'),
-      date: yup.string().required('Date is required'),
       description: yup.string().required('Description is required'),
-      url: yup.string().required('URL is required'),
-      status: yup.string().required('Status is required'),
-      image: yup
-        .mixed()
-        .test('fileExists', 'No file uploaded', async (value) => {
-          return value instanceof FileList && value.length > 0;
-        })
-        .test('type', 'Only .jpeg, .jpg, or .png file is supported', (value) => {
-          if (value instanceof FileList && value.length > 0) {
-            const isCorrectType = Array.from(value).every((file) => {
-              return ['image/jpeg', 'image/png'].includes(file.type);
-            });
-            if (!isCorrectType) {
-              return false;
-            }
+      url: yup
+        .string()
+        .required('URL is required')
+        .test('valid-url', 'Must be a valid URL', (value) => {
+          if (!value) {
+            return true;
           }
-          return true;
+          if (!value.startsWith('http://') && !value.startsWith('https://')) {
+            return isValidHttpUrl('http://' + value);
+          }
+          return isValidHttpUrl(value);
+        }),
+      eventAnnouncementDate: yup.string().required('Date is required'),
+      status: yup.string().required('Status is required'),
+
+      // file state is temporary since file is only used for file upload
+      file: yup
+        .mixed()
+        .test('fileExists', 'No file uploaded', (value) => {
+          // If there's an existing photoUrl, it's valid regardless of whether a new file is being uploaded
+          if (hasExistingPhotoUrl) {
+            return true;
+          }
+          // If there's existing photoUrl and new file is uploaded
+          else if (hasExistingPhotoUrl && value instanceof FileList && value.length > 0) {
+            return true;
+          }
+          // If there's no existing photoUrl and new file is uploaded
+          else if (!hasExistingPhotoUrl && value instanceof FileList && value.length > 0) {
+            return true;
+          }
+          // In all other cases, the test fails
+          return false;
         })
         .test('fileSizeAndDimensions', 'Image must be less than or equal to 5MB and 843x843 pixels', async (value) => {
-          if (value instanceof FileList && value.length > 0) {
-            const file = value[0];
-            const fileSizeInMB = file.size / (1024 * 1024);
-            if (fileSizeInMB > 5) {
-              return false;
-            }
-            return new Promise((resolve) => {
-              const img = new Image();
-              img.onload = () => {
-                const { width, height } = img;
-                resolve(width <= 843 && height <= 843);
-              };
-              img.onerror = () => resolve(false);
-              const reader = new FileReader();
-              reader.onload = (e) => {
-                img.src = e.target.result as string;
-              };
-              reader.onerror = () => resolve(false);
-              reader.readAsDataURL(file);
-            });
+          // If value is not a FileList or it's empty, pass the test
+          if (!(value instanceof FileList) || value.length === 0) {
+            return true;
           }
-          return false;
+
+          const file = value[0];
+          const fileSizeInMB = file.size / (1024 * 1024);
+          if (fileSizeInMB > 5) {
+            return false;
+          }
+
+          return new Promise((resolve) => {
+            const img = new Image();
+            img.onload = () => {
+              const { width, height } = img;
+              resolve(width <= 843 && height <= 843);
+            };
+            img.onerror = () => resolve(false);
+            const reader = new FileReader();
+            reader.onload = (e) => {
+              img.src = e.target.result as string;
+            };
+            reader.onerror = () => resolve(false);
+            reader.readAsDataURL(file);
+          });
         }),
     })
     .required();
@@ -124,34 +177,38 @@ const EditAnnouncementModal: FunctionComponent<EditModalProps> = ({
 
   // form submission
   const onSubmit: SubmitHandler<Announcement> = async (data: Announcement) => {
-    const isValid = await trigger(); // manually trigger validation
-    if (!isValid) return; // if form is not valid, stop here
+    // const isValid = await trigger(); // manually trigger validation
+    // if (!isValid) return; // if form is not valid, stop here
 
     EmptyResponse();
     handlePatchResult(data);
   };
 
-  // const handlePatchResult = async (data: Announcement) => {
-  //   const { error, result } = await putEmpMonitoring(`/announcements`, data);
-
-  //   if (error) {
-  //     SetErrorAnnouncement(result);
-  //   } else {
-  //     SetUpdateAnnouncement(result);
-
-  //     reset();
-  //     closeModalAction();
-  //   }
-  // };
-
   const handlePatchResult = async (data: Announcement) => {
-    try {
-      const { result } = await putEmpMonitoring(`/announcements`, data);
+    const formData = new FormData();
+
+    let { url } = data;
+    if (!url.startsWith('http://') && !url.startsWith('https://')) {
+      url = `https://${url}`;
+    }
+    formData.append('url', url);
+    formData.append('title', data.title);
+    formData.append('description', data.description);
+    formData.append('status', data.status);
+    formData.append('eventAnnouncementDate', data.eventAnnouncementDate);
+
+    if (data.file instanceof FileList && data.file.length > 0) {
+      formData.append('file', data.file[0]);
+    }
+
+    const { error, result } = await putEmpMonitoring('/events-announcements', formData);
+
+    if (error) {
+      SetErrorAnnouncement(result);
+    } else {
       SetUpdateAnnouncement(result);
       reset();
       closeModalAction();
-    } catch (error) {
-      SetErrorAnnouncement(error.message);
     }
   };
 
@@ -176,7 +233,18 @@ const EditAnnouncementModal: FunctionComponent<EditModalProps> = ({
 
       // traverse to each object and setValue
       keys.forEach((key) => {
-        return setValue(key, rowData[key as AnnouncementKeys], {
+        let value = rowData[key as AnnouncementKeys];
+        if (key === AnnouncementKeys.EVENTANNOUNCEMENTDATE && value) {
+          const date = new Date(String(value));
+          value = date.toLocaleDateString('en-CA', {
+            timeZone: 'Asia/Manila',
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit',
+          });
+          // This will give you date in 'YYYY-MM-DD' format in Asia/Manila timezone
+        }
+        return setValue(key, value, {
           shouldValidate: false,
           shouldDirty: true,
         });
@@ -190,6 +258,7 @@ const EditAnnouncementModal: FunctionComponent<EditModalProps> = ({
       {!isEmpty(UpdateAnnouncementResponse) ? (
         <ToastNotification toastType="success" notifMessage="Announcement details updated successfully" />
       ) : null}
+      {!isEmpty(ErrorAnnouncement) ? <ToastNotification toastType="error" notifMessage={ErrorAnnouncement} /> : null}
       <Modal open={modalState} setOpen={setModalState} steady size="sm">
         <Modal.Header withCloseBtn>
           <div className="flex justify-between w-full">
@@ -244,12 +313,12 @@ const EditAnnouncementModal: FunctionComponent<EditModalProps> = ({
               {/* Date input */}
               <div className="mb-6">
                 <LabelInput
-                  id={'date'}
+                  id={'eventAnnouncementDate'}
                   label={'Date'}
                   type={'date'}
-                  controller={{ ...register('date') }}
-                  isError={errors.date ? true : false}
-                  errorMessage={errors.date?.message}
+                  controller={{ ...register('eventAnnouncementDate') }}
+                  isError={errors.eventAnnouncementDate ? true : false}
+                  errorMessage={errors.eventAnnouncementDate?.message}
                 />
               </div>
 
@@ -268,12 +337,12 @@ const EditAnnouncementModal: FunctionComponent<EditModalProps> = ({
               {/* Image input */}
               <div className="mb-6">
                 <LabelInput
-                  id={'image'}
+                  id={'file'}
                   label={'Image'}
                   type={'file'}
-                  controller={{ ...register('image') }}
-                  isError={errors.image ? true : false}
-                  errorMessage={errors.image?.message}
+                  controller={{ ...register('file') }}
+                  isError={errors.file ? true : false}
+                  errorMessage={errors.file?.message}
                   accept={'.jpg,.png'}
                 />
               </div>

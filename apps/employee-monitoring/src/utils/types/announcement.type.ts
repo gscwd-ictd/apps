@@ -8,6 +8,7 @@ export type Announcement = {
   status: string;
   fileName: string;
   eventAnnouncementDate: string;
+  file: File;
 };
 
 export type FormPostAnnouncement = Omit<Announcement, 'id'> & { app: string; file: File };
