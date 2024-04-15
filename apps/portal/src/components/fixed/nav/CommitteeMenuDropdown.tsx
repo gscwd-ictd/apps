@@ -1,18 +1,12 @@
 /* eslint-disable @nx/enforce-module-boundaries */
 import { Menu, Transition } from '@headlessui/react';
+import { useApprovalStore } from 'apps/portal/src/store/approvals.store';
 import { useEmployeeStore } from 'apps/portal/src/store/employee.store';
 import { UserRole } from 'libs/utils/src/lib/enums/user-roles.enum';
-import { isEqual } from 'lodash';
+import { isEmpty, isEqual } from 'lodash';
 import { useRouter } from 'next/router';
 import { Fragment } from 'react';
-import {
-  HiAcademicCap,
-  HiBadgeCheck,
-  HiClock,
-  HiOutlineBadgeCheck,
-  HiOutlineIdentification,
-  HiUserGroup,
-} from 'react-icons/hi';
+import { HiAcademicCap, HiClock, HiOutlineBadgeCheck, HiUserGroup } from 'react-icons/hi';
 
 type MenuDropdownProps = {
   right?: boolean;
@@ -20,17 +14,15 @@ type MenuDropdownProps = {
   labelColor?: string;
 };
 
-type EmployeeDetails = {
-  fullName: string;
-  initials: string;
-  profile: string;
-};
-
 export const CommitteeMenuDropdown = ({
   className,
   labelColor = 'text-white',
   right = false,
 }: MenuDropdownProps): JSX.Element => {
+  const { pendingApprovalsCount, errorPendingApprovalsCount } = useApprovalStore((state) => ({
+    pendingApprovalsCount: state.pendingApprovalsCount,
+    errorPendingApprovalsCount: state.error.errorPendingApprovalsCount,
+  }));
   const router = useRouter();
 
   const employeeDetails = useEmployeeStore((state) => state.employeeDetails);
@@ -130,6 +122,13 @@ export const CommitteeMenuDropdown = ({
                           <HiAcademicCap className="w-6 h-6 text-rose-600" />
                         </div>
                         <span className="text-sm tracking-tight text-gray-700 text-left">PDC Approvals</span>
+                        {isEmpty(errorPendingApprovalsCount) &&
+                        ((pendingApprovalsCount.pendingPdcChairmanApprovalCount > 0 &&
+                          pendingApprovalsCount.pendingPdcChairmanApprovalCount != null) ||
+                          (pendingApprovalsCount.pendingPdcSecretariatApprovalCount > 0 &&
+                            pendingApprovalsCount.pendingPdcSecretariatApprovalCount != null)) ? (
+                          <span className="absolute w-3 h-3 right-4 z-40 bg-red-600 rounded-full select-none" />
+                        ) : null}
                       </button>
                     )}
                   </Menu.Item>

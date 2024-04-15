@@ -11,14 +11,13 @@ import {
 } from 'libs/utils/src/lib/types/overtime.type';
 import { create } from 'zustand';
 import { devtools } from 'zustand/middleware';
-import { number } from 'yup';
-import { format } from 'date-fns';
 
 export type OvertimeState = {
   employeeList: Array<SelectOption>;
   overtime: {
     forApproval: Array<OvertimeDetails>;
     completed: Array<OvertimeDetails>;
+    supervisorName: string;
   };
   response: {
     postResponseApply: any;
@@ -140,6 +139,7 @@ export const useOvertimeStore = create<OvertimeState>()(
     overtime: {
       forApproval: [],
       completed: [],
+      supervisorName: '',
     },
     response: {
       postResponseApply: {},
@@ -489,6 +489,7 @@ export const useOvertimeStore = create<OvertimeState>()(
           ...state.overtime,
           forApproval: response.forApproval,
           completed: response.completed,
+          supervisorName: response.supervisorName,
         },
         loading: {
           ...state.loading,

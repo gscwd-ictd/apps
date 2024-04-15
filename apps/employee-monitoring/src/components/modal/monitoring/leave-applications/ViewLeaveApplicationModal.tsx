@@ -1,7 +1,7 @@
 /* eslint-disable @nx/enforce-module-boundaries */
 import { Modal, PageContentContext } from '@gscwd-apps/oneui';
 import dayjs from 'dayjs';
-import { LeaveStatus } from 'libs/utils/src/lib/enums/leave.enum';
+import { LeaveName, LeaveStatus } from 'libs/utils/src/lib/enums/leave.enum';
 import { EmployeeLeaveDetails, MonitoringLeave } from 'libs/utils/src/lib/types/leave-application.type';
 import React, { FunctionComponent, useContext, useEffect, useState } from 'react';
 import { LabelValue } from '../../../labels/LabelValue';
@@ -20,6 +20,7 @@ import { LeaveType } from 'libs/utils/src/lib/types/leave-benefits.type';
 import UseRenderBadgePill from 'apps/employee-monitoring/src/utils/functions/RenderBadgePill';
 import LeaveApplicationConfirmModal from './LeaveApplicationConfirmModal';
 import { patchEmpMonitoring } from 'apps/employee-monitoring/src/utils/helper/employee-monitoring-axios-helper';
+import { useLeaveLedgerStore } from 'apps/employee-monitoring/src/store/leave-ledger.store';
 
 type ViewLeaveApplicationModalProps = {
   rowData: MonitoringLeave;
@@ -56,15 +57,47 @@ const ViewLeaveApplicationModal: FunctionComponent<ViewLeaveApplicationModalProp
     aside: { windowWidth },
   } = useContext(PageContentContext);
 
-  // useSWR
+  // leave application store
+  const {
+    leaveConfirmAction,
+    setLeaveConfirmAction,
+
+    patchLeaveApplication,
+    patchLeaveApplicationFail,
+    patchLeaveApplicationSuccess,
+
+    leaveApplicationDetails,
+    getLeaveApplicationDetails,
+    getLeaveApplicationDetailsFail,
+    getLeaveApplicationDetailsSuccess,
+  } = useLeaveApplicationStore((state) => ({
+    leaveConfirmAction: state.leaveConfirmAction,
+    setLeaveConfirmAction: state.setLeaveConfirmAction,
+
+    patchLeaveApplication: state.patchLeaveApplication,
+    patchLeaveApplicationSuccess: state.patchLeaveApplicationSuccess,
+    patchLeaveApplicationFail: state.patchLeaveApplicationFail,
+
+    leaveApplicationDetails: state.leaveApplicationDetails,
+    getLeaveApplicationDetails: state.getLeaveApplicationDetails,
+    getLeaveApplicationDetailsSuccess: state.getLeaveApplicationDetailsSuccess,
+    getLeaveApplicationDetailsFail: state.getLeaveApplicationDetailsFail,
+  }));
+
+  // leave ledger store
+  const { leaveLedger, selectedLeaveLedger, setSelectedLeaveLedger } = useLeaveLedgerStore((state) => ({
+    leaveLedger: state.leaveLedger,
+    selectedLeaveLedger: state.selectedLeaveLedger,
+    setSelectedLeaveLedger: state.setSelectedLeaveLedger,
+  }));
+
+  // fetch leave details
   const {
     data: swrLeaveDetails,
     isLoading: swrIsLoading,
     error: swrError,
   } = useSWR(
-    modalState && rowData.employee?.employeeId && rowData.id
-      ? `/leave-application/details/${rowData.employee?.employeeId}/${rowData.id}`
-      : null,
+    modalState ? `/leave-application/details/${rowData.employee?.employeeId}/${rowData.id}` : null,
     fetcherEMS,
     {
       shouldRetryOnError: false,
@@ -72,28 +105,17 @@ const ViewLeaveApplicationModal: FunctionComponent<ViewLeaveApplicationModalProp
     }
   );
 
-  // leave application store
-  const {
-    leaveApplicationDetails,
-    leaveConfirmAction,
-    setLeaveConfirmAction,
-    patchLeaveApplication,
-    patchLeaveApplicationFail,
-    patchLeaveApplicationSuccess,
-    getLeaveApplicationDetails,
-    getLeaveApplicationDetailsFail,
-    getLeaveApplicationDetailsSuccess,
-  } = useLeaveApplicationStore((state) => ({
-    leaveConfirmAction: state.leaveConfirmAction,
-    setLeaveConfirmAction: state.setLeaveConfirmAction,
-    patchLeaveApplication: state.patchLeaveApplication,
-    patchLeaveApplicationSuccess: state.patchLeaveApplicationSuccess,
-    patchLeaveApplicationFail: state.patchLeaveApplicationFail,
-    leaveApplicationDetails: state.leaveApplicationDetails,
-    getLeaveApplicationDetails: state.getLeaveApplicationDetails,
-    getLeaveApplicationDetailsSuccess: state.getLeaveApplicationDetailsSuccess,
-    getLeaveApplicationDetailsFail: state.getLeaveApplicationDetailsFail,
-  }));
+  // fetch leave ledger
+  const { data: swrLeaveLedger, error: swrLedgerError } = useSWR(
+    modalState && !isEmpty(leaveApplicationDetails)
+      ? `/leave/ledger/${rowData.employee.employeeId}/${leaveApplicationDetails.employeeDetails.companyId}`
+      : null,
+    fetcherEMS,
+    {
+      shouldRetryOnError: false,
+      revalidateOnFocus: false,
+    }
+  );
 
   // confirm modal
   const [confirmModalIsOpen, setConfirmModalIsOpen] = useState<boolean>(false);
@@ -190,9 +212,10 @@ const ViewLeaveApplicationModal: FunctionComponent<ViewLeaveApplicationModalProp
     }
   }, [swrIsLoading]);
 
-  // success or fail
+  // success or fail of leave details
   useEffect(() => {
     if (!isEmpty(swrLeaveDetails)) {
+      console.log(swrLeaveDetails.data);
       getLeaveApplicationDetailsSuccess(swrLeaveDetails.data);
     }
 
@@ -200,6 +223,13 @@ const ViewLeaveApplicationModal: FunctionComponent<ViewLeaveApplicationModalProp
       getLeaveApplicationDetailsFail(swrError.message);
     }
   }, [swrLeaveDetails, swrError]);
+
+  // success of leave ledger
+  useEffect(() => {
+    if (!isEmpty(swrLeaveLedger)) {
+      setSelectedLeaveLedger(swrLeaveLedger.data, rowData.id);
+    }
+  }, [swrLeaveLedger]);
 
   useEffect(() => {
     if (leaveConfirmAction === 'yes') {
@@ -467,10 +497,85 @@ const ViewLeaveApplicationModal: FunctionComponent<ViewLeaveApplicationModalProp
                     direction="left-to-right"
                   />
                 </div>
+
+                <hr />
+
+                {/* LEAVE LEDGER TABLE */}
+                <div className="grid grid-cols-1 grid-rows-1 px-7 sm:gap-2 md:gap:2 lg:gap-0">
+                  {rowData.status !== LeaveStatus.DISAPPROVED_BY_SUPERVISOR &&
+                  rowData.status !== LeaveStatus.CANCELLED &&
+                  rowData.status !== LeaveStatus.DISAPPROVED_BY_HRDM &&
+                  rowData.status !== LeaveStatus.DISAPPROVED_BY_HRMO ? (
+                    rowData.leaveName === LeaveName.VACATION ||
+                    rowData.leaveName === LeaveName.FORCED ||
+                    rowData.leaveName === LeaveName.SICK ||
+                    rowData.leaveName === LeaveName.SPECIAL_PRIVILEGE ? (
+                      <div className="w-full pb-4">
+                        <span className="text-slate-500 text-md">
+                          Your {rowData.leaveName} Credits at the time of this application:
+                        </span>
+                        <table className="mt-2 bg-slate-50 text-slate-600 border-collapse border-spacing-0 border border-slate-400 w-full rounded-md">
+                          <tbody>
+                            <tr className="border border-slate-400">
+                              <td className="border border-slate-400 text-center">Total Earned</td>
+                              <td className="border border-slate-400 text-center">Less this application</td>
+                              <td className="border border-slate-400 text-center bg-green-100">Balance</td>
+                            </tr>
+                            <tr className="border border-slate-400">
+                              <td className="border border-slate-400 text-center">
+                                {rowData.leaveName === LeaveName.VACATION
+                                  ? (
+                                      Number(parseFloat(`${selectedLeaveLedger[0]?.vacationLeaveBalance}`).toFixed(3)) +
+                                      Number(parseFloat(`${selectedLeaveLedger[0]?.vacationLeave}`).toFixed(3)) * -1
+                                    ).toFixed(3)
+                                  : rowData.leaveName === LeaveName.FORCED
+                                  ? (
+                                      Number(parseFloat(`${selectedLeaveLedger[0]?.forcedLeaveBalance}`).toFixed(3)) +
+                                      Number(parseFloat(`${selectedLeaveLedger[0]?.forcedLeave}`).toFixed(3)) * -1
+                                    ).toFixed(3)
+                                  : rowData.leaveName === LeaveName.SICK
+                                  ? (
+                                      Number(parseFloat(`${selectedLeaveLedger[0]?.sickLeaveBalance}`).toFixed(3)) +
+                                      Number(parseFloat(`${selectedLeaveLedger[0]?.sickLeave}`).toFixed(3)) * -1
+                                    ).toFixed(3)
+                                  : rowData.leaveName === LeaveName.SPECIAL_PRIVILEGE
+                                  ? (
+                                      Number(
+                                        parseFloat(`${selectedLeaveLedger[0]?.specialPrivilegeLeaveBalance}`).toFixed(3)
+                                      ) +
+                                      Number(
+                                        parseFloat(`${selectedLeaveLedger[0]?.specialPrivilegeLeave}`).toFixed(3)
+                                      ) *
+                                        -1
+                                    ).toFixed(3)
+                                  : 'N/A'}
+                              </td>
+                              <td className="border border-slate-400 text-center">
+                                {rowData.leaveDates?.length.toFixed(3)}
+                              </td>
+                              <td className="border border-slate-400 text-center bg-green-100">
+                                {rowData.leaveName === LeaveName.VACATION
+                                  ? selectedLeaveLedger[0]?.vacationLeaveBalance
+                                  : rowData.leaveName === LeaveName.FORCED
+                                  ? selectedLeaveLedger[0]?.forcedLeaveBalance
+                                  : rowData.leaveName === LeaveName.SICK
+                                  ? selectedLeaveLedger[0]?.sickLeaveBalance
+                                  : rowData.leaveName === LeaveName.SPECIAL_PRIVILEGE
+                                  ? selectedLeaveLedger[0]?.specialPrivilegeLeaveBalance
+                                  : 'N/A'}
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    ) : null
+                  ) : null}
+                </div>
               </div>
             </div>
           )}
         </Modal.Body>
+
         {leaveApplicationDetails.leaveApplicationBasicInfo?.leaveType === LeaveType.SPECIAL ? (
           <Modal.Footer>
             <div className="flex justify-end w-full gap-2">

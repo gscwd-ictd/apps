@@ -1,8 +1,10 @@
 /* eslint-disable @nx/enforce-module-boundaries */
 import { Menu, Transition } from '@headlessui/react';
+import { useApprovalStore } from 'apps/portal/src/store/approvals.store';
+import { isEmpty } from 'lodash';
 import { useRouter } from 'next/router';
 import { Fragment } from 'react';
-import { HiAcademicCap, HiClipboardCheck, HiCube, HiOutlineCube, HiOutlineIdentification } from 'react-icons/hi';
+import { HiAcademicCap, HiClipboardCheck, HiOutlineCube } from 'react-icons/hi';
 
 type MenuDropdownProps = {
   right?: boolean;
@@ -10,17 +12,16 @@ type MenuDropdownProps = {
   labelColor?: string;
 };
 
-type EmployeeDetails = {
-  fullName: string;
-  initials: string;
-  profile: string;
-};
-
 export const GeneralManagerMenuDropdown = ({
   className,
   labelColor = 'text-white',
   right = false,
 }: MenuDropdownProps): JSX.Element => {
+  const { pendingApprovalsCount, errorPendingApprovalsCount } = useApprovalStore((state) => ({
+    pendingApprovalsCount: state.pendingApprovalsCount,
+    errorPendingApprovalsCount: state.error.errorPendingApprovalsCount,
+  }));
+
   const router = useRouter();
 
   return (
@@ -69,12 +70,16 @@ export const GeneralManagerMenuDropdown = ({
                       } group flex w-80 items-center gap-2 px-3 py-3 text-sm`}
                       onClick={() => router.push(`/${router.query.id}/appointing-authority-selection`)}
                     >
-                      <div>
+                      <div className="flex gap-2">
                         <HiClipboardCheck className="w-6 h-6 text-green-600" />
+                        <span className="text-sm tracking-tight text-gray-700 text-left">
+                          Appointing Authority Selection
+                        </span>
                       </div>
-                      <span className="text-sm tracking-tight text-gray-700 text-left">
-                        Appointing Authority Selection
-                      </span>
+                      {isEmpty(errorPendingApprovalsCount) &&
+                      pendingApprovalsCount.pendingAppointingAuthoritySelection > 0 ? (
+                        <span className="absolute w-3 h-3 right-4 z-40 bg-red-600 rounded-full select-none" />
+                      ) : null}
                     </button>
                   )}
                 </Menu.Item>
@@ -87,10 +92,13 @@ export const GeneralManagerMenuDropdown = ({
                       } group flex w-80 items-center gap-2 px-3 py-3 text-sm`}
                       onClick={() => router.push(`/${router.query.id}/pdc-gm-approvals`)}
                     >
-                      <div>
+                      <div className="flex gap-2">
                         <HiAcademicCap className="w-6 h-6 text-red-600" />
+                        <span className="text-sm tracking-tight text-gray-700 text-left">Training Approvals</span>
                       </div>
-                      <span className="text-sm tracking-tight text-gray-700 text-left">Training Approvals</span>
+                      {isEmpty(errorPendingApprovalsCount) && pendingApprovalsCount.pendingGmApprovalCount != 0 ? (
+                        <span className="absolute w-3 h-3 right-4 z-40 bg-red-600 rounded-full select-none" />
+                      ) : null}
                     </button>
                   )}
                 </Menu.Item>

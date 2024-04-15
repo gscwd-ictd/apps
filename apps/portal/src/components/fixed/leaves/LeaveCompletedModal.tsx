@@ -12,6 +12,7 @@ import { LeaveDateStatus, LeaveName, LeaveStatus } from 'libs/utils/src/lib/enum
 import CancelLeaveModal from './CancelLeaveModal';
 import { useLeaveLedgerStore } from 'apps/portal/src/store/leave-ledger.store';
 import { DateFormatter } from 'libs/utils/src/lib/functions/DateFormatter';
+import { LeavePdfModal } from './LeavePdfModal';
 
 type LeaveCompletedModalProps = {
   modalState: boolean;
@@ -27,11 +28,13 @@ export const LeaveCompletedModal = ({ modalState, setModalState, closeModalActio
     errorLeaveDetails,
     completedLeaveModalIsOpen,
     cancelLeaveModalIsOpen,
+    leaveDetailsPdfModalIsOpen,
 
     getLeaveIndividualDetail,
     getLeaveIndividualDetailSuccess,
     getLeaveIndividualDetailFail,
     setCancelLeaveModalIsOpen,
+    setLeaveDetailsPdfModalIsOpen,
   } = useLeaveStore((state) => ({
     leaveIndividualDetail: state.leaveIndividualDetail,
     leaveId: state.leaveId,
@@ -39,11 +42,13 @@ export const LeaveCompletedModal = ({ modalState, setModalState, closeModalActio
     errorLeaveDetails: state.error.errorIndividualLeave,
     completedLeaveModalIsOpen: state.completedLeaveModalIsOpen,
     cancelLeaveModalIsOpen: state.cancelLeaveModalIsOpen,
+    leaveDetailsPdfModalIsOpen: state.leaveDetailsPdfModalIsOpen,
 
     getLeaveIndividualDetail: state.getLeaveIndividualDetail,
     getLeaveIndividualDetailSuccess: state.getLeaveIndividualDetailSuccess,
     getLeaveIndividualDetailFail: state.getLeaveIndividualDetailFail,
     setCancelLeaveModalIsOpen: state.setCancelLeaveModalIsOpen,
+    setLeaveDetailsPdfModalIsOpen: state.setLeaveDetailsPdfModalIsOpen,
   }));
 
   const { leaveLedger, selectedLeaveLedger, setSelectedLeaveLedger } = useLeaveLedgerStore((state) => ({
@@ -86,6 +91,11 @@ export const LeaveCompletedModal = ({ modalState, setModalState, closeModalActio
     setCancelLeaveModalIsOpen(false);
   };
 
+  // close action for Leave Details PDF Modal
+  const closeLeaveDetailsPdfModal = async () => {
+    setLeaveDetailsPdfModalIsOpen(false);
+  };
+
   return (
     <>
       <Modal size={`${windowWidth > 1024 ? 'sm' : 'full'}`} open={modalState} setOpen={setModalState}>
@@ -108,6 +118,14 @@ export const LeaveCompletedModal = ({ modalState, setModalState, closeModalActio
             modalState={cancelLeaveModalIsOpen}
             setModalState={setCancelLeaveModalIsOpen}
             closeModalAction={closeCancelLeaveModal}
+          />
+
+          {/* Leave Details PDF Modal */}
+          <LeavePdfModal
+            title="Leave Details"
+            modalState={leaveDetailsPdfModalIsOpen}
+            setModalState={setLeaveDetailsPdfModalIsOpen}
+            closeModalAction={closeLeaveDetailsPdfModal}
           />
 
           {loadingLeaveDetails || errorLeaveDetails ? (
@@ -413,6 +431,7 @@ export const LeaveCompletedModal = ({ modalState, setModalState, closeModalActio
                     ) : null}
 
                     {leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.VACATION ||
+                    leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.FORCED ||
                     leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.SPECIAL_PRIVILEGE ||
                     leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.SICK ||
                     leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.STUDY ||
@@ -420,6 +439,7 @@ export const LeaveCompletedModal = ({ modalState, setModalState, closeModalActio
                       <div className="flex flex-col justify-start items-start w-full sm:w-1/2 px-0.5 pb-3">
                         <label className="text-slate-500 text-md whitespace-nowrap pb-0.5 ">
                           {leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.VACATION ||
+                          leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.FORCED ||
                           leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.SPECIAL_PRIVILEGE
                             ? 'Location:'
                             : leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.SICK
@@ -433,6 +453,7 @@ export const LeaveCompletedModal = ({ modalState, setModalState, closeModalActio
 
                         <div className="w-auto ml-5">
                           {leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.VACATION ||
+                          leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.FORCED ||
                           leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName ===
                             LeaveName.SPECIAL_PRIVILEGE ? (
                             <div className="text-md font-medium">
@@ -464,6 +485,7 @@ export const LeaveCompletedModal = ({ modalState, setModalState, closeModalActio
                     ) : null}
 
                     {leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.VACATION ||
+                    leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.FORCED ||
                     leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.SPECIAL_PRIVILEGE ||
                     leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.SICK ||
                     leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName ===
@@ -481,6 +503,7 @@ export const LeaveCompletedModal = ({ modalState, setModalState, closeModalActio
                         <div className="w-auto ml-5 mr-5">
                           <label className=" text-md font-medium">
                             {leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.VACATION ||
+                            leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.FORCED ||
                             leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.SPECIAL_PRIVILEGE
                               ? leaveIndividualDetail?.leaveApplicationDetails?.location
                               : leaveIndividualDetail.leaveApplicationBasicInfo?.leaveName === LeaveName.SICK
@@ -646,19 +669,50 @@ export const LeaveCompletedModal = ({ modalState, setModalState, closeModalActio
             leaveIndividualDetail?.leaveApplicationBasicInfo?.status === LeaveStatus.DISAPPROVED_BY_HRDM ||
             leaveIndividualDetail?.leaveApplicationBasicInfo?.status === LeaveStatus.DISAPPROVED_BY_HRMO ||
             leaveIndividualDetail?.leaveApplicationBasicInfo?.status === LeaveStatus.DISAPPROVED_BY_SUPERVISOR ? (
-              <Button variant={'default'} size={'md'} loading={false} onClick={(e) => closeModalAction()} type="submit">
-                Close
-              </Button>
+              <>
+                {leaveIndividualDetail?.leaveApplicationBasicInfo?.status === LeaveStatus.APPROVED ? (
+                  <Button
+                    variant={'primary'}
+                    size={'md'}
+                    loading={false}
+                    onClick={(e) => setLeaveDetailsPdfModalIsOpen(true)}
+                  >
+                    View PDF
+                  </Button>
+                ) : null}
+                <Button
+                  variant={'default'}
+                  size={'md'}
+                  loading={false}
+                  onClick={(e) => closeModalAction()}
+                  type="submit"
+                >
+                  Close
+                </Button>
+              </>
             ) : leaveIndividualDetail?.leaveApplicationBasicInfo?.status ? (
-              <Button
-                variant={'warning'}
-                size={'md'}
-                loading={false}
-                onClick={(e) => setCancelLeaveModalIsOpen(true)}
-                type="submit"
-              >
-                Cancel Leave
-              </Button>
+              <>
+                {leaveIndividualDetail?.leaveApplicationBasicInfo?.status === LeaveStatus.APPROVED ? (
+                  <Button
+                    variant={'primary'}
+                    size={'md'}
+                    loading={false}
+                    onClick={(e) => setLeaveDetailsPdfModalIsOpen(true)}
+                  >
+                    View PDF
+                  </Button>
+                ) : null}
+
+                <Button
+                  variant={'warning'}
+                  size={'md'}
+                  loading={false}
+                  onClick={(e) => setCancelLeaveModalIsOpen(true)}
+                  type="submit"
+                >
+                  Cancel Leave
+                </Button>
+              </>
             ) : null}
           </div>
         </Modal.Footer>

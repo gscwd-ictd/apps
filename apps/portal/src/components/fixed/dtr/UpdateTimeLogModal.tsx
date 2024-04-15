@@ -2,8 +2,6 @@ import { AlertNotification, Button, Modal } from '@gscwd-apps/oneui';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { LabelInput } from 'apps/employee-monitoring/src/components/inputs/LabelInput';
 import { LabelValue } from 'apps/employee-monitoring/src/components/labels/LabelValue';
-import { patchEmpMonitoring } from 'apps/employee-monitoring/src/utils/helper/employee-monitoring-axios-helper';
-
 import dayjs from 'dayjs';
 import { EmployeeDtrWithSchedule } from 'libs/utils/src/lib/types/dtr.type';
 import { isEmpty } from 'lodash';

@@ -28,6 +28,7 @@ import UseRenderOvertimeStatus from 'apps/portal/src/utils/functions/RenderOvert
 import { TextSize } from 'libs/utils/src/lib/enums/text-size.enum';
 import TempPhotoProfile from '../.../../../../../public/profile.jpg';
 import Image from 'next/image';
+import RenderOvertimePendingAccomplishmentStatus from 'apps/portal/src/utils/functions/RenderOvertimePendingAccomplishmentStatus';
 
 export default function OvertimeApprovals({ employeeDetails }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const {
@@ -136,13 +137,13 @@ export default function OvertimeApprovals({ employeeDetails }: InferGetServerSid
   }, [swrOvertimeList, swrOvertimeListError]);
 
   useEffect(() => {
-    if (!isEmpty(patchResponseOvertime)) {
+    if (!isEmpty(patchResponseOvertime) || !isEmpty(patchResponseAccomplishment)) {
       mutateOvertime();
       setTimeout(() => {
         emptyResponseAndError();
       }, 5000);
     }
-  }, [patchResponseOvertime]);
+  }, [patchResponseOvertime, patchResponseAccomplishment]);
 
   useEffect(() => {
     if (!pendingOvertimeModalIsOpen) {
@@ -155,21 +156,15 @@ export default function OvertimeApprovals({ employeeDetails }: InferGetServerSid
     if (employee.length <= 4) {
       return (
         <div className="flex flex-row gap-1 justify-start items-center">
-          {employee.map((employees: EmployeeOvertimeDetail) => (
-            <div key={employees.employeeId}>
-              <Image
-                width={20}
-                height={20}
-                className="rounded-full border w-8"
-                src={employees.avatarUrl ? employees.avatarUrl : TempPhotoProfile}
-                alt={'photo'}
-              />
-              {/* <img
-                className="rounded-full border w-8"
-                src={employees.avatarUrl ? employees.avatarUrl : TempPhotoProfile}
-                alt={'photo'}
-              ></img> */}
-            </div>
+          {employee.map((employees: EmployeeOvertimeDetail, idx: number) => (
+            <Image
+              key={idx}
+              width={20}
+              height={20}
+              className="rounded-full border w-8"
+              src={employees.avatarUrl ? employees.avatarUrl : TempPhotoProfile}
+              alt={'photo'}
+            />
           ))}
         </div>
       );
@@ -183,11 +178,7 @@ export default function OvertimeApprovals({ employeeDetails }: InferGetServerSid
             src={employee[0].avatarUrl ? employee[0].avatarUrl : TempPhotoProfile}
             alt={'photo'}
           />
-          {/* <img
-            className="rounded-full border w-8"
-            src={employee[0].avatarUrl ? employee[0].avatarUrl : TempPhotoProfile}
-            alt={'photo'}
-          ></img> */}
+
           <label>{`+ ${employee.length - 1} more...`}</label>
         </div>
       );
@@ -234,21 +225,18 @@ export default function OvertimeApprovals({ employeeDetails }: InferGetServerSid
       sortingFn: fuzzySort,
       cell: (info) => info.getValue(),
     }),
-    columnHelper.accessor('employees', {
+    columnHelper.display({
       header: 'Employees',
-      filterFn: 'fuzzy',
-      sortingFn: fuzzySort,
+      enableColumnFilter: true,
       cell: (props) => renderRowEmployeeAvatar(props.row.original.employees),
     }),
-    // columnHelper.display({
-    //   id: 'employees',
-    //   header: 'Employees',
-    //   enableColumnFilter: false,
-    //   cell: (props) => renderRowEmployeeAvatar(props.row.original.employees),
-    // }),
     columnHelper.accessor('status', {
       header: 'Status',
       cell: (info) => UseRenderOvertimeStatus(info.getValue(), TextSize.TEXT_SM),
+    }),
+    columnHelper.accessor('employees', {
+      header: 'Accomplishments',
+      cell: (props) => RenderOvertimePendingAccomplishmentStatus(props.row.original.employees, TextSize.TEXT_SM),
     }),
   ];
 
@@ -355,14 +343,6 @@ export default function OvertimeApprovals({ employeeDetails }: InferGetServerSid
     </>
   );
 }
-
-// export const getServerSideProps: GetServerSideProps = async (
-//   context: GetServerSidePropsContext
-// ) => {
-//   const employeeDetails = employeeDummy;
-
-//   return { props: { employeeDetails } };
-// };
 
 export const getServerSideProps: GetServerSideProps = withCookieSession(async (context: GetServerSidePropsContext) => {
   const employeeDetails = getUserDetails();

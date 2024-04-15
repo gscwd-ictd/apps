@@ -3,6 +3,12 @@ export enum CreditDistributions {
   YEARLY = 'yearly',
 }
 
+//for leave credit monetization application
+export enum LeaveMonetizationType {
+  BY_NUMBER_OF_CREDITS = 'byNumber',
+  BY_PERCENTAGE_OF_CREDITS = 'byPercentage',
+}
+
 export enum LeaveStatus {
   APPROVED = 'approved',
   CANCELLED = 'cancelled',
@@ -45,4 +51,5 @@ export enum LeaveName {
   OTHERS = 'Others',
   MONETIZATION = 'Monetization',
   LEAVE_WITHOUT_PAY = 'Leave Without Pay',
+  TERMINAL = 'Terminal Leave',
 }

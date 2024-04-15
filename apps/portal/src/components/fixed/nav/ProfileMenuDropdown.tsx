@@ -2,8 +2,6 @@
 import { Menu, Transition } from '@headlessui/react';
 import { useRouter } from 'next/router';
 import { Fragment, useEffect, useState } from 'react';
-// import { postData } from '../../../../utils/hoc/axios';
-// import { deleteCookie } from 'cookies-next'
 import {
   HiAcademicCap,
   HiBadgeCheck,
@@ -12,10 +10,8 @@ import {
   HiClock,
   HiCollection,
   HiKey,
-  HiLockClosed,
   HiOutlineBell,
   HiOutlineCheck,
-  HiOutlineCog,
   HiOutlineHome,
   HiOutlineLogout,
   HiOutlineNewspaper,
@@ -24,7 +20,6 @@ import {
 } from 'react-icons/hi';
 import axios from 'axios';
 import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
-import { ManagerMenuDropdown } from './ManagerMenuDropdown';
 import { EmployeeDetails } from 'apps/portal/src/types/employee.type';
 import { UseNameInitials } from 'apps/portal/src/utils/hooks/useNameInitials';
 import { isEmpty, isEqual } from 'lodash';
@@ -159,24 +154,6 @@ export const ProfileMenuDropdown = ({
                     </>
                   )}
 
-                  {/* <Menu.Item>
-                {({ active }) => (
-                  <button className={`${active ? 'bg-slate-100' : 'text-gray-900'} group flex w-full items-center gap-3 px-3 py-3 text-sm`}>
-                    <HiOutlineClipboardCheck className="h-5 w-5 text-gray-600" />
-                    <span className="text-sm tracking-tight text-gray-700">Daily Tasks</span>
-                  </button>
-                )}
-              </Menu.Item> */}
-
-                  {/* <Menu.Item>
-                {({ active }) => (
-                  <button className={`${active ? 'bg-slate-100' : 'text-gray-900'} group flex w-full items-center gap-3 px-3 py-3 text-sm`}>
-                    <HiOutlineDocumentDuplicate className="h-5 w-5 text-gray-600" />
-                    <span className="ftext-sm tracking-tight text-gray-700">Personal Data</span>
-                  </button>
-                )}
-              </Menu.Item> */}
-
                   {windowWidth < 1024 ? (
                     <div>
                       <Menu.Item>
@@ -213,6 +190,10 @@ export const ProfileMenuDropdown = ({
                                     Appointing Authority Selection
                                   </span>
                                 </div>
+                                {isEmpty(errorPendingApprovalsCount) &&
+                                pendingApprovalsCount.pendingAppointingAuthoritySelection > 0 ? (
+                                  <span className="absolute w-3 h-3 right-5 z-40 bg-red-600 rounded-full select-none" />
+                                ) : null}
                               </button>
                             )}
                           </Menu.Item>
@@ -230,6 +211,11 @@ export const ProfileMenuDropdown = ({
                                     Training Approvals
                                   </span>
                                 </div>
+                                {isEmpty(errorPendingApprovalsCount) &&
+                                pendingApprovalsCount.pendingGmApprovalCount > 0 &&
+                                pendingApprovalsCount.pendingGmApprovalCount != null ? (
+                                  <span className="absolute w-3 h-3 right-5 z-40 bg-red-600 rounded-full select-none" />
+                                ) : null}
                               </button>
                             )}
                           </Menu.Item>
@@ -259,9 +245,10 @@ export const ProfileMenuDropdown = ({
                                   <span className="text-sm tracking-tight text-slate-500 text-left">Approvals</span>
                                 </div>
                                 {isEmpty(errorPendingApprovalsCount) &&
-                                (pendingApprovalsCount.pendingPassSlipsCount != 0 ||
-                                  pendingApprovalsCount.pendingLeavesCount != 0 ||
-                                  pendingApprovalsCount.pendingOvertimesCount != 0) ? (
+                                (pendingApprovalsCount.pendingPassSlipsCount > 0 ||
+                                  pendingApprovalsCount.pendingLeavesCount > 0 ||
+                                  pendingApprovalsCount.pendingOvertimesCount > 0 ||
+                                  pendingApprovalsCount.pendingDtrCorrectionsApprovals > 0) ? (
                                   <span className="absolute w-3 h-3 right-5 z-40 bg-red-600 rounded-full select-none" />
                                 ) : null}
                               </button>
@@ -282,24 +269,10 @@ export const ProfileMenuDropdown = ({
                                     Training Attendee Selection
                                   </span>
                                 </div>
-                              </button>
-                            )}
-                          </Menu.Item>
-
-                          <Menu.Item>
-                            {({ active }) => (
-                              <button
-                                className={`${
-                                  active ? 'bg-slate-100' : 'text-gray-900'
-                                } group flex w-full items-center gap-3 rounded-md px-3 py-2 text-sm`}
-                                onClick={() => router.push(`/${router.query.id}/duties-and-responsibilities`)}
-                              >
-                                <HiPuzzle className="h-5 w-5 text-slate-600" />
-                                <div className="flex w-full items-end justify-between">
-                                  <span className="text-sm tracking-tight text-slate-500 text-left">
-                                    Position Duties, Responsibilities & Competencies
-                                  </span>
-                                </div>
+                                {isEmpty(errorPendingApprovalsCount) &&
+                                pendingApprovalsCount.pendingTrainingNominationCount > 0 ? (
+                                  <span className="absolute w-3 h-3 right-5 z-40 bg-red-600 rounded-full select-none" />
+                                ) : null}
                               </button>
                             )}
                           </Menu.Item>
@@ -315,9 +288,13 @@ export const ProfileMenuDropdown = ({
                                 <HiCollection className="h-5 w-5 text-slate-600" />
                                 <div className="flex w-full items-end justify-between">
                                   <span className="text-sm tracking-tight text-slate-500 text-left">
-                                    Position Request
+                                    Position Request Form
                                   </span>
                                 </div>
+                                {isEmpty(errorPendingApprovalsCount) &&
+                                pendingApprovalsCount.prfsForApprovalCount > 0 ? (
+                                  <span className="absolute w-3 h-3 right-5 z-40 bg-red-600 rounded-full select-none" />
+                                ) : null}
                               </button>
                             )}
                           </Menu.Item>
@@ -334,6 +311,28 @@ export const ProfileMenuDropdown = ({
                                 <div className="flex w-full items-end justify-between">
                                   <span className="text-sm tracking-tight text-slate-500 text-left">
                                     Applicant Endorsement
+                                  </span>
+                                </div>
+                                {isEmpty(errorPendingApprovalsCount) &&
+                                pendingApprovalsCount.pendingApplicantEndorsementsCount > 0 ? (
+                                  <span className="absolute w-3 h-3 right-5 z-40 bg-red-600 rounded-full select-none" />
+                                ) : null}
+                              </button>
+                            )}
+                          </Menu.Item>
+
+                          <Menu.Item>
+                            {({ active }) => (
+                              <button
+                                className={`${
+                                  active ? 'bg-slate-100' : 'text-gray-900'
+                                } group flex w-full items-center gap-3 rounded-md px-3 py-2 text-sm`}
+                                onClick={() => router.push(`/${router.query.id}/duties-and-responsibilities`)}
+                              >
+                                <HiPuzzle className="h-5 w-5 text-slate-600" />
+                                <div className="flex w-full items-end justify-between">
+                                  <span className="text-sm tracking-tight text-slate-500 text-left">
+                                    Position Duties, Responsibilities & Competencies
                                   </span>
                                 </div>
                               </button>
@@ -364,30 +363,38 @@ export const ProfileMenuDropdown = ({
                                     Final Leave Approval
                                   </span>
                                 </div>
+                                {isEmpty(errorPendingApprovalsCount) &&
+                                pendingApprovalsCount.forHrdmApprovalLeaves > 0 ? (
+                                  <span className="absolute w-3 h-3 right-5 z-40 bg-red-600 rounded-full select-none" />
+                                ) : null}
                               </button>
                             )}
                           </Menu.Item>
                         ) : null
                       ) : null}
 
-                      {Boolean(employeeDetails.employmentDetails.isHRMPSB) === true ? (
+                      {employeeDetails.employmentDetails.isPdcChairman ||
+                      employeeDetails.employmentDetails.isPdcSecretariat ? (
                         <Menu.Item>
                           {({ active }) => (
-                            <a
-                              href={`${process.env.NEXT_PUBLIC_PSB_URL}/psb/schedule`}
-                              target="_blank"
-                              rel="noreferrer"
+                            <button
                               className={`${
                                 active ? 'bg-slate-100' : 'text-gray-900'
                               } group flex w-full items-center gap-3 rounded-md px-3 py-2 text-sm`}
+                              onClick={() => router.push(`/${router.query.id}/pdc-approvals`)}
                             >
-                              <HiUserGroup className="h-5 w-5 text-slate-600" />
+                              <HiAcademicCap className="w-5 h-5 text-rose-600" />
                               <div className="flex w-full items-end justify-between">
-                                <span className="text-sm tracking-tight text-slate-500 text-left">
-                                  Personnel Selection Board
-                                </span>
+                                <span className="text-sm tracking-tight text-slate-500 text-left">PDC Approvals</span>
                               </div>
-                            </a>
+                              {isEmpty(errorPendingApprovalsCount) &&
+                              ((pendingApprovalsCount.pendingPdcChairmanApprovalCount > 0 &&
+                                pendingApprovalsCount.pendingPdcChairmanApprovalCount != null) ||
+                                (pendingApprovalsCount.pendingPdcSecretariatApprovalCount > 0 &&
+                                  pendingApprovalsCount.pendingPdcSecretariatApprovalCount != null)) ? (
+                                <span className="absolute w-3 h-3 right-5 z-40 bg-red-600 rounded-full select-none" />
+                              ) : null}
+                            </button>
                           )}
                         </Menu.Item>
                       ) : null}
@@ -414,21 +421,24 @@ export const ProfileMenuDropdown = ({
                         </Menu.Item>
                       ) : null}
 
-                      {employeeDetails.employmentDetails.isPdcChairman ||
-                      employeeDetails.employmentDetails.isPdcSecretariat ? (
+                      {Boolean(employeeDetails.employmentDetails.isHRMPSB) === true ? (
                         <Menu.Item>
                           {({ active }) => (
-                            <button
+                            <a
+                              href={`${process.env.NEXT_PUBLIC_PSB_URL}/psb/schedule`}
+                              target="_blank"
+                              rel="noreferrer"
                               className={`${
                                 active ? 'bg-slate-100' : 'text-gray-900'
                               } group flex w-full items-center gap-3 rounded-md px-3 py-2 text-sm`}
-                              onClick={() => router.push(`/${router.query.id}/pdc-approvals`)}
                             >
-                              <HiAcademicCap className="w-5 h-5 text-rose-600" />
+                              <HiUserGroup className="h-5 w-5 text-slate-600" />
                               <div className="flex w-full items-end justify-between">
-                                <span className="text-sm tracking-tight text-slate-500 text-left">PDC Approvals</span>
+                                <span className="text-sm tracking-tight text-slate-500 text-left">
+                                  Personnel Selection Board
+                                </span>
                               </div>
-                            </button>
+                            </a>
                           )}
                         </Menu.Item>
                       ) : null}

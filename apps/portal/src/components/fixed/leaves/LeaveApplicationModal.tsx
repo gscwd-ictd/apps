@@ -14,7 +14,7 @@ import Calendar from './LeaveCalendar';
 import { LeaveBenefitOptions } from '../../../../../../libs/utils/src/lib/types/leave-benefits.type';
 import { LeaveApplicationForm } from '../../../../../../libs/utils/src/lib/types/leave-application.type';
 import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
-import { LeaveName } from 'libs/utils/src/lib/enums/leave.enum';
+import { LeaveMonetizationType, LeaveName } from 'libs/utils/src/lib/enums/leave.enum';
 import { useLeaveLedgerStore } from 'apps/portal/src/store/leave-ledger.store';
 import { LeaveLedgerEntry } from 'libs/utils/src/lib/types/leave-ledger-entry.type';
 
@@ -23,6 +23,11 @@ type LeaveApplicationModalProps = {
   setModalState: React.Dispatch<React.SetStateAction<boolean>>;
   closeModalAction: () => void;
 };
+
+const leaveMonetizationType: Array<SelectOption> = [
+  { label: 'Max 20 Total Leave Credits', value: 'byNumber' },
+  { label: 'Max 50% Total Leave Credits', value: 'byPercentage' },
+];
 
 type Item = {
   label: string;
@@ -155,6 +160,7 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
   // set state for employee store
   const employeeDetails = useEmployeeStore((state) => state.employeeDetails);
 
+  const [selectedLeaveMonetizationType, setSelectedLeaveMonetizationType] = useState<LeaveMonetizationType>();
   const [leaveReminder, setLeaveReminder] = useState<string>(
     'The number of leave days you can apply is the rounded off value of your current Leave Credits. For leave of absence for thirty (30) calendar days or more and terminal leave, application shall be accompanied by a clearance from money, property, and work-related accountabilities (pursuant to CSC Memorandum Circular No. 2, s. 1985). '
   );
@@ -172,6 +178,10 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
   const [selectedStudy, setSelectedStudy] = useState<string>('');
   const [hasPendingLeave, setHasPendingLeave] = useState<boolean>(false);
   const [finalVacationAndForcedLeaveBalance, setFinalVacationAndForcedLeaveBalance] = useState<number>(0);
+
+  //LESS THIS APPLICATION FOR MONETIZATION
+  const [lessVlFl, setLessVlFL] = useState<number>(0);
+  const [lessSl, setLessSl] = useState<number>(0);
 
   // get the latest balance by last index value
   const getLatestBalance = (leaveLedger: Array<LeaveLedgerEntry>) => {
@@ -273,8 +283,11 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
     }
 
     //reset leave monetization input values
-    setVacationLeaveInput(0);
+    setLeaveCreditsInput(0);
+    setLessSl(0);
+    setLessVlFL(0);
     setSickLeaveInput(0);
+    setSelectedLeaveMonetizationType(null);
   }, [watch('typeOfLeaveDetails.leaveName')]);
 
   useEffect(() => {
@@ -320,6 +333,7 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
     let dataToSend;
     if (
       data.typeOfLeaveDetails.leaveName === LeaveName.VACATION ||
+      data.typeOfLeaveDetails.leaveName === LeaveName.FORCED ||
       data.typeOfLeaveDetails.leaveName === LeaveName.SPECIAL_PRIVILEGE
     ) {
       if (data.inPhilippinesOrAbroad === 'Philippines') {
@@ -435,7 +449,7 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
 
   const [leaveCreditMultiplier, setLeaveCreditMultiplier] = useState<number>(0.0481927);
   const [maxMonetizationAmount, setMaxMonetizationAmount] = useState<number>(0);
-  const [vacationLeaveInput, setVacationLeaveInput] = useState<number>(0);
+  const [leaveCreditsInput, setLeaveCreditsInput] = useState<number>(0);
   const [sickLeaveInput, setSickLeaveInput] = useState<number>(0);
   const [estimatedAmount, setEstimatedAmount] = useState<number>(0);
 
@@ -452,53 +466,42 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
     setRoundedFinalSickLeaveBalance(Math.round(sickLeaveBalance) - leaveDates.length);
   }, [leaveDates, watch('typeOfLeaveDetails.leaveName')]);
 
-  const getVacationLeaveInput = (credits: number) => {
-    const totalVacationLeave = Number(vacationLeaveBalance) + Number(forcedLeaveBalance);
-    if (credits <= 0) {
-      setVacationLeaveInput(0);
-    } else if (credits > totalVacationLeave && totalVacationLeave <= 0) {
-      setVacationLeaveInput(0);
-    } else if (credits > totalVacationLeave && totalVacationLeave > 0) {
-      setVacationLeaveInput(totalVacationLeave);
-    } else {
-      setVacationLeaveInput(credits);
+  //compute leave monetization
+  const getLeaveCreditsInput = (credits: number) => {
+    const totalLeaveCredits = Number(vacationLeaveBalance) + Number(forcedLeaveBalance) + Number(sickLeaveBalance);
+    const totalVlFlCredits = Number(vacationLeaveBalance) + Number(forcedLeaveBalance);
+    if (selectedLeaveMonetizationType === LeaveMonetizationType.BY_NUMBER_OF_CREDITS) {
+      setLeaveCreditsInput(credits);
+      setLessVlFL(credits);
+      if (totalVlFlCredits - credits > 5) {
+      }
+    } else if (selectedLeaveMonetizationType === LeaveMonetizationType.BY_PERCENTAGE_OF_CREDITS) {
+      setLeaveCreditsInput(credits);
     }
   };
 
-  const getSickLeaveInput = (credits: number) => {
-    if (credits <= 0) {
-      setSickLeaveInput(0);
-    } else if (credits > Number(sickLeaveBalance) && Number(sickLeaveBalance) <= 0) {
-      setSickLeaveInput(0);
-    } else if (credits > Number(sickLeaveBalance) && Number(sickLeaveBalance) > 0) {
-      setSickLeaveInput(sickLeaveBalance);
-    } else {
-      setSickLeaveInput(credits);
-    }
+  const computeEstimateAmount = () => {
+    const totalLeaveCredits = Number(vacationLeaveBalance) + Number(forcedLeaveBalance);
+    setFinalVacationAndForcedLeaveBalance(totalLeaveCredits - leaveCreditsInput);
+    setFinalSickLeaveBalance(sickLeaveBalance - sickLeaveInput);
+    setMaxMonetizationAmount(
+      employeeDetails.employmentDetails.salaryGradeAmount *
+        (Number(totalLeaveCredits) + Number(sickLeaveBalance)) *
+        leaveCreditMultiplier
+    );
+
+    setEstimatedAmount(
+      employeeDetails.employmentDetails.salaryGradeAmount *
+        (Number(leaveCreditsInput) + Number(sickLeaveInput)) *
+        leaveCreditMultiplier
+    );
   };
 
   useEffect(() => {
     if (watch('typeOfLeaveDetails.leaveName') === LeaveName.MONETIZATION) {
       computeEstimateAmount();
     }
-  }, [vacationLeaveInput, sickLeaveInput, watch('typeOfLeaveDetails.leaveName')]);
-
-  const computeEstimateAmount = () => {
-    const totalVacationLeave = Number(vacationLeaveBalance) + Number(forcedLeaveBalance);
-    setFinalVacationAndForcedLeaveBalance(totalVacationLeave - vacationLeaveInput);
-    setFinalSickLeaveBalance(sickLeaveBalance - sickLeaveInput);
-    setMaxMonetizationAmount(
-      employeeDetails.employmentDetails.salaryGradeAmount *
-        (Number(totalVacationLeave) + Number(sickLeaveBalance)) *
-        leaveCreditMultiplier
-    );
-
-    setEstimatedAmount(
-      employeeDetails.employmentDetails.salaryGradeAmount *
-        (Number(vacationLeaveInput) + Number(sickLeaveInput)) *
-        leaveCreditMultiplier
-    );
-  };
+  }, [leaveCreditsInput, sickLeaveInput, watch('typeOfLeaveDetails.leaveName')]);
 
   const { windowWidth } = UseWindowDimensions();
 
@@ -764,6 +767,7 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
                       <div className="flex flex-row justify-between items-center w-full">
                         <label className="pt-2 text-slate-500 text-md font-medium">
                           {watch('typeOfLeaveDetails.leaveName') === LeaveName.VACATION ||
+                          watch('typeOfLeaveDetails.leaveName') === LeaveName.FORCED ||
                           watch('typeOfLeaveDetails.leaveName') === LeaveName.SPECIAL_PRIVILEGE ? (
                             <>
                               Location:<span className="text-red-600">*</span>
@@ -786,6 +790,7 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
 
                       <div className="flex gap-2 w-full items-center">
                         {watch('typeOfLeaveDetails.leaveName') === LeaveName.VACATION ||
+                        watch('typeOfLeaveDetails.leaveName') === LeaveName.FORCED ||
                         watch('typeOfLeaveDetails.leaveName') === LeaveName.SPECIAL_PRIVILEGE ? (
                           <>
                             <select
@@ -877,67 +882,86 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
                       <>
                         <div className="flex flex-row justify-between items-center w-full">
                           <div className="flex flex-row justify-between items-center w-full">
-                            <label className="pt-2 pr-2 text-slate-500 text-md font-medium">
-                              Vacation/Forced Leave to Convert:
-                            </label>
+                            <label className="pt-2 pr-2 text-slate-500 text-md font-medium">Monetization Type:</label>
                           </div>
 
                           <div className="flex gap-2 w-full items-center">
                             <div className="w-full">
-                              <input
-                                type="number"
-                                className="border-slate-300 text-slate-500 h-12 text-md w-full rounded-md"
-                                placeholder="Vacation/Forced Leave Credits"
-                                min={0}
-                                max={Number(vacationLeaveBalance) + Number(forcedLeaveBalance)}
-                                onChange={(e: any) => getVacationLeaveInput(e.target.value)}
+                              <select
+                                id="leaveMonetizationType"
                                 required
-                                value={vacationLeaveInput}
-                              />
-                            </div>
-                          </div>
-                        </div>
-                        <div className="flex flex-row justify-between items-center w-full">
-                          <div className="flex flex-row justify-between items-center w-full">
-                            <label className="pt-2 pr-2 text-slate-500 text-md font-medium">
-                              Sick Leave to Convert:
-                            </label>
-                          </div>
-
-                          <div className="flex gap-2 w-full items-center">
-                            <div className="w-full">
-                              <input
-                                type="number"
+                                defaultValue={''}
                                 className="border-slate-300 text-slate-500 h-12 text-md w-full rounded-md"
-                                placeholder="Sick Leave Credits"
-                                min={0}
-                                max={sickLeaveBalance}
-                                onChange={(e: any) => getSickLeaveInput(e.target.value)}
-                                value={sickLeaveInput}
-                                required
-                              />
+                                onChange={(e: any) => setSelectedLeaveMonetizationType(e.target.value)}
+                              >
+                                <option value="" disabled>
+                                  Monetization Type
+                                </option>
+                                {leaveMonetizationType.map((item: Item, idx: number) => (
+                                  <option value={item.value} key={idx}>
+                                    {item.label}
+                                  </option>
+                                ))}
+                              </select>
                             </div>
                           </div>
                         </div>
 
-                        <div className="flex flex-row justify-between items-center w-full">
-                          <div className="flex flex-row justify-between items-center w-full">
-                            <label className="pt-2 pr-2 text-slate-500 text-md font-medium">Monetization Amount:</label>
-                          </div>
+                        {selectedLeaveMonetizationType ? (
+                          <>
+                            <div className="flex flex-row justify-between items-center w-full">
+                              <div className="flex flex-row justify-between items-center w-full">
+                                <label className="pt-2 pr-2 text-slate-500 text-md font-medium">
+                                  Leave Credits to Convert:
+                                </label>
+                              </div>
 
-                          <div className="flex gap-2 w-full items-center">
-                            <div className="w-full">
-                              <input
-                                type="text"
-                                className="border-slate-300 text-slate-500 h-12 text-md w-full rounded-md"
-                                placeholder="Amount"
-                                disabled
-                                required
-                                value={Number(estimatedAmount).toLocaleString()}
-                              />
+                              <div className="flex gap-2 w-full items-center">
+                                <div className="w-full">
+                                  <input
+                                    type="number"
+                                    min={1}
+                                    max={
+                                      selectedLeaveMonetizationType === LeaveMonetizationType.BY_PERCENTAGE_OF_CREDITS
+                                        ? `${
+                                            (Number(vacationLeaveBalance) +
+                                              Number(forcedLeaveBalance) +
+                                              Number(sickLeaveBalance)) /
+                                            2
+                                          }`
+                                        : '20'
+                                    }
+                                    className="border-slate-300 text-slate-500 h-12 text-md w-full rounded-md"
+                                    placeholder="Leave Credits to Monetize"
+                                    onChange={(e: any) => getLeaveCreditsInput(e.target.value)}
+                                    required
+                                    value={leaveCreditsInput}
+                                  />
+                                </div>
+                              </div>
                             </div>
-                          </div>
-                        </div>
+                            <div className="flex flex-row justify-between items-center w-full">
+                              <div className="flex flex-row justify-between items-center w-full">
+                                <label className="pt-2 pr-2 text-slate-500 text-md font-medium">
+                                  Monetization Amount:
+                                </label>
+                              </div>
+
+                              <div className="flex gap-2 w-full items-center">
+                                <div className="w-full">
+                                  <input
+                                    type="text"
+                                    className="border-slate-300 text-slate-500 h-12 text-md w-full rounded-md"
+                                    placeholder="Amount"
+                                    disabled
+                                    required
+                                    value={Number(estimatedAmount).toLocaleString()}
+                                  />
+                                </div>
+                              </div>
+                            </div>
+                          </>
+                        ) : null}
                       </>
                     ) : null}
 
@@ -974,12 +998,14 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
                     ) : null}
 
                     {watch('typeOfLeaveDetails.leaveName') === LeaveName.VACATION ||
+                    watch('typeOfLeaveDetails.leaveName') === LeaveName.FORCED ||
                     watch('typeOfLeaveDetails.leaveName') === LeaveName.SPECIAL_PRIVILEGE ||
                     watch('typeOfLeaveDetails.leaveName') === LeaveName.SICK ||
                     watch('typeOfLeaveDetails.leaveName') === LeaveName.SPECIAL_LEAVE_BENEFITS_FOR_WOMEN ||
                     (watch('typeOfLeaveDetails.leaveName') === LeaveName.STUDY && selectedStudy === 'other') ? (
                       <textarea
                         {...(watch('typeOfLeaveDetails.leaveName') === LeaveName.VACATION ||
+                        watch('typeOfLeaveDetails.leaveName') === LeaveName.FORCED ||
                         watch('typeOfLeaveDetails.leaveName') === LeaveName.SPECIAL_PRIVILEGE
                           ? { ...register('location') }
                           : watch('typeOfLeaveDetails.leaveName') === LeaveName.SICK
@@ -993,6 +1019,7 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
                         rows={3}
                         placeholder={`${
                           watch('typeOfLeaveDetails.leaveName') === LeaveName.VACATION ||
+                          watch('typeOfLeaveDetails.leaveName') === LeaveName.FORCED ||
                           watch('typeOfLeaveDetails.leaveName') === LeaveName.SPECIAL_PRIVILEGE
                             ? 'Specify Leave Details'
                             : watch('typeOfLeaveDetails.leaveName') === LeaveName.SICK ||
@@ -1086,24 +1113,44 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
                             <label className="block sm:hidden">Less</label>
                           </td>
                           <td className="border border-slate-200 p-1 text-center text-sm">
-                            {watch('typeOfLeaveDetails.leaveName') === LeaveName.VACATION
-                              ? leaveDates.length
-                              : watch('typeOfLeaveDetails.leaveName') === LeaveName.MONETIZATION
-                              ? Number(vacationLeaveInput).toFixed(3)
-                              : 0}
+                            {/* if vacation leave */}
+                            {watch('typeOfLeaveDetails.leaveName') === LeaveName.VACATION ? leaveDates.length : null}
+
+                            {/* if monetization */}
+                            {watch('typeOfLeaveDetails.leaveName') === LeaveName.MONETIZATION
+                              ? lessVlFl > 0
+                                ? lessVlFl
+                                : 0
+                              : null}
+
+                            {watch('typeOfLeaveDetails.leaveName') != LeaveName.MONETIZATION &&
+                            watch('typeOfLeaveDetails.leaveName') != LeaveName.VACATION
+                              ? 0
+                              : null}
                           </td>
+
+                          {/* force leave td */}
                           {watch('typeOfLeaveDetails.leaveName') !== LeaveName.MONETIZATION ? (
                             <td className="border border-slate-200 p-1 text-center text-sm">
                               {watch('typeOfLeaveDetails.leaveName') === LeaveName.FORCED ? leaveDates.length : 0}
                             </td>
                           ) : null}
 
+                          {/* sick leave td */}
                           <td className="border border-slate-200 p-1 text-center text-sm">
-                            {watch('typeOfLeaveDetails.leaveName') === LeaveName.SICK
-                              ? leaveDates.length
-                              : watch('typeOfLeaveDetails.leaveName') === LeaveName.MONETIZATION
-                              ? sickLeaveInput
-                              : 0}
+                            {watch('typeOfLeaveDetails.leaveName') === LeaveName.SICK ? leaveDates.length : null}
+
+                            {/* if monetization */}
+                            {watch('typeOfLeaveDetails.leaveName') === LeaveName.MONETIZATION
+                              ? lessSl > 0
+                                ? lessSl
+                                : 0
+                              : null}
+
+                            {watch('typeOfLeaveDetails.leaveName') != LeaveName.MONETIZATION &&
+                            watch('typeOfLeaveDetails.leaveName') != LeaveName.SICK
+                              ? 0
+                              : null}
                           </td>
                           {watch('typeOfLeaveDetails.leaveName') !== LeaveName.MONETIZATION ? (
                             <td className="border border-slate-200 p-1 text-center text-sm">
@@ -1126,15 +1173,24 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
                                 ? 'bg-red-300'
                                 : finalVacationAndForcedLeaveBalance < 5 &&
                                   watch('typeOfLeaveDetails.leaveName') === LeaveName.MONETIZATION
-                                ? 'bg-red-300'
+                                ? ''
                                 : ''
                             } border border-slate-200 p-1 text-center text-sm`}
                           >
+                            {/* if vacation leave application */}
                             {watch('typeOfLeaveDetails.leaveName') === LeaveName.VACATION
                               ? finalVacationLeaveBalance.toFixed(3)
-                              : watch('typeOfLeaveDetails.leaveName') === LeaveName.MONETIZATION
+                              : null}
+
+                            {/* if monetization by max 20 leave credits */}
+                            {watch('typeOfLeaveDetails.leaveName') === LeaveName.MONETIZATION
                               ? finalVacationAndForcedLeaveBalance.toFixed(3)
-                              : vacationLeaveBalance}
+                              : null}
+
+                            {watch('typeOfLeaveDetails.leaveName') != LeaveName.MONETIZATION &&
+                            watch('typeOfLeaveDetails.leaveName') != LeaveName.VACATION
+                              ? finalVacationLeaveBalance.toFixed(3)
+                              : null}
                           </td>
                           {watch('typeOfLeaveDetails.leaveName') !== LeaveName.MONETIZATION ? (
                             <td
@@ -1194,7 +1250,7 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
                                   : ''
                               } border border-slate-200 p-1 text-center text-sm`}
                             >
-                              {Number(finalVacationAndForcedLeaveBalance) + Number(finalSickLeaveBalance)}
+                              {(Number(finalVacationAndForcedLeaveBalance) + Number(finalSickLeaveBalance)).toFixed(3)}
                             </td>
                           </tr>
                         ) : null}
@@ -1269,49 +1325,49 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
                     // ? true
                     //initial value of one of the leave is already below 5/10 but other one is still sufficient
                     (finalVacationAndForcedLeaveBalance < 5 &&
-                        vacationLeaveInput > 0 &&
+                        leaveCreditsInput > 0 &&
                         finalSickLeaveBalance < 10 &&
                         sickLeaveInput <= 0 &&
                         watch('typeOfLeaveDetails.leaveName') === LeaveName.MONETIZATION) ||
                       (finalVacationAndForcedLeaveBalance < 5 &&
-                        vacationLeaveInput <= 0 &&
+                        leaveCreditsInput <= 0 &&
                         finalSickLeaveBalance < 10 &&
                         sickLeaveInput > 0 &&
                         watch('typeOfLeaveDetails.leaveName') === LeaveName.MONETIZATION)
                     ? true
                     : //both fields have input but one of them is less than 5/10
                     (finalVacationAndForcedLeaveBalance < 5 &&
-                        vacationLeaveInput > 0 &&
+                        leaveCreditsInput > 0 &&
                         finalSickLeaveBalance >= 10 &&
                         sickLeaveInput > 0 &&
                         watch('typeOfLeaveDetails.leaveName') === LeaveName.MONETIZATION) ||
                       (finalVacationAndForcedLeaveBalance >= 5 &&
-                        vacationLeaveInput > 0 &&
+                        leaveCreditsInput > 0 &&
                         finalSickLeaveBalance < 10 &&
                         sickLeaveInput > 0 &&
                         watch('typeOfLeaveDetails.leaveName') === LeaveName.MONETIZATION)
                     ? true
                     : //one field has input and is less than 10
                     (finalVacationAndForcedLeaveBalance < 5 &&
-                        vacationLeaveInput > 0 &&
+                        leaveCreditsInput > 0 &&
                         finalSickLeaveBalance >= 10 &&
                         sickLeaveInput <= 0 &&
                         watch('typeOfLeaveDetails.leaveName') === LeaveName.MONETIZATION) ||
                       (finalVacationAndForcedLeaveBalance >= 5 &&
-                        vacationLeaveInput <= 0 &&
+                        leaveCreditsInput <= 0 &&
                         finalSickLeaveBalance < 10 &&
                         sickLeaveInput > 0 &&
                         watch('typeOfLeaveDetails.leaveName') === LeaveName.MONETIZATION)
                     ? true
                     : //both fields have input and VL is less than 5 while SL is less than 10 - disabled
                     finalVacationAndForcedLeaveBalance < 5 &&
-                      vacationLeaveInput > 0 &&
+                      leaveCreditsInput > 0 &&
                       finalSickLeaveBalance < 10 &&
                       sickLeaveInput > 0 &&
                       watch('typeOfLeaveDetails.leaveName') === LeaveName.MONETIZATION
                     ? true
                     : //both fields have no input
-                    vacationLeaveInput <= 0 &&
+                    leaveCreditsInput <= 0 &&
                       sickLeaveInput <= 0 &&
                       watch('typeOfLeaveDetails.leaveName') === LeaveName.MONETIZATION
                     ? true

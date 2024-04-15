@@ -6,7 +6,6 @@ import { useRouter } from 'next/router';
 import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
 import { DateFormatter } from 'libs/utils/src/lib/functions/DateFormatter';
 import { useInboxStore } from 'apps/portal/src/store/inbox.store';
-import { OvertimeMembers, PsbMembers } from 'apps/portal/src/types/inbox.type';
 import { NomineeStatus } from 'libs/utils/src/lib/enums/training.enum';
 import { InboxMessageResponse } from 'libs/utils/src/lib/enums/inbox.enum';
 import { ConfirmationInboxModal } from './ConfirmationModal';

@@ -6,7 +6,7 @@ import { useRouter } from 'next/router';
 import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
 import { DateFormatter } from 'libs/utils/src/lib/functions/DateFormatter';
 import { useInboxStore } from 'apps/portal/src/store/inbox.store';
-import { OvertimeMembers, PsbMembers } from 'apps/portal/src/types/inbox.type';
+import { OvertimeMembers } from 'apps/portal/src/types/inbox.type';
 
 type ModalProps = {
   modalState: boolean;

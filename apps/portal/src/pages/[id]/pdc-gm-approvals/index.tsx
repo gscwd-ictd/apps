@@ -196,7 +196,7 @@ export default function PdcGeneralManagerApprovals({
           <div className={`w-full pl-4 pr-4 lg:pl-32 lg:pr-32`}>
             <ContentHeader
               title="General Manager Training Approvals"
-              subtitle="Final Approve or disapprove Trainings"
+              subtitle="Final approve or disapprove Trainings"
               backUrl={`/${router.query.id}`}
             ></ContentHeader>
 

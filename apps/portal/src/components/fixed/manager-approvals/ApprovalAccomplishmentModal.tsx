@@ -1,5 +1,5 @@
 /* eslint-disable @nx/enforce-module-boundaries */
-import { AlertNotification, Button, CaptchaModal, LoadingSpinner, Modal } from '@gscwd-apps/oneui';
+import { AlertNotification, Button, CaptchaModal, LoadingSpinner, Modal, ToastNotification } from '@gscwd-apps/oneui';
 import { HiX } from 'react-icons/hi';
 import { SpinnerDotted } from 'spinners-react';
 import { useEmployeeStore } from '../../../store/employee.store';
@@ -18,6 +18,8 @@ import { SelectOption } from 'libs/utils/src/lib/types/select.type';
 import { GenerateCaptcha } from '../captcha/CaptchaGenerator';
 import { ApprovalCaptcha } from './ApprovalOtp/ApprovalCaptcha';
 import { DateFormatter } from 'libs/utils/src/lib/functions/DateFormatter';
+import { useOvertimeAccomplishmentStore } from 'apps/portal/src/store/overtime-accomplishment.store';
+import dayjs from 'dayjs';
 
 type ModalProps = {
   modalState: boolean;
@@ -66,11 +68,9 @@ export const ApprovalAccomplishmentModal = ({ modalState, setModalState, closeMo
   const employeeDetails = useEmployeeStore((state) => state.employeeDetails);
   const { windowWidth } = UseWindowDimensions();
   const [pwdArray, setPwdArray] = useState<string[]>();
-  const [wiggleEffect, setWiggleEffect] = useState(false);
   const [password, setPassword] = useState<string>('');
   const [captchaPassword, setCaptchaPassword] = useState<string>('');
   const [isCaptchaError, setIsCaptchaError] = useState<boolean>(false);
-  const [errorCaptcha, setErrorCaptcha] = useState<string>('');
 
   // generate captcha
   const getCaptcha = () => {
@@ -150,8 +150,6 @@ export const ApprovalAccomplishmentModal = ({ modalState, setModalState, closeMo
     }
   }, [patchResponseAccomplishment]);
 
-  const [encodedHours, setEncodedHours] = useState<number>(0);
-  const [finalEncodedHours, setFinalEncodedHours] = useState<number>(0);
   const [dataToSubmit, setDataToSubmit] = useState<OvertimeAccomplishmentApprovalPatch>();
 
   const onSubmit: SubmitHandler<OvertimeAccomplishmentApprovalPatch> = async (
@@ -163,7 +161,11 @@ export const ApprovalAccomplishmentModal = ({ modalState, setModalState, closeMo
 
   return (
     <>
-      <Modal size={`${windowWidth > 1024 ? 'md' : 'full'}`} open={modalState} setOpen={setModalState}>
+      {/* {!isEmpty(swrTimeLogsOnDayAndNextError) ? (
+        <ToastNotification toastType="error" notifMessage={`IVMS Entries: ${swrTimeLogsOnDayAndNextError.message}.`} />
+      ) : null} */}
+
+      <Modal size={`${windowWidth > 1024 ? 'sm' : 'full'}`} open={modalState} setOpen={setModalState}>
         <Modal.Header>
           <h3 className="font-semibold text-gray-700">
             <div className="px-5 flex justify-between">
@@ -260,89 +262,37 @@ export const ApprovalAccomplishmentModal = ({ modalState, setModalState, closeMo
                       </div>
                     </div>
 
-                    <div className="flex flex-col justify-start items-start w-full px-0.5 pb-3  ">
-                      <label className="text-slate-500 text-md whitespace-nowrap pb-0.5">IVMS Time In & Out:</label>
-
+                    <div className="flex flex-col justify-start items-start w-full sm:w-1/2 px-0.5 pb-3  ">
+                      <label className="text-slate-500 text-md whitespace-nowrap pb-0.5">IVMS Entries:</label>
                       <div className="w-auto ml-5">
-                        <div className="w-full flex flex-row gap-2 items-center justify-between">
-                          <label className="w-full">
-                            <LabelInput
-                              id={'ivmsTimeIn'}
-                              type="text"
-                              label={''}
-                              className="w-full font-medium"
-                              textSize="sm"
-                              disabled
-                              value={UseTwelveHourFormat(accomplishmentDetails.ivmsTimeIn)}
-                            />
-                          </label>
-                          <label className="w-auto text-sm">-</label>
-                          <label className="w-full ">
-                            <LabelInput
-                              id={'ivmsTimeOut'}
-                              type="text"
-                              label={''}
-                              className="w-full font-medium"
-                              textSize="sm"
-                              disabled
-                              value={UseTwelveHourFormat(accomplishmentDetails.ivmsTimeOut)}
-                            />
-                          </label>
-                          <label className="w-full">
-                            <LabelInput
-                              id={'estimate'}
-                              type="text"
-                              label={''}
-                              className="w-full font-medium"
-                              textSize="sm"
-                              disabled
-                              value={`${accomplishmentDetails.computedIvmsHours ?? 0} Hour(s)`}
-                            />
-                          </label>
-                        </div>
+                        {accomplishmentDetails.entriesForTheDay && accomplishmentDetails.entriesForTheDay.length > 0 ? (
+                          accomplishmentDetails.entriesForTheDay.map((logs: string, idx: number) => {
+                            return (
+                              <div key={idx}>
+                                <label className="text-sm font-medium">{logs}</label>
+                              </div>
+                            );
+                          })
+                        ) : (
+                          <label className="text-md font-medium">None</label>
+                        )}
                       </div>
                     </div>
 
-                    <div className="flex flex-col justify-start items-start w-full px-0.5 pb-3  ">
+                    <div className="flex flex-col justify-start items-start w-full sm:w-1/2 px-0.5 pb-3  ">
                       <label className="text-slate-500 text-md whitespace-nowrap pb-0.5">Encoded Time In & Out:</label>
 
-                      <div className="w-auto ml-5">
-                        <div className="w-full flex flex-row gap-2 items-center justify-between">
-                          <label className="w-full text-md ">
-                            <LabelInput
-                              id={'encodeTimeIn'}
-                              type="text"
-                              label={''}
-                              className="w-full font-medium"
-                              textSize="sm"
-                              disabled
-                              value={UseTwelveHourFormat(accomplishmentDetails.encodedTimeIn)}
-                            />
-                          </label>
-                          <label className="w-auto text-sm">-</label>
-                          <label className="w-full text-md ">
-                            <LabelInput
-                              id={'encodeTimeOut'}
-                              type="text"
-                              label={''}
-                              className="w-full font-medium"
-                              textSize="sm"
-                              disabled
-                              value={UseTwelveHourFormat(accomplishmentDetails.encodedTimeOut)}
-                            />
-                          </label>
-                          <label className="w-full text-md ">
-                            <LabelInput
-                              id={'estimate'}
-                              type="text"
-                              label={''}
-                              className="w-full font-medium"
-                              textSize="sm"
-                              disabled
-                              value={`${accomplishmentDetails?.computedEncodedHours} Hours(s)`}
-                            />
-                          </label>
-                        </div>
+                      <div className="w-auto ml-5 flex flex-col">
+                        <label className="text-sm font-medium">
+                          Start: {dayjs(accomplishmentDetails?.encodedTimeIn).format('MM-DD-YYYY hh:mm A')}
+                        </label>
+                        <label className="text-sm font-medium">
+                          End: {dayjs(accomplishmentDetails?.encodedTimeOut).format('MM-DD-YYYY hh:mm A')}
+                        </label>
+                        <label className="text-sm font-medium">
+                          Total Hours:
+                          {` ${accomplishmentDetails?.computedEncodedHours} Hours(s)`}
+                        </label>
                       </div>
                     </div>
 
@@ -377,7 +327,7 @@ export const ApprovalAccomplishmentModal = ({ modalState, setModalState, closeMo
                         <input
                           type="number"
                           className="border-slate-300 text-slate-500 h-12 text-md w-full md:w-44 rounded-lg"
-                          placeholder="Enter number of hours"
+                          placeholder="Number of hours"
                           required
                           defaultValue={0}
                           max="24"

@@ -3,8 +3,9 @@
 /* eslint-disable jsx-a11y/alt-text */
 import { Page, Text, Document, StyleSheet, PDFViewer, View, Image } from '@react-pdf/renderer';
 import React, { useEffect, useState } from 'react';
-import { EmployeeDetails } from '../../../../src/types/employee.type';
-import { EmployeeLeaveDetails } from '../../../../../../libs/utils/src/lib/types/leave-application.type';
+
+import { EmployeeDetails } from '../../utils/types/employee.type';
+import { EmployeeLeaveDetails, MonitoringLeave } from 'libs/utils/src/lib/types/leave-application.type';
 import { LeaveName, LeaveStatus } from 'libs/utils/src/lib/enums/leave.enum';
 import { LeaveLedgerEntry } from 'libs/utils/src/lib/types/leave-ledger-entry.type';
 
@@ -150,22 +151,27 @@ const styles = StyleSheet.create({
 });
 
 type LeavePdfProps = {
-  employeeDetails: EmployeeDetails;
+  rowData: MonitoringLeave;
+  // employeeDetails: EmployeeDetails;
   leaveDetails: EmployeeLeaveDetails;
   selectedLeaveLedger: Array<LeaveLedgerEntry>;
 };
 
-export const LeavePdf = ({ employeeDetails, leaveDetails, selectedLeaveLedger }: LeavePdfProps): JSX.Element => {
+export const LeavePdf = ({ rowData, leaveDetails, selectedLeaveLedger }: LeavePdfProps): JSX.Element => {
   const [isClient, setIsClient] = useState<boolean>(false);
 
   useEffect(() => {
     setIsClient(true);
   }, []);
 
+  useEffect(() => {
+    console.log(leaveDetails);
+  }, [leaveDetails]);
+
   return (
     <>
       {isClient && (
-        <PDFViewer width={'100%'} height={2800} showToolbar>
+        <PDFViewer width={'100%'} height={2000} showToolbar>
           <Document title="Leave">
             {/* FOLIO */}
             <Page size={[612.0, 792.0]}>
@@ -236,7 +242,7 @@ export const LeavePdf = ({ employeeDetails, leaveDetails, selectedLeaveLedger }:
                         width: '140px',
                       }}
                     >
-                      {leaveDetails.employeeDetails.assignment.name}
+                      {leaveDetails.employeeDetails?.assignment?.name}
                     </Text>
                     <Text style={{ marginRight: 50 }}>2. NAME</Text>
                     <Text
@@ -249,7 +255,8 @@ export const LeavePdf = ({ employeeDetails, leaveDetails, selectedLeaveLedger }:
                         textAlign: 'center',
                       }}
                     >
-                      {employeeDetails.profile.lastName}
+                      {rowData.employee?.employeeName}
+                      {/* {employeeDetails.profile.lastName} */}
                     </Text>
                     <Text style={{ marginRight: 80 }}>(Last)</Text>
                     <Text
@@ -262,7 +269,7 @@ export const LeavePdf = ({ employeeDetails, leaveDetails, selectedLeaveLedger }:
                         textAlign: 'center',
                       }}
                     >
-                      {employeeDetails.profile.firstName}
+                      {/* {employeeDetails.profile.firstName} */}
                     </Text>
                     <Text style={{ marginRight: 80 }}>(First)</Text>
                     <Text
@@ -275,7 +282,7 @@ export const LeavePdf = ({ employeeDetails, leaveDetails, selectedLeaveLedger }:
                         textAlign: 'center',
                       }}
                     >
-                      {employeeDetails.profile.middleName}
+                      {/* {employeeDetails.profile.middleName} */}
                     </Text>
                     <Text style={{ marginRight: 50 }}>(Middle)</Text>
                   </View>
@@ -305,7 +312,7 @@ export const LeavePdf = ({ employeeDetails, leaveDetails, selectedLeaveLedger }:
                         width: '100px',
                       }}
                     >
-                      {leaveDetails.leaveApplicationBasicInfo.dateOfFiling}
+                      {leaveDetails.leaveApplicationBasicInfo?.dateOfFiling}
                     </Text>
                     <Text style={{ marginRight: 1 }}>___________________</Text>
                     <Text style={{ marginRight: 1 }}>4. POSITION</Text>
@@ -318,7 +325,7 @@ export const LeavePdf = ({ employeeDetails, leaveDetails, selectedLeaveLedger }:
                         width: '100px',
                       }}
                     >
-                      {leaveDetails.employeeDetails.assignment.positionTitle}
+                      {leaveDetails.employeeDetails?.assignment?.positionTitle}
                     </Text>
                     <Text style={{ marginRight: 1 }}>___________________</Text>
                     <Text style={{ marginRight: 1 }}>5. SALARY</Text>
@@ -331,7 +338,7 @@ export const LeavePdf = ({ employeeDetails, leaveDetails, selectedLeaveLedger }:
                         width: '140px',
                       }}
                     >
-                      {leaveDetails.employeeDetails.assignment.salary}
+                      {leaveDetails.employeeDetails?.assignment?.salary}
                     </Text>
                     <Text style={{ marginRight: 1 }}>___________________</Text>
                   </View>
@@ -363,7 +370,7 @@ export const LeavePdf = ({ employeeDetails, leaveDetails, selectedLeaveLedger }:
                       <Text>6.A TYPE OF LEAVE TO BE AVAILED OF</Text>
                       <View style={styles.leaveLabelContainer}>
                         <Text style={styles.checkbox}>
-                          {leaveDetails.leaveApplicationBasicInfo.leaveName === LeaveName.VACATION ? 'X' : null}
+                          {leaveDetails.leaveApplicationBasicInfo?.leaveName === LeaveName.VACATION ? 'X' : null}
                         </Text>
                         <Text style={styles.leaveLabel}>Vacation Leave</Text>
                         <Text style={{ fontSize: 6 }}>
@@ -372,7 +379,7 @@ export const LeavePdf = ({ employeeDetails, leaveDetails, selectedLeaveLedger }:
                       </View>
                       <View style={styles.leaveLabelContainer}>
                         <Text style={styles.checkbox}>
-                          {leaveDetails.leaveApplicationBasicInfo.leaveName === LeaveName.FORCED ? 'X' : null}
+                          {leaveDetails.leaveApplicationBasicInfo?.leaveName === LeaveName.FORCED ? 'X' : null}
                         </Text>
                         <Text style={styles.leaveLabel}>Mandatory/Force Leave</Text>
                         <Text style={{ fontSize: 6 }}>
@@ -381,7 +388,7 @@ export const LeavePdf = ({ employeeDetails, leaveDetails, selectedLeaveLedger }:
                       </View>
                       <View style={styles.leaveLabelContainer}>
                         <Text style={styles.checkbox}>
-                          {leaveDetails.leaveApplicationBasicInfo.leaveName === LeaveName.SICK ? 'X' : null}
+                          {leaveDetails.leaveApplicationBasicInfo?.leaveName === LeaveName.SICK ? 'X' : null}
                         </Text>
                         <Text style={styles.leaveLabel}>Sick Leave</Text>
                         <Text style={{ fontSize: 6 }}>
@@ -390,21 +397,21 @@ export const LeavePdf = ({ employeeDetails, leaveDetails, selectedLeaveLedger }:
                       </View>
                       <View style={styles.leaveLabelContainer}>
                         <Text style={styles.checkbox}>
-                          {leaveDetails.leaveApplicationBasicInfo.leaveName === LeaveName.MATERNITY ? 'X' : null}
+                          {leaveDetails.leaveApplicationBasicInfo?.leaveName === LeaveName.MATERNITY ? 'X' : null}
                         </Text>
                         <Text style={styles.leaveLabel}>Maternity Leave</Text>
                         <Text style={{ fontSize: 6 }}>(R.A. No. 11210 / IRR issued by CSC, DOLE and SSS)</Text>
                       </View>
                       <View style={styles.leaveLabelContainer}>
                         <Text style={styles.checkbox}>
-                          {leaveDetails.leaveApplicationBasicInfo.leaveName === LeaveName.PATERNITY ? 'X' : null}
+                          {leaveDetails.leaveApplicationBasicInfo?.leaveName === LeaveName.PATERNITY ? 'X' : null}
                         </Text>
                         <Text style={styles.leaveLabel}>Paternity Leave</Text>
                         <Text style={{ fontSize: 6 }}>(R.A. No. 8187 / CSC MC No. 71, s. 1998 as amended)</Text>
                       </View>
                       <View style={styles.leaveLabelContainer}>
                         <Text style={styles.checkbox}>
-                          {leaveDetails.leaveApplicationBasicInfo.leaveName === LeaveName.SPECIAL_PRIVILEGE
+                          {leaveDetails.leaveApplicationBasicInfo?.leaveName === LeaveName.SPECIAL_PRIVILEGE
                             ? 'X'
                             : null}
                         </Text>
@@ -415,14 +422,14 @@ export const LeavePdf = ({ employeeDetails, leaveDetails, selectedLeaveLedger }:
                       </View>
                       <View style={styles.leaveLabelContainer}>
                         <Text style={styles.checkbox}>
-                          {leaveDetails.leaveApplicationBasicInfo.leaveName === LeaveName.SOLO_PARENT ? 'X' : null}
+                          {leaveDetails.leaveApplicationBasicInfo?.leaveName === LeaveName.SOLO_PARENT ? 'X' : null}
                         </Text>
                         <Text style={styles.leaveLabel}>Solo Parent Leave</Text>
                         <Text style={{ fontSize: 6 }}>(R.A. No. 8972 / CSC MC No. 8, s. 2004)</Text>
                       </View>
                       <View style={styles.leaveLabelContainer}>
                         <Text style={styles.checkbox}>
-                          {leaveDetails.leaveApplicationBasicInfo.leaveName === LeaveName.STUDY ? 'X' : null}
+                          {leaveDetails.leaveApplicationBasicInfo?.leaveName === LeaveName.STUDY ? 'X' : null}
                         </Text>
                         <Text style={styles.leaveLabel}>Study Leave</Text>
                         <Text style={{ fontSize: 6 }}>
@@ -431,14 +438,14 @@ export const LeavePdf = ({ employeeDetails, leaveDetails, selectedLeaveLedger }:
                       </View>
                       <View style={styles.leaveLabelContainer}>
                         <Text style={styles.checkbox}>
-                          {leaveDetails.leaveApplicationBasicInfo.leaveName === LeaveName.VAWC ? 'X' : null}
+                          {leaveDetails.leaveApplicationBasicInfo?.leaveName === LeaveName.VAWC ? 'X' : null}
                         </Text>
                         <Text style={styles.leaveLabel}>10-Day VAWC Leave</Text>
                         <Text style={{ fontSize: 6 }}>(R.A. No. 9262 / CSC MC No. 15, s. 2005)</Text>
                       </View>
                       <View style={styles.leaveLabelContainer}>
                         <Text style={styles.checkbox}>
-                          {leaveDetails.leaveApplicationBasicInfo.leaveName === LeaveName.REHABILITATION ? 'X' : null}
+                          {leaveDetails.leaveApplicationBasicInfo?.leaveName === LeaveName.REHABILITATION ? 'X' : null}
                         </Text>
                         <Text style={styles.leaveLabel}>Rehabilitation Privilege</Text>
                         <Text style={{ fontSize: 6 }}>
@@ -447,7 +454,7 @@ export const LeavePdf = ({ employeeDetails, leaveDetails, selectedLeaveLedger }:
                       </View>
                       <View style={styles.leaveLabelContainer}>
                         <Text style={styles.checkbox}>
-                          {leaveDetails.leaveApplicationBasicInfo.leaveName ===
+                          {leaveDetails.leaveApplicationBasicInfo?.leaveName ===
                           LeaveName.SPECIAL_LEAVE_BENEFITS_FOR_WOMEN
                             ? 'X'
                             : null}
@@ -457,7 +464,7 @@ export const LeavePdf = ({ employeeDetails, leaveDetails, selectedLeaveLedger }:
                       </View>
                       <View style={styles.leaveLabelContainer}>
                         <Text style={styles.checkbox}>
-                          {leaveDetails.leaveApplicationBasicInfo.leaveName === LeaveName.SPECIAL_EMERGENCY_CALAMITY
+                          {leaveDetails.leaveApplicationBasicInfo?.leaveName === LeaveName.SPECIAL_EMERGENCY_CALAMITY
                             ? 'X'
                             : null}
                         </Text>
@@ -467,16 +474,16 @@ export const LeavePdf = ({ employeeDetails, leaveDetails, selectedLeaveLedger }:
 
                       <View style={styles.leaveLabelContainer}>
                         <Text style={styles.checkbox}>
-                          {leaveDetails.leaveApplicationBasicInfo.leaveName === LeaveName.ADOPTION ? 'X' : null}
+                          {leaveDetails.leaveApplicationBasicInfo?.leaveName === LeaveName.ADOPTION ? 'X' : null}
                         </Text>
                         <Text style={styles.leaveLabel}>Adoption Leave</Text>
                         <Text style={{ fontSize: 6 }}>(R.A. No. 8552)</Text>
                       </View>
                       <View style={styles.leaveLabelContainer}>
                         <Text style={styles.checkbox}>
-                          {leaveDetails.leaveApplicationBasicInfo.leaveName === LeaveName.MONETIZATION ||
-                          leaveDetails.leaveApplicationBasicInfo.leaveName === LeaveName.LEAVE_WITHOUT_PAY ||
-                          leaveDetails.leaveApplicationBasicInfo.leaveName === LeaveName.TERMINAL
+                          {leaveDetails.leaveApplicationBasicInfo?.leaveName === LeaveName.MONETIZATION ||
+                          leaveDetails.leaveApplicationBasicInfo?.leaveName === LeaveName.LEAVE_WITHOUT_PAY ||
+                          leaveDetails.leaveApplicationBasicInfo?.leaveName === LeaveName.TERMINAL
                             ? 'X'
                             : null}
                         </Text>
@@ -497,37 +504,38 @@ export const LeavePdf = ({ employeeDetails, leaveDetails, selectedLeaveLedger }:
                       <Text style={styles.inCase}>In case of Vacation/Special Priviledge Leave:</Text>
                       <View style={styles.leaveLabelContainer2}>
                         <Text style={styles.checkbox}>
-                          {(leaveDetails.leaveApplicationBasicInfo.leaveName === LeaveName.VACATION ||
-                            leaveDetails.leaveApplicationBasicInfo.leaveName === LeaveName.FORCED) &&
-                          leaveDetails.leaveApplicationDetails.inPhilippinesOrAbroad &&
-                          leaveDetails.leaveApplicationDetails.inPhilippinesOrAbroad === 'Within the Philippines'
+                          {(leaveDetails.leaveApplicationBasicInfo?.leaveName === LeaveName.VACATION ||
+                            leaveDetails.leaveApplicationBasicInfo?.leaveName === LeaveName.FORCED) &&
+                          leaveDetails.leaveApplicationDetails?.inPhilippinesOrAbroad &&
+                          leaveDetails.leaveApplicationDetails?.inPhilippinesOrAbroad === 'Within the Philippines'
                             ? 'X'
                             : null}
                         </Text>
                         <Text style={styles.leaveLabel}>Within the Philippines</Text>
-                        <Text style={{ fontSize: 6, paddingLeft: 25 }}>_______________________________</Text>
+                        {/* <Text style={{ fontSize: 6, paddingLeft: 25 }}>_______________________________</Text> */}
                         <Text
                           style={{
-                            fontSize: 8,
+                            fontSize: 7.5,
                             position: 'absolute',
-                            width: '110',
+                            width: '45%',
                             marginLeft: 152,
                             paddingBottom: 3,
+                            borderBottom: '0.5px solid black',
                           }}
                         >
-                          {(leaveDetails.leaveApplicationBasicInfo.leaveName === LeaveName.VACATION ||
-                            leaveDetails.leaveApplicationBasicInfo.leaveName === LeaveName.FORCED) &&
-                          leaveDetails.leaveApplicationDetails.location &&
-                          leaveDetails.leaveApplicationDetails.inPhilippinesOrAbroad &&
-                          leaveDetails.leaveApplicationDetails.inPhilippinesOrAbroad === 'Within the Philippines'
-                            ? leaveDetails.leaveApplicationDetails.location
+                          {(leaveDetails.leaveApplicationBasicInfo?.leaveName === LeaveName.VACATION ||
+                            leaveDetails.leaveApplicationBasicInfo?.leaveName === LeaveName.FORCED) &&
+                          leaveDetails.leaveApplicationDetails?.location &&
+                          leaveDetails.leaveApplicationDetails?.inPhilippinesOrAbroad &&
+                          leaveDetails.leaveApplicationDetails?.inPhilippinesOrAbroad === 'Within the Philippines'
+                            ? leaveDetails.leaveApplicationDetails?.location
                             : null}
                         </Text>
                         <Text
                           style={{
                             fontSize: 8,
                             position: 'absolute',
-                            width: '100%',
+                            width: '45%',
                             marginLeft: 128,
                             paddingBottom: 3,
                           }}
@@ -535,54 +543,56 @@ export const LeavePdf = ({ employeeDetails, leaveDetails, selectedLeaveLedger }:
                       </View>
                       <View style={styles.leaveLabelContainer2}>
                         <Text style={styles.checkbox}>
-                          {(leaveDetails.leaveApplicationBasicInfo.leaveName === LeaveName.VACATION ||
-                            leaveDetails.leaveApplicationBasicInfo.leaveName === LeaveName.FORCED) &&
-                          leaveDetails.leaveApplicationDetails.inPhilippinesOrAbroad &&
-                          leaveDetails.leaveApplicationDetails.inPhilippinesOrAbroad === 'Abroad'
+                          {(leaveDetails.leaveApplicationBasicInfo?.leaveName === LeaveName.VACATION ||
+                            leaveDetails.leaveApplicationBasicInfo?.leaveName === LeaveName.FORCED) &&
+                          leaveDetails.leaveApplicationDetails?.inPhilippinesOrAbroad &&
+                          leaveDetails.leaveApplicationDetails?.inPhilippinesOrAbroad === 'Abroad'
                             ? 'X'
                             : null}
                         </Text>
                         <Text style={styles.leaveLabel}>Abroad (Specify)</Text>
-                        <Text style={{ fontSize: 6, paddingLeft: 45 }}>_______________________________</Text>
+                        {/* <Text style={{ fontSize: 6, paddingLeft: 45 }}>_______________________________</Text> */}
                         <Text
                           style={{
-                            fontSize: 8,
+                            fontSize: 7.5,
                             position: 'absolute',
-                            width: '110',
+                            width: '45%',
                             marginLeft: 152,
                             paddingBottom: 3,
+                            borderBottom: '0.5px solid black',
                           }}
                         >
-                          {(leaveDetails.leaveApplicationBasicInfo.leaveName === LeaveName.VACATION ||
-                            leaveDetails.leaveApplicationBasicInfo.leaveName === LeaveName.FORCED) &&
-                          leaveDetails.leaveApplicationDetails.location &&
-                          leaveDetails.leaveApplicationDetails.inPhilippinesOrAbroad &&
-                          leaveDetails.leaveApplicationDetails.inPhilippinesOrAbroad === 'Abroad'
-                            ? leaveDetails.leaveApplicationDetails.location
+                          {(leaveDetails.leaveApplicationBasicInfo?.leaveName === LeaveName.VACATION ||
+                            leaveDetails.leaveApplicationBasicInfo?.leaveName === LeaveName.FORCED) &&
+                          leaveDetails.leaveApplicationDetails?.location &&
+                          leaveDetails.leaveApplicationDetails?.inPhilippinesOrAbroad &&
+                          leaveDetails.leaveApplicationDetails?.inPhilippinesOrAbroad === 'Abroad'
+                            ? leaveDetails.leaveApplicationDetails?.location
                             : null}
                         </Text>
                       </View>
                       <Text style={styles.inCase}>In case of Sick Leave:</Text>
                       <View style={styles.leaveLabelContainer2}>
                         <Text style={styles.checkbox}>
-                          {leaveDetails.leaveApplicationBasicInfo.leaveName === LeaveName.SICK &&
-                          leaveDetails.leaveApplicationDetails.hospital &&
-                          leaveDetails.leaveApplicationDetails.hospital === 'In Hospital'
+                          {leaveDetails.leaveApplicationBasicInfo?.leaveName === LeaveName.SICK &&
+                          leaveDetails.leaveApplicationDetails?.hospital &&
+                          leaveDetails.leaveApplicationDetails?.hospital === 'In Hospital'
                             ? 'X'
                             : null}
                         </Text>
                         <Text style={styles.leaveLabel}>In Hospital (Specify Illness)</Text>
-                        <Text style={{ fontSize: 6, paddingLeft: 5 }}>_______________________________</Text>
+                        {/* <Text style={{ fontSize: 6, paddingLeft: 5 }}>_______________________________</Text> */}
                         <Text
                           style={{
-                            fontSize: 8,
+                            fontSize: 7.5,
                             position: 'absolute',
-                            width: '110',
+                            width: '45%',
                             marginLeft: 152,
                             paddingBottom: 3,
+                            borderBottom: '0.5px solid black',
                           }}
                         >
-                          {leaveDetails.leaveApplicationBasicInfo.leaveName === LeaveName.SICK &&
+                          {leaveDetails.leaveApplicationBasicInfo?.leaveName === LeaveName.SICK &&
                           leaveDetails.leaveApplicationDetails.illness &&
                           leaveDetails.leaveApplicationDetails.hospital === 'In Hospital'
                             ? leaveDetails.leaveApplicationDetails.illness
@@ -592,56 +602,58 @@ export const LeavePdf = ({ employeeDetails, leaveDetails, selectedLeaveLedger }:
                       <View style={styles.leaveLabelContainer2}>
                         <Text style={styles.checkbox}>
                           {' '}
-                          {leaveDetails.leaveApplicationBasicInfo.leaveName === LeaveName.SICK &&
+                          {leaveDetails.leaveApplicationBasicInfo?.leaveName === LeaveName.SICK &&
                           leaveDetails.leaveApplicationDetails.hospital &&
                           leaveDetails.leaveApplicationDetails.hospital === 'Out Patient'
                             ? 'X'
                             : null}
                         </Text>
                         <Text style={styles.leaveLabel}>Out Patient (Specify Illness)</Text>
-                        <Text style={{ fontSize: 6, paddingLeft: 3 }}>_______________________________</Text>
+                        {/* <Text style={{ fontSize: 6, paddingLeft: 3 }}>_______________________________</Text> */}
                         <Text
                           style={{
-                            fontSize: 8,
+                            fontSize: 7.5,
                             position: 'absolute',
-                            width: '110',
+                            width: '45%',
                             marginLeft: 152,
                             paddingBottom: 3,
+                            borderBottom: '0.5px solid black',
                           }}
                         >
-                          {leaveDetails.leaveApplicationBasicInfo.leaveName === LeaveName.SICK &&
-                          leaveDetails.leaveApplicationDetails.illness &&
-                          leaveDetails.leaveApplicationDetails.hospital === 'Out Patient'
-                            ? leaveDetails.leaveApplicationDetails.illness
+                          {leaveDetails.leaveApplicationBasicInfo?.leaveName === LeaveName.SICK &&
+                          leaveDetails.leaveApplicationDetails?.illness &&
+                          leaveDetails.leaveApplicationDetails?.hospital === 'Out Patient'
+                            ? leaveDetails.leaveApplicationDetails?.illness
                             : null}
                         </Text>
                       </View>
                       <Text style={styles.inCase}>In case of Special Leave Benefit for Women:</Text>
                       <View style={styles.leaveLabelContainer2}>
                         <Text style={styles.leaveLabel}>(Specify Illness):</Text>
-                        <Text style={{ fontSize: 6, paddingLeft: 5 }}>
+                        {/* <Text style={{ fontSize: 6, paddingLeft: 5 }}>
                           ________________________________________________
-                        </Text>
+                        </Text> */}
                         <Text
                           style={{
-                            fontSize: 8,
+                            fontSize: 7.5,
                             position: 'absolute',
-                            width: '155',
+                            width: '69%',
                             marginLeft: 95,
                             paddingBottom: 3,
+                            borderBottom: '0.5px solid black',
                           }}
                         >
-                          {leaveDetails.leaveApplicationBasicInfo.leaveName ===
-                            LeaveName.SPECIAL_LEAVE_BENEFITS_FOR_WOMEN && leaveDetails.leaveApplicationDetails.splWomen
-                            ? leaveDetails.leaveApplicationDetails.splWomen
+                          {leaveDetails.leaveApplicationBasicInfo?.leaveName ===
+                            LeaveName.SPECIAL_LEAVE_BENEFITS_FOR_WOMEN && leaveDetails.leaveApplicationDetails?.splWomen
+                            ? leaveDetails.leaveApplicationDetails?.splWomen
                             : null}
                         </Text>
                       </View>
                       <Text style={styles.inCase}>In case of Study Leave:</Text>
                       <View style={styles.leaveLabelContainer2}>
                         <Text style={styles.checkbox}>
-                          {leaveDetails.leaveApplicationBasicInfo.leaveName === LeaveName.STUDY &&
-                          leaveDetails.leaveApplicationDetails.forMastersCompletion === '1'
+                          {leaveDetails.leaveApplicationBasicInfo?.leaveName === LeaveName.STUDY &&
+                          leaveDetails.leaveApplicationDetails?.forMastersCompletion === '1'
                             ? 'X'
                             : null}
                         </Text>
@@ -649,8 +661,8 @@ export const LeavePdf = ({ employeeDetails, leaveDetails, selectedLeaveLedger }:
                       </View>
                       <View style={styles.leaveLabelContainer2}>
                         <Text style={styles.checkbox}>
-                          {leaveDetails.leaveApplicationBasicInfo.leaveName === LeaveName.STUDY &&
-                          leaveDetails.leaveApplicationDetails.forBarBoardReview === '1'
+                          {leaveDetails.leaveApplicationBasicInfo?.leaveName === LeaveName.STUDY &&
+                          leaveDetails.leaveApplicationDetails?.forBarBoardReview === '1'
                             ? 'X'
                             : null}
                         </Text>
@@ -658,33 +670,34 @@ export const LeavePdf = ({ employeeDetails, leaveDetails, selectedLeaveLedger }:
                       </View>
                       <View style={styles.leaveLabelContainer2}>
                         <Text style={styles.leaveLabel}>Other purpose:</Text>
-                        <Text style={{ fontSize: 6, paddingLeft: 8 }}>
+                        {/* <Text style={{ fontSize: 6, paddingLeft: 8 }}>
                           _________________________________________________
-                        </Text>
+                        </Text> */}
                         <Text
                           style={{
-                            fontSize: 8,
+                            fontSize: 7.5,
                             position: 'absolute',
-                            width: '155',
+                            width: '69%',
                             marginLeft: 95,
                             paddingBottom: 3,
+                            borderBottom: '0.5px solid black',
                           }}
                         >
-                          {leaveDetails.leaveApplicationBasicInfo.leaveName === LeaveName.STUDY &&
-                          leaveDetails.leaveApplicationDetails.studyLeaveOther
-                            ? leaveDetails.leaveApplicationDetails.studyLeaveOther
+                          {leaveDetails.leaveApplicationBasicInfo?.leaveName === LeaveName.STUDY &&
+                          leaveDetails.leaveApplicationDetails?.studyLeaveOther
+                            ? leaveDetails.leaveApplicationDetails?.studyLeaveOther
                             : null}
                         </Text>
                       </View>
                       <View style={styles.leaveLabelContainer2}>
                         <Text style={styles.checkbox}>
-                          {leaveDetails.leaveApplicationBasicInfo.leaveName === LeaveName.MONETIZATION ? 'X' : null}
+                          {leaveDetails.leaveApplicationBasicInfo?.leaveName === LeaveName.MONETIZATION ? 'X' : null}
                         </Text>
                         <Text style={styles.leaveLabel}>Monetization of Leave Credits</Text>
                       </View>
                       <View style={styles.leaveLabelContainer2}>
                         <Text style={styles.checkbox}>
-                          {leaveDetails.leaveApplicationBasicInfo.leaveName === LeaveName.TERMINAL ? 'X' : null}
+                          {leaveDetails.leaveApplicationBasicInfo?.leaveName === LeaveName.TERMINAL ? 'X' : null}
                         </Text>
                         <Text style={styles.leaveLabel}>Terminal Leave</Text>
                       </View>
@@ -711,14 +724,14 @@ export const LeavePdf = ({ employeeDetails, leaveDetails, selectedLeaveLedger }:
                           lineHeight: 2.1,
                         }}
                       >
-                        {leaveDetails.leaveApplicationBasicInfo.leaveDates
-                          ? leaveDetails.leaveApplicationBasicInfo.leaveDates.length > 18
-                            ? `From ${leaveDetails.leaveApplicationBasicInfo.leaveDates[0]} To ${
-                                leaveDetails.leaveApplicationBasicInfo.leaveDates[
-                                  leaveDetails.leaveApplicationBasicInfo.leaveDates.length - 1
+                        {leaveDetails.leaveApplicationBasicInfo?.leaveDates
+                          ? leaveDetails.leaveApplicationBasicInfo?.leaveDates.length > 18
+                            ? `From ${leaveDetails.leaveApplicationBasicInfo?.leaveDates[0]} To ${
+                                leaveDetails.leaveApplicationBasicInfo?.leaveDates[
+                                  leaveDetails.leaveApplicationBasicInfo?.leaveDates.length - 1
                                 ]
                               }`
-                            : leaveDetails.leaveApplicationBasicInfo.leaveDates.join(', ')
+                            : leaveDetails.leaveApplicationBasicInfo?.leaveDates.join(', ')
                           : null}
                       </Text>
                       <Text style={{ padding: 5 }}>_____________________________________________________</Text>
@@ -789,7 +802,7 @@ export const LeavePdf = ({ employeeDetails, leaveDetails, selectedLeaveLedger }:
                           marginTop: 18,
                         }}
                       >
-                        {leaveDetails.leaveApplicationBasicInfo.dateOfFiling}
+                        {leaveDetails.leaveApplicationBasicInfo?.dateOfFiling}
                       </Text>
                       <Text
                         style={{
@@ -839,8 +852,8 @@ export const LeavePdf = ({ employeeDetails, leaveDetails, selectedLeaveLedger }:
                             </View>
                             <View style={styles.containerTableRow}>
                               <Text>
-                                {leaveDetails.leaveApplicationBasicInfo.leaveName === LeaveName.VACATION ||
-                                leaveDetails.leaveApplicationBasicInfo.leaveName === LeaveName.FORCED
+                                {leaveDetails.leaveApplicationBasicInfo?.leaveName === LeaveName.VACATION ||
+                                leaveDetails.leaveApplicationBasicInfo?.leaveName === LeaveName.FORCED
                                   ? leaveDetails?.leaveApplicationBasicInfo?.leaveDates?.length.toFixed(3)
                                   : '0.000'}
                               </Text>
@@ -848,7 +861,7 @@ export const LeavePdf = ({ employeeDetails, leaveDetails, selectedLeaveLedger }:
                             <View style={styles.containerTableRow2}>
                               <Text>
                                 {' '}
-                                {leaveDetails.leaveApplicationBasicInfo.leaveName === LeaveName.SICK
+                                {leaveDetails.leaveApplicationBasicInfo?.leaveName === LeaveName.SICK
                                   ? leaveDetails?.leaveApplicationBasicInfo?.leaveDates?.length.toFixed(3)
                                   : '0.000'}
                               </Text>
@@ -939,16 +952,17 @@ export const LeavePdf = ({ employeeDetails, leaveDetails, selectedLeaveLedger }:
                             lineHeight: 2.2,
                           }}
                         >
-                          {leaveDetails.leaveApplicationBasicInfo.supervisorDisapprovalRemarks
-                            ? leaveDetails.leaveApplicationBasicInfo.supervisorDisapprovalRemarks
-                            : leaveDetails.leaveApplicationBasicInfo.hrdmDisapprovalRemarks
-                            ? leaveDetails.leaveApplicationBasicInfo.hrdmDisapprovalRemarks
+                          {leaveDetails.leaveApplicationBasicInfo?.supervisorDisapprovalRemarks
+                            ? leaveDetails.leaveApplicationBasicInfo?.supervisorDisapprovalRemarks
+                            : leaveDetails.leaveApplicationBasicInfo?.hrdmDisapprovalRemarks
+                            ? leaveDetails.leaveApplicationBasicInfo?.hrdmDisapprovalRemarks
                             : 'N/A'}
                         </Text>
                         <Text style={{ padding: 5 }}>____________________________________________</Text>
                         <Text style={{ padding: 5 }}>____________________________________________</Text>
                         <Text style={{ padding: 5 }}>____________________________________________</Text>
                       </View>
+                      {/* INSERT OFFICER NAME WITH SIGNATORY */}
                       {/* <Image
                         style={{ width: 50, position: 'absolute', marginLeft: 432, marginTop: -13 }}
                         src={leaveDetails?.leaveApplicationBasicInfo. ?? ''}
@@ -963,7 +977,7 @@ export const LeavePdf = ({ employeeDetails, leaveDetails, selectedLeaveLedger }:
                           fontSize: 10,
                         }}
                       >
-                        test
+                        {/* INSERT OFFICER NAME WITH SIGNATORY */}
                       </Text>
                       <Text style={{ paddingTop: 20, paddingLeft: 6 }}>
                         _________________________________________________
@@ -1007,7 +1021,7 @@ export const LeavePdf = ({ employeeDetails, leaveDetails, selectedLeaveLedger }:
                           marginLeft: 13,
                         }}
                       >
-                        {leaveDetails.leaveApplicationBasicInfo.leaveName != LeaveName.LEAVE_WITHOUT_PAY
+                        {leaveDetails.leaveApplicationBasicInfo?.leaveName != LeaveName.LEAVE_WITHOUT_PAY
                           ? leaveDetails?.leaveApplicationBasicInfo?.leaveDates?.length
                           : 0}
                       </Text>
@@ -1019,7 +1033,7 @@ export const LeavePdf = ({ employeeDetails, leaveDetails, selectedLeaveLedger }:
                           marginLeft: 13,
                         }}
                       >
-                        {leaveDetails.leaveApplicationBasicInfo.leaveName === LeaveName.LEAVE_WITHOUT_PAY
+                        {leaveDetails.leaveApplicationBasicInfo?.leaveName === LeaveName.LEAVE_WITHOUT_PAY
                           ? leaveDetails?.leaveApplicationBasicInfo?.leaveDates?.length
                           : 0}
                       </Text>
@@ -1043,10 +1057,10 @@ export const LeavePdf = ({ employeeDetails, leaveDetails, selectedLeaveLedger }:
                             lineHeight: 2.2,
                           }}
                         >
-                          {leaveDetails.leaveApplicationBasicInfo.supervisorDisapprovalRemarks
-                            ? leaveDetails.leaveApplicationBasicInfo.supervisorDisapprovalRemarks
-                            : leaveDetails.leaveApplicationBasicInfo.hrdmDisapprovalRemarks
-                            ? leaveDetails.leaveApplicationBasicInfo.hrdmDisapprovalRemarks
+                          {leaveDetails.leaveApplicationBasicInfo?.supervisorDisapprovalRemarks
+                            ? leaveDetails.leaveApplicationBasicInfo?.supervisorDisapprovalRemarks
+                            : leaveDetails.leaveApplicationBasicInfo?.hrdmDisapprovalRemarks
+                            ? leaveDetails.leaveApplicationBasicInfo?.hrdmDisapprovalRemarks
                             : 'N/A'}
                         </Text>
                         <Text style={{ padding: 5 }}>____________________________________________</Text>
@@ -1063,6 +1077,7 @@ export const LeavePdf = ({ employeeDetails, leaveDetails, selectedLeaveLedger }:
                       paddingBottom: 20,
                     }}
                   >
+                    {/* INSERT OFFICER NAME WITH SIGNATORY */}
                     {/* <Image
                         style={{ width: 50, position: 'absolute', marginLeft: 432, marginTop: -13 }}
                         src={leaveDetails?.leaveApplicationBasicInfo. ?? ''}
@@ -1079,7 +1094,7 @@ export const LeavePdf = ({ employeeDetails, leaveDetails, selectedLeaveLedger }:
                         fontSize: 10,
                       }}
                     >
-                      test
+                      {/* INSERT OFFICER NAME WITH SIGNATORY */}
                     </Text>
                     <Text
                       style={{

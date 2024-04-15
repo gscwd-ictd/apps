@@ -37,8 +37,7 @@ export const DtrPdfModal = ({ modalState, setModalState, closeModalAction, title
         </Modal.Header>
         <Modal.Body>
           <>
-            {/* <DtrPdf employeeDtr={employeeDtr} employeeData={employeeDetails} /> */}
-            test
+            <DtrPdf employeeDtr={employeeDtr} employeeData={employeeDetails} />
           </>
         </Modal.Body>
         <Modal.Footer>
