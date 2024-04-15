@@ -13,7 +13,7 @@ const nextConfig = {
     svgr: false,
   },
   images: {
-    domains: ['172.20.110.45'],
+    domains: ['172.20.110.60'],
   },
 };
 
