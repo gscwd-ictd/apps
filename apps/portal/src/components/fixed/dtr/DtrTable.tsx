@@ -372,9 +372,9 @@ export const DtrTable = ({ employeeDetails }: DtrTableProps) => {
             </table>
           </div>
           <div className="flex justify-end w-full pt-4">
-            {/* <Button variant={'primary'} size={'md'} loading={false} onClick={() => setDtrPdfModalIsOpen(true)}>
+            <Button variant={'primary'} size={'md'} loading={false} onClick={() => setDtrPdfModalIsOpen(true)}>
               View PDF
-            </Button> */}
+            </Button>
           </div>
         </>
       ) : (

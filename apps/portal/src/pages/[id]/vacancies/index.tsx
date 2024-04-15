@@ -327,13 +327,13 @@ export default function Vacancies({
                             );
                           })
                         ) : (
-                          <div className="flex flex-col items-center justify-center w-full px-8 pb-5 overflow-y-auto bg-slate-50 md:px-0 md:w-full h-80 md:h-full md:pl-4 md:pr-20">
-                            <label className="w-full text-4xl text-center text-gray-400 ">NO VACANCIES</label>
+                          <div className="flex justify-center pt-20 px-5">
+                            <h1 className="text-4xl text-gray-300">No vacancies found</h1>
                           </div>
                         )
                       ) : (
-                        <div className="flex flex-col items-center justify-center w-full px-8 pb-5 overflow-y-auto bg-slate-50 md:px-0 md:w-full h-80 md:h-full md:pl-4 md:pr-20">
-                          <label className="w-full text-4xl text-center text-gray-400 ">NO DATA</label>
+                        <div className="flex justify-center pt-20 px-5">
+                          <h1 className="text-4xl text-gray-300">No data found</h1>
                         </div>
                       )}
                     </div>
@@ -376,71 +376,6 @@ export default function Vacancies({
               )}
             </div>
           </MainContainer>
-
-          {/* <MainContainer>
-            <div className="flex flex-col w-full h-full px-4 pb-10 md:flex-row md:px-0">
-              <div className="flex flex-col w-full px-8 pb-5 overflow-y-auto md:px-0 md:w-full h-1/2 md:h-full md:pl-4 md:pr-20">
-                <label className="pb-4">Job Vacancies</label>
-
-                {employeeDetails.employmentDetails.userRole !== UserRole.JOB_ORDER ? (
-                  data && data.length > 0 ? (
-                    data.map((vacancies: VacancyDetails, messageIdx: number) => {
-                      return (
-                        <div key={messageIdx}>
-                          <MessageCard
-                            icon={<HiNewspaper className="w-6 h-6 text-green-800" />}
-                            color={`green`}
-                            title={vacancies.positionTitle}
-                            description={vacancies.occupationName}
-                            linkType={'router'}
-                            onClick={() => handleMessage(vacancies)}
-                          />
-                        </div>
-                      );
-                    })
-                  ) : (
-                    <div className="flex flex-col items-center justify-center w-full px-8 pb-5 overflow-y-auto bg-slate-50 md:px-0 md:w-full h-80 md:h-full md:pl-4 md:pr-20">
-                      <label className="w-full text-4xl text-center text-gray-400 ">NO VACANCIES</label>
-                    </div>
-                  )
-                ) : (
-                  <div className="flex flex-col items-center justify-center w-full px-8 pb-5 overflow-y-auto bg-slate-50 md:px-0 md:w-full h-80 md:h-full md:pl-4 md:pr-20">
-                    <label className="w-full text-4xl text-center text-gray-400 ">NO DATA</label>
-                  </div>
-                )}
-              </div>
-              {isEmpty(jobDetails?.error) && jobDetails && messageContent ? (
-                <div className="flex flex-col items-center w-full pt-1 text-gray-700 h-1/2 md:h-full md:pt-6 md:ml-4 md:mr-4">
-                  <div
-                    className={`${isMessageOpen ? 'w-full md:ml-10 md:mr-10 p-8 flex flex-col bg-white' : 'hidden'}`}
-                  >
-                    <label className="pb-2">{mailMessage}</label>
-                    <JobDetailsPanel data={jobDetails} details={messageContent} />
-
-                    <label className="pt-2 pb-2">Click Details button for more information.</label>
-                    <div className="flex flex-row justify-end gap-4">
-                      <div
-                        className={`${
-                          messageContent?.postingDeadline ? '' : 'flex flex-row gap-4 items-center justify-end'
-                        }`}
-                      >
-                        <button
-                          className={`w-24 h-10 rounded bg-indigo-500 text-white hover:bg-indigo-600`}
-                          onClick={openModal}
-                        >
-                          Details
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              ) : (
-                <div className="flex flex-col items-center justify-center w-full pt-1 text-4xl text-center text-gray-400 h-1/2 md:h-full md:pt-6 md:ml-4 md:mr-4">
-                  NO JOB POSTING SELECTED
-                </div>
-              )}
-            </div>
-          </MainContainer> */}
         </div>
       ) : (
         'No Data'

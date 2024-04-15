@@ -4,20 +4,7 @@ import { useApprovalStore } from 'apps/portal/src/store/approvals.store';
 import { isEmpty } from 'lodash';
 import { useRouter } from 'next/router';
 import { Fragment } from 'react';
-import {
-  HiAcademicCap,
-  HiBadgeCheck,
-  HiClipboardCheck,
-  HiClipboardList,
-  HiCollection,
-  HiDotsCircleHorizontal,
-  HiExclamationCircle,
-  HiFolder,
-  HiOutlineDotsVertical,
-  HiOutlineFolder,
-  HiOutlineIdentification,
-  HiPuzzle,
-} from 'react-icons/hi';
+import { HiAcademicCap, HiBadgeCheck, HiClipboardList, HiCollection, HiOutlineFolder, HiPuzzle } from 'react-icons/hi';
 
 type MenuDropdownProps = {
   right?: boolean;
@@ -73,7 +60,7 @@ export const ManagerMenuDropdown = ({
                 {({ active }) => (
                   <div className={`${active ? 'bg-slate-50' : null} cursor-pointer rounded-md p-4`}>
                     <div>
-                      <h5 className="truncate font-semibold ">Managerial Actions</h5>
+                      <h5 className="truncate font-semibold">Managerial Actions</h5>
                     </div>
                   </div>
                 )}
@@ -110,10 +97,53 @@ export const ManagerMenuDropdown = ({
                       } group flex w-80 items-center gap-2 px-3 py-3 text-sm`}
                       onClick={() => router.push(`/${router.query.id}/training-selection`)}
                     >
-                      <HiAcademicCap className="w-6 h-6 text-rose-600" />
-                      <span className="text-sm tracking-tight text-gray-700 text-left">
-                        Training Attendee Selection
-                      </span>
+                      <div className="flex gap-2">
+                        <HiAcademicCap className="w-6 h-6 text-rose-600" />
+                        <span className="text-sm tracking-tight text-gray-700 text-left">
+                          Training Attendee Selection
+                        </span>
+                      </div>
+                      {isEmpty(errorPendingApprovalsCount) &&
+                      pendingApprovalsCount.pendingTrainingNominationCount != 0 ? (
+                        <span className="absolute w-3 h-3 right-4 z-40 bg-red-600 rounded-full select-none" />
+                      ) : null}
+                    </button>
+                  )}
+                </Menu.Item>
+                <Menu.Item>
+                  {({ active }) => (
+                    <button
+                      className={`${
+                        active ? 'bg-slate-100' : 'text-gray-900'
+                      } group flex w-80 items-center gap-2 px-3 py-3 text-sm`}
+                      onClick={() => router.push(`/${router.query.id}/prf`)}
+                    >
+                      <div className="flex gap-2">
+                        <HiCollection className="w-6 h-6 text-indigo-500" />
+                        <span className="text-sm tracking-tight text-gray-700 text-left">Position Request Form</span>
+                      </div>
+                      {isEmpty(errorPendingApprovalsCount) && pendingApprovalsCount.prfsForApprovalCount != 0 ? (
+                        <span className="absolute w-3 h-3 right-4 z-40 bg-red-600 rounded-full select-none" />
+                      ) : null}
+                    </button>
+                  )}
+                </Menu.Item>
+                <Menu.Item>
+                  {({ active }) => (
+                    <button
+                      className={`${
+                        active ? 'bg-slate-100' : 'text-gray-900'
+                      } group flex w-80 items-center gap-2 px-3 py-3 text-sm`}
+                      onClick={() => router.push(`/${router.query.id}/applicant-endorsement`)}
+                    >
+                      <div className="flex gap-2">
+                        <HiClipboardList className="w-6 h-6 text-green-600" />
+                        <span className="text-sm tracking-tight text-gray-700 text-left">Applicant Endorsement</span>
+                      </div>
+                      {isEmpty(errorPendingApprovalsCount) &&
+                      pendingApprovalsCount.pendingApplicantEndorsementsCount != 0 ? (
+                        <span className="absolute w-3 h-3 right-4 z-40 bg-red-600 rounded-full select-none" />
+                      ) : null}
                     </button>
                   )}
                 </Menu.Item>
@@ -129,32 +159,6 @@ export const ManagerMenuDropdown = ({
                       <span className="text-sm tracking-tight text-gray-700 text-left">
                         Position Duties, Responsibilities & Competencies
                       </span>
-                    </button>
-                  )}
-                </Menu.Item>
-                <Menu.Item>
-                  {({ active }) => (
-                    <button
-                      className={`${
-                        active ? 'bg-slate-100' : 'text-gray-900'
-                      } group flex w-80 items-center gap-2 px-3 py-3 text-sm`}
-                      onClick={() => router.push(`/${router.query.id}/prf`)}
-                    >
-                      <HiCollection className="w-6 h-6 text-indigo-500" />
-                      <span className="text-sm tracking-tight text-gray-700 text-left">Position Request</span>
-                    </button>
-                  )}
-                </Menu.Item>
-                <Menu.Item>
-                  {({ active }) => (
-                    <button
-                      className={`${
-                        active ? 'bg-slate-100' : 'text-gray-900'
-                      } group flex w-80 items-center gap-2 px-3 py-3 text-sm`}
-                      onClick={() => router.push(`/${router.query.id}/applicant-endorsement`)}
-                    >
-                      <HiClipboardList className="w-6 h-6 text-green-600" />
-                      <span className="text-sm tracking-tight text-gray-700 text-left">Applicant Endorsement</span>
                     </button>
                   )}
                 </Menu.Item>

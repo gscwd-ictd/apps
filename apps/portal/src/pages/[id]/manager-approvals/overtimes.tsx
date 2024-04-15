@@ -28,6 +28,7 @@ import UseRenderOvertimeStatus from 'apps/portal/src/utils/functions/RenderOvert
 import { TextSize } from 'libs/utils/src/lib/enums/text-size.enum';
 import TempPhotoProfile from '../.../../../../../public/profile.jpg';
 import Image from 'next/image';
+import RenderOvertimePendingAccomplishmentStatus from 'apps/portal/src/utils/functions/RenderOvertimePendingAccomplishmentStatus';
 
 export default function OvertimeApprovals({ employeeDetails }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const {
@@ -249,6 +250,10 @@ export default function OvertimeApprovals({ employeeDetails }: InferGetServerSid
     columnHelper.accessor('status', {
       header: 'Status',
       cell: (info) => UseRenderOvertimeStatus(info.getValue(), TextSize.TEXT_SM),
+    }),
+    columnHelper.accessor('employees', {
+      header: 'Accomplishments',
+      cell: (props) => RenderOvertimePendingAccomplishmentStatus(props.row.original.employees, TextSize.TEXT_SM),
     }),
   ];
 

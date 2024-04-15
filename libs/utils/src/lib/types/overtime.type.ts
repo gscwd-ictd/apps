@@ -52,6 +52,7 @@ export type OvertimeForm = {
 export type OvertimeList = {
   forApproval: Array<OvertimeDetails>;
   completed: Array<OvertimeDetails>;
+  supervisorName: string;
 };
 
 //for viewing of overtime details
@@ -100,6 +101,7 @@ export type OvertimeAccomplishment = {
   purpose: string;
   followEstimatedHrs: boolean;
   employeeSignature: string;
+  supervisorName: string;
 };
 
 //for pdf

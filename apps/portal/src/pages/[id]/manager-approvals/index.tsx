@@ -89,7 +89,9 @@ export default function Approvals({ employeeDetails }: InferGetServerSidePropsTy
                     icon={<HiClipboard size={26} />}
                     subtitle="Show all Overtime requests"
                     notificationCount={
-                      pendingApprovalsCount.pendingOvertimesCount != 0 ? pendingApprovalsCount.pendingOvertimesCount : 0
+                      pendingApprovalsCount.pendingOvertimeApprovals != 0
+                        ? pendingApprovalsCount.pendingOvertimeApprovals
+                        : 0
                     }
                     className="bg-indigo-500"
                     onClick={() => router.push(`/${router.query.id}/manager-approvals/overtimes`)}
@@ -101,7 +103,11 @@ export default function Approvals({ employeeDetails }: InferGetServerSidePropsTy
                     title="Time Log Requests"
                     icon={<HiClock size={26} />}
                     subtitle="Show all Time Log Correction requests"
-                    notificationCount={0}
+                    notificationCount={
+                      pendingApprovalsCount.pendingDtrCorrectionsApprovals != 0
+                        ? pendingApprovalsCount.pendingDtrCorrectionsApprovals
+                        : 0
+                    }
                     className="bg-indigo-500"
                     onClick={() => router.push(`/${router.query.id}/manager-approvals/timelogs`)}
                   />

@@ -1,18 +1,12 @@
 /* eslint-disable @nx/enforce-module-boundaries */
 import { Menu, Transition } from '@headlessui/react';
+import { useApprovalStore } from 'apps/portal/src/store/approvals.store';
 import { useEmployeeStore } from 'apps/portal/src/store/employee.store';
 import { UserRole } from 'libs/utils/src/lib/enums/user-roles.enum';
 import { isEqual } from 'lodash';
 import { useRouter } from 'next/router';
 import { Fragment } from 'react';
-import {
-  HiAcademicCap,
-  HiBadgeCheck,
-  HiClock,
-  HiOutlineBadgeCheck,
-  HiOutlineIdentification,
-  HiUserGroup,
-} from 'react-icons/hi';
+import { HiAcademicCap, HiClock, HiOutlineBadgeCheck, HiUserGroup } from 'react-icons/hi';
 
 type MenuDropdownProps = {
   right?: boolean;
@@ -31,6 +25,10 @@ export const CommitteeMenuDropdown = ({
   labelColor = 'text-white',
   right = false,
 }: MenuDropdownProps): JSX.Element => {
+  const { pendingApprovalsCount, errorPendingApprovalsCount } = useApprovalStore((state) => ({
+    pendingApprovalsCount: state.pendingApprovalsCount,
+    errorPendingApprovalsCount: state.error.errorPendingApprovalsCount,
+  }));
   const router = useRouter();
 
   const employeeDetails = useEmployeeStore((state) => state.employeeDetails);

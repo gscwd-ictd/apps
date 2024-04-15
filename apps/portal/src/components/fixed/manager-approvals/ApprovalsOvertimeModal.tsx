@@ -242,41 +242,43 @@ export const OvertimeModal = ({ modalState, setModalState, closeModalAction }: M
             <div className="w-full h-full flex flex-col  ">
               <div className="w-full h-full flex flex-col gap-2 ">
                 <div className="w-full flex flex-col gap-2 px-4 rounded">
-                  <AlertNotification
-                    alertType={
-                      overtimeDetails.status === OvertimeStatus.PENDING
-                        ? 'warning'
-                        : overtimeDetails.status === OvertimeStatus.APPROVED
-                        ? 'success'
-                        : overtimeDetails.status === OvertimeStatus.DISAPPROVED
-                        ? 'error'
-                        : overtimeDetails.status === OvertimeStatus.CANCELLED
-                        ? 'error'
-                        : 'info'
-                    }
-                    notifMessage={
-                      overtimeDetails.status === OvertimeStatus.PENDING
-                        ? 'For Supervisor Review'
-                        : overtimeDetails.status === OvertimeStatus.APPROVED
-                        ? 'Approved'
-                        : overtimeDetails.status === OvertimeStatus.DISAPPROVED
-                        ? 'Disapproved'
-                        : overtimeDetails.status === OvertimeStatus.CANCELLED
-                        ? 'Cancelled'
-                        : overtimeDetails.status
-                    }
-                    dismissible={false}
-                  />
-
-                  {pendingAccomplishmentEmployees.length > 0 ? (
+                  <div className="w-full flex flex-col gap-0">
                     <AlertNotification
-                      alertType={'warning'}
+                      alertType={
+                        overtimeDetails.status === OvertimeStatus.PENDING
+                          ? 'warning'
+                          : overtimeDetails.status === OvertimeStatus.APPROVED
+                          ? 'success'
+                          : overtimeDetails.status === OvertimeStatus.DISAPPROVED
+                          ? 'error'
+                          : overtimeDetails.status === OvertimeStatus.CANCELLED
+                          ? 'error'
+                          : 'info'
+                      }
                       notifMessage={
-                        'Approving All Accomplishments will approve only the submitted and pending Overtime Accomplishments.'
+                        overtimeDetails.status === OvertimeStatus.PENDING
+                          ? 'For Supervisor Review'
+                          : overtimeDetails.status === OvertimeStatus.APPROVED
+                          ? 'Approved'
+                          : overtimeDetails.status === OvertimeStatus.DISAPPROVED
+                          ? 'Disapproved'
+                          : overtimeDetails.status === OvertimeStatus.CANCELLED
+                          ? 'Cancelled'
+                          : overtimeDetails.status
                       }
                       dismissible={false}
                     />
-                  ) : null}
+
+                    {pendingAccomplishmentEmployees.length > 0 ? (
+                      <AlertNotification
+                        alertType={'warning'}
+                        notifMessage={
+                          'Approving All Accomplishments will approve only the submitted and pending Overtime Accomplishments.'
+                        }
+                        dismissible={false}
+                      />
+                    ) : null}
+                  </div>
 
                   <div className="flex flex-wrap justify-between">
                     <div className="flex flex-col justify-start items-start w-full sm:w-1/2 px-0.5 pb-3  ">
