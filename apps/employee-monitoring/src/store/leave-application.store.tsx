@@ -33,20 +33,25 @@ type LeaveApplicationState = {
   leaveApplication: ResponseLeaveApplication;
   leaveApplications: Array<MonitoringLeave>;
   leaveApplicationDetails: EmployeeLeaveDetails;
+  leaveIndividualDetail: EmployeeLeaveDetails;
   loading: LoadingLeaveApplication;
   error: ErrorLeaveApplication;
   leaveConfirmAction: LeaveConfirmAction | null;
   setLeaveApplicationDetails: (leaveApplicationDetails: EmployeeLeaveDetails) => void;
   emptyResponseAndErrors: () => void;
+
   getLeaveApplications: () => void;
   getLeaveApplicationsSuccess: (response: Array<MonitoringLeave>) => void;
   getLeaveApplicationsFail: (error: string) => void;
+
   getLeaveApplicationDetails: () => void;
   getLeaveApplicationDetailsSuccess: (response: EmployeeLeaveDetails) => void;
   getLeaveApplicationDetailsFail: (error: string) => void;
+
   patchLeaveApplication: () => void;
   patchLeaveApplicationSuccess: (response: EmployeeLeaveDetails) => void;
   patchLeaveApplicationFail: (error: string) => void;
+
   setLeaveConfirmAction: (leaveConfirmAction: LeaveConfirmAction | null) => void;
 
   leaveCancellations: Array<LeaveCancellationDetails>;
@@ -62,6 +67,10 @@ type LeaveApplicationState = {
   setErrorApproveLeaveCancellation: (errorApproveLeaveCancellation: string) => void;
 
   setLeaveCancellationConfirmAction: (leaveCancellationConfirmAction: LeaveConfirmAction | null) => void;
+
+  getLeaveIndividualDetail: (loading: boolean) => void;
+  getLeaveIndividualDetailSuccess: (loading: boolean, response) => void;
+  getLeaveIndividualDetailFail: (loading: boolean, error: string) => void;
 };
 
 export const useLeaveApplicationStore = create<LeaveApplicationState>()(
@@ -69,6 +78,7 @@ export const useLeaveApplicationStore = create<LeaveApplicationState>()(
     leaveApplications: [],
     leaveApplication: { patchResponse: {} as EmployeeLeaveDetails },
     leaveApplicationDetails: {} as EmployeeLeaveDetails,
+    leaveIndividualDetail: {} as EmployeeLeaveDetails,
     loading: {
       loadingLeaveApplications: false,
       loadingLeaveApplicationDetails: false,
@@ -178,5 +188,44 @@ export const useLeaveApplicationStore = create<LeaveApplicationState>()(
 
     setLeaveCancellationConfirmAction: (leaveConfirmAction: LeaveConfirmAction | null) =>
       set((state) => ({ ...state, leaveConfirmAction })),
+
+    //GET LEAVE INDIVIDUAL DETAILS ACTIONS
+    getLeaveIndividualDetail: (loading: boolean) => {
+      set((state) => ({
+        ...state,
+        leaveIndividualDetail: {} as EmployeeLeaveDetails,
+        loading: {
+          ...state.loading,
+          loadingIndividualLeave: loading,
+        },
+        error: {
+          ...state.error,
+          errorIndividualLeave: '',
+        },
+      }));
+    },
+    getLeaveIndividualDetailSuccess: (loading: boolean, response: EmployeeLeaveDetails) => {
+      set((state) => ({
+        ...state,
+        leaveIndividualDetail: response,
+        loading: {
+          ...state.loading,
+          loadingIndividualLeave: loading,
+        },
+      }));
+    },
+    getLeaveIndividualDetailFail: (loading: boolean, error: string) => {
+      set((state) => ({
+        ...state,
+        loading: {
+          ...state.loading,
+          loadingIndividualLeave: loading,
+        },
+        error: {
+          ...state.error,
+          errorIndividualLeave: error,
+        },
+      }));
+    },
   }))
 );

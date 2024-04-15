@@ -15,6 +15,8 @@ import ViewLeaveApplicationModal from 'apps/employee-monitoring/src/components/m
 import dayjs from 'dayjs';
 import UseRenderLeaveStatus from 'apps/employee-monitoring/src/utils/functions/RenderLeaveStatus';
 import UseRenderLeaveType from 'apps/employee-monitoring/src/utils/functions/RenderLeaveType';
+import { LeaveStatus } from 'libs/utils/src/lib/enums/leave.enum';
+import ViewLeavePdfModal from 'apps/employee-monitoring/src/components/modal/monitoring/leave-applications/ViewLeavePdfModal';
 
 const Index = () => {
   // Current row data in the table that has been clicked
@@ -68,6 +70,17 @@ const Index = () => {
     setCurrentRowData({} as MonitoringLeave);
   };
 
+  // View PDF modal function
+  const [viewPdfModalIsOpen, setViewPdfModalIsOpen] = useState<boolean>(false);
+  const openViewPdfActionModal = (rowData: MonitoringLeave) => {
+    setViewPdfModalIsOpen(true);
+    setCurrentRowData(rowData);
+  };
+  const closeViewPdfActionModal = () => {
+    setViewPdfModalIsOpen(false);
+    setCurrentRowData({} as MonitoringLeave);
+  };
+
   // Rendering of leave dates in row
   const renderRowLeaveDates = (leaveDates: Array<string>) => {
     if (leaveDates) {
@@ -101,6 +114,16 @@ const Index = () => {
         >
           <i className="bx bx-show"></i>
         </button>
+
+        {rowData.status === LeaveStatus.APPROVED ? (
+          <button
+            type="button"
+            className="text-white bg-blue-400 hover:bg-blue-500 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm p-2.5 text-center inline-flex items-center mr-2 "
+            onClick={() => openViewPdfActionModal(rowData)}
+          >
+            <i className="bx bx-printer"></i>
+          </button>
+        ) : null}
       </div>
     );
   };
@@ -165,7 +188,6 @@ const Index = () => {
   // Upon success/fail of swr request, zustand state will be updated
   useEffect(() => {
     if (!isEmpty(swrLeaveApplication)) {
-      console.log(swrLeaveApplication.data);
       GetLeaveApplicationsSuccess(swrLeaveApplication.data);
     }
 
@@ -240,6 +262,14 @@ const Index = () => {
         modalState={viewModalIsOpen}
         setModalState={setViewModalIsOpen}
         closeModalAction={closeViewActionModal}
+        rowData={currentRowData}
+      />
+
+      {/* View PDF modal */}
+      <ViewLeavePdfModal
+        modalState={viewPdfModalIsOpen}
+        setModalState={setViewPdfModalIsOpen}
+        closeModalAction={closeViewPdfActionModal}
         rowData={currentRowData}
       />
     </div>
