@@ -102,6 +102,7 @@ export type OvertimeAccomplishment = {
   followEstimatedHrs: boolean;
   employeeSignature: string;
   supervisorName: string;
+  entriesForTheDay: Array<string>;
 };
 
 //for pdf

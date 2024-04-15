@@ -248,6 +248,16 @@ export const useApprovalStore = create<ApprovalState>()(
       pendingPassSlipsCount: 0,
       pendingLeavesCount: 0,
       pendingOvertimesCount: 0,
+      pendingTrainingNominationCount: 0,
+      pendingDtrCorrectionsApprovals: 0,
+      forHrdmApprovalLeaves: 0,
+      pendingOvertimeApprovals: 0,
+      pendingPdcSecretariatApprovalCount: 0,
+      pendingPdcChairmanApprovalCount: null,
+      pendingGmApprovalCount: null,
+      prfsForApprovalCount: 0,
+      pendingApplicantEndorsementsCount: 0,
+      pendingAppointingAuthoritySelection: 0,
     } as PendingApprovalsCount,
 
     response: {

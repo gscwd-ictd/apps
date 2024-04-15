@@ -5,12 +5,11 @@ import { SpinnerDotted } from 'spinners-react';
 import { useEmployeeStore } from '../../../store/employee.store';
 import { useOvertimeStore } from 'apps/portal/src/store/overtime.store';
 import { Page, Text, Document, StyleSheet, PDFViewer, View, Image } from '@react-pdf/renderer';
-import { DateFormatter } from 'libs/utils/src/lib/functions/DateFormatter';
 import { fetchWithToken } from 'apps/portal/src/utils/hoc/fetcher';
 import useSWR from 'swr';
 import { useEffect } from 'react';
 import { isEmpty } from 'lodash';
-import { OvertimeSummary, OvertimeSummaryEmployee } from 'libs/utils/src/lib/types/overtime.type';
+import { OvertimeSummaryEmployee } from 'libs/utils/src/lib/types/overtime.type';
 import dayjs from 'dayjs';
 
 const styles = StyleSheet.create({

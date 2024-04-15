@@ -10,11 +10,9 @@ export const LeavesTabWindow = (): JSX.Element => {
   }));
 
   return (
-    <>
-      <div className="w-full bg-inherit rounded px-5 h-[30rem] overflow-y-auto">
-        {tab === 1 && <AllLeavesListTab leaves={leavesOnGoing} tab={tab} />}
-        {tab === 2 && <AllLeavesListTab leaves={leavesCompleted} tab={tab} />}
-      </div>
-    </>
+    <div className="w-full bg-inherit rounded px-5 h-[30rem] overflow-y-auto">
+      {tab === 1 && <AllLeavesListTab leaves={leavesOnGoing} tab={tab} />}
+      {tab === 2 && <AllLeavesListTab leaves={leavesCompleted} tab={tab} />}
+    </div>
   );
 };

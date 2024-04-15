@@ -16,6 +16,7 @@ import { CardMiniStats } from '../cards/CardMiniStats';
 import { ActionType } from 'libs/utils/src/lib/enums/leave-ledger.type';
 import RemarksAndLeaveDatesModal from '../leaves/RemarksAndLeaveDatesModal';
 import { EmployeeDetails } from 'apps/portal/src/types/employee.type';
+import { useLeaveStore } from '../../../../src/store/leave.store';
 
 dayjs.extend(localizedFormat);
 dayjs.extend(customParseFormat);
@@ -31,11 +32,22 @@ type RemarksAndLeaveDates = {
 };
 
 export const LeaveLedgerTable: FunctionComponent<LeaveLedgerTableProps> = ({ employeeData }) => {
-  const { getLeaveLedgerFail, getLeaveLedgerSuccess, leaveLedger } = useLeaveLedgerPageStore((state) => ({
-    leaveLedger: state.leaveLedger,
-    getLeaveLedgerSuccess: state.getLeaveLedgerSuccess,
-    getLeaveLedgerFail: state.getLeaveLedgerFail,
-  }));
+  const { getLeaveLedgerFail, getLeaveLedgerSuccess, leaveLedger, leaveLedgerModalIsOpen } = useLeaveLedgerPageStore(
+    (state) => ({
+      leaveLedger: state.leaveLedger,
+      getLeaveLedgerSuccess: state.getLeaveLedgerSuccess,
+      getLeaveLedgerFail: state.getLeaveLedgerFail,
+      leaveLedgerModalIsOpen: state.leaveLedgerModalIsOpen,
+    })
+  );
+
+  const { leaveDetailsPdfModalIsOpen, applyLeaveModalIsOpen, pendingLeaveModalIsOpen, completedLeaveModalIsOpen } =
+    useLeaveStore((state) => ({
+      leaveDetailsPdfModalIsOpen: state.leaveDetailsPdfModalIsOpen,
+      applyLeaveModalIsOpen: state.applyLeaveModalIsOpen,
+      pendingLeaveModalIsOpen: state.pendingLeaveModalIsOpen,
+      completedLeaveModalIsOpen: state.completedLeaveModalIsOpen,
+    }));
 
   // forced leave balance
   const [forcedLeaveBalance, setForcedLeaveBalance] = useState<number>(0);
@@ -73,7 +85,15 @@ export const LeaveLedgerTable: FunctionComponent<LeaveLedgerTableProps> = ({ emp
     error: swrError,
     mutate: mutateLeaveLedger,
   } = useSWR(
-    employeeData.user._id && employeeData.employmentDetails.companyId ? leaveLedgerUrl : null,
+    (leaveDetailsPdfModalIsOpen ||
+      applyLeaveModalIsOpen ||
+      pendingLeaveModalIsOpen ||
+      completedLeaveModalIsOpen ||
+      leaveLedgerModalIsOpen) &&
+      employeeData.user._id &&
+      employeeData.employmentDetails.companyId
+      ? leaveLedgerUrl
+      : null,
     fetchWithToken,
     {
       shouldRetryOnError: true,

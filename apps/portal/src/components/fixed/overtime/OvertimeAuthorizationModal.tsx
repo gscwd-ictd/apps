@@ -18,6 +18,7 @@ const styles = StyleSheet.create({
     margin: 10,
     display: 'flex',
     flexDirection: 'column',
+    width: '97%',
   },
   headerMain: {
     display: 'flex',
@@ -34,6 +35,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     fontSize: 8,
+    width: '100%',
   },
   controlNumber: {
     display: 'flex',
@@ -41,6 +43,7 @@ const styles = StyleSheet.create({
     alignItems: 'flex-end',
     padding: 5,
     fontSize: 8,
+    width: '100%',
   },
 
   pdfTitle: {
@@ -151,6 +154,7 @@ export const OvertimeAuthorizationModal = ({ modalState, setModalState, closeMod
 
                     <View
                       style={{
+                        width: '100%',
                         display: 'flex',
                         flexDirection: 'row',
                         justifyContent: 'space-between',
@@ -186,6 +190,7 @@ export const OvertimeAuthorizationModal = ({ modalState, setModalState, closeMod
                     <View
                       style={{
                         display: 'flex',
+                        width: '100%',
                         flexDirection: 'row',
                         justifyContent: 'space-between',
                         fontSize: 9,
@@ -218,6 +223,7 @@ export const OvertimeAuthorizationModal = ({ modalState, setModalState, closeMod
                     {/* MAIN TABLE CONTAINER */}
                     <View
                       style={{
+                        width: 'auto',
                         display: 'flex',
                         // borderBottom: '1px solid #000',
                         borderRight: '1px solid #000',
@@ -233,6 +239,7 @@ export const OvertimeAuthorizationModal = ({ modalState, setModalState, closeMod
                       {/* HEADERS */}
                       <View
                         style={{
+                          width: 'auto',
                           display: 'flex',
                           flexDirection: 'row',
                         }}
@@ -291,6 +298,7 @@ export const OvertimeAuthorizationModal = ({ modalState, setModalState, closeMod
                         <View
                           key={idx}
                           style={{
+                            width: 'auto',
                             display: 'flex',
                             borderBottom: '1px solid #000',
                             borderRight: '1px solid #000',
@@ -305,6 +313,7 @@ export const OvertimeAuthorizationModal = ({ modalState, setModalState, closeMod
                           {/* HEADERS */}
                           <View
                             style={{
+                              width: 'auto',
                               display: 'flex',
                               flexDirection: 'row',
                             }}
@@ -361,6 +370,7 @@ export const OvertimeAuthorizationModal = ({ modalState, setModalState, closeMod
                     {/* SIGNATORIES */}
                     <View
                       style={{
+                        width: 'auto',
                         display: 'flex',
                         flexDirection: 'row',
                         justifyContent: 'space-between',
@@ -403,6 +413,7 @@ export const OvertimeAuthorizationModal = ({ modalState, setModalState, closeMod
                     </View>
                     <View
                       style={{
+                        width: 'auto',
                         display: 'flex',
                         flexDirection: 'row',
                         justifyContent: 'space-between',
@@ -419,6 +430,7 @@ export const OvertimeAuthorizationModal = ({ modalState, setModalState, closeMod
                     </View>
                     <View
                       style={{
+                        width: 'auto',
                         display: 'flex',
                         flexDirection: 'row',
                         justifyContent: 'flex-start',
@@ -460,6 +472,7 @@ export const OvertimeAuthorizationModal = ({ modalState, setModalState, closeMod
 
                     <View
                       style={{
+                        width: 'auto',
                         display: 'flex',
                         flexDirection: 'row',
                         justifyContent: 'flex-start',

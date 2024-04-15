@@ -190,10 +190,10 @@ export const ProfileMenuDropdown = ({
                                     Appointing Authority Selection
                                   </span>
                                 </div>
-                                {/* {isEmpty(errorPendingApprovalsCount) &&
-                                pendingApprovalsCount.pendingGmApprovalCount > 0 ? (
+                                {isEmpty(errorPendingApprovalsCount) &&
+                                pendingApprovalsCount.pendingAppointingAuthoritySelection > 0 ? (
                                   <span className="absolute w-3 h-3 right-5 z-40 bg-red-600 rounded-full select-none" />
-                                ) : null} */}
+                                ) : null}
                               </button>
                             )}
                           </Menu.Item>

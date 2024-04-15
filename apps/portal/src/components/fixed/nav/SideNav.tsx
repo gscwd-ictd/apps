@@ -31,7 +31,6 @@ type NavDetails = {
 export const SideNav = ({ employeeDetails }: NavDetails) => {
   const router = useRouter();
   const { windowWidth } = UseWindowDimensions(); //get screen width and height
-  // const employeeDetails = useEmployeeStore((state) => state.employeeDetails);
 
   const {
     tab,
@@ -57,10 +56,7 @@ export const SideNav = ({ employeeDetails }: NavDetails) => {
     data: swrPendingApprovalsCount,
     isLoading: swrPendingApprovalsCountIsLoading,
     error: swrPendingApprovalsCountError,
-  } = useSWR(pendingApprovalsCountUrl, fetchWithToken, {
-    shouldRetryOnError: false,
-    revalidateOnFocus: false,
-  });
+  } = useSWR(pendingApprovalsCountUrl, fetchWithToken, {});
 
   // Initial zustand state update
   useEffect(() => {
@@ -72,7 +68,6 @@ export const SideNav = ({ employeeDetails }: NavDetails) => {
   // Upon success/fail of swr request, zustand state will be updated
   useEffect(() => {
     if (!isEmpty(swrPendingApprovalsCount)) {
-      console.log(swrPendingApprovalsCount);
       getPendingApprovalsCountSuccess(swrPendingApprovalsCountIsLoading, swrPendingApprovalsCount);
     }
 
@@ -125,7 +120,7 @@ export const SideNav = ({ employeeDetails }: NavDetails) => {
                       pendingApprovalsCount.pendingTrainingNominationCount > 0 ||
                       pendingApprovalsCount.prfsForApprovalCount > 0 ||
                       pendingApprovalsCount.pendingApplicantEndorsementsCount > 0) ? (
-                      <span className="absolute w-3 h-3 mt-1 ml-8 z-40 bg-red-600 rounded-full select-none" />
+                      <span className="absolute w-3 h-3 mt-1 ml-8 z-30 bg-red-600 rounded-full select-none" />
                     ) : null}
                     <ManagerMenuDropdown right />
                   </li>

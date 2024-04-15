@@ -13,6 +13,7 @@ import { UseTwelveHourFormat } from 'libs/utils/src/lib/functions/TwelveHourForm
 import { OvertimeAccomplishmentStatus } from 'libs/utils/src/lib/enums/overtime.enum';
 import OvertimeAccomplishmentReportPdfModal from './OvertimeAccomplishmentReportPdfModal';
 import { DateFormatter } from 'libs/utils/src/lib/functions/DateFormatter';
+import dayjs from 'dayjs';
 
 type ModalProps = {
   modalState: boolean;
@@ -162,87 +163,18 @@ export const OvertimeSupervisorAccomplishmentModal = ({ modalState, setModalStat
                     </div>
 
                     <div className="flex flex-col justify-start items-start w-full px-0.5 pb-3  ">
-                      <label className="text-slate-500 text-md whitespace-nowrap pb-0.5">IVMS Time In & Out:</label>
-
-                      <div className="w-auto ml-5">
-                        <div className="w-full flex flex-row gap-2 items-center justify-between">
-                          <label className="w-full">
-                            <LabelInput
-                              id={'ivmsTimeIn'}
-                              type="text"
-                              label={''}
-                              className="w-full font-medium"
-                              textSize="sm"
-                              disabled
-                              value={UseTwelveHourFormat(accomplishmentDetails.ivmsTimeIn)}
-                            />
-                          </label>
-                          <label className="w-auto text-sm">-</label>
-                          <label className="w-full ">
-                            <LabelInput
-                              id={'ivmsTimeOut'}
-                              type="text"
-                              label={''}
-                              className="w-full font-medium"
-                              textSize="sm"
-                              disabled
-                              value={UseTwelveHourFormat(accomplishmentDetails.ivmsTimeOut)}
-                            />
-                          </label>
-                          <label className="w-full">
-                            <LabelInput
-                              id={'estimate'}
-                              type="text"
-                              label={''}
-                              className="w-full font-medium"
-                              textSize="sm"
-                              disabled
-                              value={`${accomplishmentDetails.computedIvmsHours ?? 0} Hour(s)`}
-                            />
-                          </label>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="flex flex-col justify-start items-start w-full px-0.5 pb-3  ">
                       <label className="text-slate-500 text-md whitespace-nowrap pb-0.5">Encoded Time In & Out:</label>
 
                       <div className="w-auto ml-5">
                         <div className="w-full flex flex-row gap-2 items-center justify-between">
-                          <label className="w-full text-md ">
-                            <LabelInput
-                              id={'encodeTimeIn'}
-                              type="text"
-                              label={''}
-                              className="w-full font-medium"
-                              textSize="sm"
-                              disabled
-                              value={UseTwelveHourFormat(accomplishmentDetails.encodedTimeIn)}
-                            />
+                          <label className="text-md font-medium">
+                            {dayjs(accomplishmentDetails?.encodedTimeIn).format('MM-DD-YYYY hh:mm A')}
                           </label>
-                          <label className="w-auto text-sm">-</label>
-                          <label className="w-full text-md ">
-                            <LabelInput
-                              id={'encodeTimeOut'}
-                              type="text"
-                              label={''}
-                              className="w-full font-medium"
-                              textSize="sm"
-                              disabled
-                              value={UseTwelveHourFormat(accomplishmentDetails.encodedTimeOut)}
-                            />
+                          <label className="w-auto  font-medium text-medium">-</label>
+                          <label className="text-md font-medium">
+                            {dayjs(accomplishmentDetails?.encodedTimeOut).format('MM-DD-YYYY hh:mm A')}
                           </label>
-                          <label className="w-full text-md ">
-                            <LabelInput
-                              id={'estimate'}
-                              type="text"
-                              label={''}
-                              className="w-full font-medium"
-                              textSize="sm"
-                              disabled
-                              value={`${accomplishmentDetails?.computedEncodedHours} Hours(s)`}
-                            />
-                          </label>
+                          <label className="text-md font-medium">{`: ${accomplishmentDetails?.computedEncodedHours} Hours(s)`}</label>
                         </div>
                       </div>
                     </div>

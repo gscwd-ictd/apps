@@ -37,8 +37,10 @@ const approvalAction: Array<SelectOption> = [
 
 export const OvertimeModal = ({ modalState, setModalState, closeModalAction }: ModalProps) => {
   const {
-    overtimeDetails,
+    approvedOvertimeModalIsOpen,
+    disapprovedOvertimeModalIsOpen,
     pendingOvertimeModalIsOpen,
+    overtimeDetails,
     otpOvertimeModalIsOpen,
     setOtpOvertimeModalIsOpen,
     declineApplicationModalIsOpen,
@@ -60,6 +62,8 @@ export const OvertimeModal = ({ modalState, setModalState, closeModalAction }: M
     setApproveAllCaptchaModalIsOpen,
   } = useApprovalStore((state) => ({
     overtimeDetails: state.overtimeDetails,
+    approvedOvertimeModalIsOpen: state.approvedOvertimeModalIsOpen,
+    disapprovedOvertimeModalIsOpen: state.disapprovedLeaveModalIsOpen,
     pendingOvertimeModalIsOpen: state.pendingOvertimeModalIsOpen,
     otpOvertimeModalIsOpen: state.otpOvertimeModalIsOpen,
     setOtpOvertimeModalIsOpen: state.setOtpOvertimeModalIsOpen,
@@ -96,7 +100,11 @@ export const OvertimeModal = ({ modalState, setModalState, closeModalAction }: M
     error: swrOvertimeDetailsError,
     mutate: mutateOvertimeDetailsUrl,
   } = useSWR(
-    selectedOvertimeId && employeeDetails.employmentDetails.userId ? overtimeDetailsUrl : null,
+    (approvedOvertimeModalIsOpen || disapprovedOvertimeModalIsOpen || pendingOvertimeModalIsOpen) &&
+      selectedOvertimeId &&
+      employeeDetails.employmentDetails.userId
+      ? overtimeDetailsUrl
+      : null,
     fetchWithToken,
     {
       shouldRetryOnError: false,
@@ -370,7 +378,7 @@ export const OvertimeModal = ({ modalState, setModalState, closeModalAction }: M
                         {overtimeDetails?.employees?.map((employee: EmployeeOvertimeDetail, index: number) => {
                           return (
                             <div
-                              key={index}
+                              key={employee.companyId}
                               className={`${
                                 index != 0 ? 'border-t border-slate-200' : ''
                               } px-2 py-4 md:px-4 md:py-4 flex flex-row justify-between items-center gap-8 `}

@@ -1,6 +1,4 @@
-import { useApprovalStore } from '../../../store/approvals.store';
 import { HiOutlineCheckCircle, HiCheck } from 'react-icons/hi';
-
 import { TabHeader } from '../tab/TabHeader';
 import { useFinalLeaveApprovalStore } from 'apps/portal/src/store/final-leave-approvals.store';
 

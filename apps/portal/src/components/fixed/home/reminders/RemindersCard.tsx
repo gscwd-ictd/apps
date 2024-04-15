@@ -1,4 +1,3 @@
-import { format } from 'date-fns';
 import { HiCheckCircle, HiOutlineClipboardList } from 'react-icons/hi';
 
 interface Props {
@@ -43,12 +42,8 @@ export const RemindersCard: React.FC<Props> = ({ reminders = '' }) => {
               <div className="flex flex-row gap-2 items-center justify-start">
                 <HiCheckCircle className="w-4 h-4 text-indigo-500" />
                 <div className="flex flex-col cursor-pointer">
-                  <span className="text-sm font-bold text-slate-700">
-                    {reminder.title}
-                  </span>
-                  <span className="text-xs text-slate-600">
-                    {reminder.desc}
-                  </span>
+                  <span className="text-sm font-bold text-slate-700">{reminder.title}</span>
+                  <span className="text-xs text-slate-600">{reminder.desc}</span>
                 </div>
               </div>
               {/* <div className="text-xs text-slate-600 text-center whitespace-nowrap">{format(new Date(reminder.date), 'MMM dd')}</div> */}
