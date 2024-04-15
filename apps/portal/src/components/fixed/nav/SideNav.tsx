@@ -56,7 +56,12 @@ export const SideNav = ({ employeeDetails }: NavDetails) => {
     data: swrPendingApprovalsCount,
     isLoading: swrPendingApprovalsCountIsLoading,
     error: swrPendingApprovalsCountError,
-  } = useSWR(pendingApprovalsCountUrl, fetchWithToken, {});
+  } = useSWR(pendingApprovalsCountUrl, fetchWithToken, {
+    onErrorRetry: (error, key, config, revalidate, { retryCount }) => {
+      // Only retry up to 10 times.
+      if (retryCount >= 1) return;
+    },
+  });
 
   // Initial zustand state update
   useEffect(() => {
@@ -79,12 +84,12 @@ export const SideNav = ({ employeeDetails }: NavDetails) => {
   return (
     <>
       {/* Approval List Load Failed Error */}
-      {!isEmpty(errorPendingApprovalsCount) ? (
+      {/* {!isEmpty(errorPendingApprovalsCount) ? (
         <ToastNotification
           toastType="error"
           notifMessage={`${errorPendingApprovalsCount}: Failed to load Pending Approval Count.`}
         />
-      ) : null}
+      ) : null} */}
 
       <nav className="fixed z-30 flex justify-start lg:justify-center w-screen lg:w-24 h-auto">
         <ul className="z-30 flex flex-col items-center gap-2 text-gray-600 mt-14">
