@@ -22,16 +22,17 @@ export type overtimeAction = {
 };
 
 export type PendingApprovalsCount = {
-  pendingPassSlipsCount: number;
-  pendingLeavesCount: number;
-  pendingOvertimesCount: number;
-  pendingTrainingNominationCount: number;
-  pendingDtrCorrectionsApprovals: number;
-  forHrdmApprovalLeaves: number;
-  pendingOvertimeApprovals: number;
-  pendingPdcSecretariatApprovalCount: number;
+  pendingPassSlipsCount: number | null;
+  pendingLeavesCount: number | null;
+  pendingOvertimesCount: number | null;
+  pendingTrainingNominationCount: number | null;
+  pendingDtrCorrectionsApprovals: number | null;
+  forHrdmApprovalLeaves: number | null;
+  pendingOvertimeApprovals: number | null;
+  pendingPdcSecretariatApprovalCount: number | null;
   pendingPdcChairmanApprovalCount: number | null;
   pendingGmApprovalCount: number | null;
-  prfsForApprovalCount: number;
-  pendingApplicantEndorsementsCount: number;
+  prfsForApprovalCount: number | null;
+  pendingApplicantEndorsementsCount: number | null;
+  pendingAppointingAuthoritySelection: number | null;
 };

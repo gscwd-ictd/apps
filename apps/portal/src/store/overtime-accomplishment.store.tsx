@@ -12,6 +12,7 @@ import { create } from 'zustand';
 import { devtools } from 'zustand/middleware';
 import { OvertimeStatus } from 'libs/utils/src/lib/enums/overtime.enum';
 import { WorkExperience } from '../types/workexp.type';
+import { EmployeeDtrWithSchedule } from 'libs/utils/src/lib/types/dtr.type';
 
 export type OvertimeAccomplishmentList = {
   forApproval: Array<OvertimeAccomplishment>;
@@ -30,19 +31,26 @@ export type OvertimeState = {
 
   loading: {
     loadingOvertimeAccomplishment: boolean;
+    loadingTimeLogsOnDayAndNext: boolean;
     loadingResponse: boolean;
   };
   error: {
     errorOvertimeAccomplishment: string;
+    errorTimeLogsOnDayAndNext: string;
     errorResponse: string;
   };
 
+  timeLogsOnDayAndNext: Array<string>; // for IVMS entries on OT accomplishment modal
   overtimeAccomplishmentDetails: OvertimeAccomplishment;
   overtimeAccomplishmentPatchDetails: OvertimeAccomplishmentPatch;
   pendingOvertimeAccomplishmentModalIsOpen: boolean;
   completedOvertimeAccomplishmentModalIsOpen: boolean;
   confirmOvertimeAccomplishmentModalIsOpen: boolean;
   tab: number;
+
+  getTimeLogsOnDayAndNext: (loading: boolean) => void;
+  getTimeLogsOnDayAndNextSuccess: (loading: boolean, response) => void;
+  getTimeLogsOnDayAndNextFail: (loading: boolean, error: string) => void;
 
   getOvertimeAccomplishmentList: (loading: boolean) => void;
   getOvertimeAccomplishmentListSuccess: (loading: boolean, response) => void;
@@ -79,14 +87,16 @@ export const useOvertimeAccomplishmentStore = create<OvertimeState>()(
     },
     loading: {
       loadingOvertimeAccomplishment: false,
+      loadingTimeLogsOnDayAndNext: false,
       loadingResponse: false,
-      loadingEmployeeList: false,
     },
     error: {
       errorOvertimeAccomplishment: '',
+      errorTimeLogsOnDayAndNext: '',
       errorResponse: '',
     },
 
+    timeLogsOnDayAndNext: [] as Array<string>,
     overtimeAccomplishmentDetails: {} as OvertimeAccomplishment,
     overtimeAccomplishmentPatchDetails: {} as OvertimeAccomplishmentPatch,
     pendingOvertimeAccomplishmentModalIsOpen: false,
@@ -129,6 +139,45 @@ export const useOvertimeAccomplishmentStore = create<OvertimeState>()(
 
     setOvertimeAccomplishmentPatchDetails: (overtimeAccomplishmentPatchDetails: OvertimeAccomplishmentPatch) => {
       set((state) => ({ ...state, overtimeAccomplishmentPatchDetails }));
+    },
+
+    //GET OVERTIME ACTIONS
+    getTimeLogsOnDayAndNext: (loading: boolean) => {
+      set((state) => ({
+        ...state,
+        timeLogsOnDayAndNext: [] as Array<string>,
+        loading: {
+          ...state.loading,
+          loadingTimeLogsOnDayAndNext: loading,
+        },
+        error: {
+          ...state.error,
+          errorTimeLogsOnDayAndNext: '',
+        },
+      }));
+    },
+    getTimeLogsOnDayAndNextSuccess: (loading: boolean, response: Array<string>) => {
+      set((state) => ({
+        ...state,
+        timeLogsOnDayAndNext: response,
+        loading: {
+          ...state.loading,
+          loadingTimeLogsOnDayAndNext: loading,
+        },
+      }));
+    },
+    getTimeLogsOnDayAndNextFail: (loading: boolean, error: string) => {
+      set((state) => ({
+        ...state,
+        loading: {
+          ...state.loading,
+          loadingTimeLogsOnDayAndNext: loading,
+        },
+        error: {
+          ...state.error,
+          errorTimeLogsOnDayAndNext: error,
+        },
+      }));
     },
 
     //GET OVERTIME ACTIONS

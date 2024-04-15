@@ -1,12 +1,10 @@
 import { HiX } from 'react-icons/hi';
-import { useApprovalStore } from '../../../store/approvals.store';
 import { Modal } from 'libs/oneui/src/components/Modal';
 import { Button } from 'libs/oneui/src/components/Button';
 import { SpinnerDotted } from 'spinners-react';
 import { AlertNotification } from '@gscwd-apps/oneui';
 import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
 import { LeaveName, LeaveStatus } from 'libs/utils/src/lib/enums/leave.enum';
-import { ConfirmationLeaveModal } from './FinalApprovalOtp/ConfirmationLeaveModal';
 import { useFinalLeaveApprovalStore } from 'apps/portal/src/store/final-leave-approvals.store';
 import { DateFormatter } from 'libs/utils/src/lib/functions/DateFormatter';
 import { useEffect, useState } from 'react';

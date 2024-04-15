@@ -2,14 +2,10 @@
 /* eslint-disable react/no-unescaped-entities */
 /* eslint-disable jsx-a11y/alt-text */
 import { Page, Text, Document, StyleSheet, PDFViewer, View, Image } from '@react-pdf/renderer';
-import { format } from 'date-fns';
 import React, { useEffect, useState } from 'react';
-import { useRouter } from 'next/router';
 import { EmployeeDetails } from '../../../../src/types/employee.type';
-
 import { EmployeeLeaveDetails } from '../../../../../../libs/utils/src/lib/types/leave-application.type';
-import { LeaveType } from 'libs/utils/src/lib/types/leave-benefits.type';
-import { LeaveDateStatus, LeaveName, LeaveStatus } from 'libs/utils/src/lib/enums/leave.enum';
+import { LeaveName, LeaveStatus } from 'libs/utils/src/lib/enums/leave.enum';
 import { LeaveLedgerEntry } from 'libs/utils/src/lib/types/leave-ledger-entry.type';
 
 const styles = StyleSheet.create({
@@ -161,8 +157,6 @@ type LeavePdfProps = {
 
 export const LeavePdf = ({ employeeDetails, leaveDetails, selectedLeaveLedger }: LeavePdfProps): JSX.Element => {
   const [isClient, setIsClient] = useState<boolean>(false);
-
-  const router = useRouter();
 
   useEffect(() => {
     setIsClient(true);
@@ -516,7 +510,7 @@ export const LeavePdf = ({ employeeDetails, leaveDetails, selectedLeaveLedger }:
                           style={{
                             fontSize: 8,
                             position: 'absolute',
-                            width: '100%',
+                            width: '110',
                             marginLeft: 152,
                             paddingBottom: 3,
                           }}
@@ -554,7 +548,7 @@ export const LeavePdf = ({ employeeDetails, leaveDetails, selectedLeaveLedger }:
                           style={{
                             fontSize: 8,
                             position: 'absolute',
-                            width: '100%',
+                            width: '110',
                             marginLeft: 152,
                             paddingBottom: 3,
                           }}
@@ -583,7 +577,7 @@ export const LeavePdf = ({ employeeDetails, leaveDetails, selectedLeaveLedger }:
                           style={{
                             fontSize: 8,
                             position: 'absolute',
-                            width: '100%',
+                            width: '110',
                             marginLeft: 152,
                             paddingBottom: 3,
                           }}
@@ -610,7 +604,7 @@ export const LeavePdf = ({ employeeDetails, leaveDetails, selectedLeaveLedger }:
                           style={{
                             fontSize: 8,
                             position: 'absolute',
-                            width: '100%',
+                            width: '110',
                             marginLeft: 152,
                             paddingBottom: 3,
                           }}
@@ -632,7 +626,7 @@ export const LeavePdf = ({ employeeDetails, leaveDetails, selectedLeaveLedger }:
                           style={{
                             fontSize: 8,
                             position: 'absolute',
-                            width: '100%',
+                            width: '155',
                             marginLeft: 95,
                             paddingBottom: 3,
                           }}
@@ -671,7 +665,7 @@ export const LeavePdf = ({ employeeDetails, leaveDetails, selectedLeaveLedger }:
                           style={{
                             fontSize: 8,
                             position: 'absolute',
-                            width: '100%',
+                            width: '155',
                             marginLeft: 95,
                             paddingBottom: 3,
                           }}

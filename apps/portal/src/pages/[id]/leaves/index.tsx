@@ -149,7 +149,6 @@ export default function Leaves({ employeeDetails }: InferGetServerSidePropsType<
   // Upon success/fail of swr request, zustand state will be updated
   useEffect(() => {
     if (!isEmpty(swrLeaves)) {
-      console.log(swrLeaves);
       getLeaveListSuccess(swrIsLoading, swrLeaves);
     }
 

@@ -24,6 +24,7 @@ export type EmployeeRestDay = {
 export type EmployeeDtrWithSchedule = {
   day: string;
   companyId: string;
+  date?: string;
   dtr: EmployeeTimeLog; //dtr
   dtrCorrection?: DtrCorrectionForEmployee;
   schedule: Schedule & EmployeeRestDay; // schedule with rest days

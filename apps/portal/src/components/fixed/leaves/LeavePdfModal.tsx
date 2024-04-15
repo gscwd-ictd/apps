@@ -1,10 +1,6 @@
 /* eslint-disable @nx/enforce-module-boundaries */
-
 import { Button, Modal } from '@gscwd-apps/oneui';
-import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
-import { patchPortal } from 'apps/portal/src/utils/helpers/portal-axios-helper';
 import { useLeaveStore } from 'apps/portal/src/store/leave.store';
-import { LeaveCancellationSubmission } from 'libs/utils/src/lib/types/leave-application.type';
 import LeavePdf from './LeavePdf';
 import { useEmployeeStore } from 'apps/portal/src/store/employee.store';
 import { HiX } from 'react-icons/hi';
@@ -22,15 +18,11 @@ export const LeavePdfModal = ({ modalState, setModalState, closeModalAction, tit
     leaveIndividualDetail: state.leaveIndividualDetail,
   }));
 
-  const { leaveLedger, selectedLeaveLedger, setSelectedLeaveLedger } = useLeaveLedgerStore((state) => ({
-    leaveLedger: state.leaveLedger,
+  const { selectedLeaveLedger } = useLeaveLedgerStore((state) => ({
     selectedLeaveLedger: state.selectedLeaveLedger,
-    setSelectedLeaveLedger: state.setSelectedLeaveLedger,
   }));
 
   const employeeDetails = useEmployeeStore((state) => state.employeeDetails);
-
-  const { windowWidth } = UseWindowDimensions();
 
   return (
     <>

@@ -12,12 +12,6 @@ type MenuDropdownProps = {
   labelColor?: string;
 };
 
-type EmployeeDetails = {
-  fullName: string;
-  initials: string;
-  profile: string;
-};
-
 export const GeneralManagerMenuDropdown = ({
   className,
   labelColor = 'text-white',
@@ -82,7 +76,8 @@ export const GeneralManagerMenuDropdown = ({
                           Appointing Authority Selection
                         </span>
                       </div>
-                      {isEmpty(errorPendingApprovalsCount) && pendingApprovalsCount.pendingGmApprovalCount != 0 ? (
+                      {isEmpty(errorPendingApprovalsCount) &&
+                      pendingApprovalsCount.pendingAppointingAuthoritySelection > 0 ? (
                         <span className="absolute w-3 h-3 right-4 z-40 bg-red-600 rounded-full select-none" />
                       ) : null}
                     </button>

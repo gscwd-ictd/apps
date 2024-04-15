@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import { HiX } from 'react-icons/hi';
-
 import { Modal } from 'libs/oneui/src/components/Modal';
 import { Button } from 'libs/oneui/src/components/Button';
 import { isEmpty } from 'lodash';

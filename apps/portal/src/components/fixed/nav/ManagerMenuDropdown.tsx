@@ -12,12 +12,6 @@ type MenuDropdownProps = {
   labelColor?: string;
 };
 
-type EmployeeDetails = {
-  fullName: string;
-  initials: string;
-  profile: string;
-};
-
 export const ManagerMenuDropdown = ({
   className,
   labelColor = 'text-white',
@@ -32,7 +26,7 @@ export const ManagerMenuDropdown = ({
 
   return (
     <>
-      <Menu as="div" className={`z-30 -mt-10 -ml-6 fixed lg:relative lg:-mt-0 lg:ml-0 inline-block text-left`}>
+      <Menu as="div" className={`z-20 -mt-10 -ml-6 fixed lg:relative lg:-mt-0 lg:ml-0 inline-block text-left`}>
         <div>
           <Menu.Button
             className={`${className} h-10 w-10 rounded flex justify-center items-center bg-white outline-none transition-colors ease-in-out hover:bg-slate-200 hover:text-slate-500 `}
@@ -81,9 +75,9 @@ export const ManagerMenuDropdown = ({
                         <span className="text-sm tracking-tight text-gray-700 text-left">Approvals</span>
                       </div>
                       {isEmpty(errorPendingApprovalsCount) &&
-                      (pendingApprovalsCount.pendingPassSlipsCount != 0 ||
-                        pendingApprovalsCount.pendingLeavesCount != 0 ||
-                        pendingApprovalsCount.pendingOvertimesCount != 0) ? (
+                      (pendingApprovalsCount.pendingPassSlipsCount > 0 ||
+                        pendingApprovalsCount.pendingLeavesCount > 0 ||
+                        pendingApprovalsCount.pendingOvertimesCount > 0) ? (
                         <span className="absolute w-3 h-3 right-4 z-40 bg-red-600 rounded-full select-none" />
                       ) : null}
                     </button>
@@ -104,7 +98,7 @@ export const ManagerMenuDropdown = ({
                         </span>
                       </div>
                       {isEmpty(errorPendingApprovalsCount) &&
-                      pendingApprovalsCount.pendingTrainingNominationCount != 0 ? (
+                      pendingApprovalsCount.pendingTrainingNominationCount > 0 ? (
                         <span className="absolute w-3 h-3 right-4 z-40 bg-red-600 rounded-full select-none" />
                       ) : null}
                     </button>
@@ -122,7 +116,7 @@ export const ManagerMenuDropdown = ({
                         <HiCollection className="w-6 h-6 text-indigo-500" />
                         <span className="text-sm tracking-tight text-gray-700 text-left">Position Request Form</span>
                       </div>
-                      {isEmpty(errorPendingApprovalsCount) && pendingApprovalsCount.prfsForApprovalCount != 0 ? (
+                      {isEmpty(errorPendingApprovalsCount) && pendingApprovalsCount.prfsForApprovalCount > 0 ? (
                         <span className="absolute w-3 h-3 right-4 z-40 bg-red-600 rounded-full select-none" />
                       ) : null}
                     </button>
@@ -141,7 +135,7 @@ export const ManagerMenuDropdown = ({
                         <span className="text-sm tracking-tight text-gray-700 text-left">Applicant Endorsement</span>
                       </div>
                       {isEmpty(errorPendingApprovalsCount) &&
-                      pendingApprovalsCount.pendingApplicantEndorsementsCount != 0 ? (
+                      pendingApprovalsCount.pendingApplicantEndorsementsCount > 0 ? (
                         <span className="absolute w-3 h-3 right-4 z-40 bg-red-600 rounded-full select-none" />
                       ) : null}
                     </button>
