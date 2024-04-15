@@ -103,11 +103,11 @@ export const SideNav = ({ employeeDetails }: NavDetails) => {
               isEqual(employeeDetails.employmentDetails.userRole, UserRole.GENERAL_MANAGER) ? (
                 <>
                   <li className="ml-10 lg:ml-0">
-                    {isEmpty(errorPendingApprovalsCount) &&
+                    {/* {isEmpty(errorPendingApprovalsCount) &&
                     pendingApprovalsCount.pendingGmApprovalCount > 0 &&
                     pendingApprovalsCount.pendingGmApprovalCount != null ? (
                       <span className="absolute w-3 h-3 mt-1 ml-8 z-50 bg-red-600 rounded-full select-none" />
-                    ) : null}
+                    ) : null} */}
                     <GeneralManagerMenuDropdown right />
                   </li>
 
@@ -117,7 +117,7 @@ export const SideNav = ({ employeeDetails }: NavDetails) => {
                       pendingApprovalsCount.pendingLeavesCount > 0 ||
                       pendingApprovalsCount.pendingOvertimesCount > 0 ||
                       pendingApprovalsCount.pendingDtrCorrectionsApprovals > 0 ||
-                      pendingApprovalsCount.pendingTrainingNominationCount > 0 ||
+                      // pendingApprovalsCount.pendingTrainingNominationCount > 0 ||
                       pendingApprovalsCount.prfsForApprovalCount > 0 ||
                       pendingApprovalsCount.pendingApplicantEndorsementsCount > 0) ? (
                       <span className="absolute w-3 h-3 mt-1 ml-8 z-30 bg-red-600 rounded-full select-none" />
@@ -137,7 +137,7 @@ export const SideNav = ({ employeeDetails }: NavDetails) => {
                       pendingApprovalsCount.pendingLeavesCount > 0 ||
                       pendingApprovalsCount.pendingOvertimesCount > 0 ||
                       pendingApprovalsCount.pendingDtrCorrectionsApprovals > 0 ||
-                      pendingApprovalsCount.pendingTrainingNominationCount > 0 ||
+                      // pendingApprovalsCount.pendingTrainingNominationCount > 0 ||
                       pendingApprovalsCount.prfsForApprovalCount > 0 ||
                       pendingApprovalsCount.pendingApplicantEndorsementsCount > 0) ? (
                       <span className="absolute w-3 h-3 mt-1 ml-8 z-40 bg-red-600 rounded-full select-none" />
@@ -157,7 +157,7 @@ export const SideNav = ({ employeeDetails }: NavDetails) => {
                       pendingApprovalsCount.pendingLeavesCount > 0 ||
                       pendingApprovalsCount.pendingOvertimesCount > 0 ||
                       pendingApprovalsCount.pendingDtrCorrectionsApprovals > 0 ||
-                      pendingApprovalsCount.pendingTrainingNominationCount > 0 ||
+                      // pendingApprovalsCount.pendingTrainingNominationCount > 0 ||
                       pendingApprovalsCount.prfsForApprovalCount > 0 ||
                       pendingApprovalsCount.pendingApplicantEndorsementsCount > 0) ? (
                       <span className="absolute w-3 h-3 mt-1 ml-8 z-40 bg-red-600 rounded-full select-none" />
@@ -177,7 +177,7 @@ export const SideNav = ({ employeeDetails }: NavDetails) => {
                       pendingApprovalsCount.pendingLeavesCount > 0 ||
                       pendingApprovalsCount.pendingOvertimesCount > 0 ||
                       pendingApprovalsCount.pendingDtrCorrectionsApprovals > 0 ||
-                      pendingApprovalsCount.pendingTrainingNominationCount > 0 ||
+                      // pendingApprovalsCount.pendingTrainingNominationCount > 0 ||
                       pendingApprovalsCount.prfsForApprovalCount > 0 ||
                       pendingApprovalsCount.pendingApplicantEndorsementsCount > 0) ? (
                       <span className="absolute w-3 h-3 mt-1 ml-8 z-40 bg-red-600 rounded-full select-none" />
@@ -221,13 +221,13 @@ export const SideNav = ({ employeeDetails }: NavDetails) => {
               (!isEqual(employeeDetails.employmentDetails.userRole, UserRole.RANK_AND_FILE) &&
                 !isEqual(employeeDetails.employmentDetails.userRole, UserRole.JOB_ORDER)) ? (
                 <li className="ml-10 lg:ml-0">
-                  {isEmpty(errorPendingApprovalsCount) &&
+                  {/* {isEmpty(errorPendingApprovalsCount) &&
                   ((pendingApprovalsCount.pendingPdcChairmanApprovalCount > 0 &&
                     pendingApprovalsCount.pendingPdcChairmanApprovalCount != null) ||
                     (pendingApprovalsCount.pendingPdcSecretariatApprovalCount > 0 &&
                       pendingApprovalsCount.pendingPdcSecretariatApprovalCount != null)) ? (
                     <span className="absolute w-3 h-3 mt-1 ml-8 z-40 bg-red-600 rounded-full select-none" />
-                  ) : null}
+                  ) : null} */}
                   <CommitteeMenuDropdown right />
                 </li>
               ) : null}

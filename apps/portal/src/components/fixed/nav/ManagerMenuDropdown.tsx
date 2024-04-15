@@ -97,10 +97,10 @@ export const ManagerMenuDropdown = ({
                           Training Attendee Selection
                         </span>
                       </div>
-                      {isEmpty(errorPendingApprovalsCount) &&
+                      {/* {isEmpty(errorPendingApprovalsCount) &&
                       pendingApprovalsCount.pendingTrainingNominationCount > 0 ? (
                         <span className="absolute w-3 h-3 right-4 z-40 bg-red-600 rounded-full select-none" />
-                      ) : null}
+                      ) : null} */}
                     </button>
                   )}
                 </Menu.Item>
