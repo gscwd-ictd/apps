@@ -1189,7 +1189,7 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
 
                             {watch('typeOfLeaveDetails.leaveName') != LeaveName.MONETIZATION &&
                             watch('typeOfLeaveDetails.leaveName') != LeaveName.VACATION
-                              ? finalVacationLeaveBalance.toFixed(3)
+                              ? vacationLeaveBalance
                               : null}
                           </td>
                           {watch('typeOfLeaveDetails.leaveName') !== LeaveName.MONETIZATION ? (
