@@ -9,8 +9,6 @@ import fetcherEMS from 'apps/employee-monitoring/src/utils/fetcher/FetcherEMS';
 import { useAnnouncementsStore } from 'apps/employee-monitoring/src/store/announcement.store';
 import { Announcement } from 'apps/employee-monitoring/src/utils/types/announcement.type';
 
-import TestAnnouncement from 'apps/employee-monitoring/public/Test-Announcement.png';
-
 import { DataTable, LoadingSpinner, ToastNotification, useDataTable } from '@gscwd-apps/oneui';
 import { Card } from 'apps/employee-monitoring/src/components/cards/Card';
 import { BreadCrumbs } from 'apps/employee-monitoring/src/components/navigations/BreadCrumbs';
@@ -21,53 +19,10 @@ import dayjs from 'dayjs';
 import AddAnnouncementModal from 'apps/employee-monitoring/src/components/modal/settings/announcements/AddAnnouncementModal';
 import EditAnnouncementModal from 'apps/employee-monitoring/src/components/modal/settings/announcements/EditAnnouncementModal';
 import DeleteAnnouncementModal from 'apps/employee-monitoring/src/components/modal/settings/announcements/DeleteAnnouncementModal';
-
-// sample static data
-const Announcements: Announcement[] = [
-  {
-    _id: '2001',
-    title: 'Announcement 1',
-    description: 'This is announcement 1',
-    date: '2021-09-01',
-    url: 'https://www.google.com',
-    image: TestAnnouncement.src,
-    status: 'inactive',
-  },
-  {
-    _id: '2002',
-    title: 'Announcement 2',
-    description: 'This is announcement 2',
-    date: '2021-09-02',
-    url: 'https://www.google2.com',
-    image: 'https://i.ibb.co/xSwJ5Dt/Test-Announcement.png',
-    status: 'active',
-  },
-  {
-    _id: '2003',
-    title: 'Announcement 3',
-    description: 'This is announcement 3',
-    date: '2021-09-03',
-    url: 'https://www.google3.com',
-    image: TestAnnouncement.src,
-    status: 'active',
-  },
-];
+import Image from 'next/image';
+import ConvertFullMonthNameToDigit from 'apps/employee-monitoring/src/utils/functions/ConvertFullMonthNameToDigit';
 
 const Index = () => {
-  // Current row data in the table that has been clicked
-  //   const [currentRowData, setCurrentRowData] = useState<OfficerOfTheDay>({} as OfficerOfTheDay);
-
-  // fetch data for list of announcements
-  // const {
-  //   data: swrAnnouncements,
-  //   error: swrError,
-  //   isLoading: swrIsLoading,
-  //   mutate: mutateOfficersOfTheDay,
-  // } = useSWR('/', fetcherEMS, {
-  //   shouldRetryOnError: false,
-  //   revalidateOnFocus: false,
-  // });
-
   // Add modal function
   const [addModalIsOpen, setAddModalIsOpen] = useState<boolean>(false);
   const openAddActionModal = () => setAddModalIsOpen(true);
@@ -89,13 +44,59 @@ const Index = () => {
   };
   const closeDeleteActionModal = () => setDeleteModalIsOpen(false);
 
+  // Current row data in the table that has been clicked
   const [currentRowData, setCurrentRowData] = useState<Announcement>({} as Announcement);
 
-  // transform date
-  const transformDate = (date: string | Date | null) => {
-    if (date === null) return '-';
-    else return dayjs(date).format('MMMM DD, YYYY');
-  };
+  // fetch data for list of announcements
+  const {
+    data: announcements,
+    error: announcementsError,
+    isLoading: announcementsLoading,
+    mutate: mutateAnnouncements,
+  } = useSWR('/events-announcements', fetcherEMS, {});
+
+  // Zustand initialization
+  const {
+    Announcements,
+    SetGetAnnouncements,
+
+    PostAnnouncement,
+    SetPostAnnouncement,
+
+    UpdateAnnouncement,
+    SetUpdateAnnouncement,
+
+    DeleteAnnouncement,
+    SetDeleteAnnouncement,
+
+    ErrorAnnouncement,
+    SetErrorAnnouncement,
+
+    ErrorAnnouncements,
+    SetErrorAnnouncements,
+
+    EmptyResponse,
+  } = useAnnouncementsStore((state) => ({
+    Announcements: state.getAnnouncements,
+    SetGetAnnouncements: state.setGetAnnouncements,
+
+    PostAnnouncement: state.postAnnouncement,
+    SetPostAnnouncement: state.setPostAnnouncement,
+
+    UpdateAnnouncement: state.updateAnnouncement,
+    SetUpdateAnnouncement: state.setUpdateAnnouncement,
+
+    DeleteAnnouncement: state.deleteAnnouncement,
+    SetDeleteAnnouncement: state.setDeleteAnnouncement,
+
+    ErrorAnnouncement: state.errorAnnouncement,
+    SetErrorAnnouncement: state.setErrorAnnouncement,
+
+    ErrorAnnouncements: state.errorAnnouncements,
+    SetErrorAnnouncements: state.setErrorAnnouncements,
+
+    EmptyResponse: state.emptyResponse,
+  }));
 
   // Render row actions in the table component
   const renderRowActions = (rowData: Announcement) => {
@@ -123,35 +124,56 @@ const Index = () => {
   // Define table columns
   const columnHelper = createColumnHelper<Announcement>();
   const columns = [
-    columnHelper.accessor('_id', {
+    columnHelper.accessor('id', {
       cell: (info) => info.getValue(),
     }),
     columnHelper.accessor('title', {
       enableSorting: true,
       header: () => 'Title',
-      cell: (info) => info.getValue(),
+      cell: (info) => (
+        <div className="w-40">
+          <p>{info.getValue()}</p>
+        </div>
+      ),
     }),
-    columnHelper.accessor('date', {
+    columnHelper.accessor('eventAnnouncementDate', {
       enableSorting: true,
       header: () => 'Date',
-      cell: (info) => transformDate(info.getValue()),
+      cell: (info) => ConvertFullMonthNameToDigit(info.getValue()),
     }),
     columnHelper.accessor('url', {
       enableSorting: true,
       header: () => 'URL',
       cell: (info) => (
-        <a href={info.getValue()} target="_blank" rel="noopener noreferrer" className="text-blue-500">
-          {info.getValue()}
-        </a>
+        <div className="flex w-32">
+          <a
+            href={info.getValue()}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-blue-500 overflow-hidden overflow-ellipsis"
+          >
+            {info.getValue()}
+          </a>
+        </div>
       ),
     }),
-    columnHelper.accessor('image', {
+    columnHelper.accessor('photoUrl', {
       enableSorting: true,
       header: () => 'Image',
       cell: (info) => (
-        <a href={info.getValue()} target="_blank" rel="noopener noreferrer">
-          <img src={info.getValue()} alt="Image" width={'84.3rem'} height={'84.3rem'} />
-        </a>
+        <div className="flex flex-row justify-center">
+          {info.getValue() ? (
+            <div className="flex flex-col items-center">
+              <a href={info.getValue()} target="_blank" rel="noopener noreferrer">
+                <Image src={info.getValue()} alt="Image" width={84.3} height={84.3} priority />
+              </a>
+            </div>
+          ) : (
+            <div className="flex flex-col items-center justify-center w-20 h-20 bg-gray-400">
+              <i className="bx bxs-error text-3xl text-white"></i>
+            </div>
+          )}
+        </div>
       ),
     }),
     columnHelper.accessor('status', {
@@ -166,46 +188,81 @@ const Index = () => {
     }),
   ];
 
-  // Zustand initialization
-
   // React Table initialization
   const { table } = useDataTable({
     columns: columns,
     data: Announcements,
-    columnVisibility: { _id: false },
+    columnVisibility: { id: false },
   });
-
-  // Reset responses on load of page
 
   // Initial zustand state update
 
-  // Upon success/fail of swr request, zustand state will be updated
+  useEffect(() => {
+    if (!isEmpty(announcements)) {
+      SetGetAnnouncements(announcements.data);
+    }
 
-  // Reset responses from all modal actions
+    if (!isEmpty(announcementsError)) {
+      switch (announcementsError?.response?.status) {
+        case 400:
+          SetErrorAnnouncements('Bad Request');
+          break;
+        case 401:
+          SetErrorAnnouncements('Unauthorized');
+          break;
+        case 403:
+          SetErrorAnnouncements('Forbidden');
+          break;
+        case 404:
+          SetErrorAnnouncements('Announcements not found');
+          break;
+        case 500:
+          SetErrorAnnouncements('Internal Server Error');
+          break;
+        default:
+          SetErrorAnnouncements('An error occurred. Please try again later.');
+          break;
+      }
+    }
+  }, [announcements, announcementsError]);
+
+  useEffect(() => {
+    if (!isEmpty(PostAnnouncement) || !isEmpty(UpdateAnnouncement) || !isEmpty(DeleteAnnouncement)) {
+      mutateAnnouncements();
+
+      setTimeout(() => {
+        EmptyResponse();
+      }, 5000);
+    }
+  }, [PostAnnouncement, UpdateAnnouncement, DeleteAnnouncement]);
 
   return (
     <>
       <div className="w-full">
         <BreadCrumbs title="Announcements" />
+        {/* Notifications */}
+        {!isEmpty(ErrorAnnouncements) ? (
+          <ToastNotification toastType="error" notifMessage={ErrorAnnouncements} />
+        ) : null}
         <Can I="access" this="Announcements">
           <div className="mx-5">
             <Card>
-              {/* {swrIsLoading ? (
+              {announcementsLoading ? (
                 <LoadingSpinner size="lg" />
-              ) : ( */}
-              <div className="flex flex-row flex-wrap">
-                <div className="flex justify-end order-2 w-1/2 table-actions-wrapper">
-                  <button
-                    type="button"
-                    className="text-white bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-blue-300 font-medium rounded-md text-xs p-2.5 text-center inline-flex items-center mr-2 dark:bg-blue-400 dark:hover:bg-blue-500 dark:focus:ring-blue-600"
-                    onClick={openAddActionModal}
-                  >
-                    <i className="bx bxs-plus-square"></i>&nbsp; Add Announcement
-                  </button>
+              ) : (
+                <div className="flex flex-row flex-wrap">
+                  <div className="flex justify-end order-2 w-1/2 table-actions-wrapper">
+                    <button
+                      type="button"
+                      className="text-white bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-blue-300 font-medium rounded-md text-xs p-2.5 text-center inline-flex items-center mr-2 dark:bg-blue-400 dark:hover:bg-blue-500 dark:focus:ring-blue-600"
+                      onClick={openAddActionModal}
+                    >
+                      <i className="bx bxs-plus-square"></i>&nbsp; Add Announcement
+                    </button>
+                  </div>
+                  <DataTable model={table} showGlobalFilter={true} showColumnFilter={false} paginate={true} />
                 </div>
-                <DataTable model={table} showGlobalFilter={true} showColumnFilter={false} paginate={true} />
-              </div>
-              {/* )} */}
+              )}
             </Card>
           </div>
 

@@ -1,5 +1,5 @@
 /* eslint-disable @nx/enforce-module-boundaries */
-import { FunctionComponent, useEffect, useState } from 'react';
+import { FunctionComponent, useEffect } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
@@ -7,7 +7,7 @@ import { postEmpMonitoring } from 'apps/employee-monitoring/src/utils/helper/emp
 
 // store and type
 import { useAnnouncementsStore } from 'apps/employee-monitoring/src/store/announcement.store';
-import { Announcement, FormPostAnnouncement } from 'apps/employee-monitoring/src/utils/types/announcement.type';
+import { FormPostAnnouncement } from 'apps/employee-monitoring/src/utils/types/announcement.type';
 
 import { Modal, AlertNotification, LoadingSpinner, Button, ToastNotification } from '@gscwd-apps/oneui';
 import { LabelInput } from '../../../inputs/LabelInput';
@@ -26,15 +26,52 @@ type AddModalProps = {
   closeModalAction: () => void;
 };
 
+// URL validation
+const isValidHttpUrl = (string: string | URL) => {
+  let url: URL;
+
+  try {
+    url = new URL(string);
+  } catch (_) {
+    return false;
+  }
+
+  // Check protocol
+  if (url.protocol !== 'http:' && url.protocol !== 'https:') {
+    return false;
+  }
+
+  // Check if URL contains a proper top-level domain
+  const domainParts = url.hostname.split('.');
+  if (domainParts.length < 2 || domainParts[domainParts.length - 1] === '') {
+    return false;
+  }
+
+  return true;
+};
+
 // yup error handling initialization
 const yupSchema = yup
   .object({
     title: yup.string().required('Title is required'),
-    date: yup.string().required('Date is required'),
     description: yup.string().required('Description is required'),
-    url: yup.string().required('URL is required'),
+    url: yup
+      .string()
+      .required('URL is required')
+      .test('valid-url', 'Must be a valid URL', (value) => {
+        if (!value) {
+          return true;
+        }
+        if (!value.startsWith('http://') && !value.startsWith('https://')) {
+          return isValidHttpUrl('http://' + value);
+        }
+        return isValidHttpUrl(value);
+      }),
+    eventAnnouncementDate: yup.string().required('Date is required'),
     status: yup.string().required('Status is required'),
-    image: yup
+
+    // file state is temporary since file is only used for file upload
+    file: yup
       .mixed()
       .test('fileExists', 'No file uploaded', async (value) => {
         return value instanceof FileList && value.length > 0;
@@ -80,16 +117,20 @@ const yupSchema = yup
 const AddAnnouncementModal: FunctionComponent<AddModalProps> = ({ modalState, setModalState, closeModalAction }) => {
   // Zustand initialization
   const {
-    PostAnnouncementResponse,
+    PostAnnouncement,
     SetPostAnnouncement,
 
+    ErrorAnnouncement,
     SetErrorAnnouncement,
+
     EmptyResponse,
   } = useAnnouncementsStore((state) => ({
-    PostAnnouncementResponse: state.postAnnouncement,
+    PostAnnouncement: state.postAnnouncement,
     SetPostAnnouncement: state.setPostAnnouncement,
 
+    ErrorAnnouncement: state.errorAnnouncement,
     SetErrorAnnouncement: state.setErrorAnnouncement,
+
     EmptyResponse: state.emptyResponse,
   }));
 
@@ -100,14 +141,15 @@ const AddAnnouncementModal: FunctionComponent<AddModalProps> = ({ modalState, se
     handleSubmit,
     formState: { errors, isSubmitting: postFormLoading },
   } = useForm<FormPostAnnouncement>({
-    mode: 'onChange',
+    mode: 'onSubmit',
+    reValidateMode: 'onChange',
     defaultValues: {
       title: '',
-      date: '',
+      eventAnnouncementDate: '',
       description: '',
       url: '',
-      image: '',
       app: 'ems',
+      photoUrl: '',
     },
     resolver: yupResolver(yupSchema),
   });
@@ -115,18 +157,31 @@ const AddAnnouncementModal: FunctionComponent<AddModalProps> = ({ modalState, se
   // form submission
   const onSubmit: SubmitHandler<FormPostAnnouncement> = (data: FormPostAnnouncement) => {
     EmptyResponse();
-
     handlePostResult(data);
   };
 
   const handlePostResult = async (data: FormPostAnnouncement) => {
-    const { error, result } = await postEmpMonitoring('/announcements', data);
+    const formData = new FormData();
+
+    // adding protocol to url if it does not start with the protocol
+    let { url } = data;
+    if (!url.startsWith('http://') && !url.startsWith('https://')) {
+      url = `https://${url}`;
+    }
+    formData.append('url', url);
+
+    formData.append('file', data.file[0]);
+    formData.append('title', data.title);
+    formData.append('description', data.description);
+    formData.append('status', data.status);
+    formData.append('eventAnnouncementDate', data.eventAnnouncementDate);
+
+    const { error, result } = await postEmpMonitoring('/events-announcements', formData);
 
     if (error) {
       SetErrorAnnouncement(result);
     } else {
       SetPostAnnouncement(result);
-
       reset();
       closeModalAction();
     }
@@ -142,9 +197,10 @@ const AddAnnouncementModal: FunctionComponent<AddModalProps> = ({ modalState, se
   return (
     <>
       {/* Notification */}
-      {!isEmpty(PostAnnouncementResponse) ? (
-        <ToastNotification toastType="success" notifMessage="Module added successfully" />
+      {!isEmpty(PostAnnouncement) ? (
+        <ToastNotification toastType="success" notifMessage="Announcement added successfully" />
       ) : null}
+      {!isEmpty(ErrorAnnouncement) ? <ToastNotification toastType="error" notifMessage={ErrorAnnouncement} /> : null}
 
       <Modal open={modalState} setOpen={setModalState} steady size="sm">
         <Modal.Header withCloseBtn>
@@ -172,13 +228,6 @@ const AddAnnouncementModal: FunctionComponent<AddModalProps> = ({ modalState, se
                 dismissible={true}
               />
             ) : null}
-
-            {/* {!isEmpty(postFormError) ? (
-              <ToastNotification
-                toastType="error"
-                notifMessage={postFormError}
-              />
-            ) : null} */}
 
             <form onSubmit={handleSubmit(onSubmit)} id="addAnnouncementForm">
               {/* Title input */}
@@ -211,9 +260,9 @@ const AddAnnouncementModal: FunctionComponent<AddModalProps> = ({ modalState, se
                   id={'date'}
                   label={'Date'}
                   type={'date'}
-                  controller={{ ...register('date') }}
-                  isError={errors.date ? true : false}
-                  errorMessage={errors.date?.message}
+                  controller={{ ...register('eventAnnouncementDate') }}
+                  isError={errors.eventAnnouncementDate ? true : false}
+                  errorMessage={errors.eventAnnouncementDate?.message}
                 />
               </div>
 
@@ -230,17 +279,15 @@ const AddAnnouncementModal: FunctionComponent<AddModalProps> = ({ modalState, se
               </div>
 
               {/* Image input */}
-              <div className="mb-6">
-                <LabelInput
-                  id={'image'}
-                  label={'Image'}
-                  type={'file'}
-                  controller={{ ...register('image') }}
-                  isError={errors.image ? true : false}
-                  errorMessage={errors.image?.message}
-                  accept={'.jpg,.png'}
-                />
-              </div>
+              <LabelInput
+                id={'file'}
+                label={'Image'}
+                type={'file'}
+                controller={{ ...register('file') }}
+                isError={errors.file ? true : false}
+                errorMessage={errors.file?.message}
+                accept={'.jpg,.png'}
+              />
 
               {/* Active / inactive announcement select*/}
               <SelectListRF
