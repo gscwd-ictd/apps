@@ -21,6 +21,7 @@ type SingleSelectProps = {
 };
 
 type SelectProps = {
+  selectOpen?: boolean | null;
   options: SelectOption[];
   label: string;
   id: string;
@@ -29,6 +30,7 @@ type SelectProps = {
 } & (SingleSelectProps | MultipleSelectProps);
 
 export function MySelectList({
+  selectOpen = false,
   multiple,
   value,
   onChange,
@@ -38,6 +40,7 @@ export function MySelectList({
   options,
   isSelectedHidden = false,
 }: SelectProps) {
+  const [customIsOpen, setCustomIsOpen] = useState<boolean>(selectOpen);
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [highlightedIndex, setHighlightedIndex] = useState<number>(0);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -70,6 +73,10 @@ export function MySelectList({
   }, [isOpen]);
 
   useEffect(() => {
+    setCustomIsOpen(selectOpen);
+  }, [selectOpen]);
+
+  useEffect(() => {
     const handler = (e: KeyboardEvent) => {
       if (e.target != containerRef.current) return;
       switch (e.code) {
@@ -93,6 +100,7 @@ export function MySelectList({
         }
         case 'Escape':
           setIsOpen(false);
+
           break;
       }
     };
@@ -102,7 +110,7 @@ export function MySelectList({
       containerRef.current?.addEventListener('keydown', handler);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isOpen, highlightedIndex, options]);
+  }, [isOpen, highlightedIndex, options, containerRef]);
 
   return (
     <div className="flex flex-col w-full">
@@ -110,9 +118,12 @@ export function MySelectList({
         {label}
       </label>
 
-      <Popover.Root>
+      <Popover.Root open={customIsOpen}>
         <Popover.Trigger>
           <div
+            onClick={() => {
+              setCustomIsOpen(!customIsOpen);
+            }}
             id={id}
             ref={containerRef}
             tabIndex={0}
@@ -156,7 +167,7 @@ export function MySelectList({
               <span className="px-2 font-light text-gray-500">|</span>
               <span
                 className={`text-gray-600 hover:cursor-pointer px-2 hover:text-gray-800 ${
-                  isOpen ? 'rotate-180 transition-all' : ''
+                  customIsOpen ? 'rotate-180 transition-all' : 'transition-all'
                 }`}
               >
                 <ChevronDownIcon size={20} type={undefined} />

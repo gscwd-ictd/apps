@@ -232,7 +232,7 @@ export const OvertimeAccomplishmentReportPdfModal = ({ modalState, setModalState
                             fontSize: 9,
                             padding: 6,
                             width: '100%',
-                            height: 100,
+                            height: 80,
                             textAlign: 'justify',
                           }}
                         >
@@ -247,7 +247,7 @@ export const OvertimeAccomplishmentReportPdfModal = ({ modalState, setModalState
                         flexDirection: 'row',
                         justifyContent: 'space-between',
                         fontSize: 9,
-                        paddingTop: 20,
+                        paddingTop: 10,
                         paddingLeft: 35,
                         paddingRight: 35,
                       }}
@@ -262,109 +262,91 @@ export const OvertimeAccomplishmentReportPdfModal = ({ modalState, setModalState
                       </Text>
                     </View>
                     {/* SIGNATURES */}
-                    <View
-                      style={{
-                        display: 'flex',
-                        flexDirection: 'row',
-                        justifyContent: 'flex-start',
-                        fontSize: 9,
-                        paddingTop: 10,
-                        paddingLeft: 35,
-                        paddingRight: 35,
-                        width: '100%',
-                      }}
-                    >
-                      <Image
-                        style={{ width: 50, position: 'absolute', marginLeft: 112, marginTop: -13 }}
-                        src={overtimeAccomplishmentReport?.employeeSignature ?? '/'}
-                      />
-                      <Image
-                        style={{ width: 50, position: 'absolute', marginLeft: 432, marginTop: -13 }}
-                        src={overtimeAccomplishmentReport?.supervisorSignature ?? '/'}
-                      />
-                    </View>
-                    <View
-                      style={{
-                        display: 'flex',
-                        flexDirection: 'row',
-                        justifyContent: 'space-between',
-                        fontSize: 9,
-                        paddingTop: 10,
-                        paddingLeft: 35,
-                        paddingRight: 35,
-                      }}
-                    >
-                      <Text>_______________________________________</Text>
-                      <Text>_______________________________________</Text>
-                    </View>
 
                     <View
                       style={{
+                        width: '100%',
                         display: 'flex',
                         flexDirection: 'row',
                         justifyContent: 'space-between',
-                        fontSize: 8,
-                        paddingTop: 2,
-                        paddingLeft: 35,
-                        paddingRight: 35,
+                        alignItems: 'flex-end',
+                        fontSize: 9,
+                        paddingRight: 20,
+                        paddingLeft: 20,
                       }}
                     >
-                      <Text
+                      <View
                         style={{
-                          marginTop: 1,
-                          marginLeft: 35,
-                          width: 195,
-                          textAlign: 'center',
-                          position: 'absolute',
+                          width: 200,
+                          display: 'flex',
+                          flexDirection: 'column',
+                          justifyContent: 'flex-end',
+                          alignItems: 'center',
+                          fontSize: 9,
+                          paddingTop: 0,
+                          gap: 0,
                         }}
                       >
-                        Signature Over Printed Name
-                      </Text>
-                      <Text
+                        <Image
+                          style={{ width: 30, marginBottom: 2 }}
+                          src={overtimeAccomplishmentReport?.employeeSignature ?? '/'}
+                        />
+
+                        <Text
+                          style={{
+                            marginBottom: -8,
+                            width: 165,
+                            textAlign: 'center',
+                          }}
+                        >
+                          {overtimeAccomplishmentReport.employeeName}
+                        </Text>
+                        <Text>_______________________________</Text>
+                        <Text
+                          style={{
+                            marginTop: 2,
+                            textAlign: 'center',
+                          }}
+                        >
+                          Signature Over Printed Name
+                        </Text>
+                      </View>
+
+                      <View
                         style={{
-                          marginTop: 1,
-                          marginLeft: 362,
-                          width: 195,
-                          textAlign: 'center',
-                          position: 'absolute',
+                          width: 200,
+                          display: 'flex',
+                          flexDirection: 'column',
+                          justifyContent: 'flex-end',
+                          alignItems: 'center',
+                          fontSize: 9,
+                          gap: 0,
                         }}
                       >
-                        {overtimeAccomplishmentReport.supervisorPosition}
-                      </Text>
-                    </View>
-                    <View
-                      style={{
-                        display: 'flex',
-                        flexDirection: 'row',
-                        justifyContent: 'flex-start',
-                        fontSize: 8,
-                        paddingTop: 2,
-                        paddingLeft: 35,
-                        paddingRight: 35,
-                      }}
-                    >
-                      <Text
-                        style={{
-                          marginLeft: 35,
-                          marginTop: -12,
-                          width: 195,
-                          textAlign: 'center',
-                          position: 'absolute',
-                        }}
-                      >
-                        {overtimeAccomplishmentReport.employeeName}
-                      </Text>
-                      <Text
-                        style={{
-                          marginLeft: 362,
-                          marginTop: -12,
-                          width: 195,
-                          textAlign: 'center',
-                          position: 'absolute',
-                        }}
-                      >
-                        {overtimeAccomplishmentReport.supervisorName}
-                      </Text>
+                        <Image
+                          style={{ width: 40, marginBottom: 2 }}
+                          src={overtimeAccomplishmentReport?.supervisorSignature ?? '/'}
+                        />
+
+                        <Text
+                          style={{
+                            marginBottom: -8,
+                            width: 165,
+                            textAlign: 'center',
+                          }}
+                        >
+                          {overtimeAccomplishmentReport.supervisorName}
+                        </Text>
+                        <Text>_______________________________</Text>
+                        <Text
+                          style={{
+                            marginTop: 2,
+                            textAlign: 'center',
+                          }}
+                        >
+                          {overtimeAccomplishmentReport.supervisorPosition}
+                        </Text>
+                      </View>
                     </View>
                   </View>
                 </Page>

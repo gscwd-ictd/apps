@@ -50,46 +50,46 @@ export const SideNav = ({ employeeDetails }: NavDetails) => {
 
   // const pendingApprovalsCountUrl = `${process.env.NEXT_PUBLIC_EMPLOYEE_MONITORING_URL}/v1/stats/${employeeDetails.employmentDetails.userId}`;
   // use useSWR, provide the URL and fetchWithSession function as a parameter
-  const pendingApprovalsCountUrl = `${process.env.NEXT_PUBLIC_PORTAL_URL}/stats-notifications`;
+  // const pendingApprovalsCountUrl = `${process.env.NEXT_PUBLIC_PORTAL_URL}/stats-notifications`;
 
-  const {
-    data: swrPendingApprovalsCount,
-    isLoading: swrPendingApprovalsCountIsLoading,
-    error: swrPendingApprovalsCountError,
-  } = useSWR(pendingApprovalsCountUrl, fetchWithToken, {
-    onErrorRetry: (error, key, config, revalidate, { retryCount }) => {
-      // Only retry up to 10 times.
-      if (retryCount >= 1) return;
-    },
-  });
+  // const {
+  //   data: swrPendingApprovalsCount,
+  //   isLoading: swrPendingApprovalsCountIsLoading,
+  //   error: swrPendingApprovalsCountError,
+  // } = useSWR(pendingApprovalsCountUrl, fetchWithToken, {
+  //   onErrorRetry: (error, key, config, revalidate, { retryCount }) => {
+  //     // Only retry up to 10 times.
+  //     if (retryCount >= 1) return;
+  //   },
+  // });
 
-  // Initial zustand state update
-  useEffect(() => {
-    if (swrPendingApprovalsCountIsLoading) {
-      getPendingApprovalsCount(swrPendingApprovalsCountIsLoading);
-    }
-  }, [swrPendingApprovalsCountIsLoading]);
+  // // Initial zustand state update
+  // useEffect(() => {
+  //   if (swrPendingApprovalsCountIsLoading) {
+  //     getPendingApprovalsCount(swrPendingApprovalsCountIsLoading);
+  //   }
+  // }, [swrPendingApprovalsCountIsLoading]);
 
-  // Upon success/fail of swr request, zustand state will be updated
-  useEffect(() => {
-    if (!isEmpty(swrPendingApprovalsCount)) {
-      getPendingApprovalsCountSuccess(swrPendingApprovalsCountIsLoading, swrPendingApprovalsCount);
-    }
+  // // Upon success/fail of swr request, zustand state will be updated
+  // useEffect(() => {
+  //   if (!isEmpty(swrPendingApprovalsCount)) {
+  //     getPendingApprovalsCountSuccess(swrPendingApprovalsCountIsLoading, swrPendingApprovalsCount);
+  //   }
 
-    if (!isEmpty(swrPendingApprovalsCountError)) {
-      getPendingApprovalsCountFail(swrPendingApprovalsCountIsLoading, swrPendingApprovalsCountError.message);
-    }
-  }, [swrPendingApprovalsCount, swrPendingApprovalsCountError]);
+  //   if (!isEmpty(swrPendingApprovalsCountError)) {
+  //     getPendingApprovalsCountFail(swrPendingApprovalsCountIsLoading, swrPendingApprovalsCountError.message);
+  //   }
+  // }, [swrPendingApprovalsCount, swrPendingApprovalsCountError]);
 
   return (
     <>
       {/* Approval List Load Failed Error */}
-      {!isEmpty(errorPendingApprovalsCount) ? (
+      {/* {!isEmpty(errorPendingApprovalsCount) ? (
         <ToastNotification
           toastType="error"
           notifMessage={`${errorPendingApprovalsCount}: Failed to load Pending Approval Count.`}
         />
-      ) : null}
+      ) : null} */}
 
       <nav className="fixed z-30 flex justify-start lg:justify-center w-screen lg:w-24 h-auto">
         <ul className="z-30 flex flex-col items-center gap-2 text-gray-600 mt-14">
