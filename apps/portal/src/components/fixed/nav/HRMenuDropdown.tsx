@@ -17,10 +17,10 @@ export const HRMenuDropdown = ({
   labelColor = 'text-white',
   right = false,
 }: MenuDropdownProps): JSX.Element => {
-  const { pendingApprovalsCount, errorPendingApprovalsCount } = useApprovalStore((state) => ({
-    pendingApprovalsCount: state.pendingApprovalsCount,
-    errorPendingApprovalsCount: state.error.errorPendingApprovalsCount,
-  }));
+  // const { pendingApprovalsCount, errorPendingApprovalsCount } = useApprovalStore((state) => ({
+  //   pendingApprovalsCount: state.pendingApprovalsCount,
+  //   errorPendingApprovalsCount: state.error.errorPendingApprovalsCount,
+  // }));
   const router = useRouter();
 
   return (
@@ -72,9 +72,9 @@ export const HRMenuDropdown = ({
                       <HiBadgeCheck className="w-6 h-6 text-rose-600" />
                       <span className="text-sm tracking-tight text-gray-700 text-left">Final Leave Approvals</span>
 
-                      {isEmpty(errorPendingApprovalsCount) && pendingApprovalsCount.forHrdmApprovalLeaves > 0 ? (
+                      {/* {isEmpty(errorPendingApprovalsCount) && pendingApprovalsCount.forHrdmApprovalLeaves > 0 ? (
                         <span className="absolute w-3 h-3 right-4 z-40 bg-red-600 rounded-full select-none" />
-                      ) : null}
+                      ) : null} */}
                     </button>
                   )}
                 </Menu.Item>
