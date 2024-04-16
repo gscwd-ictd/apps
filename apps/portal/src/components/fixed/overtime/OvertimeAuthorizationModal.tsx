@@ -410,7 +410,7 @@ export const OvertimeAuthorizationModal = ({ modalState, setModalState, closeMod
                           justifyContent: 'flex-end',
                           alignItems: 'center',
                           fontSize: 9,
-                          paddingTop: 30,
+                          paddingTop: 0,
                           gap: 0,
                         }}
                       >
@@ -446,7 +446,7 @@ export const OvertimeAuthorizationModal = ({ modalState, setModalState, closeMod
                           justifyContent: 'space-between',
                           alignItems: 'center',
                           fontSize: 9,
-                          paddingTop: 30,
+                          paddingTop: 0,
                         }}
                       >
                         <Text
@@ -477,7 +477,7 @@ export const OvertimeAuthorizationModal = ({ modalState, setModalState, closeMod
                           justifyContent: 'flex-end',
                           alignItems: 'center',
                           fontSize: 9,
-                          paddingTop: 30,
+                          paddingTop: 0,
                         }}
                       >
                         <Image
@@ -512,7 +512,7 @@ export const OvertimeAuthorizationModal = ({ modalState, setModalState, closeMod
                           justifyContent: 'space-between',
                           alignItems: 'center',
                           fontSize: 9,
-                          paddingTop: 30,
+                          paddingTop: 0,
                         }}
                       >
                         <Text
