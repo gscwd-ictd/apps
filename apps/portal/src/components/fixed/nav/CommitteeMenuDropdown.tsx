@@ -122,13 +122,13 @@ export const CommitteeMenuDropdown = ({
                           <HiAcademicCap className="w-6 h-6 text-rose-600" />
                         </div>
                         <span className="text-sm tracking-tight text-gray-700 text-left">PDC Approvals</span>
-                        {/* {isEmpty(errorPendingApprovalsCount) &&
+                        {isEmpty(errorPendingApprovalsCount) &&
                         ((pendingApprovalsCount.pendingPdcChairmanApprovalCount > 0 &&
                           pendingApprovalsCount.pendingPdcChairmanApprovalCount != null) ||
                           (pendingApprovalsCount.pendingPdcSecretariatApprovalCount > 0 &&
                             pendingApprovalsCount.pendingPdcSecretariatApprovalCount != null)) ? (
                           <span className="absolute w-3 h-3 right-4 z-40 bg-red-600 rounded-full select-none" />
-                        ) : null} */}
+                        ) : null}
                       </button>
                     )}
                   </Menu.Item>

@@ -207,6 +207,7 @@ export default function PassSlipApprovals({ employeeDetails }: InferGetServerSid
     }),
     columnHelper.accessor('estimateHours', {
       header: 'Estimated Hours',
+      enableColumnFilter: false,
       cell: (info) => info.getValue(),
     }),
     columnHelper.accessor('status', {

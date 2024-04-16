@@ -276,11 +276,11 @@ export const OvertimeAccomplishmentReportPdfModal = ({ modalState, setModalState
                     >
                       <Image
                         style={{ width: 50, position: 'absolute', marginLeft: 112, marginTop: -13 }}
-                        src={overtimeAccomplishmentReport?.employeeSignature ?? ''}
+                        src={overtimeAccomplishmentReport?.employeeSignature ?? '/'}
                       />
                       <Image
                         style={{ width: 50, position: 'absolute', marginLeft: 432, marginTop: -13 }}
-                        src={overtimeAccomplishmentReport?.supervisorSignature ?? ''}
+                        src={overtimeAccomplishmentReport?.supervisorSignature ?? '/'}
                       />
                     </View>
                     <View

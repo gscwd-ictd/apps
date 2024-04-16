@@ -84,12 +84,12 @@ export const SideNav = ({ employeeDetails }: NavDetails) => {
   return (
     <>
       {/* Approval List Load Failed Error */}
-      {/* {!isEmpty(errorPendingApprovalsCount) ? (
+      {!isEmpty(errorPendingApprovalsCount) ? (
         <ToastNotification
           toastType="error"
           notifMessage={`${errorPendingApprovalsCount}: Failed to load Pending Approval Count.`}
         />
-      ) : null} */}
+      ) : null}
 
       <nav className="fixed z-30 flex justify-start lg:justify-center w-screen lg:w-24 h-auto">
         <ul className="z-30 flex flex-col items-center gap-2 text-gray-600 mt-14">
@@ -108,11 +108,11 @@ export const SideNav = ({ employeeDetails }: NavDetails) => {
               isEqual(employeeDetails.employmentDetails.userRole, UserRole.GENERAL_MANAGER) ? (
                 <>
                   <li className="ml-10 lg:ml-0">
-                    {/* {isEmpty(errorPendingApprovalsCount) &&
+                    {isEmpty(errorPendingApprovalsCount) &&
                     pendingApprovalsCount.pendingGmApprovalCount > 0 &&
                     pendingApprovalsCount.pendingGmApprovalCount != null ? (
                       <span className="absolute w-3 h-3 mt-1 ml-8 z-50 bg-red-600 rounded-full select-none" />
-                    ) : null} */}
+                    ) : null}
                     <GeneralManagerMenuDropdown right />
                   </li>
 
@@ -220,19 +220,19 @@ export const SideNav = ({ employeeDetails }: NavDetails) => {
                 ) : null
               ) : null}
 
-              {/* PSB / OVERTIME SUPERVISOR */}
+              {/* PSB / OVERTIME SUPERVISOR / PDC */}
               {Boolean(employeeDetails.employmentDetails.isHRMPSB) === true ||
               employeeDetails.employmentDetails.overtimeImmediateSupervisorId != null ||
               (!isEqual(employeeDetails.employmentDetails.userRole, UserRole.RANK_AND_FILE) &&
                 !isEqual(employeeDetails.employmentDetails.userRole, UserRole.JOB_ORDER)) ? (
                 <li className="ml-10 lg:ml-0">
-                  {/* {isEmpty(errorPendingApprovalsCount) &&
+                  {isEmpty(errorPendingApprovalsCount) &&
                   ((pendingApprovalsCount.pendingPdcChairmanApprovalCount > 0 &&
                     pendingApprovalsCount.pendingPdcChairmanApprovalCount != null) ||
                     (pendingApprovalsCount.pendingPdcSecretariatApprovalCount > 0 &&
                       pendingApprovalsCount.pendingPdcSecretariatApprovalCount != null)) ? (
                     <span className="absolute w-3 h-3 mt-1 ml-8 z-40 bg-red-600 rounded-full select-none" />
-                  ) : null} */}
+                  ) : null}
                   <CommitteeMenuDropdown right />
                 </li>
               ) : null}

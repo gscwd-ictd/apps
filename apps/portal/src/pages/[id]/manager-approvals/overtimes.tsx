@@ -236,6 +236,7 @@ export default function OvertimeApprovals({ employeeDetails }: InferGetServerSid
     }),
     columnHelper.accessor('employees', {
       header: 'Accomplishments',
+      enableColumnFilter: false,
       cell: (props) => RenderOvertimePendingAccomplishmentStatus(props.row.original.employees, TextSize.TEXT_SM),
     }),
   ];

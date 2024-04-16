@@ -404,11 +404,11 @@ export const OvertimeAuthorizationModal = ({ modalState, setModalState, closeMod
                     >
                       <Image
                         style={{ width: 50, position: 'absolute', marginLeft: 90, marginTop: 0 }}
-                        src={overtimeAuthorizationReport?.signatories?.employeeSignature ?? ''}
+                        src={overtimeAuthorizationReport?.signatories?.employeeSignature ?? '/'}
                       />
                       <Image
                         style={{ width: 50, position: 'absolute', marginLeft: 360, marginTop: 0 }}
-                        src={overtimeAuthorizationReport?.signatories?.supervisorSignature ?? ''}
+                        src={overtimeAuthorizationReport?.signatories?.supervisorSignature ?? '/'}
                       />
                     </View>
                     <View

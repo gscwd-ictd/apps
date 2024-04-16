@@ -161,11 +161,13 @@ export default function TrainingSelection({ employeeDetails }: InferGetServerSid
     }),
     columnHelper.accessor('trainingEnd', {
       header: 'End',
+      enableColumnFilter: false,
       // filterFn: 'equalsString',
       cell: (info) => dayjs(info.getValue()).format('MMMM DD, YYYY'),
     }),
     columnHelper.accessor('numberOfSlots', {
       header: 'Slots',
+      enableColumnFilter: false,
       cell: (info) => info.getValue(),
     }),
     columnHelper.accessor('status', {
@@ -264,7 +266,7 @@ export default function TrainingSelection({ employeeDetails }: InferGetServerSid
                     textSize={'text-lg'}
                     model={table}
                     showGlobalFilter={true}
-                    showColumnFilter={false}
+                    showColumnFilter={true}
                     paginate={true}
                   />
                 </div>

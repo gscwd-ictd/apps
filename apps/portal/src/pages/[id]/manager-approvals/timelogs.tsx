@@ -134,18 +134,22 @@ export default function PassSlipApprovals({ employeeDetails }: InferGetServerSid
     }),
     columnHelper.accessor('dtrTimeIn', {
       header: 'Time In',
+      enableColumnFilter: false,
       cell: (info) => info.getValue(),
     }),
     columnHelper.accessor('dtrLunchOut', {
       header: 'Lunch Out',
+      enableColumnFilter: false,
       cell: (info) => info.getValue(),
     }),
     columnHelper.accessor('dtrLunchIn', {
       header: 'Lunch In',
+      enableColumnFilter: false,
       cell: (info) => info.getValue(),
     }),
     columnHelper.accessor('dtrTimeOut', {
       header: 'Time Out',
+      enableColumnFilter: false,
       cell: (info) => info.getValue(),
     }),
     columnHelper.accessor('status', {
@@ -227,7 +231,7 @@ export default function PassSlipApprovals({ employeeDetails }: InferGetServerSid
                       textSize={'text-lg'}
                       model={table}
                       showGlobalFilter={true}
-                      showColumnFilter={false}
+                      showColumnFilter={true}
                       paginate={true}
                     />
                   </div>
