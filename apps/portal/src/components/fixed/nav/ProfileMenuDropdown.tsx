@@ -68,10 +68,10 @@ export const ProfileMenuDropdown = ({
     emptyResponseAndError: state.emptyResponseAndError,
   }));
 
-  const { pendingApprovalsCount, errorPendingApprovalsCount } = useApprovalStore((state) => ({
-    pendingApprovalsCount: state.pendingApprovalsCount,
-    errorPendingApprovalsCount: state.error.errorPendingApprovalsCount,
-  }));
+  // const { pendingApprovalsCount, errorPendingApprovalsCount } = useApprovalStore((state) => ({
+  //   pendingApprovalsCount: state.pendingApprovalsCount,
+  //   errorPendingApprovalsCount: state.error.errorPendingApprovalsCount,
+  // }));
 
   // close Change Password Modal
   const closeChangePasswordModal = async () => {
@@ -190,10 +190,10 @@ export const ProfileMenuDropdown = ({
                                     Appointing Authority Selection
                                   </span>
                                 </div>
-                                {isEmpty(errorPendingApprovalsCount) &&
+                                {/* {isEmpty(errorPendingApprovalsCount) &&
                                 pendingApprovalsCount.pendingAppointingAuthoritySelection > 0 ? (
                                   <span className="absolute w-3 h-3 right-5 z-40 bg-red-600 rounded-full select-none" />
-                                ) : null}
+                                ) : null} */}
                               </button>
                             )}
                           </Menu.Item>
@@ -244,13 +244,13 @@ export const ProfileMenuDropdown = ({
                                 <div className="flex w-full items-end justify-between">
                                   <span className="text-sm tracking-tight text-slate-500 text-left">Approvals</span>
                                 </div>
-                                {isEmpty(errorPendingApprovalsCount) &&
+                                {/* {isEmpty(errorPendingApprovalsCount) &&
                                 (pendingApprovalsCount.pendingPassSlipsCount > 0 ||
                                   pendingApprovalsCount.pendingLeavesCount > 0 ||
                                   pendingApprovalsCount.pendingOvertimesCount > 0 ||
                                   pendingApprovalsCount.pendingDtrCorrectionsApprovals > 0) ? (
                                   <span className="absolute w-3 h-3 right-5 z-40 bg-red-600 rounded-full select-none" />
-                                ) : null}
+                                ) : null} */}
                               </button>
                             )}
                           </Menu.Item>
@@ -291,10 +291,10 @@ export const ProfileMenuDropdown = ({
                                     Position Request Form
                                   </span>
                                 </div>
-                                {isEmpty(errorPendingApprovalsCount) &&
+                                {/* {isEmpty(errorPendingApprovalsCount) &&
                                 pendingApprovalsCount.prfsForApprovalCount > 0 ? (
                                   <span className="absolute w-3 h-3 right-5 z-40 bg-red-600 rounded-full select-none" />
-                                ) : null}
+                                ) : null} */}
                               </button>
                             )}
                           </Menu.Item>
@@ -313,10 +313,10 @@ export const ProfileMenuDropdown = ({
                                     Applicant Endorsement
                                   </span>
                                 </div>
-                                {isEmpty(errorPendingApprovalsCount) &&
+                                {/* {isEmpty(errorPendingApprovalsCount) &&
                                 pendingApprovalsCount.pendingApplicantEndorsementsCount > 0 ? (
                                   <span className="absolute w-3 h-3 right-5 z-40 bg-red-600 rounded-full select-none" />
-                                ) : null}
+                                ) : null} */}
                               </button>
                             )}
                           </Menu.Item>
@@ -363,10 +363,10 @@ export const ProfileMenuDropdown = ({
                                     Final Leave Approval
                                   </span>
                                 </div>
-                                {isEmpty(errorPendingApprovalsCount) &&
+                                {/* {isEmpty(errorPendingApprovalsCount) &&
                                 pendingApprovalsCount.forHrdmApprovalLeaves > 0 ? (
                                   <span className="absolute w-3 h-3 right-5 z-40 bg-red-600 rounded-full select-none" />
-                                ) : null}
+                                ) : null} */}
                               </button>
                             )}
                           </Menu.Item>
