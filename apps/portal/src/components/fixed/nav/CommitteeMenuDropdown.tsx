@@ -19,10 +19,10 @@ export const CommitteeMenuDropdown = ({
   labelColor = 'text-white',
   right = false,
 }: MenuDropdownProps): JSX.Element => {
-  const { pendingApprovalsCount, errorPendingApprovalsCount } = useApprovalStore((state) => ({
-    pendingApprovalsCount: state.pendingApprovalsCount,
-    errorPendingApprovalsCount: state.error.errorPendingApprovalsCount,
-  }));
+  // const { pendingApprovalsCount, errorPendingApprovalsCount } = useApprovalStore((state) => ({
+  //   pendingApprovalsCount: state.pendingApprovalsCount,
+  //   errorPendingApprovalsCount: state.error.errorPendingApprovalsCount,
+  // }));
   const router = useRouter();
 
   const employeeDetails = useEmployeeStore((state) => state.employeeDetails);

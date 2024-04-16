@@ -17,10 +17,10 @@ export const ManagerMenuDropdown = ({
   labelColor = 'text-white',
   right = false,
 }: MenuDropdownProps): JSX.Element => {
-  const { pendingApprovalsCount, errorPendingApprovalsCount } = useApprovalStore((state) => ({
-    pendingApprovalsCount: state.pendingApprovalsCount,
-    errorPendingApprovalsCount: state.error.errorPendingApprovalsCount,
-  }));
+  // const { pendingApprovalsCount, errorPendingApprovalsCount } = useApprovalStore((state) => ({
+  //   pendingApprovalsCount: state.pendingApprovalsCount,
+  //   errorPendingApprovalsCount: state.error.errorPendingApprovalsCount,
+  // }));
 
   const router = useRouter();
 
@@ -74,12 +74,12 @@ export const ManagerMenuDropdown = ({
                         <HiBadgeCheck className="w-6 h-6 text-blue-600" />
                         <span className="text-sm tracking-tight text-gray-700 text-left">Approvals</span>
                       </div>
-                      {isEmpty(errorPendingApprovalsCount) &&
+                      {/* {isEmpty(errorPendingApprovalsCount) &&
                       (pendingApprovalsCount.pendingPassSlipsCount > 0 ||
                         pendingApprovalsCount.pendingLeavesCount > 0 ||
                         pendingApprovalsCount.pendingOvertimesCount > 0) ? (
                         <span className="absolute w-3 h-3 right-4 z-40 bg-red-600 rounded-full select-none" />
-                      ) : null}
+                      ) : null} */}
                     </button>
                   )}
                 </Menu.Item>
@@ -116,9 +116,9 @@ export const ManagerMenuDropdown = ({
                         <HiCollection className="w-6 h-6 text-indigo-500" />
                         <span className="text-sm tracking-tight text-gray-700 text-left">Position Request Form</span>
                       </div>
-                      {isEmpty(errorPendingApprovalsCount) && pendingApprovalsCount.prfsForApprovalCount > 0 ? (
+                      {/* {isEmpty(errorPendingApprovalsCount) && pendingApprovalsCount.prfsForApprovalCount > 0 ? (
                         <span className="absolute w-3 h-3 right-4 z-40 bg-red-600 rounded-full select-none" />
-                      ) : null}
+                      ) : null} */}
                     </button>
                   )}
                 </Menu.Item>
@@ -134,10 +134,10 @@ export const ManagerMenuDropdown = ({
                         <HiClipboardList className="w-6 h-6 text-green-600" />
                         <span className="text-sm tracking-tight text-gray-700 text-left">Applicant Endorsement</span>
                       </div>
-                      {isEmpty(errorPendingApprovalsCount) &&
+                      {/* {isEmpty(errorPendingApprovalsCount) &&
                       pendingApprovalsCount.pendingApplicantEndorsementsCount > 0 ? (
                         <span className="absolute w-3 h-3 right-4 z-40 bg-red-600 rounded-full select-none" />
-                      ) : null}
+                      ) : null} */}
                     </button>
                   )}
                 </Menu.Item>
