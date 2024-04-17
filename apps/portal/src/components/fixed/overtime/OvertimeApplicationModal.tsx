@@ -38,9 +38,6 @@ export const OvertimeApplicationModal = ({ modalState, setModalState, closeModal
   // set state for employee store
   const employeeDetails = useEmployeeStore((state) => state.employeeDetails);
   const [selectedEmployees, setSelectedEmployees] = useState<Array<SelectOption>>([]);
-  const [searchedEmployee, setSearchedEmployee] = useState<Array<SelectOption>>([]);
-  const [searchedEmployeeInput, setSearchedEmployeeInput] = useState<string>(null);
-  const [focusedEmployeeInput, setFocusedEmployeeInput] = useState<boolean>(false);
 
   // React hook form
   const { reset, register, handleSubmit, watch, setValue } = useForm<OvertimeForm>({
@@ -88,16 +85,6 @@ export const OvertimeApplicationModal = ({ modalState, setModalState, closeModal
     }
   };
 
-  const handleSearchEmployee = (name: string) => {
-    setSearchedEmployeeInput(name);
-    let searchedName = employeeList.filter((search) => search.label.toLowerCase().includes(name.toLowerCase()));
-    setSearchedEmployee(searchedName);
-  };
-
-  useEffect(() => {
-    console.log(searchedEmployee);
-  }, [searchedEmployee]);
-
   const { windowWidth } = UseWindowDimensions();
 
   return (
@@ -126,7 +113,7 @@ export const OvertimeApplicationModal = ({ modalState, setModalState, closeModal
               dismissible={true}
             />
           ) : null}
-          <form id="ApplyOvertimeForm" onSubmit={handleSubmit(onSubmit)} onClick={() => setSearchedEmployeeInput(null)}>
+          <form id="ApplyOvertimeForm" onSubmit={handleSubmit(onSubmit)}>
             <div className="w-full h-full flex flex-col gap-2 ">
               <div className="w-full flex flex-col gap-2 px-4 rounded">
                 <div className={`md:flex-row md:items-center flex-col items-start flex gap-0 md:gap-3 justify-between`}>
@@ -168,19 +155,13 @@ export const OvertimeApplicationModal = ({ modalState, setModalState, closeModal
                     Employees:
                     <span className="text-red-600">*</span>
                   </label>
-                  <input
-                    type="text"
-                    className="border-slate-300 text-slate-500 h-12 text-md w-full rounded mt-1"
-                    placeholder="Search Employee"
-                    onChange={(e) => handleSearchEmployee(e.target.value)}
-                    value={searchedEmployeeInput}
-                  />
+
                   <MySelectList
-                    selectOpen={focusedEmployeeInput ? true : false}
+                    withSearchBar={true}
                     id="employees"
                     label=""
                     multiple
-                    options={searchedEmployee.length > 0 ? searchedEmployee : employeeList}
+                    options={employeeList}
                     onChange={(o) => setSelectedEmployees(o)}
                     value={selectedEmployees}
                   />

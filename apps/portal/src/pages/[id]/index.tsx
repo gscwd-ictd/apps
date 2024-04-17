@@ -114,6 +114,7 @@ export default function Dashboard({ userDetails }: InferGetServerSidePropsType<t
     if (schedule && userDetails) {
       const modules = await setModules(userDetails, schedule);
       setAllowedModules(modules);
+      console.log(userDetails);
     }
   }
 
@@ -412,8 +413,7 @@ export default function Dashboard({ userDetails }: InferGetServerSidePropsType<t
                 <div className="grid grid-cols-2 gap-4 md:grid-cols-4 lg:grid-cols-5 ">
                   <div className="order-1 col-span-2 md:order-1 md:col-span-2 md:row-span-2 lg:row-span-2 lg:col-span-1 lg:order-1 ">
                     <ProfileCard
-                      firstName={userDetails.profile.firstName}
-                      lastName={userDetails.profile.lastName}
+                      fullName={userDetails.employmentDetails.employeeFullName}
                       position={userDetails.employmentDetails.assignment.positionTitle}
                       division={userDetails.employmentDetails.assignment.name}
                       photoUrl={userDetails.profile.photoUrl}

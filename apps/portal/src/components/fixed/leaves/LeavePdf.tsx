@@ -742,18 +742,34 @@ export const LeavePdf = ({ employeeDetails, leaveDetails, selectedLeaveLedger }:
                         <Text style={styles.checkbox}></Text>
                         <Text style={styles.leaveLabel}>Requested</Text>
                       </View>
-                      <Text style={{ paddingTop: 6, paddingLeft: 6 }}>
-                        _________________________________________________
-                      </Text>
-                      <Text
+                      <View
                         style={{
+                          width: '100%',
                           textAlign: 'center',
-                          fontSize: 8,
+                          fontFamily: 'Helvetica',
                           paddingBottom: 5,
+                          backgroundColor: 'red',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'flex-end',
                         }}
                       >
-                        (Signature of Applicant)
-                      </Text>
+                        {/* <Image
+                        style={{ width: 50, position: 'absolute', marginLeft: 432, marginTop: -13 }}
+                        src={leaveDetails?.leaveApplicationBasicInfo. ?? ''}
+                      /> */}
+                        <Text style={{ paddingTop: 6, paddingLeft: 6 }}>
+                          _________________________________________________
+                        </Text>
+                        <Text
+                          style={{
+                            textAlign: 'center',
+                            fontSize: 8,
+                          }}
+                        >
+                          (Signature of Applicant)
+                        </Text>
+                      </View>
                     </View>
                   </View>
                 </View>
@@ -872,35 +888,45 @@ export const LeavePdf = ({ employeeDetails, leaveDetails, selectedLeaveLedger }:
                           </View>
                         </View>
 
-                        <Text style={{ paddingTop: 20, paddingLeft: 6 }}>
-                          _________________________________________________
-                        </Text>
                         {/* <Image
                         style={{ width: 50, position: 'absolute', marginLeft: 432, marginTop: -13 }}
                         src={leaveDetails?.leaveApplicationBasicInfo. ?? ''}
                       /> */}
-                        <Text
+                        <View
                           style={{
-                            position: 'absolute',
-                            bottom: 0,
-                            marginBottom: 16,
-                            textAlign: 'center',
                             width: '100%',
-                            fontSize: 10,
-                          }}
-                        >
-                          test
-                        </Text>
-                        <Text
-                          style={{
                             textAlign: 'center',
-                            fontSize: 8,
+                            fontFamily: 'Helvetica',
                             paddingBottom: 5,
-                            paddingTop: 2,
+                            backgroundColor: 'red',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'flex-end',
+                            paddingTop: 25,
                           }}
                         >
-                          Authorized Officer
-                        </Text>
+                          <Text
+                            style={{
+                              marginBottom: -9,
+                              textAlign: 'center',
+                              width: '100%',
+                              fontSize: 10,
+                            }}
+                          >
+                            test
+                          </Text>
+                          <Text style={{}}>_________________________________________________</Text>
+                          <Text
+                            style={{
+                              textAlign: 'center',
+                              fontSize: 8,
+                              paddingBottom: 5,
+                              paddingTop: 2,
+                            }}
+                          >
+                            Authorized Officer
+                          </Text>
+                        </View>
                       </View>
                     </View>
                     <View
@@ -949,35 +975,45 @@ export const LeavePdf = ({ employeeDetails, leaveDetails, selectedLeaveLedger }:
                         <Text style={{ padding: 5 }}>____________________________________________</Text>
                         <Text style={{ padding: 5 }}>____________________________________________</Text>
                       </View>
-                      {/* <Image
+                      <View
+                        style={{
+                          width: '100%',
+                          textAlign: 'center',
+                          fontFamily: 'Helvetica',
+                          paddingBottom: 5,
+                          backgroundColor: 'red',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'flex-end',
+                          paddingTop: 23,
+                        }}
+                      >
+                        {/* <Image
                         style={{ width: 50, position: 'absolute', marginLeft: 432, marginTop: -13 }}
                         src={leaveDetails?.leaveApplicationBasicInfo. ?? ''}
                       /> */}
-                      <Text
-                        style={{
-                          position: 'absolute',
-                          bottom: 0,
-                          marginBottom: 18,
-                          textAlign: 'center',
-                          width: '100%',
-                          fontSize: 10,
-                        }}
-                      >
-                        test
-                      </Text>
-                      <Text style={{ paddingTop: 20, paddingLeft: 6 }}>
-                        _________________________________________________
-                      </Text>
-                      <Text
-                        style={{
-                          textAlign: 'center',
-                          fontSize: 8,
-                          paddingBottom: 5,
-                          paddingTop: 2,
-                        }}
-                      >
-                        Authorized Officer
-                      </Text>
+                        <Text
+                          style={{
+                            marginBottom: -9,
+                            textAlign: 'center',
+                            width: '100%',
+                            fontSize: 10,
+                          }}
+                        >
+                          test
+                        </Text>
+                        <Text style={{}}>_________________________________________________</Text>
+                        <Text
+                          style={{
+                            textAlign: 'center',
+                            fontSize: 8,
+                            paddingBottom: 5,
+                            paddingTop: 2,
+                          }}
+                        >
+                          Authorized Officer
+                        </Text>
+                      </View>
                     </View>
                   </View>
                   <View
@@ -1061,26 +1097,28 @@ export const LeavePdf = ({ employeeDetails, leaveDetails, selectedLeaveLedger }:
                       textAlign: 'center',
                       fontFamily: 'Helvetica',
                       paddingBottom: 20,
+                      backgroundColor: 'red',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'flex-end',
                     }}
                   >
                     {/* <Image
-                        style={{ width: 50, position: 'absolute', marginLeft: 432, marginTop: -13 }}
+                        style={{ width: 50,  marginTop: -13 }}
                         src={leaveDetails?.leaveApplicationBasicInfo. ?? ''}
                       /> */}
-                    <Text style={{ paddingTop: 6, paddingBottom: 4 }}>______________________</Text>
-
                     <Text
                       style={{
-                        position: 'absolute',
-                        bottom: 0,
-                        marginBottom: 40,
                         textAlign: 'center',
                         width: '100%',
                         fontSize: 10,
+                        marginBottom: -18,
                       }}
                     >
                       test
                     </Text>
+                    <Text style={{}}>______________________</Text>
+
                     <Text
                       style={{
                         textAlign: 'center',

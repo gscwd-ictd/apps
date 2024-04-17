@@ -1,3 +1,5 @@
+/* eslint-disable @nx/enforce-module-boundaries */
+import { ScheduleBases } from 'libs/utils/src/lib/enums/schedule.enum';
 import { Roles } from '../utils/constants/user-roles';
 
 export type User = {
@@ -25,12 +27,20 @@ export type Assignment = {
   positionTitle: string;
 };
 
+export type OrgStructure = {
+  departmentName: string;
+  divisionName: string;
+  officeName: string;
+};
+
 export type EmploymentDetails = {
   salaryGrade: string;
   salaryGradeAmount: number;
+  scheduleBase: ScheduleBases;
   userId: string;
   companyId: string | null;
   assignment: Assignment;
+  orgStruct: OrgStructure;
   userRole: string;
   isHRMPSB?: boolean;
   isPdcChairman?: boolean;
@@ -103,5 +113,11 @@ export const employeeDummy: EmployeeDetails = {
     userRole: 'general_manager',
     isPdcChairman: false,
     isPdcSecretariat: false,
+    scheduleBase: ScheduleBases.OFFICE,
+    orgStruct: {
+      departmentName: '',
+      divisionName: '',
+      officeName: '',
+    },
   },
 };

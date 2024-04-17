@@ -692,7 +692,7 @@ export const LeaveCompletedModal = ({ modalState, setModalState, closeModalActio
               </>
             ) : leaveIndividualDetail?.leaveApplicationBasicInfo?.status ? (
               <>
-                {/* {leaveIndividualDetail?.leaveApplicationBasicInfo?.status === LeaveStatus.APPROVED ? (
+                {leaveIndividualDetail?.leaveApplicationBasicInfo?.status === LeaveStatus.APPROVED ? (
                   <Button
                     variant={'primary'}
                     size={'md'}
@@ -701,7 +701,7 @@ export const LeaveCompletedModal = ({ modalState, setModalState, closeModalActio
                   >
                     View PDF
                   </Button>
-                ) : null} */}
+                ) : null}
 
                 <Button
                   variant={'warning'}

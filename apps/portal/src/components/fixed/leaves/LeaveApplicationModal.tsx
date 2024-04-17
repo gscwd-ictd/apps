@@ -472,8 +472,10 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
     const totalVlFlCredits = Number(vacationLeaveBalance) + Number(forcedLeaveBalance);
     if (selectedLeaveMonetizationType === LeaveMonetizationType.BY_NUMBER_OF_CREDITS) {
       setLeaveCreditsInput(credits);
-      setLessVlFL(credits);
       if (totalVlFlCredits - credits > 5) {
+        setLessVlFL(credits);
+      } else if (totalVlFlCredits <= 5) {
+        setLessSl(credits);
       }
     } else if (selectedLeaveMonetizationType === LeaveMonetizationType.BY_PERCENTAGE_OF_CREDITS) {
       setLeaveCreditsInput(credits);

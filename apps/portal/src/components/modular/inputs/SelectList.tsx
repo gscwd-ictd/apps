@@ -21,6 +21,7 @@ type SingleSelectProps = {
 };
 
 type SelectProps = {
+  withSearchBar?: boolean;
   selectOpen?: boolean | null;
   options: SelectOption[];
   label: string;
@@ -30,6 +31,7 @@ type SelectProps = {
 } & (SingleSelectProps | MultipleSelectProps);
 
 export function MySelectList({
+  withSearchBar = false,
   selectOpen = false,
   multiple,
   value,
@@ -44,6 +46,23 @@ export function MySelectList({
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [highlightedIndex, setHighlightedIndex] = useState<number>(0);
   const containerRef = useRef<HTMLDivElement>(null);
+  const [searchedItem, setSearchedItem] = useState<Array<SelectOption>>([]); //filtered list based on searchInput
+  const [searchedInput, setSearchedInput] = useState<string>(null);
+  const [listToSearch, setListToSearch] = useState<Array<SelectOption>>([]);
+
+  const handleSearchItem = (name: string) => {
+    setSearchedInput(name);
+    const searchedItem = options.filter((search) => search.label.toLowerCase().includes(name.toLowerCase()));
+    setSearchedItem(searchedItem);
+  };
+
+  useEffect(() => {
+    if (searchedItem.length > 0) {
+      setListToSearch(searchedItem);
+    } else {
+      setListToSearch(options);
+    }
+  }, [searchedItem]);
 
   // clear all values inside the input
   const clearOptions = () => {
@@ -118,12 +137,9 @@ export function MySelectList({
         {label}
       </label>
 
-      <Popover.Root open={customIsOpen}>
+      <Popover.Root>
         <Popover.Trigger>
           <div
-            onClick={() => {
-              setCustomIsOpen(!customIsOpen);
-            }}
             id={id}
             ref={containerRef}
             tabIndex={0}
@@ -182,8 +198,18 @@ export function MySelectList({
               isOpen ? 'block' : 'hidden'
             } border absolute  rounded  max-h-[12em] bg-white z-50 overflow-y-auto w-full left-0 top-[calc(100%+.25em)] `}
           > */}
+          {withSearchBar ? (
+            <input
+              type="text"
+              className="border-slate-300 text-slate-500 h-8 text-sm w-full rounded mt-1"
+              placeholder="Search"
+              onChange={(e) => handleSearchItem(e.target.value)}
+              value={searchedInput}
+            />
+          ) : null}
+
           <ul className="border  rounded  max-h-[12em] bg-white z-50 overflow-y-auto w-full">
-            {options.map((option, index) => (
+            {listToSearch.map((option, index) => (
               <div key={option.value}>
                 {isSelectedHidden ? (
                   //hides selected options from list pool

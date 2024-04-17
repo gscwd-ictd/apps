@@ -1,6 +1,8 @@
+/* eslint-disable @nx/enforce-module-boundaries */
 import { create } from 'zustand';
 import { EmployeeDetails } from '../types/employee.type';
 import { devtools } from 'zustand/middleware';
+import { ScheduleBases } from 'libs/utils/src/lib/enums/schedule.enum';
 
 export type EmployeeState = {
   employeeDetails: EmployeeDetails;
@@ -38,6 +40,12 @@ export const EMPLOYEE_DATA: EmployeeDetails = {
     },
     userRole: '',
     overtimeImmediateSupervisorId: '',
+    scheduleBase: ScheduleBases.OFFICE,
+    orgStruct: {
+      departmentName: '',
+      divisionName: '',
+      officeName: '',
+    },
   },
 };
 
