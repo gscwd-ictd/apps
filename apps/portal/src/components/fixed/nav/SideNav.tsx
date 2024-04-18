@@ -95,9 +95,9 @@ export const SideNav = ({ employeeDetails }: NavDetails) => {
     }
   }, [employeeDetails]);
 
-  useEffect(() => {
-    console.log(employeeSalaryGrade, 'sg');
-  }, [employeeSalaryGrade]);
+  // useEffect(() => {
+  //   console.log(employeeSalaryGrade, 'sg');
+  // }, [employeeSalaryGrade]);
 
   return (
     <>
