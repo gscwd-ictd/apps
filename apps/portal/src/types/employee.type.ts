@@ -33,6 +33,11 @@ export type OrgStructure = {
   officeName: string;
 };
 
+export type OfficerOfTheDay = {
+  id: string;
+  name: string;
+};
+
 export type EmploymentDetails = {
   salaryGrade: string;
   salaryGradeAmount: number;
@@ -46,6 +51,7 @@ export type EmploymentDetails = {
   isPdcChairman?: boolean;
   isPdcSecretariat?: boolean;
   overtimeImmediateSupervisorId: string;
+  officerOfTheDay: Array<OfficerOfTheDay>;
 };
 
 export type EmployeeDetails = {
@@ -119,5 +125,6 @@ export const employeeDummy: EmployeeDetails = {
       divisionName: '',
       officeName: '',
     },
+    officerOfTheDay: [],
   },
 };
