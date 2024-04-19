@@ -17,10 +17,10 @@ export const HRMenuDropdown = ({
   labelColor = 'text-white',
   right = false,
 }: MenuDropdownProps): JSX.Element => {
-  // const { pendingApprovalsCount, errorPendingApprovalsCount } = useApprovalStore((state) => ({
-  //   pendingApprovalsCount: state.pendingApprovalsCount,
-  //   errorPendingApprovalsCount: state.error.errorPendingApprovalsCount,
-  // }));
+  const { pendingApprovalsCount, errorPendingApprovalsCount } = useApprovalStore((state) => ({
+    pendingApprovalsCount: state.pendingApprovalsCount,
+    errorPendingApprovalsCount: state.error.errorPendingApprovalsCount,
+  }));
   const router = useRouter();
 
   return (
@@ -30,6 +30,9 @@ export const HRMenuDropdown = ({
           <Menu.Button
             className={`${className} h-10 w-10 rounded flex justify-center items-center bg-white outline-none transition-colors ease-in-out hover:bg-slate-200 hover:text-slate-500 `}
           >
+            {isEmpty(errorPendingApprovalsCount) && pendingApprovalsCount.forHrdmApprovalLeaves > 0 ? (
+              <span className="absolute w-3 h-3 -mt-5 ml-9 bg-red-600 rounded-full select-none" />
+            ) : null}
             <HiOutlineBriefcase className="w-6 h-6 text-indigo-500" />
           </Menu.Button>
         </div>
@@ -72,9 +75,9 @@ export const HRMenuDropdown = ({
                       <HiBadgeCheck className="w-6 h-6 text-rose-600" />
                       <span className="text-sm tracking-tight text-gray-700 text-left">Final Leave Approvals</span>
 
-                      {/* {isEmpty(errorPendingApprovalsCount) && pendingApprovalsCount.forHrdmApprovalLeaves > 0 ? (
-                        <span className="absolute w-3 h-3 right-4 z-40 bg-red-600 rounded-full select-none" />
-                      ) : null} */}
+                      {isEmpty(errorPendingApprovalsCount) && pendingApprovalsCount.forHrdmApprovalLeaves > 0 ? (
+                        <span className="absolute w-3 h-3 right-4 z-20 bg-red-600 rounded-full select-none" />
+                      ) : null}
                     </button>
                   )}
                 </Menu.Item>
