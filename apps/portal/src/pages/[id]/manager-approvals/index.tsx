@@ -15,8 +15,12 @@ import { UserRole } from 'apps/portal/src/utils/enums/userRoles';
 import { TabHeader } from 'apps/portal/src/components/fixed/tab/TabHeader';
 import { HiCalendar, HiClipboard, HiClock, HiDocumentText } from 'react-icons/hi';
 import { useRouter } from 'next/router';
+import { SalaryGradeConverter } from 'libs/utils/src/lib/functions/SalaryGradeConverter';
 
-export default function Approvals({ employeeDetails }: InferGetServerSidePropsType<typeof getServerSideProps>) {
+export default function Approvals({
+  employeeDetails,
+  finalSalaryGrade,
+}: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const {
     pendingApprovalsCount,
     getPendingApprovalsCount,
@@ -58,59 +62,75 @@ export default function Approvals({ employeeDetails }: InferGetServerSidePropsTy
             <ContentBody>
               <>
                 <ul className="flex flex-col lg:flex-col text-gray-500 w-full md:w-1/2 justify-center items-center">
-                  <TabHeader
-                    tab={0}
-                    tabIndex={1}
-                    title="Pass Slip Requests"
-                    icon={<HiDocumentText size={26} />}
-                    subtitle="Show all Pass Slips requests"
-                    notificationCount={
-                      pendingApprovalsCount.pendingPassSlipsCount != 0 ? pendingApprovalsCount.pendingPassSlipsCount : 0
-                    }
-                    className="bg-indigo-500"
-                    onClick={() => router.push(`/${router.query.id}/manager-approvals/pass-slips`)}
-                  />
-                  <TabHeader
-                    tab={0}
-                    tabIndex={2}
-                    title="Leave Requests"
-                    icon={<HiCalendar size={26} />}
-                    subtitle="Show all Leave requests"
-                    notificationCount={
-                      pendingApprovalsCount.pendingLeavesCount != 0 ? pendingApprovalsCount.pendingLeavesCount : 0
-                    }
-                    className="bg-indigo-500"
-                    onClick={() => router.push(`/${router.query.id}/manager-approvals/leaves`)}
-                  />
-                  <TabHeader
-                    tab={0}
-                    tabIndex={3}
-                    title="Overtime Requests"
-                    icon={<HiClipboard size={26} />}
-                    subtitle="Show all Overtime requests"
-                    notificationCount={
-                      pendingApprovalsCount.pendingOvertimeApprovals != 0
-                        ? pendingApprovalsCount.pendingOvertimeApprovals
-                        : 0
-                    }
-                    className="bg-indigo-500"
-                    onClick={() => router.push(`/${router.query.id}/manager-approvals/overtimes`)}
-                  />
+                  {/* show pass slip link if user is SG16+, an OIC, or not Rank and File */}
+                  {finalSalaryGrade >= 16 ||
+                  (employeeDetails.employmentDetails.officerOfTheDay.length > 0 &&
+                    (employeeDetails.employmentDetails.userRole !== UserRole.RANK_AND_FILE ||
+                      employeeDetails.employmentDetails.userRole !== UserRole.JOB_ORDER)) ? (
+                    <TabHeader
+                      tab={0}
+                      tabIndex={1}
+                      title="Pass Slip Requests"
+                      icon={<HiDocumentText size={26} />}
+                      subtitle="Show all Pass Slips requests"
+                      notificationCount={
+                        pendingApprovalsCount.pendingPassSlipsCount != 0
+                          ? pendingApprovalsCount.pendingPassSlipsCount
+                          : 0
+                      }
+                      className="bg-indigo-500"
+                      onClick={() => router.push(`/${router.query.id}/manager-approvals/pass-slips`)}
+                    />
+                  ) : null}
 
-                  <TabHeader
-                    tab={0}
-                    tabIndex={4}
-                    title="Time Log Requests"
-                    icon={<HiClock size={26} />}
-                    subtitle="Show all Time Log Correction requests"
-                    notificationCount={
-                      pendingApprovalsCount.pendingDtrCorrectionsApprovals != 0
-                        ? pendingApprovalsCount.pendingDtrCorrectionsApprovals
-                        : 0
-                    }
-                    className="bg-indigo-500"
-                    onClick={() => router.push(`/${router.query.id}/manager-approvals/timelogs`)}
-                  />
+                  {/* show other links if user is an OIC, or not Rank and File */}
+                  {employeeDetails.employmentDetails.officerOfTheDay.length > 0 ||
+                  (employeeDetails.employmentDetails.userRole !== UserRole.RANK_AND_FILE &&
+                    employeeDetails.employmentDetails.userRole !== UserRole.JOB_ORDER) ? (
+                    <>
+                      <TabHeader
+                        tab={0}
+                        tabIndex={2}
+                        title="Leave Requests"
+                        icon={<HiCalendar size={26} />}
+                        subtitle="Show all Leave requests"
+                        notificationCount={
+                          pendingApprovalsCount.pendingLeavesCount != 0 ? pendingApprovalsCount.pendingLeavesCount : 0
+                        }
+                        className="bg-indigo-500"
+                        onClick={() => router.push(`/${router.query.id}/manager-approvals/leaves`)}
+                      />
+                      <TabHeader
+                        tab={0}
+                        tabIndex={3}
+                        title="Overtime Requests"
+                        icon={<HiClipboard size={26} />}
+                        subtitle="Show all Overtime requests"
+                        notificationCount={
+                          pendingApprovalsCount.pendingOvertimeApprovals != 0
+                            ? pendingApprovalsCount.pendingOvertimeApprovals
+                            : 0
+                        }
+                        className="bg-indigo-500"
+                        onClick={() => router.push(`/${router.query.id}/manager-approvals/overtimes`)}
+                      />
+
+                      <TabHeader
+                        tab={0}
+                        tabIndex={4}
+                        title="Time Log Requests"
+                        icon={<HiClock size={26} />}
+                        subtitle="Show all Time Log Correction requests"
+                        notificationCount={
+                          pendingApprovalsCount.pendingDtrCorrectionsApprovals != 0
+                            ? pendingApprovalsCount.pendingDtrCorrectionsApprovals
+                            : 0
+                        }
+                        className="bg-indigo-500"
+                        onClick={() => router.push(`/${router.query.id}/manager-approvals/timelogs`)}
+                      />
+                    </>
+                  ) : null}
                 </ul>
               </>
             </ContentBody>
@@ -121,21 +141,18 @@ export default function Approvals({ employeeDetails }: InferGetServerSidePropsTy
   );
 }
 
-// export const getServerSideProps: GetServerSideProps = async (
-//   context: GetServerSidePropsContext
-// ) => {
-//   const employeeDetails = employeeDummy;
-
-//   return { props: { employeeDetails } };
-// };
-
 export const getServerSideProps: GetServerSideProps = withCookieSession(async (context: GetServerSidePropsContext) => {
   const employeeDetails = getUserDetails();
 
-  // check if user role is rank_and_file or job order = kick out
+  //convert salary grade to number
+  const finalSalaryGrade = SalaryGradeConverter(employeeDetails.employmentDetails.salaryGrade);
+
+  // check if user role is rank_and_file or job order, or not OIC or not SG16 and up = kick out
   if (
-    employeeDetails.employmentDetails.userRole === UserRole.RANK_AND_FILE ||
-    employeeDetails.employmentDetails.userRole === UserRole.JOB_ORDER
+    (employeeDetails.employmentDetails.userRole === UserRole.RANK_AND_FILE ||
+      employeeDetails.employmentDetails.userRole === UserRole.JOB_ORDER) &&
+    employeeDetails.employmentDetails.officerOfTheDay.length <= 0 &&
+    finalSalaryGrade < 16
   ) {
     // if true, the employee is not allowed to access this page
     return {
@@ -145,6 +162,6 @@ export const getServerSideProps: GetServerSideProps = withCookieSession(async (c
       },
     };
   } else {
-    return { props: { employeeDetails } };
+    return { props: { employeeDetails, finalSalaryGrade } };
   }
 });
