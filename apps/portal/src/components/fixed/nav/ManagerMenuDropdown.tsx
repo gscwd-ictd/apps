@@ -26,10 +26,10 @@ export const ManagerMenuDropdown = ({
   salaryGrade = 0,
   oic = [],
 }: MenuDropdownProps): JSX.Element => {
-  const { pendingApprovalsCount, errorPendingApprovalsCount } = useApprovalStore((state) => ({
-    pendingApprovalsCount: state.pendingApprovalsCount,
-    errorPendingApprovalsCount: state.error.errorPendingApprovalsCount,
-  }));
+  // const { pendingApprovalsCount, errorPendingApprovalsCount } = useApprovalStore((state) => ({
+  //   pendingApprovalsCount: state.pendingApprovalsCount,
+  //   errorPendingApprovalsCount: state.error.errorPendingApprovalsCount,
+  // }));
 
   const router = useRouter();
 

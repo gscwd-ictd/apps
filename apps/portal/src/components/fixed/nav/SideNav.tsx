@@ -49,6 +49,7 @@ export const SideNav = ({ employeeDetails }: NavDetails) => {
     getPendingApprovalsCountFail: state.getPendingApprovalsCountFail,
   }));
 
+
   const { employeeSalaryGrade, setEmployeeSalaryGrade } = useEmployeeStore((state) => ({
     employeeSalaryGrade: state.employeeSalaryGrade,
     setEmployeeSalaryGrade: state.setEmployeeSalaryGrade,
@@ -68,7 +69,7 @@ export const SideNav = ({ employeeDetails }: NavDetails) => {
   //     if (retryCount >= 1) return;
   //   },
   // });
-
+      
   // // Initial zustand state update
   // useEffect(() => {
   //   if (swrPendingApprovalsCountIsLoading) {
@@ -144,7 +145,9 @@ export const SideNav = ({ employeeDetails }: NavDetails) => {
                       pendingApprovalsCount.prfsForApprovalCount > 0 ||
                       pendingApprovalsCount.pendingApplicantEndorsementsCount > 0) ? (
                       <span className="absolute w-3 h-3 mt-1 ml-8 z-30 bg-red-600 rounded-full select-none" />
+
                     ) : null}
+                    
                     <ManagerMenuDropdown
                       userRole={employeeDetails.employmentDetails.userRole}
                       salaryGrade={employeeSalaryGrade}
@@ -154,6 +157,8 @@ export const SideNav = ({ employeeDetails }: NavDetails) => {
                   </li>
                 </>
               ) : null}
+
+              
 
               {
                 /* ASSISTANT GENERAL MANAGER */
@@ -197,9 +202,9 @@ export const SideNav = ({ employeeDetails }: NavDetails) => {
                 employeeDetails.employmentDetails.assignment.name === 'Recruitment and Personnel Welfare Division' ||
                 employeeDetails.employmentDetails.assignment.name === 'Human Resource Department' ? (
                   <li className="ml-10 lg:ml-0">
-                    {isEmpty(errorPendingApprovalsCount) && pendingApprovalsCount.forHrdmApprovalLeaves > 0 ? (
+                    {/* {isEmpty(errorPendingApprovalsCount) && pendingApprovalsCount.forHrdmApprovalLeaves > 0 ? (
                       <span className="absolute w-3 h-3 mt-1 ml-8 z-40 bg-red-600 rounded-full select-none" />
-                    ) : null}
+                    ) : null} */}
                     <HRMenuDropdown right />
                   </li>
                 ) : null
@@ -211,9 +216,9 @@ export const SideNav = ({ employeeDetails }: NavDetails) => {
                 employeeDetails.employmentDetails.assignment.name === 'Recruitment and Personnel Welfare Division' ||
                 employeeDetails.employmentDetails.assignment.name === 'Human Resource Department' ? (
                   <li className="ml-10 lg:ml-0">
-                    {isEmpty(errorPendingApprovalsCount) && pendingApprovalsCount.forHrdmApprovalLeaves > 0 ? (
+                    {/* {isEmpty(errorPendingApprovalsCount) && pendingApprovalsCount.forHrdmApprovalLeaves > 0 ? (
                       <span className="absolute w-3 h-3 mt-1 ml-8 z-40 bg-red-600 rounded-full select-none" />
-                    ) : null}
+                    ) : null} */}
                     <HRMenuDropdown right />
                   </li>
                 ) : null

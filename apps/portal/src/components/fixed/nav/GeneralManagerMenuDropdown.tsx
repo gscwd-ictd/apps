@@ -17,10 +17,10 @@ export const GeneralManagerMenuDropdown = ({
   labelColor = 'text-white',
   right = false,
 }: MenuDropdownProps): JSX.Element => {
-  const { pendingApprovalsCount, errorPendingApprovalsCount } = useApprovalStore((state) => ({
-    pendingApprovalsCount: state.pendingApprovalsCount,
-    errorPendingApprovalsCount: state.error.errorPendingApprovalsCount,
-  }));
+  // const { pendingApprovalsCount, errorPendingApprovalsCount } = useApprovalStore((state) => ({
+  //   pendingApprovalsCount: state.pendingApprovalsCount,
+  //   errorPendingApprovalsCount: state.error.errorPendingApprovalsCount,
+  // }));
 
   const router = useRouter();
 
@@ -76,10 +76,10 @@ export const GeneralManagerMenuDropdown = ({
                           Appointing Authority Selection
                         </span>
                       </div>
-                      {isEmpty(errorPendingApprovalsCount) &&
+                      {/* {isEmpty(errorPendingApprovalsCount) &&
                       pendingApprovalsCount.pendingAppointingAuthoritySelection > 0 ? (
                         <span className="absolute w-3 h-3 right-4 z-40 bg-red-600 rounded-full select-none" />
-                      ) : null}
+                      ) : null} */}
                     </button>
                   )}
                 </Menu.Item>
