@@ -1,5 +1,5 @@
 /* eslint-disable @nx/enforce-module-boundaries */
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { HiX } from 'react-icons/hi';
 import { AlertNotification, Button, LoadingSpinner, Modal } from '@gscwd-apps/oneui';
 import { SubmitHandler, useFieldArray, useForm } from 'react-hook-form';
@@ -155,7 +155,9 @@ export const OvertimeApplicationModal = ({ modalState, setModalState, closeModal
                     Employees:
                     <span className="text-red-600">*</span>
                   </label>
+
                   <MySelectList
+                    withSearchBar={true}
                     id="employees"
                     label=""
                     multiple

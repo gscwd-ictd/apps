@@ -27,6 +27,7 @@ import ApprovalsCompletedPassSlipModal from 'apps/portal/src/components/fixed/ma
 import { useRouter } from 'next/router';
 import UseRenderPassSlipStatus from 'apps/portal/src/utils/functions/RenderPassSlipStatus';
 import { TextSize } from 'libs/utils/src/lib/enums/text-size.enum';
+import { SalaryGradeConverter } from 'libs/utils/src/lib/functions/SalaryGradeConverter';
 
 export default function PassSlipApprovals({ employeeDetails }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const {
@@ -207,6 +208,7 @@ export default function PassSlipApprovals({ employeeDetails }: InferGetServerSid
     }),
     columnHelper.accessor('estimateHours', {
       header: 'Estimated Hours',
+      enableColumnFilter: false,
       cell: (info) => info.getValue(),
     }),
     columnHelper.accessor('status', {
@@ -321,10 +323,15 @@ export default function PassSlipApprovals({ employeeDetails }: InferGetServerSid
 export const getServerSideProps: GetServerSideProps = withCookieSession(async (context: GetServerSidePropsContext) => {
   const employeeDetails = getUserDetails();
 
-  // check if user role is rank_and_file or job order = kick out
+  //convert salary grade to number
+  const finalSalaryGrade = SalaryGradeConverter(employeeDetails.employmentDetails.salaryGrade);
+
+  // check if user role is rank_and_file or job order, or not OIC or not SG16 and up = kick out
   if (
-    employeeDetails.employmentDetails.userRole === UserRole.RANK_AND_FILE ||
-    employeeDetails.employmentDetails.userRole === UserRole.JOB_ORDER
+    (employeeDetails.employmentDetails.userRole === UserRole.RANK_AND_FILE ||
+      employeeDetails.employmentDetails.userRole === UserRole.JOB_ORDER) &&
+    employeeDetails.employmentDetails.officerOfTheDay.length <= 0 &&
+    finalSalaryGrade < 16
   ) {
     // if true, the employee is not allowed to access this page
     return {

@@ -4,6 +4,7 @@ import { Button, Modal } from '@gscwd-apps/oneui';
 import { useDtrStore } from 'apps/portal/src/store/dtr.store';
 import DtrPdf from './DtrPdf';
 import { useEmployeeStore } from 'apps/portal/src/store/employee.store';
+import { HiX } from 'react-icons/hi';
 
 type ModalProps = {
   modalState: boolean;
@@ -32,6 +33,12 @@ export const DtrPdfModal = ({ modalState, setModalState, closeModalAction, title
           <h3 className="font-semibold text-xl text-gray-700">
             <div className="px-5 flex justify-between">
               <span>{title}</span>
+              <button
+                className="hover:bg-slate-100 outline-slate-100 outline-8 px-2 rounded-full"
+                onClick={closeModalAction}
+              >
+                <HiX />
+              </button>
             </div>
           </h3>
         </Modal.Header>

@@ -148,7 +148,8 @@ export const DtrPdf: FunctionComponent<DtrPdfProps> = ({ employeeData, employeeD
     if (addition) {
       return dayjs(day + ' ' + actualTime).isAfter(
         dayjs(day + ' ' + scheduledTime)
-          .add(dayjs.duration({ minutes: 29 }))
+          // .add(dayjs.duration({ minutes: 29 }))
+          .add(29, 'minutes')
           .format('MM DD YYYY HH:mm'),
         'minutes'
       );
@@ -267,19 +268,19 @@ export const DtrPdf: FunctionComponent<DtrPdfProps> = ({ employeeData, employeeD
                     {/* OFFICE */}
                     <View style={[styles.rowContainer, { paddingTop: 4 }]}>
                       <Text style={[styles.w20]}>OFFICE</Text>
-                      <Text style={[styles.w80]}>{employeeData.employmentDetails.assignment.name}</Text>
+                      <Text style={[styles.w80]}>{employeeData.employmentDetails.orgStruct.officeName}</Text>
                     </View>
 
                     {/* DEPARTMENT */}
                     <View style={[styles.rowContainer]}>
                       <Text style={[styles.w20]}>DEPARTMENT</Text>
-                      <Text style={[styles.w80]}>{employeeData.employmentDetails.assignment.name}</Text>
+                      <Text style={[styles.w80]}>{employeeData.employmentDetails.orgStruct.departmentName}</Text>
                     </View>
 
                     {/* DIVISION */}
                     <View style={[styles.rowContainer]}>
                       <Text style={[styles.w20]}>DIVISION</Text>
-                      <Text style={[styles.w80]}>{employeeData.employmentDetails.assignment.name}</Text>
+                      <Text style={[styles.w80]}>{employeeData.employmentDetails.orgStruct.divisionName}</Text>
                     </View>
                   </View>
                 </View>
@@ -289,8 +290,7 @@ export const DtrPdf: FunctionComponent<DtrPdfProps> = ({ employeeData, employeeD
                   {/* COLUMN HEADERS  */}
                   <View>
                     {/* For Office Schedule */}
-                    {employeeData ? (
-                      // employeeData.employmentDetails. === ScheduleBases.OFFICE
+                    {employeeData && employeeData.employmentDetails.scheduleBase === ScheduleBases.OFFICE ? (
                       <View style={[styles.rowContainer]}>
                         <View style={[styles.tableHeader, styles.w10]}>
                           <Text style={[styles.tableHeaderText]}>DATE</Text>
@@ -317,9 +317,9 @@ export const DtrPdf: FunctionComponent<DtrPdfProps> = ({ employeeData, employeeD
                     ) : null}
 
                     {/* For Field/Pumping Station Schedule */}
-                    {employeeData ? (
-                      // employeeData.scheduleBase === ScheduleBases.FIELD ||
-                      // employeeData.scheduleBase === ScheduleBases.PUMPING_STATION
+                    {employeeData &&
+                    (employeeData.employmentDetails.scheduleBase === ScheduleBases.FIELD ||
+                      employeeData.employmentDetails.scheduleBase === ScheduleBases.PUMPING_STATION) ? (
                       <View style={[styles.rowContainer]}>
                         <View style={[styles.tableHeader, styles.w25]}>
                           <Text style={{ margin: 'auto 0' }}>REMARKS</Text>
@@ -367,9 +367,8 @@ export const DtrPdf: FunctionComponent<DtrPdfProps> = ({ employeeData, employeeD
                   {/* TABLE ROWS */}
                   <View>
                     {/* For Office Schedule */}
-                    {employeeData
-                      ? // employeeData.scheduleBase === ScheduleBases.OFFICE
-                        employeeDtr.dtrDays?.map((log, index) => {
+                    {employeeData && employeeData.employmentDetails.scheduleBase === ScheduleBases.OFFICE
+                      ? employeeDtr.dtrDays?.map((log, index) => {
                           const yellow = 'yellow';
                           const gray = '#9CA3AF';
                           const white = '#FFFFFF';
@@ -500,10 +499,10 @@ export const DtrPdf: FunctionComponent<DtrPdfProps> = ({ employeeData, employeeD
                       : null}
 
                     {/* For Field/Pumping Station Schedule */}
-                    {employeeData
-                      ? // employeeData.scheduleBase === ScheduleBases.FIELD ||
-                        // employeeData.scheduleBase === ScheduleBases.PUMPING_STATION
-                        employeeDtr.dtrDays?.map((log, index) => {
+                    {employeeData &&
+                    (employeeData.employmentDetails.scheduleBase === ScheduleBases.FIELD ||
+                      employeeData.employmentDetails.scheduleBase === ScheduleBases.PUMPING_STATION)
+                      ? employeeDtr.dtrDays?.map((log, index) => {
                           const yellow = 'yellow';
                           const gray = '#9CA3AF';
                           const white = '#FFFFFF';

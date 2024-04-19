@@ -4,7 +4,7 @@ import { HiOutlineBell, HiOutlineHome, HiOutlineNewspaper } from 'react-icons/hi
 import { ProfileMenuDropdown } from './ProfileMenuDropdown';
 import { SideNavLink } from './SideNavLink';
 import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { ManagerMenuDropdown } from './ManagerMenuDropdown';
 import { GeneralManagerMenuDropdown } from './GeneralManagerMenuDropdown';
 import { CommitteeMenuDropdown } from './CommitteeMenuDropdown';
@@ -16,6 +16,8 @@ import { useApprovalStore } from 'apps/portal/src/store/approvals.store';
 import { fetchWithToken } from 'apps/portal/src/utils/hoc/fetcher';
 import useSWR from 'swr';
 import { ToastNotification } from '@gscwd-apps/oneui';
+import { useEmployeeStore } from 'apps/portal/src/store/employee.store';
+import { SalaryGradeConverter } from 'libs/utils/src/lib/functions/SalaryGradeConverter';
 
 export type EmployeeLocalStorage = {
   employeeId: string;
@@ -31,22 +33,27 @@ type NavDetails = {
 export const SideNav = ({ employeeDetails }: NavDetails) => {
   const router = useRouter();
   const { windowWidth } = UseWindowDimensions(); //get screen width and height
+  const {
+    tab,
+    errorPendingApprovalsCount,
+    pendingApprovalsCount,
+    getPendingApprovalsCount,
+    getPendingApprovalsCountSuccess,
+    getPendingApprovalsCountFail,
+  } = useApprovalStore((state) => ({
+    tab: state.tab,
+    errorPendingApprovalsCount: state.error.errorPendingApprovalsCount,
+    pendingApprovalsCount: state.pendingApprovalsCount,
+    getPendingApprovalsCount: state.getPendingApprovalsCount,
+    getPendingApprovalsCountSuccess: state.getPendingApprovalsCountSuccess,
+    getPendingApprovalsCountFail: state.getPendingApprovalsCountFail,
+  }));
 
-  // const {
-  //   tab,
-  //   errorPendingApprovalsCount,
-  //   pendingApprovalsCount,
-  //   getPendingApprovalsCount,
-  //   getPendingApprovalsCountSuccess,
-  //   getPendingApprovalsCountFail,
-  // } = useApprovalStore((state) => ({
-  //   tab: state.tab,
-  //   errorPendingApprovalsCount: state.error.errorPendingApprovalsCount,
-  //   pendingApprovalsCount: state.pendingApprovalsCount,
-  //   getPendingApprovalsCount: state.getPendingApprovalsCount,
-  //   getPendingApprovalsCountSuccess: state.getPendingApprovalsCountSuccess,
-  //   getPendingApprovalsCountFail: state.getPendingApprovalsCountFail,
-  // }));
+
+  const { employeeSalaryGrade, setEmployeeSalaryGrade } = useEmployeeStore((state) => ({
+    employeeSalaryGrade: state.employeeSalaryGrade,
+    setEmployeeSalaryGrade: state.setEmployeeSalaryGrade,
+  }));
 
   // const pendingApprovalsCountUrl = `${process.env.NEXT_PUBLIC_EMPLOYEE_MONITORING_URL}/v1/stats/${employeeDetails.employmentDetails.userId}`;
   // use useSWR, provide the URL and fetchWithSession function as a parameter
@@ -62,8 +69,8 @@ export const SideNav = ({ employeeDetails }: NavDetails) => {
   //     if (retryCount >= 1) return;
   //   },
   // });
-
-  // Initial zustand state update
+      
+  // // Initial zustand state update
   // useEffect(() => {
   //   if (swrPendingApprovalsCountIsLoading) {
   //     getPendingApprovalsCount(swrPendingApprovalsCountIsLoading);
@@ -80,6 +87,18 @@ export const SideNav = ({ employeeDetails }: NavDetails) => {
   //     getPendingApprovalsCountFail(swrPendingApprovalsCountIsLoading, swrPendingApprovalsCountError.message);
   //   }
   // }, [swrPendingApprovalsCount, swrPendingApprovalsCountError]);
+
+  useEffect(() => {
+    if (employeeDetails) {
+      //convert salary grade to number
+      const finalSalaryGrade = SalaryGradeConverter(employeeDetails.employmentDetails.salaryGrade);
+      setEmployeeSalaryGrade(finalSalaryGrade);
+    }
+  }, [employeeDetails]);
+
+  // useEffect(() => {
+  //   console.log(employeeSalaryGrade, 'sg');
+  // }, [employeeSalaryGrade]);
 
   return (
     <>
@@ -108,16 +127,16 @@ export const SideNav = ({ employeeDetails }: NavDetails) => {
               isEqual(employeeDetails.employmentDetails.userRole, UserRole.GENERAL_MANAGER) ? (
                 <>
                   <li className="ml-10 lg:ml-0">
-                    {/* {isEmpty(errorPendingApprovalsCount) &&
+                    {isEmpty(errorPendingApprovalsCount) &&
                     pendingApprovalsCount.pendingGmApprovalCount > 0 &&
                     pendingApprovalsCount.pendingGmApprovalCount != null ? (
                       <span className="absolute w-3 h-3 mt-1 ml-8 z-50 bg-red-600 rounded-full select-none" />
-                    ) : null} */}
+                    ) : null}
                     <GeneralManagerMenuDropdown right />
                   </li>
 
                   <li className="ml-10 lg:ml-0">
-                    {/* {isEmpty(errorPendingApprovalsCount) &&
+                    {isEmpty(errorPendingApprovalsCount) &&
                     (pendingApprovalsCount.pendingPassSlipsCount > 0 ||
                       pendingApprovalsCount.pendingLeavesCount > 0 ||
                       pendingApprovalsCount.pendingOvertimesCount > 0 ||
@@ -126,71 +145,56 @@ export const SideNav = ({ employeeDetails }: NavDetails) => {
                       pendingApprovalsCount.prfsForApprovalCount > 0 ||
                       pendingApprovalsCount.pendingApplicantEndorsementsCount > 0) ? (
                       <span className="absolute w-3 h-3 mt-1 ml-8 z-30 bg-red-600 rounded-full select-none" />
-                    ) : null} */}
-                    <ManagerMenuDropdown right />
+
+                    ) : null}
+                    
+                    <ManagerMenuDropdown
+                      userRole={employeeDetails.employmentDetails.userRole}
+                      salaryGrade={employeeSalaryGrade}
+                      oic={employeeDetails.employmentDetails.officerOfTheDay}
+                      right
+                    />
                   </li>
                 </>
               ) : null}
 
-              {/* ASSISTANT GENERAL MANAGER */}
-              {isEqual(employeeDetails.employmentDetails.userRole, UserRole.ASSISTANT_GENERAL_MANAGER) ||
-              isEqual(employeeDetails.employmentDetails.userRole, UserRole.OIC_ASSISTANT_GENERAL_MANAGER) ? (
-                <>
-                  <li className="ml-10 lg:ml-0">
-                    {/* {isEmpty(errorPendingApprovalsCount) &&
-                    (pendingApprovalsCount.pendingPassSlipsCount > 0 ||
-                      pendingApprovalsCount.pendingLeavesCount > 0 ||
-                      pendingApprovalsCount.pendingOvertimesCount > 0 ||
-                      pendingApprovalsCount.pendingDtrCorrectionsApprovals > 0 ||
-                      // pendingApprovalsCount.pendingTrainingNominationCount > 0 ||
-                      pendingApprovalsCount.prfsForApprovalCount > 0 ||
-                      pendingApprovalsCount.pendingApplicantEndorsementsCount > 0) ? (
-                      <span className="absolute w-3 h-3 mt-1 ml-8 z-40 bg-red-600 rounded-full select-none" />
-                    ) : null} */}
-                    <ManagerMenuDropdown right />
-                  </li>
-                </>
-              ) : null}
+              
 
-              {/* DEPARTMENT MANAGER */}
-              {isEqual(employeeDetails.employmentDetails.userRole, UserRole.DEPARTMENT_MANAGER) ||
-              isEqual(employeeDetails.employmentDetails.userRole, UserRole.OIC_DEPARTMENT_MANAGER) ? (
-                <>
-                  <li className="ml-10 lg:ml-0">
-                    {/* {isEmpty(errorPendingApprovalsCount) &&
-                    (pendingApprovalsCount.pendingPassSlipsCount > 0 ||
-                      pendingApprovalsCount.pendingLeavesCount > 0 ||
-                      pendingApprovalsCount.pendingOvertimesCount > 0 ||
-                      pendingApprovalsCount.pendingDtrCorrectionsApprovals > 0 ||
-                      // pendingApprovalsCount.pendingTrainingNominationCount > 0 ||
-                      pendingApprovalsCount.prfsForApprovalCount > 0 ||
-                      pendingApprovalsCount.pendingApplicantEndorsementsCount > 0) ? (
-                      <span className="absolute w-3 h-3 mt-1 ml-8 z-40 bg-red-600 rounded-full select-none" />
-                    ) : null} */}
-                    <ManagerMenuDropdown right />
-                  </li>
-                </>
-              ) : null}
-
-              {/* DIVISION MANAGER */}
-              {isEqual(employeeDetails.employmentDetails.userRole, UserRole.DIVISION_MANAGER) ||
-              isEqual(employeeDetails.employmentDetails.userRole, UserRole.OIC_DIVISION_MANAGER) ? (
-                <>
-                  <li className="ml-10 lg:ml-0">
-                    {/* {isEmpty(errorPendingApprovalsCount) &&
-                    (pendingApprovalsCount.pendingPassSlipsCount > 0 ||
-                      pendingApprovalsCount.pendingLeavesCount > 0 ||
-                      pendingApprovalsCount.pendingOvertimesCount > 0 ||
-                      pendingApprovalsCount.pendingDtrCorrectionsApprovals > 0 ||
-                      // pendingApprovalsCount.pendingTrainingNominationCount > 0 ||
-                      pendingApprovalsCount.prfsForApprovalCount > 0 ||
-                      pendingApprovalsCount.pendingApplicantEndorsementsCount > 0) ? (
-                      <span className="absolute w-3 h-3 mt-1 ml-8 z-40 bg-red-600 rounded-full select-none" />
-                    ) : null} */}
-                    <ManagerMenuDropdown right />
-                  </li>
-                </>
-              ) : null}
+              {
+                /* ASSISTANT GENERAL MANAGER */
+                isEqual(employeeDetails.employmentDetails.userRole, UserRole.ASSISTANT_GENERAL_MANAGER) ||
+                isEqual(employeeDetails.employmentDetails.userRole, UserRole.OIC_ASSISTANT_GENERAL_MANAGER) ||
+                /* DEPARTMENT MANAGER */
+                isEqual(employeeDetails.employmentDetails.userRole, UserRole.DEPARTMENT_MANAGER) ||
+                isEqual(employeeDetails.employmentDetails.userRole, UserRole.OIC_DEPARTMENT_MANAGER) ||
+                /* DIVISION MANAGER */
+                isEqual(employeeDetails.employmentDetails.userRole, UserRole.DIVISION_MANAGER) ||
+                isEqual(employeeDetails.employmentDetails.userRole, UserRole.OIC_DIVISION_MANAGER) ||
+                // OIC OR SG16+
+                employeeDetails.employmentDetails.officerOfTheDay.length > 0 ||
+                employeeSalaryGrade >= 16 ? (
+                  <>
+                    <li className="ml-10 lg:ml-0">
+                      {isEmpty(errorPendingApprovalsCount) &&
+                      (pendingApprovalsCount.pendingPassSlipsCount > 0 ||
+                        pendingApprovalsCount.pendingLeavesCount > 0 ||
+                        pendingApprovalsCount.pendingOvertimesCount > 0 ||
+                        pendingApprovalsCount.pendingDtrCorrectionsApprovals > 0 ||
+                        // pendingApprovalsCount.pendingTrainingNominationCount > 0 ||
+                        pendingApprovalsCount.prfsForApprovalCount > 0 ||
+                        pendingApprovalsCount.pendingApplicantEndorsementsCount > 0) ? (
+                        <span className="absolute w-3 h-3 mt-1 ml-8 z-40 bg-red-600 rounded-full select-none" />
+                      ) : null}
+                      <ManagerMenuDropdown
+                        userRole={employeeDetails.employmentDetails.userRole}
+                        salaryGrade={employeeSalaryGrade}
+                        oic={employeeDetails.employmentDetails.officerOfTheDay}
+                        right
+                      />
+                    </li>
+                  </>
+                ) : null
+              }
 
               {/* DEPARTMENT MANAGER HR LEAVE APPROVAL */}
               {isEqual(employeeDetails.employmentDetails.userRole, UserRole.DEPARTMENT_MANAGER) ||
@@ -220,19 +224,19 @@ export const SideNav = ({ employeeDetails }: NavDetails) => {
                 ) : null
               ) : null}
 
-              {/* PSB / OVERTIME SUPERVISOR */}
+              {/* PSB / OVERTIME SUPERVISOR / PDC */}
               {Boolean(employeeDetails.employmentDetails.isHRMPSB) === true ||
               employeeDetails.employmentDetails.overtimeImmediateSupervisorId != null ||
               (!isEqual(employeeDetails.employmentDetails.userRole, UserRole.RANK_AND_FILE) &&
                 !isEqual(employeeDetails.employmentDetails.userRole, UserRole.JOB_ORDER)) ? (
                 <li className="ml-10 lg:ml-0">
-                  {/* {isEmpty(errorPendingApprovalsCount) &&
+                  {isEmpty(errorPendingApprovalsCount) &&
                   ((pendingApprovalsCount.pendingPdcChairmanApprovalCount > 0 &&
                     pendingApprovalsCount.pendingPdcChairmanApprovalCount != null) ||
                     (pendingApprovalsCount.pendingPdcSecretariatApprovalCount > 0 &&
                       pendingApprovalsCount.pendingPdcSecretariatApprovalCount != null)) ? (
                     <span className="absolute w-3 h-3 mt-1 ml-8 z-40 bg-red-600 rounded-full select-none" />
-                  ) : null} */}
+                  ) : null}
                   <CommitteeMenuDropdown right />
                 </li>
               ) : null}

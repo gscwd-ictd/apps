@@ -102,6 +102,7 @@ export const DtrTable = ({ employeeDetails }: DtrTableProps) => {
                     </th>
                   </tr>
                 </thead>
+
                 <tbody className="text-sm text-center ">
                   {employeeDtr?.dtrDays?.length > 0 ? (
                     employeeDtr.dtrDays.map((logs, index) => {

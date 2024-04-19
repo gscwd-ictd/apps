@@ -21,6 +21,8 @@ type SingleSelectProps = {
 };
 
 type SelectProps = {
+  withSearchBar?: boolean;
+  selectOpen?: boolean | null;
   options: SelectOption[];
   label: string;
   id: string;
@@ -29,6 +31,8 @@ type SelectProps = {
 } & (SingleSelectProps | MultipleSelectProps);
 
 export function MySelectList({
+  withSearchBar = false,
+  selectOpen = false,
   multiple,
   value,
   onChange,
@@ -38,9 +42,27 @@ export function MySelectList({
   options,
   isSelectedHidden = false,
 }: SelectProps) {
+  const [customIsOpen, setCustomIsOpen] = useState<boolean>(selectOpen);
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [highlightedIndex, setHighlightedIndex] = useState<number>(0);
   const containerRef = useRef<HTMLDivElement>(null);
+  const [searchedItem, setSearchedItem] = useState<Array<SelectOption>>([]); //filtered list based on searchInput
+  const [searchedInput, setSearchedInput] = useState<string>(null);
+  const [listToSearch, setListToSearch] = useState<Array<SelectOption>>([]);
+
+  const handleSearchItem = (name: string) => {
+    setSearchedInput(name);
+    const searchedItem = options.filter((search) => search.label.toLowerCase().includes(name.toLowerCase()));
+    setSearchedItem(searchedItem);
+  };
+
+  useEffect(() => {
+    if (searchedItem.length > 0) {
+      setListToSearch(searchedItem);
+    } else {
+      setListToSearch(options);
+    }
+  }, [searchedItem]);
 
   // clear all values inside the input
   const clearOptions = () => {
@@ -70,6 +92,10 @@ export function MySelectList({
   }, [isOpen]);
 
   useEffect(() => {
+    setCustomIsOpen(selectOpen);
+  }, [selectOpen]);
+
+  useEffect(() => {
     const handler = (e: KeyboardEvent) => {
       if (e.target != containerRef.current) return;
       switch (e.code) {
@@ -93,6 +119,7 @@ export function MySelectList({
         }
         case 'Escape':
           setIsOpen(false);
+
           break;
       }
     };
@@ -102,7 +129,7 @@ export function MySelectList({
       containerRef.current?.addEventListener('keydown', handler);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isOpen, highlightedIndex, options]);
+  }, [isOpen, highlightedIndex, options, containerRef]);
 
   return (
     <div className="flex flex-col w-full">
@@ -156,7 +183,7 @@ export function MySelectList({
               <span className="px-2 font-light text-gray-500">|</span>
               <span
                 className={`text-gray-600 hover:cursor-pointer px-2 hover:text-gray-800 ${
-                  isOpen ? 'rotate-180 transition-all' : ''
+                  customIsOpen ? 'rotate-180 transition-all' : 'transition-all'
                 }`}
               >
                 <ChevronDownIcon size={20} type={undefined} />
@@ -171,8 +198,18 @@ export function MySelectList({
               isOpen ? 'block' : 'hidden'
             } border absolute  rounded  max-h-[12em] bg-white z-50 overflow-y-auto w-full left-0 top-[calc(100%+.25em)] `}
           > */}
+          {withSearchBar ? (
+            <input
+              type="text"
+              className="border-slate-300 text-slate-500 h-8 text-sm w-full rounded mt-1"
+              placeholder="Search"
+              onChange={(e) => handleSearchItem(e.target.value)}
+              value={searchedInput}
+            />
+          ) : null}
+
           <ul className="border  rounded  max-h-[12em] bg-white z-50 overflow-y-auto w-full">
-            {options.map((option, index) => (
+            {listToSearch.map((option, index) => (
               <div key={option.value}>
                 {isSelectedHidden ? (
                   //hides selected options from list pool
