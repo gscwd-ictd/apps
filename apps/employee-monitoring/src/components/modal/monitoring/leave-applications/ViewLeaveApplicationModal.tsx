@@ -133,13 +133,12 @@ const ViewLeaveApplicationModal: FunctionComponent<ViewLeaveApplicationModalProp
 
   // on submit
   const onSubmit = async () => {
-    // const { action, ...rest } = leave;
-
     const data = {
       id: rowData.id,
       status:
         leaveApplicationDetails.leaveApplicationBasicInfo.leaveType === LeaveType.CUMULATIVE ||
-        leaveApplicationDetails.leaveApplicationBasicInfo.leaveType === LeaveType.RECURRING
+        leaveApplicationDetails.leaveApplicationBasicInfo.leaveType === LeaveType.RECURRING ||
+        leaveApplicationDetails.leaveApplicationBasicInfo.leaveType === null
           ? LeaveStatus.FOR_SUPERVISOR_APPROVAL
           : leaveApplicationDetails.leaveApplicationBasicInfo.leaveType === LeaveType.SPECIAL
           ? getValues('action') === Action.APPROVE
@@ -326,6 +325,7 @@ const ViewLeaveApplicationModal: FunctionComponent<ViewLeaveApplicationModalProp
                       value={rowData.status ? UseRenderLeaveStatus(rowData.status, 'text-sm') : ''}
                     />
                   </div>
+
                   <div className="grid grid-cols-2 grid-rows-1 px-3 sm:gap-2 md:gap:2 lg:gap-0">
                     <LabelValue
                       label="Applied Number of Days"

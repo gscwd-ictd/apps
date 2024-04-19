@@ -40,6 +40,12 @@ type OvertimeState = {
   errorUnassignImmediateSupervisor: string;
   setErrorUnassignImmediateSupervisor: (errorAssignImmediateSupervisor: string) => void;
 
+  timeLogsOnDayAndNext: Array<string>;
+  setTimeLogsOnDayAndNext: (timeLogsOnDayAndNext: Array<string>) => void;
+
+  errorTimeLogsOnDayAndNext: string;
+  setErrorTimeLogsOnDayAndNext: (errorTimeLogsOnDayAndNext: string) => void;
+
   emptyResponse: () => void;
 };
 
@@ -76,6 +82,12 @@ export const useOvertimeStore = create<OvertimeState>()(
     errorUnassignImmediateSupervisor: '',
     setErrorUnassignImmediateSupervisor: (errorUnassignImmediateSupervisor) =>
       set({ errorUnassignImmediateSupervisor }),
+
+    timeLogsOnDayAndNext: [] as Array<string>,
+    setTimeLogsOnDayAndNext: (timeLogsOnDayAndNext) => set({ timeLogsOnDayAndNext }),
+
+    errorTimeLogsOnDayAndNext: '',
+    setErrorTimeLogsOnDayAndNext: (errorTimeLogsOnDayAndNext) => set({ errorTimeLogsOnDayAndNext }),
 
     emptyResponse: () =>
       set({
