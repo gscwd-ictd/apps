@@ -13,6 +13,7 @@ import CancelLeaveModal from './CancelLeaveModal';
 import { useLeaveLedgerStore } from 'apps/portal/src/store/leave-ledger.store';
 import { DateFormatter } from 'libs/utils/src/lib/functions/DateFormatter';
 import { LeavePdfModal } from './LeavePdfModal';
+import { DateTimeFormatter } from 'libs/utils/src/lib/functions/DateTimeFormatter';
 
 type LeaveCompletedModalProps = {
   modalState: boolean;
@@ -295,29 +296,19 @@ export const LeaveCompletedModal = ({ modalState, setModalState, closeModalActio
                       <div className="w-auto ml-5">
                         <label className=" text-md font-medium ">
                           {leaveIndividualDetail?.leaveApplicationBasicInfo?.status === LeaveStatus.DISAPPROVED_BY_HRDM
-                            ? DateFormatter(
-                                leaveIndividualDetail?.leaveApplicationBasicInfo?.hrdmApprovalDate,
-                                'MM-DD-YYYY'
-                              )
+                            ? DateTimeFormatter(leaveIndividualDetail?.leaveApplicationBasicInfo?.hrdmApprovalDate)
                             : leaveIndividualDetail?.leaveApplicationBasicInfo?.status ===
                               LeaveStatus.DISAPPROVED_BY_SUPERVISOR
-                            ? DateFormatter(
-                                leaveIndividualDetail?.leaveApplicationBasicInfo?.supervisorApprovalDate,
-                                'MM-DD-YYYY'
+                            ? DateTimeFormatter(
+                                leaveIndividualDetail?.leaveApplicationBasicInfo?.supervisorApprovalDate
                               )
                             : leaveIndividualDetail?.leaveApplicationBasicInfo?.status ===
                               LeaveStatus.DISAPPROVED_BY_HRMO
-                            ? DateFormatter(
-                                leaveIndividualDetail?.leaveApplicationBasicInfo?.hrmoApprovalDate,
-                                'MM-DD-YYYY'
-                              )
+                            ? DateTimeFormatter(leaveIndividualDetail?.leaveApplicationBasicInfo?.hrmoApprovalDate)
                             : leaveIndividualDetail?.leaveApplicationBasicInfo?.status === LeaveStatus.APPROVED
-                            ? DateFormatter(
-                                leaveIndividualDetail?.leaveApplicationBasicInfo?.hrdmApprovalDate,
-                                'MM-DD-YYYY'
-                              )
+                            ? DateTimeFormatter(leaveIndividualDetail?.leaveApplicationBasicInfo?.hrdmApprovalDate)
                             : leaveIndividualDetail?.leaveApplicationBasicInfo?.status === LeaveStatus.CANCELLED
-                            ? DateFormatter(leaveIndividualDetail?.leaveApplicationBasicInfo?.cancelDate, 'MM-DD-YYYY')
+                            ? DateTimeFormatter(leaveIndividualDetail?.leaveApplicationBasicInfo?.cancelDate)
                             : null}
                         </label>
                       </div>
@@ -575,13 +566,13 @@ export const LeaveCompletedModal = ({ modalState, setModalState, closeModalActio
                         </div>
                       </div>
                     ) : null}
-                    <div className="flex flex-col sm:flex-col justify-start items-start w-full sm:w-1/2 px-0.5 pb-3 ">
+                    {/* <div className="flex flex-col sm:flex-col justify-start items-start w-full sm:w-1/2 px-0.5 pb-3 ">
                       <label className="text-slate-500 text-md whitespace-nowrap pb-0.5 ">Supervisor:</label>
 
                       <div className="w-auto ml-5">
                         <label className=" text-md font-medium">{'---'}</label>
                       </div>
-                    </div>
+                    </div> */}
                   </div>
 
                   {leaveIndividualDetail?.leaveApplicationBasicInfo?.status !== LeaveStatus.DISAPPROVED_BY_SUPERVISOR &&

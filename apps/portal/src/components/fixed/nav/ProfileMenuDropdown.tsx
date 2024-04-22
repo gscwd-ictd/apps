@@ -68,10 +68,10 @@ export const ProfileMenuDropdown = ({
     emptyResponseAndError: state.emptyResponseAndError,
   }));
 
-  // const { pendingApprovalsCount, errorPendingApprovalsCount } = useApprovalStore((state) => ({
-  //   pendingApprovalsCount: state.pendingApprovalsCount,
-  //   errorPendingApprovalsCount: state.error.errorPendingApprovalsCount,
-  // }));
+  const { pendingApprovalsCount, errorPendingApprovalsCount } = useApprovalStore((state) => ({
+    pendingApprovalsCount: state.pendingApprovalsCount,
+    errorPendingApprovalsCount: state.error.errorPendingApprovalsCount,
+  }));
 
   // close Change Password Modal
   const closeChangePasswordModal = async () => {
@@ -130,7 +130,9 @@ export const ProfileMenuDropdown = ({
                     <div className={`${active ? 'bg-slate-50' : null} cursor-pointer rounded-md p-5`}>
                       <div>
                         <h5 className="truncate font-semibold">
-                          {`${employeeDetails.profile.firstName} ${employeeDetails.profile.middleName} ${employeeDetails.profile.lastName}`}
+                          {`${employeeDetails.profile.firstName} ${employeeDetails.profile.middleName} ${
+                            employeeDetails.profile.lastName
+                          } ${employeeDetails.profile.nameExt ?? ''}`}
                         </h5>
                         <p className="truncate text-xs text-gray-500">
                           {employeeDetails.employmentDetails.assignment.positionTitle}
@@ -190,10 +192,10 @@ export const ProfileMenuDropdown = ({
                                     Appointing Authority Selection
                                   </span>
                                 </div>
-                                {/* {isEmpty(errorPendingApprovalsCount) &&
+                                {isEmpty(errorPendingApprovalsCount) &&
                                 pendingApprovalsCount.pendingAppointingAuthoritySelection > 0 ? (
                                   <span className="absolute w-3 h-3 right-5 z-40 bg-red-600 rounded-full select-none" />
-                                ) : null} */}
+                                ) : null}
                               </button>
                             )}
                           </Menu.Item>
@@ -222,7 +224,7 @@ export const ProfileMenuDropdown = ({
                         </>
                       ) : null}
 
-                      {/* MANAGERIAL ACTIONS */}
+                      {/* MANAGERIAL ACTIONS + OIC/SG16 */}
                       {isEqual(employeeDetails.employmentDetails.userRole, UserRole.OIC_GENERAL_MANAGER) ||
                       isEqual(employeeDetails.employmentDetails.userRole, UserRole.GENERAL_MANAGER) ||
                       isEqual(employeeDetails.employmentDetails.userRole, UserRole.ASSISTANT_GENERAL_MANAGER) ||
@@ -230,7 +232,11 @@ export const ProfileMenuDropdown = ({
                       isEqual(employeeDetails.employmentDetails.userRole, UserRole.DEPARTMENT_MANAGER) ||
                       isEqual(employeeDetails.employmentDetails.userRole, UserRole.OIC_DEPARTMENT_MANAGER) ||
                       isEqual(employeeDetails.employmentDetails.userRole, UserRole.DIVISION_MANAGER) ||
-                      isEqual(employeeDetails.employmentDetails.userRole, UserRole.OIC_DIVISION_MANAGER) ? (
+                      isEqual(employeeDetails.employmentDetails.userRole, UserRole.OIC_DIVISION_MANAGER) ||
+                      // OIC OR SG16+
+                      employeeDetails.employmentDetails.officerOfTheDay.length > 0 ? (
+                        //  ||
+                        // employeeSalaryGrade >= 16
                         <>
                           <Menu.Item>
                             {({ active }) => (
@@ -244,17 +250,29 @@ export const ProfileMenuDropdown = ({
                                 <div className="flex w-full items-end justify-between">
                                   <span className="text-sm tracking-tight text-slate-500 text-left">Approvals</span>
                                 </div>
-                                {/* {isEmpty(errorPendingApprovalsCount) &&
+                                {isEmpty(errorPendingApprovalsCount) &&
                                 (pendingApprovalsCount.pendingPassSlipsCount > 0 ||
                                   pendingApprovalsCount.pendingLeavesCount > 0 ||
                                   pendingApprovalsCount.pendingOvertimesCount > 0 ||
                                   pendingApprovalsCount.pendingDtrCorrectionsApprovals > 0) ? (
                                   <span className="absolute w-3 h-3 right-5 z-40 bg-red-600 rounded-full select-none" />
-                                ) : null} */}
+                                ) : null}
                               </button>
                             )}
                           </Menu.Item>
+                        </>
+                      ) : null}
 
+                      {/* MANAGERIAL ACTIONS ONLY */}
+                      {isEqual(employeeDetails.employmentDetails.userRole, UserRole.OIC_GENERAL_MANAGER) ||
+                      isEqual(employeeDetails.employmentDetails.userRole, UserRole.GENERAL_MANAGER) ||
+                      isEqual(employeeDetails.employmentDetails.userRole, UserRole.ASSISTANT_GENERAL_MANAGER) ||
+                      isEqual(employeeDetails.employmentDetails.userRole, UserRole.OIC_ASSISTANT_GENERAL_MANAGER) ||
+                      isEqual(employeeDetails.employmentDetails.userRole, UserRole.DEPARTMENT_MANAGER) ||
+                      isEqual(employeeDetails.employmentDetails.userRole, UserRole.OIC_DEPARTMENT_MANAGER) ||
+                      isEqual(employeeDetails.employmentDetails.userRole, UserRole.DIVISION_MANAGER) ||
+                      isEqual(employeeDetails.employmentDetails.userRole, UserRole.OIC_DIVISION_MANAGER) ? (
+                        <>
                           <Menu.Item>
                             {({ active }) => (
                               <button
@@ -291,10 +309,10 @@ export const ProfileMenuDropdown = ({
                                     Position Request Form
                                   </span>
                                 </div>
-                                {/* {isEmpty(errorPendingApprovalsCount) &&
+                                {isEmpty(errorPendingApprovalsCount) &&
                                 pendingApprovalsCount.prfsForApprovalCount > 0 ? (
                                   <span className="absolute w-3 h-3 right-5 z-40 bg-red-600 rounded-full select-none" />
-                                ) : null} */}
+                                ) : null}
                               </button>
                             )}
                           </Menu.Item>
@@ -313,10 +331,10 @@ export const ProfileMenuDropdown = ({
                                     Applicant Endorsement
                                   </span>
                                 </div>
-                                {/* {isEmpty(errorPendingApprovalsCount) &&
+                                {isEmpty(errorPendingApprovalsCount) &&
                                 pendingApprovalsCount.pendingApplicantEndorsementsCount > 0 ? (
                                   <span className="absolute w-3 h-3 right-5 z-40 bg-red-600 rounded-full select-none" />
-                                ) : null} */}
+                                ) : null}
                               </button>
                             )}
                           </Menu.Item>
@@ -363,10 +381,10 @@ export const ProfileMenuDropdown = ({
                                     Final Leave Approval
                                   </span>
                                 </div>
-                                {/* {isEmpty(errorPendingApprovalsCount) &&
+                                {isEmpty(errorPendingApprovalsCount) &&
                                 pendingApprovalsCount.forHrdmApprovalLeaves > 0 ? (
                                   <span className="absolute w-3 h-3 right-5 z-40 bg-red-600 rounded-full select-none" />
-                                ) : null} */}
+                                ) : null}
                               </button>
                             )}
                           </Menu.Item>

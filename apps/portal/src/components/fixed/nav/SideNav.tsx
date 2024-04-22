@@ -49,7 +49,6 @@ export const SideNav = ({ employeeDetails }: NavDetails) => {
     getPendingApprovalsCountFail: state.getPendingApprovalsCountFail,
   }));
 
-
   const { employeeSalaryGrade, setEmployeeSalaryGrade } = useEmployeeStore((state) => ({
     employeeSalaryGrade: state.employeeSalaryGrade,
     setEmployeeSalaryGrade: state.setEmployeeSalaryGrade,
@@ -57,36 +56,39 @@ export const SideNav = ({ employeeDetails }: NavDetails) => {
 
   // const pendingApprovalsCountUrl = `${process.env.NEXT_PUBLIC_EMPLOYEE_MONITORING_URL}/v1/stats/${employeeDetails.employmentDetails.userId}`;
   // use useSWR, provide the URL and fetchWithSession function as a parameter
-  // const pendingApprovalsCountUrl = `${process.env.NEXT_PUBLIC_PORTAL_URL}/stats-notifications`;
+  const pendingApprovalsCountUrl = `${process.env.NEXT_PUBLIC_PORTAL_URL}/stats-notifications`;
 
-  // const {
-  //   data: swrPendingApprovalsCount,
-  //   isLoading: swrPendingApprovalsCountIsLoading,
-  //   error: swrPendingApprovalsCountError,
-  // } = useSWR(pendingApprovalsCountUrl, fetchWithToken, {
-  //   onErrorRetry: (error, key, config, revalidate, { retryCount }) => {
-  //     // Only retry up to 10 times.
-  //     if (retryCount >= 1) return;
-  //   },
-  // });
-      
-  // // Initial zustand state update
-  // useEffect(() => {
-  //   if (swrPendingApprovalsCountIsLoading) {
-  //     getPendingApprovalsCount(swrPendingApprovalsCountIsLoading);
-  //   }
-  // }, [swrPendingApprovalsCountIsLoading]);
+  const {
+    data: swrPendingApprovalsCount,
+    isLoading: swrPendingApprovalsCountIsLoading,
+    error: swrPendingApprovalsCountError,
+    mutate: mutateApprovalCounts,
+  } = useSWR(pendingApprovalsCountUrl, fetchWithToken, {
+    // shouldRetryOnError: true,
+    // revalidateOnFocus: false,
+    // onErrorRetry: (error, key, config, revalidate, { retryCount }) => {
+    //   // Only retry up to 10 times.
+    //   if (retryCount >= 1) return;
+    // },
+  });
 
-  // // Upon success/fail of swr request, zustand state will be updated
-  // useEffect(() => {
-  //   if (!isEmpty(swrPendingApprovalsCount)) {
-  //     getPendingApprovalsCountSuccess(swrPendingApprovalsCountIsLoading, swrPendingApprovalsCount);
-  //   }
+  // Initial zustand state update
+  useEffect(() => {
+    if (swrPendingApprovalsCountIsLoading) {
+      getPendingApprovalsCount(swrPendingApprovalsCountIsLoading);
+    }
+  }, [swrPendingApprovalsCountIsLoading]);
 
-  //   if (!isEmpty(swrPendingApprovalsCountError)) {
-  //     getPendingApprovalsCountFail(swrPendingApprovalsCountIsLoading, swrPendingApprovalsCountError.message);
-  //   }
-  // }, [swrPendingApprovalsCount, swrPendingApprovalsCountError]);
+  // Upon success/fail of swr request, zustand state will be updated
+  useEffect(() => {
+    if (!isEmpty(swrPendingApprovalsCount)) {
+      getPendingApprovalsCountSuccess(swrPendingApprovalsCountIsLoading, swrPendingApprovalsCount);
+    }
+
+    if (!isEmpty(swrPendingApprovalsCountError)) {
+      getPendingApprovalsCountFail(swrPendingApprovalsCountIsLoading, swrPendingApprovalsCountError.message);
+    }
+  }, [swrPendingApprovalsCount, swrPendingApprovalsCountError]);
 
   useEffect(() => {
     if (employeeDetails) {
@@ -95,10 +97,6 @@ export const SideNav = ({ employeeDetails }: NavDetails) => {
       setEmployeeSalaryGrade(finalSalaryGrade);
     }
   }, [employeeDetails]);
-
-  // useEffect(() => {
-  //   console.log(employeeSalaryGrade, 'sg');
-  // }, [employeeSalaryGrade]);
 
   return (
     <>
@@ -110,8 +108,8 @@ export const SideNav = ({ employeeDetails }: NavDetails) => {
         />
       ) : null} */}
 
-      <nav className="fixed z-30 flex justify-start lg:justify-center w-screen lg:w-24 h-auto">
-        <ul className="z-30 flex flex-col items-center gap-2 text-gray-600 mt-14">
+      <nav className="fixed z-20 flex justify-start lg:justify-center w-screen lg:w-24 h-auto">
+        <ul className="z-40 flex flex-col items-center gap-2 text-gray-600 mt-14">
           <li className="mb-3 lg:mb-5 ml-10 lg:ml-0">
             <ProfileMenuDropdown right employeeDetails={employeeDetails} />
           </li>
@@ -127,40 +125,15 @@ export const SideNav = ({ employeeDetails }: NavDetails) => {
               isEqual(employeeDetails.employmentDetails.userRole, UserRole.GENERAL_MANAGER) ? (
                 <>
                   <li className="ml-10 lg:ml-0">
-                    {isEmpty(errorPendingApprovalsCount) &&
-                    pendingApprovalsCount.pendingGmApprovalCount > 0 &&
-                    pendingApprovalsCount.pendingGmApprovalCount != null ? (
-                      <span className="absolute w-3 h-3 mt-1 ml-8 z-50 bg-red-600 rounded-full select-none" />
-                    ) : null}
                     <GeneralManagerMenuDropdown right />
-                  </li>
-
-                  <li className="ml-10 lg:ml-0">
-                    {isEmpty(errorPendingApprovalsCount) &&
-                    (pendingApprovalsCount.pendingPassSlipsCount > 0 ||
-                      pendingApprovalsCount.pendingLeavesCount > 0 ||
-                      pendingApprovalsCount.pendingOvertimesCount > 0 ||
-                      pendingApprovalsCount.pendingDtrCorrectionsApprovals > 0 ||
-                      // pendingApprovalsCount.pendingTrainingNominationCount > 0 ||
-                      pendingApprovalsCount.prfsForApprovalCount > 0 ||
-                      pendingApprovalsCount.pendingApplicantEndorsementsCount > 0) ? (
-                      <span className="absolute w-3 h-3 mt-1 ml-8 z-30 bg-red-600 rounded-full select-none" />
-
-                    ) : null}
-                    
-                    <ManagerMenuDropdown
-                      userRole={employeeDetails.employmentDetails.userRole}
-                      salaryGrade={employeeSalaryGrade}
-                      oic={employeeDetails.employmentDetails.officerOfTheDay}
-                      right
-                    />
                   </li>
                 </>
               ) : null}
 
-              
-
               {
+                // GENERAL MANAGER
+                isEqual(employeeDetails.employmentDetails.userRole, UserRole.OIC_GENERAL_MANAGER) ||
+                isEqual(employeeDetails.employmentDetails.userRole, UserRole.GENERAL_MANAGER) ||
                 /* ASSISTANT GENERAL MANAGER */
                 isEqual(employeeDetails.employmentDetails.userRole, UserRole.ASSISTANT_GENERAL_MANAGER) ||
                 isEqual(employeeDetails.employmentDetails.userRole, UserRole.OIC_ASSISTANT_GENERAL_MANAGER) ||
@@ -171,20 +144,11 @@ export const SideNav = ({ employeeDetails }: NavDetails) => {
                 isEqual(employeeDetails.employmentDetails.userRole, UserRole.DIVISION_MANAGER) ||
                 isEqual(employeeDetails.employmentDetails.userRole, UserRole.OIC_DIVISION_MANAGER) ||
                 // OIC OR SG16+
-                employeeDetails.employmentDetails.officerOfTheDay.length > 0 ||
-                employeeSalaryGrade >= 16 ? (
+                employeeDetails.employmentDetails.officerOfTheDay.length > 0 ? (
+                  //  ||
+                  // employeeSalaryGrade >= 16
                   <>
                     <li className="ml-10 lg:ml-0">
-                      {isEmpty(errorPendingApprovalsCount) &&
-                      (pendingApprovalsCount.pendingPassSlipsCount > 0 ||
-                        pendingApprovalsCount.pendingLeavesCount > 0 ||
-                        pendingApprovalsCount.pendingOvertimesCount > 0 ||
-                        pendingApprovalsCount.pendingDtrCorrectionsApprovals > 0 ||
-                        // pendingApprovalsCount.pendingTrainingNominationCount > 0 ||
-                        pendingApprovalsCount.prfsForApprovalCount > 0 ||
-                        pendingApprovalsCount.pendingApplicantEndorsementsCount > 0) ? (
-                        <span className="absolute w-3 h-3 mt-1 ml-8 z-40 bg-red-600 rounded-full select-none" />
-                      ) : null}
                       <ManagerMenuDropdown
                         userRole={employeeDetails.employmentDetails.userRole}
                         salaryGrade={employeeSalaryGrade}
@@ -202,9 +166,6 @@ export const SideNav = ({ employeeDetails }: NavDetails) => {
                 employeeDetails.employmentDetails.assignment.name === 'Recruitment and Personnel Welfare Division' ||
                 employeeDetails.employmentDetails.assignment.name === 'Human Resource Department' ? (
                   <li className="ml-10 lg:ml-0">
-                    {/* {isEmpty(errorPendingApprovalsCount) && pendingApprovalsCount.forHrdmApprovalLeaves > 0 ? (
-                      <span className="absolute w-3 h-3 mt-1 ml-8 z-40 bg-red-600 rounded-full select-none" />
-                    ) : null} */}
                     <HRMenuDropdown right />
                   </li>
                 ) : null
@@ -216,9 +177,6 @@ export const SideNav = ({ employeeDetails }: NavDetails) => {
                 employeeDetails.employmentDetails.assignment.name === 'Recruitment and Personnel Welfare Division' ||
                 employeeDetails.employmentDetails.assignment.name === 'Human Resource Department' ? (
                   <li className="ml-10 lg:ml-0">
-                    {/* {isEmpty(errorPendingApprovalsCount) && pendingApprovalsCount.forHrdmApprovalLeaves > 0 ? (
-                      <span className="absolute w-3 h-3 mt-1 ml-8 z-40 bg-red-600 rounded-full select-none" />
-                    ) : null} */}
                     <HRMenuDropdown right />
                   </li>
                 ) : null
@@ -230,13 +188,6 @@ export const SideNav = ({ employeeDetails }: NavDetails) => {
               (!isEqual(employeeDetails.employmentDetails.userRole, UserRole.RANK_AND_FILE) &&
                 !isEqual(employeeDetails.employmentDetails.userRole, UserRole.JOB_ORDER)) ? (
                 <li className="ml-10 lg:ml-0">
-                  {isEmpty(errorPendingApprovalsCount) &&
-                  ((pendingApprovalsCount.pendingPdcChairmanApprovalCount > 0 &&
-                    pendingApprovalsCount.pendingPdcChairmanApprovalCount != null) ||
-                    (pendingApprovalsCount.pendingPdcSecretariatApprovalCount > 0 &&
-                      pendingApprovalsCount.pendingPdcSecretariatApprovalCount != null)) ? (
-                    <span className="absolute w-3 h-3 mt-1 ml-8 z-40 bg-red-600 rounded-full select-none" />
-                  ) : null}
                   <CommitteeMenuDropdown right />
                 </li>
               ) : null}

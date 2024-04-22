@@ -26,25 +26,60 @@ export const ManagerMenuDropdown = ({
   salaryGrade = 0,
   oic = [],
 }: MenuDropdownProps): JSX.Element => {
-  // const { pendingApprovalsCount, errorPendingApprovalsCount } = useApprovalStore((state) => ({
-  //   pendingApprovalsCount: state.pendingApprovalsCount,
-  //   errorPendingApprovalsCount: state.error.errorPendingApprovalsCount,
-  // }));
+  const { pendingApprovalsCount, errorPendingApprovalsCount } = useApprovalStore((state) => ({
+    pendingApprovalsCount: state.pendingApprovalsCount,
+    errorPendingApprovalsCount: state.error.errorPendingApprovalsCount,
+  }));
 
   const router = useRouter();
 
-  const { employeeSalaryGrade, setEmployeeSalaryGrade } = useEmployeeStore((state) => ({
-    employeeSalaryGrade: state.employeeSalaryGrade,
-    setEmployeeSalaryGrade: state.setEmployeeSalaryGrade,
-  }));
+  // const { employeeSalaryGrade, setEmployeeSalaryGrade } = useEmployeeStore((state) => ({
+  //   employeeSalaryGrade: state.employeeSalaryGrade,
+  //   setEmployeeSalaryGrade: state.setEmployeeSalaryGrade,
+  // }));
 
   return (
     <>
-      <Menu as="div" className={`z-20 -mt-10 -ml-6 fixed lg:relative lg:-mt-0 lg:ml-0 inline-block text-left`}>
+      <Menu as="div" className={`z-30 -mt-10 -ml-6 fixed lg:relative lg:-mt-0 lg:ml-0 inline-block text-left`}>
         <div>
           <Menu.Button
             className={`${className} h-10 w-10 rounded flex justify-center items-center bg-white outline-none transition-colors ease-in-out hover:bg-slate-200 hover:text-slate-500 `}
           >
+            {
+              //red dot
+              //if Manager only or Manager and is the OIC -- all notif
+              // GENERAL MANAGER
+              isEqual(userRole, UserRole.OIC_GENERAL_MANAGER) ||
+              isEqual(userRole, UserRole.GENERAL_MANAGER) ||
+              /* ASSISTANT GENERAL MANAGER */
+              ((isEqual(userRole, UserRole.ASSISTANT_GENERAL_MANAGER) ||
+                isEqual(userRole, UserRole.OIC_ASSISTANT_GENERAL_MANAGER) ||
+                /* DEPARTMENT MANAGER */
+                isEqual(userRole, UserRole.DEPARTMENT_MANAGER) ||
+                isEqual(userRole, UserRole.OIC_DEPARTMENT_MANAGER) ||
+                /* DIVISION MANAGER */
+                isEqual(userRole, UserRole.DIVISION_MANAGER) ||
+                isEqual(userRole, UserRole.OIC_DIVISION_MANAGER)) &&
+                isEmpty(errorPendingApprovalsCount) &&
+                (pendingApprovalsCount.pendingPassSlipsCount > 0 ||
+                  pendingApprovalsCount.pendingLeavesCount > 0 ||
+                  pendingApprovalsCount.pendingOvertimesCount > 0 ||
+                  pendingApprovalsCount.pendingDtrCorrectionsApprovals > 0 ||
+                  pendingApprovalsCount.pendingTrainingNominationCount > 0 ||
+                  pendingApprovalsCount.prfsForApprovalCount > 0 ||
+                  pendingApprovalsCount.pendingApplicantEndorsementsCount > 0)) ? (
+                <span className="absolute w-3 h-3 -mt-5 ml-9 bg-red-600 rounded-full select-none" />
+              ) : //if OIC and is Rank and File -- Approvals page notifs only
+              (isEqual(userRole, UserRole.RANK_AND_FILE) || isEqual(userRole, UserRole.JOB_ORDER)) &&
+                oic.length > 0 &&
+                isEmpty(errorPendingApprovalsCount) &&
+                (pendingApprovalsCount.pendingPassSlipsCount > 0 ||
+                  pendingApprovalsCount.pendingLeavesCount > 0 ||
+                  pendingApprovalsCount.pendingOvertimesCount > 0 ||
+                  pendingApprovalsCount.pendingDtrCorrectionsApprovals > 0) ? (
+                <span className="absolute w-3 h-3 -mt-5 ml-9 bg-red-600 rounded-full select-none" />
+              ) : null
+            }
             <HiOutlineFolder className="w-6 h-6 text-indigo-500" />
           </Menu.Button>
         </div>
@@ -77,6 +112,9 @@ export const ManagerMenuDropdown = ({
             <div>
               <>
                 {
+                  /*  GENERAL MANAGER */
+                  isEqual(userRole, UserRole.GENERAL_MANAGER) ||
+                  isEqual(userRole, UserRole.OIC_GENERAL_MANAGER) ||
                   /* ASSISTANT GENERAL MANAGER */
                   isEqual(userRole, UserRole.ASSISTANT_GENERAL_MANAGER) ||
                   isEqual(userRole, UserRole.OIC_ASSISTANT_GENERAL_MANAGER) ||
@@ -87,8 +125,9 @@ export const ManagerMenuDropdown = ({
                   isEqual(userRole, UserRole.DIVISION_MANAGER) ||
                   isEqual(userRole, UserRole.OIC_DIVISION_MANAGER) ||
                   // OIC OR SG16+
-                  oic.length > 0 ||
-                  salaryGrade >= 16 ? (
+                  oic?.length > 0 ? (
+                    // ||
+                    // salaryGrade >= 16
                     <Menu.Item>
                       {({ active }) => (
                         <button
@@ -101,12 +140,42 @@ export const ManagerMenuDropdown = ({
                             <HiBadgeCheck className="w-6 h-6 text-blue-600" />
                             <span className="text-sm tracking-tight text-gray-700 text-left">Approvals</span>
                           </div>
-                          {isEmpty(errorPendingApprovalsCount) &&
-                          (pendingApprovalsCount.pendingPassSlipsCount > 0 ||
-                            pendingApprovalsCount.pendingLeavesCount > 0 ||
-                            pendingApprovalsCount.pendingOvertimesCount > 0) ? (
-                            <span className="absolute w-3 h-3 right-4 z-40 bg-red-600 rounded-full select-none" />
-                          ) : null}
+
+                          {
+                            //red dot
+                            //if Manager only or Manager and is the OIC -- all notif
+                            /*  GENERAL MANAGER */
+                            isEqual(userRole, UserRole.GENERAL_MANAGER) ||
+                            isEqual(userRole, UserRole.OIC_GENERAL_MANAGER) ||
+                            /* ASSISTANT GENERAL MANAGER */
+                            ((isEqual(userRole, UserRole.ASSISTANT_GENERAL_MANAGER) ||
+                              isEqual(userRole, UserRole.OIC_ASSISTANT_GENERAL_MANAGER) ||
+                              /* DEPARTMENT MANAGER */
+                              isEqual(userRole, UserRole.DEPARTMENT_MANAGER) ||
+                              isEqual(userRole, UserRole.OIC_DEPARTMENT_MANAGER) ||
+                              /* DIVISION MANAGER */
+                              isEqual(userRole, UserRole.DIVISION_MANAGER) ||
+                              isEqual(userRole, UserRole.OIC_DIVISION_MANAGER)) &&
+                              isEmpty(errorPendingApprovalsCount) &&
+                              (pendingApprovalsCount.pendingPassSlipsCount > 0 ||
+                                pendingApprovalsCount.pendingLeavesCount > 0 ||
+                                pendingApprovalsCount.pendingOvertimesCount > 0 ||
+                                pendingApprovalsCount.pendingDtrCorrectionsApprovals > 0 ||
+                                pendingApprovalsCount.pendingTrainingNominationCount > 0 ||
+                                pendingApprovalsCount.prfsForApprovalCount > 0 ||
+                                pendingApprovalsCount.pendingApplicantEndorsementsCount > 0)) ? (
+                              <span className="absolute w-3 h-3 right-4 z-30 bg-red-600 rounded-full select-none" />
+                            ) : //if OIC and is Rank and File -- Approvals page notifs only
+                            (isEqual(userRole, UserRole.RANK_AND_FILE) || isEqual(userRole, UserRole.JOB_ORDER)) &&
+                              oic.length > 0 &&
+                              isEmpty(errorPendingApprovalsCount) &&
+                              (pendingApprovalsCount.pendingPassSlipsCount > 0 ||
+                                pendingApprovalsCount.pendingLeavesCount > 0 ||
+                                pendingApprovalsCount.pendingOvertimesCount > 0 ||
+                                pendingApprovalsCount.pendingDtrCorrectionsApprovals > 0) ? (
+                              <span className="absolute w-3 h-3 right-4 z-30 bg-red-600 rounded-full select-none" />
+                            ) : null
+                          }
                         </button>
                       )}
                     </Menu.Item>
@@ -114,6 +183,9 @@ export const ManagerMenuDropdown = ({
                 }
 
                 {
+                  /*  GENERAL MANAGER */
+                  isEqual(userRole, UserRole.GENERAL_MANAGER) ||
+                  isEqual(userRole, UserRole.OIC_GENERAL_MANAGER) ||
                   /* ASSISTANT GENERAL MANAGER */
                   isEqual(userRole, UserRole.ASSISTANT_GENERAL_MANAGER) ||
                   isEqual(userRole, UserRole.OIC_ASSISTANT_GENERAL_MANAGER) ||
@@ -140,7 +212,7 @@ export const ManagerMenuDropdown = ({
                             </div>
                             {isEmpty(errorPendingApprovalsCount) &&
                             pendingApprovalsCount.pendingTrainingNominationCount > 0 ? (
-                              <span className="absolute w-3 h-3 right-4 z-40 bg-red-600 rounded-full select-none" />
+                              <span className="absolute w-3 h-3 right-4 z-30 bg-red-600 rounded-full select-none" />
                             ) : null}
                           </button>
                         )}
@@ -160,7 +232,7 @@ export const ManagerMenuDropdown = ({
                               </span>
                             </div>
                             {isEmpty(errorPendingApprovalsCount) && pendingApprovalsCount.prfsForApprovalCount > 0 ? (
-                              <span className="absolute w-3 h-3 right-4 z-40 bg-red-600 rounded-full select-none" />
+                              <span className="absolute w-3 h-3 right-4 z-30 bg-red-600 rounded-full select-none" />
                             ) : null}
                           </button>
                         )}
@@ -181,7 +253,7 @@ export const ManagerMenuDropdown = ({
                             </div>
                             {isEmpty(errorPendingApprovalsCount) &&
                             pendingApprovalsCount.pendingApplicantEndorsementsCount > 0 ? (
-                              <span className="absolute w-3 h-3 right-4 z-40 bg-red-600 rounded-full select-none" />
+                              <span className="absolute w-3 h-3 right-4 z-30 bg-red-600 rounded-full select-none" />
                             ) : null}
                           </button>
                         )}

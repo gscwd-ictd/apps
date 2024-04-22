@@ -263,6 +263,7 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
       forMastersCompletion: null,
       forBarBoardReview: null,
       studyLeaveOther: null,
+      isLateFiling: false,
     },
   });
 
@@ -272,6 +273,10 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
     setValue('typeOfLeaveDetails', leave);
     setLeaveDateFrom(null);
     setLeaveDateTo(null);
+  };
+
+  const handleTypeOfFiling = (e: boolean) => {
+    setValue('isLateFiling', e);
   };
 
   //check if there are pending leaves of the same name being filed, return true/false
@@ -739,6 +744,31 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
                   </div>
                 </div>
 
+                {/* {watch('typeOfLeaveDetails.leaveName') ? (
+                  <div className="flex flex-col md:flex-row justify-between items-center w-full gap-1 pt-1">
+                    <div className="flex flex-row justify-between items-center w-full">
+                      <label className="pt-2 text-slate-500 text-md font-medium">
+                        Late Filing:<span className="text-red-600">*</span>
+                      </label>
+                    </div>
+
+                    <div className="flex gap-2 w-full items-center">
+                      <select
+                        className="text-slate-500 w-full h-14 rounded-md text-md border-slate-300"
+                        required
+                        defaultValue={''}
+                        onChange={(e) => handleTypeOfFiling(e.target.value as unknown as boolean)}
+                      >
+                        <option value="" disabled>
+                          Select Type Of Filing:
+                        </option>
+                        <option value="false">No</option>
+                        <option value="true">Yes</option>
+                      </select>
+                    </div>
+                  </div>
+                ) : null} */}
+
                 <div>
                   {watch('typeOfLeaveDetails.leaveName') ? (
                     <div className="flex flex-col gap-1 w-full bg-slate-100 text-sm p-2">
@@ -1077,6 +1107,7 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
                           type={'single'}
                           clickableDate={true}
                           leaveName={watch('typeOfLeaveDetails.leaveName')}
+                          isLateFiling={watch('isLateFiling')}
                         />
                       )}
                     </div>
