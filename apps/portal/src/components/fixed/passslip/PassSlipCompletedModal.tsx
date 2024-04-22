@@ -6,10 +6,10 @@ import { usePassSlipStore } from '../../../store/passslip.store';
 import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
 import { NatureOfBusiness, PassSlipStatus } from 'libs/utils/src/lib/enums/pass-slip.enum';
 import { UseTwelveHourFormat } from 'libs/utils/src/lib/functions/TwelveHourFormatter';
-import { DateFormatter } from 'libs/utils/src/lib/functions/DateFormatter';
 import { DisputeApplicationModal } from './DisputeModal';
 import dayjs from 'dayjs';
 import { GetDateDifference } from 'libs/utils/src/lib/functions/GetDateDifference';
+import { DateTimeFormatter } from 'libs/utils/src/lib/functions/DateTimeFormatter';
 
 type PassSlipCompletedModalProps = {
   modalState: boolean;
@@ -144,9 +144,7 @@ export const PassSlipCompletedModal = ({
                   <label className="text-slate-500 text-md whitespace-nowrap pb-0.5 ">Date of Application:</label>
 
                   <div className="w-auto ml-5">
-                    <label className=" text-md font-medium">
-                      {DateFormatter(passSlip.dateOfApplication, 'MM-DD-YYYY')}
-                    </label>
+                    <label className=" text-md font-medium">{DateTimeFormatter(passSlip.dateOfApplication)}</label>
                   </div>
                 </div>
 
@@ -203,11 +201,19 @@ export const PassSlipCompletedModal = ({
                   </div>
                 </div>
 
-                <div className="flex flex-col sm:flex-col justify-start items-start w-full px-0.5 pb-3 ">
+                <div className="flex flex-col sm:flex-col justify-start items-start w-full sm:w-1/2 px-0.5 pb-3 ">
                   <label className="text-slate-500 text-md whitespace-nowrap pb-0.5 ">Supervisor:</label>
 
                   <div className="w-auto ml-5">
                     <label className=" text-md font-medium">{passSlip.supervisorName}</label>
+                  </div>
+                </div>
+
+                <div className="flex flex-col justify-start items-start w-full sm:w-1/2 px-0.5 pb-3  ">
+                  <label className="text-slate-500 text-md whitespace-nowrap pb-0.5 ">Date Approved:</label>
+
+                  <div className="w-auto ml-5">
+                    <label className=" text-md font-medium">{DateTimeFormatter(passSlip.dateOfApplication)}</label>
                   </div>
                 </div>
 

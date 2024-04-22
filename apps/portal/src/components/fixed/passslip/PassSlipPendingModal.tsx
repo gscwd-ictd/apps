@@ -5,7 +5,7 @@ import { usePassSlipStore } from '../../../store/passslip.store';
 import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
 import { ConfirmationApplicationModal } from './ConfirmationModal';
 import { NatureOfBusiness, PassSlipStatus } from 'libs/utils/src/lib/enums/pass-slip.enum';
-import { DateFormatter } from 'libs/utils/src/lib/functions/DateFormatter';
+import { DateTimeFormatter } from 'libs/utils/src/lib/functions/DateTimeFormatter';
 
 type PassSlipPendingModalProps = {
   modalState: boolean;
@@ -111,9 +111,7 @@ export const PassSlipPendingModal = ({ modalState, setModalState, closeModalActi
                   <label className="text-slate-500 text-md whitespace-nowrap pb-0.5 ">Date of Application:</label>
 
                   <div className="w-auto ml-5">
-                    <label className=" text-md font-medium">
-                      {DateFormatter(passSlip.dateOfApplication, 'MM-DD-YYYY')}
-                    </label>
+                    <label className=" text-md font-medium">{DateTimeFormatter(passSlip.dateOfApplication)}</label>
                   </div>
                 </div>
 

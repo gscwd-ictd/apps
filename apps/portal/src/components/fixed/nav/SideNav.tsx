@@ -64,9 +64,8 @@ export const SideNav = ({ employeeDetails }: NavDetails) => {
     error: swrPendingApprovalsCountError,
     mutate: mutateApprovalCounts,
   } = useSWR(pendingApprovalsCountUrl, fetchWithToken, {
-    shouldRetryOnError: true,
-    revalidateOnFocus: false,
-
+    // shouldRetryOnError: true,
+    // revalidateOnFocus: false,
     // onErrorRetry: (error, key, config, revalidate, { retryCount }) => {
     //   // Only retry up to 10 times.
     //   if (retryCount >= 1) return;

@@ -1,18 +1,13 @@
 // STORE FOR EMPLOYEE VIEW OF THEIR OT ACCOMPLISHMENTS
 
 /* eslint-disable @nx/enforce-module-boundaries */
-import { SelectOption } from 'libs/utils/src/lib/types/select.type';
 import {
   OvertimeAccomplishment,
   OvertimeAccomplishmentPatch,
-  OvertimeDetails,
   OvertimeForm,
 } from 'libs/utils/src/lib/types/overtime.type';
 import { create } from 'zustand';
 import { devtools } from 'zustand/middleware';
-import { OvertimeStatus } from 'libs/utils/src/lib/enums/overtime.enum';
-import { WorkExperience } from '../types/workexp.type';
-import { EmployeeDtrWithSchedule } from 'libs/utils/src/lib/types/dtr.type';
 
 export type OvertimeAccomplishmentList = {
   forApproval: Array<OvertimeAccomplishment>;

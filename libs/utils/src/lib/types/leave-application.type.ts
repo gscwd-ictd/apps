@@ -47,6 +47,8 @@ export type LeaveApplicationForm = {
   commutation?: string | null;
   forMonetization?: boolean;
   totalNumberOfDays: number; //number of days of leave
+
+  isLateFiling: boolean;
 };
 
 // Employee full leave details
