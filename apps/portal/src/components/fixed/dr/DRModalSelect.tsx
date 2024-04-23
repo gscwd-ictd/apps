@@ -1,11 +1,4 @@
-import {
-  FormEvent,
-  MutableRefObject,
-  useContext,
-  useEffect,
-  useRef,
-  useState,
-} from 'react';
+import { FormEvent, MutableRefObject, useContext, useEffect, useRef, useState } from 'react';
 import { HiOutlineSearch, HiXCircle } from 'react-icons/hi';
 import { useDrStore } from '../../../store/dr.store';
 import { DutyResponsibility } from '../../../types/dr.type';
@@ -39,9 +32,7 @@ export const DRModalSelect = ({ type }: SelectDRProps): JSX.Element => {
   const setFilteredDRCs = useDrStore((state) => state.setFilteredDRCs);
 
   // initialize ref for search input
-  const searchValueRef = useRef(
-    null
-  ) as unknown as MutableRefObject<HTMLInputElement>;
+  const searchValueRef = useRef(null) as unknown as MutableRefObject<HTMLInputElement>;
 
   // set focus whenever filtered drs change
   useEffect(() => {
@@ -100,14 +91,12 @@ export const DRModalSelect = ({ type }: SelectDRProps): JSX.Element => {
             <p className="font-medium text-gray-500 uppercase">{type}</p>
             {type === 'core' && (
               <p className="text-gray-600">
-                {checkedDRCs.core.length} out of {allDRCPool.length} items
-                selected
+                {checkedDRCs.core.length} out of {allDRCPool.length} items selected
               </p>
             )}
             {type === 'support' && (
               <p className="text-gray-600">
-                {checkedDRCs.support.length} out of {allDRCPool.length} items
-                selected
+                {checkedDRCs.support.length} out of {allDRCPool.length} items selected
               </p>
             )}
           </div>
@@ -123,10 +112,7 @@ export const DRModalSelect = ({ type }: SelectDRProps): JSX.Element => {
             ></input>
             {searchDRCValue !== '' ? (
               <>
-                <button
-                  className="absolute -right-0 mr-7 focus:outline-none"
-                  onClick={onClearSearch}
-                >
+                <button className="absolute -right-0 mr-7 focus:outline-none" onClick={onClearSearch}>
                   <HiXCircle className="w-6 h-6 mt-3 transition-colors ease-in-out text-slate-300 hover:text-slate-400" />
                 </button>
               </>
@@ -150,9 +136,7 @@ export const DRModalSelect = ({ type }: SelectDRProps): JSX.Element => {
             <>
               <div className="flex flex-col items-center justify-center w-full h-full gap-5">
                 <UndrawSelecting width={250} height={250} />
-                <h1 className="text-2xl text-gray-300">
-                  Select at least 1 duty & responsibility to proceed.
-                </h1>
+                <h1 className="text-2xl text-gray-300">Select at least 1 duty & responsibility to proceed.</h1>
               </div>
             </>
           ) : (type === 'core' && checkedDRCs.core.length > 0) ||

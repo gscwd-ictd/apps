@@ -4,6 +4,8 @@ import { DrcModalSelect } from './DrcModalSelect';
 import { DrcModalSelectPositions } from './DrcModalSelectPositions';
 import { DrcModalSetting } from './DrcModalSetting';
 import { DrcModalSummary } from './DrcModalSummary';
+import { DrcUpdatedModalSetting } from './DrcUpdatedModalSetting';
+import { DrcModalAddDrc } from './DrcModalAddDrc';
 
 export const DrcModalController = (): JSX.Element => {
   const { modal } = useModalStore((state) => ({ modal: state.modal }));
@@ -14,8 +16,10 @@ export const DrcModalController = (): JSX.Element => {
       <>
         {/* {modal.isOpen && modal.page === 1 && 'Open and Page is 1'} */}
         {page === 1 && <DrcModalSelectPositions />}
-        {page === 2 && <DrcModalSetting />}
-        {page === 3 && <DrcModalSelect />}
+        {/* {page === 2 && <DrcModalSetting />} */}
+        {page === 2 && <DrcUpdatedModalSetting />}
+        {/* {page === 3 && <DrcModalSelect />} */}
+        {page === 4 && <DrcModalAddDrc />}
         {page === 4 && <DrcModalSummary />}
       </>
     </div>
