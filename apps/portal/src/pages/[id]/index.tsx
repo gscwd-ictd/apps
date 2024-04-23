@@ -33,6 +33,7 @@ import LeaveCreditMonetizationCalculatorModal from '../../components/fixed/leave
 import { useLeaveMonetizationCalculatorStore } from '../../store/leave-monetization-calculator.store';
 import dayjs from 'dayjs';
 import { usePassSlipStore } from '../../store/passslip.store';
+import { employeeCeliaDananDummy } from '../../types/employee.type';
 
 export type NavDetails = {
   fullName: string;
@@ -71,6 +72,7 @@ export default function Dashboard({ userDetails }: InferGetServerSidePropsType<t
     getMonetizationConstantFail: state.getMonetizationConstantFail,
   }));
 
+  console.log(userDetails);
   const { dtr, schedule, loadingTimeLogs, errorTimeLogs, getTimeLogs, getTimeLogsSuccess, getTimeLogsFail } =
     useTimeLogStore((state) => ({
       dtr: state.dtr,
@@ -293,6 +295,7 @@ export default function Dashboard({ userDetails }: InferGetServerSidePropsType<t
   //requirements - userDetails(server-side) and schedule(swr)
   useEffect(() => {
     if (userDetails) {
+      // console.log(userDetails);
       setEmployee(userDetails);
       hydration();
     }
@@ -521,6 +524,12 @@ export default function Dashboard({ userDetails }: InferGetServerSidePropsType<t
     </>
   );
 }
+
+//use for dummy use
+// export const getServerSideProps: GetServerSideProps = async (context: GetServerSidePropsContext) => {
+//   const userDetails = employeeCeliaDananDummy;
+//   return { props: { userDetails } };
+// };
 
 //use for official user
 export const getServerSideProps: GetServerSideProps = withCookieSession(async (context: GetServerSidePropsContext) => {

@@ -15,7 +15,7 @@ import {
   getEmployeeProfile,
 } from '../../../../utils/helpers/http-requests/employee-requests';
 import { getPrfById, getPrfTrailByPrfId } from '../../../../utils/helpers/prf.requests';
-import { EmployeeDetailsPrf, EmployeeProfile, employeeDummy } from '../../../../types/employee.type';
+import { EmployeeDetailsPrf, EmployeeProfile } from '../../../../types/employee.type';
 import { Position, PrfDetails, PrfTrail } from '../../../../types/prf.types';
 import { withCookieSession } from '../../../../utils/helpers/session';
 import { DateFormatter } from 'libs/utils/src/lib/functions/DateFormatter';

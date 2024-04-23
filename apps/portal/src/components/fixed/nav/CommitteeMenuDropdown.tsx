@@ -130,10 +130,8 @@ export const CommitteeMenuDropdown = ({
                         </div>
                         <span className="text-sm tracking-tight text-gray-700 text-left">PDC Approvals</span>
                         {isEmpty(errorPendingApprovalsCount) &&
-                        ((pendingApprovalsCount.pendingPdcChairmanApprovalCount > 0 &&
-                          pendingApprovalsCount.pendingPdcChairmanApprovalCount != null) ||
-                          (pendingApprovalsCount.pendingPdcSecretariatApprovalCount > 0 &&
-                            pendingApprovalsCount.pendingPdcSecretariatApprovalCount != null)) ? (
+                        (pendingApprovalsCount.pendingPdcChairmanApprovalCount > 0 ||
+                          pendingApprovalsCount.pendingPdcSecretariatApprovalCount > 0) ? (
                           <span className="absolute w-3 h-3 right-4 z-10 bg-red-600 rounded-full select-none" />
                         ) : null}
                       </button>

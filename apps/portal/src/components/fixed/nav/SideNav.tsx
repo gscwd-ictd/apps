@@ -12,12 +12,16 @@ import { isEmpty, isEqual } from 'lodash';
 import { UserRole } from 'apps/portal/src/utils/enums/userRoles';
 import { HRMenuDropdown } from './HRMenuDropdown';
 import { EmployeeDetails } from 'apps/portal/src/types/employee.type';
-import { useApprovalStore } from 'apps/portal/src/store/approvals.store';
+import { useApprovalStore } from '../../../store/approvals.store';
 import { fetchWithToken } from 'apps/portal/src/utils/hoc/fetcher';
 import useSWR from 'swr';
 import { ToastNotification } from '@gscwd-apps/oneui';
-import { useEmployeeStore } from 'apps/portal/src/store/employee.store';
+import { useEmployeeStore } from '../../../store/employee.store';
 import { SalaryGradeConverter } from 'libs/utils/src/lib/functions/SalaryGradeConverter';
+import { useFinalLeaveApprovalStore } from '../../../store/final-leave-approvals.store';
+import { usePrfStore } from '../../../store/prf.store';
+import { useAppSelectionStore } from '../../../store/selection.store';
+import { useAppEndStore } from 'apps/portal/src/store/endorsement.store';
 
 export type EmployeeLocalStorage = {
   employeeId: string;
@@ -54,6 +58,45 @@ export const SideNav = ({ employeeDetails }: NavDetails) => {
     setEmployeeSalaryGrade: state.setEmployeeSalaryGrade,
   }));
 
+  //Manager Approval
+  const {
+    patchResponsePassSlip,
+    patchResponseAccomplishment,
+    patchResponseOvertime,
+    patchResponseLeave,
+    patchResponseDtrCorrection,
+  } = useApprovalStore((state) => ({
+    patchResponsePassSlip: state.response.patchResponsePassSlip,
+    patchResponseAccomplishment: state.response.patchResponseAccomplishment,
+    patchResponseOvertime: state.response.patchResponseOvertime,
+    patchResponseLeave: state.response.patchResponseLeave,
+    patchResponseDtrCorrection: state.response.patchResponseDtrCorrection,
+  }));
+
+  //Final Leave Approval
+  const { patchResponseFinalLeaveApproval } = useFinalLeaveApprovalStore((state) => ({
+    patchResponseFinalLeaveApproval: state.response.patchResponseLeave,
+  }));
+
+  //PRF
+  const { patchResponsePrf } = usePrfStore((state) => ({
+    patchResponsePrf: state.response.patchResponse,
+  }));
+
+  //Applicant Endorsement
+  const { updateResponseAppEnd } = useAppEndStore((state) => ({
+    updateResponseAppEnd: state.publicationResponse.updateResponse,
+  }));
+
+  const { patchResponseAppSelection } = useAppSelectionStore((state) => ({
+    patchResponseAppSelection: state.response.patchResponseApply,
+  }));
+
+  //GM Applicant Selection
+  const { patchResponseApplicantSelection } = useAppSelectionStore((state) => ({
+    patchResponseApplicantSelection: state.response.patchResponseApply,
+  }));
+
   // const pendingApprovalsCountUrl = `${process.env.NEXT_PUBLIC_EMPLOYEE_MONITORING_URL}/v1/stats/${employeeDetails.employmentDetails.userId}`;
   // use useSWR, provide the URL and fetchWithSession function as a parameter
   const pendingApprovalsCountUrl = `${process.env.NEXT_PUBLIC_PORTAL_URL}/stats-notifications`;
@@ -82,6 +125,7 @@ export const SideNav = ({ employeeDetails }: NavDetails) => {
   // Upon success/fail of swr request, zustand state will be updated
   useEffect(() => {
     if (!isEmpty(swrPendingApprovalsCount)) {
+      // console.log(swrPendingApprovalsCount);
       getPendingApprovalsCountSuccess(swrPendingApprovalsCountIsLoading, swrPendingApprovalsCount);
     }
 
@@ -97,6 +141,21 @@ export const SideNav = ({ employeeDetails }: NavDetails) => {
       setEmployeeSalaryGrade(finalSalaryGrade);
     }
   }, [employeeDetails]);
+
+  useEffect(() => {
+    mutateApprovalCounts();
+  }, [
+    patchResponsePassSlip,
+    patchResponseAccomplishment,
+    patchResponseOvertime,
+    patchResponseLeave,
+    patchResponseDtrCorrection,
+    patchResponseFinalLeaveApproval,
+    patchResponsePrf,
+    patchResponseApplicantSelection,
+    updateResponseAppEnd,
+    patchResponseAppSelection,
+  ]);
 
   return (
     <>

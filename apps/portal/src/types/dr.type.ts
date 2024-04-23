@@ -15,6 +15,22 @@ export type DutyResponsibility = {
   onEdit?: boolean;
 };
 
+export type UpdatedDutyResponsibility = {
+  duty: string;
+  pdrId?: string;
+  percentage?: number;
+  competency?: Competency;
+  proficiency?: string;
+  // state?: boolean;
+  sequenceNo?: number | undefined;
+  onEdit?: boolean;
+};
+
+export type UpdatedDutiesResponsibilities = {
+  core: Array<UpdatedDutyResponsibility>;
+  support: Array<UpdatedDutyResponsibility>;
+};
+
 export type Competency = {
   level?: string;
   pcplId: string;
@@ -86,9 +102,7 @@ export type PositionDR = StandardModalState & {
   tempPercentageDRs: Array<DutyResponsibility>;
   setTempPercentageDRs: Dispatch<SetStateAction<Array<DutyResponsibility>>>;
   btnType: 'button' | 'submit' | 'reset' | undefined;
-  setBtnType: Dispatch<
-    SetStateAction<'button' | 'submit' | 'reset' | undefined>
-  >;
+  setBtnType: Dispatch<SetStateAction<'button' | 'submit' | 'reset' | undefined>>;
   DRCIsLoaded: boolean;
   setDRCIsLoaded: Dispatch<SetStateAction<boolean>>;
   drcdsForUpdating: UpdatedDRCD;

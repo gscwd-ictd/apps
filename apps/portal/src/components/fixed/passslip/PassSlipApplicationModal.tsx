@@ -87,7 +87,6 @@ export const PassSlipApplicationModal = ({
     mode: 'onChange',
     defaultValues: {
       employeeId: '',
-      dateOfApplication: dateToday,
       natureOfBusiness: null,
       estimateHours: 0,
       purposeDestination: '',

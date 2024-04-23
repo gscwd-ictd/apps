@@ -210,7 +210,6 @@ export default function Calendar({ type = 'single', clickableDate = true, leaveN
   }
 
   function nextMonth() {
-    console.log(days);
     const firstDayNextMonth = add(firstDayCurrentMonth, { months: 1 });
     setCurrentMonth(format(firstDayNextMonth, 'MMM-yyyy'));
   }
