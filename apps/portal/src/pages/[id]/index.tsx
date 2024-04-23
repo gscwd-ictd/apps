@@ -33,6 +33,7 @@ import LeaveCreditMonetizationCalculatorModal from '../../components/fixed/leave
 import { useLeaveMonetizationCalculatorStore } from '../../store/leave-monetization-calculator.store';
 import dayjs from 'dayjs';
 import { usePassSlipStore } from '../../store/passslip.store';
+import { employeeCeliaDananDummy } from '../../types/employee.type';
 
 export type NavDetails = {
   fullName: string;
@@ -522,8 +523,14 @@ export default function Dashboard({ userDetails }: InferGetServerSidePropsType<t
   );
 }
 
-//use for official user
-export const getServerSideProps: GetServerSideProps = withCookieSession(async (context: GetServerSidePropsContext) => {
-  const userDetails = getUserDetails();
+//use for dummy use
+export const getServerSideProps: GetServerSideProps = async (context: GetServerSidePropsContext) => {
+  const userDetails = employeeCeliaDananDummy;
   return { props: { userDetails } };
-});
+};
+
+//use for official user
+// export const getServerSideProps: GetServerSideProps = withCookieSession(async (context: GetServerSidePropsContext) => {
+//   const userDetails = getUserDetails();
+//   return { props: { userDetails } };
+// });
