@@ -21,6 +21,7 @@ import UseRenderBadgePill from 'apps/employee-monitoring/src/utils/functions/Ren
 import LeaveApplicationConfirmModal from './LeaveApplicationConfirmModal';
 import { patchEmpMonitoring } from 'apps/employee-monitoring/src/utils/helper/employee-monitoring-axios-helper';
 import { useLeaveLedgerStore } from 'apps/employee-monitoring/src/store/leave-ledger.store';
+import { DateTimeFormatter } from 'libs/utils/src/lib/functions/DateTimeFormatter';
 
 type ViewLeaveApplicationModalProps = {
   rowData: MonitoringLeave;
@@ -43,8 +44,6 @@ const actionTaken: Array<SelectOption> = [
   { label: 'Approve', value: 'approve' },
   { label: 'Disapprove', value: 'disapprove' },
 ];
-
-// /v1/leave-application/details/${leaveId}
 
 const ViewLeaveApplicationModal: FunctionComponent<ViewLeaveApplicationModalProps> = ({
   rowData,
@@ -214,7 +213,6 @@ const ViewLeaveApplicationModal: FunctionComponent<ViewLeaveApplicationModalProp
   // success or fail of leave details
   useEffect(() => {
     if (!isEmpty(swrLeaveDetails)) {
-      console.log(swrLeaveDetails.data);
       getLeaveApplicationDetailsSuccess(swrLeaveDetails.data);
     }
 
@@ -488,15 +486,48 @@ const ViewLeaveApplicationModal: FunctionComponent<ViewLeaveApplicationModalProp
                     )}
                 </div>
 
+                <hr />
+
                 {/* TRAIL */}
-                <div className="grid grid-cols-2 grid-rows-1 px-7 sm:gap-2 md:gap:2 lg:gap-0">
+                <div className="grid grid-cols-1 grid-rows-1 px-7 sm:gap-2 md:gap:2 lg:gap-0">
                   <LabelValue
                     label="Date of Filing: "
                     textSize="md"
-                    value={dayjs(rowData.dateOfFiling).format('MMM DD, YYYY')}
+                    value={DateTimeFormatter(
+                      leaveApplicationDetails.leaveApplicationBasicInfo?.dateOfFiling,
+                      'MMMM DD, YYYY hh:mm A'
+                    )}
                     direction="left-to-right"
                   />
                 </div>
+
+                {!isEmpty(leaveApplicationDetails.leaveApplicationBasicInfo?.hrmoApprovalDate) ? (
+                  <div className="grid grid-cols-1 grid-rows-1 px-7 sm:gap-2 md:gap:2 lg:gap-0">
+                    <LabelValue
+                      label="HRMO Approval Date: "
+                      textSize="md"
+                      value={DateTimeFormatter(
+                        leaveApplicationDetails.leaveApplicationBasicInfo?.hrmoApprovalDate,
+                        'MMMM DD, YYYY hh:mm A'
+                      )}
+                      direction="left-to-right"
+                    />
+                  </div>
+                ) : null}
+
+                {!isEmpty(leaveApplicationDetails.leaveApplicationBasicInfo?.supervisorApprovalDate) ? (
+                  <div className="grid grid-cols-1 grid-rows-1 px-7 sm:gap-2 md:gap:2 lg:gap-0">
+                    <LabelValue
+                      label="Supervisor Approval Date: "
+                      textSize="md"
+                      value={DateTimeFormatter(
+                        leaveApplicationDetails.leaveApplicationBasicInfo?.supervisorApprovalDate,
+                        'MMMM DD, YYYY hh:mm A'
+                      )}
+                      direction="left-to-right"
+                    />
+                  </div>
+                ) : null}
 
                 <hr />
 

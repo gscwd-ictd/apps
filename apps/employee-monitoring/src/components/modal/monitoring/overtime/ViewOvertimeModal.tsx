@@ -1,7 +1,7 @@
 /* eslint-disable @nx/enforce-module-boundaries */
 import { Modal } from '@gscwd-apps/oneui';
 import dayjs from 'dayjs';
-import React, { FunctionComponent } from 'react';
+import React, { FunctionComponent, useEffect } from 'react';
 import { LabelValue } from '../../../labels/LabelValue';
 import { Overtime } from 'libs/utils/src/lib/types/overtime.type';
 import UseRenderOvertimeStatus from 'apps/employee-monitoring/src/utils/functions/RenderOvertimeStatus';

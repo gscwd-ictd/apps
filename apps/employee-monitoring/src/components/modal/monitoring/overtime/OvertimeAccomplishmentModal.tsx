@@ -73,10 +73,6 @@ const ViewEmployeeOvertimeAccomplishmentModal: FunctionComponent<OvertimeAccompl
     }
   }, [overtimeAccomplishment, overtimeAccomplishmentError]);
 
-  useEffect(() => {
-    console.log(OvertimeAccomplishment);
-  }, [OvertimeAccomplishment]);
-
   return (
     <>
       {/* Notification */}
