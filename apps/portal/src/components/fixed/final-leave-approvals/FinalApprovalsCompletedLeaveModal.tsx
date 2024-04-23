@@ -8,6 +8,7 @@ import { LeaveName, LeaveStatus } from 'libs/utils/src/lib/enums/leave.enum';
 import { useFinalLeaveApprovalStore } from 'apps/portal/src/store/final-leave-approvals.store';
 import { DateFormatter } from 'libs/utils/src/lib/functions/DateFormatter';
 import { useEffect, useState } from 'react';
+import { DateTimeFormatter } from 'libs/utils/src/lib/functions/DateTimeFormatter';
 
 type ApprovalsCompletedLeaveModalProps = {
   modalState: boolean;
@@ -36,7 +37,7 @@ export const ApprovalsCompletedLeaveModal = ({
 
   return (
     <>
-      <Modal size={windowWidth > 1024 ? 'md' : 'full'} open={modalState} setOpen={setModalState}>
+      <Modal size={windowWidth > 1024 ? 'sm' : 'full'} open={modalState} setOpen={setModalState}>
         <Modal.Header>
           <h3 className="font-semibold text-gray-700">
             <div className="px-5 flex justify-between">
@@ -116,6 +117,16 @@ export const ApprovalsCompletedLeaveModal = ({
                     </div>
 
                     <div className="flex flex-col justify-start items-start w-full sm:w-1/2 px-0.5 pb-3  ">
+                      <label className="text-slate-500 text-md whitespace-nowrap pb-0.5">Date of Application:</label>
+
+                      <div className="w-auto ml-5">
+                        <label className="text-md font-medium">
+                          {DateTimeFormatter(leaveIndividualDetail.dateOfFiling)}
+                        </label>
+                      </div>
+                    </div>
+
+                    <div className="flex flex-col justify-start items-start w-full sm:w-1/2 px-0.5 pb-3  ">
                       <label className="text-slate-500 text-md whitespace-nowrap pb-0.5">Leave Type:</label>
 
                       <div className="w-auto ml-5">
@@ -173,6 +184,7 @@ export const ApprovalsCompletedLeaveModal = ({
                     </div>
 
                     {leaveIndividualDetail?.leaveName === LeaveName.VACATION ||
+                    leaveIndividualDetail?.leaveName === LeaveName.FORCED ||
                     leaveIndividualDetail?.leaveName === LeaveName.SPECIAL_PRIVILEGE ||
                     leaveIndividualDetail?.leaveName === LeaveName.SICK ||
                     leaveIndividualDetail?.leaveName === LeaveName.STUDY ||
@@ -180,6 +192,7 @@ export const ApprovalsCompletedLeaveModal = ({
                       <div className="flex flex-col justify-start items-start w-full px-0.5 pb-3">
                         <label className="text-slate-500 text-md whitespace-nowrap pb-0.5 ">
                           {leaveIndividualDetail?.leaveName === LeaveName.VACATION ||
+                          leaveIndividualDetail?.leaveName === LeaveName.FORCED ||
                           leaveIndividualDetail?.leaveName === LeaveName.SPECIAL_PRIVILEGE
                             ? 'Location:'
                             : leaveIndividualDetail?.leaveName === LeaveName.SICK
@@ -193,6 +206,7 @@ export const ApprovalsCompletedLeaveModal = ({
 
                         <div className="w-auto ml-5">
                           {leaveIndividualDetail?.leaveName === LeaveName.VACATION ||
+                          leaveIndividualDetail?.leaveName === LeaveName.FORCED ||
                           leaveIndividualDetail?.leaveName === LeaveName.SPECIAL_PRIVILEGE ? (
                             <div className="text-md font-medium">
                               {leaveIndividualDetail?.inPhilippines ? 'Within the Philippines' : 'Abroad'}
@@ -223,6 +237,7 @@ export const ApprovalsCompletedLeaveModal = ({
                     ) : null}
 
                     {leaveIndividualDetail?.leaveName === LeaveName.VACATION ||
+                    leaveIndividualDetail?.leaveName === LeaveName.FORCED ||
                     leaveIndividualDetail?.leaveName === LeaveName.SPECIAL_PRIVILEGE ||
                     leaveIndividualDetail?.leaveName === LeaveName.SICK ||
                     leaveIndividualDetail?.leaveName === LeaveName.SPECIAL_LEAVE_BENEFITS_FOR_WOMEN ||
@@ -236,6 +251,7 @@ export const ApprovalsCompletedLeaveModal = ({
                         <div className="w-auto ml-5 mr-5">
                           <label className=" text-md font-medium">
                             {leaveIndividualDetail?.leaveName === LeaveName.VACATION ||
+                            leaveIndividualDetail?.leaveName === LeaveName.FORCED ||
                             leaveIndividualDetail?.leaveName === LeaveName.SPECIAL_PRIVILEGE
                               ? leaveIndividualDetail.inPhilippines
                                 ? leaveIndividualDetail.inPhilippines
@@ -273,15 +289,15 @@ export const ApprovalsCompletedLeaveModal = ({
                       <div className="w-auto ml-5">
                         <label className=" text-md font-medium ">
                           {leaveIndividualDetail?.status === LeaveStatus.DISAPPROVED_BY_HRDM
-                            ? DateFormatter(leaveIndividualDetail?.hrdmApprovalDate, 'MM-DD-YYYY')
+                            ? DateTimeFormatter(leaveIndividualDetail?.hrdmApprovalDate)
                             : leaveIndividualDetail?.status === LeaveStatus.DISAPPROVED_BY_SUPERVISOR
-                            ? DateFormatter(leaveIndividualDetail?.supervisorApprovalDate, 'MM-DD-YYYY')
+                            ? DateTimeFormatter(leaveIndividualDetail?.supervisorApprovalDate)
                             : leaveIndividualDetail?.status === LeaveStatus.DISAPPROVED_BY_HRMO
-                            ? DateFormatter(leaveIndividualDetail?.hrmoApprovalDate, 'MM-DD-YYYY')
+                            ? DateTimeFormatter(leaveIndividualDetail?.hrmoApprovalDate)
                             : leaveIndividualDetail?.status === LeaveStatus.APPROVED
-                            ? DateFormatter(leaveIndividualDetail?.hrdmApprovalDate, 'MM-DD-YYYY')
+                            ? DateTimeFormatter(leaveIndividualDetail?.hrdmApprovalDate)
                             : leaveIndividualDetail?.status === LeaveStatus.CANCELLED
-                            ? DateFormatter(leaveIndividualDetail?.cancelDate, 'MM-DD-YYYY')
+                            ? DateTimeFormatter(leaveIndividualDetail?.cancelDate)
                             : null}
                         </label>
                       </div>

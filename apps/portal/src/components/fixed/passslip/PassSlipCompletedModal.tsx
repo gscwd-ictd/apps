@@ -10,6 +10,7 @@ import { DisputeApplicationModal } from './DisputeModal';
 import dayjs from 'dayjs';
 import { GetDateDifference } from 'libs/utils/src/lib/functions/GetDateDifference';
 import { DateTimeFormatter } from 'libs/utils/src/lib/functions/DateTimeFormatter';
+import PassSlip from 'apps/portal/src/pages/[id]/inbox';
 
 type PassSlipCompletedModalProps = {
   modalState: boolean;
@@ -210,10 +211,32 @@ export const PassSlipCompletedModal = ({
                 </div>
 
                 <div className="flex flex-col justify-start items-start w-full sm:w-1/2 px-0.5 pb-3  ">
-                  <label className="text-slate-500 text-md whitespace-nowrap pb-0.5 ">Date Approved:</label>
+                  <label className="text-slate-500 text-md whitespace-nowrap pb-0.5 ">
+                    {passSlip.status === PassSlipStatus.APPROVED
+                      ? `Date Approved:`
+                      : passSlip.status === PassSlipStatus.DISAPPROVED
+                      ? 'Date Disapproved:'
+                      : passSlip.status === PassSlipStatus.DISAPPROVED_BY_HRMO
+                      ? 'Date Disapproved:'
+                      : passSlip.status === PassSlipStatus.FOR_SUPERVISOR_APPROVAL &&
+                        passSlip.natureOfBusiness === NatureOfBusiness.OFFICIAL_BUSINESS
+                      ? 'Date Approved by HRMO:'
+                      : 'Date Approved:'}
+                  </label>
 
                   <div className="w-auto ml-5">
-                    <label className=" text-md font-medium">{DateTimeFormatter(passSlip.dateOfApplication)}</label>
+                    <label className=" text-md font-medium">
+                      {passSlip.status === PassSlipStatus.APPROVED
+                        ? DateTimeFormatter(passSlip.supervisorApprovalDate)
+                        : passSlip.status === PassSlipStatus.DISAPPROVED
+                        ? DateTimeFormatter(passSlip.supervisorApprovalDate)
+                        : passSlip.status === PassSlipStatus.DISAPPROVED_BY_HRMO
+                        ? DateTimeFormatter(passSlip.hrmoApprovalDate)
+                        : passSlip.status === PassSlipStatus.FOR_SUPERVISOR_APPROVAL &&
+                          passSlip.natureOfBusiness === NatureOfBusiness.OFFICIAL_BUSINESS
+                        ? DateTimeFormatter(passSlip.hrmoApprovalDate)
+                        : '-- -- ----'}
+                    </label>
                   </div>
                 </div>
 

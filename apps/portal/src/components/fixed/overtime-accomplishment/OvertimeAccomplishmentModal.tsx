@@ -203,7 +203,9 @@ export const OvertimeAccomplishmentModal = ({ modalState, setModalState, closeMo
     }
   }, [encodedHours]);
 
-  const faceScanUrl = `${process.env.NEXT_PUBLIC_EMPLOYEE_MONITORING_URL}/v1/daily-time-record/employees/${employeeDetails.employmentDetails.companyId}/${overtimeAccomplishmentDetails.plannedDate}`;
+  const faceScanUrl = `${process.env.NEXT_PUBLIC_EMPLOYEE_MONITORING_URL}/v1/daily-time-record/employees/${
+    employeeDetails.employmentDetails.companyId
+  }/${dayjs(overtimeAccomplishmentDetails.plannedDate).format('YYYY-MM-DD')}`;
   // use useSWR, provide the URL and fetchWithSession function as a parameter
 
   const {
@@ -588,7 +590,8 @@ export const OvertimeAccomplishmentModal = ({ modalState, setModalState, closeMo
                             <span className="text-justify">
                               Please use your IVMS Entries as your reference when encoding your Overtime Start and End.
                               You may use your IVMS Entries from the second day for cases where you have ended your
-                              Overtime on the next day.
+                              Overtime on the next day. Your IVMS entries will be used by your manager as basis for
+                              information accuracy.
                             </span>
                           </div>
                         </div>
@@ -754,7 +757,9 @@ export const OvertimeAccomplishmentModal = ({ modalState, setModalState, closeMo
                           <label className="text-slate-500 text-md whitespace-nowrap pb-0.5 ">Approved Hours:</label>
 
                           <div className="w-auto ml-5">
-                            <label className=" text-md font-medium">{overtimeAccomplishmentDetails.actualHrs}</label>
+                            <label className=" text-md font-medium">
+                              {overtimeAccomplishmentDetails.actualHrs ?? '---'}
+                            </label>
                           </div>
                         </div>
                       ) : null}
@@ -799,6 +804,7 @@ export const OvertimeAccomplishmentModal = ({ modalState, setModalState, closeMo
                     !watch('accomplishments') ||
                     finalEncodedHours <= 0 ||
                     isNaN(finalEncodedHours) ||
+                    //if scheduled/future OT but no time logs in array
                     (overtimeAccomplishmentDetails.plannedDate > overtimeAccomplishmentDetails.dateOfOTApproval &&
                       overtimeAccomplishmentDetails.entriesForTheDay.length <= 0)
                       ? true

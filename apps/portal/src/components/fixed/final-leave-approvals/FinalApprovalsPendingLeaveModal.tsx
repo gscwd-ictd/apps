@@ -15,6 +15,7 @@ import { useFinalLeaveApprovalStore } from 'apps/portal/src/store/final-leave-ap
 import { ConfirmationLeaveModal } from './FinalApprovalOtp/ConfirmationLeaveModal';
 import { ApprovalOtpContentsLeave } from './FinalApprovalOtp/ApprovalOtpContentsLeave';
 import { DateFormatter } from 'libs/utils/src/lib/functions/DateFormatter';
+import { DateTimeFormatter } from 'libs/utils/src/lib/functions/DateTimeFormatter';
 
 type ApprovalsPendingLeaveModalProps = {
   modalState: boolean;
@@ -105,7 +106,7 @@ export const FinalApprovalsPendingLeaveModal = ({
   const { windowWidth } = UseWindowDimensions();
   return (
     <>
-      <Modal size={windowWidth > 1024 ? 'md' : 'full'} open={modalState} setOpen={setModalState}>
+      <Modal size={windowWidth > 1024 ? 'sm' : 'full'} open={modalState} setOpen={setModalState}>
         <Modal.Header>
           <h3 className="font-semibold text-gray-700">
             <div className="flex justify-between px-5">
@@ -185,6 +186,16 @@ export const FinalApprovalsPendingLeaveModal = ({
                     </div>
 
                     <div className="flex flex-col justify-start items-start w-full sm:w-1/2 px-0.5 pb-3  ">
+                      <label className="text-slate-500 text-md whitespace-nowrap pb-0.5">Date of Application:</label>
+
+                      <div className="w-auto ml-5">
+                        <label className="text-md font-medium">
+                          {DateTimeFormatter(leaveIndividualDetail.dateOfFiling)}
+                        </label>
+                      </div>
+                    </div>
+
+                    <div className="flex flex-col justify-start items-start w-full sm:w-1/2 px-0.5 pb-3  ">
                       <label className="text-slate-500 text-md whitespace-nowrap pb-0.5">Leave Type:</label>
 
                       <div className="w-auto ml-5">
@@ -242,6 +253,7 @@ export const FinalApprovalsPendingLeaveModal = ({
                     </div>
 
                     {leaveIndividualDetail?.leaveName === LeaveName.VACATION ||
+                    leaveIndividualDetail?.leaveName === LeaveName.FORCED ||
                     leaveIndividualDetail?.leaveName === LeaveName.SPECIAL_PRIVILEGE ||
                     leaveIndividualDetail?.leaveName === LeaveName.SICK ||
                     leaveIndividualDetail?.leaveName === LeaveName.STUDY ||
@@ -249,6 +261,7 @@ export const FinalApprovalsPendingLeaveModal = ({
                       <div className="flex flex-col justify-start items-start w-full px-0.5 pb-3">
                         <label className="text-slate-500 text-md whitespace-nowrap pb-0.5 ">
                           {leaveIndividualDetail?.leaveName === LeaveName.VACATION ||
+                          leaveIndividualDetail?.leaveName === LeaveName.FORCED ||
                           leaveIndividualDetail?.leaveName === LeaveName.SPECIAL_PRIVILEGE
                             ? 'Location:'
                             : leaveIndividualDetail?.leaveName === LeaveName.SICK
@@ -262,6 +275,7 @@ export const FinalApprovalsPendingLeaveModal = ({
 
                         <div className="w-auto ml-5">
                           {leaveIndividualDetail?.leaveName === LeaveName.VACATION ||
+                          leaveIndividualDetail?.leaveName === LeaveName.FORCED ||
                           leaveIndividualDetail?.leaveName === LeaveName.SPECIAL_PRIVILEGE ? (
                             <div className="text-md font-medium">
                               {leaveIndividualDetail?.inPhilippines ? 'Within the Philippines' : 'Abroad'}
@@ -292,6 +306,7 @@ export const FinalApprovalsPendingLeaveModal = ({
                     ) : null}
 
                     {leaveIndividualDetail?.leaveName === LeaveName.VACATION ||
+                    leaveIndividualDetail?.leaveName === LeaveName.FORCED ||
                     leaveIndividualDetail?.leaveName === LeaveName.SPECIAL_PRIVILEGE ||
                     leaveIndividualDetail?.leaveName === LeaveName.SICK ||
                     leaveIndividualDetail?.leaveName === LeaveName.SPECIAL_LEAVE_BENEFITS_FOR_WOMEN ||

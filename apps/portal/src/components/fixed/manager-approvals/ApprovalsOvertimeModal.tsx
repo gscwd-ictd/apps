@@ -23,6 +23,7 @@ import { fetchWithToken } from 'apps/portal/src/utils/hoc/fetcher';
 import { isEmpty } from 'lodash';
 import { TextSize } from 'libs/utils/src/lib/enums/text-size.enum';
 import { ApprovalCaptcha } from './ApprovalOtp/ApprovalCaptcha';
+import { DateTimeFormatter } from 'libs/utils/src/lib/functions/DateTimeFormatter';
 
 type ModalProps = {
   modalState: boolean;
@@ -152,6 +153,7 @@ export const OvertimeModal = ({ modalState, setModalState, closeModalAction }: M
   // Upon success/fail of swr request, zustand state will be updated
   useEffect(() => {
     if (!isEmpty(swrOvertimeDetails)) {
+      // console.log(swrOvertimeDetails);
       getOvertimeDetailsSuccess(swrOvertimeDetailsIsLoading, swrOvertimeDetails);
     }
 
@@ -338,7 +340,7 @@ export const OvertimeModal = ({ modalState, setModalState, closeModalAction }: M
                       <div className="w-auto ml-5">
                         <label className="text-md font-medium">
                           {overtimeDetails.dateApproved
-                            ? DateFormatter(overtimeDetails.dateApproved, 'MM-DD-YYYY')
+                            ? DateTimeFormatter(overtimeDetails.dateApproved)
                             : '-- -- ----'}
                         </label>
                       </div>

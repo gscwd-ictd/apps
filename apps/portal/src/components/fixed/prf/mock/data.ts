@@ -147,7 +147,7 @@ export const profile = {
   firstName: 'Eric',
   middleName: 'Costelo',
   lastName: 'Sison',
-  nameExt: '',
+  nameExtension: '',
   photoUrl: '',
 };
 

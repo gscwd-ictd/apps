@@ -4,7 +4,6 @@ import { getUserDetails, withCookieSession } from '../../../../utils/helpers/ses
 import { usePassSlipStore } from '../../../../store/passslip.store';
 import React, { useEffect } from 'react';
 import { PassSlipPdfView } from '../../../../components/fixed/passslip/PassSlipPdf';
-import { employeeDummy } from '../../../../types/employee.type';
 import useSWR from 'swr';
 import { fetchWithToken } from '../../../../utils/hoc/fetcher';
 import { useRouter } from 'next/router';
