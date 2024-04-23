@@ -72,7 +72,6 @@ export default function Dashboard({ userDetails }: InferGetServerSidePropsType<t
     getMonetizationConstantFail: state.getMonetizationConstantFail,
   }));
 
-  console.log(userDetails);
   const { dtr, schedule, loadingTimeLogs, errorTimeLogs, getTimeLogs, getTimeLogsSuccess, getTimeLogsFail } =
     useTimeLogStore((state) => ({
       dtr: state.dtr,
