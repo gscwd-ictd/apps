@@ -47,6 +47,8 @@ export type LeaveApplicationForm = {
   commutation?: string | null;
   forMonetization?: boolean;
   totalNumberOfDays: number; //number of days of leave
+
+  isLateFiling: boolean;
 };
 
 // Employee full leave details
@@ -76,6 +78,8 @@ export type EmployeeLeaveDetails = {
     maximumCredits?: number | null;
     supervisorApprovalDate: string;
     supervisorDisapprovalRemarks: string;
+    supervisorId: string;
+    supervisorName: string;
     hrdmApprovalDate: string;
     hrdmDisapprovalRemarks: string;
     hrmoApprovalDate: string;

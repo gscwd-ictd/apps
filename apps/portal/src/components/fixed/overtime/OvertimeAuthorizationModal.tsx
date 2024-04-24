@@ -389,147 +389,151 @@ export const OvertimeAuthorizationModal = ({ modalState, setModalState, closeMod
                         Approved by:
                       </Text>
                     </View>
-                    {/* SIGNATURES */}
+
                     <View
                       style={{
-                        display: 'flex',
-                        flexDirection: 'row',
-                        justifyContent: 'flex-start',
-                        fontSize: 9,
-                        paddingTop: 2,
-                        paddingLeft: 35,
-                        paddingRight: 35,
                         width: '100%',
-                      }}
-                    >
-                      <Image
-                        style={{ width: 50, position: 'absolute', marginLeft: 90, marginTop: 0 }}
-                        src={overtimeAuthorizationReport?.signatories?.employeeSignature ?? ''}
-                      />
-                      <Image
-                        style={{ width: 50, position: 'absolute', marginLeft: 360, marginTop: 0 }}
-                        src={overtimeAuthorizationReport?.signatories?.supervisorSignature ?? ''}
-                      />
-                    </View>
-                    <View
-                      style={{
-                        width: 'auto',
                         display: 'flex',
                         flexDirection: 'row',
                         justifyContent: 'space-between',
+                        alignItems: 'flex-end',
                         fontSize: 9,
-                        paddingTop: 30,
-                        paddingLeft: 35,
-                        paddingRight: 35,
-                      }}
-                    >
-                      <Text>_______________________________</Text>
-                      <Text>_____________</Text>
-                      <Text>__________________________________</Text>
-                      <Text>_____________</Text>
-                    </View>
-                    <View
-                      style={{
-                        width: 'auto',
-                        display: 'flex',
-                        flexDirection: 'row',
-                        justifyContent: 'flex-start',
-                        fontSize: 8,
                         paddingTop: 0,
-                        paddingLeft: 35,
-                        paddingRight: 35,
+                        paddingLeft: 30,
                       }}
                     >
-                      <Text
+                      <View
                         style={{
-                          marginLeft: 60,
+                          width: 200,
+                          display: 'flex',
+                          flexDirection: 'column',
+                          justifyContent: 'flex-end',
+                          alignItems: 'center',
+                          fontSize: 9,
+                          paddingTop: 0,
+                          gap: 0,
                         }}
                       >
-                        Supervisor
-                      </Text>
-                      <Text
-                        style={{
-                          marginLeft: 105,
-                        }}
-                      >
-                        Date
-                      </Text>
-                      <Text
-                        style={{
-                          marginLeft: 80,
-                        }}
-                      >
-                        Division/Department Manager
-                      </Text>
-                      <Text
-                        style={{
-                          marginLeft: 78,
-                        }}
-                      >
-                        Date
-                      </Text>
-                    </View>
+                        <Image
+                          style={{ width: 50, marginBottom: 2 }}
+                          src={overtimeAuthorizationReport?.signatories?.employeeSignature ?? '/'}
+                        />
+                        <Text
+                          style={{
+                            marginBottom: -8,
+                            width: 165,
+                            textAlign: 'center',
+                          }}
+                        >
+                          {overtimeAuthorizationReport?.signatories?.employeeName}
+                        </Text>
+                        <Text>_______________________________</Text>
+                        <Text
+                          style={{
+                            marginTop: 2,
+                            textAlign: 'center',
+                          }}
+                        >
+                          Supervisor
+                        </Text>
+                      </View>
 
-                    <View
-                      style={{
-                        width: 'auto',
-                        display: 'flex',
-                        flexDirection: 'row',
-                        justifyContent: 'flex-start',
-                        fontSize: 9,
-                        paddingTop: 2,
-                        paddingLeft: 35,
-                        paddingRight: 35,
-                      }}
-                    >
-                      <Text
+                      <View
                         style={{
-                          position: 'absolute',
-                          marginLeft: 30,
-                          marginTop: -20,
-                          width: 165,
-
-                          textAlign: 'center',
+                          width: 200,
+                          display: 'flex',
+                          flexDirection: 'column',
+                          justifyContent: 'space-between',
+                          alignItems: 'center',
+                          fontSize: 9,
+                          paddingTop: 0,
                         }}
                       >
-                        {overtimeAuthorizationReport?.signatories?.employeeName}
-                      </Text>
-                      <Text
-                        style={{
-                          position: 'absolute',
-                          marginLeft: 163,
-                          marginTop: -20,
-                          width: 165,
+                        <Text
+                          style={{
+                            marginBottom: -8,
+                            width: 165,
+                            textAlign: 'center',
+                          }}
+                        >
+                          {overtimeAuthorizationReport?.requestedDate}
+                        </Text>
+                        <Text>_____________</Text>
+                        <Text
+                          style={{
+                            marginTop: 2,
+                            textAlign: 'center',
+                          }}
+                        >
+                          Date
+                        </Text>
+                      </View>
 
-                          textAlign: 'center',
+                      <View
+                        style={{
+                          width: 200,
+                          display: 'flex',
+                          flexDirection: 'column',
+                          justifyContent: 'flex-end',
+                          alignItems: 'center',
+                          fontSize: 9,
+                          paddingTop: 0,
                         }}
                       >
-                        {overtimeAuthorizationReport?.requestedDate}
-                      </Text>
-                      <Text
-                        style={{
-                          position: 'absolute',
-                          marginLeft: 300,
-                          marginTop: -20,
-                          width: 170,
+                        <Image
+                          style={{ width: 50, marginBottom: 2 }}
+                          src={overtimeAuthorizationReport?.signatories?.supervisorSignature ?? '/'}
+                        />
+                        <Text
+                          style={{
+                            marginBottom: -8,
+                            width: 165,
+                            textAlign: 'center',
+                          }}
+                        >
+                          {overtimeAuthorizationReport?.signatories?.supervisorName}
+                        </Text>
+                        <Text>_______________________________</Text>
+                        <Text
+                          style={{
+                            marginTop: 2,
+                            textAlign: 'center',
+                          }}
+                        >
+                          Division/Department Manager
+                        </Text>
+                      </View>
 
-                          textAlign: 'center',
+                      <View
+                        style={{
+                          width: 200,
+                          display: 'flex',
+                          flexDirection: 'column',
+                          justifyContent: 'space-between',
+                          alignItems: 'center',
+                          fontSize: 9,
+                          paddingTop: 0,
                         }}
                       >
-                        {overtimeAuthorizationReport?.signatories?.supervisorName}
-                      </Text>
-                      <Text
-                        style={{
-                          position: 'absolute',
-                          marginLeft: 442,
-                          marginTop: -20,
-                          width: 165,
-
-                          textAlign: 'center',
-                        }}
-                      >
-                        {overtimeAuthorizationReport?.managerApprovalDate}
-                      </Text>
+                        <Text
+                          style={{
+                            marginBottom: -8,
+                            width: 165,
+                            textAlign: 'center',
+                          }}
+                        >
+                          {overtimeAuthorizationReport?.managerApprovalDate}
+                        </Text>
+                        <Text>_____________</Text>
+                        <Text
+                          style={{
+                            marginTop: 2,
+                            textAlign: 'center',
+                          }}
+                        >
+                          Date
+                        </Text>
+                      </View>
                     </View>
                   </View>
                 </Page>

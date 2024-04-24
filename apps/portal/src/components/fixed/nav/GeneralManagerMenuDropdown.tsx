@@ -17,10 +17,10 @@ export const GeneralManagerMenuDropdown = ({
   labelColor = 'text-white',
   right = false,
 }: MenuDropdownProps): JSX.Element => {
-  // const { pendingApprovalsCount, errorPendingApprovalsCount } = useApprovalStore((state) => ({
-  //   pendingApprovalsCount: state.pendingApprovalsCount,
-  //   errorPendingApprovalsCount: state.error.errorPendingApprovalsCount,
-  // }));
+  const { pendingApprovalsCount, errorPendingApprovalsCount } = useApprovalStore((state) => ({
+    pendingApprovalsCount: state.pendingApprovalsCount,
+    errorPendingApprovalsCount: state.error.errorPendingApprovalsCount,
+  }));
 
   const router = useRouter();
 
@@ -31,6 +31,10 @@ export const GeneralManagerMenuDropdown = ({
           <Menu.Button
             className={`${className} h-10 w-10 rounded flex justify-center items-center bg-white outline-none transition-colors ease-in-out hover:bg-slate-200 hover:text-slate-500 `}
           >
+            {(isEmpty(errorPendingApprovalsCount) && pendingApprovalsCount.pendingGmApprovalCount > 0) ||
+            pendingApprovalsCount.pendingAppointingAuthoritySelection > 0 ? (
+              <span className="absolute w-3 h-3 -mt-5 ml-9 bg-red-600 rounded-full select-none" />
+            ) : null}
             <HiOutlineCube className="w-6 h-6 text-indigo-500 " />
           </Menu.Button>
         </div>
@@ -76,10 +80,10 @@ export const GeneralManagerMenuDropdown = ({
                           Appointing Authority Selection
                         </span>
                       </div>
-                      {/* {isEmpty(errorPendingApprovalsCount) &&
+                      {isEmpty(errorPendingApprovalsCount) &&
                       pendingApprovalsCount.pendingAppointingAuthoritySelection > 0 ? (
                         <span className="absolute w-3 h-3 right-4 z-40 bg-red-600 rounded-full select-none" />
-                      ) : null} */}
+                      ) : null}
                     </button>
                   )}
                 </Menu.Item>
@@ -96,9 +100,9 @@ export const GeneralManagerMenuDropdown = ({
                         <HiAcademicCap className="w-6 h-6 text-red-600" />
                         <span className="text-sm tracking-tight text-gray-700 text-left">Training Approvals</span>
                       </div>
-                      {/* {isEmpty(errorPendingApprovalsCount) && pendingApprovalsCount.pendingGmApprovalCount != 0 ? (
+                      {isEmpty(errorPendingApprovalsCount) && pendingApprovalsCount.pendingGmApprovalCount > 0 ? (
                         <span className="absolute w-3 h-3 right-4 z-40 bg-red-600 rounded-full select-none" />
-                      ) : null} */}
+                      ) : null}
                     </button>
                   )}
                 </Menu.Item>

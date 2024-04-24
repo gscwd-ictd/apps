@@ -5,7 +5,7 @@ import { NatureOfBusiness, ObTransportation, PassSlipStatus } from '../enums/pas
 // Pass slip application form
 export type PassSlipApplicationForm = {
   employeeId: string;
-  dateOfApplication: string;
+  dateOfApplication: string | null;
   natureOfBusiness: NatureOfBusiness | null;
   vehiclePlateNumber?: string | null;
   obTransportation: ObTransportation | null;
@@ -39,7 +39,10 @@ export type PassSlip = {
   disputeRemarks?: string;
   isDisputeApproved?: boolean | null;
   encodedTimeIn?: string;
-  isMedical?: boolean;
+  // isMedical?: boolean;
+  supervisorApprovalDate: string | null;
+  hrmoApprovalDate: string | null;
+  hrmoDisapprovalRemarks: string | null;
 } & PassSlipApplicationForm;
 
 // Individual pass slip id

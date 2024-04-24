@@ -1,6 +1,7 @@
 import { useMemo } from 'react';
 import { DebouncedInput } from './DebounceInput';
 import { Column, Table } from '@tanstack/react-table';
+import dayjs from 'dayjs';
 
 export const ColumnFilterPortal = ({
   column,
@@ -47,9 +48,15 @@ export const ColumnFilterPortal = ({
   ) : (
     <>
       <datalist id={column.id + 'list'} className="capitalize">
-        {sortedUniqueValues.slice(0, 5000).map((value: any, index: number) => (
-          <option value={value} key={index} />
-        ))}
+        {sortedUniqueValues
+          .slice(0, 5000)
+          .map((value: any, index: number) =>
+            dayjs(value).format('MM-DD-YYYY') !== 'Invalid Date' ? (
+              <option value={value} label={`${dayjs(value).format('MM-DD-YYYY')}`} key={index}></option>
+            ) : (
+              <option value={value} key={index} />
+            )
+          )}
       </datalist>
 
       <DebouncedInput

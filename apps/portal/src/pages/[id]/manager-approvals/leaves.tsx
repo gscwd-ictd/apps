@@ -27,6 +27,7 @@ import ApprovalsPendingLeaveModal from 'apps/portal/src/components/fixed/manager
 import ApprovalsCompletedLeaveModal from 'apps/portal/src/components/fixed/manager-approvals/ApprovalsCompletedLeaveModal';
 import UseRenderLeaveStatus from 'apps/portal/src/utils/functions/RenderLeaveStatus';
 import { TextSize } from 'libs/utils/src/lib/enums/text-size.enum';
+import { SalaryGradeConverter } from 'libs/utils/src/lib/functions/SalaryGradeConverter';
 
 export default function LeaveApprovals({ employeeDetails }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const {
@@ -336,10 +337,14 @@ export default function LeaveApprovals({ employeeDetails }: InferGetServerSidePr
 export const getServerSideProps: GetServerSideProps = withCookieSession(async (context: GetServerSidePropsContext) => {
   const employeeDetails = getUserDetails();
 
-  // check if user role is rank_and_file or job order = kick out
+  //convert salary grade to number
+  // const finalSalaryGrade = SalaryGradeConverter(employeeDetails.employmentDetails.salaryGrade);
+
+  // check if user role is rank_and_file or job order, or not OIC or not SG16 and up = kick out
   if (
-    employeeDetails.employmentDetails.userRole === UserRole.RANK_AND_FILE ||
-    employeeDetails.employmentDetails.userRole === UserRole.JOB_ORDER
+    (employeeDetails.employmentDetails.userRole === UserRole.RANK_AND_FILE ||
+      employeeDetails.employmentDetails.userRole === UserRole.JOB_ORDER) &&
+    employeeDetails.employmentDetails.officerOfTheDay.length <= 0
   ) {
     // if true, the employee is not allowed to access this page
     return {

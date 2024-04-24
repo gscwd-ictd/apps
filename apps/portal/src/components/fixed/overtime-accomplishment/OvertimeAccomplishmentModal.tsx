@@ -11,6 +11,7 @@ import { useEffect, useState } from 'react';
 import dayjs from 'dayjs';
 import { OvertimeAccomplishmentPatch } from 'libs/utils/src/lib/types/overtime.type';
 import { DateFormatter } from 'libs/utils/src/lib/functions/DateFormatter';
+import { DateTimeFormatter } from 'libs/utils/src/lib/functions/DateTimeFormatter';
 import { GetDateDifference } from 'libs/utils/src/lib/functions/GetDateDifference';
 import { OvertimeAccomplishmentStatus, OvertimeStatus } from 'libs/utils/src/lib/enums/overtime.enum';
 import { useTimeLogStore } from 'apps/portal/src/store/timelogs.store';
@@ -35,10 +36,6 @@ export const OvertimeAccomplishmentModal = ({ modalState, setModalState, closeMo
     completedOvertimeAccomplishmentModalIsOpen,
     setConfirmOvertimeAccomplishmentModalIsOpen,
     setOvertimeAccomplishmentPatchDetails,
-    timeLogsOnDayAndNext,
-    getTimeLogsOnDayAndNext,
-    getTimeLogsOnDayAndNextSuccess,
-    getTimeLogsOnDayAndNextFail,
   } = useOvertimeAccomplishmentStore((state) => ({
     overtimeAccomplishmentDetails: state.overtimeAccomplishmentDetails,
     confirmOvertimeAccomplishmentModalIsOpen: state.confirmOvertimeAccomplishmentModalIsOpen,
@@ -46,10 +43,6 @@ export const OvertimeAccomplishmentModal = ({ modalState, setModalState, closeMo
     completedOvertimeAccomplishmentModalIsOpen: state.completedOvertimeAccomplishmentModalIsOpen,
     setConfirmOvertimeAccomplishmentModalIsOpen: state.setConfirmOvertimeAccomplishmentModalIsOpen,
     setOvertimeAccomplishmentPatchDetails: state.setOvertimeAccomplishmentPatchDetails,
-    timeLogsOnDayAndNext: state.timeLogsOnDayAndNext,
-    getTimeLogsOnDayAndNext: state.getTimeLogsOnDayAndNext,
-    getTimeLogsOnDayAndNextSuccess: state.getTimeLogsOnDayAndNextSuccess,
-    getTimeLogsOnDayAndNextFail: state.getTimeLogsOnDayAndNextFail,
   }));
 
   const { schedule, isHoliday, isRestday, getTimeLogs, getTimeLogsSuccess, getTimeLogsFail } = useTimeLogStore(
@@ -100,12 +93,23 @@ export const OvertimeAccomplishmentModal = ({ modalState, setModalState, closeMo
     } else {
       setValue('employeeId', overtimeAccomplishmentDetails.employeeId);
       setValue('overtimeApplicationId', overtimeAccomplishmentDetails.overtimeApplicationId);
-      setValue('encodedTimeIn', overtimeAccomplishmentDetails.encodedTimeIn);
-      setValue('encodedTimeOut', overtimeAccomplishmentDetails.encodedTimeOut);
+      setValue(
+        'encodedTimeIn',
+        overtimeAccomplishmentDetails?.ivmsTimeIn
+          ? dayjs(overtimeAccomplishmentDetails?.ivmsTimeOut).format('YYYY-MM-DDThh:mm')
+          : null
+      );
+      setValue(
+        'encodedTimeOut',
+        overtimeAccomplishmentDetails?.ivmsTimeOut
+          ? dayjs(overtimeAccomplishmentDetails?.ivmsTimeOut).format('YYYY-MM-DDThh:mm')
+          : null
+      );
       setValue('accomplishments', overtimeAccomplishmentDetails.accomplishments);
     }
   }, [pendingOvertimeAccomplishmentModalIsOpen]);
 
+  // console.log(dayjs(overtimeAccomplishmentDetails.entriesForTheDay[0]).format('YYYY-MM-DDThh:mm'));
   useEffect(() => {
     setFinalEncodedHours(overtimeAccomplishmentDetails.computedEncodedHours);
   }, [employeeDetails, overtimeAccomplishmentDetails]);
@@ -199,7 +203,9 @@ export const OvertimeAccomplishmentModal = ({ modalState, setModalState, closeMo
     }
   }, [encodedHours]);
 
-  const faceScanUrl = `${process.env.NEXT_PUBLIC_EMPLOYEE_MONITORING_URL}/v1/daily-time-record/employees/${employeeDetails.employmentDetails.companyId}/${overtimeAccomplishmentDetails.plannedDate}`;
+  const faceScanUrl = `${process.env.NEXT_PUBLIC_EMPLOYEE_MONITORING_URL}/v1/daily-time-record/employees/${
+    employeeDetails.employmentDetails.companyId
+  }/${dayjs(overtimeAccomplishmentDetails.plannedDate).format('YYYY-MM-DD')}`;
   // use useSWR, provide the URL and fetchWithSession function as a parameter
 
   const {
@@ -235,49 +241,49 @@ export const OvertimeAccomplishmentModal = ({ modalState, setModalState, closeMo
   }, [swrFaceScan, swrFaceScanError]);
 
   //get DTR for OT date and next day
-  const timeLogsOnDayAndNextUrl = `${process.env.NEXT_PUBLIC_EMPLOYEE_MONITORING_URL}/v1/daily-time-record/employees/entries/logs/${employeeDetails.employmentDetails.companyId}/${overtimeAccomplishmentDetails.plannedDate}`;
+  // const timeLogsOnDayAndNextUrl = `${process.env.NEXT_PUBLIC_EMPLOYEE_MONITORING_URL}/v1/daily-time-record/employees/entries/logs/${employeeDetails.employmentDetails.companyId}/${overtimeAccomplishmentDetails.plannedDate}`;
   // use useSWR, provide the URL and fetchWithSession function as a parameter
 
-  const {
-    data: swrTimeLogsOnDayAndNext,
-    isLoading: swrTimeLogsOnDayAndNextIsLoading,
-    error: swrTimeLogsOnDayAndNextError,
-  } = useSWR(
-    (pendingOvertimeAccomplishmentModalIsOpen || completedOvertimeAccomplishmentModalIsOpen) &&
-      employeeDetails.employmentDetails.companyId &&
-      overtimeAccomplishmentDetails.plannedDate
-      ? timeLogsOnDayAndNextUrl
-      : null,
-    fetchWithToken,
-    {
-      shouldRetryOnError: true,
-      revalidateOnFocus: true,
-    }
-  );
+  // const {
+  //   data: swrTimeLogsOnDayAndNext,
+  //   isLoading: swrTimeLogsOnDayAndNextIsLoading,
+  //   error: swrTimeLogsOnDayAndNextError,
+  // } = useSWR(
+  //   (pendingOvertimeAccomplishmentModalIsOpen || completedOvertimeAccomplishmentModalIsOpen) &&
+  //     employeeDetails.employmentDetails.companyId &&
+  //     overtimeAccomplishmentDetails.plannedDate
+  //     ? timeLogsOnDayAndNextUrl
+  //     : null,
+  //   fetchWithToken,
+  //   {
+  //     shouldRetryOnError: true,
+  //     revalidateOnFocus: true,
+  //   }
+  // );
 
   // Initial zustand state update
-  useEffect(() => {
-    if (swrTimeLogsOnDayAndNextIsLoading) {
-      getTimeLogsOnDayAndNext(swrTimeLogsOnDayAndNextIsLoading);
-    }
-  }, [swrTimeLogsOnDayAndNextIsLoading]);
+  // useEffect(() => {
+  //   if (swrTimeLogsOnDayAndNextIsLoading) {
+  //     getTimeLogsOnDayAndNext(swrTimeLogsOnDayAndNextIsLoading);
+  //   }
+  // }, [swrTimeLogsOnDayAndNextIsLoading]);
 
-  // Upon success/fail of swr request, zustand state will be updated
-  useEffect(() => {
-    if (!isEmpty(swrTimeLogsOnDayAndNext)) {
-      getTimeLogsOnDayAndNextSuccess(swrTimeLogsOnDayAndNextIsLoading, swrTimeLogsOnDayAndNext);
-    }
+  // // Upon success/fail of swr request, zustand state will be updated
+  // useEffect(() => {
+  //   if (!isEmpty(swrTimeLogsOnDayAndNext)) {
+  //     getTimeLogsOnDayAndNextSuccess(swrTimeLogsOnDayAndNextIsLoading, swrTimeLogsOnDayAndNext);
+  //   }
 
-    if (!isEmpty(swrTimeLogsOnDayAndNextError)) {
-      getTimeLogsOnDayAndNextFail(swrTimeLogsOnDayAndNextIsLoading, swrTimeLogsOnDayAndNextError.message);
-    }
-  }, [swrTimeLogsOnDayAndNext, swrTimeLogsOnDayAndNextError]);
+  //   if (!isEmpty(swrTimeLogsOnDayAndNextError)) {
+  //     getTimeLogsOnDayAndNextFail(swrTimeLogsOnDayAndNextIsLoading, swrTimeLogsOnDayAndNextError.message);
+  //   }
+  // }, [swrTimeLogsOnDayAndNext, swrTimeLogsOnDayAndNextError]);
 
   return (
     <>
-      {!isEmpty(swrTimeLogsOnDayAndNextError) ? (
+      {/* {!isEmpty(swrTimeLogsOnDayAndNextError) ? (
         <ToastNotification toastType="error" notifMessage={`IVMS Entries: ${swrTimeLogsOnDayAndNextError.message}.`} />
-      ) : null}
+      ) : null} */}
 
       {!isEmpty(swrFaceScanError) ? (
         <ToastNotification toastType="error" notifMessage={`Face Scans: ${swrFaceScanError.message}.`} />
@@ -363,16 +369,6 @@ export const OvertimeAccomplishmentModal = ({ modalState, setModalState, closeMo
                         />
                       ) : null}
 
-                      {overtimeAccomplishmentDetails.status === OvertimeAccomplishmentStatus.PENDING ? (
-                        <AlertNotification
-                          alertType="warning"
-                          notifMessage={
-                            'Please encode your Overtime Start and End time based on your list of IVMS entries.'
-                          }
-                          dismissible={false}
-                        />
-                      ) : null}
-
                       {isHoliday || isRestday ? (
                         <AlertNotification
                           alertType="info"
@@ -383,7 +379,7 @@ export const OvertimeAccomplishmentModal = ({ modalState, setModalState, closeMo
 
                       {/* Scheduled OT but IVMS is incomplete/empty - for Office, Field, Pumping*/}
                       {overtimeAccomplishmentDetails.plannedDate > overtimeAccomplishmentDetails.dateOfOTApproval &&
-                      timeLogsOnDayAndNext.length <= 0 ? (
+                      overtimeAccomplishmentDetails.entriesForTheDay.length <= 0 ? (
                         <AlertNotification
                           alertType="error"
                           notifMessage={
@@ -467,7 +463,9 @@ export const OvertimeAccomplishmentModal = ({ modalState, setModalState, closeMo
                       ) : null}
 
                       {/* Emergency OT and Encoded TimeIn/Out is empty - for Field, Pumping Only */}
-                      {finalEncodedHours <= 0 || isNaN(finalEncodedHours) ? (
+                      {(overtimeAccomplishmentDetails.status === OvertimeAccomplishmentStatus.PENDING &&
+                        finalEncodedHours <= 0) ||
+                      isNaN(finalEncodedHours) ? (
                         <AlertNotification
                           alertType="error"
                           notifMessage={'Encoded Time In and Time Out fields are empty.'}
@@ -514,49 +512,110 @@ export const OvertimeAccomplishmentModal = ({ modalState, setModalState, closeMo
                         <div className="w-auto ml-5">
                           <label className="text-md font-medium">
                             {overtimeAccomplishmentDetails.dateOfOTApproval
-                              ? DateFormatter(overtimeAccomplishmentDetails.dateOfOTApproval, 'MM-DD-YYYY')
+                              ? DateTimeFormatter(overtimeAccomplishmentDetails.dateOfOTApproval)
                               : '-- -- ----'}
                           </label>
                         </div>
                       </div>
 
-                      <div className="flex flex-col justify-start items-start w-full sm:w-1/2 px-0.5 pb-3  ">
+                      <hr className="bg-slate-50 h-0.5 w-full mt-1 mb-4"></hr>
+
+                      {/* Day 1 IVMS Entries */}
+                      <div className="flex flex-col justify-start items-start w-full sm:w-1/2 px-0.5 pb-3 ">
                         <label className="text-slate-500 text-md whitespace-nowrap pb-0.5">IVMS Entries:</label>
                         <div className="w-auto ml-5">
-                          {timeLogsOnDayAndNext && timeLogsOnDayAndNext.length > 0 ? (
-                            timeLogsOnDayAndNext.map((logs: string, idx: number) => {
-                              return (
-                                <div key={idx}>
-                                  <label className="text-sm font-medium ">{logs}</label>
-                                </div>
-                              );
-                            })
+                          {overtimeAccomplishmentDetails.entriesForTheDay &&
+                          overtimeAccomplishmentDetails.entriesForTheDay.length > 0 &&
+                          overtimeAccomplishmentDetails.entriesForTheDay.filter(
+                            (e) =>
+                              DateFormatter(e, 'MM-DD-YYYY') ===
+                              DateFormatter(overtimeAccomplishmentDetails.plannedDate, 'MM-DD-YYYY')
+                          ).length > 0 ? (
+                            overtimeAccomplishmentDetails.entriesForTheDay
+                              .filter(
+                                (e) =>
+                                  DateFormatter(e, 'MM-DD-YYYY') ===
+                                  DateFormatter(overtimeAccomplishmentDetails.plannedDate, 'MM-DD-YYYY')
+                              )
+                              .map((logs: string, idx: number) => {
+                                return (
+                                  <div key={idx}>
+                                    <label className="text-md font-medium ">{DateTimeFormatter(logs)}</label>
+                                  </div>
+                                );
+                              })
                           ) : (
-                            <label className="text-md font-medium ">None</label>
+                            <label className="text-md font-medium ">None Found</label>
                           )}
                         </div>
                       </div>
 
+                      {/* Day 2 IVMS Entries */}
+                      <div className="flex flex-col justify-start items-start w-full sm:w-1/2 px-0.5 pb-3  ">
+                        <label className="text-slate-500 text-md whitespace-nowrap pb-0.5">
+                          IVMS Entries Next Day:
+                        </label>
+                        <div className="w-auto ml-5">
+                          {overtimeAccomplishmentDetails.entriesForTheDay &&
+                          overtimeAccomplishmentDetails.entriesForTheDay.length > 0 &&
+                          overtimeAccomplishmentDetails.entriesForTheDay.filter(
+                            (e) =>
+                              DateFormatter(e, 'MM-DD-YYYY') !==
+                              DateFormatter(overtimeAccomplishmentDetails.plannedDate, 'MM-DD-YYYY')
+                          ).length > 0 ? (
+                            overtimeAccomplishmentDetails.entriesForTheDay
+                              .filter(
+                                (e) =>
+                                  DateFormatter(e, 'MM-DD-YYYY') !==
+                                  DateFormatter(overtimeAccomplishmentDetails.plannedDate, 'MM-DD-YYYY')
+                              )
+                              .map((logs: string, idx: number) => {
+                                return (
+                                  <div key={idx}>
+                                    <label className="text-md font-medium ">{DateTimeFormatter(logs)}</label>
+                                  </div>
+                                );
+                              })
+                          ) : (
+                            <label className="text-md font-medium ">None Found</label>
+                          )}
+                        </div>
+                      </div>
+
+                      {overtimeAccomplishmentDetails.status === OvertimeAccomplishmentStatus.PENDING &&
+                      !overtimeAccomplishmentDetails?.accomplishments ? (
+                        <div className={`flex flex-col justify-start items-start w-full px-0.5 pb-3`}>
+                          <div className="flex flex-col gap-1 w-full bg-slate-100 text-sm p-2 rounded-md">
+                            <span className="font-bold">Notes:</span>
+                            <span className="text-justify">
+                              Please use your IVMS Entries as your reference when encoding your Overtime Start and End.
+                              You may use your IVMS Entries from the second day for cases where you have ended your
+                              Overtime on the next day. Your IVMS entries will be used by your manager as basis for
+                              information accuracy.
+                            </span>
+                          </div>
+                        </div>
+                      ) : null}
+
                       {
                         <div
                           className={`flex flex-col justify-start items-start ${
-                            overtimeAccomplishmentDetails?.accomplishments ? 'w-full sm:w-1/2' : 'w-full sm:w-1/2'
+                            overtimeAccomplishmentDetails?.accomplishments ? 'w-full' : 'w-full'
                           } px-0.5 pb-3`}
                         >
                           <label className="text-slate-500 text-md whitespace-nowrap pb-0.5">
-                            Encode Start and End Time:
+                            Encoded Start and End Time:
                           </label>
 
                           {overtimeAccomplishmentDetails?.accomplishments ? (
                             <div className="w-auto ml-5 flex flex-col">
-                              <label className="text-sm font-medium">
-                                Start:{' '}
-                                {dayjs(overtimeAccomplishmentDetails?.encodedTimeIn).format('MM-DD-YYYY hh:mm A')}
+                              <label className="text-md font-medium">
+                                Start: {DateTimeFormatter(overtimeAccomplishmentDetails?.encodedTimeIn)}
                               </label>
-                              <label className="text-sm font-medium">
-                                End: {dayjs(overtimeAccomplishmentDetails?.encodedTimeOut).format('MM-DD-YYYY hh:mm A')}
+                              <label className="text-md font-medium">
+                                End: {DateTimeFormatter(overtimeAccomplishmentDetails?.encodedTimeOut)}
                               </label>
-                              <label className="text-sm font-medium">
+                              <label className="text-md font-medium">
                                 Total Hours:
                                 {` ${
                                   overtimeAccomplishmentDetails?.computedEncodedHours
@@ -568,9 +627,9 @@ export const OvertimeAccomplishmentModal = ({ modalState, setModalState, closeMo
                               </label>
                             </div>
                           ) : (
-                            <div className="w-full pr-5 ml-5">
-                              <div className="w-full flex flex-col gap-2 items-center justify-between">
-                                <label className="w-full">
+                            <div className="w-full">
+                              <div className="w-full flex flex-col md:flex-row lg:flex-col xl:flex-row gap-2 items-center justify-between">
+                                <div className="w-full">
                                   <LabelInput
                                     id={'encodedTimeIn'}
                                     type={'datetime-local'}
@@ -578,7 +637,11 @@ export const OvertimeAccomplishmentModal = ({ modalState, setModalState, closeMo
                                     className="w-full font-medium"
                                     textSize="sm"
                                     disabled={overtimeAccomplishmentDetails?.accomplishments ? true : false}
-                                    defaultValue={overtimeAccomplishmentDetails?.encodedTimeIn ?? null}
+                                    defaultValue={
+                                      overtimeAccomplishmentDetails?.ivmsTimeIn
+                                        ? dayjs(overtimeAccomplishmentDetails?.ivmsTimeIn).format('YYYY-MM-DDThh:mm')
+                                        : null
+                                    }
                                     controller={{
                                       ...register('encodedTimeIn', {
                                         onChange: (e) => {
@@ -590,8 +653,8 @@ export const OvertimeAccomplishmentModal = ({ modalState, setModalState, closeMo
                                       }),
                                     }}
                                   />
-                                </label>
-                                <label className="w-full">
+                                </div>
+                                <div className="w-full">
                                   <LabelInput
                                     id={'encodedTimeOut'}
                                     type="datetime-local"
@@ -599,7 +662,11 @@ export const OvertimeAccomplishmentModal = ({ modalState, setModalState, closeMo
                                     className="w-full font-medium"
                                     textSize="sm"
                                     disabled={overtimeAccomplishmentDetails?.accomplishments ? true : false}
-                                    defaultValue={overtimeAccomplishmentDetails?.encodedTimeOut ?? null}
+                                    defaultValue={
+                                      overtimeAccomplishmentDetails?.ivmsTimeOut
+                                        ? dayjs(overtimeAccomplishmentDetails?.ivmsTimeOut).format('YYYY-MM-DDThh:mm')
+                                        : null
+                                    }
                                     controller={{
                                       ...register('encodedTimeOut', {
                                         onChange: (e) => {
@@ -611,12 +678,12 @@ export const OvertimeAccomplishmentModal = ({ modalState, setModalState, closeMo
                                       }),
                                     }}
                                   />
-                                </label>
-                                <label className="w-full">
+                                </div>
+                                <div className="w-full">
                                   <LabelInput
                                     id={'encodedHours'}
                                     type="text"
-                                    label={'Computed Overtime'}
+                                    label={'Hours'}
                                     className="w-full font-medium"
                                     textSize="sm"
                                     isError={
@@ -638,12 +705,14 @@ export const OvertimeAccomplishmentModal = ({ modalState, setModalState, closeMo
                                         : finalEncodedHours
                                     } Hour(s)`}
                                   />
-                                </label>
+                                </div>
                               </div>
                             </div>
                           )}
                         </div>
                       }
+
+                      <hr className="bg-slate-50 h-0.5 w-full mt-3 mb-4"></hr>
 
                       <div className={`flex flex-col justify-start items-start w-full px-0.5 pb-3`}>
                         <label className="text-slate-500 text-md whitespace-nowrap pb-0.5">Purpose:</label>
@@ -682,6 +751,18 @@ export const OvertimeAccomplishmentModal = ({ modalState, setModalState, closeMo
                           <label className=" text-md font-medium">{overtimeAccomplishmentDetails.supervisorName}</label>
                         </div>
                       </div>
+
+                      {overtimeAccomplishmentDetails.status === OvertimeAccomplishmentStatus.APPROVED ? (
+                        <div className="flex flex-col sm:flex-col justify-start items-start w-full sm:w-1/2 px-0.5 pb-3 ">
+                          <label className="text-slate-500 text-md whitespace-nowrap pb-0.5 ">Approved Hours:</label>
+
+                          <div className="w-auto ml-5">
+                            <label className=" text-md font-medium">
+                              {overtimeAccomplishmentDetails.actualHrs ?? '---'}
+                            </label>
+                          </div>
+                        </div>
+                      ) : null}
                     </div>
 
                     {overtimeAccomplishmentDetails.status === OvertimeAccomplishmentStatus.PENDING &&
@@ -719,38 +800,13 @@ export const OvertimeAccomplishmentModal = ({ modalState, setModalState, closeMo
                 </Button>
               ) : (
                 <Button
-                  // disabled={
-                  //   // If Scheduled OT but IVMS is incomplete/empty - for Office, Field, Pumping
-                  //   (overtimeAccomplishmentDetails.plannedDate > overtimeAccomplishmentDetails.dateOfOTApproval &&
-                  //     (!overtimeAccomplishmentDetails.ivmsTimeIn || !overtimeAccomplishmentDetails.ivmsTimeOut)) ||
-                  //   // If Emergency OT but IVMS is incomplete/empty and OT day is Restday or Holiday - for Office Only
-                  //   (overtimeAccomplishmentDetails.plannedDate <= overtimeAccomplishmentDetails.dateOfOTApproval &&
-                  //     schedule.scheduleBase === ScheduleBases.OFFICE &&
-                  //     (!overtimeAccomplishmentDetails.ivmsTimeIn || !overtimeAccomplishmentDetails.ivmsTimeOut) &&
-                  //     (isHoliday || isRestday)) ||
-                  //   // If Emergency OT but IVMS is incomplete/empty and OT day is REGULAR SCHEDULED WORK DAY - for Office Only */}
-                  //   (overtimeAccomplishmentDetails.plannedDate <= overtimeAccomplishmentDetails.dateOfOTApproval &&
-                  //     schedule.scheduleBase === ScheduleBases.OFFICE &&
-                  //     (!overtimeAccomplishmentDetails.ivmsTimeIn || !overtimeAccomplishmentDetails.ivmsTimeOut) &&
-                  //     !isHoliday &&
-                  //     !isRestday) ||
-                  //   //If Emergency OT and is FIELD/PUMPING EMPLOYEE and has no encoded timeIn/Out
-                  //   (overtimeAccomplishmentDetails.plannedDate <= overtimeAccomplishmentDetails.dateOfOTApproval &&
-                  //     (schedule.scheduleBase === ScheduleBases.FIELD ||
-                  //       schedule.scheduleBase === ScheduleBases.PUMPING_STATION) &&
-                  //     (finalEncodedHours <= 0 || isNaN(finalEncodedHours))) ||
-                  //   // If accomplishment field hasn't been filled out
-                  //   !watch('accomplishments')
-                  //     ? true
-                  //     : false
-                  // }
-
                   disabled={
                     !watch('accomplishments') ||
                     finalEncodedHours <= 0 ||
                     isNaN(finalEncodedHours) ||
+                    //if scheduled/future OT but no time logs in array
                     (overtimeAccomplishmentDetails.plannedDate > overtimeAccomplishmentDetails.dateOfOTApproval &&
-                      timeLogsOnDayAndNext.length <= 0)
+                      overtimeAccomplishmentDetails.entriesForTheDay.length <= 0)
                       ? true
                       : false
                   }

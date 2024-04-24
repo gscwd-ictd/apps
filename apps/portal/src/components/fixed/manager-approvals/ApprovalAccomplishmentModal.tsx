@@ -20,6 +20,7 @@ import { ApprovalCaptcha } from './ApprovalOtp/ApprovalCaptcha';
 import { DateFormatter } from 'libs/utils/src/lib/functions/DateFormatter';
 import { useOvertimeAccomplishmentStore } from 'apps/portal/src/store/overtime-accomplishment.store';
 import dayjs from 'dayjs';
+import { DateTimeFormatter } from 'libs/utils/src/lib/functions/DateTimeFormatter';
 
 type ModalProps = {
   modalState: boolean;
@@ -133,6 +134,7 @@ export const ApprovalAccomplishmentModal = ({ modalState, setModalState, closeMo
   // Upon success/fail of swr request, zustand state will be updated
   useEffect(() => {
     if (!isEmpty(swrOvertimeAccomplishment)) {
+      // console.log(swrOvertimeAccomplishment);
       getAccomplishmentDetailsSuccess(swrOvertimeAccomplishmentIsLoading, swrOvertimeAccomplishment);
     }
 
@@ -258,23 +260,66 @@ export const ApprovalAccomplishmentModal = ({ modalState, setModalState, closeMo
                       <label className="text-slate-500 text-md whitespace-nowrap pb-0.5">Approved Hours:</label>
 
                       <div className="w-auto ml-5">
-                        <label className="text-md font-medium">{'--'}</label>
+                        <label className="text-md font-medium">{accomplishmentDetails.actualHrs ?? '---'}</label>
                       </div>
                     </div>
 
-                    <div className="flex flex-col justify-start items-start w-full sm:w-1/2 px-0.5 pb-3  ">
+                    {/* Day 1 IVMS Entries */}
+                    <div className="flex flex-col justify-start items-start w-full sm:w-1/2 px-0.5 pb-3 ">
                       <label className="text-slate-500 text-md whitespace-nowrap pb-0.5">IVMS Entries:</label>
                       <div className="w-auto ml-5">
-                        {accomplishmentDetails.entriesForTheDay && accomplishmentDetails.entriesForTheDay.length > 0 ? (
-                          accomplishmentDetails.entriesForTheDay.map((logs: string, idx: number) => {
-                            return (
-                              <div key={idx}>
-                                <label className="text-sm font-medium">{logs}</label>
-                              </div>
-                            );
-                          })
+                        {accomplishmentDetails.entriesForTheDay &&
+                        accomplishmentDetails.entriesForTheDay.length > 0 &&
+                        accomplishmentDetails.entriesForTheDay.filter(
+                          (e) =>
+                            DateFormatter(e, 'MM-DD-YYYY') ===
+                            DateFormatter(accomplishmentDetails.plannedDate, 'MM-DD-YYYY')
+                        ).length > 0 ? (
+                          accomplishmentDetails.entriesForTheDay
+                            .filter(
+                              (e) =>
+                                DateFormatter(e, 'MM-DD-YYYY') ===
+                                DateFormatter(accomplishmentDetails.plannedDate, 'MM-DD-YYYY')
+                            )
+                            .map((logs: string, idx: number) => {
+                              return (
+                                <div key={idx}>
+                                  <label className="text-md font-medium ">{DateTimeFormatter(logs)}</label>
+                                </div>
+                              );
+                            })
                         ) : (
-                          <label className="text-md font-medium">None</label>
+                          <label className="text-md font-medium ">None Found</label>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* Day 2 IVMS Entries */}
+                    <div className="flex flex-col justify-start items-start w-full sm:w-1/2 px-0.5 pb-3  ">
+                      <label className="text-slate-500 text-md whitespace-nowrap pb-0.5">IVMS Entries Next Day:</label>
+                      <div className="w-auto ml-5">
+                        {accomplishmentDetails.entriesForTheDay &&
+                        accomplishmentDetails.entriesForTheDay.length > 0 &&
+                        accomplishmentDetails.entriesForTheDay.filter(
+                          (e) =>
+                            DateFormatter(e, 'MM-DD-YYYY') !==
+                            DateFormatter(accomplishmentDetails.plannedDate, 'MM-DD-YYYY')
+                        ).length > 0 ? (
+                          accomplishmentDetails.entriesForTheDay
+                            .filter(
+                              (e) =>
+                                DateFormatter(e, 'MM-DD-YYYY') !==
+                                DateFormatter(accomplishmentDetails.plannedDate, 'MM-DD-YYYY')
+                            )
+                            .map((logs: string, idx: number) => {
+                              return (
+                                <div key={idx}>
+                                  <label className="text-md font-medium ">{DateTimeFormatter(logs)}</label>
+                                </div>
+                              );
+                            })
+                        ) : (
+                          <label className="text-md font-medium ">None Found</label>
                         )}
                       </div>
                     </div>
@@ -283,15 +328,15 @@ export const ApprovalAccomplishmentModal = ({ modalState, setModalState, closeMo
                       <label className="text-slate-500 text-md whitespace-nowrap pb-0.5">Encoded Time In & Out:</label>
 
                       <div className="w-auto ml-5 flex flex-col">
-                        <label className="text-sm font-medium">
-                          Start: {dayjs(accomplishmentDetails?.encodedTimeIn).format('MM-DD-YYYY hh:mm A')}
+                        <label className="text-md font-medium">
+                          Start: {DateTimeFormatter(accomplishmentDetails?.encodedTimeIn)}
                         </label>
-                        <label className="text-sm font-medium">
-                          End: {dayjs(accomplishmentDetails?.encodedTimeOut).format('MM-DD-YYYY hh:mm A')}
+                        <label className="text-md font-medium">
+                          End: {DateTimeFormatter(accomplishmentDetails?.encodedTimeOut)}
                         </label>
-                        <label className="text-sm font-medium">
+                        <label className="text-md font-medium">
                           Total Hours:
-                          {` ${accomplishmentDetails?.computedEncodedHours} Hours(s)`}
+                          {` ${accomplishmentDetails?.computedEncodedHours} Hour(s)`}
                         </label>
                       </div>
                     </div>
@@ -331,7 +376,8 @@ export const ApprovalAccomplishmentModal = ({ modalState, setModalState, closeMo
                           required
                           defaultValue={0}
                           max="24"
-                          min={watch('status') === OvertimeAccomplishmentStatus.DISAPPROVED ? '0' : '1'}
+                          step={0.1}
+                          min={watch('status') === OvertimeAccomplishmentStatus.DISAPPROVED ? '0' : '0.1'}
                           {...register('actualHrs')}
                         />
                       </div>

@@ -24,7 +24,7 @@ import {
   getEmployeeProfile,
 } from '../../../../utils/helpers/http-requests/employee-requests';
 import { getPrfById, getPrfTrailByPrfId, patchPrfRequest } from '../../../../utils/helpers/prf.requests';
-import { EmployeeDetailsPrf, EmployeeProfile, employeeDummy } from '../../../../types/employee.type';
+import { EmployeeDetailsPrf, EmployeeProfile } from '../../../../types/employee.type';
 import { Position, PrfDetails, PrfStatus, PrfTrail } from '../../../../types/prf.types';
 import { withCookieSession } from '../../../../utils/helpers/session';
 import { useEmployeeStore } from 'apps/portal/src/store/employee.store';
@@ -115,6 +115,10 @@ export const ForApprovalPrfModal = ({ modalState, setModalState, closeModalActio
   const handleOtpModal = () => {
     setPrfOtpModalIsOpen(true);
   };
+
+  useEffect(() => {
+    setRemarks('');
+  }, [isDeclineModalOpen]);
 
   const handleDecline = async (e) => {
     if (!isEmpty(remarks)) {

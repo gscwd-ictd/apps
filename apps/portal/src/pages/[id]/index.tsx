@@ -33,6 +33,7 @@ import LeaveCreditMonetizationCalculatorModal from '../../components/fixed/leave
 import { useLeaveMonetizationCalculatorStore } from '../../store/leave-monetization-calculator.store';
 import dayjs from 'dayjs';
 import { usePassSlipStore } from '../../store/passslip.store';
+import { employeeCeliaDananDummy } from '../../types/employee.type';
 
 export type NavDetails = {
   fullName: string;
@@ -293,6 +294,7 @@ export default function Dashboard({ userDetails }: InferGetServerSidePropsType<t
   //requirements - userDetails(server-side) and schedule(swr)
   useEffect(() => {
     if (userDetails) {
+      // console.log(userDetails);
       setEmployee(userDetails);
       hydration();
     }
@@ -412,8 +414,7 @@ export default function Dashboard({ userDetails }: InferGetServerSidePropsType<t
                 <div className="grid grid-cols-2 gap-4 md:grid-cols-4 lg:grid-cols-5 ">
                   <div className="order-1 col-span-2 md:order-1 md:col-span-2 md:row-span-2 lg:row-span-2 lg:col-span-1 lg:order-1 ">
                     <ProfileCard
-                      firstName={userDetails.profile.firstName}
-                      lastName={userDetails.profile.lastName}
+                      fullName={userDetails.employmentDetails.employeeFullName}
                       position={userDetails.employmentDetails.assignment.positionTitle}
                       division={userDetails.employmentDetails.assignment.name}
                       photoUrl={userDetails.profile.photoUrl}
@@ -522,6 +523,12 @@ export default function Dashboard({ userDetails }: InferGetServerSidePropsType<t
     </>
   );
 }
+
+//use for dummy use
+// export const getServerSideProps: GetServerSideProps = async (context: GetServerSidePropsContext) => {
+//   const userDetails = employeeCeliaDananDummy;
+//   return { props: { userDetails } };
+// };
 
 //use for official user
 export const getServerSideProps: GetServerSideProps = withCookieSession(async (context: GetServerSidePropsContext) => {

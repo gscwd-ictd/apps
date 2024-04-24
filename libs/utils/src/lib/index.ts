@@ -27,3 +27,6 @@ export * from './functions/UndertimeChecker';
 export * from './functions/LateChecker';
 export * from './functions/DateFormatter';
 export * from './functions/GetDateDifference';
+export * from './functions/DateTimeFormatter';
+export * from './functions/SalaryGradeConverter';
+

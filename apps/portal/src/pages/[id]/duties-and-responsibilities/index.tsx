@@ -12,6 +12,7 @@ import { MainContainer } from 'apps/portal/src/components/modular/custom/contain
 import { useEmployeeStore } from 'apps/portal/src/store/employee.store';
 import { useModalStore } from 'apps/portal/src/store/modal.store';
 import { usePositionStore } from 'apps/portal/src/store/position.store';
+import { employeeCeliaDananDummy } from 'apps/portal/src/types/employee.type';
 import { NavButtonDetails } from 'apps/portal/src/types/nav.type';
 import { UserRole } from 'apps/portal/src/utils/enums/userRoles';
 import fetcherHRIS from 'apps/portal/src/utils/helpers/fetchers/FetcherHRIS';
@@ -177,6 +178,11 @@ export default function DutiesResponsibilities({
     </>
   );
 }
+
+// export const getServerSideProps: GetServerSideProps = async (context: GetServerSidePropsContext) => {
+//   const employeeDetails = employeeCeliaDananDummy;
+//   return { props: { employeeDetails } };
+// };
 
 export const getServerSideProps: GetServerSideProps = withCookieSession(async (context: GetServerSidePropsContext) => {
   const employeeDetails = getUserDetails();

@@ -122,21 +122,25 @@ export default function PdcGeneralManagerApprovals({
     }),
     columnHelper.accessor('trainingStart', {
       header: 'Start',
+      enableColumnFilter: false,
       // filterFn: 'equalsString',
       cell: (info) => dayjs(info.getValue()).format('MMMM DD, YYYY'),
     }),
     columnHelper.accessor('trainingEnd', {
       header: 'End',
+      enableColumnFilter: false,
       // filterFn: 'equalsString',
       cell: (info) => dayjs(info.getValue()).format('MMMM DD, YYYY'),
     }),
     columnHelper.accessor('numberOfHours', {
       header: 'Hours',
+      enableColumnFilter: false,
       // filterFn: 'equalsString',
       cell: (info) => info.getValue(),
     }),
     columnHelper.accessor('numberOfParticipants', {
       header: 'Participants',
+      enableColumnFilter: false,
       cell: (info) => info.getValue(),
     }),
 
@@ -218,7 +222,7 @@ export default function PdcGeneralManagerApprovals({
                     textSize={'text-lg'}
                     model={table}
                     showGlobalFilter={true}
-                    showColumnFilter={false}
+                    showColumnFilter={true}
                     paginate={true}
                   />
                 </div>

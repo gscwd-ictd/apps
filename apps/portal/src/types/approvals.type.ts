@@ -25,13 +25,13 @@ export type PendingApprovalsCount = {
   pendingPassSlipsCount: number | null;
   pendingLeavesCount: number | null;
   pendingOvertimesCount: number | null;
-  // pendingTrainingNominationCount: number | null;
+  pendingTrainingNominationCount?: number | null;
   pendingDtrCorrectionsApprovals: number | null;
   forHrdmApprovalLeaves: number | null;
   pendingOvertimeApprovals: number | null;
-  // pendingPdcSecretariatApprovalCount: number | null;
-  // pendingPdcChairmanApprovalCount: number | null;
-  // pendingGmApprovalCount: number | null;
+  pendingPdcSecretariatApprovalCount?: number | null;
+  pendingPdcChairmanApprovalCount?: number | null;
+  pendingGmApprovalCount?: number | null;
   prfsForApprovalCount: number | null;
   pendingApplicantEndorsementsCount: number | null;
   pendingAppointingAuthoritySelection: number | null;

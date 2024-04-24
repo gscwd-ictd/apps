@@ -236,7 +236,9 @@ export const OvertimeSummaryReportPdfModal = ({ modalState, setModalState, close
                         </View>
 
                         <View style={[styles.tableCol, { width: 52 }]}>
-                          <Text style={styles.tableCell}>MONTHLY BASIC SALARY</Text>
+                          <Text style={styles.tableCell}>
+                            MONTHLY {'\n'} BASIC {'\n'} SALARY
+                          </Text>
                         </View>
 
                         <View style={[styles.tableCol, { width: 40 }]}>
@@ -774,151 +776,124 @@ export const OvertimeSummaryReportPdfModal = ({ modalState, setModalState, close
                         Approved by:
                       </Text>
                     </View>
-                    <View
-                      style={{
-                        display: 'flex',
-                        flexDirection: 'row',
-                        justifyContent: 'space-between',
-                        fontSize: 9,
-                        paddingTop: 30,
-                        paddingLeft: 35,
-                        paddingRight: 35,
-                      }}
-                    >
-                      <Text>_______________________________________</Text>
-                      <Text>_______________________________________</Text>
-                      <Text>_______________________________________</Text>
-                    </View>
-                    <View
-                      style={{
-                        display: 'flex',
-                        flexDirection: 'row',
-                        justifyContent: 'space-between',
-                        fontSize: 8,
-                        paddingTop: 2,
-                        paddingLeft: 35,
-                        paddingRight: 35,
-                      }}
-                    >
-                      <Text
-                        style={{
-                          marginLeft: 35,
-                          marginTop: 2,
-                          width: 195,
-                          textAlign: 'center',
-                          position: 'absolute',
-                        }}
-                      >
-                        {overtimeSummaryReport?.signatories?.preparedBy?.position}
-                      </Text>
-                      <Text
-                        style={{
-                          marginLeft: 350,
-                          marginTop: 2,
-                          width: 195,
-                          textAlign: 'center',
-                          position: 'absolute',
-                        }}
-                      >
-                        {overtimeSummaryReport?.signatories?.notedBy?.position}
-                      </Text>
-                      <Text
-                        style={{
-                          marginLeft: 665,
-                          marginTop: 2,
-                          width: 195,
-                          textAlign: 'center',
-                          position: 'absolute',
-                        }}
-                      >
-                        {overtimeSummaryReport?.signatories?.approvedBy?.position}
-                      </Text>
-                    </View>
-                    <View
-                      style={{
-                        display: 'flex',
-                        flexDirection: 'row',
-                        justifyContent: 'flex-start',
-                        fontSize: 8,
-                        paddingTop: 2,
-                        paddingLeft: 35,
-                        paddingRight: 35,
-                      }}
-                    >
-                      <Text
-                        style={{
-                          marginLeft: 35,
-                          marginTop: -15,
-                          width: 195,
-                          textAlign: 'center',
-                          position: 'absolute',
-                        }}
-                      >
-                        {overtimeSummaryReport?.signatories?.preparedBy?.name}
-                      </Text>
-                      <Text
-                        style={{
-                          marginLeft: 350,
-                          marginTop: -15,
-                          width: 195,
-                          textAlign: 'center',
-                          position: 'absolute',
-                        }}
-                      >
-                        {overtimeSummaryReport?.signatories?.notedBy?.name}
-                      </Text>
-                      <Text
-                        style={{
-                          marginLeft: 665,
-                          marginTop: -15,
-                          width: 195,
-                          textAlign: 'center',
-                          position: 'absolute',
-                        }}
-                      >
-                        {overtimeSummaryReport?.signatories?.approvedBy?.name}
-                      </Text>
-                    </View>
                     {/* SIGNATURES */}
                     <View
                       style={{
                         display: 'flex',
                         flexDirection: 'row',
-                        justifyContent: 'flex-start',
+                        justifyContent: 'space-between',
                         fontSize: 9,
-                        paddingTop: 2,
+                        paddingTop: 10,
                         paddingLeft: 35,
                         paddingRight: 35,
-                        width: '100%',
                       }}
                     >
-                      <Image
+                      <View
                         style={{
-                          width: overtimeSummaryReport?.signatories?.preparedBy?.signature ? 50 : 0,
-                          position: 'absolute',
-                          marginLeft: 110,
-                          marginTop: -50,
+                          width: 200,
+                          display: 'flex',
+                          flexDirection: 'column',
+                          justifyContent: 'flex-end',
+                          alignItems: 'center',
+                          fontSize: 9,
+                          gap: 0,
                         }}
-                        src={overtimeSummaryReport?.signatories?.preparedBy?.signature ?? null}
-                      />
-                      <Image
+                      >
+                        <Image
+                          style={{ width: 40, marginBottom: 2 }}
+                          src={overtimeSummaryReport?.signatories?.preparedBy?.signature ?? '/'}
+                        />
+
+                        <Text
+                          style={{
+                            marginBottom: -8,
+                            width: 165,
+                            textAlign: 'center',
+                          }}
+                        >
+                          {overtimeSummaryReport?.signatories?.preparedBy?.name}
+                        </Text>
+                        <Text>_______________________________</Text>
+                        <Text
+                          style={{
+                            marginTop: 2,
+                            textAlign: 'center',
+                          }}
+                        >
+                          {overtimeSummaryReport?.signatories?.preparedBy?.position}
+                        </Text>
+                      </View>
+
+                      <View
                         style={{
-                          width: overtimeSummaryReport?.signatories?.notedBy?.signature ? 50 : 0,
-                          position: 'absolute',
-                          marginLeft: 415,
-                          marginTop: -50,
+                          width: 200,
+                          display: 'flex',
+                          flexDirection: 'column',
+                          justifyContent: 'flex-end',
+                          alignItems: 'center',
+                          fontSize: 9,
+                          gap: 0,
                         }}
-                        src={overtimeSummaryReport?.signatories?.notedBy?.signature ?? null}
-                      />
-                      <Image
+                      >
+                        <Image
+                          style={{ width: 40, marginBottom: 2 }}
+                          src={overtimeSummaryReport?.signatories?.notedBy?.signature ?? '/'}
+                        />
+
+                        <Text
+                          style={{
+                            marginBottom: -8,
+                            width: 165,
+                            textAlign: 'center',
+                          }}
+                        >
+                          {overtimeSummaryReport?.signatories?.notedBy?.name}
+                        </Text>
+                        <Text>_______________________________</Text>
+                        <Text
+                          style={{
+                            marginTop: 2,
+                            textAlign: 'center',
+                          }}
+                        >
+                          {overtimeSummaryReport?.signatories?.notedBy?.position}
+                        </Text>
+                      </View>
+                      <View
                         style={{
-                          width: overtimeSummaryReport?.signatories?.approvedBy?.signature ? 50 : 0,
-                          position: 'absolute',
-                          marginLeft: 735,
-                          marginTop: -50,
+                          width: 200,
+                          display: 'flex',
+                          flexDirection: 'column',
+                          justifyContent: 'flex-end',
+                          alignItems: 'center',
+                          fontSize: 9,
+                          gap: 0,
                         }}
-                        src={overtimeSummaryReport?.signatories?.approvedBy?.signature ?? null}
-                      />
+                      >
+                        <Image
+                          style={{ width: 40, marginBottom: 2 }}
+                          src={overtimeSummaryReport?.signatories?.approvedBy?.signature ?? '/'}
+                        />
+
+                        <Text
+                          style={{
+                            marginBottom: -8,
+                            width: 165,
+                            textAlign: 'center',
+                          }}
+                        >
+                          {overtimeSummaryReport?.signatories?.approvedBy?.name}
+                        </Text>
+                        <Text>_______________________________</Text>
+                        <Text
+                          style={{
+                            marginTop: 2,
+                            textAlign: 'center',
+                          }}
+                        >
+                          {overtimeSummaryReport?.signatories?.approvedBy?.position}
+                        </Text>
+                      </View>
                     </View>
                   </View>
                 </Page>

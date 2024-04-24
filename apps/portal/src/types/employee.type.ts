@@ -1,3 +1,5 @@
+/* eslint-disable @nx/enforce-module-boundaries */
+import { ScheduleBases } from 'libs/utils/src/lib/enums/schedule.enum';
 import { Roles } from '../utils/constants/user-roles';
 
 export type User = {
@@ -10,7 +12,7 @@ export type Profile = User & {
   firstName: string;
   middleName: string;
   lastName: string;
-  nameExt: string;
+  nameExtension: string;
   sex: string;
   birthDate: string | Date | null;
   mobileNumber: string;
@@ -25,17 +27,31 @@ export type Assignment = {
   positionTitle: string;
 };
 
+export type OrgStructure = {
+  departmentName: string;
+  divisionName: string;
+  officeName: string;
+};
+
+export type OfficerOfTheDay = {
+  id: string;
+  name: string;
+};
+
 export type EmploymentDetails = {
   salaryGrade: string;
   salaryGradeAmount: number;
+  scheduleBase: ScheduleBases;
   userId: string;
   companyId: string | null;
   assignment: Assignment;
+  orgStruct: OrgStructure;
   userRole: string;
   isHRMPSB?: boolean;
   isPdcChairman?: boolean;
   isPdcSecretariat?: boolean;
   overtimeImmediateSupervisorId: string;
+  officerOfTheDay: Array<OfficerOfTheDay>;
 };
 
 export type EmployeeDetails = {
@@ -69,39 +85,47 @@ export type EmployeeProfile = {
   photoUrl: string;
 };
 
-export const employeeDummy: EmployeeDetails = {
+export const employeeCeliaDananDummy: EmployeeDetails = {
   user: {
-    _id: '62fef63c-b26f-11ed-a79b-000c29f95a80',
-    email: 'ericsison003@gmail.com',
+    _id: '010a0911-5b3d-11ed-a08b-000c29f95a80',
+    email: 'mariaceliadandan@gscwd.com',
   },
   profile: {
-    // _id: '1c0787b0-093e-4362-85ff-c372c0dde496',
-    _id: '62fef63c-b26f-11ed-a79b-000c29f95a80', //allyn
-    companyId: null,
-    firstName: 'Ferdz Dummy',
-    middleName: 'Dionaldo',
-    lastName: 'Ferrer',
-    nameExt: 'Jr',
-    sex: 'Male',
-    birthDate: '1991-08-14',
-    mobileNumber: '09235197604',
-    email: 'ericsison003@gmail.com',
-    photoUrl: '/profile.jpg',
+    birthDate: '1971-01-27',
+    companyId: '2001-002',
+
+    email: 'mariaceliadandan@gscwd.com',
+    firstName: 'Maria Celia',
+    lastName: 'Dandan',
+    middleName: 'N',
+    mobileNumber: '09770912663',
+    nameExtension: '',
+    photoUrl: 'http://172.20.110.45:4500/DANDAN.jpg',
+    sex: 'Female',
+    _id: '5e156167-5b4d-11ed-a08b-000c29f95a80',
   },
   employmentDetails: {
-    salaryGrade: '',
-    salaryGradeAmount: 0,
-    overtimeImmediateSupervisorId: '',
-    userId: '62fef63c-b26f-11ed-a79b-000c29f95a80',
-    companyId: '2020-007',
+    salaryGrade: '24-1',
+    salaryGradeAmount: 88410,
+    scheduleBase: ScheduleBases.OFFICE,
+    userId: '010a0911-5b3d-11ed-a08b-000c29f95a80',
+    companyId: '2001-002',
     assignment: {
-      id: '91ddf4e0-f048-11ec-8d31-c4bde5a04065',
-      name: 'Systems Development and Application Division',
-      positionId: '91f25a60-f048-11ec-8d31-c4bde5a04065',
-      positionTitle: 'Management Information System Researcher',
+      id: '923f93eb-f048-11ec-8d31-c4bde5a04065',
+      name: 'Engineering and Construction Department',
+      positionId: '925c64e4-f048-11ec-8d31-c4bde5a04065',
+      positionTitle: 'OIC-Department Manager',
     },
-    userRole: 'general_manager',
+    orgStruct: {
+      departmentName: 'Engineering and Construction Department',
+      divisionName: null,
+      officeName: 'Office of the Assistant General Manager for Operations and Technical Services',
+    },
+    userRole: 'oic_department_manager',
+    isHRMPSB: false,
     isPdcChairman: false,
     isPdcSecretariat: false,
+    overtimeImmediateSupervisorId: '',
+    officerOfTheDay: [],
   },
 };

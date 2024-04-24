@@ -11,6 +11,7 @@ import { patchPrfRequest } from '../../../../utils/helpers/prf.requests';
 import { PrfStatus } from '../../../../types/prf.types';
 import { useRouter } from 'next/router';
 import { usePrfStore } from '../../../../../src/store/prf.store';
+import AuthCode from 'react-auth-code-input';
 
 interface OtpProps {
   mobile: string;
@@ -42,7 +43,6 @@ export const PrfOtpContents: FunctionComponent<OtpProps> = ({
   const [seconds, setSeconds] = useState(0);
   const [countingDown, setCountingDown] = useState<boolean>(false);
   const [failedFirstOtp, setFailedFirstOtp] = useState<boolean>(false);
-  const router = useRouter();
 
   // set state for controlling the displaying of error status
   const [isError, setIsError] = useState({
@@ -51,21 +51,15 @@ export const PrfOtpContents: FunctionComponent<OtpProps> = ({
     animate: false,
   });
 
-  const {
-    selectedPrfId,
-    patchPrf,
-    patchPrfSuccess,
-    patchPrfFail,
-    setPrfOtpModalIsOpen,
-    setForApprovalPrfModalIsOpen,
-  } = usePrfStore((state) => ({
-    selectedPrfId: state.selectedPrfId,
-    setPrfOtpModalIsOpen: state.setPrfOtpModalIsOpen,
-    setForApprovalPrfModalIsOpen: state.setForApprovalPrfModalIsOpen,
-    patchPrf: state.patchPrf,
-    patchPrfSuccess: state.patchPrfSuccess,
-    patchPrfFail: state.patchPrfFail,
-  }));
+  const { selectedPrfId, patchPrf, patchPrfSuccess, patchPrfFail, setPrfOtpModalIsOpen, setForApprovalPrfModalIsOpen } =
+    usePrfStore((state) => ({
+      selectedPrfId: state.selectedPrfId,
+      setPrfOtpModalIsOpen: state.setPrfOtpModalIsOpen,
+      setForApprovalPrfModalIsOpen: state.setForApprovalPrfModalIsOpen,
+      patchPrf: state.patchPrf,
+      patchPrfSuccess: state.patchPrfSuccess,
+      patchPrfFail: state.patchPrfFail,
+    }));
 
   useEffect(() => {
     if (!localStorage.getItem(`${otpName}OtpEndTime_${tokenId}`)) {
@@ -104,12 +98,7 @@ export const PrfOtpContents: FunctionComponent<OtpProps> = ({
         setMinutes(data.minutes);
         setSeconds(data.seconds);
         //TERMINATE OTP COUNTDOWN IF ALL ARE 0
-        if (
-          data.days <= 0 &&
-          data.hours <= 0 &&
-          data.minutes <= 0 &&
-          data.seconds <= 0
-        ) {
+        if (data.days <= 0 && data.hours <= 0 && data.minutes <= 0 && data.seconds <= 0) {
           setCountingDown(false);
           localStorage.removeItem(`${otpName}OtpEndTime_${data.id}`); //delete otp expiration local storage
           localStorage.removeItem(`${otpName}OtpToken_${data.id}`); //delete otp expiration local storage
@@ -191,14 +180,11 @@ export const PrfOtpContents: FunctionComponent<OtpProps> = ({
 
     const data = await confirmOtpCode(otpCode, tokenId, otpName);
     if (data) {
-      const { error, result } = await patchPrfRequest(
-        `/prf-trail/${selectedPrfId}`,
-        {
-          status: PrfStatus.APPROVED,
-          employeeId: employeeId,
-          remarks: remarks,
-        }
-      );
+      const { error, result } = await patchPrfRequest(`/prf-trail/${selectedPrfId}`, {
+        status: PrfStatus.APPROVED,
+        employeeId: employeeId,
+        remarks: remarks,
+      });
       patchPrf();
       //check if there's an error in otp confirmation
       if (data.errorMessage) {
@@ -248,14 +234,8 @@ export const PrfOtpContents: FunctionComponent<OtpProps> = ({
               } this Position Request, click Send Code and enter the code sent to your mobile number: ${mobile}. `}
             </div>
             {isOtpSending ? (
-              <div
-                className={`mb-4 text-center text-green-600 cursor-pointer text-md`}
-              >
-                <PortalSVG.AnimationBlueLoading
-                  width={28}
-                  height={28}
-                  className={`absolute -mt-1 -ml-8`}
-                />
+              <div className={`mb-4 text-center text-green-600 cursor-pointer text-md`}>
+                <PortalSVG.AnimationBlueLoading width={28} height={28} className={`absolute -mt-1 -ml-8`} />
                 <label className={``}>Sending Code</label>
               </div>
             ) : null}
@@ -269,19 +249,13 @@ export const PrfOtpContents: FunctionComponent<OtpProps> = ({
                 } mb-2 text-white bg-indigo-500 h-10 transition-all rounded hover:bg-indigo-600 active:bg-indigo-600 outline-indigo-500 w-56`}
                 onClick={() => handleSendCode()}
               >
-                <label className="font-bold cursor-pointer">{`${
-                  failedFirstOtp ? 'RESEND CODE ' : 'SEND CODE'
-                }`}</label>
+                <label className="font-bold cursor-pointer">{`${failedFirstOtp ? 'RESEND CODE ' : 'SEND CODE'}`}</label>
               </button>
             )}
 
             {isSendOtpLoading ? (
               <div className="flex flex-col justify-center items-center">
-                <PortalSVG.AnimationBlueLoading
-                  width={120}
-                  height={120}
-                  className={`-mt-1 my-2`}
-                />
+                <PortalSVG.AnimationBlueLoading width={120} height={120} className={`-mt-1 my-2`} />
                 <label className={`absolute -mt-1 my-2 text-red-700 font-bold`}>
                   {minutes}:{seconds}
                 </label>
@@ -290,28 +264,14 @@ export const PrfOtpContents: FunctionComponent<OtpProps> = ({
 
             {isOtpSending || isSendOtpLoading ? (
               <>
-                <form
-                  onSubmit={(e) => handleFinalSubmit(e)}
-                  className="flex flex-col gap-1"
-                >
+                <form onSubmit={(e) => handleFinalSubmit(e)} className="flex flex-col gap-1">
                   {otpFieldError && (
-                    <section
-                      className="mb-3"
-                      onAnimationEnd={() =>
-                        setIsError({ ...isError, animate: false })
-                      }
-                    >
-                      <Notice
-                        type="error"
-                        message={errorMessage}
-                        animate={otpFieldError}
-                      />
+                    <section className="mb-3" onAnimationEnd={() => setIsError({ ...isError, animate: false })}>
+                      <Notice type="error" message={errorMessage} animate={otpFieldError} />
                     </section>
                   )}
-                  <section
-                    className={`${otpFieldError ? 'space-y-5' : 'space-y-3'}`}
-                  >
-                    <TextField
+                  <section className={`${otpFieldError ? 'space-y-5' : 'space-y-3'}`}>
+                    {/* <TextField
                       autoFocus
                       value={otpCode}
                       type="text"
@@ -319,9 +279,15 @@ export const PrfOtpContents: FunctionComponent<OtpProps> = ({
                       isError={otpFieldError ? true : false}
                       errorMessage={''}
                       maxLength={6}
-                      onChange={(e) =>
-                        handleOtpInput(e.target.value as unknown as string)
-                      }
+                      onChange={(e) => handleOtpInput(e.target.value as unknown as string)}
+                    /> */}
+                    <AuthCode
+                      allowedCharacters="numeric"
+                      onChange={handleOtpInput}
+                      containerClassName="flex gap-3 flex-row justify-between items-center"
+                      inputClassName={`w-7 rounded border-indigo-500 font-bold text-lg ${
+                        otpFieldError ? 'border-red-500' : ''
+                      } px-0 text-center`}
                     />
                   </section>
                   <button
@@ -329,9 +295,7 @@ export const PrfOtpContents: FunctionComponent<OtpProps> = ({
                     className={`${wiggleEffect && 'animate-shake'}  ${
                       isSubmitLoading == true ? 'cursor-not-allowed' : ''
                     }  text-white w-56 h-10 transition-all rounded my-2 hover:bg-indigo-600 active:bg-indigo-600 outline-blue-500 ${
-                      wiggleEffect
-                        ? 'bg-rose-600 hover:bg-rose-600'
-                        : 'bg-indigo-500'
+                      wiggleEffect ? 'bg-rose-600 hover:bg-rose-600' : 'bg-indigo-500'
                     }`}
                     type="submit"
                     onAnimationEnd={() => setWiggleEffect(false)}
@@ -339,25 +303,15 @@ export const PrfOtpContents: FunctionComponent<OtpProps> = ({
                     <PortalSVG.AnimationBlueLoading
                       width={30}
                       height={30}
-                      className={`${
-                        isSubmitLoading ? '' : 'hidden'
-                      } absolute -mt-1`}
+                      className={`${isSubmitLoading ? '' : 'hidden'} absolute -mt-1`}
                     />
                     <label
-                      className={`${
-                        isSubmitLoading
-                          ? 'cursor-not-allowed pointer-events-none font-bold'
-                          : 'hidden'
-                      } `}
+                      className={`${isSubmitLoading ? 'cursor-not-allowed pointer-events-none font-bold' : 'hidden'} `}
                     >
                       VERIFYING
                     </label>
                     <label
-                      className={`${
-                        isSubmitLoading
-                          ? 'hidden'
-                          : 'cursor-pointer pointer-events-none font-bold'
-                      } `}
+                      className={`${isSubmitLoading ? 'hidden' : 'cursor-pointer pointer-events-none font-bold'} `}
                     >
                       CONFIRM OTP
                     </label>
@@ -380,24 +334,14 @@ export const PrfOtpContents: FunctionComponent<OtpProps> = ({
 
       {otpComplete ? (
         <>
-          <div
-            className={
-              'flex flex-col p-4 gap-1 justify-center items-center text-md'
-            }
-          >
-            <div className="text-center text-sm">
-              OTP Verified Successfully!
-            </div>
-            <div className="text-center text-sm mb-4">
-              Position Request has been {action}.
-            </div>
+          <div className={'flex flex-col p-4 gap-1 justify-center items-center text-md'}>
+            <div className="text-center text-sm">OTP Verified Successfully!</div>
+            <div className="text-center text-sm mb-4">Position Request has been {action}.</div>
 
             <Button
               btnLabel="Close"
               variant="primary"
-              className={`${
-                isSubmitLoading == true ? 'cursor-not-allowed' : 'w-full'
-              } `}
+              className={`${isSubmitLoading == true ? 'cursor-not-allowed' : 'w-full'} `}
               onClick={(e) => handleClose(e)}
             />
           </div>

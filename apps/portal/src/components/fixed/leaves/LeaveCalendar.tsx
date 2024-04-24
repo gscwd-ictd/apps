@@ -29,14 +29,16 @@ type CalendarProps = {
   clickableDate: boolean;
   type: string; // single or range
   leaveName: string;
+  isLateFiling?: boolean;
 };
 
-export default function Calendar({ type = 'single', clickableDate = true, leaveName }: CalendarProps) {
+export default function Calendar({ type = 'single', clickableDate = true, leaveName, isLateFiling }: CalendarProps) {
   const today = startOfToday();
   const [selectedDay, setSelectedDay] = useState(today);
   const [currentMonth, setCurrentMonth] = useState(format(today, 'MMM-yyyy'));
   const firstDayCurrentMonth = parse(currentMonth, 'MMM-yyyy', new Date());
   const [selectedDates, setSelectedDates] = useState<string[]>([]);
+  const [lateFiling, setLateFiling] = useState<boolean>(false);
   // set state for employee store
   const employeeDetails = useEmployeeStore((state) => state.employeeDetails);
 
@@ -76,6 +78,10 @@ export default function Calendar({ type = 'single', clickableDate = true, leaveN
     revalidateOnFocus: false,
   });
   const [holidayCount, setHolidayCount] = useState<number>(0);
+
+  useEffect(() => {
+    setLateFiling(isLateFiling);
+  }, [isLateFiling]);
 
   // Initial zustand state update
   useEffect(() => {
@@ -118,23 +124,34 @@ export default function Calendar({ type = 'single', clickableDate = true, leaveN
         if (!swrUnavailableDates.some((item) => item.date === specifiedDate)) {
           //for vacation or forced leave
           if (
-            (leaveName === LeaveName.VACATION || leaveName === LeaveName.FORCED) &&
-            dayjs(`${specifiedDate}`).diff(`${today}`, 'day') >= 0
+            (leaveName === LeaveName.VACATION ||
+              leaveName === LeaveName.FORCED ||
+              leaveName === LeaveName.SOLO_PARENT) &&
+            dayjs(`${specifiedDate}`).diff(`${today}`, 'day') > 0 &&
+            dayjs(`${specifiedDate}`).diff(`${today}`, 'day') <= 10
           ) {
             setSelectedDates((selectedDates) => [...selectedDates, specifiedDate]);
           }
-          //for SPL
+          //for sick leave and today is Monday
+          else if (
+            leaveName === LeaveName.SICK &&
+            // today.getDay() == 1 &&
+            // dayjs(`${today}`).diff(`${specifiedDate}`, 'day') <= 3 &&
+            dayjs(`${specifiedDate}`).diff(`${today}`, 'day') <= 10
+          ) {
+            setSelectedDates((selectedDates) => [...selectedDates, specifiedDate]);
+          }
+          //for sick leave and today is Tuesday - Fri
           // else if (
-          //   leaveName === LeaveName.SPECIAL_PRIVILEGE &&
-          //   dayjs(`${specifiedDate}`).diff(`${today}`, 'day') >= 0
+          //   leaveName === LeaveName.SICK &&
+          //   today.getDay() >= 2 &&
+          //   today.getDay() <= 5 &&
+          //   dayjs(`${today}`).diff(`${specifiedDate}`, 'day') <= 1 &&
+          //   dayjs(`${specifiedDate}`).diff(`${today}`, 'day') <= 10
           // ) {
           //   setSelectedDates((selectedDates) => [...selectedDates, specifiedDate]);
           // }
-          //for Solo Parent
-          else if (leaveName === LeaveName.SOLO_PARENT && dayjs(`${specifiedDate}`).diff(`${today}`, 'day') >= 0) {
-            setSelectedDates((selectedDates) => [...selectedDates, specifiedDate]);
-          } else if (
-            leaveName === LeaveName.SICK ||
+          else if (
             leaveName === LeaveName.PATERNITY ||
             leaveName === LeaveName.SPECIAL_PRIVILEGE ||
             leaveName === LeaveName.VAWC ||
@@ -282,10 +299,34 @@ export default function Calendar({ type = 'single', clickableDate = true, leaveN
                         onClick={() => viewDateActivities(day)}
                         className={classNames(
                           isEqual(day, selectedDay) && 'text-gray-900 font-semibold',
+                          //disable date selection for past dates from current day for VL/FL/SOLO
                           (leaveName === LeaveName.VACATION ||
                             leaveName === LeaveName.FORCED ||
                             leaveName === LeaveName.SOLO_PARENT) &&
-                            dayjs(`${day}`).diff(`${today}`, 'day') < 0 &&
+                            dayjs(`${day}`).diff(`${today}`, 'day') <= 0 &&
+                            // lateFiling === false &&
+                            'text-slate-300',
+                          //disable date selection starting from 10th day from current day for VL/FL/SOLO
+                          (leaveName === LeaveName.VACATION ||
+                            leaveName === LeaveName.FORCED ||
+                            leaveName === LeaveName.SOLO_PARENT) &&
+                            dayjs(`${day}`).diff(`${today}`, 'day') > 10 &&
+                            // lateFiling === false &&
+                            'text-slate-300',
+                          //disable date selection from 3rd day beyond in the past if previous day is SUN from current day for SL
+                          // leaveName === LeaveName.SICK &&
+                          //   dayjs(`${today}`).diff(`${day}`, 'day') > 3 &&
+                          //   today.getDay() == 1 &&
+                          //   'text-slate-300',
+                          // leaveName === LeaveName.SICK &&
+                          //   today.getDay() >= 2 &&
+                          //   today.getDay() <= 5 &&
+                          //   dayjs(`${today}`).diff(`${day}`, 'day') <= 1 &&
+                          //   dayjs(`${day}`).diff(`${today}`, 'day') <= 10 &&
+                          //   'text-slate-300',
+                          //disable date selection for more than 10 days from current day for SL
+                          leaveName === LeaveName.SICK &&
+                            dayjs(`${day}`).diff(`${today}`, 'day') > 10 &&
                             'text-slate-300',
                           isToday(day) && 'text-red-500',
                           swrUnavailableDates &&

@@ -7,6 +7,8 @@ import {
   DutyResponsibilityList,
   UpdatedDRC,
   UpdatedDRCD,
+  UpdatedDutiesResponsibilities,
+  UpdatedDutyResponsibility,
 } from '../../../../types/dr.type';
 
 export async function UpdateDrcPool(
@@ -195,26 +197,83 @@ export const DrcChecker = (selectedDrcs: DutiesResponsibilities) => {
   };
 };
 
+export const UpdatedDrcChecker = (selectedDrcs: UpdatedDutiesResponsibilities) => {
+  let noPercentageCounter = 0;
+  let noCompetencyCounter = 0;
+  let onEditCounter = 0;
+  let coreTotal = 0;
+  let supportTotal = 0;
+
+  selectedDrcs.core &&
+    selectedDrcs.core.map((dr: UpdatedDutyResponsibility) => {
+      if (dr.percentage > 0) {
+      } else noPercentageCounter++;
+      if (dr.onEdit === true) onEditCounter++;
+      if (
+        dr.competency.code === null ||
+        dr.competency.code === '' ||
+        dr.competency === undefined ||
+        JSON.stringify(dr.competency) === '{}'
+      )
+        noCompetencyCounter++;
+      coreTotal = coreTotal + dr.percentage!;
+    });
+
+  selectedDrcs.support &&
+    selectedDrcs.support.map((dr: UpdatedDutyResponsibility) => {
+      if (dr.percentage > 0) {
+      } else noPercentageCounter++;
+      if (dr.onEdit === true) onEditCounter++;
+      if (
+        dr.competency.code === null ||
+        dr.competency.code === '' ||
+        dr.competency === undefined ||
+        JSON.stringify(dr.competency) === '{}'
+      )
+        noCompetencyCounter++;
+      supportTotal = supportTotal + dr.percentage!;
+    });
+
+  return {
+    noPercentageCounter,
+    coreTotal,
+    supportTotal,
+    onEditCounter,
+    noCompetencyCounter,
+  };
+};
+
 export function CompetencyChecker(drcs: DutiesResponsibilities, type: string) {
   let noCoreCompetencyCounter = 0;
   let noSupportCompetencyCounter = 0;
   if (type === 'core') {
     drcs.core.map((dr: DutyResponsibility) => {
-      if (
-        dr.competency.pcplId === null ||
-        dr.competency.pcplId === undefined ||
-        dr.competency.pcplId === ''
-      )
+      if (dr.competency?.pcplId === null || dr.competency?.pcplId === undefined || dr.competency?.pcplId === '')
         noCoreCompetencyCounter++;
     });
   }
   if (type === 'support') {
     drcs.support.map((dr: DutyResponsibility) => {
-      if (
-        dr.competency.pcplId === null ||
-        dr.competency.pcplId === undefined ||
-        dr.competency.pcplId === ''
-      )
+      if (dr.competency?.pcplId === null || dr.competency?.pcplId === undefined || dr.competency?.pcplId === '')
+        noSupportCompetencyCounter++;
+    });
+  }
+
+  return { noCoreCompetencyCounter, noSupportCompetencyCounter };
+}
+
+export function UpdatedCompetencyChecker(drcs: UpdatedDutiesResponsibilities, type: string) {
+  let noCoreCompetencyCounter = 0;
+  let noSupportCompetencyCounter = 0;
+  if (type === 'core') {
+    drcs.core.map((dr: UpdatedDutyResponsibility) => {
+      if (dr.competency?.pcplId === null || dr.competency?.pcplId === undefined || dr.competency?.pcplId === '')
+        noCoreCompetencyCounter++;
+    });
+  }
+  if (type === 'support') {
+    drcs.support.map((dr: UpdatedDutyResponsibility) => {
+      if (dr.competency?.pcplId === null || dr.competency?.pcplId === undefined || dr.competency?.pcplId === '')
         noSupportCompetencyCounter++;
     });
   }

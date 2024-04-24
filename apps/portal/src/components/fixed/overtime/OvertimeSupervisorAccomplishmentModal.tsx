@@ -14,6 +14,7 @@ import { OvertimeAccomplishmentStatus } from 'libs/utils/src/lib/enums/overtime.
 import OvertimeAccomplishmentReportPdfModal from './OvertimeAccomplishmentReportPdfModal';
 import { DateFormatter } from 'libs/utils/src/lib/functions/DateFormatter';
 import dayjs from 'dayjs';
+import { DateTimeFormatter } from 'libs/utils/src/lib/functions/DateTimeFormatter';
 
 type ModalProps = {
   modalState: boolean;
@@ -72,6 +73,7 @@ export const OvertimeSupervisorAccomplishmentModal = ({ modalState, setModalStat
   // Upon success/fail of swr request, zustand state will be updated
   useEffect(() => {
     if (!isEmpty(swrOvertimeAccomplishment)) {
+      // console.log(swrOvertimeAccomplishment);
       getAccomplishmentDetailsSuccess(swrOvertimeAccomplishmentIsLoading, swrOvertimeAccomplishment);
     }
 
@@ -142,6 +144,7 @@ export const OvertimeSupervisorAccomplishmentModal = ({ modalState, setModalStat
                       <div className="w-auto ml-5">
                         <label className="text-md font-medium">
                           {DateFormatter(overtimeDetails.plannedDate, 'MM-DD-YYYY')}
+                          {/* {DateTimeFormatter(overtimeDetails.plannedDate)} */}
                         </label>
                       </div>
                     </div>
@@ -158,24 +161,24 @@ export const OvertimeSupervisorAccomplishmentModal = ({ modalState, setModalStat
                       <label className="text-slate-500 text-md whitespace-nowrap pb-0.5">Approved Hours:</label>
 
                       <div className="w-auto ml-5">
-                        <label className="text-md font-medium">{'--'}</label>
+                        <label className="text-md font-medium">{accomplishmentDetails.actualHrs ?? '---'}</label>
                       </div>
                     </div>
 
                     <div className="flex flex-col justify-start items-start w-full px-0.5 pb-3  ">
                       <label className="text-slate-500 text-md whitespace-nowrap pb-0.5">Encoded Time In & Out:</label>
 
-                      <div className="w-auto ml-5">
-                        <div className="w-full flex flex-row gap-2 items-center justify-between">
-                          <label className="text-md font-medium">
-                            {dayjs(accomplishmentDetails?.encodedTimeIn).format('MM-DD-YYYY hh:mm A')}
-                          </label>
-                          <label className="w-auto  font-medium text-medium">-</label>
-                          <label className="text-md font-medium">
-                            {dayjs(accomplishmentDetails?.encodedTimeOut).format('MM-DD-YYYY hh:mm A')}
-                          </label>
-                          <label className="text-md font-medium">{`: ${accomplishmentDetails?.computedEncodedHours} Hours(s)`}</label>
-                        </div>
+                      <div className="w-auto ml-5 flex flex-col">
+                        <label className="text-md font-medium">
+                          Start: {DateTimeFormatter(accomplishmentDetails?.encodedTimeIn)}
+                        </label>
+                        <label className="text-md font-medium">
+                          End: {DateTimeFormatter(accomplishmentDetails?.encodedTimeOut)}
+                        </label>
+                        <label className="text-md font-medium">
+                          Total Hours:
+                          {` ${accomplishmentDetails?.computedEncodedHours} Hour(s)`}
+                        </label>
                       </div>
                     </div>
 
