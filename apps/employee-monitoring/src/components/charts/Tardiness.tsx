@@ -32,10 +32,7 @@ export const TardinessChart = () => {
   } = useSWR('/stats/lates/department', fetcherEMS, {
     onErrorRetry: (error, key, config, revalidate, { retryCount }) => {
       // Only retry up to 5 times.
-      if (retryCount >= 5) return;
-
-      // Retry after 15 seconds.
-      setTimeout(() => revalidate({ retryCount }), 15000);
+      if (retryCount >= 2) return;
     },
   });
 
@@ -114,15 +111,14 @@ export const TardinessChart = () => {
 
   return (
     <>
-    {/*  Notifications */}
-    {!isEmpty(ErrorTardinessChartData) ? (
+      {/*  Notifications */}
+      {!isEmpty(ErrorTardinessChartData) ? (
         <ToastNotification toastType="error" notifMessage={ErrorTardinessChartData} />
       ) : null}
 
-    <div className="flex justify-center w-full p-5 bg-white border rounded shadow">
-      <Bar options={chartOptions} data={chartData} />
-    </div>
+      <div className="flex justify-center w-full p-5 bg-white border rounded shadow">
+        <Bar options={chartOptions} data={chartData} />
+      </div>
     </>
-    
   );
 };
