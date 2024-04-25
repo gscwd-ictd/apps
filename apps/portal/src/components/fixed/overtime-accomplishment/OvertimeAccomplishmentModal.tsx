@@ -143,63 +143,64 @@ export const OvertimeAccomplishmentModal = ({ modalState, setModalState, closeMo
     //if holiday or rest day
     if (isHoliday || isRestday) {
       //if scheduled OT
-      if (overtimeAccomplishmentDetails.plannedDate > overtimeAccomplishmentDetails.dateOfOTApproval) {
-        //8-1 rule - if scheduled OT and is Holiday or Rest Day
-        if (Number(encodedHours.toFixed(2)) >= 4 && Number(encodedHours.toFixed(2)) < 10) {
-          let temporaryHours = Number(encodedHours - 1);
-          setFinalEncodedHours(Number(temporaryHours.toFixed(2)));
-        }
-        //3-1 rule beyond 9 hours
-        else if (Number(encodedHours.toFixed(2)) >= 10) {
-          numberOfBreaks = (Number(encodedHours - 9) / 4).toFixed(2); // for 3-1 rule
+      // if (overtimeAccomplishmentDetails.plannedDate > overtimeAccomplishmentDetails.dateOfOTApproval)
+      //   {
+      //8-1 rule - is Holiday or Rest Day
+      if (Number(encodedHours.toFixed(2)) >= 4 && Number(encodedHours.toFixed(2)) < 10) {
+        let temporaryHours = Number(encodedHours - 1);
+        setFinalEncodedHours(Number(temporaryHours.toFixed(2)));
+      }
+      //3-1 rule beyond 9 hours
+      else if (Number(encodedHours.toFixed(2)) >= 10) {
+        numberOfBreaks = (Number(encodedHours - 9) / 4).toFixed(2); // for 3-1 rule
 
-          let temporaryHours = Number(encodedHours - 1 - Math.floor(numberOfBreaks));
-          setFinalEncodedHours(Number(temporaryHours.toFixed(2)));
-        } else {
-          setFinalEncodedHours(Number(encodedHours.toFixed(2)));
-        }
+        let temporaryHours = Number(encodedHours - 1 - Math.floor(numberOfBreaks));
+        setFinalEncodedHours(Number(temporaryHours.toFixed(2)));
+      } else {
+        setFinalEncodedHours(Number(encodedHours.toFixed(2)));
       }
+      // }
       //if emergency OT
-      else {
-        // apply 3-1 rule only
-        if (Number(encodedHours.toFixed(2)) >= 4) {
-          numberOfBreaks = (Number(encodedHours) / 4).toFixed(2); // for 3-1 rule
-          let temporaryHours = Number(encodedHours - Math.floor(numberOfBreaks));
-          setFinalEncodedHours(Number(temporaryHours.toFixed(2)));
-        }
-        //no break time (less than 4 hours)
-        else {
-          setFinalEncodedHours(Number(encodedHours.toFixed(2)));
-        }
-      }
+      // else {
+      //   // apply 3-1 rule only
+      //   if (Number(encodedHours.toFixed(2)) >= 4) {
+      //     numberOfBreaks = (Number(encodedHours) / 4).toFixed(2); // for 3-1 rule
+      //     let temporaryHours = Number(encodedHours - Math.floor(numberOfBreaks));
+      //     setFinalEncodedHours(Number(temporaryHours.toFixed(2)));
+      //   }
+      //   //no break time (less than 4 hours)
+      //   else {
+      //     setFinalEncodedHours(Number(encodedHours.toFixed(2)));
+      //   }
+      // }
     }
-    //if regular work day
+    //if regular work day - 3-1 rule only
     else {
       //if scheduled OT
-      if (overtimeAccomplishmentDetails.plannedDate > overtimeAccomplishmentDetails.dateOfOTApproval) {
-        if (Number(encodedHours.toFixed(2)) >= 4) {
-          numberOfBreaks = (Number(encodedHours) / 4).toFixed(2); // for 3-1 rule
-          let temporaryHours = Number(encodedHours - Math.floor(numberOfBreaks));
-          setFinalEncodedHours(Number(temporaryHours.toFixed(2)));
-        }
-        //no break time (less than 4 hours)
-        else {
-          setFinalEncodedHours(Number(encodedHours.toFixed(2)));
-        }
+      // if (overtimeAccomplishmentDetails.plannedDate > overtimeAccomplishmentDetails.dateOfOTApproval) {
+      if (Number(encodedHours.toFixed(2)) >= 4) {
+        numberOfBreaks = (Number(encodedHours) / 4).toFixed(2); // for 3-1 rule
+        let temporaryHours = Number(encodedHours - Math.floor(numberOfBreaks));
+        setFinalEncodedHours(Number(temporaryHours.toFixed(2)));
       }
-      //if emergency OT
+      //no break time (less than 4 hours)
       else {
-        // apply 3-1 rule only
-        if (Number(encodedHours.toFixed(2)) >= 4) {
-          numberOfBreaks = (Number(encodedHours) / 4).toFixed(2); // for 3-1 rule
-          let temporaryHours = Number(encodedHours - Math.floor(numberOfBreaks));
-          setFinalEncodedHours(Number(temporaryHours.toFixed(2)));
-        }
-        //no break time (less than 4 hours)
-        else {
-          setFinalEncodedHours(Number(encodedHours.toFixed(2)));
-        }
+        setFinalEncodedHours(Number(encodedHours.toFixed(2)));
       }
+      // }
+      //if emergency OT
+      // else {
+      //   // apply 3-1 rule only
+      //   if (Number(encodedHours.toFixed(2)) >= 4) {
+      //     numberOfBreaks = (Number(encodedHours) / 4).toFixed(2); // for 3-1 rule
+      //     let temporaryHours = Number(encodedHours - Math.floor(numberOfBreaks));
+      //     setFinalEncodedHours(Number(temporaryHours.toFixed(2)));
+      //   }
+      //   //no break time (less than 4 hours)
+      //   else {
+      //     setFinalEncodedHours(Number(encodedHours.toFixed(2)));
+      //   }
+      // }
     }
   }, [encodedHours]);
 
@@ -369,6 +370,13 @@ export const OvertimeAccomplishmentModal = ({ modalState, setModalState, closeMo
                         />
                       ) : null}
 
+                      {overtimeAccomplishmentDetails.status === OvertimeAccomplishmentStatus.APPROVED ? (
+                        <AlertNotification alertType="success" notifMessage={'Approved'} dismissible={false} />
+                      ) : null}
+                      {overtimeAccomplishmentDetails.status === OvertimeAccomplishmentStatus.DISAPPROVED ? (
+                        <AlertNotification alertType="error" notifMessage={'Disapproved'} dismissible={false} />
+                      ) : null}
+
                       {isHoliday || isRestday ? (
                         <AlertNotification
                           alertType="info"
@@ -387,13 +395,6 @@ export const OvertimeAccomplishmentModal = ({ modalState, setModalState, closeMo
                           }
                           dismissible={false}
                         />
-                      ) : null}
-
-                      {overtimeAccomplishmentDetails.status === OvertimeAccomplishmentStatus.APPROVED ? (
-                        <AlertNotification alertType="success" notifMessage={'Approved'} dismissible={false} />
-                      ) : null}
-                      {overtimeAccomplishmentDetails.status === OvertimeAccomplishmentStatus.DISAPPROVED ? (
-                        <AlertNotification alertType="error" notifMessage={'Disapproved'} dismissible={false} />
                       ) : null}
 
                       {/* not submitted, late OT filing/emergency OT, beyond 5 days allowance for submission from date of approval of OT */}

@@ -1,7 +1,7 @@
 /* eslint-disable @nx/enforce-module-boundaries */
 import { useEffect, useState } from 'react';
 import { HiX } from 'react-icons/hi';
-import { AlertNotification, Button, LoadingSpinner, Modal } from '@gscwd-apps/oneui';
+import { AlertNotification, Button, Checkbox, LoadingSpinner, Modal } from '@gscwd-apps/oneui';
 import { useLeaveStore } from '../../../../src/store/leave.store';
 import { SubmitHandler, useFieldArray, useForm } from 'react-hook-form';
 import { postPortal } from '../../../../src/utils/helpers/portal-axios-helper';
@@ -17,6 +17,7 @@ import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
 import { LeaveMonetizationType, LeaveName } from 'libs/utils/src/lib/enums/leave.enum';
 import { useLeaveLedgerStore } from 'apps/portal/src/store/leave-ledger.store';
 import { LeaveLedgerEntry } from 'libs/utils/src/lib/types/leave-ledger-entry.type';
+import { ArrowPathIcon } from '@heroicons/react/20/solid';
 
 type LeaveApplicationModalProps = {
   modalState: boolean;
@@ -1087,9 +1088,28 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
                 {watch('typeOfLeaveDetails.leaveName') &&
                 watch('typeOfLeaveDetails.leaveName') != LeaveName.MONETIZATION ? (
                   <>
-                    <label className="text-slate-500 text-md font-medium">
-                      Select Leave Dates:<span className="text-red-600">*</span>
-                    </label>
+                    <div className="flex flex-row justify-between">
+                      <label className="text-slate-500 text-md font-medium">
+                        Select Leave Dates:<span className="text-red-600">*</span>
+                      </label>
+
+                      {/* <Checkbox
+                        id="isLateFiling"
+                        checked={watch('isLateFiling')}
+                        label="Late Filing"
+                        className={
+                          watch('isLateFiling') === true ? 'cursor-not-allowed italic' : 'hover:text-indigo-800 italic'
+                        }
+                        onChange={(e) => handleTypeOfFiling(e.target.value as unknown as boolean)}
+                        // disabled={
+                        //   hasPds && permanentAddressOnEdit
+                        //     ? false
+                        //     : hasPds && !permanentAddressOnEdit
+                        //     ? true
+                        //     : !hasPds && false
+                        // }
+                      /> */}
+                    </div>
 
                     <div className="w-full p-4 bg-gray-50 rounded">
                       {watch('typeOfLeaveDetails.leaveName') === LeaveName.MATERNITY ||
