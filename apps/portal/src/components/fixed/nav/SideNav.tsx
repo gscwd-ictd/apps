@@ -88,6 +88,7 @@ export const SideNav = ({ employeeDetails }: NavDetails) => {
     updateResponseAppEnd: state.publicationResponse.updateResponse,
   }));
 
+  //Applicant Selection
   const { patchResponseAppSelection } = useAppSelectionStore((state) => ({
     patchResponseAppSelection: state.response.patchResponseApply,
   }));
