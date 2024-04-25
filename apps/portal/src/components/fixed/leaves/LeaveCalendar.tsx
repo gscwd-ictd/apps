@@ -38,7 +38,7 @@ export default function Calendar({ type = 'single', clickableDate = true, leaveN
   const [currentMonth, setCurrentMonth] = useState(format(today, 'MMM-yyyy'));
   const firstDayCurrentMonth = parse(currentMonth, 'MMM-yyyy', new Date());
   const [selectedDates, setSelectedDates] = useState<string[]>([]);
-  const [lateFiling, setLateFiling] = useState<boolean>(false);
+  const [lateFiling, setLateFiling] = useState<boolean>(isLateFiling);
   // set state for employee store
   const employeeDetails = useEmployeeStore((state) => state.employeeDetails);
 
@@ -80,6 +80,7 @@ export default function Calendar({ type = 'single', clickableDate = true, leaveN
   const [holidayCount, setHolidayCount] = useState<number>(0);
 
   useEffect(() => {
+    // console.log(isLateFiling);
     setLateFiling(isLateFiling);
   }, [isLateFiling]);
 
@@ -304,14 +305,14 @@ export default function Calendar({ type = 'single', clickableDate = true, leaveN
                             leaveName === LeaveName.FORCED ||
                             leaveName === LeaveName.SOLO_PARENT) &&
                             dayjs(`${day}`).diff(`${today}`, 'day') < 0 &&
-                            // lateFiling === false &&
+                            isLateFiling === false &&
                             'text-slate-300',
                           //disable date selection starting from 10th day from current day for VL/FL/SOLO
                           (leaveName === LeaveName.VACATION ||
                             leaveName === LeaveName.FORCED ||
                             leaveName === LeaveName.SOLO_PARENT) &&
                             dayjs(`${day}`).diff(`${today}`, 'day') > 10 &&
-                            // lateFiling === false &&
+                            isLateFiling === false &&
                             'text-slate-300',
                           //disable date selection from 3rd day beyond in the past if previous day is SUN from current day for SL
                           // leaveName === LeaveName.SICK &&
