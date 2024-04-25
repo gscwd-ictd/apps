@@ -127,7 +127,7 @@ export default function Calendar({ type = 'single', clickableDate = true, leaveN
             (leaveName === LeaveName.VACATION ||
               leaveName === LeaveName.FORCED ||
               leaveName === LeaveName.SOLO_PARENT) &&
-            dayjs(`${specifiedDate}`).diff(`${today}`, 'day') > 0 &&
+            dayjs(`${specifiedDate}`).diff(`${today}`, 'day') >= 0 &&
             dayjs(`${specifiedDate}`).diff(`${today}`, 'day') <= 10
           ) {
             setSelectedDates((selectedDates) => [...selectedDates, specifiedDate]);
@@ -303,7 +303,7 @@ export default function Calendar({ type = 'single', clickableDate = true, leaveN
                           (leaveName === LeaveName.VACATION ||
                             leaveName === LeaveName.FORCED ||
                             leaveName === LeaveName.SOLO_PARENT) &&
-                            dayjs(`${day}`).diff(`${today}`, 'day') <= 0 &&
+                            dayjs(`${day}`).diff(`${today}`, 'day') < 0 &&
                             // lateFiling === false &&
                             'text-slate-300',
                           //disable date selection starting from 10th day from current day for VL/FL/SOLO
