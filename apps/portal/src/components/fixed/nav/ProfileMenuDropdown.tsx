@@ -133,8 +133,8 @@ export const ProfileMenuDropdown = ({
                           {`${employeeDetails.profile.firstName} ${employeeDetails.profile.middleName}. ${
                             employeeDetails.profile.lastName
                           } ${
-                            employeeDetails.profile.nameExtension ? `${employeeDetails.profile.nameExtension}.` : ''
-                          }`}
+                            employeeDetails.profile.nameExtension ? `${employeeDetails.profile.nameExtension}.` : ''}`}
+
                         </h5>
                         <p className="truncate text-xs text-gray-500">
                           {employeeDetails.employmentDetails.assignment.positionTitle}

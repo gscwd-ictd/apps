@@ -151,9 +151,9 @@ const Index = () => {
     // }
   }, [ApproveLeaveCancellation]);
 
-  useEffect(() => {
-    console.log(LeaveCancellations);
-  }, [LeaveCancellations]);
+  // useEffect(() => {
+  //   console.log(LeaveCancellations);
+  // }, [LeaveCancellations]);
 
   return (
     <div>
