@@ -164,9 +164,9 @@ export const LeavePdf = ({ rowData, leaveDetails, selectedLeaveLedger }: LeavePd
     setIsClient(true);
   }, []);
 
-  useEffect(() => {
-    console.log(leaveDetails);
-  }, [leaveDetails]);
+  // useEffect(() => {
+  //   console.log(leaveDetails);
+  // }, [leaveDetails]);
 
   return (
     <>

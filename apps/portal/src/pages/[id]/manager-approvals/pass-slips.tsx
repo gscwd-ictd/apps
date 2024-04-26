@@ -134,6 +134,7 @@ export default function PassSlipApprovals({ employeeDetails }: InferGetServerSid
   // Upon success/fail of swr request, zustand state will be updated
   useEffect(() => {
     if (!isEmpty(swrPassSlips)) {
+      // console.log(swrPassSlips);
       getPassSlipApplicationsListSuccess(swrPassSlipIsLoading, swrPassSlips);
     }
 

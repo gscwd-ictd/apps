@@ -14,10 +14,10 @@ import { useForm, SubmitHandler } from 'react-hook-form';
 import { SelectOption } from 'libs/utils/src/lib/types/select.type';
 import { LabelInput } from '../../../inputs/LabelInput';
 import { usePassSlipStore } from 'apps/employee-monitoring/src/store/pass-slip.store';
-import { patchEmpMonitoring } from 'apps/employee-monitoring/src/utils/helper/employee-monitoring-axios-helper';
 import PassSlipConfirmModal from './PassSlipConfirmModal';
 import { isEmpty } from 'lodash';
 import UseConvertDayToTime from 'apps/employee-monitoring/src/utils/functions/ConvertDateToTime';
+import { DateTimeFormatter } from 'libs/utils/src/lib/functions/DateTimeFormatter';
 
 const actionTaken: Array<SelectOption> = [
   { label: 'Approve', value: 'for supervisor approval' },
@@ -156,7 +156,7 @@ const ViewPassSlipModal: FunctionComponent<ViewPassSlipModalProps> = ({
                       label="Pass Slip Date"
                       direction="top-to-bottom"
                       textSize="md"
-                      value={dayjs(rowData.dateOfApplication).format('MMMM DD, YYYY')}
+                      value={DateTimeFormatter(rowData.createdAt, 'MMMM DD, YYYY hh:mm A')}
                     />
                   </div>
 

@@ -294,6 +294,7 @@ export default function Dashboard({ userDetails }: InferGetServerSidePropsType<t
   //requirements - userDetails(server-side) and schedule(swr)
   useEffect(() => {
     if (userDetails) {
+      // console.log(userDetails);
       setEmployee(userDetails);
       hydration();
     }
@@ -333,7 +334,7 @@ export default function Dashboard({ userDetails }: InferGetServerSidePropsType<t
     <>
       {/* Falling Hearts Effect for February Only */}
       {dateNow == '02-14' ? (
-        <div className="wrapper absolute">
+        <div className="absolute wrapper">
           <div className="heart x1"></div>
           <div className="heart x2"></div>
           <div className="heart x3"></div>
@@ -345,7 +346,7 @@ export default function Dashboard({ userDetails }: InferGetServerSidePropsType<t
 
       {/* Balloon Effect for Birthday */}
       {dateNow === employeeBirthday && employee ? (
-        <div className="wrapper absolute">
+        <div className="absolute wrapper">
           <div className="balloon1 x1"></div>
           <div className="balloon2 x2"></div>
           <div className="balloon1 x3"></div>
@@ -408,7 +409,7 @@ export default function Dashboard({ userDetails }: InferGetServerSidePropsType<t
             <div className="absolute top-0 left-0 z-0 flex items-center justify-center w-full h-full overflow-hidden pointer-events-none opacity-10">
               <Image src={'/gwdlogo.png'} priority className="w-2/4 " alt={''} width={'500'} height={'500'} />
             </div>
-            <div className="pt-2 md:pt-0 grid grid-cols-1 gap-4 px-4 md:grid-cols-3 lg:grid-cols-5">
+            <div className="grid grid-cols-1 gap-4 px-4 pt-2 md:pt-0 md:grid-cols-3 lg:grid-cols-5">
               <div className="z-10 order-1 col-span-1 md:col-span-5 lg:col-span-5 lg:order-1">
                 <div className="grid grid-cols-2 gap-4 md:grid-cols-4 lg:grid-cols-5 ">
                   <div className="order-1 col-span-2 md:order-1 md:col-span-2 md:row-span-2 lg:row-span-2 lg:col-span-1 lg:order-1 ">
@@ -428,14 +429,14 @@ export default function Dashboard({ userDetails }: InferGetServerSidePropsType<t
                   <div className="order-5 col-span-2 md:row-span-2 lg:row-span-4 md:col-span-2 md:order-4 lg:col-span-1 lg:order-5">
                     <EmployeeDashboard />
                   </div>
-                  <div className="grid grid-cols-2 gap-4 order-3 col-span-2 md:order-3 md:col-span-2 lg:col-span-2 lg:order-4">
+                  <div className="grid order-3 grid-cols-2 col-span-2 gap-4 md:order-3 md:col-span-2 lg:col-span-2 lg:order-4">
                     <StatsCard
                       name={'Lates Count'}
                       count={swrDtr?.summary?.noOfTimesLate ?? 0}
                       isLoading={swrDtrIsLoading}
                       width={'w-full'}
                       height={windowHeight > 820 ? 'h-52' : 'h-36'}
-                      svg={<HiClock className="w-7 h-7 text-indigo-500" />}
+                      svg={<HiClock className="text-indigo-500 w-7 h-7" />}
                       svgBgColor={'bg-indigo-100'}
                     />
                     <StatsCard
@@ -444,7 +445,7 @@ export default function Dashboard({ userDetails }: InferGetServerSidePropsType<t
                       isLoading={swrDtrIsLoading}
                       width={'w-full'}
                       height={windowHeight > 820 ? 'h-52' : 'h-36'}
-                      svg={<HiDocument className="w-7 h-7 text-indigo-500" />}
+                      svg={<HiDocument className="text-indigo-500 w-7 h-7" />}
                       svgBgColor={'bg-indigo-100'}
                     />
                   </div>
@@ -465,7 +466,7 @@ export default function Dashboard({ userDetails }: InferGetServerSidePropsType<t
                         isLoading={swrLeaveLedgerLoading}
                         width={'w-full'}
                         height={windowHeight > 820 ? 'h-32' : 'h-28'}
-                        svg={<HiCalendar className="w-7 h-7 text-orange-500" />}
+                        svg={<HiCalendar className="text-orange-500 w-7 h-7" />}
                         svgBgColor={'bg-orange-100'}
                       />
                       <StatsCard
@@ -483,7 +484,7 @@ export default function Dashboard({ userDetails }: InferGetServerSidePropsType<t
                         isLoading={swrLeaveLedgerLoading}
                         width={'w-full'}
                         height={windowHeight > 820 ? 'h-32' : 'h-28'}
-                        svg={<HiCalendar className="w-7 h-7 text-pink-500" />}
+                        svg={<HiCalendar className="text-pink-500 w-7 h-7" />}
                         svgBgColor={'bg-pink-100'}
                       />
                     </div>
@@ -497,14 +498,14 @@ export default function Dashboard({ userDetails }: InferGetServerSidePropsType<t
                         isLoading={swrLeaveLedgerLoading}
                         width={'w-auto'}
                         height={windowHeight > 820 ? 'h-32' : 'h-32'}
-                        svg={<HiCash className="w-7 h-7 text-green-500" />}
+                        svg={<HiCash className="text-green-500 w-7 h-7" />}
                         svgBgColor={'bg-green-100'}
                         canHover={true}
                       />
                     </div>
                   </div>
 
-                  <div className="order-6 md:order-5 lg:order-7 col-span-2 row-span-2">
+                  <div className="order-6 col-span-2 row-span-2 md:order-5 lg:order-7">
                     <div className="w-full h-full gap-2 p-4 pb-10 mb-2 bg-white rounded-md shadow">
                       <EmployeeCalendar />
                     </div>
@@ -522,6 +523,12 @@ export default function Dashboard({ userDetails }: InferGetServerSidePropsType<t
     </>
   );
 }
+
+//use for dummy use
+// export const getServerSideProps: GetServerSideProps = async (context: GetServerSidePropsContext) => {
+//   const userDetails = employeeCeliaDananDummy;
+//   return { props: { userDetails } };
+// };
 
 //use for dummy use
 export const getServerSideProps: GetServerSideProps = async (context: GetServerSidePropsContext) => {

@@ -15,6 +15,7 @@ import { ManagerOtpApproval } from 'libs/utils/src/lib/enums/approval.enum';
 import { ApprovalOtpContents } from './ApprovalOtp/ApprovalOtpContents';
 import { ConfirmationApprovalModal } from './ApprovalOtp/ConfirmationApprovalModal';
 import { DateFormatter } from 'libs/utils/src/lib/functions/DateFormatter';
+import { DateTimeFormatter } from 'libs/utils/src/lib/functions/DateTimeFormatter';
 
 type ApprovalsPendingLeaveModalProps = {
   modalState: boolean;
@@ -180,6 +181,16 @@ export const ApprovalsPendingLeaveModal = ({
                     </div>
 
                     <div className="flex flex-col justify-start items-start w-full sm:w-1/2 px-0.5 pb-3  ">
+                      <label className="text-slate-500 text-md whitespace-nowrap pb-0.5">Date of Application:</label>
+
+                      <div className="w-auto ml-5">
+                        <label className="text-md font-medium">
+                          {DateTimeFormatter(leaveIndividualDetail.dateOfFiling)}
+                        </label>
+                      </div>
+                    </div>
+
+                    <div className="flex flex-col justify-start items-start w-full sm:w-1/2 px-0.5 pb-3  ">
                       <label className="text-slate-500 text-md whitespace-nowrap pb-0.5">Leave Type:</label>
 
                       <div className="w-auto ml-5">
@@ -242,7 +253,7 @@ export const ApprovalsPendingLeaveModal = ({
                     leaveIndividualDetail?.leaveName === LeaveName.SICK ||
                     leaveIndividualDetail?.leaveName === LeaveName.STUDY ||
                     leaveIndividualDetail?.leaveName === LeaveName.OTHERS ? (
-                      <div className="flex flex-col justify-start items-start w-full px-0.5 pb-3">
+                      <div className="flex flex-col justify-start items-start w-full sm:w-1/2 px-0.5 pb-3">
                         <label className="text-slate-500 text-md whitespace-nowrap pb-0.5 ">
                           {leaveIndividualDetail?.leaveName === LeaveName.VACATION ||
                           leaveIndividualDetail?.leaveName === LeaveName.FORCED ||

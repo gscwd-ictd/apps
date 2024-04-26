@@ -78,6 +78,8 @@ export type EmployeeLeaveDetails = {
     maximumCredits?: number | null;
     supervisorApprovalDate: string;
     supervisorDisapprovalRemarks: string;
+    supervisorId: string;
+    supervisorName: string;
     hrdmApprovalDate: string;
     hrdmDisapprovalRemarks: string;
     hrmoApprovalDate: string;

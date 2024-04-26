@@ -9,6 +9,8 @@ import {
   UpdatedDRCD,
   UpdatedDutiesResponsibilities,
   UpdatedDutyResponsibility,
+  UpdatedDutiesResponsibilities,
+  UpdatedDutyResponsibility,
 } from '../../../../types/dr.type';
 
 export async function UpdateDrcPool(
@@ -175,6 +177,52 @@ export const DrcChecker = (selectedDrcs: DutiesResponsibilities) => {
 
   selectedDrcs.support &&
     selectedDrcs.support.map((dr: DutyResponsibility) => {
+      if (dr.percentage > 0) {
+      } else noPercentageCounter++;
+      if (dr.onEdit === true) onEditCounter++;
+      if (
+        dr.competency.code === null ||
+        dr.competency.code === '' ||
+        dr.competency === undefined ||
+        JSON.stringify(dr.competency) === '{}'
+      )
+        noCompetencyCounter++;
+      supportTotal = supportTotal + dr.percentage!;
+    });
+
+  return {
+    noPercentageCounter,
+    coreTotal,
+    supportTotal,
+    onEditCounter,
+    noCompetencyCounter,
+  };
+};
+
+export const UpdatedDrcChecker = (selectedDrcs: UpdatedDutiesResponsibilities) => {
+  let noPercentageCounter = 0;
+  let noCompetencyCounter = 0;
+  let onEditCounter = 0;
+  let coreTotal = 0;
+  let supportTotal = 0;
+
+  selectedDrcs.core &&
+    selectedDrcs.core.map((dr: UpdatedDutyResponsibility) => {
+      if (dr.percentage > 0) {
+      } else noPercentageCounter++;
+      if (dr.onEdit === true) onEditCounter++;
+      if (
+        dr.competency.code === null ||
+        dr.competency.code === '' ||
+        dr.competency === undefined ||
+        JSON.stringify(dr.competency) === '{}'
+      )
+        noCompetencyCounter++;
+      coreTotal = coreTotal + dr.percentage!;
+    });
+
+  selectedDrcs.support &&
+    selectedDrcs.support.map((dr: UpdatedDutyResponsibility) => {
       if (dr.percentage > 0) {
       } else noPercentageCounter++;
       if (dr.onEdit === true) onEditCounter++;

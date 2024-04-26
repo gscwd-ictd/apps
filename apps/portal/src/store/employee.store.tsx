@@ -23,7 +23,7 @@ export const EMPLOYEE_DATA: EmployeeDetails = {
     firstName: '',
     middleName: '',
     lastName: '',
-    nameExt: '',
+    nameExtension: '',
     sex: '',
     birthDate: '',
     mobileNumber: '',

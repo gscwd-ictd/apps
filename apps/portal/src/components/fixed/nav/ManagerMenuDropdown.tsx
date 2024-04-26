@@ -160,10 +160,7 @@ export const ManagerMenuDropdown = ({
                               (pendingApprovalsCount.pendingPassSlipsCount > 0 ||
                                 pendingApprovalsCount.pendingLeavesCount > 0 ||
                                 pendingApprovalsCount.pendingOvertimesCount > 0 ||
-                                pendingApprovalsCount.pendingDtrCorrectionsApprovals > 0 ||
-                                pendingApprovalsCount.pendingTrainingNominationCount > 0 ||
-                                pendingApprovalsCount.prfsForApprovalCount > 0 ||
-                                pendingApprovalsCount.pendingApplicantEndorsementsCount > 0)) ? (
+                                pendingApprovalsCount.pendingDtrCorrectionsApprovals > 0)) ? (
                               <span className="absolute w-3 h-3 right-4 z-30 bg-red-600 rounded-full select-none" />
                             ) : //if OIC and is Rank and File -- Approvals page notifs only
                             (isEqual(userRole, UserRole.RANK_AND_FILE) || isEqual(userRole, UserRole.JOB_ORDER)) &&

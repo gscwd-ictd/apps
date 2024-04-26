@@ -13,6 +13,7 @@ import UseRenderAccomplishmentSubmitted from 'apps/portal/src/utils/functions/Re
 import RenderOvertimeAccomplishmentStatus from 'apps/portal/src/utils/functions/RenderOvertimeAccomplishmentStatus';
 import { TextSize } from 'libs/utils/src/lib/enums/text-size.enum';
 import OvertimeAuthorizationModal from './OvertimeAuthorizationModal';
+import { DateTimeFormatter } from 'libs/utils/src/lib/functions/DateTimeFormatter';
 
 type ModalProps = {
   modalState: boolean;
@@ -184,7 +185,7 @@ export const OvertimeModal = ({ modalState, setModalState, closeModalAction }: M
                       <div className="w-auto ml-5">
                         <label className="text-md font-medium">
                           {overtimeDetails.dateApproved
-                            ? DateFormatter(overtimeDetails.dateApproved, 'MM-DD-YYYY')
+                            ? DateTimeFormatter(overtimeDetails.dateApproved)
                             : '-- -- ----'}
                         </label>
                       </div>
