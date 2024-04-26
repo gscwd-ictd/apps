@@ -96,6 +96,7 @@ const DrcUpdatedModal: FunctionComponent = () => {
     // nextPage();
   };
 
+  // cancel
   const cancelBtn = () => {
     // put your logic here
     if (modal.page === 1) closeModal();
@@ -143,6 +144,8 @@ const DrcUpdatedModal: FunctionComponent = () => {
       return true;
     else return false;
   };
+
+  // window dimension
   const { windowWidth } = UseWindowDimensions();
   return (
     <>
@@ -154,7 +157,7 @@ const DrcUpdatedModal: FunctionComponent = () => {
       >
         <Modal.Header withCloseBtn>
           <div className="flex justify-between w-full">
-            <div className="flex w-full flex-col px-5">
+            <div className="flex flex-col w-full px-5">
               <h3 className="text-xl font-semibold text-gray-700 md:text-2xl">
                 {modal.page === 6 ? 'Setting Successful' : 'Set Duties, Responsibilities, and Competencies'}
               </h3>
@@ -164,17 +167,30 @@ const DrcUpdatedModal: FunctionComponent = () => {
                 ) : modal.page === 2 ? (
                   'Add core or support'
                 ) : modal.page === 3 ? (
-                  <>
-                    <div>{selectedPosition.positionTitle}</div>
-                    <div className="text-xs text-gray-600">{selectedPosition.designation}</div>
-                  </>
+                  <div className="flex">
+                    <div className="flex flex-col w-full">
+                      <div>{selectedPosition.positionTitle}</div>
+                      <div className="text-xs text-gray-600">{selectedPosition.designation}</div>
+                    </div>
+                    <div className="flex items-end justify-end w-full">
+                      <div>
+                        {selectedDrcType === 'core' ? (
+                          <span>{tempAddedDrcs.core.length === 0 ? 'None' : tempAddedDrcs.core.length} assigned</span>
+                        ) : (
+                          <span>
+                            {tempAddedDrcs.support.length === 0 ? 'None' : tempAddedDrcs.support.length} assigned
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                  </div>
                 ) : (
                   modal.page === 4 && 'Position Summary'
                 )}
               </div>
             </div>
 
-            <i className="bx bx-x text-2xl" role="button" onClick={closeDrcModal} tabIndex={-1}></i>
+            <i className="text-2xl bx bx-x" role="button" onClick={closeDrcModal} tabIndex={-1}></i>
           </div>
         </Modal.Header>
         <Modal.Body>
@@ -186,7 +202,7 @@ const DrcUpdatedModal: FunctionComponent = () => {
               onClick={cancelBtn}
               className="w-[6rem] disabled:bg-white disabled:cursor-not-allowed text-gray-700 text-opacity-85 bg-white border border-gray-300 px-3 text-sm transition-all ease-in-out duration-100 font-semibold tracking-wide py-2 rounded whitespace-nowrap focus:outline-none focus:ring-4 hover:shadow-lg active:shadow-md active:ring-0 active:scale-95"
             >
-              {modal.page === 1 ? 'Close' : 'Cancel'}
+              {modal.page === 1 ? 'Close' : modal.page === 2 ? 'Cancel' : 'Previous'}
             </button>
             {modal.page !== 1 ? (
               <button

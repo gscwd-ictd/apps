@@ -2,120 +2,107 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { LoadingSpinner } from '@gscwd-apps/oneui';
 import { useDnrStore } from 'apps/portal/src/store/dnr.store';
-import { Competency, DutyResponsibility } from 'apps/portal/src/types/dr.type';
+import { Competency, DutyResponsibility, UpdatedDutyResponsibility } from 'apps/portal/src/types/dr.type';
 import { HiBadgeCheck, HiExclamationCircle, HiLockClosed, HiLockOpen, HiX } from 'react-icons/hi';
 import UseRenderBadgePill from '../../badge-pill/BadgePill';
 import { Table, TableHeader } from '../../table/Table';
+import { useUpdatedDrcStore } from 'apps/portal/src/store/updated-drc.store';
 
-export const SelectedSupportDrcs = (): JSX.Element => {
-  const {
-    selectedDnrs,
-    availableDnrs,
-    isLoading,
-    filteredAvailableDnrs,
-    originalPool,
-    setSelectedDnrs,
-    setAvailableDnrs,
-    setFilteredAvailableDnrs,
-  } = useDnrStore((state) => ({
-    isLoading: state.loading.loadingExistingDnrs,
-    selectedDnrs: state.selectedDnrs,
-    availableDnrs: state.availableDnrs,
-    filteredAvailableDnrs: state.filteredAvailableDnrs,
-    originalPool: state.originalPoolOfDnrs,
-    setSelectedDnrs: state.setSelectedDnrs,
-    setAvailableDnrs: state.setAvailableDnrs,
-    setFilteredAvailableDnrs: state.setFilteredAvailableDnrs,
+export const UpdatedSelectedSupportDrcs = (): JSX.Element => {
+  const { addedDrcs, isLoading, setAddedDrcs } = useUpdatedDrcStore((state) => ({
+    isLoading: state.loading.loadingExistingDrcs,
+    addedDrcs: state.addedDrcs,
+    setAddedDrcs: state.setAddedDrcs,
   }));
 
-  const handleRemove = (positionIndexToRemove: number, positionIdToRemove: string) => {
+  const handleRemove = (positionIndexToRemove: number) => {
     // copy the selected drs from context to local constant variable
-    const updatedSelectedSupportDnrs = [...selectedDnrs.support];
+    const updatedSelectedSupportDnrs = [...addedDrcs.support];
 
-    // copy the all dr pool from the context to a local constant varialbe
-    const updatedAvailableDnrs = [...availableDnrs];
+    // // copy the all dr pool from the context to a local constant varialbe
+    // const updatedAvailableDnrs = [...availableDnrs];
 
     // initialize the remove object
     let _removed: DutyResponsibility = {} as DutyResponsibility;
 
-    // map the original pool from context
-    originalPool.map((dr: DutyResponsibility) => {
-      if (dr.odrId === positionIdToRemove) {
-        // set the _remove if odrid is equal to positionId
-        _removed = dr;
-      }
-    });
+    // // map the original pool from context
+    // originalPool.map((dr: DutyResponsibility) => {
+    //   if (dr.odrId === positionIdToRemove) {
+    //     // set the _remove if odrid is equal to positionId
+    //     _removed = dr;
+    //   }
+    // });
 
-    // push the removed object to dr pool array
-    updatedAvailableDnrs.push(_removed);
+    // // push the removed object to dr pool array
+    // updatedAvailableDnrs.push(_removed);
 
-    // sort the array alphabetically
-    const sortedNewPool = [
-      ...updatedAvailableDnrs.sort((a: DutyResponsibility, b: DutyResponsibility) =>
-        a.description!.localeCompare(b.description!)
-      ),
-    ];
+    // // sort the array alphabetically
+    // const sortedNewPool = [
+    //   ...updatedAvailableDnrs.sort((a: DutyResponsibility, b: DutyResponsibility) =>
+    //     a.description!.localeCompare(b.description!)
+    //   ),
+    // ];
 
-    // map the sorted pool
-    sortedNewPool.map((dr: DutyResponsibility, index: number) => {
-      // re initializes the index from 0 to n
-      dr.sequenceNo = index;
+    // // map the sorted pool
+    // sortedNewPool.map((dr: DutyResponsibility, index: number) => {
+    //   // re initializes the index from 0 to n
+    //   dr.sequenceNo = index;
 
-      // re initializes the percentage to 0
-      dr.percentage = 0;
+    //   // re initializes the percentage to 0
+    //   dr.percentage = 0;
 
-      // set the selected state to false
-      dr.state = false;
+    //   // set the selected state to false
+    //   dr.state = false;
 
-      // set the selected on edit to false
-      dr.onEdit = false;
+    //   // set the selected on edit to false
+    //   dr.onEdit = false;
 
-      // sets the competency to an empty object since it is deleted
-      dr.competency = {} as Competency;
-    });
+    //   // sets the competency to an empty object since it is deleted
+    //   dr.competency = {} as Competency;
+    // });
 
-    // set the all dr pool according to the sorted new pool
-    setAvailableDnrs(sortedNewPool);
+    // // set the all dr pool according to the sorted new pool
+    // setAvailableDnrs(sortedNewPool);
 
-    // set the filtered dr pool according to the sorted new pool
-    setFilteredAvailableDnrs(sortedNewPool);
+    // // set the filtered dr pool according to the sorted new pool
+    // setFilteredAvailableDnrs(sortedNewPool);
 
     // remove the selected support dr
     updatedSelectedSupportDnrs.splice(positionIndexToRemove, 1);
-    updatedSelectedSupportDnrs.map((dr: DutyResponsibility, index: number) => {
+    updatedSelectedSupportDnrs.map((dr: UpdatedDutyResponsibility, index: number) => {
       dr.sequenceNo = index;
     });
 
     // set the new value of selected support drs
-    setSelectedDnrs({ ...selectedDnrs, support: updatedSelectedSupportDnrs });
+    setAddedDrcs({ ...addedDrcs, support: updatedSelectedSupportDnrs });
   };
 
-  const handleEditToggle = (odrId: string, onEdit: boolean) => {
-    const tempSelectedDnrs = JSON.parse(JSON.stringify(selectedDnrs.support));
-    const tempUpdatedSelectedDnrs: Array<DutyResponsibility> = [];
+  const handleEditToggle = (sequenceNo: number, onEdit: boolean) => {
+    const tempSelectedDnrs = JSON.parse(JSON.stringify(addedDrcs.support));
+    const tempUpdatedSelectedDnrs: Array<UpdatedDutyResponsibility> = [];
 
-    tempSelectedDnrs.map((dr: DutyResponsibility, index: number) => {
-      if (odrId === dr.odrId) dr.onEdit = !onEdit;
+    tempSelectedDnrs.map((dr: UpdatedDutyResponsibility, index: number) => {
+      if (index === sequenceNo) dr.onEdit = !onEdit;
       dr.sequenceNo = index;
       tempUpdatedSelectedDnrs.push(dr);
     });
 
-    setSelectedDnrs({ ...selectedDnrs, support: tempUpdatedSelectedDnrs });
+    setAddedDrcs({ ...addedDrcs, support: tempUpdatedSelectedDnrs });
   };
 
-  const onChangePercentage = (e: any, odrId: string, sequenceNo: number) => {
-    const tempSelectedDnrs = [...selectedDnrs.support];
-    const tempUpdatedSelectedDnrs: Array<DutyResponsibility> = [];
+  const onChangePercentage = (e: any, sequenceNo: number) => {
+    const tempSelectedDnrs = [...addedDrcs.support];
+    const tempUpdatedSelectedDnrs: Array<UpdatedDutyResponsibility> = [];
 
-    tempSelectedDnrs.map((dr: DutyResponsibility, index: number) => {
-      if (dr.odrId === odrId) {
+    tempSelectedDnrs.map((dr: UpdatedDutyResponsibility, index: number) => {
+      if (dr.sequenceNo === sequenceNo) {
         if (e.currentTarget.valueAsNumber >= 0) dr.percentage = e.currentTarget.valueAsNumber;
         else dr.percentage = 0;
       }
       tempUpdatedSelectedDnrs.push(dr);
     });
 
-    setSelectedDnrs({ ...selectedDnrs, support: tempUpdatedSelectedDnrs });
+    setAddedDrcs({ ...addedDrcs, support: tempUpdatedSelectedDnrs });
   };
 
   return (
@@ -123,7 +110,7 @@ export const SelectedSupportDrcs = (): JSX.Element => {
       <>
         <div className="min-w-[50rem] grid grid-cols-12 gap-1 pt-2 text-xs">
           <div className="col-span-1 "></div>
-          <div className="col-span-6 ">
+          <div className="col-span-6 gap-2 ">
             <label className="justify-start font-normal lex">Description</label>
           </div>
           <div className="col-span-1 ">
@@ -142,8 +129,8 @@ export const SelectedSupportDrcs = (): JSX.Element => {
           {isLoading ? (
             <LoadingSpinner size="lg" />
           ) : (
-            selectedDnrs &&
-            selectedDnrs.support.map((dr: DutyResponsibility, index: number) => {
+            addedDrcs &&
+            addedDrcs.support.map((dr: UpdatedDutyResponsibility, index: number) => {
               return (
                 <div key={index} className="grid grid-cols-12 col-span-12 gap-1">
                   <div className="col-span-1 ">
@@ -164,18 +151,18 @@ export const SelectedSupportDrcs = (): JSX.Element => {
                   </div>
                   <div className="col-span-6 ">
                     <div className="flex flex-row justify-start peer-hover:text-white">
-                      <p className="w-full overflow-hidden text-sm font-light text-black text-gray-600 text-ellipsis ">
-                        {dr.description}
+                      <p className="w-full overflow-hidden text-sm font-normal text-gray-600 text-ellipsis ">
+                        {dr.duty}
                       </p>
                     </div>
                   </div>
                   <div className="col-span-1">
-                    <label className="flex justify-center font-light text-gray-800 xs:text-xs sm:text-xs md:text-xs lg:text-sm">
+                    <label className="flex justify-center font-light h-[1.5rem] text-gray-800 xs:text-xs sm:text-xs md:text-xs lg:text-sm">
                       {UseRenderBadgePill(dr.competency.code)}
                     </label>
                   </div>
                   <div className="col-span-1">
-                    <label className="flex justify-center font-light text-gray-800 xs:text-xs sm:text-xs md:text-xs lg:text-sm">
+                    <label className="flex justify-center font-light text-gray-800 h-[1.5rem] xs:text-xs sm:text-xs md:text-xs lg:text-sm">
                       {UseRenderBadgePill(dr.competency.level)}
                     </label>
                   </div>
@@ -188,7 +175,7 @@ export const SelectedSupportDrcs = (): JSX.Element => {
                         }`}
                         max={100}
                         value={dr.percentage ? dr.percentage : 0}
-                        onChange={(e) => onChangePercentage(e, dr.odrId, dr.sequenceNo!)}
+                        onChange={(e) => onChangePercentage(e, dr.sequenceNo!)}
                         disabled={dr.onEdit ? false : true}
                       />
 
@@ -203,7 +190,7 @@ export const SelectedSupportDrcs = (): JSX.Element => {
                             size={26}
                             className="bg-transparent rounded hover:cursor-pointer"
                             fill="#fc0303"
-                            onClick={() => handleEditToggle(dr.odrId, dr.onEdit!)}
+                            onClick={() => handleEditToggle(dr.sequenceNo, dr.onEdit!)}
                           />
                         </>
                       ) : (
@@ -212,7 +199,7 @@ export const SelectedSupportDrcs = (): JSX.Element => {
                             size={26}
                             className="bg-transparent rounded hover:cursor-pointer"
                             fill="#7b42f5"
-                            onClick={() => handleEditToggle(dr.odrId, dr.onEdit!)}
+                            onClick={() => handleEditToggle(dr.sequenceNo, dr.onEdit!)}
                           />
                         </>
                       )}
@@ -220,7 +207,7 @@ export const SelectedSupportDrcs = (): JSX.Element => {
                         className="bg-red-500 rounded hover:cursor-pointer"
                         fill="white"
                         size={26}
-                        onClick={() => handleRemove(index, dr.odrId)}
+                        onClick={() => handleRemove(index)}
                       />
                     </div>
                   </div>

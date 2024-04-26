@@ -111,7 +111,7 @@ export const UpCompetencyDropdown = ({ index }: CompetencyDropDownProps) => {
     <>
       <Menu as="div" className="relative inline-block text-left">
         <div>
-          <Menu.Button className="h-full px-5 py-2 text-white transition-colors ease-in-out text-md  rounded-l whitespace-nowrap bg-indigo-400 hover:bg-indigo-600 active:bg-indigo-700">
+          <Menu.Button className="h-full px-5 py-2 text-white transition-colors ease-in-out rounded-l bg-emerald-500 text-md whitespace-nowrap hover:bg-emerald-600 active:bg-emerald-700">
             <p>Select Competency</p>
           </Menu.Button>
         </div>
@@ -127,7 +127,7 @@ export const UpCompetencyDropdown = ({ index }: CompetencyDropDownProps) => {
           <Menu.Items
             className={`shadow-gray absolute z-[100] mb-2 mt-2 w-[26rem] origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-lg shadow-gray-100 ring-1 ring-black ring-opacity-5 focus:outline-none`}
           >
-            {competencies &&
+            {competencies && competencies.length > 0 ? (
               competencies.map((item: Competency, idx: number) => {
                 return (
                   <div key={idx}>
@@ -149,7 +149,10 @@ export const UpCompetencyDropdown = ({ index }: CompetencyDropDownProps) => {
                     </Menu.Item>
                   </div>
                 );
-              })}
+              })
+            ) : (
+              <div className="flex items-center justify-center h-[4rem]">No competency assigned.</div>
+            )}
           </Menu.Items>
         </Transition>
       </Menu>

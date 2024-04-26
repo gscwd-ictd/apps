@@ -2,37 +2,18 @@
 
 import { Button } from '@gscwd-apps/oneui';
 import { useUpdatedDrcStore } from 'apps/portal/src/store/updated-drc.store';
-import { UpdatedDutyResponsibility } from 'apps/portal/src/types/dr.type';
-import { useState } from 'react';
 
 export const DrcLeftAdd = (): JSX.Element => {
-  // const {
-  //   availableDnrs,
-  //   checkedDnrs,
-  //   filteredAvailableDnrs,
-  //   selectedDrcType,
-  //   setFilteredAvailableDnrs,
-  //   setAvailableDnrs,
-  //   setCheckedDnrs,
-  //   setFilteredDnrValue,
-  // } = useDnrStore((state) => ({
-  //   availableDnrs: state.availableDnrs,
-  //   filteredAvailableDnrs: state.filteredAvailableDnrs,
-  //   checkedDnrs: state.checkedDnrs,
-  //   selectedDrcType: state.selectedDrcType,
-  //   setFilteredAvailableDnrs: state.setFilteredAvailableDnrs,
-  //   setAvailableDnrs: state.setAvailableDnrs,
-  //   setCheckedDnrs: state.setCheckedDnrs,
-  //   setFilteredDnrValue: state.setFilteredDnrValue,
-  // }));
-
-  const [text, setText] = useState<string>('');
-
-  const { tempAddedDrcs, selectedDrcType, setTempAddedDrcs } = useUpdatedDrcStore((state) => ({
-    tempAddedDrcs: state.tempAddedDrcs,
-    selectedDrcType: state.selectedDrcType,
-    setTempAddedDrcs: state.setTempAddedDrcs,
-  }));
+  const { tempAddedDrcs, selectedDrcType, dutyText, indexToUpdate, setDutyText, setTempAddedDrcs, setIndexToUpdate } =
+    useUpdatedDrcStore((state) => ({
+      tempAddedDrcs: state.tempAddedDrcs,
+      selectedDrcType: state.selectedDrcType,
+      dutyText: state.dutyText,
+      indexToUpdate: state.indexToUpdate,
+      setTempAddedDrcs: state.setTempAddedDrcs,
+      setDutyText: state.setDutyText,
+      setIndexToUpdate: state.setIndexToUpdate,
+    }));
 
   // const onSelect = (sequenceNo: number | undefined, drId: string) => {
   //   // initialize currently selected drc
@@ -160,30 +141,105 @@ export const DrcLeftAdd = (): JSX.Element => {
     if (selectedDrcType === 'core') {
       const finalTempAddedCoreDrcs = [...tempAddedDrcs.core];
 
-      finalTempAddedCoreDrcs.push({ duty: text, sequenceNo: tempAddedDrcs.core.length });
+      finalTempAddedCoreDrcs.push({ duty: dutyText.trim(), sequenceNo: tempAddedDrcs.core.length, onEdit: false });
 
       setTempAddedDrcs({ ...tempAddedDrcs, core: finalTempAddedCoreDrcs });
     } else if (selectedDrcType === 'support') {
       const finalTempAddedSupportDrcs = [...tempAddedDrcs.support];
 
-      finalTempAddedSupportDrcs.push({ duty: text, sequenceNo: tempAddedDrcs.support.length });
+      finalTempAddedSupportDrcs.push({
+        duty: dutyText.trim(),
+        sequenceNo: tempAddedDrcs.support.length,
+        onEdit: false,
+      });
+      setTempAddedDrcs({ ...tempAddedDrcs, support: finalTempAddedSupportDrcs });
     }
 
-    setText('');
+    setDutyText('');
+  };
+
+  const onUpdate = () => {
+    if (selectedDrcType === 'core') {
+      const tempAddedDrcsCoreCopy = [...tempAddedDrcs.core];
+
+      const core = tempAddedDrcsCoreCopy.map((drc) => {
+        if (drc.sequenceNo === indexToUpdate) {
+          drc.duty = dutyText;
+          drc.onEdit = false;
+          setIndexToUpdate(null);
+          setDutyText('');
+        }
+        return drc;
+      });
+
+      // set temp added drcs core
+      setTempAddedDrcs({ ...tempAddedDrcs, core: core });
+    } else if (selectedDrcType === 'support') {
+      const tempAddedDrcsSupportCopy = [...tempAddedDrcs.support];
+      const support = tempAddedDrcsSupportCopy.map((drc) => {
+        if (drc.sequenceNo === indexToUpdate) {
+          drc.duty = dutyText;
+          drc.onEdit = false;
+          setIndexToUpdate(null);
+          setDutyText('');
+        }
+        return drc;
+      });
+
+      // set temp added drcs support
+
+      setTempAddedDrcs({ ...tempAddedDrcs, support: support });
+    }
   };
 
   return (
     <>
-      <textarea
-        className="w-full border-2 border-gray-300 focus:border-indigo-500 focus:outline-none focus:ring-0  rounded min-h-[10rem] placeholder:text-center  placeholder:text-gray-300"
-        placeholder="Type duties and responsibilities here"
-        value={text}
-        onChange={(e) => setText(e.target.value)}
-      />
-      <div className="flex justify-end">
-        <Button type="button" onClick={onAdd}>
-          Add
-        </Button>
+      <div className="flex flex-col h-full gap-2">
+        <textarea
+          className="w-full h-[50%] border border-slate-300 rounded focus:border-indigo-500 focus:outline-none focus:ring-0 placeholder:text-center placeholder:text-gray-300"
+          placeholder="Type duties and responsibilities here"
+          value={dutyText}
+          onChange={(e) => setDutyText(e.target.value)}
+        />
+
+        <div className="flex w-full h-[4rem]">
+          {indexToUpdate === null ? (
+            <Button
+              type="button"
+              onClick={onAdd}
+              disabled={
+                dutyText === ''
+                  ? true
+                  : dutyText !== '' && tempAddedDrcs.core.length >= 4
+                  ? true
+                  : dutyText !== '' && tempAddedDrcs.support.length >= 4
+                  ? true
+                  : false
+              }
+              className="w-full h-full"
+            >
+              Add
+            </Button>
+          ) : (
+            <Button
+              type="button"
+              onClick={onUpdate}
+              variant="warning"
+              disabled={
+                dutyText === ''
+                  ? true
+                  : dutyText !== '' && tempAddedDrcs.core.length > 4
+                  ? true
+                  : dutyText !== '' && tempAddedDrcs.support.length > 4
+                  ? true
+                  : false
+              }
+              className="w-full h-full"
+            >
+              Update
+            </Button>
+          )}
+        </div>
       </div>
     </>
   );

@@ -1,13 +1,12 @@
 /* eslint-disable @nx/enforce-module-boundaries */
-import {
-  DutiesResponsibilitiesList,
-  DutyResponsibilityList,
-} from 'apps/portal/src/store/dnr.store';
+import { DutiesResponsibilitiesList, DutyResponsibilityList } from 'apps/portal/src/store/dnr.store';
 import {
   DutiesResponsibilities,
   DutyResponsibility,
   UpdatedDRC,
   UpdatedDRCD,
+  UpdatedDutiesResponsibilities,
+  UpdatedDutyResponsibility,
 } from 'apps/portal/src/types/dr.type';
 import { isEmpty } from 'lodash';
 
@@ -90,6 +89,31 @@ export async function UpdateFinalDrcs(selected: DutiesResponsibilities) {
   });
 
   return { core: finalCoreDnrList, support: finalSupportDnrList };
+}
+
+export async function UpdateUpdatedFinalDrcs(selected: UpdatedDutiesResponsibilities) {
+  const tempCoreDrcList = selected.core;
+  const tempSupportDrcList = selected.support;
+  const finalCoreDrcList: Array<UpdatedDutyResponsibility> = [];
+  const finalSupportDrcList: Array<UpdatedDutyResponsibility> = [];
+
+  tempCoreDrcList.map((drc) => {
+    finalCoreDrcList.push({
+      duty: drc.duty,
+      pcplId: drc.competency.pcplId,
+      percentage: drc.percentage,
+    });
+  });
+
+  tempSupportDrcList.map((drc) => {
+    finalSupportDrcList.push({
+      duty: drc.duty,
+      pcplId: drc.competency.pcplId,
+      percentage: drc.percentage,
+    });
+  });
+
+  return { core: finalCoreDrcList, support: finalSupportDrcList };
 }
 
 // assign the updated drcs for the update

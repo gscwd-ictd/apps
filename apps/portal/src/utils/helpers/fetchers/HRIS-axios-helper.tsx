@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import axios from 'axios';
+import axios, { AxiosRequestConfig } from 'axios';
 
 const API_URL = process.env.NEXT_PUBLIC_HRIS_URL;
 
@@ -26,22 +26,20 @@ export const getHRIS = async (url: string, config = {}) =>
       return { error: false, result: response.data };
     })
     .catch((error) => {
-      if (error.message === 'Network Error')
-        return { error: true, result: `Cannot connect to the server.` };
+      if (error.message === 'Network Error') return { error: true, result: `Cannot connect to the server.` };
 
       return { error: true, result: error.response.data.message };
     });
 
 // POST
-export const postHRIS = async (url: string, data: any, config = {}) =>
+export const postHRIS = async (url: string, data: any, config: AxiosRequestConfig = {}) =>
   await axiosApi
     .post(url, { ...data }, { ...config })
     .then((response) => {
       return { error: false, result: response.data };
     })
     .catch((error) => {
-      if (error.message === 'Network Error')
-        return { error: true, result: `Cannot connect to the server.` };
+      if (error.message === 'Network Error') return { error: true, result: `Cannot connect to the server.` };
 
       return { error: true, result: error.response.data.message };
     });
@@ -54,8 +52,7 @@ export const putHRIS = async (url: string, data: any, config = {}) =>
       return { error: false, result: response.data };
     })
     .catch((error) => {
-      if (error.message === 'Network Error')
-        return { error: true, result: `Cannot connect to the server.` };
+      if (error.message === 'Network Error') return { error: true, result: `Cannot connect to the server.` };
 
       return { error: true, result: error.response.data.message };
     });
@@ -68,8 +65,7 @@ export const patchHRIS = async (url: string, data: any, config = {}) =>
       return { error: false, result: response.data };
     })
     .catch((error) => {
-      if (error.message === 'Network Error')
-        return { error: true, result: `Cannot connect to the server.` };
+      if (error.message === 'Network Error') return { error: true, result: `Cannot connect to the server.` };
 
       return { error: true, result: error.response.data.message };
     });
@@ -82,8 +78,7 @@ export const deleteHRIS = async (url: string, config = {}) =>
       return { error: false, result: response.data };
     })
     .catch((error) => {
-      if (error.message === 'Network Error')
-        return { error: true, result: `Cannot connect to the server.` };
+      if (error.message === 'Network Error') return { error: true, result: `Cannot connect to the server.` };
 
       return { error: true, result: error.response.data.message };
     });

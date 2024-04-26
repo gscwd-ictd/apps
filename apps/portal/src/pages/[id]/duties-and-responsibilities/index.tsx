@@ -2,7 +2,9 @@
 import { Button } from '@gscwd-apps/oneui';
 import { DrcAlertConfirmation } from 'apps/portal/src/components/fixed/dr/alert/DrcAlertConfirmation';
 import { DrcAlertSuccess } from 'apps/portal/src/components/fixed/dr/alert/DrcAlertSuccess';
+import { DrcAlertUpdatedConfirmation } from 'apps/portal/src/components/fixed/dr/alert/DrcAlertUpdatedConfirmation.tsx';
 import DrcModal from 'apps/portal/src/components/fixed/dr/modal/DrcModal';
+import DrcUpdatedModal from 'apps/portal/src/components/fixed/dr/modal/DrcUpdatedModal';
 import { DrcTabs } from 'apps/portal/src/components/fixed/dr/tab/DrcTabs';
 import { DrcTabWindow } from 'apps/portal/src/components/fixed/dr/tab/DrcTabWindow';
 import SideNav from 'apps/portal/src/components/fixed/nav/SideNav';
@@ -131,9 +133,11 @@ export default function DutiesResponsibilities({
 
       <SideNav employeeDetails={employeeDetails} />
 
-      <DrcModal />
+      {/* <DrcModal /> */}
+      <DrcUpdatedModal />
 
-      <DrcAlertConfirmation />
+      {/* <DrcAlertConfirmation /> */}
+      <DrcAlertUpdatedConfirmation />
 
       <DrcAlertSuccess />
 

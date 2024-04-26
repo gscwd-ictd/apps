@@ -1,11 +1,6 @@
 /* eslint-disable @nx/enforce-module-boundaries */
-import { useDnrStore } from 'apps/portal/src/store/dnr.store';
-import { DutyResponsibility } from 'apps/portal/src/types/dr.type';
-import { FormEvent, MutableRefObject, useEffect, useRef } from 'react';
-import { HiOutlineSearch, HiXCircle } from 'react-icons/hi';
+
 import { UndrawSelecting } from '../../undraw/Selecting';
-import { DrcAllDrcsList } from './DrcAllDrcsList';
-import { DrcSelectedDrcCard } from './DrcSelectedDrcCard';
 import { useUpdatedDrcStore } from 'apps/portal/src/store/updated-drc.store';
 import { DrcLeftAdd } from '../DrcLeftAdd';
 import { DrcUpdatedSelectedCard } from './DrcUpdatedSelectedCard';
@@ -47,7 +42,7 @@ export const DrcModalAddDrc = (): JSX.Element => {
   return (
     <>
       <div className="grid grid-cols-1 mb-5 lg:grid-cols-6">
-        <section className="col-span-1 lg:col-span-3 px-5 ">
+        <section className="h-full col-span-1 px-5 lg:col-span-3">
           <div className="flex justify-between px-3 mb-1 text-sm">
             <p className="font-medium text-gray-500 uppercase">{selectedDrcType}</p>
             {/* {selectedDrcType === 'core' && (
@@ -113,10 +108,6 @@ export const DrcModalAddDrc = (): JSX.Element => {
             </>
           ) : null}
         </section>
-
-        <button onClick={() => console.log(tempAddedDrcs)} type="button">
-          Log Temp Added
-        </button>
       </div>
     </>
   );

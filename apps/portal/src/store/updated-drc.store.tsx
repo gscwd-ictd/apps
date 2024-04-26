@@ -2,7 +2,7 @@ import { create } from 'zustand';
 import { UpdatedDutiesResponsibilities, UpdatedDutyResponsibility } from '../types/dr.type';
 import { devtools } from 'zustand/middleware';
 
-export type UpdatedDutyResponsibilityList = Pick<UpdatedDutyResponsibility, 'proficiency'>;
+export type UpdatedDutyResponsibilityList = Pick<UpdatedDutyResponsibility, 'pcplId'>;
 
 export enum DrcTypes {
   CORE = 'core',
@@ -38,6 +38,12 @@ type ExistingDrcResponse = {
 };
 
 export type DrcState = {
+  // value of duties and responsibilities textarea
+  dutyText: string;
+
+  // value of the index for updating
+  indexToUpdate: number | null;
+
   // these are all the initial drcs on first load when updating
   initialDrcsOnLoad: UpdatedDutiesResponsibilities;
 
@@ -76,6 +82,18 @@ export type DrcState = {
 
   // position available drcs on posting
   positionExistingDrcsOnPosting: ExistingDrcResponse;
+
+  // updated position duties
+  positionDuties: Array<{ pdId: string }>;
+
+  // set updated position duties
+  // setPositionDuties: (positionDuties: Array<{ pdId: string }>) => void;
+
+  // set the value of duties and responsibilities text
+  setDutyText: (dutyText: string) => void;
+
+  // set the value of the index to update
+  setIndexToUpdate: (indexToUpdate: number | null) => void;
 
   // set should mutate to false if mutate is done
   setShouldMutateFalse: () => void;
@@ -134,12 +152,23 @@ export const useUpdatedDrcStore = create<DrcState>()(
     positionExistingDrcsOnPosting: { postResponse: DUTIES_RESPONSIBILITIES, updateResponse: DUTIES_RESPONSIBILITIES },
     loading: { loadingExistingDrcs: false },
     error: { errorExistingDrcs: '' },
+    dutyText: '',
     shouldMutate: false,
+    indexToUpdate: null,
+    positionDuties: [],
+
+    setIndexToUpdate: (indexToUpdate) => set({ indexToUpdate }),
+    setDutyText: (dutyText) => set({ dutyText }),
     setShouldMutateFalse: () => set((state) => ({ ...state, shouldMutate: false })),
     setTempAddedDrcs: (tempAddedDrcs) => set({ tempAddedDrcs }),
     setSelectedDrcType: (selectedDrcType) => set({ selectedDrcType }),
     setDefaultValues: () =>
-      set((state) => ({ ...state, addedDrcs: DUTIES_RESPONSIBILITIES, initialDrcsOnLoad: DUTIES_RESPONSIBILITIES })),
+      set((state) => ({
+        ...state,
+        addedDrcs: DUTIES_RESPONSIBILITIES,
+        initialDrcsOnLoad: DUTIES_RESPONSIBILITIES,
+        dutyText: '',
+      })),
     setAddedDrcs: (addedDrcs) => set({ addedDrcs }),
 
     getExistingDrcs: (loading: boolean) =>
@@ -189,13 +218,21 @@ export const useUpdatedDrcStore = create<DrcState>()(
     cancelDrcPage: () =>
       set((state) => ({ ...state, existingDrcsIsLoaded: false, addedDrcs: DUTIES_RESPONSIBILITIES })),
 
-    addTempToAddedDrcs: () =>
+    addTempToAddedDrcs: () => {
+      // const updatedPdIds = get().addedCoreDrcs.filter((adrc) =>
+      //   get().tempAddedDrcs.core.filter((tdrc) => tdrc.duty !== adrc.duty)
+      // );
+
       set((state) => ({
         ...state,
         addedDrcs: { core: get().tempAddedDrcs.core, support: get().tempAddedDrcs.support },
+        // positionDuties: updatedPdIds.map((pdrc) => {
+        //   return { pdId: pdrc.pdId };
+        // }),
         tempAddedDrcs: { core: [], support: [] },
         selectedDrcType: null,
-      })),
+      }));
+    },
 
     postDrcs: () =>
       set((state) => ({

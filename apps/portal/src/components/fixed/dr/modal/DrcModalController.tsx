@@ -6,6 +6,7 @@ import { DrcModalSetting } from './DrcModalSetting';
 import { DrcModalSummary } from './DrcModalSummary';
 import { DrcUpdatedModalSetting } from './DrcUpdatedModalSetting';
 import { DrcModalAddDrc } from './DrcModalAddDrc';
+import { DrcUpdatedModalSummary } from './DrcUpdatedModalSummary';
 
 export const DrcModalController = (): JSX.Element => {
   const { modal } = useModalStore((state) => ({ modal: state.modal }));
@@ -19,8 +20,9 @@ export const DrcModalController = (): JSX.Element => {
         {/* {page === 2 && <DrcModalSetting />} */}
         {page === 2 && <DrcUpdatedModalSetting />}
         {/* {page === 3 && <DrcModalSelect />} */}
-        {page === 4 && <DrcModalAddDrc />}
-        {page === 4 && <DrcModalSummary />}
+        {page === 3 && <DrcModalAddDrc />}
+        {/* {page === 4 && <DrcModalSummary />} */}
+        {page === 4 && <DrcUpdatedModalSummary />}
       </>
     </div>
   );

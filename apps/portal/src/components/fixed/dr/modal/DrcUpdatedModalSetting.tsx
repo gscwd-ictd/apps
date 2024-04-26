@@ -19,6 +19,8 @@ import LoadingVisual from '../../loading/LoadingVisual';
 import { SelectedCoreDrcs } from './DrcSelectedCores';
 import { SelectedSupportDrcs } from './DrcSelectedSupports';
 import { useUpdatedDrcStore } from 'apps/portal/src/store/updated-drc.store';
+import { UpdatedSelectedCoreDrcs } from './UpdatedSelectedCoreDrcs';
+import { UpdatedSelectedSupportDrcs } from './UpdatedSelectedSupportDrcs';
 
 export const DrcUpdatedModalSetting = () => {
   // get from position store
@@ -30,56 +32,7 @@ export const DrcUpdatedModalSetting = () => {
   // get from employee store
   const employee = useEmployeeStore((state) => state.employeeDetails);
 
-  // get from dnr store
-  // const {
-  //   originalPoolOfDnrs, // get original pool of dnrs
-  //   selectedDnrs, // get selected dnrs
-  //   availableDnrs, // get available dnrs for selection
-  //   filteredAvailableDnrs, // get filtered available dnrs for selection
-  //   availableDnrsIsLoaded, // boolean if available dnrs is loaded
-  //   existingDnrsIsLoaded, // boolean if existing dnrs is loaded
-  //   selectedDrcType, // type of drc
-  //   setOriginalPoolOfDnrs, // set original pool of dnrs
-  //   setAvailableDnrs, // set available dnrs
-  //   setFilteredAvailableDnrs, // set filtered available dnrs
-  //   getAvailableDnrs, // initialize dnr on create
-  //   getAvailableDnrsSuccess, // success dnrs on create
-  //   getAvailableDnrsFail, // fail dnrs on create
-  //   getExistingDnrs,
-  //   getExistingDnrsSuccess,
-  //   getExistingDnrsFail,
-  //   setSelectedDnrs, // set the selected dnrs
-  //   setSelectedDrcType, // set the selected drc type
-  //   postDrcResponse,
-  //   selectedDnrsOnLoad,
-  //   shouldMutate,
-  //   setShouldMutateFalse,
-  // } = useDnrStore((state) => ({
-  //   originalPoolOfDnrs: state.originalPoolOfDnrs,
-  //   availableDnrs: state.availableDnrs,
-  //   filteredAvailableDnrs: state.filteredAvailableDnrs,
-  //   selectedDnrs: state.selectedDnrs,
-  //   selectedDnrsOnLoad: state.selectedDnrsOnLoad,
-  //   availableDnrsIsLoaded: state.availableDnrsIsLoaded,
-  //   existingDnrsIsLoaded: state.existingDnrsIsLoaded,
-  //   selectedDrcType: state.selectedDrcType,
-  //   postDrcResponse: state.positionExistingDrcsOnPosting.postResponse,
-  //   shouldMutate: state.shouldMutate,
-
-  //   setSelectedDnrs: state.setSelectedDnrs,
-  //   setOriginalPoolOfDnrs: state.setOriginalPoolOfDnrs,
-  //   setAvailableDnrs: state.setAvailableDnrs,
-  //   setSelectedDrcType: state.setSelectedDrcType,
-  //   setFilteredAvailableDnrs: state.setFilteredAvailableDnrs,
-  //   getAvailableDnrs: state.getAvailableDnrs,
-  //   getAvailableDnrsSuccess: state.getAvailableDnrsSuccess,
-  //   getAvailableDnrsFail: state.getAvailableDnrsFail,
-  //   getExistingDnrs: state.getExistingDnrs,
-  //   getExistingDnrsSuccess: state.getExistingDnrsSuccess,
-  //   getExistingDnrsFail: state.getExistingDnrsFail,
-  //   setShouldMutateFalse: state.setShouldMutateFalse,
-  // }));
-
+  // get from updated drc store
   const {
     addedDrcs,
     initialDrcsOnLoad,
@@ -93,6 +46,7 @@ export const DrcUpdatedModalSetting = () => {
     getExistingDnrsSuccess,
     getExistingDnrsFail,
     setShouldMutateFalse,
+    setTempAddedDrcs,
   } = useUpdatedDrcStore((state) => ({
     addedDrcs: state.addedDrcs,
     initialDrcsOnLoad: state.initialDrcsOnLoad,
@@ -106,6 +60,7 @@ export const DrcUpdatedModalSetting = () => {
     getExistingDnrsSuccess: state.getExistingDrcsSuccess,
     getExistingDnrsFail: state.getExistingDrcsFail,
     setShouldMutateFalse: state.setShouldMutateFalse,
+    setTempAddedDrcs: state.setTempAddedDrcs,
   }));
 
   // get from modal store
@@ -174,6 +129,7 @@ export const DrcUpdatedModalSetting = () => {
 
   // fires when core button is clicked
   const openDrcModalSelection = (drcType: DrcTypes) => {
+    setTempAddedDrcs(addedDrcs);
     setSelectedDrcType(drcType);
     setModalPage(3);
   };
@@ -280,12 +236,12 @@ export const DrcUpdatedModalSetting = () => {
   //   }
   // }, [swrAvailableDnrsIsLoading]);
 
-  // trigger loading if useSWR is called for existing dnrs
-  useEffect(() => {
-    if (swrExistingDnrsIsLoading) {
-      getExistingDnrs(swrExistingDnrsIsLoading);
-    }
-  }, [swrExistingDnrsIsLoading]);
+  //! trigger loading if useSWR is called for existing dnrs
+  // useEffect(() => {
+  //   if (swrExistingDnrsIsLoading) {
+  //     getExistingDnrs(swrExistingDnrsIsLoading);
+  //   }
+  // }, [swrExistingDnrsIsLoading]);
 
   // set the default values
   useEffect(() => {
@@ -302,8 +258,8 @@ export const DrcUpdatedModalSetting = () => {
         {/** HERE */}
         <div className="flex flex-col w-full mt-5">
           <section>
-            <div className="flex flex-col items-end justify-between md:flex-row ">
-              <div className="flex w-full md:min-w-[22rem] md:max-w-[30rem] font-normal items-center ">
+            <div className="flex flex-col items-center justify-between md:flex-row ">
+              <div className="flex w-full md:min-w-[22rem] md:max-w-[30rem] font-normal items-center select-none">
                 Core Duties, Responsibilities, & Competencies
                 <HiPuzzle />
               </div>
@@ -311,13 +267,15 @@ export const DrcUpdatedModalSetting = () => {
               {swrAvailableDnrsIsLoading ? (
                 <LoadingVisual size={5} />
               ) : (
-                <Button
-                  btnLabel={'+ Add Core'}
-                  btnVariant="white"
-                  className="w-auto lg:min-w-[16rem] border-none text-indigo-600 "
-                  // isDisabled={availableDnrs.length === 0 ? true : false}
-                  onClick={() => openDrcModalSelection(DrcTypes.CORE)}
-                />
+                <>
+                  <Button
+                    btnLabel={addedDrcs.core.length > 0 ? 'Edit Core' : '+ Add Core'}
+                    btnVariant="white"
+                    className="w-auto lg:min-w-[16rem] border-none text-indigo-600 "
+                    // isDisabled={availableDnrs.length === 0 ? true : false}
+                    onClick={() => openDrcModalSelection(DrcTypes.CORE)}
+                  />
+                </>
               )}
             </div>
             {/**Core Duties Box */}
@@ -340,7 +298,8 @@ export const DrcUpdatedModalSetting = () => {
                       </>
                     ) : (
                       <div className="w-full">
-                        <SelectedCoreDrcs />
+                        {/* <SelectedCoreDrcs /> */}
+                        <UpdatedSelectedCoreDrcs />
                       </div>
                     )}
                   </>
@@ -349,8 +308,8 @@ export const DrcUpdatedModalSetting = () => {
             </div>
           </section>
           <section>
-            <div className="flex flex-col items-end justify-between md:flex-row ">
-              <div className="flex w-full md:min-w-[22rem] md:max-w-[30rem] font-normal items-center ">
+            <div className="flex flex-col items-center justify-between md:flex-row ">
+              <div className="flex w-full md:min-w-[22rem] md:max-w-[30rem] font-normal items-center select-none">
                 Support Duties, Responsibilities, & Competencies <HiPuzzle />
               </div>
 
@@ -358,7 +317,7 @@ export const DrcUpdatedModalSetting = () => {
                 <LoadingVisual size={5} />
               ) : (
                 <Button
-                  btnLabel={'+ Add Support'}
+                  btnLabel={addedDrcs.support.length > 0 ? 'Edit Support' : '+ Add Support'}
                   btnVariant="white"
                   // isDisabled={availableDnrs.length === 0 ? true : false}
                   className="w-auto lg:min-w-[16rem] border-none text-indigo-600"
@@ -386,7 +345,8 @@ export const DrcUpdatedModalSetting = () => {
                       </>
                     ) : (
                       <div className="w-full">
-                        <SelectedSupportDrcs />
+                        {/* <SelectedSupportDrcs /> */}
+                        <UpdatedSelectedSupportDrcs />
                       </div>
                     )}
                   </>
@@ -396,6 +356,9 @@ export const DrcUpdatedModalSetting = () => {
           </section>
         </div>
       </div>
+      <button className="px-3 py-2 text-white bg-indigo-600 rounded" onClick={() => console.log(addedDrcs)}>
+        Log Duties
+      </button>
     </div>
   );
 };

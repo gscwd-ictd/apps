@@ -17,10 +17,10 @@ export type DutyResponsibility = {
 
 export type UpdatedDutyResponsibility = {
   duty: string;
-  pdrId?: string;
+  pdId?: string;
   percentage?: number;
   competency?: Competency;
-  proficiency?: string;
+  pcplId?: string;
   // state?: boolean;
   sequenceNo?: number | undefined;
   onEdit?: boolean;
