@@ -395,7 +395,7 @@ export const OvertimeModal = ({ modalState, setModalState, closeModalAction }: M
                       <label className="text-slate-500 text-md whitespace-nowrap">Employees:</label>
 
                       <div className="text-slate-500 w-full text-md flex flex-col">
-                        {finalEmployeeList?.map((employee: EmployeeOvertimeDetail, index: number) => {
+                        {overtimeDetails.employees?.map((employee: EmployeeOvertimeDetail, index: number) => {
                           return (
                             <div
                               key={employee.companyId}
@@ -406,7 +406,7 @@ export const OvertimeModal = ({ modalState, setModalState, closeModalAction }: M
                               <img
                                 className={`rounded-full border border-stone-100 shadow w-16 ${
                                   overtimeDetails.status === OvertimeStatus.PENDING &&
-                                  (finalEmployeeList.filter((e) => e.employeeId === employee.employeeId).length <= 0
+                                  (finalEmployeeList?.filter((e) => e.employeeId === employee.employeeId).length <= 0
                                     ? 'opacity-50'
                                     : '')
                                 }`}
@@ -417,7 +417,7 @@ export const OvertimeModal = ({ modalState, setModalState, closeModalAction }: M
                                 <label
                                   className={`w-full ${
                                     overtimeDetails.status === OvertimeStatus.PENDING &&
-                                    (finalEmployeeList.filter((e) => e.employeeId === employee.employeeId).length <= 0
+                                    (finalEmployeeList?.filter((e) => e.employeeId === employee.employeeId).length <= 0
                                       ? 'opacity-50'
                                       : '')
                                   }`}
@@ -427,7 +427,7 @@ export const OvertimeModal = ({ modalState, setModalState, closeModalAction }: M
                                 <label
                                   className={`w-full ${
                                     overtimeDetails.status === OvertimeStatus.PENDING &&
-                                    (finalEmployeeList.filter((e) => e.employeeId === employee.employeeId).length <= 0
+                                    (finalEmployeeList?.filter((e) => e.employeeId === employee.employeeId).length <= 0
                                       ? 'opacity-50'
                                       : '')
                                   }`}
