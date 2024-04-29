@@ -1,7 +1,7 @@
 /* eslint-disable @nx/enforce-module-boundaries */
-import { GetServerSideProps } from 'next';
+import { GetServerSideProps, GetServerSidePropsContext } from 'next';
 import { useEffect, useState } from 'react';
-import { EmployeeDetails } from '../../../types/employee.type';
+import { EmployeeDetails, employeeCeliaDananDummy } from '../../../types/employee.type';
 import { User } from '../../../types/user.type';
 import { Roles } from '../../../utils/constants/user-roles';
 import { usePrfStore } from '../../../store/prf.store';
@@ -379,7 +379,7 @@ export default function Prf({ user, employee }: PrfPageProps) {
             </Button>
           </ContentHeader>
           {swrForApprovalPrfListIsLoading && swrDisapprovedPrfListIsLoading && swrPendingPrfListIsLoading ? (
-            <div className="w-full h-96 static flex flex-col justify-items-center items-center place-items-center">
+            <div className="static flex flex-col items-center w-full h-96 justify-items-center place-items-center">
               <SpinnerDotted
                 speed={70}
                 thickness={70}
@@ -412,8 +412,8 @@ export default function Prf({ user, employee }: PrfPageProps) {
   );
 }
 
-export const getServerSideProps: GetServerSideProps = withCookieSession(async () => {
-  const employee = getUserDetails();
+export const getServerSideProps: GetServerSideProps = async (context: GetServerSidePropsContext) => {
+  const employee = employeeCeliaDananDummy;
 
   // check if user role is rank_and_file
   if (
@@ -435,4 +435,29 @@ export const getServerSideProps: GetServerSideProps = withCookieSession(async ()
       employee: employee,
     },
   };
-});
+};
+
+// export const getServerSideProps: GetServerSideProps = withCookieSession(async () => {
+//   const employee = getUserDetails();
+
+//   // check if user role is rank_and_file
+//   if (
+//     employee.employmentDetails.userRole === Roles.RANK_AND_FILE ||
+//     employee.employmentDetails.userRole === Roles.JOB_ORDER
+//   ) {
+//     // if true, the employee is not allowed to access this page
+//     return {
+//       redirect: {
+//         permanent: false,
+//         destination: `/${employee.user._id}`,
+//       },
+//     };
+//   }
+
+//   return {
+//     props: {
+//       user: employee.user,
+//       employee: employee,
+//     },
+//   };
+// });
