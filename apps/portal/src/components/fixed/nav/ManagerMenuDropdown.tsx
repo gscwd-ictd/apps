@@ -48,11 +48,12 @@ export const ManagerMenuDropdown = ({
             {
               //red dot
               //if Manager only or Manager and is the OIC -- all notif
+
               // GENERAL MANAGER
-              isEqual(userRole, UserRole.OIC_GENERAL_MANAGER) ||
-              isEqual(userRole, UserRole.GENERAL_MANAGER) ||
-              /* ASSISTANT GENERAL MANAGER */
-              ((isEqual(userRole, UserRole.ASSISTANT_GENERAL_MANAGER) ||
+              (isEqual(userRole, UserRole.OIC_GENERAL_MANAGER) ||
+                isEqual(userRole, UserRole.GENERAL_MANAGER) ||
+                /* ASSISTANT GENERAL MANAGER */
+                isEqual(userRole, UserRole.ASSISTANT_GENERAL_MANAGER) ||
                 isEqual(userRole, UserRole.OIC_ASSISTANT_GENERAL_MANAGER) ||
                 /* DEPARTMENT MANAGER */
                 isEqual(userRole, UserRole.DEPARTMENT_MANAGER) ||
@@ -60,14 +61,14 @@ export const ManagerMenuDropdown = ({
                 /* DIVISION MANAGER */
                 isEqual(userRole, UserRole.DIVISION_MANAGER) ||
                 isEqual(userRole, UserRole.OIC_DIVISION_MANAGER)) &&
-                isEmpty(errorPendingApprovalsCount) &&
-                (pendingApprovalsCount.pendingPassSlipsCount > 0 ||
-                  pendingApprovalsCount.pendingLeavesCount > 0 ||
-                  pendingApprovalsCount.pendingOvertimesCount > 0 ||
-                  pendingApprovalsCount.pendingDtrCorrectionsApprovals > 0 ||
-                  pendingApprovalsCount.pendingTrainingNominationCount > 0 ||
-                  pendingApprovalsCount.prfsForApprovalCount > 0 ||
-                  pendingApprovalsCount.pendingApplicantEndorsementsCount > 0)) ? (
+              isEmpty(errorPendingApprovalsCount) &&
+              (pendingApprovalsCount.pendingPassSlipsCount > 0 ||
+                pendingApprovalsCount.pendingLeavesCount > 0 ||
+                pendingApprovalsCount.pendingOvertimesCount > 0 ||
+                pendingApprovalsCount.pendingDtrCorrectionsApprovals > 0 ||
+                pendingApprovalsCount.pendingTrainingNominationCount > 0 ||
+                pendingApprovalsCount.prfsForApprovalCount > 0 ||
+                pendingApprovalsCount.pendingApplicantEndorsementsCount > 0) ? (
                 <span className="absolute w-3 h-3 -mt-5 ml-9 bg-red-600 rounded-full select-none" />
               ) : //if OIC and is Rank and File -- Approvals page notifs only
               (isEqual(userRole, UserRole.RANK_AND_FILE) || isEqual(userRole, UserRole.JOB_ORDER)) &&
@@ -77,6 +78,12 @@ export const ManagerMenuDropdown = ({
                   pendingApprovalsCount.pendingLeavesCount > 0 ||
                   pendingApprovalsCount.pendingOvertimesCount > 0 ||
                   pendingApprovalsCount.pendingDtrCorrectionsApprovals > 0) ? (
+                <span className="absolute w-3 h-3 -mt-5 ml-9 bg-red-600 rounded-full select-none" />
+              ) : //if SG16 and is Rank and File -- Pass Slip Approvals page notifs only
+              (isEqual(userRole, UserRole.RANK_AND_FILE) || isEqual(userRole, UserRole.JOB_ORDER)) &&
+                salaryGrade >= 16 &&
+                isEmpty(errorPendingApprovalsCount) &&
+                pendingApprovalsCount.pendingPassSlipsCount > 0 ? (
                 <span className="absolute w-3 h-3 -mt-5 ml-9 bg-red-600 rounded-full select-none" />
               ) : null
             }
@@ -125,9 +132,8 @@ export const ManagerMenuDropdown = ({
                   isEqual(userRole, UserRole.DIVISION_MANAGER) ||
                   isEqual(userRole, UserRole.OIC_DIVISION_MANAGER) ||
                   // OIC OR SG16+
-                  oic?.length > 0 ? (
-                    // ||
-                    // salaryGrade >= 16
+                  oic?.length > 0 ||
+                  salaryGrade >= 16 ? (
                     <Menu.Item>
                       {({ active }) => (
                         <button
@@ -143,33 +149,32 @@ export const ManagerMenuDropdown = ({
 
                           {
                             //red dot
-                            //if Manager only or Manager and is the OIC -- all notif
+                            //if Manager only or Manager and/or is the OIC -- all notif
+
                             /*  GENERAL MANAGER */
-                            isEqual(userRole, UserRole.GENERAL_MANAGER) ||
-                            isEqual(userRole, UserRole.OIC_GENERAL_MANAGER) ||
-                            /* ASSISTANT GENERAL MANAGER */
-                            ((isEqual(userRole, UserRole.ASSISTANT_GENERAL_MANAGER) ||
+                            (isEqual(userRole, UserRole.GENERAL_MANAGER) ||
+                              isEqual(userRole, UserRole.OIC_GENERAL_MANAGER) ||
+                              /* ASSISTANT GENERAL MANAGER */
+                              isEqual(userRole, UserRole.ASSISTANT_GENERAL_MANAGER) ||
                               isEqual(userRole, UserRole.OIC_ASSISTANT_GENERAL_MANAGER) ||
                               /* DEPARTMENT MANAGER */
                               isEqual(userRole, UserRole.DEPARTMENT_MANAGER) ||
                               isEqual(userRole, UserRole.OIC_DEPARTMENT_MANAGER) ||
                               /* DIVISION MANAGER */
                               isEqual(userRole, UserRole.DIVISION_MANAGER) ||
-                              isEqual(userRole, UserRole.OIC_DIVISION_MANAGER)) &&
-                              isEmpty(errorPendingApprovalsCount) &&
-                              (pendingApprovalsCount.pendingPassSlipsCount > 0 ||
-                                pendingApprovalsCount.pendingLeavesCount > 0 ||
-                                pendingApprovalsCount.pendingOvertimesCount > 0 ||
-                                pendingApprovalsCount.pendingDtrCorrectionsApprovals > 0)) ? (
+                              isEqual(userRole, UserRole.OIC_DIVISION_MANAGER) ||
+                              oic.length > 0) &&
+                            isEmpty(errorPendingApprovalsCount) &&
+                            (pendingApprovalsCount.pendingPassSlipsCount > 0 ||
+                              pendingApprovalsCount.pendingLeavesCount > 0 ||
+                              pendingApprovalsCount.pendingOvertimesCount > 0 ||
+                              pendingApprovalsCount.pendingDtrCorrectionsApprovals > 0) ? (
                               <span className="absolute w-3 h-3 right-4 z-30 bg-red-600 rounded-full select-none" />
-                            ) : //if OIC and is Rank and File -- Approvals page notifs only
+                            ) : //if SG 16 and is Rank and File -- Pass Slip Approvals page notifs only
                             (isEqual(userRole, UserRole.RANK_AND_FILE) || isEqual(userRole, UserRole.JOB_ORDER)) &&
-                              oic.length > 0 &&
+                              salaryGrade >= 16 &&
                               isEmpty(errorPendingApprovalsCount) &&
-                              (pendingApprovalsCount.pendingPassSlipsCount > 0 ||
-                                pendingApprovalsCount.pendingLeavesCount > 0 ||
-                                pendingApprovalsCount.pendingOvertimesCount > 0 ||
-                                pendingApprovalsCount.pendingDtrCorrectionsApprovals > 0) ? (
+                              pendingApprovalsCount.pendingPassSlipsCount > 0 ? (
                               <span className="absolute w-3 h-3 right-4 z-30 bg-red-600 rounded-full select-none" />
                             ) : null
                           }

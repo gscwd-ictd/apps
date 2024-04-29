@@ -204,9 +204,8 @@ export const SideNav = ({ employeeDetails }: NavDetails) => {
                 isEqual(employeeDetails.employmentDetails.userRole, UserRole.DIVISION_MANAGER) ||
                 isEqual(employeeDetails.employmentDetails.userRole, UserRole.OIC_DIVISION_MANAGER) ||
                 // OIC OR SG16+
-                employeeDetails.employmentDetails.officerOfTheDay.length > 0 ? (
-                  //  ||
-                  // employeeSalaryGrade >= 16
+                employeeDetails.employmentDetails.officerOfTheDay.length > 0 ||
+                employeeSalaryGrade >= 16 ? (
                   <>
                     <li className="ml-10 lg:ml-0">
                       <ManagerMenuDropdown

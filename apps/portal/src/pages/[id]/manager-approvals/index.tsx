@@ -63,28 +63,25 @@ export default function Approvals({
               <>
                 <ul className="flex flex-col lg:flex-col text-gray-500 w-full md:w-1/2 justify-center items-center">
                   {/* show pass slip link if user is SG16+, an OIC, or not Rank and File */}
-                  {
-                    // finalSalaryGrade >= 16 ||
-
-                    employeeDetails.employmentDetails.officerOfTheDay.length > 0 ||
-                    employeeDetails.employmentDetails.userRole !== UserRole.RANK_AND_FILE ||
-                    employeeDetails.employmentDetails.userRole !== UserRole.JOB_ORDER ? (
-                      <TabHeader
-                        tab={0}
-                        tabIndex={1}
-                        title="Pass Slip Requests"
-                        icon={<HiDocumentText size={26} />}
-                        subtitle="Show all Pass Slips requests"
-                        notificationCount={
-                          pendingApprovalsCount.pendingPassSlipsCount != 0
-                            ? pendingApprovalsCount.pendingPassSlipsCount
-                            : 0
-                        }
-                        className="bg-indigo-500"
-                        onClick={() => router.push(`/${router.query.id}/manager-approvals/pass-slips`)}
-                      />
-                    ) : null
-                  }
+                  {finalSalaryGrade >= 16 ||
+                  employeeDetails.employmentDetails.officerOfTheDay.length > 0 ||
+                  employeeDetails.employmentDetails.userRole !== UserRole.RANK_AND_FILE ||
+                  employeeDetails.employmentDetails.userRole !== UserRole.JOB_ORDER ? (
+                    <TabHeader
+                      tab={0}
+                      tabIndex={1}
+                      title="Pass Slip Requests"
+                      icon={<HiDocumentText size={26} />}
+                      subtitle="Show all Pass Slips requests"
+                      notificationCount={
+                        pendingApprovalsCount.pendingPassSlipsCount != 0
+                          ? pendingApprovalsCount.pendingPassSlipsCount
+                          : 0
+                      }
+                      className="bg-indigo-500"
+                      onClick={() => router.push(`/${router.query.id}/manager-approvals/pass-slips`)}
+                    />
+                  ) : null}
 
                   {/* show other links if user is an OIC, or not Rank and File */}
                   {employeeDetails.employmentDetails.officerOfTheDay.length > 0 ||
@@ -154,9 +151,8 @@ export const getServerSideProps: GetServerSideProps = withCookieSession(async (c
   if (
     (employeeDetails.employmentDetails.userRole === UserRole.RANK_AND_FILE ||
       employeeDetails.employmentDetails.userRole === UserRole.JOB_ORDER) &&
-    employeeDetails.employmentDetails.officerOfTheDay.length <= 0
-    //  &&
-    // finalSalaryGrade < 16
+    employeeDetails.employmentDetails.officerOfTheDay.length <= 0 &&
+    finalSalaryGrade < 16
   ) {
     // if true, the employee is not allowed to access this page
     return {

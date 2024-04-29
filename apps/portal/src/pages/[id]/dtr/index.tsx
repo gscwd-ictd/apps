@@ -33,6 +33,7 @@ export default function DailyTimeRecord({ employeeDetails }: InferGetServerSideP
     getEmployeeDtrFail,
     selectedMonth,
     selectedYear,
+    emptyResponseAndError,
   } = useDtrStore((state) => ({
     isErrorDtr: state.error.errorDtr,
     isLoadingDtr: state.loading.loadingDtr,
@@ -43,6 +44,7 @@ export default function DailyTimeRecord({ employeeDetails }: InferGetServerSideP
     getEmployeeDtrFail: state.getEmployeeDtrFail,
     selectedMonth: state.selectedMonth,
     selectedYear: state.selectedYear,
+    emptyResponseAndError: state.emptyResponseAndError,
   }));
 
   const monthNow = format(new Date(), 'M');
@@ -63,10 +65,7 @@ export default function DailyTimeRecord({ employeeDetails }: InferGetServerSideP
       ? dtrUrlDefault
       : null,
     fetchWithToken,
-    {
-      shouldRetryOnError: true,
-      revalidateOnFocus: true,
-    }
+    {}
   );
 
   // Initial zustand state update
@@ -98,8 +97,17 @@ export default function DailyTimeRecord({ employeeDetails }: InferGetServerSideP
   }, [employeeDetails, setEmployeeDetails]);
 
   useEffect(() => {
-    mutateDtrUrl;
+    mutateDtrUrl();
   }, [responseUpdateDtr]);
+
+  useEffect(() => {
+    if (!isEmpty(responseUpdateDtr) || !isEmpty(errorUpdateEmployeeDtr)) {
+      mutateDtrUrl();
+      setTimeout(() => {
+        emptyResponseAndError();
+      }, 5000);
+    }
+  }, [responseUpdateDtr, errorUpdateEmployeeDtr]);
 
   const [navDetails, setNavDetails] = useState<NavButtonDetails>();
 
