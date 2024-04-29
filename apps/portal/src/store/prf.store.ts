@@ -1,11 +1,5 @@
 import { create } from 'zustand';
-import {
-  PrfDetails,
-  Position,
-  ForApprovalPrf,
-  PrfTrail,
-  PrfDetailsForApproval,
-} from '../types/prf.types';
+import { PrfDetails, Position, ForApprovalPrf, PrfTrail, PrfDetailsForApproval } from '../types/prf.types';
 import { devtools } from 'zustand/middleware';
 
 export type PrfError = {
@@ -28,6 +22,7 @@ export type PrfState = {
     loadingForApprovalList: boolean;
     loadingPendingList: boolean;
     loadingDisapprovedList: boolean;
+    loadingCancelledList: boolean;
   };
 
   errors: {
@@ -37,6 +32,7 @@ export type PrfState = {
     errorForApprovalList: string;
     errorPendingList: string;
     errorDisapprovedList: string;
+    errorCancelledList: string;
   };
 
   patchPrf: () => void;
@@ -58,6 +54,7 @@ export type PrfState = {
   pendingPrfs: Array<PrfDetails>;
   forApprovalPrfs: Array<ForApprovalPrf>;
   disapprovedPrfs: Array<PrfDetails>;
+  cancelledPrfs: Array<PrfDetails>;
 
   getPrfDetailsForApprovalList: (loading: boolean) => void;
   getPrfDetailsForApprovalListSuccess: (loading: boolean, response) => void;
@@ -71,12 +68,18 @@ export type PrfState = {
   getPrfDetailsDisapprovedListSuccess: (loading: boolean, response) => void;
   getPrfDetailsDisapprovedListFail: (loading: boolean, error: string) => void;
 
+  getPrfDetailsCancelledList: (loading: boolean) => void;
+  getPrfDetailsCancelledListSuccess: (loading: boolean, response) => void;
+  getPrfDetailsCancelledListFail: (loading: boolean, error: string) => void;
+
   pendingPrfModalIsOpen: boolean;
   setPendingPrfModalIsOpen: (pendingPrfModalIsOpen: boolean) => void;
   forApprovalPrfModalIsOpen: boolean;
   setForApprovalPrfModalIsOpen: (forApprovalPrfModalIsOpen: boolean) => void;
   disapprovedPrfModalIsOpen: boolean;
   setDisapprovedPrfModalIsOpen: (disapprovedPrfModalIsOpen: boolean) => void;
+  cancelledPrfModalIsOpen: boolean;
+  setCancelledPrfModalIsOpen: (cancelledPrfModalIsOpen: boolean) => void;
 
   selectedPrfId: string;
   setSelectedPrfId: (selectedPrfId: string) => void;
@@ -128,6 +131,7 @@ export const usePrfStore = create<PrfState>()(
       loadingForApprovalList: false,
       loadingPendingList: false,
       loadingDisapprovedList: false,
+      loadingCancelledList: false,
     },
     errors: {
       errorResponse: '',
@@ -136,11 +140,13 @@ export const usePrfStore = create<PrfState>()(
       errorForApprovalList: '',
       errorPendingList: '',
       errorDisapprovedList: '',
+      errorCancelledList: '',
     },
 
     pendingPrfModalIsOpen: false,
     forApprovalPrfModalIsOpen: false,
     disapprovedPrfModalIsOpen: false,
+    cancelledPrfModalIsOpen: false,
 
     selectedPrfId: '',
 
@@ -166,9 +172,15 @@ export const usePrfStore = create<PrfState>()(
 
     disapprovedPrfs: [],
 
+    cancelledPrfs: [],
+
     activeItem: 0,
 
     isLoading: false,
+
+    setCancelledPrfModalIsOpen: (cancelledPrfModalIsOpen: boolean) => {
+      set((state) => ({ ...state, cancelledPrfModalIsOpen }));
+    },
 
     setPendingPrfModalIsOpen: (pendingPrfModalIsOpen: boolean) => {
       set((state) => ({ ...state, pendingPrfModalIsOpen }));
@@ -383,10 +395,7 @@ export const usePrfStore = create<PrfState>()(
         },
       }));
     },
-    getPrfDetailsForApprovalSuccess: (
-      loading: boolean,
-      response: PrfDetailsForApproval
-    ) => {
+    getPrfDetailsForApprovalSuccess: (loading: boolean, response: PrfDetailsForApproval) => {
       set((state) => ({
         ...state,
         response: {
@@ -428,10 +437,7 @@ export const usePrfStore = create<PrfState>()(
       }));
     },
 
-    getPrfDetailsForApprovalListSuccess: (
-      loading: boolean,
-      response: Array<ForApprovalPrf>
-    ) => {
+    getPrfDetailsForApprovalListSuccess: (loading: boolean, response: Array<ForApprovalPrf>) => {
       set((state) => ({
         ...state,
         forApprovalPrfs: response,
@@ -469,10 +475,7 @@ export const usePrfStore = create<PrfState>()(
         },
       }));
     },
-    getPrfDetailsPendingListSuccess: (
-      loading: boolean,
-      response: Array<PrfDetails>
-    ) => {
+    getPrfDetailsPendingListSuccess: (loading: boolean, response: Array<PrfDetails>) => {
       set((state) => ({
         ...state,
         pendingPrfs: response,
@@ -510,10 +513,7 @@ export const usePrfStore = create<PrfState>()(
         },
       }));
     },
-    getPrfDetailsDisapprovedListSuccess: (
-      loading: boolean,
-      response: Array<PrfDetails>
-    ) => {
+    getPrfDetailsDisapprovedListSuccess: (loading: boolean, response: Array<PrfDetails>) => {
       set((state) => ({
         ...state,
         disapprovedPrfs: response,
@@ -533,6 +533,44 @@ export const usePrfStore = create<PrfState>()(
         errors: {
           ...state.errors,
           errorDisapprovedList: errors,
+        },
+      }));
+    },
+
+    // GET PENDING PRF-LIST
+    getPrfDetailsCancelledList: (loading: boolean) => {
+      set((state) => ({
+        ...state,
+        loading: {
+          ...state.loading,
+          loadingCancelledList: loading,
+        },
+        errors: {
+          ...state.errors,
+          errorCancelledList: '',
+        },
+      }));
+    },
+    getPrfDetailsCancelledListSuccess: (loading: boolean, response: Array<PrfDetails>) => {
+      set((state) => ({
+        ...state,
+        cancelledPrfs: response,
+        loading: {
+          ...state.loading,
+          loadingCancelledList: loading,
+        },
+      }));
+    },
+    getPrfDetailsCancelledListFail: (loading: boolean, errors: string) => {
+      set((state) => ({
+        ...state,
+        loading: {
+          ...state.loading,
+          loadingCancelledList: loading,
+        },
+        errors: {
+          ...state.errors,
+          errorCancelledList: errors,
         },
       }));
     },

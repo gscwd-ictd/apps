@@ -36,7 +36,7 @@ export type PrfDetails = {
   prfNo: string;
   withExam: boolean;
   dateNeeded: Date;
-  status: 'Pending' | 'Approved';
+  status: 'Pending' | 'Approved' | 'Cancelled';
   dateRequested: Date;
   for: {
     name: string;

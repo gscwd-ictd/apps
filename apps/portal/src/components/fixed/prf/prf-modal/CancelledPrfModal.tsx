@@ -30,7 +30,6 @@ import { withCookieSession } from '../../../../../src/utils/helpers/session';
 import { useEmployeeStore } from 'apps/portal/src/store/employee.store';
 import { SpinnerDotted } from 'spinners-react';
 import { DateFormatter } from 'libs/utils/src/lib/functions/DateFormatter';
-import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
 
 type ModalProps = {
   modalState: boolean;
@@ -38,11 +37,11 @@ type ModalProps = {
   closeModalAction: () => void;
 };
 
-export const PendingPrfModal = ({ modalState, setModalState, closeModalAction }: ModalProps) => {
+export const CancelledPrfModal = ({ modalState, setModalState, closeModalAction }: ModalProps) => {
   const {
     selectedPrfId,
     patchResponse,
-    setPendingPrfIsModalOpen,
+    setCancelledPrfModalIsOpen,
     getPrfDetails,
     getPrfDetailsSuccess,
     getPrfDetailsFail,
@@ -56,7 +55,7 @@ export const PendingPrfModal = ({ modalState, setModalState, closeModalAction }:
   } = usePrfStore((state) => ({
     selectedPrfId: state.selectedPrfId,
     patchResponse: state.response.patchResponse,
-    setPendingPrfIsModalOpen: state.setPendingPrfModalIsOpen,
+    setCancelledPrfModalIsOpen: state.setCancelledPrfModalIsOpen,
     getPrfDetails: state.getPrfDetails,
     getPrfDetailsSuccess: state.getPrfDetailsSuccess,
     getPrfDetailsFail: state.getPrfDetailsFail,
@@ -85,8 +84,6 @@ export const PendingPrfModal = ({ modalState, setModalState, closeModalAction }:
     shouldRetryOnError: false,
     revalidateOnFocus: true,
   });
-
-  const [cancelModalIsOpen, setCancelModalIsOpen] = useState(false);
 
   // Initial zustand state update
   useEffect(() => {
@@ -117,22 +114,6 @@ export const PendingPrfModal = ({ modalState, setModalState, closeModalAction }:
     revalidateOnFocus: true,
   });
 
-  //! call functions when you cancel the prf
-  const handleCancelRequest = async () => {
-    const { error, result } = await patchPrfRequest(`/prf/`, {
-      _id: selectedPrfId,
-    });
-    if (error) {
-      // request is done set loading to false and set the error message
-      patchPrfFail(result);
-    } else if (!error) {
-      // request is done set loading to false and set the update response
-      patchPrfSuccess(result);
-      setPendingPrfIsModalOpen(false);
-      setCancelModalIsOpen(false);
-    }
-  };
-
   // Initial zustand state update
   useEffect(() => {
     if (swrPrfTrailIsLoading) {
@@ -151,15 +132,13 @@ export const PendingPrfModal = ({ modalState, setModalState, closeModalAction }:
     }
   }, [prfTrail, swrPrfTrailError]);
 
-  const { windowWidth } = UseWindowDimensions();
-
   return (
     <>
       <Modal size={'full'} open={modalState} setOpen={setModalState}>
         <Modal.Header>
           <h3 className="font-semibold text-gray-700">
             <div className="flex justify-between px-5">
-              <span className="text-xl md:text-2xl">Pending PRF</span>
+              <span className="text-xl md:text-2xl">Cancelled PRF</span>
               <button
                 className="px-2 rounded-full hover:bg-slate-100 outline-slate-100 outline-8"
                 onClick={closeModalAction}
@@ -200,13 +179,13 @@ export const PendingPrfModal = ({ modalState, setModalState, closeModalAction }:
                     <div className="flex flex-col w-full h-auto py-10 pl-4 pr-4 overflow-hidden lg:pl-32 lg:pr-32">
                       <header className="flex items-center justify-between">
                         <section className="shrink-0">
-                          <h1 className="text-2xl font-semibold text-gray-700">Pending Request</h1>
+                          <h1 className="text-2xl font-semibold text-gray-700">Cancelled Request</h1>
                           <p className="text-gray-500">{prfDetails.prfNo}</p>
                         </section>
                       </header>
 
                       <section className="w-full py-5 scale-[60%] lg:scale-75">
-                        <PrfTimeline prfTrail={prfTrail} />
+                        <PrfTimeline prfTrail={prfTrail} prfDetails={prfDetails} />
                       </section>
 
                       <main>
@@ -244,14 +223,17 @@ export const PendingPrfModal = ({ modalState, setModalState, closeModalAction }:
 
                             <section className="flex flex-col w-full gap-2 mt-10">
                               <>
-                                <Button
-                                  variant="danger"
-                                  onClick={() => {
-                                    setCancelModalIsOpen(true);
-                                  }}
-                                >
-                                  Cancel this Request
-                                </Button>
+                                <div className="flex w-full bg-red-600 rounded min-h-[3rem] justify-center items-center text-center">
+                                  <span className="font-medium text-white">
+                                    {' '}
+                                    Cancelled by{' '}
+                                    {prfTrail.division?.name !== 'N/A'
+                                      ? prfTrail.division?.name
+                                      : prfTrail.department?.name !== 'N/A'
+                                      ? prfTrail.department?.name
+                                      : 'the requesting entity'}
+                                  </span>
+                                </div>
                               </>
                             </section>
                           </aside>
@@ -298,47 +280,6 @@ export const PendingPrfModal = ({ modalState, setModalState, closeModalAction }:
                     </div>
                   </>
                 ) : null}
-
-                <Modal
-                  size={`${windowWidth > 1024 ? 'sm' : 'xl'}`}
-                  open={cancelModalIsOpen}
-                  setOpen={setCancelModalIsOpen}
-                >
-                  <Modal.Header>
-                    <h3 className="text-xl font-semibold text-gray-700">
-                      <div className="flex justify-between px-2">
-                        <span>Cancel Position Request</span>
-                        <button
-                          className="px-2 rounded-full hover:bg-slate-100 outline-slate-100 outline-8"
-                          onClick={() => {
-                            setCancelModalIsOpen(false);
-                          }}
-                        >
-                          <HiX />
-                        </button>
-                      </div>
-                    </h3>
-                  </Modal.Header>
-                  <Modal.Body>
-                    <div className="flex flex-col w-full h-full gap-2 px-4 text-md ">
-                      <span className="font-medium text-gray-700">
-                        Are you sure you want to cancel this {prfDetails?.prfNo}?
-                      </span>
-                    </div>
-                  </Modal.Body>
-                  <Modal.Footer>
-                    <div className="flex justify-end gap-2 px-4">
-                      <div className="flex gap-4 ">
-                        <Button variant={'primary'} onClick={handleCancelRequest} className="w-[6rem]">
-                          Yes
-                        </Button>
-                        <Button variant={'default'} onClick={() => setCancelModalIsOpen(false)} className="w-[6rem]">
-                          No
-                        </Button>
-                      </div>
-                    </div>
-                  </Modal.Footer>
-                </Modal>
               </>
             )}
           </>
@@ -351,4 +292,4 @@ export const PendingPrfModal = ({ modalState, setModalState, closeModalAction }:
   );
 };
 
-export default PendingPrfModal;
+export default CancelledPrfModal;

@@ -1,9 +1,5 @@
 import React, { DOMAttributes, FunctionComponent } from 'react';
-import {
-  HiOutlineTag,
-  HiOutlineThumbDown,
-  HiOutlineThumbUp,
-} from 'react-icons/hi';
+import { HiOutlineTag, HiOutlineThumbDown, HiOutlineThumbUp, HiOutlineXCircle } from 'react-icons/hi';
 import { usePrfStore } from '../../../../store/prf.store';
 
 interface TabHeaderItemProps extends DOMAttributes<HTMLDivElement> {
@@ -28,6 +24,8 @@ export const TabHeader: FunctionComponent = () => {
 
   const disapprovedPrfs = usePrfStore((state) => state.disapprovedPrfs);
 
+  const cancelledPrfs = usePrfStore((state) => state.cancelledPrfs);
+
   const activeItem = usePrfStore((state) => state.activeItem);
 
   const setActiveItem = usePrfStore((state) => state.setActiveItem);
@@ -38,7 +36,7 @@ export const TabHeader: FunctionComponent = () => {
       subtitle: 'Show all pending position requests',
       count: pendingPrfs.length,
       isActive: true,
-      icon: <HiOutlineTag className="h-5 w-5 text-gray-700" />,
+      icon: <HiOutlineTag className="w-5 h-5 text-gray-700" />,
     },
     {
       title: 'For Approval',
@@ -46,7 +44,7 @@ export const TabHeader: FunctionComponent = () => {
       count: forApprovalPrfs && forApprovalPrfs.length,
       isActive: false,
       variant: 'warning',
-      icon: <HiOutlineThumbUp className="h-5 w-5 text-gray-700" />,
+      icon: <HiOutlineThumbUp className="w-5 h-5 text-gray-700" />,
     },
     {
       title: 'Disapproved Requests',
@@ -54,12 +52,20 @@ export const TabHeader: FunctionComponent = () => {
       count: disapprovedPrfs && disapprovedPrfs.length,
       isActive: false,
       variant: 'warning',
-      icon: <HiOutlineThumbDown className="h-5 w-5 text-gray-700" />,
+      icon: <HiOutlineThumbDown className="w-5 h-5 text-gray-700" />,
+    },
+    {
+      title: 'Cancelled Requests',
+      subtitle: 'Show all cancelled position requests',
+      count: cancelledPrfs && cancelledPrfs.length,
+      isActive: false,
+      variant: 'warning',
+      icon: <HiOutlineXCircle className="w-5 h-5 text-gray-700" />,
     },
   ];
 
   return (
-    <div className=" flex flex-col md:py-5 md:flex-row lg:flex-col">
+    <div className="flex flex-col md:py-5 md:flex-row lg:flex-col">
       {headerItems.map((item: TabHeaderItemProps, index: number) => {
         return (
           <React.Fragment key={index}>
@@ -93,9 +99,7 @@ const TabHeaderItem: FunctionComponent<TabHeaderItemProps> = ({
       <div
         {...props}
         className={`${
-          isActive
-            ? 'bg-slate-200 bg-opacity-50'
-            : 'hover:bg-slate-100 bg-opacity-30'
+          isActive ? 'bg-slate-200 bg-opacity-50' : 'hover:bg-slate-100 bg-opacity-30'
         } flex items-center justify-between cursor-pointer px-5 py-3 rounded`}
       >
         <div className="flex items-center gap-5">
@@ -110,13 +114,7 @@ const TabHeaderItem: FunctionComponent<TabHeaderItemProps> = ({
             count > 0 ? countVariant[variant] : 'bg-transparent'
           } w-5 h-5 flex justify-center items-center rounded-md`}
         >
-          <p
-            className={`${
-              count > 0 ? 'text-white' : 'text-transparent'
-            } text-xs font-medium`}
-          >
-            {count}
-          </p>
+          <p className={`${count > 0 ? 'text-white' : 'text-transparent'} text-xs font-medium`}>{count}</p>
         </div>
       </div>
 
