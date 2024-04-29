@@ -331,9 +331,8 @@ export const getServerSideProps: GetServerSideProps = withCookieSession(async (c
   if (
     (employeeDetails.employmentDetails.userRole === UserRole.RANK_AND_FILE ||
       employeeDetails.employmentDetails.userRole === UserRole.JOB_ORDER) &&
-    employeeDetails.employmentDetails.officerOfTheDay.length <= 0
-    // &&
-    // finalSalaryGrade < 16
+    employeeDetails.employmentDetails.officerOfTheDay.length <= 0 &&
+    finalSalaryGrade < 16
   ) {
     // if true, the employee is not allowed to access this page
     return {

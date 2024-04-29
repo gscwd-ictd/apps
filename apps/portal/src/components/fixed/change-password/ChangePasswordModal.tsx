@@ -138,21 +138,6 @@ export const ChangePasswordModal = ({ modalState, setModalState, closeModalActio
   return (
     <>
       <Modal size={`${windowWidth > 768 ? 'sm' : 'full'}`} open={modalState} setOpen={setModalState}>
-        {/* Incorrect Current Password Error */}
-        {/* {!isEmpty(errorVerifyCurrentPassword) && modalState ? (
-          <ToastNotification toastType="error" notifMessage={`${errorVerifyCurrentPassword}`} />
-        ) : null} */}
-
-        {/* New Password Error */}
-        {/* {!isEmpty(errorChangePassword) && modalState ? (
-          <ToastNotification toastType="error" notifMessage={`${errorChangePassword}`} />
-        ) : null} */}
-
-        {/* Front End Password Error */}
-        {/* {!isEmpty(passwordError) && modalState ? (
-          <ToastNotification toastType="error" notifMessage={`${passwordError}`} />
-        ) : null} */}
-
         <Modal.Header>
           <h3 className="font-semibold text-gray-700">
             <div className="px-5 flex justify-between">

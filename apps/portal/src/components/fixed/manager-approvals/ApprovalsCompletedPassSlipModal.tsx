@@ -7,7 +7,6 @@ import { NatureOfBusiness, PassSlipStatus } from 'libs/utils/src/lib/enums/pass-
 import { UseTwelveHourFormat } from 'libs/utils/src/lib/functions/TwelveHourFormatter';
 import { ConfirmationApprovalModal } from './ApprovalOtp/ConfirmationApprovalModal';
 import { ManagerOtpApproval } from 'libs/utils/src/lib/enums/approval.enum';
-import { DateFormatter } from 'libs/utils/src/lib/functions/DateFormatter';
 import { DateTimeFormatter } from 'libs/utils/src/lib/functions/DateTimeFormatter';
 
 type PassSlipCompletedModalProps = {
