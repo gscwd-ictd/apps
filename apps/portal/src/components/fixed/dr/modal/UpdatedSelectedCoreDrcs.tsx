@@ -133,9 +133,9 @@ export const UpdatedSelectedCoreDrcs = (): JSX.Element => {
           addedDrcs &&
           addedDrcs.core.map((dr: UpdatedDutyResponsibility, index: number) => {
             return (
-              <div key={index} className="grid grid-cols-12 col-span-12 gap-1">
+              <div key={index} className="grid grid-cols-12 col-span-12 gap-1 pt-3">
                 <div className="col-span-1 ">
-                  <div className="flex justify-center">
+                  <div className="flex items-start justify-center h-full ">
                     {dr.percentage! > 0 &&
                     dr.onEdit === false &&
                     !Number.isNaN(dr.percentage) &&
@@ -152,7 +152,9 @@ export const UpdatedSelectedCoreDrcs = (): JSX.Element => {
                 </div>
                 <div className="col-span-6 ">
                   <div className="flex flex-row justify-start peer-hover:text-white">
-                    <p className="w-full overflow-hidden text-sm font-normal text-gray-600 text-ellipsis ">{dr.duty}</p>
+                    <p className="w-full overflow-hidden text-sm font-normal text-justify text-gray-600 text-ellipsis ">
+                      {dr.duty}
+                    </p>
                   </div>
                 </div>
                 <div className="col-span-1 ">

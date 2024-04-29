@@ -54,6 +54,8 @@ const DrcUpdatedModal: FunctionComponent = () => {
     cancelTempDrcsAction,
     cancelDrcPage,
     addTempToAddedDrcs,
+    setDutyText,
+    setIndexToUpdate,
   } = useUpdatedDrcStore((state) => ({
     addedDrcs: state.addedDrcs,
     initialDrcsOnLoad: state.initialDrcsOnLoad,
@@ -62,6 +64,8 @@ const DrcUpdatedModal: FunctionComponent = () => {
     cancelTempDrcsAction: state.cancelTempDrcsAction,
     cancelDrcPage: state.cancelDrcPage,
     addTempToAddedDrcs: state.addTempToAddedDrcs,
+    setIndexToUpdate: state.setIndexToUpdate,
+    setDutyText: state.setDutyText,
   }));
 
   // use position store
@@ -106,6 +110,8 @@ const DrcUpdatedModal: FunctionComponent = () => {
       prevPage();
     } else if (modal.page === 3) {
       // cancelCheckedDnrsAction();
+      setIndexToUpdate(null);
+      setDutyText('');
       cancelTempDrcsAction();
       prevPage();
     } else if (modal.page === 4) setModalPage(2);

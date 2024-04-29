@@ -111,7 +111,7 @@ export const UpCompetencyDropdown = ({ index }: CompetencyDropDownProps) => {
     <>
       <Menu as="div" className="relative inline-block text-left">
         <div>
-          <Menu.Button className="h-full px-5 py-2 text-white transition-colors ease-in-out rounded-l bg-emerald-500 text-md whitespace-nowrap hover:bg-emerald-600 active:bg-emerald-700">
+          <Menu.Button className="h-full px-5 py-2 text-white transition-colors ease-in-out bg-teal-500 rounded-l text-md whitespace-nowrap hover:bg-teal-600 active:bg-teal-700">
             <p>Select Competency</p>
           </Menu.Button>
         </div>

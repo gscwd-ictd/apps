@@ -196,7 +196,7 @@ export const DrcLeftAdd = (): JSX.Element => {
     <>
       <div className="flex flex-col h-full gap-2">
         <textarea
-          className="w-full h-[50%] border border-slate-300 rounded focus:border-indigo-500 focus:outline-none focus:ring-0 placeholder:text-center placeholder:text-gray-300"
+          className="w-full h-[50%] border border-slate-300 rounded focus:border-teal-500 focus:outline-none focus:ring-0 placeholder:text-center placeholder:text-gray-300"
           placeholder="Type duties and responsibilities here"
           value={dutyText}
           onChange={(e) => setDutyText(e.target.value)}
@@ -204,7 +204,7 @@ export const DrcLeftAdd = (): JSX.Element => {
 
         <div className="flex w-full h-[4rem]">
           {indexToUpdate === null ? (
-            <Button
+            <button
               type="button"
               onClick={onAdd}
               disabled={
@@ -216,15 +216,14 @@ export const DrcLeftAdd = (): JSX.Element => {
                   ? true
                   : false
               }
-              className="w-full h-full"
+              className="w-full h-full text-white bg-teal-500 rounded-md hover:bg-teal-600 active:bg-teal-700 disabled:cursor-not-allowed"
             >
               Add
-            </Button>
+            </button>
           ) : (
-            <Button
+            <button
               type="button"
               onClick={onUpdate}
-              variant="warning"
               disabled={
                 dutyText === ''
                   ? true
@@ -234,10 +233,10 @@ export const DrcLeftAdd = (): JSX.Element => {
                   ? true
                   : false
               }
-              className="w-full h-full"
+              className="w-full h-full text-white bg-teal-500 rounded-md hover:bg-teal-600 active:bg-teal-700 disabled:cursor-not-allowed"
             >
-              Update
-            </Button>
+              Update Duty
+            </button>
           )}
         </div>
       </div>

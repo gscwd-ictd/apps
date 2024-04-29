@@ -190,7 +190,7 @@ export const DrcUpdatedSelectedCard = (): JSX.Element => {
           {tempAddedDrcs.core.map((dr: UpdatedDutyResponsibility, index: number) => {
             return (
               <div className="p-5 mb-5 rounded shadow-lg shadow-slate-100 ring-1 ring-slate-100" key={index}>
-                <div className="flex items-center gap-5">
+                <div className="flex items-start gap-5">
                   <div className="flex items-center justify-center w-12 h-10 rounded bg-indigo-50">
                     <HiClipboardList className="w-6 h-6 text-indigo-500" />
                   </div>
@@ -202,7 +202,7 @@ export const DrcUpdatedSelectedCard = (): JSX.Element => {
                       {indexToUpdate === null || index !== indexToUpdate ? (
                         <div
                           onClick={() => handleEdit(index, dr.duty)}
-                          className="flex items-center justify-center w-8 h-8 text-gray-500 transition-colors ease-in-out rounded-full cursor-pointer hover:bg-gray-100"
+                          className="flex items-center justify-center w-8 h-8 text-gray-500 transition-colors ease-in-out rounded-md cursor-pointer hover:bg-gray-100"
                         >
                           <HiPencilAlt />
                         </div>
@@ -217,7 +217,7 @@ export const DrcUpdatedSelectedCard = (): JSX.Element => {
 
                       <div
                         onClick={() => handleRemove(index)}
-                        className="flex items-center justify-center w-8 h-8 text-gray-500 transition-colors ease-in-out rounded-full cursor-pointer hover:bg-gray-100"
+                        className="flex items-center justify-center w-8 h-8 text-gray-500 transition-colors ease-in-out rounded-md cursor-pointer hover:bg-gray-100"
                       >
                         <HiOutlineX />
                       </div>
@@ -261,7 +261,7 @@ export const DrcUpdatedSelectedCard = (): JSX.Element => {
           {tempAddedDrcs.support.map((dr: UpdatedDutyResponsibility, index: number) => {
             return (
               <div className="p-5 mb-5 bg-white rounded shadow-lg shadow-slate-100 ring-1 ring-slate-100" key={index}>
-                <div className="flex items-center gap-5">
+                <div className="flex items-start gap-5">
                   <div className="flex items-center justify-center w-12 h-10 rounded bg-indigo-50">
                     <HiClipboardList className="w-6 h-6 text-indigo-500" />
                   </div>
@@ -273,7 +273,7 @@ export const DrcUpdatedSelectedCard = (): JSX.Element => {
                       {indexToUpdate === null || index !== indexToUpdate ? (
                         <div
                           onClick={() => handleEdit(index, dr.duty)}
-                          className="flex items-center justify-center w-8 h-8 text-gray-500 transition-colors ease-in-out rounded-full cursor-pointer hover:bg-gray-100"
+                          className="flex items-center justify-center w-8 h-8 text-gray-500 transition-colors ease-in-out rounded-md cursor-pointer hover:bg-gray-100"
                         >
                           <HiPencilAlt />
                         </div>
@@ -288,7 +288,7 @@ export const DrcUpdatedSelectedCard = (): JSX.Element => {
 
                       <div
                         onClick={() => handleRemove(index)}
-                        className="flex items-center justify-center w-8 h-8 text-gray-500 transition-colors ease-in-out rounded-full cursor-pointer hover:bg-gray-100"
+                        className="flex items-center justify-center w-8 h-8 text-gray-500 transition-colors ease-in-out rounded-md cursor-pointer hover:bg-gray-100"
                       >
                         <HiOutlineX />
                       </div>

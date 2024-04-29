@@ -225,7 +225,16 @@ export const useUpdatedDrcStore = create<DrcState>()(
 
       set((state) => ({
         ...state,
-        addedDrcs: { core: get().tempAddedDrcs.core, support: get().tempAddedDrcs.support },
+        indexToUpdate: null,
+        dutyText: '',
+        addedDrcs: {
+          core: get().tempAddedDrcs.core.map((drc) => {
+            return { ...drc, onEdit: false };
+          }),
+          support: get().tempAddedDrcs.support.map((drc) => {
+            return { ...drc, onEdit: false };
+          }),
+        },
         // positionDuties: updatedPdIds.map((pdrc) => {
         //   return { pdId: pdrc.pdId };
         // }),

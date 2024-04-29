@@ -129,7 +129,14 @@ export const DrcUpdatedModalSetting = () => {
 
   // fires when core button is clicked
   const openDrcModalSelection = (drcType: DrcTypes) => {
-    setTempAddedDrcs(addedDrcs);
+    setTempAddedDrcs({
+      core: addedDrcs.core.map((drc) => {
+        return { ...drc, onEdit: false };
+      }),
+      support: addedDrcs.support.map((drc) => {
+        return { ...drc, onEdit: false };
+      }),
+    });
     setSelectedDrcType(drcType);
     setModalPage(3);
   };
