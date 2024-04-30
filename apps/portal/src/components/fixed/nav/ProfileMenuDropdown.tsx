@@ -28,6 +28,8 @@ import ChangePasswordModal from '../change-password/ChangePasswordModal';
 import { useChangePasswordStore } from 'apps/portal/src/store/change-password.store';
 import { ToastNotification } from '@gscwd-apps/oneui';
 import { useApprovalStore } from 'apps/portal/src/store/approvals.store';
+import { useEmployeeStore } from 'apps/portal/src/store/employee.store';
+import { SalaryGradeConverter } from 'libs/utils/src/lib/functions/SalaryGradeConverter';
 
 type MenuDropdownProps = {
   right?: boolean;
@@ -86,6 +88,18 @@ export const ProfileMenuDropdown = ({
     }
   }, [responseChangePassword]);
 
+  const { employeeSalaryGrade, setEmployeeSalaryGrade } = useEmployeeStore((state) => ({
+    employeeSalaryGrade: state.employeeSalaryGrade,
+    setEmployeeSalaryGrade: state.setEmployeeSalaryGrade,
+  }));
+
+  useEffect(() => {
+    if (employeeDetails) {
+      //convert salary grade to number
+      const finalSalaryGrade = SalaryGradeConverter(employeeDetails.employmentDetails.salaryGrade);
+      setEmployeeSalaryGrade(finalSalaryGrade);
+    }
+  }, [employeeDetails]);
   return (
     <>
       {employeeDetails ? (
@@ -133,7 +147,9 @@ export const ProfileMenuDropdown = ({
                           {`${employeeDetails.profile.firstName} ${employeeDetails.profile.middleName}. ${
                             employeeDetails.profile.lastName
                           } ${
-                            employeeDetails.profile.nameExtension ? `${employeeDetails.profile.nameExtension}.` : ''
+                            employeeDetails.profile.nameExtension && employeeDetails.profile.nameExtension !== 'N/A'
+                              ? `${employeeDetails.profile.nameExtension}.`
+                              : ''
                           }`}
                         </h5>
                         <p className="truncate text-xs text-gray-500">
@@ -236,9 +252,8 @@ export const ProfileMenuDropdown = ({
                       isEqual(employeeDetails.employmentDetails.userRole, UserRole.DIVISION_MANAGER) ||
                       isEqual(employeeDetails.employmentDetails.userRole, UserRole.OIC_DIVISION_MANAGER) ||
                       // OIC OR SG16+
-                      employeeDetails.employmentDetails.officerOfTheDay.length > 0 ? (
-                        //  ||
-                        // employeeSalaryGrade >= 16
+                      employeeDetails.employmentDetails.officerOfTheDay.length > 0 ||
+                      employeeSalaryGrade >= 16 ? (
                         <>
                           <Menu.Item>
                             {({ active }) => (

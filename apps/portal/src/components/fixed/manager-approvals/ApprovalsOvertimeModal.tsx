@@ -1,5 +1,5 @@
 /* eslint-disable @nx/enforce-module-boundaries */
-import { AlertNotification, Button, CaptchaModal, Modal, OtpModal } from '@gscwd-apps/oneui';
+import { AlertNotification, Button, CaptchaModal, Checkbox, Modal, OtpModal } from '@gscwd-apps/oneui';
 import { HiX } from 'react-icons/hi';
 import { SpinnerDotted } from 'spinners-react';
 import { useEmployeeStore } from '../../../store/employee.store';
@@ -92,6 +92,7 @@ export const OvertimeModal = ({ modalState, setModalState, closeModalAction }: M
     useState<OvertimeAccomplishmentApprovalPatch>();
   const [pendingAccomplishmentEmployees, setPendingAccomplishmentEmployees] = useState<Array<string>>([]);
   const [actualHours, setActualHours] = useState<number>(0);
+  const [finalEmployeeList, setFinalEmployeeList] = useState<Array<EmployeeOvertimeDetail>>([]);
 
   const overtimeDetailsUrl = `${process.env.NEXT_PUBLIC_EMPLOYEE_MONITORING_URL}/v1/overtime/${employeeDetails.employmentDetails.userId}/approval/${selectedOvertimeId}`;
 
@@ -143,6 +144,23 @@ export const OvertimeModal = ({ modalState, setModalState, closeModalAction }: M
     setActualHours(0);
   }, [modalState]);
 
+  useEffect(() => {
+    setFinalEmployeeList(overtimeDetails.employees);
+  }, [overtimeDetails]);
+
+  const handleEmployeeList = async (selectedEmployee: EmployeeOvertimeDetail) => {
+    const filteredEmployee = finalEmployeeList.filter(
+      (employee) => employee.employeeId === selectedEmployee.employeeId
+    );
+
+    if (filteredEmployee.length > 0) {
+      //if selected employee is still in final employee list, remove it from array
+      setFinalEmployeeList(finalEmployeeList.filter((employee) => employee.employeeId !== selectedEmployee.employeeId));
+    } else {
+      //if selected employee is not found in final employee list, add it from array
+      finalEmployeeList.push(selectedEmployee);
+    }
+  };
   // Initial zustand state update
   useEffect(() => {
     if (swrOvertimeDetailsIsLoading) {
@@ -377,7 +395,7 @@ export const OvertimeModal = ({ modalState, setModalState, closeModalAction }: M
                       <label className="text-slate-500 text-md whitespace-nowrap">Employees:</label>
 
                       <div className="text-slate-500 w-full text-md flex flex-col">
-                        {overtimeDetails?.employees?.map((employee: EmployeeOvertimeDetail, index: number) => {
+                        {overtimeDetails.employees?.map((employee: EmployeeOvertimeDetail, index: number) => {
                           return (
                             <div
                               key={employee.companyId}
@@ -386,13 +404,36 @@ export const OvertimeModal = ({ modalState, setModalState, closeModalAction }: M
                               } px-2 py-4 md:px-4 md:py-4 flex flex-row justify-between items-center gap-8 `}
                             >
                               <img
-                                className="rounded-full border border-stone-100 shadow w-16"
+                                className={`rounded-full border border-stone-100 shadow w-16 ${
+                                  overtimeDetails.status === OvertimeStatus.PENDING &&
+                                  (finalEmployeeList?.filter((e) => e.employeeId === employee.employeeId).length <= 0
+                                    ? 'opacity-50'
+                                    : '')
+                                }`}
                                 src={employee?.avatarUrl ?? ''}
                                 alt={'photo'}
                               ></img>
                               <div className="w-full flex flex-col md:flex-row justify-between items-start md:items-center gap-2 md:gap-4 text-sm md:text-md">
-                                <label className="w-full">{employee.fullName}</label>
-                                <label className="w-full">{employee.positionTitle}</label>
+                                <label
+                                  className={`w-full ${
+                                    overtimeDetails.status === OvertimeStatus.PENDING &&
+                                    (finalEmployeeList?.filter((e) => e.employeeId === employee.employeeId).length <= 0
+                                      ? 'opacity-50'
+                                      : '')
+                                  }`}
+                                >
+                                  {employee.fullName}
+                                </label>
+                                <label
+                                  className={`w-full ${
+                                    overtimeDetails.status === OvertimeStatus.PENDING &&
+                                    (finalEmployeeList?.filter((e) => e.employeeId === employee.employeeId).length <= 0
+                                      ? 'opacity-50'
+                                      : '')
+                                  }`}
+                                >
+                                  {employee.positionTitle}
+                                </label>
                                 {/* <label className="w-full">{employee.assignment}</label> */}
                                 {overtimeDetails.status === OvertimeStatus.APPROVED ? (
                                   <div className="flex flex-col gap-2">
@@ -423,6 +464,19 @@ export const OvertimeModal = ({ modalState, setModalState, closeModalAction }: M
                                   >
                                     Accomplishment
                                   </Button>
+                                ) : null}
+
+                                {overtimeDetails.status === OvertimeStatus.PENDING ? (
+                                  <Checkbox
+                                    // checked={lateFiling}
+                                    label="Add/Remove"
+                                    // className={
+                                    //   watch('isLateFiling') === true
+                                    //     ? 'cursor-not-allowed italic'
+                                    //     : 'hover:text-indigo-800 italic'
+                                    // }
+                                    onChange={() => handleEmployeeList(employee)}
+                                  />
                                 ) : null}
                               </div>
                             </div>

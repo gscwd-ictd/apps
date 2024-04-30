@@ -180,6 +180,8 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
   const [hasPendingLeave, setHasPendingLeave] = useState<boolean>(false);
   const [finalVacationAndForcedLeaveBalance, setFinalVacationAndForcedLeaveBalance] = useState<number>(0);
 
+  const [lateFiling, setLateFiling] = useState<boolean>(false);
+
   //LESS THIS APPLICATION FOR MONETIZATION
   const [lessVlFl, setLessVlFL] = useState<number>(0);
   const [lessSl, setLessSl] = useState<number>(0);
@@ -253,6 +255,10 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
     }
   }, [swrLeaveTypes, swrError]);
 
+  useEffect(() => {
+    console.log(lateFiling);
+  }, [lateFiling]);
+
   // React hook form
   const { reset, register, handleSubmit, watch, setValue } = useForm<LeaveApplicationForm>({
     mode: 'onChange',
@@ -276,8 +282,9 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
     setLeaveDateTo(null);
   };
 
-  const handleTypeOfFiling = (e: boolean) => {
-    setValue('isLateFiling', e);
+  const handleTypeOfFiling = () => {
+    setLateFiling(!lateFiling);
+    setValue('isLateFiling', !lateFiling);
   };
 
   //check if there are pending leaves of the same name being filed, return true/false
@@ -294,6 +301,7 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
     setLessVlFL(0);
     setSickLeaveInput(0);
     setSelectedLeaveMonetizationType(null);
+    setLateFiling(false);
   }, [watch('typeOfLeaveDetails.leaveName')]);
 
   useEffect(() => {
@@ -745,31 +753,6 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
                   </div>
                 </div>
 
-                {/* {watch('typeOfLeaveDetails.leaveName') ? (
-                  <div className="flex flex-col md:flex-row justify-between items-center w-full gap-1 pt-1">
-                    <div className="flex flex-row justify-between items-center w-full">
-                      <label className="pt-2 text-slate-500 text-md font-medium">
-                        Late Filing:<span className="text-red-600">*</span>
-                      </label>
-                    </div>
-
-                    <div className="flex gap-2 w-full items-center">
-                      <select
-                        className="text-slate-500 w-full h-14 rounded-md text-md border-slate-300"
-                        required
-                        defaultValue={''}
-                        onChange={(e) => handleTypeOfFiling(e.target.value as unknown as boolean)}
-                      >
-                        <option value="" disabled>
-                          Select Type Of Filing:
-                        </option>
-                        <option value="false">No</option>
-                        <option value="true">Yes</option>
-                      </select>
-                    </div>
-                  </div>
-                ) : null} */}
-
                 <div>
                   {watch('typeOfLeaveDetails.leaveName') ? (
                     <div className="flex flex-col gap-1 w-full bg-slate-100 text-sm p-2">
@@ -1093,22 +1076,20 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
                         Select Leave Dates:<span className="text-red-600">*</span>
                       </label>
 
-                      {/* <Checkbox
-                        id="isLateFiling"
-                        checked={watch('isLateFiling')}
-                        label="Late Filing"
-                        className={
-                          watch('isLateFiling') === true ? 'cursor-not-allowed italic' : 'hover:text-indigo-800 italic'
-                        }
-                        onChange={(e) => handleTypeOfFiling(e.target.value as unknown as boolean)}
-                        // disabled={
-                        //   hasPds && permanentAddressOnEdit
-                        //     ? false
-                        //     : hasPds && !permanentAddressOnEdit
-                        //     ? true
-                        //     : !hasPds && false
-                        // }
-                      /> */}
+                      <div className="flex gap-2 items-center">
+                        <label className="text-slate-500 text-md font-medium">Late Filing:</label>
+                        <Checkbox
+                          id="isLateFiling"
+                          checked={lateFiling}
+                          label="Late Filing"
+                          className={
+                            watch('isLateFiling') === true
+                              ? 'cursor-not-allowed italic'
+                              : 'hover:text-indigo-800 italic'
+                          }
+                          onChange={() => setLateFiling(!lateFiling)}
+                        />
+                      </div>
                     </div>
 
                     <div className="w-full p-4 bg-gray-50 rounded">
@@ -1127,7 +1108,7 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
                           type={'single'}
                           clickableDate={true}
                           leaveName={watch('typeOfLeaveDetails.leaveName')}
-                          isLateFiling={watch('isLateFiling')}
+                          isLateFiling={lateFiling}
                         />
                       )}
                     </div>

@@ -146,7 +146,7 @@ export const OvertimeAccomplishmentModal = ({ modalState, setModalState, closeMo
       // if (overtimeAccomplishmentDetails.plannedDate > overtimeAccomplishmentDetails.dateOfOTApproval)
       //   {
       //8-1 rule - is Holiday or Rest Day
-      if (Number(encodedHours.toFixed(2)) >= 4 && Number(encodedHours.toFixed(2)) < 10) {
+      if (Number(encodedHours.toFixed(2)) > 4 && Number(encodedHours.toFixed(2)) < 10) {
         let temporaryHours = Number(encodedHours - 1);
         setFinalEncodedHours(Number(temporaryHours.toFixed(2)));
       }

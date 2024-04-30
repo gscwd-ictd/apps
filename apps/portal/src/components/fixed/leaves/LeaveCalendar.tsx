@@ -32,13 +32,17 @@ type CalendarProps = {
   isLateFiling?: boolean;
 };
 
-export default function Calendar({ type = 'single', clickableDate = true, leaveName, isLateFiling }: CalendarProps) {
+export default function Calendar({
+  type = 'single',
+  clickableDate = true,
+  leaveName,
+  isLateFiling = false,
+}: CalendarProps) {
   const today = startOfToday();
   const [selectedDay, setSelectedDay] = useState(today);
   const [currentMonth, setCurrentMonth] = useState(format(today, 'MMM-yyyy'));
   const firstDayCurrentMonth = parse(currentMonth, 'MMM-yyyy', new Date());
   const [selectedDates, setSelectedDates] = useState<string[]>([]);
-  const [lateFiling, setLateFiling] = useState<boolean>(isLateFiling);
   // set state for employee store
   const employeeDetails = useEmployeeStore((state) => state.employeeDetails);
 
@@ -79,11 +83,6 @@ export default function Calendar({ type = 'single', clickableDate = true, leaveN
   });
   const [holidayCount, setHolidayCount] = useState<number>(0);
 
-  useEffect(() => {
-    // console.log(isLateFiling);
-    setLateFiling(isLateFiling);
-  }, [isLateFiling]);
-
   // Initial zustand state update
   useEffect(() => {
     setSelectedDates([]);
@@ -107,6 +106,13 @@ export default function Calendar({ type = 'single', clickableDate = true, leaveN
     }
   }, [swrUnavailableDates, swrError]);
 
+  // Initial zustand state update
+  useEffect(() => {
+    if (!isLateFiling) {
+      setSelectedDates([]);
+    }
+  }, [isLateFiling]);
+
   function viewDateActivities(day: Date) {
     if (clickableDate) {
       setSelectedDay(day);
@@ -123,16 +129,29 @@ export default function Calendar({ type = 'single', clickableDate = true, leaveN
         //adds date to array
         //if selected date is not found in unavailable dates array
         if (!swrUnavailableDates.some((item) => item.date === specifiedDate)) {
-          //for vacation or forced leave
+          //for VL, FL, Solo Parent, within 10 days from today and not late filing
           if (
             (leaveName === LeaveName.VACATION ||
               leaveName === LeaveName.FORCED ||
               leaveName === LeaveName.SOLO_PARENT) &&
             dayjs(`${specifiedDate}`).diff(`${today}`, 'day') >= 0 &&
-            dayjs(`${specifiedDate}`).diff(`${today}`, 'day') <= 10
+            dayjs(`${specifiedDate}`).diff(`${today}`, 'day') <= 10 &&
+            !isLateFiling
           ) {
             setSelectedDates((selectedDates) => [...selectedDates, specifiedDate]);
           }
+          //for VL, FL, Solo Parent, within 10 days from today and the past days and is late filing
+          if (
+            (leaveName === LeaveName.VACATION ||
+              leaveName === LeaveName.FORCED ||
+              leaveName === LeaveName.SOLO_PARENT) &&
+            // dayjs(`${specifiedDate}`).diff(`${today}`, 'day') >= 0 &&
+            dayjs(`${specifiedDate}`).diff(`${today}`, 'day') <= 10 &&
+            isLateFiling
+          ) {
+            setSelectedDates((selectedDates) => [...selectedDates, specifiedDate]);
+          }
+
           //for sick leave and today is Monday
           else if (
             leaveName === LeaveName.SICK &&
@@ -312,7 +331,7 @@ export default function Calendar({ type = 'single', clickableDate = true, leaveN
                             leaveName === LeaveName.FORCED ||
                             leaveName === LeaveName.SOLO_PARENT) &&
                             dayjs(`${day}`).diff(`${today}`, 'day') > 10 &&
-                            isLateFiling === false &&
+                            // isLateFiling === false &&
                             'text-slate-300',
                           //disable date selection from 3rd day beyond in the past if previous day is SUN from current day for SL
                           // leaveName === LeaveName.SICK &&
