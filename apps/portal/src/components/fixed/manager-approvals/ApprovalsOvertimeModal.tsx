@@ -144,9 +144,11 @@ export const OvertimeModal = ({ modalState, setModalState, closeModalAction }: M
     setActualHours(0);
   }, [modalState]);
 
-  useEffect(() => {
-    setFinalEmployeeList(overtimeDetails.employees);
-  }, [overtimeDetails]);
+  // useEffect(() => {
+  //   // setFinalEmployeeList(overtimeDetails.employees);
+
+  //   console.log(finalEmployeeList);
+  // }, [finalEmployeeList]);
 
   const handleEmployeeList = async (selectedEmployee: EmployeeOvertimeDetail) => {
     const filteredEmployee = finalEmployeeList.filter(
@@ -158,7 +160,9 @@ export const OvertimeModal = ({ modalState, setModalState, closeModalAction }: M
       setFinalEmployeeList(finalEmployeeList.filter((employee) => employee.employeeId !== selectedEmployee.employeeId));
     } else {
       //if selected employee is not found in final employee list, add it from array
-      finalEmployeeList.push(selectedEmployee);
+      setFinalEmployeeList([...finalEmployeeList, selectedEmployee]);
+      // finalEmployeeList.push(selectedEmployee);
+      // console.log(filteredEmployee);
     }
   };
   // Initial zustand state update

@@ -255,9 +255,9 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
     }
   }, [swrLeaveTypes, swrError]);
 
-  useEffect(() => {
-    console.log(lateFiling);
-  }, [lateFiling]);
+  // useEffect(() => {
+  //   console.log(lateFiling);
+  // }, [lateFiling]);
 
   // React hook form
   const { reset, register, handleSubmit, watch, setValue } = useForm<LeaveApplicationForm>({
