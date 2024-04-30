@@ -18,7 +18,8 @@ export const PrfTimeline: FunctionComponent<PrfTimelineProps> = ({ prfTrail, cre
       <div className="flex justify-center w-full gap-1">
         {division.name !== 'N/A' && (
           <PrfTimelineNode
-            status={prfDetails.status === 'Cancelled' ? 'Cancelled' : division.status}
+            // status={prfDetails.status === 'Cancelled' ? 'Cancelled' : division.status}
+            status={division.status}
             name={division.name}
             position={division.position}
             createdAt={createdAt}
@@ -31,8 +32,8 @@ export const PrfTimeline: FunctionComponent<PrfTimelineProps> = ({ prfTrail, cre
 
         {department.name !== 'N/A' && (
           <PrfTimelineNode
-            // status={department.status}
-            status={prfDetails?.status === 'Cancelled' && division.name === 'N/A' ? 'Cancelled' : department.status}
+            status={department.status}
+            // status={prfDetails?.status === 'Cancelled' && division.name === 'N/A' ? 'Cancelled' : department.status}
             name={department.name}
             designation={department.designation}
             createdAt={createdAt}
@@ -45,7 +46,8 @@ export const PrfTimeline: FunctionComponent<PrfTimelineProps> = ({ prfTrail, cre
 
         {agm.name !== 'N/A' && (
           <PrfTimelineNode
-            status={prfDetails?.status === 'Cancelled' && department.name === 'N/A' ? 'Cancelled' : agm.status}
+            // status={prfDetails?.status === 'Cancelled' && department.name === 'N/A' ? 'Cancelled' : agm.status}
+            status={agm.status}
             name={agm.name}
             position={agm.position}
             designation={agm.designation}

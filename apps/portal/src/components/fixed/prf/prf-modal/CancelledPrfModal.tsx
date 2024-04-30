@@ -1,6 +1,6 @@
 /* eslint-disable @nx/enforce-module-boundaries */
 import { Button, Modal, ToastNotification } from '@gscwd-apps/oneui';
-import { HiX } from 'react-icons/hi';
+import { HiOutlineClock, HiX } from 'react-icons/hi';
 import { useRouter } from 'next/router';
 import { usePrfStore } from 'apps/portal/src/store/prf.store';
 import { fetchWithToken } from 'apps/portal/src/utils/hoc/fetcher';
@@ -25,11 +25,12 @@ import {
 } from '../../../../utils/helpers/http-requests/employee-requests';
 import { getPrfById, getPrfTrailByPrfId, patchPrfRequest } from '../../../../utils/helpers/prf.requests';
 import { EmployeeDetailsPrf, EmployeeProfile } from '../../../../types/employee.type';
-import { Position, PrfDetails, PrfStatus, PrfTrail } from '../../../../types/prf.types';
-import { withCookieSession } from '../../../../../src/utils/helpers/session';
+import { Position } from '../../../../types/prf.types';
 import { useEmployeeStore } from 'apps/portal/src/store/employee.store';
 import { SpinnerDotted } from 'spinners-react';
 import { DateFormatter } from 'libs/utils/src/lib/functions/DateFormatter';
+import { PrfPositionCard } from './PrfPositionCard';
+import { ViewPositionModal } from '../prf-view-position/ViewPositionModal';
 
 type ModalProps = {
   modalState: boolean;
@@ -41,6 +42,7 @@ export const CancelledPrfModal = ({ modalState, setModalState, closeModalAction 
   const {
     selectedPrfId,
     patchResponse,
+    viewPositionModalIsOpen,
     setCancelledPrfModalIsOpen,
     getPrfDetails,
     getPrfDetailsSuccess,
@@ -50,11 +52,15 @@ export const CancelledPrfModal = ({ modalState, setModalState, closeModalAction 
     getPrfTrailSuccess,
     getPrfTrailFail,
     patchPrfFail,
+    setViewPositionModalIsOpen,
+    setSelectedPosition,
     patchPrfSuccess,
     emptyResponseAndError,
   } = usePrfStore((state) => ({
     selectedPrfId: state.selectedPrfId,
     patchResponse: state.response.patchResponse,
+    viewPositionModalIsOpen: state.viewPositionModalIsOpen,
+    setSelectedPosition: state.setSelectedPosition,
     setCancelledPrfModalIsOpen: state.setCancelledPrfModalIsOpen,
     getPrfDetails: state.getPrfDetails,
     getPrfDetailsSuccess: state.getPrfDetailsSuccess,
@@ -65,6 +71,7 @@ export const CancelledPrfModal = ({ modalState, setModalState, closeModalAction 
     emptyResponseAndError: state.emptyResponseAndError,
     patchPrfSuccess: state.patchPrfSuccess,
     patchPrfFail: state.patchPrfFail,
+    setViewPositionModalIsOpen: state.setViewPositionModalIsOpen,
   }));
 
   const employeeDetail = useEmployeeStore((state) => state.employeeDetails);
@@ -221,56 +228,45 @@ export const CancelledPrfModal = ({ modalState, setModalState, closeModalAction 
                               )}
                             </section>
 
-                            <section className="flex flex-col w-full gap-2 mt-10">
+                            <section className="flex flex-col items-center w-full p-2 mt-10">
                               <>
-                                <div className="flex w-full bg-red-600 rounded min-h-[3rem] justify-center items-center text-center">
-                                  <span className="font-medium text-white">
-                                    {' '}
-                                    Cancelled by{' '}
-                                    {prfTrail.division?.name !== 'N/A'
-                                      ? prfTrail.division?.name
-                                      : prfTrail.department?.name !== 'N/A'
-                                      ? prfTrail.department?.name
-                                      : 'the requesting entity'}
-                                  </span>
+                                <div className="flex  w-full  rounded min-h-[3rem] justify-start items-center text-center text-gray-700">
+                                  Cancelled by{' '}
+                                  {prfTrail.division?.name !== 'N/A'
+                                    ? prfTrail.division?.name
+                                    : prfTrail.department?.name !== 'N/A'
+                                    ? prfTrail.department?.name
+                                    : 'the requesting entity'}{' '}
+                                </div>
+
+                                <div className="flex items-center justify-between w-full text-red-500">
+                                  <div className="flex items-center gap-2">
+                                    <HiOutlineCalendar />
+                                    {dayjs(prfDetails.updatedAt).format('MMMM DD, YYYY')}
+                                  </div>
+                                  <div className="flex items-center gap-2">
+                                    <HiOutlineClock />
+                                    {dayjs(prfDetails.updatedAt).format('hh:MM:A')}
+                                  </div>
                                 </div>
                               </>
                             </section>
                           </aside>
                           <section className="w-full pt-4 lg:pt-0">
                             <main className="w-full h-auto px-5 overflow-y-auto scale-95">
-                              {prfDetails.prfPositions.map((position: Position, index: number) => {
+                              {prfDetails.prfPositions.map((position: Position) => {
                                 return (
-                                  <div
-                                    key={index}
-                                    className={`${
-                                      position.remarks ? 'hover:border-l-green-600' : 'hover:border-l-red-500'
-                                    } cursor-pointer hover:shadow-slate-200 mb-4 flex items-center justify-between border-l-4 py-3 px-5 border-gray-100 shadow-2xl shadow-slate-100 transition-all`}
-                                  >
-                                    <section className="w-full space-y-3">
-                                      <header>
-                                        <section className="flex items-center justify-between">
-                                          <h3 className="text-lg font-medium text-gray-600">
-                                            {position.positionTitle}
-                                          </h3>
-                                          <p className="text-sm text-gray-600">{position.itemNumber}</p>
-                                        </section>
-                                        <p className="text-sm text-gray-400">{position.designation}</p>
-                                      </header>
-
-                                      <main>
-                                        {position.remarks ? (
-                                          <section className="flex items-center gap-2">
-                                            <p className="text-emerald-600">{position.remarks}</p>
-                                          </section>
-                                        ) : (
-                                          <section className="flex items-center gap-2">
-                                            <p className="text-red-400">No remarks set for this position.</p>
-                                          </section>
-                                        )}
-                                      </main>
-                                    </section>
-                                  </div>
+                                  <>
+                                    <PrfPositionCard
+                                      position={position}
+                                      key={position.positionId}
+                                      onClick={() => {
+                                        setViewPositionModalIsOpen(true);
+                                        setSelectedPosition(position);
+                                      }}
+                                    />
+                                    <ViewPositionModal />
+                                  </>
                                 );
                               })}
                             </main>

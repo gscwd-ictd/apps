@@ -259,7 +259,6 @@ export default function Prf({ user, employee }: PrfPageProps) {
   // upon success/fail of swr request, zustand state will be updated
   useEffect(() => {
     if (!isEmpty(swrCancelledPrfDetailsList)) {
-      console.log(swrCancelledPrfDetailsList);
       getPrfDetailsCancelledListSuccess(swrCancelledPrfListIsLoading, swrCancelledPrfDetailsList);
     }
 
@@ -399,6 +398,7 @@ export default function Prf({ user, employee }: PrfPageProps) {
         setModalState={setCancelledPrfModalIsOpen}
         closeModalAction={closeCancelledPrfModal}
       />
+
       <Modal
         title="Position Request"
         subtitle="Request for new personnel"

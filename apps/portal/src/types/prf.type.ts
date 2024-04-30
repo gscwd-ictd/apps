@@ -33,6 +33,8 @@ export type Prf = {
 
 export type PrfDetails = {
   _id: string;
+  createdAt?: string;
+  updatedAt?: string;
   prfNo: string;
   withExam: boolean;
   dateNeeded: Date;

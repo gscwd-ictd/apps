@@ -1,10 +1,22 @@
 import { create } from 'zustand';
 import { PrfDetails, Position, ForApprovalPrf, PrfTrail, PrfDetailsForApproval } from '../types/prf.types';
 import { devtools } from 'zustand/middleware';
+import { Competencies, JobDescription, QualificationStandards } from '../types/vacancies.type';
 
 export type PrfError = {
   status: boolean;
   message: string;
+};
+
+type FilteredCompetencies = Pick<Competencies, 'core' | 'crossCutting' | 'functional' | 'managerial'>;
+
+export type PositionDutyResponsibilities = {
+  duties: {
+    core: Array<{ competency: string; description: string; domain: string; level: string; percentage: string }>;
+    support: Array<{ competency: string; description: string; domain: string; level: string; percentage: string }>;
+  };
+  positionId: string;
+  summary: string;
 };
 
 export type PrfState = {
@@ -13,6 +25,10 @@ export type PrfState = {
     getPrfResponse: PrfDetails; //single get prf
     getPrfTrailResponse: PrfTrail; //single prf trail
     getPrfForApprovalResponse: PrfDetailsForApproval; // single prf for approval
+    getPositionJdResponse: JobDescription;
+    getPositionDrcResponse: PositionDutyResponsibilities;
+    getPositionQsResponse: QualificationStandards;
+    getPositionPlResponse: FilteredCompetencies;
   };
 
   loading: {
@@ -23,6 +39,10 @@ export type PrfState = {
     loadingPendingList: boolean;
     loadingDisapprovedList: boolean;
     loadingCancelledList: boolean;
+    loadingPositionJd: boolean;
+    loadingPositionDrc: boolean;
+    loadingPositionQs: boolean;
+    loadingPositionPl: boolean;
   };
 
   errors: {
@@ -33,6 +53,10 @@ export type PrfState = {
     errorPendingList: string;
     errorDisapprovedList: string;
     errorCancelledList: string;
+    errorPositionJd: string;
+    errorPositionDrc: string;
+    errorPositionQs: string;
+    errorPositionPl: string;
   };
 
   patchPrf: () => void;
@@ -50,6 +74,22 @@ export type PrfState = {
   getPrfDetailsForApproval: (loading: boolean) => void;
   getPrfDetailsForApprovalSuccess: (loading: boolean, response) => void;
   getPrfDetailsForApprovalFail: (loading: boolean, error: string) => void;
+
+  getPositionJobDescription: (loading: boolean) => void;
+  getPositionJobDescriptionSuccess: (loading: boolean, response) => void;
+  getPositionJobDescriptionFail: (loading: boolean, error: string) => void;
+
+  getPositionDuties: (loading: boolean) => void;
+  getPositionDutiesSuccess: (loading: boolean, response) => void;
+  getPositionDutiesFail: (loading: boolean, error: string) => void;
+
+  getPositionQualificationStandards: (loading: boolean) => void;
+  getPositionQualificationStandardsSuccess: (loading: boolean, response) => void;
+  getPositionQualificationStandardsFail: (loading: boolean, error: string) => void;
+
+  getPositionCompetencies: (loading: boolean) => void;
+  getPositionCompetenciesSuccess: (loading: boolean, response) => void;
+  getPositionCompetenciesFail: (loading: boolean, error: string) => void;
 
   pendingPrfs: Array<PrfDetails>;
   forApprovalPrfs: Array<ForApprovalPrf>;
@@ -80,6 +120,8 @@ export type PrfState = {
   setDisapprovedPrfModalIsOpen: (disapprovedPrfModalIsOpen: boolean) => void;
   cancelledPrfModalIsOpen: boolean;
   setCancelledPrfModalIsOpen: (cancelledPrfModalIsOpen: boolean) => void;
+  viewPositionModalIsOpen: boolean;
+  setViewPositionModalIsOpen: (viewPositionModalIsOpen: boolean) => void;
 
   selectedPrfId: string;
   setSelectedPrfId: (selectedPrfId: string) => void;
@@ -112,6 +154,9 @@ export type PrfState = {
   prfOtpModalIsOpen: boolean;
   setPrfOtpModalIsOpen: (prfOtpModalIsOpen: boolean) => void;
 
+  selectedPosition: Position;
+  setSelectedPosition: (selectedPosition: Position) => void;
+
   emptyResponseAndError: () => void;
 };
 
@@ -123,6 +168,10 @@ export const usePrfStore = create<PrfState>()(
       getPrfResponse: {} as PrfDetails,
       getPrfTrailResponse: {} as PrfTrail,
       getPrfForApprovalResponse: {} as PrfDetailsForApproval,
+      getPositionJdResponse: {} as JobDescription,
+      getPositionDrcResponse: {} as any,
+      getPositionQsResponse: {} as QualificationStandards,
+      getPositionPlResponse: {} as FilteredCompetencies,
     },
     loading: {
       loadingResponse: false,
@@ -132,6 +181,10 @@ export const usePrfStore = create<PrfState>()(
       loadingPendingList: false,
       loadingDisapprovedList: false,
       loadingCancelledList: false,
+      loadingPositionJd: false,
+      loadingPositionDrc: false,
+      loadingPositionQs: false,
+      loadingPositionPl: false,
     },
     errors: {
       errorResponse: '',
@@ -141,12 +194,19 @@ export const usePrfStore = create<PrfState>()(
       errorPendingList: '',
       errorDisapprovedList: '',
       errorCancelledList: '',
+      errorPositionDrc: '',
+      errorPositionJd: '',
+      errorPositionPl: '',
+      errorPositionQs: '',
     },
 
     pendingPrfModalIsOpen: false,
     forApprovalPrfModalIsOpen: false,
     disapprovedPrfModalIsOpen: false,
     cancelledPrfModalIsOpen: false,
+    viewPositionModalIsOpen: false,
+
+    selectedPosition: {} as Position,
 
     selectedPrfId: '',
 
@@ -177,6 +237,12 @@ export const usePrfStore = create<PrfState>()(
     activeItem: 0,
 
     isLoading: false,
+
+    setSelectedPosition: (selectedPosition: Position) => set((state) => ({ ...state, selectedPosition })),
+
+    setViewPositionModalIsOpen: (viewPositionModalIsOpen: boolean) => {
+      set((state) => ({ ...state, viewPositionModalIsOpen }));
+    },
 
     setCancelledPrfModalIsOpen: (cancelledPrfModalIsOpen: boolean) => {
       set((state) => ({ ...state, cancelledPrfModalIsOpen }));
@@ -613,6 +679,90 @@ export const usePrfStore = create<PrfState>()(
           ...state.errors,
           errorPrfTrail: error,
         },
+      }));
+    },
+
+    // GET POSITION JOB DESC
+    getPositionJobDescription: (loading: boolean) => {
+      set((state) => ({ ...state, loading: { ...state.loading, loadingPositionJd: loading } }));
+    },
+
+    getPositionJobDescriptionSuccess: (loading: boolean, response) => {
+      set((state) => ({
+        ...state,
+        loading: { ...state.loading, loadingPositionJd: loading },
+        response: { ...state.response, getPositionJdResponse: response },
+      }));
+    },
+
+    getPositionJobDescriptionFail: (loading: boolean, error: string) => {
+      set((state) => ({
+        ...state,
+        loading: { ...state.loading, loadingPositionJd: loading },
+        errors: { ...state.errors, errorPositionJd: error },
+      }));
+    },
+
+    // GET POSITION DUTIES
+    getPositionDuties: (loading: boolean) => {
+      set((state) => ({ ...state, loading: { ...state.loading, loadingPositionDrc: loading } }));
+    },
+
+    getPositionDutiesSuccess: (loading: boolean, response) => {
+      set((state) => ({
+        ...state,
+        loading: { ...state.loading, loadingPositionDrc: loading },
+        response: { ...state.response, getPositionDrcResponse: response },
+      }));
+    },
+
+    getPositionDutiesFail: (loading: boolean, error: string) => {
+      set((state) => ({
+        ...state,
+        loading: { ...state.loading, loadingPositionDrc: loading },
+        errors: { ...state.errors, errorPositionDrc: error },
+      }));
+    },
+
+    // GET POSITION QUALIFICATION STANDARDS
+    getPositionQualificationStandards: (loading: boolean) => {
+      set((state) => ({ ...state, loading: { ...state.loading, loadingPositionQs: loading } }));
+    },
+
+    getPositionQualificationStandardsSuccess: (loading: boolean, response) => {
+      set((state) => ({
+        ...state,
+        loading: { ...state.loading, loadingPositionQs: loading },
+        response: { ...state.response, getPositionQsResponse: response },
+      }));
+    },
+
+    getPositionQualificationStandardsFail: (loading: boolean, error: string) => {
+      set((state) => ({
+        ...state,
+        loading: { ...state.loading, loadingPositionQs: loading },
+        errors: { ...state.errors, errorPositionQs: error },
+      }));
+    },
+
+    // GET POSITION COMPETENCIES
+    getPositionCompetencies: (loading: boolean) => {
+      set((state) => ({ ...state, loading: { ...state.loading, loadingPositionPl: loading } }));
+    },
+
+    getPositionCompetenciesSuccess: (loading: boolean, response) => {
+      set((state) => ({
+        ...state,
+        loading: { ...state.loading, loadingPositionPl: loading },
+        response: { ...state.response, getPositionPlResponse: response },
+      }));
+    },
+
+    getPositionCompetenciesFail: (loading: boolean, error: string) => {
+      set((state) => ({
+        ...state,
+        loading: { ...state.loading, loadingPositionPl: loading },
+        errors: { ...state.errors, errorPositionPl: error },
       }));
     },
 

@@ -31,6 +31,8 @@ import { useEmployeeStore } from 'apps/portal/src/store/employee.store';
 import { SpinnerDotted } from 'spinners-react';
 import { DateFormatter } from 'libs/utils/src/lib/functions/DateFormatter';
 import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
+import { PrfPositionCard } from './PrfPositionCard';
+import { ViewPositionModal } from '../prf-view-position/ViewPositionModal';
 
 type ModalProps = {
   modalState: boolean;
@@ -42,6 +44,9 @@ export const PendingPrfModal = ({ modalState, setModalState, closeModalAction }:
   const {
     selectedPrfId,
     patchResponse,
+    selectedPosition,
+
+    setSelectedPosition,
     setPendingPrfIsModalOpen,
     getPrfDetails,
     getPrfDetailsSuccess,
@@ -56,6 +61,8 @@ export const PendingPrfModal = ({ modalState, setModalState, closeModalAction }:
   } = usePrfStore((state) => ({
     selectedPrfId: state.selectedPrfId,
     patchResponse: state.response.patchResponse,
+    selectedPosition: state.selectedPosition,
+    setSelectedPosition: state.setSelectedPosition,
     setPendingPrfIsModalOpen: state.setPendingPrfModalIsOpen,
     getPrfDetails: state.getPrfDetails,
     getPrfDetailsSuccess: state.getPrfDetailsSuccess,
@@ -67,6 +74,8 @@ export const PendingPrfModal = ({ modalState, setModalState, closeModalAction }:
     patchPrfSuccess: state.patchPrfSuccess,
     patchPrfFail: state.patchPrfFail,
   }));
+
+  const setViewPositionModalIsOpen = usePrfStore((state) => state.setViewPositionModalIsOpen);
 
   const employeeDetail = useEmployeeStore((state) => state.employeeDetails);
 
@@ -117,7 +126,7 @@ export const PendingPrfModal = ({ modalState, setModalState, closeModalAction }:
     revalidateOnFocus: true,
   });
 
-  //! call functions when you cancel the prf
+  // call the function to cancel the request
   const handleCancelRequest = async () => {
     const { error, result } = await patchPrfRequest(`/prf/`, {
       _id: selectedPrfId,
@@ -257,38 +266,19 @@ export const PendingPrfModal = ({ modalState, setModalState, closeModalAction }:
                           </aside>
                           <section className="w-full pt-4 lg:pt-0">
                             <main className="w-full h-auto px-5 overflow-y-auto scale-95">
-                              {prfDetails.prfPositions.map((position: Position, index: number) => {
+                              {prfDetails.prfPositions.map((position: Position) => {
                                 return (
-                                  <div
-                                    key={index}
-                                    className={`${
-                                      position.remarks ? 'hover:border-l-green-600' : 'hover:border-l-red-500'
-                                    } cursor-pointer hover:shadow-slate-200 mb-4 flex items-center justify-between border-l-4 py-3 px-5 border-gray-100 shadow-2xl shadow-slate-100 transition-all`}
-                                  >
-                                    <section className="w-full space-y-3">
-                                      <header>
-                                        <section className="flex items-center justify-between">
-                                          <h3 className="text-lg font-medium text-gray-600">
-                                            {position.positionTitle}
-                                          </h3>
-                                          <p className="text-sm text-gray-600">{position.itemNumber}</p>
-                                        </section>
-                                        <p className="text-sm text-gray-400">{position.designation}</p>
-                                      </header>
-
-                                      <main>
-                                        {position.remarks ? (
-                                          <section className="flex items-center gap-2">
-                                            <p className="text-emerald-600">{position.remarks}</p>
-                                          </section>
-                                        ) : (
-                                          <section className="flex items-center gap-2">
-                                            <p className="text-red-400">No remarks set for this position.</p>
-                                          </section>
-                                        )}
-                                      </main>
-                                    </section>
-                                  </div>
+                                  <>
+                                    <PrfPositionCard
+                                      position={position}
+                                      key={position.itemNumber}
+                                      onClick={() => {
+                                        setViewPositionModalIsOpen(true);
+                                        setSelectedPosition(position);
+                                      }}
+                                    />
+                                    <ViewPositionModal />
+                                  </>
                                 );
                               })}
                             </main>

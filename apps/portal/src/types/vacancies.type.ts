@@ -32,53 +32,59 @@ export type JobApplicationDetailsResponse = {
   _id: string;
 };
 
+export type JobDescription = {
+  positionId: string;
+  itemNumber: string;
+  positionTitle: string;
+  assignedTo: {
+    division: {
+      id: string;
+      name: string;
+    };
+    office: {
+      id: string;
+      name: string;
+    };
+    department: {
+      id: string;
+      name: string;
+    };
+  };
+  salary: {
+    id: string;
+    stepIncrement: number;
+    amount: number;
+    salaryGrade: number;
+  };
+
+  natureOfAppointment: string;
+  summary: string;
+  description: string;
+  reportsTo: string;
+};
+
+export type QualificationStandards = {
+  education: string;
+  training: string;
+  eligibility: string;
+  experience: string;
+};
+
+export type Competencies = {
+  positionId: string;
+  positionName: string;
+  salaryGrade: string;
+  core: Array<JobCompetencies>;
+  functional: Array<JobCompetencies>;
+  crossCutting: Array<JobCompetencies>;
+  managerial: Array<JobCompetencies>;
+};
+
 export type JobOpeningDetails = {
   error?: string;
-  jobDescription: {
-    positionId: string;
-    itemNumber: string;
-    positionTitle: string;
-    assignedTo: {
-      division: {
-        id: string;
-        name: string;
-      };
-      office: {
-        id: string;
-        name: string;
-      };
-      department: {
-        id: string;
-        name: string;
-      };
-    };
-    salary: {
-      id: string;
-      stepIncrement: number;
-      amount: number;
-      salaryGrade: number;
-    };
-
-    natureOfAppointment: string;
-    summary: string;
-    description: string;
-    reportsTo: string;
-  };
-  qualificationStandards: {
-    education: string;
-    training: string;
-    eligibility: string;
-    experience: string;
-  };
-  competencies: {
-    positionId: string;
-    positionName: string;
-    salaryGrade: string;
-    core: Array<JobCompetencies>;
-    functional: Array<JobCompetencies>;
-    crossCutting: Array<JobCompetencies>;
-    managerial: Array<JobCompetencies>;
-  };
+  jobDescription: JobDescription;
+  qualificationStandards: QualificationStandards;
+  competencies: Competencies;
 };
 
 export type JobCompetencies = {

@@ -32,6 +32,8 @@ import { SpinnerDotted } from 'spinners-react';
 import { PrfOtpContents } from '../prfOtp/PrfOtpContents';
 import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
 import { DateFormatter } from 'libs/utils/src/lib/functions/DateFormatter';
+import { PrfPositionCard } from './PrfPositionCard';
+import { ViewPositionModal } from '../prf-view-position/ViewPositionModal';
 
 type ModalProps = {
   modalState: boolean;
@@ -55,6 +57,8 @@ export const ForApprovalPrfModal = ({ modalState, setModalState, closeModalActio
     patchPrfFail,
     setPrfOtpModalIsOpen,
     setForApprovalPrfModalIsOpen,
+    setSelectedPosition,
+    setViewPositionModalIsOpen,
     emptyResponseAndError,
   } = usePrfStore((state) => ({
     selectedPrfId: state.selectedPrfId,
@@ -62,6 +66,8 @@ export const ForApprovalPrfModal = ({ modalState, setModalState, closeModalActio
     getPrfDetailsForApproval: state.getPrfDetailsForApproval,
     getPrfDetailsForApprovalSuccess: state.getPrfDetailsForApprovalSuccess,
     getPrfDetailsForApprovalFail: state.getPrfDetailsForApprovalFail,
+    setViewPositionModalIsOpen: state.setViewPositionModalIsOpen,
+    setSelectedPosition: state.setSelectedPosition,
     patchResponse: state.response.patchResponse,
     patchError: state.errors.errorResponse,
     prfOtpModalIsOpen: state.prfOtpModalIsOpen,
@@ -158,10 +164,10 @@ export const ForApprovalPrfModal = ({ modalState, setModalState, closeModalActio
       <Modal size={'full'} open={modalState} setOpen={setModalState}>
         <Modal.Header>
           <h3 className="font-semibold text-gray-700">
-            <div className="px-5 flex justify-between">
+            <div className="flex justify-between px-5">
               <span className="text-xl md:text-2xl">For Approval Position Request</span>
               <button
-                className="hover:bg-slate-100 outline-slate-100 outline-8 px-2 rounded-full"
+                className="px-2 rounded-full hover:bg-slate-100 outline-slate-100 outline-8"
                 onClick={closeModalAction}
               >
                 <HiX />
@@ -218,7 +224,7 @@ export const ForApprovalPrfModal = ({ modalState, setModalState, closeModalActio
                           <div className="flex justify-between px-2">
                             <span>Decline Position Request</span>
                             <button
-                              className="hover:bg-slate-100 outline-slate-100 outline-8 px-2 rounded-full"
+                              className="px-2 rounded-full hover:bg-slate-100 outline-slate-100 outline-8"
                               onClick={() => {
                                 setIsDeclineModalOpen(false);
                               }}
@@ -229,7 +235,7 @@ export const ForApprovalPrfModal = ({ modalState, setModalState, closeModalActio
                         </h3>
                       </Modal.Header>
                       <Modal.Body>
-                        <div className="flex flex-col w-full h-full px-4 gap-2 text-md ">
+                        <div className="flex flex-col w-full h-full gap-2 px-4 text-md ">
                           {'Please indicate reason for declining this position request:'}
                           <textarea
                             required
@@ -325,40 +331,21 @@ export const ForApprovalPrfModal = ({ modalState, setModalState, closeModalActio
                             </section>
                           </aside>
                           <section className="w-full">
-                            <main className="scale-95 h-auto w-full overflow-y-auto px-5">
+                            <main className="w-full h-auto px-5 overflow-y-auto scale-95">
                               {prfDetailsForApproval.prfPositions &&
-                                prfDetailsForApproval.prfPositions.map((position: Position, index: number) => {
+                                prfDetailsForApproval.prfPositions.map((position: Position) => {
                                   return (
-                                    <div
-                                      key={index}
-                                      className={`${
-                                        position.remarks ? 'hover:border-l-green-600' : 'hover:border-l-red-500'
-                                      } cursor-pointer hover:shadow-slate-200 mb-4 flex items-center justify-between border-l-4 py-3 px-5 border-gray-100 shadow-2xl shadow-slate-100 transition-all`}
-                                    >
-                                      <section className="w-full space-y-3">
-                                        <header>
-                                          <section className="flex items-center justify-between">
-                                            <h3 className="text-lg font-medium text-gray-600">
-                                              {position.positionTitle}
-                                            </h3>
-                                            <p className="text-sm text-gray-600">{position.itemNumber}</p>
-                                          </section>
-                                          <p className="text-sm text-gray-400">{position.designation}</p>
-                                        </header>
-
-                                        <main>
-                                          {position.remarks ? (
-                                            <section className="flex items-center gap-2">
-                                              <p className="text-emerald-600">{position.remarks}</p>
-                                            </section>
-                                          ) : (
-                                            <section className="flex items-center gap-2">
-                                              <p className="text-red-400">No remarks set for this position.</p>
-                                            </section>
-                                          )}
-                                        </main>
-                                      </section>
-                                    </div>
+                                    <>
+                                      <PrfPositionCard
+                                        position={position}
+                                        key={position.positionId}
+                                        onClick={() => {
+                                          setViewPositionModalIsOpen(true);
+                                          setSelectedPosition(position);
+                                        }}
+                                      />
+                                      <ViewPositionModal />
+                                    </>
                                   );
                                 })}
                             </main>
