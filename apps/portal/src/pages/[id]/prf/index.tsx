@@ -138,10 +138,7 @@ export default function Prf({ user, employee }: PrfPageProps) {
     isLoading: swrPendingPrfListIsLoading,
     error: swrPendingPrfListError,
     mutate: mutatePendingPrfDetails,
-  } = useSWR(`${prfUrl}/prf/${employee.user._id}?status=pending`, fetchWithToken, {
-    shouldRetryOnError: false,
-    revalidateOnFocus: true,
-  });
+  } = useSWR(`${prfUrl}/prf/${employee.user._id}?status=pending`, fetchWithToken, {});
 
   // Initial zustand state update
   useEffect(() => {
@@ -167,10 +164,7 @@ export default function Prf({ user, employee }: PrfPageProps) {
     isLoading: swrDisapprovedPrfListIsLoading,
     error: swrDisapprovedPrfListError,
     mutate: mutateDisapprovedPrfDetails,
-  } = useSWR(`${prfUrl}/prf/${employee.user._id}?status=disapproved`, fetchWithToken, {
-    shouldRetryOnError: false,
-    revalidateOnFocus: true,
-  });
+  } = useSWR(`${prfUrl}/prf/${employee.user._id}?status=disapproved`, fetchWithToken, {});
 
   // Initial zustand state update
   useEffect(() => {
@@ -196,10 +190,7 @@ export default function Prf({ user, employee }: PrfPageProps) {
     isLoading: swrForApprovalPrfListIsLoading,
     error: swrForApprovalPrfListError,
     mutate: mutateForApprovalPrfDetails,
-  } = useSWR(`${prfUrl}/prf-trail/employee/${employee.user._id}`, fetchWithToken, {
-    shouldRetryOnError: false,
-    revalidateOnFocus: true,
-  });
+  } = useSWR(`${prfUrl}/prf-trail/employee/${employee.user._id}`, fetchWithToken, {});
 
   // Initial zustand state update
   useEffect(() => {
