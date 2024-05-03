@@ -129,10 +129,11 @@ export default function Calendar({
         //adds date to array
         //if selected date is not found in unavailable dates array
         if (!swrUnavailableDates.some((item) => item.date === specifiedDate)) {
-          //for VL, FL, Solo Parent, within 10 days from today and not late filing
+          //for VL, FL, Solo Parent, SPL, within 10 days from today and not late filing
           if (
             (leaveName === LeaveName.VACATION ||
               leaveName === LeaveName.FORCED ||
+              leaveName === LeaveName.SPECIAL_PRIVILEGE ||
               leaveName === LeaveName.SOLO_PARENT) &&
             dayjs(`${specifiedDate}`).diff(`${today}`, 'day') >= 0 &&
             dayjs(`${specifiedDate}`).diff(`${today}`, 'day') <= 10 &&
@@ -140,12 +141,12 @@ export default function Calendar({
           ) {
             setSelectedDates((selectedDates) => [...selectedDates, specifiedDate]);
           }
-          //for VL, FL, Solo Parent, within 10 days from today and the past days and is late filing
+          //for VL, FL, Solo Parent, SPL, within 10 days from today and the past days and is late filing
           if (
             (leaveName === LeaveName.VACATION ||
               leaveName === LeaveName.FORCED ||
+              leaveName === LeaveName.SPECIAL_PRIVILEGE ||
               leaveName === LeaveName.SOLO_PARENT) &&
-            // dayjs(`${specifiedDate}`).diff(`${today}`, 'day') >= 0 &&
             dayjs(`${specifiedDate}`).diff(`${today}`, 'day') <= 10 &&
             isLateFiling
           ) {
@@ -173,7 +174,6 @@ export default function Calendar({
           // }
           else if (
             leaveName === LeaveName.PATERNITY ||
-            leaveName === LeaveName.SPECIAL_PRIVILEGE ||
             leaveName === LeaveName.VAWC ||
             leaveName === LeaveName.SPECIAL_EMERGENCY_CALAMITY ||
             leaveName === LeaveName.LEAVE_WITHOUT_PAY
@@ -322,6 +322,7 @@ export default function Calendar({
                           //disable date selection for past dates from current day for VL/FL/SOLO
                           (leaveName === LeaveName.VACATION ||
                             leaveName === LeaveName.FORCED ||
+                            leaveName === LeaveName.SPECIAL_PRIVILEGE ||
                             leaveName === LeaveName.SOLO_PARENT) &&
                             dayjs(`${day}`).diff(`${today}`, 'day') < 0 &&
                             isLateFiling === false &&
@@ -329,6 +330,7 @@ export default function Calendar({
                           //disable date selection starting from 10th day from current day for VL/FL/SOLO
                           (leaveName === LeaveName.VACATION ||
                             leaveName === LeaveName.FORCED ||
+                            leaveName === LeaveName.SPECIAL_PRIVILEGE ||
                             leaveName === LeaveName.SOLO_PARENT) &&
                             dayjs(`${day}`).diff(`${today}`, 'day') > 10 &&
                             // isLateFiling === false &&

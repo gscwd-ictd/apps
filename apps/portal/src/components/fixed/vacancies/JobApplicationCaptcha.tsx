@@ -89,6 +89,7 @@ export const JobApplicationCaptcha: FunctionComponent<CaptchaProps> = ({
         withRelevantExperience: withRelevantExperience,
         workExperienceSheet: workExperienceArray,
       };
+
       const { error, result } = await postPortal(
         `${process.env.NEXT_PUBLIC_HRIS_URL}/applicant/${vppId}/internal/${employeeId}`,
         data

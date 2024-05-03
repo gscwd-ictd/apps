@@ -255,10 +255,6 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
     }
   }, [swrLeaveTypes, swrError]);
 
-  useEffect(() => {
-    console.log(lateFiling);
-  }, [lateFiling]);
-
   // React hook form
   const { reset, register, handleSubmit, watch, setValue } = useForm<LeaveApplicationForm>({
     mode: 'onChange',
@@ -282,9 +278,9 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
     setLeaveDateTo(null);
   };
 
-  const handleTypeOfFiling = () => {
-    setLateFiling(!lateFiling);
-    setValue('isLateFiling', !lateFiling);
+  const handleTypeOfFiling = (lateFiling: boolean) => {
+    setLateFiling(lateFiling);
+    setValue('isLateFiling', lateFiling);
   };
 
   //check if there are pending leaves of the same name being filed, return true/false
@@ -356,6 +352,7 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
           employeeId: data.employeeId,
           inPhilippines: data.location,
           leaveApplicationDates: data.leaveApplicationDates,
+          isLateFiling: data.isLateFiling,
         };
       } else {
         dataToSend = {
@@ -363,6 +360,7 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
           employeeId: data.employeeId,
           abroad: data.location,
           leaveApplicationDates: data.leaveApplicationDates,
+          isLateFiling: data.isLateFiling,
         };
       }
     } else if (data.typeOfLeaveDetails.leaveName === LeaveName.SICK) {
@@ -372,6 +370,7 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
           employeeId: data.employeeId,
           inHospital: data.illness,
           leaveApplicationDates: data.leaveApplicationDates,
+          isLateFiling: data.isLateFiling,
         };
       } else {
         dataToSend = {
@@ -379,6 +378,7 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
           employeeId: data.employeeId,
           outPatient: data.illness,
           leaveApplicationDates: data.leaveApplicationDates,
+          isLateFiling: data.isLateFiling,
         };
       }
     } else if (data.typeOfLeaveDetails.leaveName === LeaveName.STUDY) {
@@ -389,6 +389,7 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
         forMastersCompletion: data.forMastersCompletion,
         forBarBoardReview: data.forBarBoardReview,
         studyLeaveOther: data.studyLeaveOther,
+        isLateFiling: data.isLateFiling,
       };
     } else if (data.typeOfLeaveDetails.leaveName === LeaveName.SPECIAL_LEAVE_BENEFITS_FOR_WOMEN) {
       dataToSend = {
@@ -396,6 +397,7 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
         employeeId: data.employeeId,
         leaveApplicationDates: data.leaveApplicationDatesRange,
         splWomen: data.specialLeaveWomenIllness,
+        isLateFiling: data.isLateFiling,
       };
     } else if (
       data.typeOfLeaveDetails.leaveName === LeaveName.MATERNITY ||
@@ -407,6 +409,7 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
         leaveBenefitsId: data.typeOfLeaveDetails.id,
         employeeId: data.employeeId,
         leaveApplicationDates: data.leaveApplicationDatesRange,
+        isLateFiling: data.isLateFiling,
       };
     } else if (data.typeOfLeaveDetails.leaveName === LeaveName.OTHERS) {
       dataToSend = {
@@ -415,6 +418,7 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
         leaveApplicationDates: data.leaveApplicationDates,
         other: data.other,
         commutation: data.commutation ? data.commutation : null,
+        isLateFiling: data.isLateFiling,
       };
     } else if (data.typeOfLeaveDetails.leaveName === LeaveName.MONETIZATION) {
       dataToSend = {
@@ -426,6 +430,7 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
         leaveBenefitsId: data.typeOfLeaveDetails.id,
         employeeId: data.employeeId,
         leaveApplicationDates: data.leaveApplicationDates,
+        isLateFiling: data.isLateFiling,
       };
     }
     //check first if leave dates or leave date range are filled
@@ -635,6 +640,15 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
                       className="mb-1"
                     />
                   ) : null}
+
+                  {vacationLeaveBalance < 0.5 && watch('typeOfLeaveDetails.leaveName') === LeaveName.FORCED ? (
+                    <AlertNotification
+                      alertType="warning"
+                      notifMessage="Must have at least 0.5 Vacation Leave Credits to apply for Force Leave."
+                      dismissible={false}
+                      className="mb-1"
+                    />
+                  ) : null}
                   {/* Sick Leave Credits Notifications */}
                   {roundedFinalSickLeaveBalance < 0 && watch('typeOfLeaveDetails.leaveName') === LeaveName.SICK ? (
                     <AlertNotification
@@ -761,7 +775,7 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
                         {watch('typeOfLeaveDetails.leaveName') === LeaveName.VACATION
                           ? 'It shall be filed five(5) days in advance, whenever possible, of the effective date of such leave. Vacation leave within the Philippines or abroad shall be indicated in the form for purposes of securing travel authority and completing clearance from the money and work accountabilities.'
                           : watch('typeOfLeaveDetails.leaveName') === LeaveName.FORCED
-                          ? 'Annual five-day vacatuin leave shall be forfeited if not taken during the year. In case the scheduled leave has been cancelled in the exigency of the service by the head of agency, it shall no longer be deducted from the accumulated vacation leave. Availment of one (1) day or more Vacation Leave (VL) shall be considered for complying the mandatory/forced leave subject to the conditions under Section 25, Rule XVI of the Omnibus Rules Implementing E.O. No. 292.'
+                          ? 'Annual five-day vacation leave shall be forfeited if not taken during the year. In case the scheduled leave has been cancelled in the exigency of the service by the head of agency, it shall no longer be deducted from the accumulated vacation leave. Availment of one (1) day or more Vacation Leave (VL) shall be considered for complying the mandatory/forced leave subject to the conditions under Section 25, Rule XVI of the Omnibus Rules Implementing E.O. No. 292.'
                           : watch('typeOfLeaveDetails.leaveName') === LeaveName.SICK
                           ? `It shall be filed immediately upon employee's return from such leave. If filed in advance or exceeding the five (5) days, application shall be accompanied by a medical certificate. In case medical consultation was not availed of, an affidavit should be executed by an applicant.`
                           : watch('typeOfLeaveDetails.leaveName') === LeaveName.MATERNITY
@@ -1076,20 +1090,25 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
                         Select Leave Dates:<span className="text-red-600">*</span>
                       </label>
 
-                      <div className="flex gap-2 items-center">
-                        <label className="text-slate-500 text-md font-medium">Late Filing:</label>
-                        <Checkbox
-                          id="isLateFiling"
-                          checked={lateFiling}
-                          label="Late Filing"
-                          className={
-                            watch('isLateFiling') === true
-                              ? 'cursor-not-allowed italic'
-                              : 'hover:text-indigo-800 italic'
-                          }
-                          onChange={() => setLateFiling(!lateFiling)}
-                        />
-                      </div>
+                      {watch('typeOfLeaveDetails.leaveName') === LeaveName.FORCED ||
+                      watch('typeOfLeaveDetails.leaveName') === LeaveName.VACATION ||
+                      watch('typeOfLeaveDetails.leaveName') === LeaveName.SPECIAL_PRIVILEGE ||
+                      watch('typeOfLeaveDetails.leaveName') === LeaveName.SOLO_PARENT ? (
+                        <div className="flex gap-2 items-center">
+                          <label className="text-slate-500 text-md font-medium">Late Filing:</label>
+                          <Checkbox
+                            id="isLateFiling"
+                            checked={lateFiling}
+                            label="Late Filing"
+                            className={
+                              watch('isLateFiling') === true
+                                ? 'cursor-not-allowed italic'
+                                : 'hover:text-indigo-800 italic'
+                            }
+                            onChange={() => handleTypeOfFiling(!lateFiling)}
+                          />
+                        </div>
+                      ) : null}
                     </div>
 
                     <div className="w-full p-4 bg-gray-50 rounded">
@@ -1333,7 +1352,8 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
                 disabled={
                   roundedFinalVacationLeaveBalance < 0 && watch('typeOfLeaveDetails.leaveName') === LeaveName.VACATION
                     ? true
-                    : roundedFinalForcedLeaveBalance < 0 && watch('typeOfLeaveDetails.leaveName') === LeaveName.FORCED
+                    : (vacationLeaveBalance < 0.5 || roundedFinalForcedLeaveBalance < 0) &&
+                      watch('typeOfLeaveDetails.leaveName') === LeaveName.FORCED
                     ? true
                     : roundedFinalSickLeaveBalance < 0 && watch('typeOfLeaveDetails.leaveName') === LeaveName.SICK
                     ? true
