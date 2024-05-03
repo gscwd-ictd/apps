@@ -89,6 +89,7 @@ export type EmployeeLeaveDetails = {
     cancelledLeaveDates: Array<string>;
     forCancellationLeaveDates: Array<string>;
     leaveDateCancellationRemarks: string;
+    isLateFiling: boolean;
   };
   leaveApplicationDetails: {
     inPhilippinesOrAbroad?: string;
@@ -169,6 +170,7 @@ export type SupervisorLeaveDetails = {
   hrmoApprovalDate: string;
   cancelDate: string;
   cancelReason: string;
+  isLateFiling: boolean;
 
   employee: {
     employeeId: string;

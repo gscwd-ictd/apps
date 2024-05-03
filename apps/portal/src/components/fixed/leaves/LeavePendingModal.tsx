@@ -127,7 +127,7 @@ export const LeavePendingModal = ({ modalState, setModalState, closeModalAction 
           ) : (
             <div className="w-full h-full flex flex-col  ">
               <div className="w-full h-full flex flex-col gap-2 ">
-                <div className="w-full flex flex-col gap-2 px-4 rounded">
+                <div className="w-full flex flex-col gap-0 px-4 rounded">
                   {leaveIndividualDetail?.leaveApplicationBasicInfo ? (
                     <AlertNotification
                       alertType="warning"
@@ -144,6 +144,10 @@ export const LeavePendingModal = ({ modalState, setModalState, closeModalAction 
                       }
                       dismissible={false}
                     />
+                  ) : null}
+
+                  {leaveIndividualDetail?.leaveApplicationBasicInfo?.isLateFiling ? (
+                    <AlertNotification alertType="error" notifMessage={'Late Filing'} dismissible={false} />
                   ) : null}
 
                   <div className="flex flex-wrap justify-between">
