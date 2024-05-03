@@ -1,20 +1,13 @@
 import dayjs from 'dayjs';
 import { useFormContext } from 'react-hook-form';
-import {
-  useWorkExpSheetStore,
-  WorkExperienceSheet,
-} from '../../../../store/work-experience-sheet.store';
+import { useWorkExpSheetStore, WorkExperienceSheet } from '../../../../store/work-experience-sheet.store';
 import { TabHeader } from '../../tabs/TabHeader';
 import { Accomplishments } from './Accomplishments';
 import { Duties } from './Duties';
 
 export const WorkExperiencesSheet = () => {
-  const selectedWorkExperience = useWorkExpSheetStore(
-    (state) => state.selectedWorkExperience
-  );
-  const setSelectedWorkExperience = useWorkExpSheetStore(
-    (state) => state.setSelectedWorkExperience
-  );
+  const selectedWorkExperience = useWorkExpSheetStore((state) => state.selectedWorkExperience);
+  const setSelectedWorkExperience = useWorkExpSheetStore((state) => state.setSelectedWorkExperience);
 
   const {
     register,
@@ -37,9 +30,7 @@ export const WorkExperiencesSheet = () => {
           positionTitle={selectedWorkExperience.positionTitle}
           companyName={selectedWorkExperience.companyName}
           duration={`${dateTransformer(selectedWorkExperience.from)} - ${
-            selectedWorkExperience.to === null
-              ? 'Present'
-              : dateTransformer(selectedWorkExperience.to)
+            selectedWorkExperience.to === null ? 'Present' : dateTransformer(selectedWorkExperience.to)
           }`}
         />
       </section>
@@ -52,13 +43,13 @@ export const WorkExperiencesSheet = () => {
           <input
             id="supervisor"
             type="text"
-            value={selectedWorkExperience.immediateSupervisor}
+            value={selectedWorkExperience.supervisor}
             className="w-full border-0 rounded bg-slate-100"
-            {...register('immediateSupervisor')}
+            {...register('supervisor')}
             onChange={(e) =>
               setSelectedWorkExperience({
                 ...selectedWorkExperience,
-                immediateSupervisor: e.target.value,
+                supervisor: e.target.value,
               })
             }
           />
@@ -70,13 +61,13 @@ export const WorkExperiencesSheet = () => {
           <input
             id="officeunit"
             type="text"
-            value={selectedWorkExperience.nameOfOffice}
+            value={selectedWorkExperience.office}
             className="w-full border-0 rounded bg-slate-100"
-            {...register('nameOfOffice')}
+            {...register('office')}
             onChange={(e) =>
               setSelectedWorkExperience({
                 ...selectedWorkExperience,
-                nameOfOffice: e.target.value,
+                office: e.target.value,
               })
             }
           />
