@@ -48,7 +48,7 @@ export const ForApprovalPrfModal = ({ modalState, setModalState, closeModalActio
     getPrfDetailsForApproval,
     getPrfDetailsForApprovalSuccess,
     getPrfDetailsForApprovalFail,
-
+    selectedPosition,
     prfOtpModalIsOpen,
     patchResponse,
     patchError,
@@ -62,7 +62,7 @@ export const ForApprovalPrfModal = ({ modalState, setModalState, closeModalActio
     emptyResponseAndError,
   } = usePrfStore((state) => ({
     selectedPrfId: state.selectedPrfId,
-
+    selectedPosition: state.selectedPosition,
     getPrfDetailsForApproval: state.getPrfDetailsForApproval,
     getPrfDetailsForApprovalSuccess: state.getPrfDetailsForApprovalSuccess,
     getPrfDetailsForApprovalFail: state.getPrfDetailsForApprovalFail,
@@ -333,20 +333,8 @@ export const ForApprovalPrfModal = ({ modalState, setModalState, closeModalActio
                           <section className="w-full">
                             <main className="w-full h-auto px-5 overflow-y-auto scale-95">
                               {prfDetailsForApproval.prfPositions &&
-                                prfDetailsForApproval.prfPositions.map((position: Position) => {
-                                  return (
-                                    <>
-                                      <PrfPositionCard
-                                        position={position}
-                                        key={position.positionId}
-                                        onClick={() => {
-                                          setViewPositionModalIsOpen(true);
-                                          setSelectedPosition(position);
-                                        }}
-                                      />
-                                      <ViewPositionModal />
-                                    </>
-                                  );
+                                prfDetailsForApproval.prfPositions.map((position: Position, index: number) => {
+                                  return <PrfPositionCard position={position} key={index} />;
                                 })}
                             </main>
                           </section>

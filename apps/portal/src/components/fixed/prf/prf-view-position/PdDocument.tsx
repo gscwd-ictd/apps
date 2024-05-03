@@ -1,16 +1,16 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 
 import { Page, Text, View, Document, StyleSheet, Font, Image } from '@react-pdf/renderer';
-import Header from 'components/PdfDocuments/PositionDescription/Header';
 
 // Fonts
-import CalibriRegular from 'assets/fonts/uploads/calibri-regular.ttf';
-import CalibriRegularBold from 'assets/fonts/uploads/calibri-regular-bold.ttf';
+// import CalibriRegular from '../../../../fonts/calibri-regular.ttf';
+// import CalibriRegularBold from '../../../../fonts/calibri-regular-bold';
 import { isEmpty } from 'lodash';
+import Header from '../../pdf-documents/PositionDescription/Header';
 
 const styles = StyleSheet.create({
   page: {
+    fontFamily: 'Helvetica',
     backgroundColor: '#ffffff',
     paddingTop: 10,
     paddingBottom: 25,
@@ -33,7 +33,9 @@ const styles = StyleSheet.create({
     padding: '4 0 0 4',
   },
   tHeadSecondLevel: {
-    fontFamily: 'CalibriRegularBold',
+    // fontFamily: 'CalibriRegularBold',
+    fontFamily: 'Helvetica-Bold',
+    fontSize: 10,
     padding: '4 0 0 4',
     textAlign: 'center',
   },
@@ -60,31 +62,36 @@ const styles = StyleSheet.create({
 
   // Field Styles
   documentTitle: {
-    fontFamily: 'CalibriRegularBold',
-    fontSize: 20,
+    // fontFamily: 'CalibriRegularBold',
+    fontFamily: 'Helvetica-Bold',
+    fontSize: 12,
     marginBottom: 10,
     textAlign: 'center',
   },
   headerText: {
-    fontFamily: 'CalibriRegularBold',
+    // fontFamily: 'CalibriRegularBold',
+    fontFamily: 'Helvetica-Bold',
     textDecoration: 'underline',
-    fontSize: 13,
+    fontSize: 12,
     marginTop: 15,
     marginBottom: 4,
   },
   bodyText: {
-    fontFamily: 'CalibriRegular',
+    // fontFamily: 'CalibriRegular',
+    fontFamily: 'Helvetica',
     fontSize: 12,
   },
   bodyTextBold: {
-    fontFamily: 'CalibriRegularBold',
+    // fontFamily: 'CalibriRegularBold',
+    fontFamily: 'Helvetica-Bold',
     fontSize: 12,
   },
   upperCase: {
     textTransform: 'uppercase',
   },
   signatoryName: {
-    fontFamily: 'CalibriRegularBold',
+    // fontFamily: 'CalibriRegularBold',
+    fontFamily: 'Helvetica-Bold',
     textTransform: 'uppercase',
     paddingTop: 3,
   },
@@ -116,26 +123,25 @@ const styles = StyleSheet.create({
 
 Font.register({
   family: 'CalibriRegular',
-  src: CalibriRegular,
+  // src: '../../../../../public/fonts/calibri-regular.ttf',
+  src: '/assets/fonts/calibri-regular.ttf',
+
+  // src: CalibriRegular,
 });
 
 Font.register({
   family: 'CalibriRegularBold',
-  src: CalibriRegularBold,
+  // src: '../../../../../public/fonts/calibri-regular-bold.ttf',
+  src: '/assets/fonts/calibri-regular-bold.ttf',
+
+  // src: CalibriRegularBold,
 });
 
-const PdDocument = (props) => {
-  const {
-    jobDescription,
-    positionDutyResponsibilities,
-    positionQualificationStandards,
-    proficiencyLevel,
-    prfTrail,
-    prfDetails,
-  } = props;
+export const PdDocument = (props) => {
+  const { jobDescription, positionDutyResponsibilities, positionQualificationStandards, proficiencyLevel } = props;
 
   const renderCoreDuties = () => {
-    const content = positionDutyResponsibilities.duties.core.map((duty, index) => (
+    const content = positionDutyResponsibilities?.duties.core.map((duty, index) => (
       <View style={[styles.rowContainerTable, styles.borderAll]} key={index} wrap={false}>
         <View style={[styles.w14, styles.tData, styles.borderRight]}>
           <Text style={[styles.horizontalCenter, styles.verticalCenter]}>{duty.percentage}</Text>
@@ -154,11 +160,11 @@ const PdDocument = (props) => {
   };
 
   const renderFunctionalCompetencies = () => {
-    const content = proficiencyLevel.functional.map((competency, index) => (
+    const content = proficiencyLevel?.functional.map((competency, index) => (
       <View style={[styles.rowContainerTable, styles.borderAll]} key={index} wrap={false}>
         <View style={[styles.w60, styles.tData, styles.borderRight]}>
           <Text>
-            <Text style={{ fontFamily: 'CalibriRegularBold' }}>{competency.name}</Text> - {competency.description}
+            <Text>{competency.name}</Text> - {competency.description}
           </Text>
         </View>
         <View style={[styles.w40, styles.tData]}>
@@ -171,11 +177,11 @@ const PdDocument = (props) => {
   };
 
   const renderCrossCuttingCompetencies = () => {
-    const content = proficiencyLevel.crossCutting.map((competency, index) => (
+    const content = proficiencyLevel?.crossCutting.map((competency, index) => (
       <View style={[styles.rowContainerTable, styles.borderAll]} key={index} wrap={false}>
         <View style={[styles.w60, styles.tData, styles.borderRight]}>
           <Text>
-            <Text style={{ fontFamily: 'CalibriRegularBold' }}>{competency.name}</Text> - {competency.description}
+            <Text>{competency.name}</Text> - {competency.description}
           </Text>
         </View>
         <View style={[styles.w40, styles.tData]}>
@@ -188,11 +194,11 @@ const PdDocument = (props) => {
   };
 
   const renderManagerialCompetencies = () => {
-    const content = proficiencyLevel.managerial.map((competency, index) => (
+    const content = proficiencyLevel?.managerial.map((competency, index) => (
       <View style={[styles.rowContainerTable, styles.borderAll]} key={index} wrap={false}>
         <View style={[styles.w60, styles.tData, styles.borderRight]}>
           <Text>
-            <Text style={{ fontFamily: 'CalibriRegularBold' }}>{competency.name}</Text> - {competency.description}
+            <Text>{competency.name}</Text> - {competency.description}
           </Text>
         </View>
         <View style={[styles.w40, styles.tData]}>
@@ -204,71 +210,16 @@ const PdDocument = (props) => {
     return content;
   };
 
-  const renderReviewedBy = () => {
-    const content = (
-      <>
-        {prfDetails?.from.name === prfTrail.department.name || prfTrail.department.status === 'N/A' ? (
-          <Text
-            style={[
-              {
-                fontFamily: 'CalibriRegularBold',
-                textTransform: 'uppercase',
-                paddingTop: 25,
-              },
-            ]}
-          >
-            N/A
-          </Text>
-        ) : (
-          <>
-            <Image src={`${prfTrail.department.signatureUrl}`} style={[styles.signature]} />
-            <Text style={[styles.signatoryName]}>{prfTrail.department.name}</Text>
-            <Text>{prfTrail.department.position}</Text>
-          </>
-        )}
-      </>
-    );
-
-    return content;
-  };
-
-  const renderRecommendedBy = () => {
-    const content = (
-      <>
-        {prfDetails?.from.name === prfTrail.agm.name || prfTrail.agm.status === 'N/A' ? (
-          <Text
-            style={[
-              {
-                fontFamily: 'CalibriRegularBold',
-                textTransform: 'uppercase',
-                paddingTop: 25,
-              },
-            ]}
-          >
-            N/A
-          </Text>
-        ) : (
-          <>
-            <Image src={`${prfTrail.agm.signatureUrl}`} style={[styles.signature]} />
-            <Text style={[styles.signatoryName]}>{prfTrail.agm.name}</Text>
-            <Text>{prfTrail.agm.position}</Text>
-          </>
-        )}
-      </>
-    );
-
-    return content;
-  };
-
-  const capitalizeFirstLetter = (string) => {
-    return string.charAt(0).toUpperCase() + string.slice(1);
+  const capitalizeFirstLetter = (string: string) => {
+    if (!isEmpty(string)) return string.charAt(0).toUpperCase() + string.slice(1);
+    else return '';
   };
 
   return (
     <Document
       author="General Santos City Water District"
       subject="Position Description - HRD-014-3"
-      title={'Position Description for ' + jobDescription.itemNumber}
+      title={'Position Description for ' + jobDescription?.itemNumber}
     >
       <Page size="A4" style={styles.page}>
         <Header />
@@ -293,7 +244,7 @@ const PdDocument = (props) => {
                 </View>
 
                 <View style={[styles.w60]}>
-                  <Text>{jobDescription.itemNumber || 'N/A'}</Text>
+                  <Text>{jobDescription?.itemNumber || 'N/A'}</Text>
                 </View>
               </View>
 
@@ -308,7 +259,7 @@ const PdDocument = (props) => {
                 </View>
 
                 <View style={[styles.w60]}>
-                  <Text>{jobDescription.positionTitle || 'N/A'}</Text>
+                  <Text>{jobDescription?.positionTitle || 'N/A'}</Text>
                 </View>
               </View>
 
@@ -323,7 +274,7 @@ const PdDocument = (props) => {
                 </View>
 
                 <View style={[styles.w60]}>
-                  <Text>{jobDescription.assignedTo.office.name || 'N/A'}</Text>
+                  <Text>{jobDescription?.assignedTo.office.name || 'N/A'}</Text>
                 </View>
               </View>
 
@@ -338,7 +289,7 @@ const PdDocument = (props) => {
                 </View>
 
                 <View style={[styles.w60]}>
-                  <Text>{jobDescription.assignedTo.department.name || 'N/A'}</Text>
+                  <Text>{jobDescription?.assignedTo.department.name || 'N/A'}</Text>
                 </View>
               </View>
 
@@ -353,7 +304,7 @@ const PdDocument = (props) => {
                 </View>
 
                 <View style={[styles.w60]}>
-                  <Text>{jobDescription.assignedTo.division.name || 'N/A'}</Text>
+                  <Text>{jobDescription?.assignedTo.division.name || 'N/A'}</Text>
                 </View>
               </View>
 
@@ -368,7 +319,7 @@ const PdDocument = (props) => {
                 </View>
 
                 <View style={[styles.w60]}>
-                  <Text>{jobDescription.reportsTo || 'N/A'}</Text>
+                  <Text>{jobDescription?.reportsTo || 'N/A'}</Text>
                 </View>
               </View>
 
@@ -383,7 +334,7 @@ const PdDocument = (props) => {
                 </View>
 
                 <View style={[styles.w60]}>
-                  <Text>{jobDescription.salary.salaryGrade || 0}</Text>
+                  <Text>{jobDescription?.salary.salaryGrade || 0}</Text>
                 </View>
               </View>
 
@@ -398,7 +349,7 @@ const PdDocument = (props) => {
                 </View>
 
                 <View style={[styles.w60]}>
-                  <Text>{capitalizeFirstLetter(jobDescription.natureOfAppointment) || 'N/A'}</Text>
+                  <Text>{capitalizeFirstLetter(jobDescription?.natureOfAppointment) || 'N/A'}</Text>
                 </View>
               </View>
 
@@ -407,7 +358,7 @@ const PdDocument = (props) => {
                 <Text style={[styles.headerText]}>
                   Describe briefly the general function of Office/Department/Division
                 </Text>
-                <Text>{jobDescription.description || 'N/A'}</Text>
+                <Text>{jobDescription?.description || 'N/A'}</Text>
               </View>
 
               {/* Job Summary */}
@@ -415,7 +366,7 @@ const PdDocument = (props) => {
                 <Text style={[styles.headerText]}>
                   Describe briefly the general function of the position (Job Summary)
                 </Text>
-                <Text>{jobDescription.summary || 'N/A'}</Text>
+                <Text>{jobDescription?.summary || 'N/A'}</Text>
               </View>
             </View>
 
@@ -584,7 +535,7 @@ const PdDocument = (props) => {
                   </View>
 
                   <View style={[styles.w75]}>
-                    <Text>{positionQualificationStandards.education || 'N/A'}</Text>
+                    <Text>{positionQualificationStandards?.education || 'N/A'}</Text>
                   </View>
                 </View>
 
@@ -599,7 +550,7 @@ const PdDocument = (props) => {
                   </View>
 
                   <View style={[styles.w75]}>
-                    <Text>{positionQualificationStandards.training || 'N/A'}</Text>
+                    <Text>{positionQualificationStandards?.training || 'N/A'}</Text>
                   </View>
                 </View>
 
@@ -614,7 +565,7 @@ const PdDocument = (props) => {
                   </View>
 
                   <View style={[styles.w75]}>
-                    <Text>{positionQualificationStandards.experience || 'N/A'}</Text>
+                    <Text>{positionQualificationStandards?.experience || 'N/A'}</Text>
                   </View>
                 </View>
 
@@ -629,7 +580,7 @@ const PdDocument = (props) => {
                   </View>
 
                   <View style={[styles.w75]}>
-                    <Text>{positionQualificationStandards.eligibility || 'N/A'}</Text>
+                    <Text>{positionQualificationStandards?.eligibility || 'N/A'}</Text>
                   </View>
                 </View>
               </View>
@@ -658,61 +609,6 @@ const PdDocument = (props) => {
                 {renderManagerialCompetencies()}
               </View>
             </View>
-
-            {/* SIGNATORIES */}
-            {!isEmpty(prfDetails) ? (
-              <>
-                <View style={[{ marginTop: 35 }]}>
-                  {/* Row 1  */}
-                  <View style={[styles.rowContainer]} wrap={false}>
-                    {/* REQUESTED BY */}
-                    <View style={[styles.w33_33]}>
-                      <Text>Requested by:</Text>
-                      <View style={[styles.horizontalCenter]}>
-                        <Image source={`${prfDetails?.from.fromSignatureUrl}`} style={[styles.signature]} />
-                        <Text style={[styles.signatoryName]}>{prfDetails?.from.name}</Text>
-                        <Text>{prfDetails?.from.position}</Text>
-                      </View>
-                    </View>
-
-                    {/* REVIEWED BY */}
-                    <View style={[styles.w33_33]}>
-                      <Text>Reviewed by:</Text>
-                      <View style={[styles.horizontalCenter]}>{renderReviewedBy()}</View>
-                    </View>
-
-                    {/* RECOMMENDED BY */}
-                    <View style={[styles.w33_33]}>
-                      <Text>Recommended by:</Text>
-                      <View style={[styles.horizontalCenter]}>{renderRecommendedBy()}</View>
-                    </View>
-                  </View>
-
-                  {/* Row 2  */}
-                  <View style={[styles.rowContainer, { marginTop: 20 }]} wrap={false}>
-                    {/* CERTIFIED CORRECT BY */}
-                    <View style={[styles.w50]}>
-                      <Text>Certified correct by:</Text>
-                      <View style={[styles.horizontalCenter]}>
-                        <Image source={`${prfTrail.admin.signatureUrl}`} style={[styles.signature]} />
-                        <Text style={[styles.signatoryName]}>{prfTrail.admin.name}</Text>
-                        <Text>{prfTrail.admin.position}</Text>
-                      </View>
-                    </View>
-
-                    {/* APPROVED BY */}
-                    <View style={[styles.w50]}>
-                      <Text>Approved by:</Text>
-                      <View style={[styles.horizontalCenter]}>
-                        <Image source={`${prfDetails?.for.forSignatureUrl}`} style={[styles.signature]} />
-                        <Text style={[styles.signatoryName]}>{prfDetails?.for.name}</Text>
-                        <Text>{prfDetails?.for.position}</Text>
-                      </View>
-                    </View>
-                  </View>
-                </View>
-              </>
-            ) : null}
           </View>
         </View>
       </Page>
@@ -721,11 +617,10 @@ const PdDocument = (props) => {
 };
 
 // PdDocument.propTypes = {
-//   jobDescription: PropTypes.object.isRequired,
-//   positionDutyResponsibilities: PropTypes.object.isRequired,
-//   positionQualificationStandards: PropTypes.object.isRequired,
-//   proficiencyLevel: PropTypes.object.isRequired,
-//   prfTrail: PropTypes.object,
-//   prfDetails: PropTypes.object,
+//   jobDescription?: PropTypes.object.isRequired,
+//   positionDutyResponsibilities?: PropTypes.object.isRequired,
+//   positionQualificationStandards?: PropTypes.object.isRequired,
+//   proficiencyLevel?: PropTypes.object.isRequired,
+//   prfTrail?: PropTypes.object,
+//   prfDetails?: PropTypes.object,
 // };
-export default PdDocument;

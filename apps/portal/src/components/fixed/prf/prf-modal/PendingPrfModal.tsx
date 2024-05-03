@@ -220,7 +220,7 @@ export const PendingPrfModal = ({ modalState, setModalState, closeModalAction }:
 
                       <main>
                         <main className="flex flex-col h-full lg:flex-row">
-                          <aside className="shrink-0 w-[20rem]">
+                          <aside className="shrink-0 sm:w-full lg:w-[20rem] ">
                             <section className="flex items-center gap-4">
                               <HiOutlineUser className="text-gray-700 shrink-0" />
                               <p className="font-medium text-gray-600 truncate">
@@ -252,35 +252,22 @@ export const PendingPrfModal = ({ modalState, setModalState, closeModalAction }:
                             </section>
 
                             <section className="flex flex-col w-full gap-2 mt-10">
-                              <>
-                                <Button
-                                  variant="danger"
-                                  onClick={() => {
-                                    setCancelModalIsOpen(true);
-                                  }}
-                                >
-                                  Cancel this Request
-                                </Button>
-                              </>
+                              <Button
+                                variant="danger"
+                                onClick={() => {
+                                  setCancelModalIsOpen(true);
+                                }}
+                              >
+                                Cancel this Request
+                              </Button>
                             </section>
                           </aside>
                           <section className="w-full pt-4 lg:pt-0">
                             <main className="w-full h-auto px-5 overflow-y-auto scale-95">
-                              {prfDetails.prfPositions.map((position: Position) => {
-                                return (
-                                  <>
-                                    <PrfPositionCard
-                                      position={position}
-                                      key={position.itemNumber}
-                                      onClick={() => {
-                                        setViewPositionModalIsOpen(true);
-                                        setSelectedPosition(position);
-                                      }}
-                                    />
-                                    <ViewPositionModal />
-                                  </>
-                                );
-                              })}
+                              {prfDetails?.prfPositions.length > 0 &&
+                                prfDetails?.prfPositions.map((position: Position, index: number) => {
+                                  return <PrfPositionCard position={position} key={index} />;
+                                })}
                             </main>
                           </section>
                         </main>

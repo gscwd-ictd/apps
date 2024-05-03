@@ -43,6 +43,7 @@ export const CancelledPrfModal = ({ modalState, setModalState, closeModalAction 
     selectedPrfId,
     patchResponse,
     viewPositionModalIsOpen,
+    selectedPosition,
     setCancelledPrfModalIsOpen,
     getPrfDetails,
     getPrfDetailsSuccess,
@@ -60,6 +61,7 @@ export const CancelledPrfModal = ({ modalState, setModalState, closeModalAction 
     selectedPrfId: state.selectedPrfId,
     patchResponse: state.response.patchResponse,
     viewPositionModalIsOpen: state.viewPositionModalIsOpen,
+    selectedPosition: state.selectedPosition,
     setSelectedPosition: state.setSelectedPosition,
     setCancelledPrfModalIsOpen: state.setCancelledPrfModalIsOpen,
     getPrfDetails: state.getPrfDetails,
@@ -254,20 +256,8 @@ export const CancelledPrfModal = ({ modalState, setModalState, closeModalAction 
                           </aside>
                           <section className="w-full pt-4 lg:pt-0">
                             <main className="w-full h-auto px-5 overflow-y-auto scale-95">
-                              {prfDetails.prfPositions.map((position: Position) => {
-                                return (
-                                  <>
-                                    <PrfPositionCard
-                                      position={position}
-                                      key={position.positionId}
-                                      onClick={() => {
-                                        setViewPositionModalIsOpen(true);
-                                        setSelectedPosition(position);
-                                      }}
-                                    />
-                                    <ViewPositionModal />
-                                  </>
-                                );
+                              {prfDetails.prfPositions.map((position: Position, index: number) => {
+                                return <PrfPositionCard position={position} key={index} />;
                               })}
                             </main>
                           </section>

@@ -1,14 +1,17 @@
 import { Modal } from '@gscwd-apps/oneui';
-import { PDFViewer } from '@react-pdf/renderer';
+import { PDFViewer, Text, Document, Page } from '@react-pdf/renderer';
 import { usePrfStore } from 'apps/portal/src/store/prf.store';
 import { fetchWithToken } from 'apps/portal/src/utils/hoc/fetcher';
 import { isEmpty } from 'lodash';
 import { FunctionComponent, useEffect } from 'react';
 import { SpinnerCircular } from 'spinners-react';
 import useSWR from 'swr';
-import PdDocument from './PdDocument';
+import { Position } from 'apps/portal/src/types/prf.types';
+import { HiOutlineX } from 'react-icons/hi';
+import { PdDocument } from './PdDocument';
 
 type ViewPositionModalProps = {
+  selectedPosition: Position;
   closeModalAction?: () => void;
 };
 
@@ -16,6 +19,7 @@ export const ViewPositionModal: FunctionComponent<ViewPositionModalProps> = ({ c
   const viewPositionModalIsOpen = usePrfStore((state) => state.viewPositionModalIsOpen);
   const selectedPosition = usePrfStore((state) => state.selectedPosition);
   const setViewPositionModalIsOpen = usePrfStore((state) => state.setViewPositionModalIsOpen);
+  const setSelectedPosition = usePrfStore((state) => state.setSelectedPosition);
   const getPositionJobDescription = usePrfStore((state) => state.getPositionJobDescription);
   const getPositionJobDescriptionSuccess = usePrfStore((state) => state.getPositionJobDescriptionSuccess);
   const getPositionJobDescriptionFail = usePrfStore((state) => state.getPositionJobDescriptionFail);
@@ -165,30 +169,57 @@ export const ViewPositionModal: FunctionComponent<ViewPositionModalProps> = ({ c
   // upon success/fail of swr request, zustand state will be updated
   useEffect(() => {
     if (!isEmpty(swrPl)) {
-      getPositionQualificationStandardsSuccess(swrPlIsLoading, swrPl);
+      getPositionCompetenciesSuccess(swrPlIsLoading, swrPl);
     }
 
     if (!isEmpty(swrPlError)) {
-      getPositionQualificationStandardsFail(swrPlIsLoading, swrPlError);
+      getPositionCompetenciesFail(swrPlIsLoading, swrPlError);
     }
   }, [swrPl, swrPlError]);
 
   return (
-    <Modal open={viewPositionModalIsOpen} setOpen={setViewPositionModalIsOpen} size="lg">
-      <Modal.Header>Position Description Document</Modal.Header>
+    <Modal open={viewPositionModalIsOpen} setOpen={setViewPositionModalIsOpen} size="lg" steady noShakeOnSteady>
+      <Modal.Header>
+        <header>
+          <div className="flex justify-between w-full">
+            <h3>Position Description for {selectedPosition.itemNumber}</h3>
+            <div>
+              <button
+                className="rounded-full"
+                onClick={() => {
+                  setViewPositionModalIsOpen(false);
+                  setSelectedPosition({} as Position);
+                }}
+              >
+                <HiOutlineX />
+              </button>
+            </div>
+          </div>
+        </header>
+      </Modal.Header>
       <Modal.Body>
-        {swrJdIsLoading ? (
+        {swrJdIsLoading || swrPlIsLoading || swrQsIsLoading || swrDutiesIsLoading ? (
           <SpinnerCircular />
         ) : (
           <PDFViewer width={'100%'} height={700} showToolbar={false}>
-            {/* <PdDocument
+            <PdDocument
               jobDescription={swrJd}
               positionDutyResponsibilities={swrDuties}
               positionQualificationStandards={swrQs}
               proficiencyLevel={swrPl}
-            /> */}
+            />
           </PDFViewer>
         )}
+        {/* {swrJdIsLoading || swrPlIsLoading || swrQsIsLoading || swrDutiesIsLoading ? (
+          <SpinnerCircular />
+        ) : (
+          <>
+            JD: {JSON.stringify(swrJd)}
+            PL: {JSON.stringify(swrPl)}
+            QS: {JSON.stringify(swrQs)}
+            DR: {JSON.stringify(swrDuties)}
+          </>
+        )} */}
       </Modal.Body>
       <Modal.Footer>
         <></>

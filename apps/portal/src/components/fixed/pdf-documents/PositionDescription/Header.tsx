@@ -1,13 +1,9 @@
+/* eslint-disable jsx-a11y/alt-text */
 import React from 'react';
 import { Text, View, StyleSheet, Font, Image } from '@react-pdf/renderer';
 
-// Fonts
-import ArialRegular from 'assets/fonts/uploads/arial-regular.ttf';
-import ArialSemiBold from 'assets/fonts/uploads/arial.ttf';
-import CalibriRegular from 'assets/fonts/uploads/calibri-regular.ttf';
-
 // Logo
-import GSCWDLogo from 'assets/images/main_logo_transparent.png';
+import GSCWDLogo from '../../../../../public/gwdlogo.png';
 
 const styles = StyleSheet.create({
   page: {
@@ -37,19 +33,21 @@ const styles = StyleSheet.create({
 
   // Field Styles
   headerText: {
-    fontFamily: 'ArialRegular',
+    // fontFamily: 'ArialRegular',
+    fontFamily: 'Helvetica',
     fontSize: 9,
     padding: 1,
     marginVertical: 'auto',
   },
   documentCode: {
-    fontFamily: 'CalibriRegular',
+    // fontFamily: 'CalibriRegular',
+    fontFamily: 'Helvetica',
     fontSize: 11,
     padding: '10 15 0 0',
     textAlign: 'right',
   },
   arialSemiBold: {
-    fontFamily: 'ArialSemiBold',
+    // fontFamily: 'ArialSemiBold',
   },
   verticalCenter: { margin: 'auto 0' },
   horizontalCenter: { textAlign: 'center' },
@@ -62,17 +60,17 @@ const styles = StyleSheet.create({
 
 Font.register({
   family: 'ArialRegular',
-  src: ArialRegular,
+  src: '/assets/fonts/arial-regular.ttf',
 });
 
 Font.register({
   family: 'ArialSemiBold',
-  src: ArialSemiBold,
+  src: '/assets/fonts/arial-semibold.ttf',
 });
 
 Font.register({
   family: 'CalibriRegular',
-  src: CalibriRegular,
+  src: '/assets/fonts/calibri-regular.ttf',
 });
 
 const Header = () => {
@@ -80,7 +78,7 @@ const Header = () => {
     <View style={[styles.rowContainer, { paddingBottom: 10 }]} fixed>
       {/* Logo */}
       <View style={[styles.w30, { padding: '10 0 0 15' }]}>
-        <Image src={GSCWDLogo} style={[styles.logo]} />
+        <Image src={GSCWDLogo.src} style={[styles.logo]} />
       </View>
 
       {/* Center Text */}

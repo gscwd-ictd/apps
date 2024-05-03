@@ -31,6 +31,7 @@ import { useEmployeeStore } from 'apps/portal/src/store/employee.store';
 import { SpinnerDotted } from 'spinners-react';
 import { DateFormatter } from 'libs/utils/src/lib/functions/DateFormatter';
 import { PrfPositionCard } from './PrfPositionCard';
+import { ViewPositionModal } from '../prf-view-position/ViewPositionModal';
 
 type ModalProps = {
   modalState: boolean;
@@ -42,6 +43,7 @@ export const DisapprovedPrfModal = ({ modalState, setModalState, closeModalActio
   const {
     selectedPrfId,
     patchResponse,
+    selectedPosition,
     getPrfDetails,
     getPrfDetailsSuccess,
     getPrfDetailsFail,
@@ -54,6 +56,7 @@ export const DisapprovedPrfModal = ({ modalState, setModalState, closeModalActio
   } = usePrfStore((state) => ({
     selectedPrfId: state.selectedPrfId,
     patchResponse: state.response.patchResponse,
+    selectedPosition: state.selectedPosition,
     setViewPositionModalIsOpen: state.setViewPositionModalIsOpen,
     setSelectedPosition: state.setSelectedPosition,
     getPrfDetails: state.getPrfDetails,
@@ -221,19 +224,8 @@ export const DisapprovedPrfModal = ({ modalState, setModalState, closeModalActio
                           </aside>
                           <section className="w-full pt-4 lg:pt-0">
                             <main className="w-full h-full px-5 overflow-y-auto scale-95">
-                              {prfDetails.prfPositions.map((position: Position) => {
-                                return (
-                                  <>
-                                    <PrfPositionCard
-                                      position={position}
-                                      key={position.positionId}
-                                      onClick={() => {
-                                        setViewPositionModalIsOpen(true);
-                                        setSelectedPosition(position);
-                                      }}
-                                    />
-                                  </>
-                                );
+                              {prfDetails.prfPositions.map((position: Position, index: number) => {
+                                return <PrfPositionCard position={position} key={index} />;
                               })}
                             </main>
                           </section>
