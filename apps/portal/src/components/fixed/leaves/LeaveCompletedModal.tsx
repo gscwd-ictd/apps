@@ -211,6 +211,10 @@ export const LeaveCompletedModal = ({ modalState, setModalState, closeModalActio
                     />
                   ) : null}
 
+                  {leaveIndividualDetail?.leaveApplicationBasicInfo?.isLateFiling ? (
+                    <AlertNotification alertType="error" notifMessage={'Late Filing'} dismissible={false} />
+                  ) : null}
+
                   <div className="flex flex-wrap justify-between">
                     <div className="flex flex-col justify-start items-start w-full sm:w-1/2 px-0.5 pb-3  ">
                       <label className="text-slate-500 text-md whitespace-nowrap pb-0.5">Leave Type:</label>

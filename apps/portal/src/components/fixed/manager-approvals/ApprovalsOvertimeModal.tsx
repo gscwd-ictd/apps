@@ -144,9 +144,11 @@ export const OvertimeModal = ({ modalState, setModalState, closeModalAction }: M
     setActualHours(0);
   }, [modalState]);
 
-  useEffect(() => {
-    setFinalEmployeeList(overtimeDetails.employees);
-  }, [overtimeDetails]);
+  // useEffect(() => {
+  //   // setFinalEmployeeList(overtimeDetails.employees);
+
+  //   console.log(finalEmployeeList);
+  // }, [finalEmployeeList]);
 
   const handleEmployeeList = async (selectedEmployee: EmployeeOvertimeDetail) => {
     const filteredEmployee = finalEmployeeList.filter(
@@ -158,7 +160,9 @@ export const OvertimeModal = ({ modalState, setModalState, closeModalAction }: M
       setFinalEmployeeList(finalEmployeeList.filter((employee) => employee.employeeId !== selectedEmployee.employeeId));
     } else {
       //if selected employee is not found in final employee list, add it from array
-      finalEmployeeList.push(selectedEmployee);
+      setFinalEmployeeList([...finalEmployeeList, selectedEmployee]);
+      // finalEmployeeList.push(selectedEmployee);
+      // console.log(filteredEmployee);
     }
   };
   // Initial zustand state update
@@ -269,7 +273,7 @@ export const OvertimeModal = ({ modalState, setModalState, closeModalAction }: M
           ) : (
             <div className="w-full h-full flex flex-col  ">
               <div className="w-full h-full flex flex-col gap-2 ">
-                <div className="w-full flex flex-col gap-2 px-4 rounded">
+                <div className="w-full flex flex-col gap-0 px-4 rounded">
                   <div className="w-full flex flex-col gap-0">
                     <AlertNotification
                       alertType={
@@ -407,7 +411,7 @@ export const OvertimeModal = ({ modalState, setModalState, closeModalAction }: M
                                 className={`rounded-full border border-stone-100 shadow w-16 ${
                                   overtimeDetails.status === OvertimeStatus.PENDING &&
                                   (finalEmployeeList?.filter((e) => e.employeeId === employee.employeeId).length <= 0
-                                    ? 'opacity-50'
+                                    ? ''
                                     : '')
                                 }`}
                                 src={employee?.avatarUrl ?? ''}
@@ -418,7 +422,7 @@ export const OvertimeModal = ({ modalState, setModalState, closeModalAction }: M
                                   className={`w-full ${
                                     overtimeDetails.status === OvertimeStatus.PENDING &&
                                     (finalEmployeeList?.filter((e) => e.employeeId === employee.employeeId).length <= 0
-                                      ? 'opacity-50'
+                                      ? ''
                                       : '')
                                   }`}
                                 >
@@ -428,7 +432,7 @@ export const OvertimeModal = ({ modalState, setModalState, closeModalAction }: M
                                   className={`w-full ${
                                     overtimeDetails.status === OvertimeStatus.PENDING &&
                                     (finalEmployeeList?.filter((e) => e.employeeId === employee.employeeId).length <= 0
-                                      ? 'opacity-50'
+                                      ? ''
                                       : '')
                                   }`}
                                 >
@@ -466,7 +470,7 @@ export const OvertimeModal = ({ modalState, setModalState, closeModalAction }: M
                                   </Button>
                                 ) : null}
 
-                                {overtimeDetails.status === OvertimeStatus.PENDING ? (
+                                {/* {overtimeDetails.status === OvertimeStatus.PENDING ? (
                                   <Checkbox
                                     // checked={lateFiling}
                                     label="Add/Remove"
@@ -477,7 +481,7 @@ export const OvertimeModal = ({ modalState, setModalState, closeModalAction }: M
                                     // }
                                     onChange={() => handleEmployeeList(employee)}
                                   />
-                                ) : null}
+                                ) : null} */}
                               </div>
                             </div>
                           );

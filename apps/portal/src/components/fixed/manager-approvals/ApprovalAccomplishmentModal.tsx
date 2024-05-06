@@ -197,7 +197,7 @@ export const ApprovalAccomplishmentModal = ({ modalState, setModalState, closeMo
           ) : (
             <div className="w-full h-full flex flex-col  ">
               <div className="w-full h-full flex flex-col gap-2 ">
-                <div className="w-full flex flex-col gap-3 md:gap-2 px-4 rounded">
+                <div className="w-full flex flex-col gap-0 px-4 rounded">
                   <AlertNotification
                     logo={loadingAccomplishmentResponse ? <LoadingSpinner size="xs" /> : null}
                     alertType={

@@ -4,10 +4,7 @@ import { isEmpty } from 'lodash';
 import { useState } from 'react';
 import { FormProvider, SubmitHandler, useForm } from 'react-hook-form';
 import { HiInformationCircle } from 'react-icons/hi';
-import {
-  useWorkExpSheetStore,
-  WorkExperienceSheet,
-} from '../../../../store/work-experience-sheet.store';
+import { useWorkExpSheetStore, WorkExperienceSheet } from '../../../../store/work-experience-sheet.store';
 import { Button } from '../../../modular/buttons/Button';
 import { CardContainer } from '../../../modular/cards/CardContainer';
 import { ModalController } from '../../../modular/modals/ModalController';
@@ -21,52 +18,34 @@ export const WorkExprSheet = (): JSX.Element => {
   // set state for handling modal page
   const [tab, setTab] = useState<number>(0);
   const [modal, setModal] = useState({ isOpen: false, page: 1 });
-  const selectedWorkExperience = useWorkExpSheetStore(
-    (state) => state.selectedWorkExperience
-  );
-  const workExperiencesSheet = useWorkExpSheetStore(
-    (state) => state.workExperiencesSheet
-  );
-  const workExperiences = useWorkExpSheetStore(
-    (state) => state.workExperiences
-  );
-  const setWorkExperiences = useWorkExpSheetStore(
-    (state) => state.setWorkExperiences
-  );
-  const setSelectedWorkExperience = useWorkExpSheetStore(
-    (state) => state.setSelectedWorkExperience
-  );
-  const setWorkExperiencesSheet = useWorkExpSheetStore(
-    (state) => state.setWorkExperiencesSheet
-  );
+  const selectedWorkExperience = useWorkExpSheetStore((state) => state.selectedWorkExperience);
+  const workExperiencesSheet = useWorkExpSheetStore((state) => state.workExperiencesSheet);
+  const workExperiences = useWorkExpSheetStore((state) => state.workExperiences);
+  const setWorkExperiences = useWorkExpSheetStore((state) => state.setWorkExperiences);
+  const setSelectedWorkExperience = useWorkExpSheetStore((state) => state.setSelectedWorkExperience);
+  const setWorkExperiencesSheet = useWorkExpSheetStore((state) => state.setWorkExperiencesSheet);
   const setDuties = useWorkExpSheetStore((state) => state.setDuties);
-  const setAccomplishments = useWorkExpSheetStore(
-    (state) => state.setAccomplishments
-  );
+  const setAccomplishments = useWorkExpSheetStore((state) => state.setAccomplishments);
   const [alertIsOpen, setAlertIsOpen] = useState<boolean>(false);
   const [alertFailIsOpen, setAlertFailIsOpen] = useState<boolean>(false);
-  const noWorkExperience = useWorkExpSheetStore(
-    (state) => state.noWorkExperience
-  );
+  const noWorkExperience = useWorkExpSheetStore((state) => state.noWorkExperience);
 
   const methods = useForm<WorkExperienceSheet>();
 
   // set function for action
   const modalAction: SubmitHandler<any> = (data: any, e: any) => {
     e.preventDefault();
-    if (modal.page === 1 && !isEmpty(selectedWorkExperience))
-      setModal({ ...modal, page: 2 });
+    if (modal.page === 1 && !isEmpty(selectedWorkExperience)) setModal({ ...modal, page: 2 });
     else if (
       modal.page === 2 &&
-      !isEmpty(selectedWorkExperience.immediateSupervisor) &&
-      !isEmpty(selectedWorkExperience.nameOfOffice) &&
+      !isEmpty(selectedWorkExperience.supervisor) &&
+      !isEmpty(selectedWorkExperience.office) &&
       !isEmpty(selectedWorkExperience.accomplishments)
     ) {
       setAlertIsOpen(true);
     } else if (
-      (modal.page === 2 &&
-        isEmpty(selectedWorkExperience.immediateSupervisor)) ||
-      isEmpty(selectedWorkExperience.nameOfOffice) ||
+      (modal.page === 2 && isEmpty(selectedWorkExperience.supervisor)) ||
+      isEmpty(selectedWorkExperience.office) ||
       isEmpty(selectedWorkExperience.accomplishments)
     ) {
       setAlertFailIsOpen(true);
@@ -74,9 +53,7 @@ export const WorkExprSheet = (): JSX.Element => {
   };
 
   const alertAction = () => {
-    const addedWorkExperiences: Array<WorkExperienceSheet> = [
-      ...workExperiencesSheet,
-    ];
+    const addedWorkExperiences: Array<WorkExperienceSheet> = [...workExperiencesSheet];
     const tempWorkExperiences = [...workExperiences];
     setSelectedWorkExperience({
       ...selectedWorkExperience,
@@ -87,9 +64,8 @@ export const WorkExprSheet = (): JSX.Element => {
       if (workExp._id === selectedWorkExperience._id) {
         workExp.duties = selectedWorkExperience.duties;
         workExp.accomplishments = selectedWorkExperience.accomplishments;
-        workExp.immediateSupervisor =
-          selectedWorkExperience.immediateSupervisor;
-        workExp.nameOfOffice = selectedWorkExperience.nameOfOffice;
+        workExp.supervisor = selectedWorkExperience.supervisor;
+        workExp.office = selectedWorkExperience.office;
         workExp.isSelected = true;
         addedWorkExperiences.push(workExp);
       }
@@ -144,8 +120,7 @@ export const WorkExprSheet = (): JSX.Element => {
               <HiInformationCircle size={40} className="text-slate-600" />
             </section>
             <section>
-              The work experience sheet varies on what position you are applying
-              for.
+              The work experience sheet varies on what position you are applying for.
               <br />
               Only include the relevant ones.
             </section>
@@ -162,22 +137,14 @@ export const WorkExprSheet = (): JSX.Element => {
             <section>
               <HiInformationCircle size={40} className="text-slate-600" />
             </section>
-            <section>
-              Work experiences are sorted by date upon final submission of
-              application.
-            </section>
+            <section>Work experiences are sorted by date upon final submission of application.</section>
           </div>
         </CardContainer>
         {!noWorkExperience ? (
           <>
             <div className="flex flex-col w-full grid-cols-2 gap-4 py-7">
               <div className="w-full col-span-1">
-                <Button
-                  onClick={openModal}
-                  btnLabel="Select a work experience"
-                  variant="theme"
-                  type="button"
-                />
+                <Button onClick={openModal} btnLabel="Select a work experience" variant="theme" type="button" />
               </div>
               {/**  */}
             </div>
@@ -207,8 +174,7 @@ export const WorkExprSheet = (): JSX.Element => {
 
                   <Button
                     btnLabel={
-                      modal.page === 1 &&
-                      selectedWorkExperience.isSelected === true
+                      modal.page === 1 && selectedWorkExperience.isSelected === true
                         ? 'View'
                         : modal.page === 1 && !selectedWorkExperience.isSelected
                         ? 'Next'
@@ -219,8 +185,7 @@ export const WorkExprSheet = (): JSX.Element => {
                     fluid
                     form="workExpSheet"
                     className={
-                      (selectedWorkExperience.isSelected && modal.page === 2) ||
-                      isEmpty(selectedWorkExperience)
+                      (selectedWorkExperience.isSelected && modal.page === 2) || isEmpty(selectedWorkExperience)
                         ? 'invisible'
                         : 'visible'
                     }
@@ -230,16 +195,10 @@ export const WorkExprSheet = (): JSX.Element => {
             </Modal>
             {/** Alert Success */}
             <Alert open={alertIsOpen} setOpen={setAlertIsOpen}>
-              <Alert.Description>
-                This action cannot be undone. Do you want to proceed?
-              </Alert.Description>
+              <Alert.Description>This action cannot be undone. Do you want to proceed?</Alert.Description>
               <Alert.Footer alignEnd>
                 <div className="flex w-full gap-4">
-                  <Button
-                    btnLabel="No"
-                    onClick={() => setAlertIsOpen(false)}
-                    variant="light"
-                  ></Button>
+                  <Button btnLabel="No" onClick={() => setAlertIsOpen(false)} variant="light"></Button>
                   <Button btnLabel="Yes" onClick={alertAction}></Button>
                 </div>
               </Alert.Footer>
@@ -249,47 +208,24 @@ export const WorkExprSheet = (): JSX.Element => {
             <Alert open={alertFailIsOpen} setOpen={setAlertFailIsOpen}>
               <Alert.Description>
                 <div className="flex flex-col w-full">
-                  <span className="text-xl">
-                    Incomplete work experience sheet
-                  </span>
-                  <span className="text-lg text-gray-900">
-                    Complete the following:
-                  </span>
+                  <span className="text-xl">Incomplete work experience sheet</span>
+                  <span className="text-lg text-gray-900">Complete the following:</span>
                   <span className="text-gray-600">• Immediate Supervisor</span>
-                  <span className="text-gray-600">
-                    • Name of Office or Unit
-                  </span>
-                  <span className="text-gray-600">
-                    • Accomplishment/s (at least 1)
-                  </span>
-                  <span className="text-gray-600">
-                    • Duty/Duties (not required)
-                  </span>
+                  <span className="text-gray-600">• Name of Office or Unit</span>
+                  <span className="text-gray-600">• Accomplishment/s (at least 1)</span>
+                  <span className="text-gray-600">• Duty/Duties (not required)</span>
                 </div>
               </Alert.Description>
               <Alert.Footer alignEnd>
                 <div className="flex w-full gap-4">
-                  <Button
-                    btnLabel="OK"
-                    onClick={() => setAlertFailIsOpen(false)}
-                    type="button"
-                  ></Button>
+                  <Button btnLabel="OK" onClick={() => setAlertFailIsOpen(false)} type="button"></Button>
                 </div>
               </Alert.Footer>
             </Alert>
           </>
         ) : (
-          <CardContainer
-            bgColor={''}
-            title={''}
-            remarks={''}
-            subtitle={''}
-            className="rounded-xl py-7"
-          >
-            <LabelBox
-              title="No relevant work experience"
-              titleClassName="uppercase text-2xl font-medium"
-            />
+          <CardContainer bgColor={''} title={''} remarks={''} subtitle={''} className="rounded-xl py-7">
+            <LabelBox title="No relevant work experience" titleClassName="uppercase text-2xl font-medium" />
           </CardContainer>
         )}
       </form>

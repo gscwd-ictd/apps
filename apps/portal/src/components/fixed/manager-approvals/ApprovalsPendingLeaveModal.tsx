@@ -131,7 +131,7 @@ export const ApprovalsPendingLeaveModal = ({
           ) : (
             <div className="flex flex-col w-full h-full ">
               <div className="flex flex-col w-full h-full gap-2 ">
-                <div className="flex flex-col w-full gap-2 px-4 rounded">
+                <div className="flex flex-col w-full gap-0 px-4 rounded">
                   {leaveIndividualDetail ? (
                     <AlertNotification
                       alertType={
@@ -169,6 +169,10 @@ export const ApprovalsPendingLeaveModal = ({
                       }
                       dismissible={false}
                     />
+                  ) : null}
+
+                  {leaveIndividualDetail?.isLateFiling ? (
+                    <AlertNotification alertType="error" notifMessage={'Late Filing'} dismissible={false} />
                   ) : null}
 
                   <div className="flex flex-wrap justify-between">

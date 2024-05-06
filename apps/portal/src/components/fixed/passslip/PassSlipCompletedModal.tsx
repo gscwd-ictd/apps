@@ -10,7 +10,6 @@ import { DisputeApplicationModal } from './DisputeModal';
 import dayjs from 'dayjs';
 import { GetDateDifference } from 'libs/utils/src/lib/functions/GetDateDifference';
 import { DateTimeFormatter } from 'libs/utils/src/lib/functions/DateTimeFormatter';
-import PassSlip from 'apps/portal/src/pages/[id]/inbox';
 
 type PassSlipCompletedModalProps = {
   modalState: boolean;
@@ -41,8 +40,6 @@ export const PassSlipCompletedModal = ({
   const closeConfirmationModal = async () => {
     setDisputePassSlipModalIsOpen(false);
   };
-
-  console.log(passSlip);
 
   return (
     <>

@@ -67,7 +67,7 @@ export const ApprovalsCompletedLeaveModal = ({
           ) : (
             <div className="w-full h-full flex flex-col  ">
               <div className="w-full h-full flex flex-col gap-2 ">
-                <div className="w-full flex flex-col gap-2 px-4 rounded">
+                <div className="w-full flex flex-col gap-0 px-4 rounded">
                   {leaveIndividualDetail.status ? (
                     <AlertNotification
                       alertType={
@@ -105,6 +105,10 @@ export const ApprovalsCompletedLeaveModal = ({
                       }
                       dismissible={false}
                     />
+                  ) : null}
+
+                  {leaveIndividualDetail?.isLateFiling ? (
+                    <AlertNotification alertType="error" notifMessage={'Late Filing'} dismissible={false} />
                   ) : null}
 
                   <div className="flex flex-wrap justify-between">
@@ -189,7 +193,7 @@ export const ApprovalsCompletedLeaveModal = ({
                     leaveIndividualDetail?.leaveName === LeaveName.SICK ||
                     leaveIndividualDetail?.leaveName === LeaveName.STUDY ||
                     leaveIndividualDetail?.leaveName === LeaveName.OTHERS ? (
-                      <div className="flex flex-col justify-start items-start w-full px-0.5 pb-3">
+                      <div className="flex flex-col justify-start items-start w-full sm:w-1/2 px-0.5 pb-3">
                         <label className="text-slate-500 text-md whitespace-nowrap pb-0.5 ">
                           {leaveIndividualDetail?.leaveName === LeaveName.VACATION ||
                           leaveIndividualDetail?.leaveName === LeaveName.FORCED ||
