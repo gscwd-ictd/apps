@@ -455,7 +455,7 @@ export const ApprovalOtpContents: FunctionComponent<OtpProps> = ({
             </div>
 
             <Button
-              btnLabel="Close"
+              btnLabel="CLOSE"
               variant="primary"
               className={`${isSubmitLoading == true ? 'cursor-not-allowed' : 'w-full'} `}
               onClick={(e) => handleClose(e)}

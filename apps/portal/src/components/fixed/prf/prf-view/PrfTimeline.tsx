@@ -16,7 +16,7 @@ export const PrfTimeline: FunctionComponent<PrfTimelineProps> = ({ prfTrail, cre
   return (
     <>
       <div className="flex justify-center w-full gap-1">
-        {division.name !== 'N/A' && (
+        {division && division.status !== 'N/A' ? (
           <PrfTimelineNode
             // status={prfDetails.status === 'Cancelled' ? 'Cancelled' : division.status}
             status={division.status}
@@ -28,9 +28,9 @@ export const PrfTimeline: FunctionComponent<PrfTimelineProps> = ({ prfTrail, cre
             photoUrl={division.photoUrl ? division.photoUrl : defaultPhoto.src}
             // photoUrl="https://cdn.lorem.space/images/face/.cache/500x0/pexels-alena-darmel-7710127.jpg"
           />
-        )}
+        ) : null}
 
-        {department.name !== 'N/A' && (
+        {department && department.status !== 'N/A' ? (
           <PrfTimelineNode
             status={department.status}
             // status={prfDetails?.status === 'Cancelled' && division.name === 'N/A' ? 'Cancelled' : department.status}
@@ -42,9 +42,9 @@ export const PrfTimeline: FunctionComponent<PrfTimelineProps> = ({ prfTrail, cre
             // photoUrl="https://images.unsplash.com/photo-1550525811-e5869dd03032?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
             photoUrl={department.photoUrl ? department.photoUrl : defaultPhoto.src}
           />
-        )}
+        ) : null}
 
-        {agm.name !== 'N/A' && (
+        {agm && agm.status !== 'N/A' ? (
           <PrfTimelineNode
             // status={prfDetails?.status === 'Cancelled' && department.name === 'N/A' ? 'Cancelled' : agm.status}
             status={agm.status}
@@ -55,9 +55,9 @@ export const PrfTimeline: FunctionComponent<PrfTimelineProps> = ({ prfTrail, cre
             updatedAt={agm.updatedAt}
             photoUrl={agm.photoUrl ? agm.photoUrl : defaultPhoto.src}
           />
-        )}
+        ) : null}
 
-        {admin.name !== 'N/A' && (
+        {admin && admin.status !== 'N/A' ? (
           <PrfTimelineNode
             status={admin.status}
             name={admin.name}
@@ -67,7 +67,7 @@ export const PrfTimeline: FunctionComponent<PrfTimelineProps> = ({ prfTrail, cre
             updatedAt={admin.updatedAt}
             photoUrl={admin.photoUrl ? admin.photoUrl : defaultPhoto.src}
           />
-        )}
+        ) : null}
 
         <PrfTimelineNode
           status={gm.status}
