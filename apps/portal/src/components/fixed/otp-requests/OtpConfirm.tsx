@@ -29,8 +29,8 @@ export async function confirmOtpCode(otpCode: string, id: any, otpName) {
         if (data.status && data.status === 200) {
           //otp good
           try {
-            localStorage.removeItem(`${otpName}OtpToken_${data.id}`);
-            localStorage.removeItem(`${otpName}OtpEndTime_${data.id}`);
+            // localStorage.removeItem(`${otpName}OtpToken_${data.id}`);
+            // localStorage.removeItem(`${otpName}OtpEndTime_${data.id}`);
             return {
               otpComplete: true,
               otpFieldError: false,
@@ -49,7 +49,7 @@ export async function confirmOtpCode(otpCode: string, id: any, otpName) {
                 errorMessage: errorData,
               };
             } else {
-              const errorData = 'Server Error';
+              const errorData = 'OTP Server Error';
               return {
                 otpComplete: false,
                 otpFieldError: true,
@@ -70,7 +70,7 @@ export async function confirmOtpCode(otpCode: string, id: any, otpName) {
               errorMessage: errorData,
             };
           } else {
-            const errorData = `Server Error`;
+            const errorData = `OTP Server Error`;
             return {
               otpComplete: false,
               otpFieldError: true,

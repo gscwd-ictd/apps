@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import { HiOutlineEye, HiOutlinePencilAlt, HiOutlinePlusCircle } from 'react-icons/hi';
 import { usePdsStore } from '../../../store/pds.store';
 import { TabHeader } from '../tab/TabHeader';
@@ -8,6 +9,17 @@ type PdsTabsProps = {
 };
 
 export const PdsTabs = ({ tab, userId }: PdsTabsProps) => {
+  const [openPdsIsClicked, setOpenPdsIsClicked] = useState<boolean>(false);
+
+  // delay
+  useEffect(() => {
+    if (openPdsIsClicked) {
+      setTimeout(() => {
+        setOpenPdsIsClicked(false);
+      }, 2000);
+    }
+  }, [openPdsIsClicked]);
+
   return (
     <>
       <div className="w-full px-5">
@@ -16,22 +28,14 @@ export const PdsTabs = ({ tab, userId }: PdsTabsProps) => {
             tab={tab}
             tabIndex={1}
             href={`${process.env.NEXT_PUBLIC_PDS}/pds/${userId}`}
+            // onClick={() => setOpenPdsIsClicked(true)}
             icon={<HiOutlinePlusCircle size={26} />}
             title="Open Personal Data Sheet"
             subtitle="Create or Update your PDS"
             notificationCount={0}
             className="bg-indigo-500"
           />
-          {/* <TabHeader
-                    tab={tab}
-                    tabIndex={2}
-                    onClick={() => setTab(2)}
-                    icon={<HiOutlinePencilAlt size={26} />}
-                    title="Update Personal Data Sheet"
-                    subtitle="Update your PDS by section"
-                    notificationCount={0}
-                    className="bg-indigo-500"
-                /> */}
+
           <TabHeader
             tab={tab}
             tabIndex={3}
