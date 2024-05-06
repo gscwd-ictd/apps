@@ -33,10 +33,12 @@ export type Prf = {
 
 export type PrfDetails = {
   _id: string;
+  createdAt?: string;
+  updatedAt?: string;
   prfNo: string;
   withExam: boolean;
   dateNeeded: Date;
-  status: 'Pending' | 'Approved';
+  status: 'Pending' | 'Approved' | 'Cancelled';
   dateRequested: Date;
   for: {
     name: string;

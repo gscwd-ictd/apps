@@ -30,10 +30,10 @@ export const PrfNodePopover: FunctionComponent<PrfNodePopoverProps> = ({
       <Popover.Panel
         className={`absolute -top-[10.5rem] -left-[8rem] z-50 rounded-lg border-2 border-gray-100 bg-white shadow-lg shadow-gray-200`}
       >
-        <div className="w-80 p-4">
-          <div className="border-b border-b-gray-100 pb-2">
+        <div className="p-4 w-80">
+          <div className="pb-2 border-b border-b-gray-100">
             <h5 className="font-medium text-gray-700">{position}</h5>
-            <p className="truncate text-sm text-gray-500">{designation}</p>
+            <p className="text-sm text-gray-500 truncate">{designation}</p>
           </div>
           <div className="mt-5">
             {status === PrfStatus.SENT || status === PrfStatus.APPROVED ? (
@@ -44,16 +44,12 @@ export const PrfNodePopover: FunctionComponent<PrfNodePopoverProps> = ({
                 <div className="flex gap-5 text-sm">
                   <div className="flex items-center gap-1">
                     <HiOutlineCalendar className="text-indigo-700" />
-                    <p className="font-medium text-indigo-500">
-                      {DateFormatter(`${status === PrfStatus.SENT ? createdAt : updatedAt}`, 'MMMM DD, YYYY')}
-                    </p>
+                    <p className="font-medium text-indigo-500">{DateFormatter(`${updatedAt}`, 'MMMM DD, YYYY')}</p>
                   </div>
 
                   <div className="flex items-center gap-1">
                     <HiOutlineClock className="text-indigo-700" />
-                    <p className="font-medium text-indigo-500">
-                      {dayjs(`${status === PrfStatus.SENT ? createdAt : updatedAt}`).format('hh:mm A')}
-                    </p>
+                    <p className="font-medium text-indigo-500">{dayjs(`${updatedAt}`).format('hh:mm A')}</p>
                   </div>
                 </div>
               </>
