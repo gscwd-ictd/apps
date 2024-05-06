@@ -411,7 +411,7 @@ export const OvertimeModal = ({ modalState, setModalState, closeModalAction }: M
                                 className={`rounded-full border border-stone-100 shadow w-16 ${
                                   overtimeDetails.status === OvertimeStatus.PENDING &&
                                   (finalEmployeeList?.filter((e) => e.employeeId === employee.employeeId).length <= 0
-                                    ? 'opacity-50'
+                                    ? ''
                                     : '')
                                 }`}
                                 src={employee?.avatarUrl ?? ''}
@@ -422,7 +422,7 @@ export const OvertimeModal = ({ modalState, setModalState, closeModalAction }: M
                                   className={`w-full ${
                                     overtimeDetails.status === OvertimeStatus.PENDING &&
                                     (finalEmployeeList?.filter((e) => e.employeeId === employee.employeeId).length <= 0
-                                      ? 'opacity-50'
+                                      ? ''
                                       : '')
                                   }`}
                                 >
@@ -432,7 +432,7 @@ export const OvertimeModal = ({ modalState, setModalState, closeModalAction }: M
                                   className={`w-full ${
                                     overtimeDetails.status === OvertimeStatus.PENDING &&
                                     (finalEmployeeList?.filter((e) => e.employeeId === employee.employeeId).length <= 0
-                                      ? 'opacity-50'
+                                      ? ''
                                       : '')
                                   }`}
                                 >
@@ -470,7 +470,7 @@ export const OvertimeModal = ({ modalState, setModalState, closeModalAction }: M
                                   </Button>
                                 ) : null}
 
-                                {overtimeDetails.status === OvertimeStatus.PENDING ? (
+                                {/* {overtimeDetails.status === OvertimeStatus.PENDING ? (
                                   <Checkbox
                                     // checked={lateFiling}
                                     label="Add/Remove"
@@ -481,7 +481,7 @@ export const OvertimeModal = ({ modalState, setModalState, closeModalAction }: M
                                     // }
                                     onChange={() => handleEmployeeList(employee)}
                                   />
-                                ) : null}
+                                ) : null} */}
                               </div>
                             </div>
                           );
