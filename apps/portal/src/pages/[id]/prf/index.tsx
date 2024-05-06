@@ -457,8 +457,8 @@ export default function Prf({ user, employee }: PrfPageProps) {
   );
 }
 
-export const getServerSideProps: GetServerSideProps = async (context: GetServerSidePropsContext) => {
-  const employee = employeeGabalesDummy;
+export const getServerSideProps: GetServerSideProps = withCookieSession(async () => {
+  const employee = getUserDetails();
 
   // check if user role is rank_and_file
   if (
@@ -480,29 +480,4 @@ export const getServerSideProps: GetServerSideProps = async (context: GetServerS
       employee: employee,
     },
   };
-};
-
-// export const getServerSideProps: GetServerSideProps = withCookieSession(async () => {
-//   const employee = getUserDetails();
-
-//   // check if user role is rank_and_file
-//   if (
-//     employee.employmentDetails.userRole === Roles.RANK_AND_FILE ||
-//     employee.employmentDetails.userRole === Roles.JOB_ORDER
-//   ) {
-//     // if true, the employee is not allowed to access this page
-//     return {
-//       redirect: {
-//         permanent: false,
-//         destination: `/${employee.user._id}`,
-//       },
-//     };
-//   }
-
-//   return {
-//     props: {
-//       user: employee.user,
-//       employee: employee,
-//     },
-//   };
-// });
+});
