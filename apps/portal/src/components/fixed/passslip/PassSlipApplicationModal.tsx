@@ -14,6 +14,9 @@ import { DateFormatter } from 'libs/utils/src/lib/functions/DateFormatter';
 import { NatureOfBusiness } from 'libs/utils/src/lib/enums/pass-slip.enum';
 import { useTimeLogStore } from 'apps/portal/src/store/timelogs.store';
 import { ScheduleBases } from 'libs/utils/src/lib/enums/schedule.enum';
+import useSWR from 'swr';
+import { isEmpty } from 'lodash';
+import { fetchWithToken } from 'apps/portal/src/utils/hoc/fetcher';
 
 type PassSlipApplicationModalProps = {
   modalState: boolean;
@@ -72,6 +75,10 @@ export const PassSlipApplicationModal = ({
     postPassSlipListSuccess,
     postPassSlipListFail,
     applyPassSlipModalIsOpen,
+    getSupervisors,
+    getSupervisorsSuccess,
+    getSupervisorsFail,
+    supervisors,
   } = usePassSlipStore((state) => ({
     loadingResponse: state.loading.loadingResponse,
     passSlipsForApproval: state.passSlips.forApproval,
@@ -80,6 +87,10 @@ export const PassSlipApplicationModal = ({
     postPassSlipListSuccess: state.postPassSlipListSuccess,
     postPassSlipListFail: state.postPassSlipListFail,
     applyPassSlipModalIsOpen: state.applyPassSlipModalIsOpen,
+    getSupervisors: state.getSupervisors,
+    getSupervisorsSuccess: state.getSupervisorsSuccess,
+    getSupervisorsFail: state.getSupervisorsFail,
+    supervisors: state.supervisors,
   }));
 
   // React hook form
@@ -93,6 +104,7 @@ export const PassSlipApplicationModal = ({
       isCancelled: false,
       obTransportation: null,
       isMedical: null,
+      supervisorId: null,
     },
   });
 
@@ -109,6 +121,36 @@ export const PassSlipApplicationModal = ({
     }
     setValue('employeeId', employeeDetails.employmentDetails.userId);
   }, [watch('natureOfBusiness')]);
+
+  //fetch employee leave ledger
+  const supervisorDropDownUrl = `${process.env.NEXT_PUBLIC_PORTAL_URL}/pass-slips/dropdown`;
+
+  const {
+    data: swrSupervisor,
+    isLoading: swrSupervisorLoading,
+    error: swrSupervisorError,
+  } = useSWR(applyPassSlipModalIsOpen ? supervisorDropDownUrl : null, fetchWithToken, {
+    shouldRetryOnError: true,
+    revalidateOnFocus: false,
+  });
+
+  // Initial zustand state update
+  useEffect(() => {
+    if (swrSupervisorLoading) {
+      getSupervisors(swrSupervisorLoading);
+    }
+  }, [swrSupervisorLoading]);
+
+  // Upon success/fail of swr request, zustand state will be updated
+  useEffect(() => {
+    if (!isEmpty(swrSupervisor)) {
+      getSupervisorsSuccess(swrSupervisorLoading, swrSupervisor);
+    }
+
+    if (!isEmpty(swrSupervisorError)) {
+      getSupervisorsFail(swrSupervisorLoading, swrSupervisorError.message);
+    }
+  }, [swrSupervisor, swrSupervisorError]);
 
   const onSubmit: SubmitHandler<PassSlipApplicationForm> = (data: PassSlipApplicationForm) => {
     handlePostResult(data);
@@ -254,7 +296,7 @@ export const PassSlipApplicationModal = ({
 
                 {watch('natureOfBusiness') === NatureOfBusiness.OFFICIAL_BUSINESS ? (
                   <div
-                    className={`xl:flex-row xl:items-center flex-col items-start flex gap-2 md:gap-2 justify-between pb-4`}
+                    className={`xl:flex-row xl:items-center flex-col items-start flex gap-2 md:gap-2 justify-between pb-2`}
                   >
                     <label className="text-slate-500 text-md whitespace-nowrap font-medium w-1/2">
                       Mode of Transportation:
@@ -282,7 +324,7 @@ export const PassSlipApplicationModal = ({
 
                 {watch('natureOfBusiness') == NatureOfBusiness.PERSONAL_BUSINESS ? (
                   <div
-                    className={`xl:flex-row xl:items-center flex-col items-start flex gap-2 md:gap-2 justify-between pb-4`}
+                    className={`xl:flex-row xl:items-center flex-col items-start flex gap-2 md:gap-2 justify-between pb-2`}
                   >
                     <label className="text-slate-500 text-md font-medium whitespace-nowrap w-1/2">
                       For Medical Purpose:
@@ -307,25 +349,63 @@ export const PassSlipApplicationModal = ({
                 ) : null}
 
                 {watch('natureOfBusiness') ? (
-                  <div className="flex flex-col gap-2 md:gap-2">
-                    <label className="text-slate-500 text-md font-medium">
-                      Purpose/Desination:
-                      <span className="text-red-600">*</span>
-                    </label>
-                    <textarea
-                      minLength={watch('natureOfBusiness') === NatureOfBusiness.OFFICIAL_BUSINESS ? 20 : 10}
-                      rows={2}
-                      placeholder={`Enter Purpose of Pass Slip`}
-                      name="passSlip_purpose"
-                      id="purposeDestination"
-                      className="resize-none w-full p-2 rounded-md text-slate-500 text-md border-slate-300"
-                      required
-                      {...register('purposeDestination')}
-                    ></textarea>
-                    <span className="text-slate-400 text-xs">{`Minimum of ${
-                      watch('natureOfBusiness') === NatureOfBusiness.OFFICIAL_BUSINESS ? '20' : '10'
-                    } characters required`}</span>
-                  </div>
+                  <>
+                    <div
+                      className={`xl:flex-row xl:items-center flex-col items-start flex gap-2 md:gap-2 justify-between pb-4 `}
+                    >
+                      <label className="text-slate-500 text-md font-medium whitespace-nowrap w-1/2">
+                        Supervisor to Approve:
+                        <span className="text-red-600">*</span>
+                      </label>
+
+                      <div className="w-full xl:w-64">
+                        <select
+                          className="text-slate-500 w-full h-14 rounded-md text-md border-slate-300"
+                          required
+                          defaultValue={''}
+                          {...register('supervisorId')}
+                        >
+                          <option value="" disabled>
+                            Select Supervisor:
+                          </option>
+                          {
+                            // typeOfLeave
+                            supervisors.length > 0 ? (
+                              supervisors.map((item: SelectOption, idx: number) => (
+                                <option value={item.value} key={idx}>
+                                  {item.label}
+                                </option>
+                              ))
+                            ) : (
+                              <option value={null} key={0} disabled>
+                                {null}
+                              </option>
+                            )
+                          }
+                        </select>
+                      </div>
+                    </div>
+
+                    <div className="flex flex-col gap-2 md:gap-2">
+                      <label className="text-slate-500 text-md font-medium">
+                        Purpose/Desination:
+                        <span className="text-red-600">*</span>
+                      </label>
+                      <textarea
+                        minLength={watch('natureOfBusiness') === NatureOfBusiness.OFFICIAL_BUSINESS ? 20 : 10}
+                        rows={2}
+                        placeholder={`Enter Purpose of Pass Slip`}
+                        name="passSlip_purpose"
+                        id="purposeDestination"
+                        className="resize-none w-full p-2 rounded-md text-slate-500 text-md border-slate-300"
+                        required
+                        {...register('purposeDestination')}
+                      ></textarea>
+                      <span className="text-slate-400 text-xs">{`Minimum of ${
+                        watch('natureOfBusiness') === NatureOfBusiness.OFFICIAL_BUSINESS ? '20' : '10'
+                      } characters required`}</span>
+                    </div>
+                  </>
                 ) : null}
               </div>
             </div>

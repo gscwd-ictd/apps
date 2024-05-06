@@ -1,13 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import {
-  PDFViewer,
-  Page,
-  Text,
-  View,
-  Document,
-  StyleSheet,
-  Font,
-} from '@react-pdf/renderer';
+import { PDFViewer, Page, Text, View, Document, StyleSheet, Font } from '@react-pdf/renderer';
 import { Accomplishment, Duty } from '../../store/work-experience-sheet.store';
 import { Data } from 'apps/job-portal/utils/types/data/wes.type';
 
@@ -116,12 +108,7 @@ Font.register({
   src: '/assets/fonts/arial-narrow-bold-italic.ttf',
 });
 
-export const WesDocument = ({
-  formatDate,
-  workExperiencesSheet,
-  isSubmitted,
-  applicant,
-}: Data): JSX.Element => {
+export const WesDocument = ({ formatDate, workExperiencesSheet, isSubmitted, applicant }: Data): JSX.Element => {
   const [isClient, setIsClient] = useState(false);
 
   // Rendering of individual row of work experience
@@ -135,33 +122,18 @@ export const WesDocument = ({
               • Duration: {formatDate(experience.from)} -{' '}
               {experience.to != null ? formatDate(experience.to) : 'PRESENT'}
             </Text>
+            <Text style={[styles.mainListStyle]}>• Position: {experience.positionTitle}</Text>
+            <Text style={[styles.mainListStyle]}>• Name of Office/Unit: {experience.office}</Text>
+            <Text style={[styles.mainListStyle]}>• Immediate Supervisor: {experience.supervisor}</Text>
             <Text style={[styles.mainListStyle]}>
-              • Position: {experience.positionTitle}
-            </Text>
-            <Text style={[styles.mainListStyle]}>
-              • Name of Office/Unit: {experience.nameOfOffice}
-            </Text>
-            <Text style={[styles.mainListStyle]}>
-              • Immediate Supervisor: {experience.immediateSupervisor}
-            </Text>
-            <Text style={[styles.mainListStyle]}>
-              • Name of Agency/Organization and Location:{' '}
-              {experience.companyName}
+              • Name of Agency/Organization and Location: {experience.companyName}
             </Text>
 
-            <Text style={[styles.mainListStyle]}>
-              • List of Accomplishments and Contributions (if any)
-            </Text>
-            <View style={{ paddingLeft: 10 }}>
-              {renderAccomplishments(experience.accomplishments)}
-            </View>
+            <Text style={[styles.mainListStyle]}>• List of Accomplishments and Contributions (if any)</Text>
+            <View style={{ paddingLeft: 10 }}>{renderAccomplishments(experience.accomplishments)}</View>
 
-            <Text style={[styles.mainListStyle]}>
-              • Summary of Actual Duties
-            </Text>
-            <View style={{ paddingLeft: 10 }}>
-              {renderDuties(experience.duties)}
-            </View>
+            <Text style={[styles.mainListStyle]}>• Summary of Actual Duties</Text>
+            <View style={{ paddingLeft: 10 }}>{renderDuties(experience.duties)}</View>
           </View>
         </View>
       ));
@@ -170,9 +142,7 @@ export const WesDocument = ({
   };
 
   // List of accomplishments
-  const renderAccomplishments = (
-    accomplishmentArray: Array<Accomplishment>
-  ) => {
+  const renderAccomplishments = (accomplishmentArray: Array<Accomplishment>) => {
     const content = accomplishmentArray.map((accomplishment, index) => (
       <Text style={[styles.subListStyle]} key={index}>
         - {accomplishment.accomplishment}
@@ -248,16 +218,11 @@ export const WesDocument = ({
                       </Text>
                     </View>
                     <View style={[styles.w85]}>
-                      <Text>
-                        1. Include only the work experiences relevant to the
-                        position being applied to.
-                      </Text>
+                      <Text>1. Include only the work experiences relevant to the position being applied to.</Text>
                       <Text style={[{ paddingTop: 15 }]}>
-                        2. The duration should include start and finish dates,
-                        if known, month in abbreviated form, if known, and year
-                        in full. For the current position, use the word Present,
-                        e.g., 1998-Present. Work experience should be listed
-                        from most recent first.
+                        2. The duration should include start and finish dates, if known, month in abbreviated form, if
+                        known, and year in full. For the current position, use the word Present, e.g., 1998-Present.
+                        Work experience should be listed from most recent first.
                       </Text>
                     </View>
                   </View>
@@ -272,18 +237,12 @@ export const WesDocument = ({
                 <View style={[styles.w60]}></View>
                 <View style={[styles.w40, { textAlign: 'center' }]}>
                   <View style={[styles.borderBottom]}>
-                    <Text style={{ fontFamily: 'ArialBold' }}>
-                      {applicant.fullName?.toUpperCase()}
-                    </Text>
+                    <Text style={{ fontFamily: 'ArialBold' }}>{applicant.fullName?.toUpperCase()}</Text>
                   </View>
                   <Text>(Signature over Printed Name</Text>
                   <Text>of Employee/Applicant)</Text>
 
-                  {isSubmitted ? (
-                    <Text style={{ paddingTop: 15 }}>
-                      Date: {'MMMM DD, YYYY'}
-                    </Text>
-                  ) : null}
+                  {isSubmitted ? <Text style={{ paddingTop: 15 }}>Date: {'MMMM DD, YYYY'}</Text> : null}
                 </View>
               </View>
             </Page>
