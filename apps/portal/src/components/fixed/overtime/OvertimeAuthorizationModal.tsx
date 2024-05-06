@@ -144,7 +144,9 @@ export const OvertimeAuthorizationModal = ({ modalState, setModalState, closeMod
           ) : (
             <PDFViewer width={'100%'} height={1000} showToolbar>
               <Document title="Overtime Authorization Report">
-                <Page size={[612.0, 396.0]}>
+                {/* <Page size={[612.0, 396.0]} orientation="portrait"> */}
+                <Page wrap={true} size={[612.0, 396.0]} orientation="portrait">
+                  {/* <Page size={'A4'}> */}
                   <View style={styles.page}>
                     <View style={styles.controlNumber}>
                       <Text>{/* NO. 1 */}</Text>
