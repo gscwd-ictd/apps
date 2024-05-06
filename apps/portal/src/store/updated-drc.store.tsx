@@ -86,6 +86,12 @@ export type DrcState = {
   // updated position duties
   positionDuties: Array<{ pdId: string }>;
 
+  // temp updated position duties
+  tempPositionDuties: Array<{ pdId: string }>;
+
+  // set temp updated position duties
+  setTempPositionDuties: (tempPositionDuties: Array<{ pdId: string }>) => void;
+
   // set updated position duties
   // setPositionDuties: (positionDuties: Array<{ pdId: string }>) => void;
 
@@ -156,6 +162,9 @@ export const useUpdatedDrcStore = create<DrcState>()(
     shouldMutate: false,
     indexToUpdate: null,
     positionDuties: [],
+    tempPositionDuties: [],
+
+    setTempPositionDuties: (tempPositionDuties: Array<{ pdId: string }>) => set({ tempPositionDuties }),
 
     setIndexToUpdate: (indexToUpdate) => set({ indexToUpdate }),
     setDutyText: (dutyText) => set({ dutyText }),

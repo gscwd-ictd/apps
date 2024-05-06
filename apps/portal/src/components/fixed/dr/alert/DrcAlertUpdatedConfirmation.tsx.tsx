@@ -13,6 +13,7 @@ import { HiExclamationCircle } from 'react-icons/hi';
 import { useSWRConfig } from 'swr';
 import { AssignUpdatedDrcs, UpdateFinalDrcs, UpdateUpdatedFinalDrcs } from '../utils/drcFunctions';
 import { useUpdatedDrcStore } from 'apps/portal/src/store/updated-drc.store';
+import axios from 'axios';
 
 export const DrcAlertUpdatedConfirmation = () => {
   // use alert confirmation store
@@ -204,17 +205,23 @@ export const DrcAlertUpdatedConfirmation = () => {
     postDrcs();
 
     // axios request for post
-    const { error, result } = await postHRIS(
-      `/position-duties-responsibilities`,
-      {
-        plantillaPositionId: selectedPosition.positionId,
-        core: data.core,
-        support: data.support,
-      },
+    // const { error, result } = await postHRIS(
+    //   `/position-duties-responsibilities`,
+    //   {
+    //     positionId: selectedPosition.positionId,
+    //     core: data.core,
+    //     support: data.support,
+    //   },
+    //   { withCredentials: true }
+    // );
+
+    const { data: dataDrc } = await axios.post(
+      `${process.env.NEXT_PUBLIC_HRIS_URL}/position-duties-responsibilities`,
+      { positionId: selectedPosition.positionId, core: data.core, support: data.support },
       { withCredentials: true }
     );
 
-    return { error, result };
+    return { error: false, result: dataDrc };
   };
 
   // // call this for positions where there are existing drcs

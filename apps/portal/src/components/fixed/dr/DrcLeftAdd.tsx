@@ -2,18 +2,30 @@
 
 import { Button } from '@gscwd-apps/oneui';
 import { useUpdatedDrcStore } from 'apps/portal/src/store/updated-drc.store';
+import { isEmpty } from 'lodash';
 
 export const DrcLeftAdd = (): JSX.Element => {
-  const { tempAddedDrcs, selectedDrcType, dutyText, indexToUpdate, setDutyText, setTempAddedDrcs, setIndexToUpdate } =
-    useUpdatedDrcStore((state) => ({
-      tempAddedDrcs: state.tempAddedDrcs,
-      selectedDrcType: state.selectedDrcType,
-      dutyText: state.dutyText,
-      indexToUpdate: state.indexToUpdate,
-      setTempAddedDrcs: state.setTempAddedDrcs,
-      setDutyText: state.setDutyText,
-      setIndexToUpdate: state.setIndexToUpdate,
-    }));
+  const {
+    tempAddedDrcs,
+    selectedDrcType,
+    dutyText,
+    indexToUpdate,
+    tempPositionDuties,
+    setDutyText,
+    setTempAddedDrcs,
+    setIndexToUpdate,
+    setTempPositionDuties,
+  } = useUpdatedDrcStore((state) => ({
+    tempPositionDuties: state.tempPositionDuties,
+    tempAddedDrcs: state.tempAddedDrcs,
+    selectedDrcType: state.selectedDrcType,
+    dutyText: state.dutyText,
+    indexToUpdate: state.indexToUpdate,
+    setTempAddedDrcs: state.setTempAddedDrcs,
+    setDutyText: state.setDutyText,
+    setIndexToUpdate: state.setIndexToUpdate,
+    setTempPositionDuties: state.setTempPositionDuties,
+  }));
 
   // const onSelect = (sequenceNo: number | undefined, drId: string) => {
   //   // initialize currently selected drc
@@ -166,6 +178,9 @@ export const DrcLeftAdd = (): JSX.Element => {
         if (drc.sequenceNo === indexToUpdate) {
           drc.duty = dutyText;
           drc.onEdit = false;
+          if (!isEmpty(drc.pdId)) {
+            setTempPositionDuties([...tempPositionDuties, { pdId: drc.pdId }]);
+          }
           setIndexToUpdate(null);
           setDutyText('');
         }
