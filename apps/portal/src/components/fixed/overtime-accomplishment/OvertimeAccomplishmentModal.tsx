@@ -60,8 +60,6 @@ export const OvertimeAccomplishmentModal = ({ modalState, setModalState, closeMo
   const employeeDetails = useEmployeeStore((state) => state.employeeDetails);
 
   const { windowWidth } = UseWindowDimensions();
-  const [overtimeIsHoliday, setOvertimeIsHoliday] = useState<boolean>(false);
-  const [overtimeIsRestday, setOvertimeIsRestday] = useState<boolean>(false);
   const [encodedHours, setEncodedHours] = useState<number>(0);
   const [finalEncodedHours, setFinalEncodedHours] = useState<number>(
     overtimeAccomplishmentDetails?.computedEncodedHours ?? 0
@@ -109,7 +107,6 @@ export const OvertimeAccomplishmentModal = ({ modalState, setModalState, closeMo
     }
   }, [pendingOvertimeAccomplishmentModalIsOpen]);
 
-  // console.log(dayjs(overtimeAccomplishmentDetails.entriesForTheDay[0]).format('YYYY-MM-DDThh:mm'));
   useEffect(() => {
     setFinalEncodedHours(overtimeAccomplishmentDetails.computedEncodedHours);
   }, [employeeDetails, overtimeAccomplishmentDetails]);
@@ -241,51 +238,8 @@ export const OvertimeAccomplishmentModal = ({ modalState, setModalState, closeMo
     }
   }, [swrFaceScan, swrFaceScanError]);
 
-  //get DTR for OT date and next day
-  // const timeLogsOnDayAndNextUrl = `${process.env.NEXT_PUBLIC_EMPLOYEE_MONITORING_URL}/v1/daily-time-record/employees/entries/logs/${employeeDetails.employmentDetails.companyId}/${overtimeAccomplishmentDetails.plannedDate}`;
-  // use useSWR, provide the URL and fetchWithSession function as a parameter
-
-  // const {
-  //   data: swrTimeLogsOnDayAndNext,
-  //   isLoading: swrTimeLogsOnDayAndNextIsLoading,
-  //   error: swrTimeLogsOnDayAndNextError,
-  // } = useSWR(
-  //   (pendingOvertimeAccomplishmentModalIsOpen || completedOvertimeAccomplishmentModalIsOpen) &&
-  //     employeeDetails.employmentDetails.companyId &&
-  //     overtimeAccomplishmentDetails.plannedDate
-  //     ? timeLogsOnDayAndNextUrl
-  //     : null,
-  //   fetchWithToken,
-  //   {
-  //     shouldRetryOnError: true,
-  //     revalidateOnFocus: true,
-  //   }
-  // );
-
-  // Initial zustand state update
-  // useEffect(() => {
-  //   if (swrTimeLogsOnDayAndNextIsLoading) {
-  //     getTimeLogsOnDayAndNext(swrTimeLogsOnDayAndNextIsLoading);
-  //   }
-  // }, [swrTimeLogsOnDayAndNextIsLoading]);
-
-  // // Upon success/fail of swr request, zustand state will be updated
-  // useEffect(() => {
-  //   if (!isEmpty(swrTimeLogsOnDayAndNext)) {
-  //     getTimeLogsOnDayAndNextSuccess(swrTimeLogsOnDayAndNextIsLoading, swrTimeLogsOnDayAndNext);
-  //   }
-
-  //   if (!isEmpty(swrTimeLogsOnDayAndNextError)) {
-  //     getTimeLogsOnDayAndNextFail(swrTimeLogsOnDayAndNextIsLoading, swrTimeLogsOnDayAndNextError.message);
-  //   }
-  // }, [swrTimeLogsOnDayAndNext, swrTimeLogsOnDayAndNextError]);
-
   return (
     <>
-      {/* {!isEmpty(swrTimeLogsOnDayAndNextError) ? (
-        <ToastNotification toastType="error" notifMessage={`IVMS Entries: ${swrTimeLogsOnDayAndNextError.message}.`} />
-      ) : null} */}
-
       {!isEmpty(swrFaceScanError) ? (
         <ToastNotification toastType="error" notifMessage={`Face Scans: ${swrFaceScanError.message}.`} />
       ) : null}
@@ -718,8 +672,8 @@ export const OvertimeAccomplishmentModal = ({ modalState, setModalState, closeMo
                       <div className={`flex flex-col justify-start items-start w-full px-0.5 pb-3`}>
                         <label className="text-slate-500 text-md whitespace-nowrap pb-0.5">Purpose:</label>
 
-                        <div className="w-auto ml-5 mr-5">
-                          <label className="text-md font-medium">{overtimeAccomplishmentDetails.purpose}</label>
+                        <div className="w-auto ml-5 mr-5 break-words">
+                          <label className="text-md font-medium ">{overtimeAccomplishmentDetails.purpose}</label>
                         </div>
                       </div>
 

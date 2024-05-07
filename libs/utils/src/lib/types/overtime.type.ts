@@ -66,6 +66,7 @@ export type OvertimeDetails = {
   immediateSupervisorName: string;
   remarks?: string;
   employees: Array<EmployeeOvertimeDetail>;
+  approvedBy: string;
 };
 
 export type EmployeeOvertimeDetail = {
@@ -104,6 +105,7 @@ export type OvertimeAccomplishment = {
   supervisorName: string;
   entriesForTheDay: Array<string>;
   actualHrs: string;
+  approvedBy: string;
 };
 
 //for pdf
@@ -143,6 +145,7 @@ export type OvertimeAccomplishmentApprovalPatch = {
   remarks?: string;
   status: OvertimeAccomplishmentStatus;
   actualHrs: number;
+  approvedBy: string;
 };
 
 //for pdf

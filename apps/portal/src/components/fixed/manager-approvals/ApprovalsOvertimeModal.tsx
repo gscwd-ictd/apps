@@ -64,7 +64,7 @@ export const OvertimeModal = ({ modalState, setModalState, closeModalAction }: M
   } = useApprovalStore((state) => ({
     overtimeDetails: state.overtimeDetails,
     approvedOvertimeModalIsOpen: state.approvedOvertimeModalIsOpen,
-    disapprovedOvertimeModalIsOpen: state.disapprovedLeaveModalIsOpen,
+    disapprovedOvertimeModalIsOpen: state.disapprovedOvertimeModalIsOpen,
     pendingOvertimeModalIsOpen: state.pendingOvertimeModalIsOpen,
     otpOvertimeModalIsOpen: state.otpOvertimeModalIsOpen,
     setOtpOvertimeModalIsOpen: state.setOtpOvertimeModalIsOpen,
@@ -137,18 +137,13 @@ export const OvertimeModal = ({ modalState, setModalState, closeModalAction }: M
       overtimeApplicationId: overtimeDetails.id,
       status: OvertimeAccomplishmentStatus.APPROVED,
       actualHrs: actualHours,
+      approvedBy: employeeDetails.employmentDetails.userId,
     });
   }, [actualHours]);
 
   useEffect(() => {
     setActualHours(0);
   }, [modalState]);
-
-  // useEffect(() => {
-  //   // setFinalEmployeeList(overtimeDetails.employees);
-
-  //   console.log(finalEmployeeList);
-  // }, [finalEmployeeList]);
 
   const handleEmployeeList = async (selectedEmployee: EmployeeOvertimeDetail) => {
     const filteredEmployee = finalEmployeeList.filter(
@@ -162,7 +157,6 @@ export const OvertimeModal = ({ modalState, setModalState, closeModalAction }: M
       //if selected employee is not found in final employee list, add it from array
       setFinalEmployeeList([...finalEmployeeList, selectedEmployee]);
       // finalEmployeeList.push(selectedEmployee);
-      // console.log(filteredEmployee);
     }
   };
   // Initial zustand state update
@@ -175,7 +169,7 @@ export const OvertimeModal = ({ modalState, setModalState, closeModalAction }: M
   // Upon success/fail of swr request, zustand state will be updated
   useEffect(() => {
     if (!isEmpty(swrOvertimeDetails)) {
-      // console.log(swrOvertimeDetails);
+      console.log(swrOvertimeDetails);
       getOvertimeDetailsSuccess(swrOvertimeDetailsIsLoading, swrOvertimeDetails);
     }
 
@@ -370,10 +364,7 @@ export const OvertimeModal = ({ modalState, setModalState, closeModalAction }: M
 
                     <div
                       className={`flex flex-col justify-start items-start w-full ${
-                        overtimeDetails.status === OvertimeStatus.PENDING ||
-                        overtimeDetails.status === OvertimeStatus.APPROVED
-                          ? ''
-                          : 'sm:w-1/2'
+                        overtimeDetails.status === OvertimeStatus.PENDING ? '' : 'sm:w-1/2'
                       } px-0.5 pb-3`}
                     >
                       <label className="text-slate-500 text-md whitespace-nowrap pb-0.5">Purpose:</label>
@@ -382,6 +373,23 @@ export const OvertimeModal = ({ modalState, setModalState, closeModalAction }: M
                         <label className="text-md font-medium">{overtimeDetails.purpose}</label>
                       </div>
                     </div>
+
+                    {overtimeDetails.status === OvertimeStatus.APPROVED ||
+                    overtimeDetails.status === OvertimeStatus.DISAPPROVED ? (
+                      <div className="flex flex-col justify-start items-start w-full sm:w-1/2 px-0.5 pb-3  ">
+                        <label className="text-slate-500 text-md whitespace-nowrap pb-0.5">
+                          {overtimeDetails.status === OvertimeStatus.APPROVED
+                            ? 'Approved By:'
+                            : overtimeDetails.status === OvertimeStatus.DISAPPROVED
+                            ? 'Disapproved By:'
+                            : ''}
+                        </label>
+
+                        <div className="w-auto ml-5">
+                          <label className="text-md font-medium">{overtimeDetails.approvedBy}</label>
+                        </div>
+                      </div>
+                    ) : null}
 
                     {overtimeDetails.status === OvertimeStatus.DISAPPROVED ? (
                       <div className="flex flex-col justify-start items-start w-full sm:w-1/2 px-0.5 pb-3  ">

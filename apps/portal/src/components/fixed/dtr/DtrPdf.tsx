@@ -252,7 +252,7 @@ export const DtrPdf: FunctionComponent<DtrPdfProps> = ({ employeeData, employeeD
                           },
                         ]}
                       >
-                        z{employeeData.profile.firstName} {employeeData.profile.middleName}{' '}
+                        {employeeData.profile.firstName} {employeeData.profile.middleName}{' '}
                         {employeeData.profile.lastName}{' '}
                         {employeeData.profile.nameExtension === 'N/A' ? '' : employeeData.profile.nameExtension}
                       </Text>

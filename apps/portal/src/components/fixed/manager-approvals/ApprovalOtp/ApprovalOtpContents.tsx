@@ -276,6 +276,7 @@ export const ApprovalOtpContents: FunctionComponent<OtpProps> = ({
       } else if (otpName === ManagerOtpApproval.OVERTIME) {
         data = {
           managerId: employeeId,
+          approvedBy: employeeId,
           remarks: remarks,
           status: actionOvertime,
           overtimeApplicationId: tokenId,

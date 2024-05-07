@@ -20,6 +20,10 @@ import { fetchWithToken } from '../../../utils/hoc/fetcher';
 import { isEmpty } from 'lodash';
 import dayjs from 'dayjs';
 import { LeaveName } from 'libs/utils/src/lib/enums/leave.enum';
+import axios from 'axios';
+import { EmployeeDtrWithSchedule } from 'libs/utils/src/lib/types/dtr.type';
+import { DateFormatter } from 'libs/utils/src/lib/functions/DateFormatter';
+import { ToastNotification } from '@gscwd-apps/oneui';
 
 function classNames(...classes: any) {
   return classes.filter(Boolean).join(' ');
@@ -43,6 +47,8 @@ export default function Calendar({
   const [currentMonth, setCurrentMonth] = useState(format(today, 'MMM-yyyy'));
   const firstDayCurrentMonth = parse(currentMonth, 'MMM-yyyy', new Date());
   const [selectedDates, setSelectedDates] = useState<string[]>([]);
+  const [lastDateOfDuty, setLastDateOfDuty] = useState(today);
+  const [errorAllowableSpl, setErrorAllowableSpl] = useState<string>(null);
   // set state for employee store
   const employeeDetails = useEmployeeStore((state) => state.employeeDetails);
 
@@ -51,6 +57,7 @@ export default function Calendar({
     leaveDateFrom,
     leaveDateTo,
     overlappingLeaveCount,
+    applyLeaveModalIsOpen,
     setLeaveDateFrom,
     setLeaveDateTo,
     setLeaveDates,
@@ -62,6 +69,7 @@ export default function Calendar({
     leaveDateFrom: state.leaveDateFrom,
     leaveDateTo: state.leaveDateTo,
     overlappingLeaveCount: state.overlappingLeaveCount,
+    applyLeaveModalIsOpen: state.applyLeaveModalIsOpen,
     setLeaveDateFrom: state.setLeaveDateFrom,
     setLeaveDateTo: state.setLeaveDateTo,
     setLeaveDates: state.setLeaveDates,
@@ -129,7 +137,7 @@ export default function Calendar({
         //adds date to array
         //if selected date is not found in unavailable dates array
         if (!swrUnavailableDates.some((item) => item.date === specifiedDate)) {
-          //for VL, FL, Solo Parent, SPL, within 10 days from today and not late filing
+          //for VL, FL, Solo Parent, within 10 days from today and not late filing
           if (
             (leaveName === LeaveName.VACATION ||
               leaveName === LeaveName.FORCED ||
@@ -137,6 +145,14 @@ export default function Calendar({
               leaveName === LeaveName.SOLO_PARENT) &&
             dayjs(`${specifiedDate}`).diff(`${today}`, 'day') >= 0 &&
             dayjs(`${specifiedDate}`).diff(`${today}`, 'day') <= 10 &&
+            !isLateFiling
+          ) {
+            setSelectedDates((selectedDates) => [...selectedDates, specifiedDate]);
+          }
+          //for SPL, between last duty date and today and not late filing
+          if (
+            leaveName === LeaveName.SPECIAL_PRIVILEGE &&
+            DateFormatter(specifiedDate, 'MM-DD-YYYY') > DateFormatter(lastDateOfDuty, 'MM-DD-YYYY') &&
             !isLateFiling
           ) {
             setSelectedDates((selectedDates) => [...selectedDates, specifiedDate]);
@@ -234,8 +250,51 @@ export default function Calendar({
     setCurrentMonth(format(firstDayNextMonth, 'MMM-yyyy'));
   }
 
+  //search for last date of duty from today
+  async function isLastDutyDate(date: Date) {
+    let isDateFound = false;
+    let dateToSearch = add(date, { days: -1 });
+    while (!isDateFound && applyLeaveModalIsOpen) {
+      try {
+        const data = await axios.get(
+          `${process.env.NEXT_PUBLIC_EMPLOYEE_MONITORING_URL}/v1/daily-time-record/employees/${
+            employeeDetails.employmentDetails.companyId
+          }/${dayjs(dateToSearch).format('YYYY-MM-DD')}`
+        );
+        if (!isEmpty(data)) {
+          if (!isEmpty(data.data.dtr.timeIn) || !isEmpty(data.data.dtr.timeOut)) {
+            isDateFound = true;
+            setLastDateOfDuty(data.data.date);
+            // console.log(data.data.date, 'last date with duty');
+          } else {
+            isDateFound = false;
+            dateToSearch = add(dateToSearch, { days: -1 });
+          }
+        } else {
+          setErrorAllowableSpl('Error');
+          isDateFound = true;
+        }
+      } catch (error: any) {
+        setErrorAllowableSpl(error);
+        isDateFound = true;
+      }
+    }
+  }
+
+  //search for last date of duty from today
+  useEffect(() => {
+    setErrorAllowableSpl(null);
+    if (leaveName === LeaveName.SPECIAL_PRIVILEGE && applyLeaveModalIsOpen) {
+      isLastDutyDate(today);
+    }
+  }, [leaveName, applyLeaveModalIsOpen]);
+
   return (
     <>
+      {!isEmpty(errorAllowableSpl) ? (
+        <ToastNotification toastType="error" notifMessage={`${errorAllowableSpl}: Failed to get last date of`} />
+      ) : null}
+
       {type === 'range' ? (
         <div className="flex flex-col md:flex-row gap-2 items-start md:items-center">
           <div className="w-full flex flex-col md:flex-row lg:flex-col xl:flex-row justify-between gap-2 items-center">
@@ -244,7 +303,7 @@ export default function Calendar({
               <input
                 required
                 type="date"
-                value={leaveDateFrom ? leaveDateFrom : 'mm/dd-yyyy'}
+                value={leaveDateFrom ? leaveDateFrom : ''}
                 className="text-slate-500 text-md border-slate-300 rounded w-full"
                 onChange={(e) => setLeaveDateFrom(e.target.value as unknown as string)}
               />
@@ -254,7 +313,7 @@ export default function Calendar({
               <input
                 required
                 type="date"
-                value={leaveDateTo ? leaveDateTo : 'mm/dd-yyyy'}
+                value={leaveDateTo ? leaveDateTo : ''}
                 className="text-slate-500 text-md border-slate-300 rounded w-full"
                 onChange={(e) => setLeaveDateTo(e.target.value as unknown as string)}
               />
@@ -322,18 +381,23 @@ export default function Calendar({
                           //disable date selection for past dates from current day for VL/FL/SOLO
                           (leaveName === LeaveName.VACATION ||
                             leaveName === LeaveName.FORCED ||
-                            leaveName === LeaveName.SPECIAL_PRIVILEGE ||
                             leaveName === LeaveName.SOLO_PARENT) &&
                             dayjs(`${day}`).diff(`${today}`, 'day') < 0 &&
                             isLateFiling === false &&
                             'text-slate-300',
-                          //disable date selection starting from 10th day from current day for VL/FL/SOLO
+
+                          //disable date selection starting from 10th day from current day for VL/FL/SOLO/SPL
                           (leaveName === LeaveName.VACATION ||
                             leaveName === LeaveName.FORCED ||
                             leaveName === LeaveName.SPECIAL_PRIVILEGE ||
                             leaveName === LeaveName.SOLO_PARENT) &&
                             dayjs(`${day}`).diff(`${today}`, 'day') > 10 &&
                             // isLateFiling === false &&
+                            'text-slate-300',
+                          //disable date selection for past dates from current day for SPL ONLY
+                          leaveName === LeaveName.SPECIAL_PRIVILEGE &&
+                            DateFormatter(day, 'MM-DD-YYYY') <= DateFormatter(lastDateOfDuty, 'MM-DD-YYYY') &&
+                            isLateFiling === false &&
                             'text-slate-300',
                           //disable date selection from 3rd day beyond in the past if previous day is SUN from current day for SL
                           // leaveName === LeaveName.SICK &&
