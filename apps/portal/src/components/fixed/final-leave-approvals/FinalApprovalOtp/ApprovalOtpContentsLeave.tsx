@@ -331,7 +331,7 @@ export const ApprovalOtpContentsLeave: FunctionComponent<OtpProps> = ({
             <div className="text-center text-sm mb-4">Leave has been approved.</div>
 
             <Button
-              btnLabel="Close"
+              btnLabel="CLOSE"
               variant="primary"
               className={`${isSubmitLoading == true ? 'cursor-not-allowed' : 'w-full'} `}
               onClick={(e) => handleClose(e)}

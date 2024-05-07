@@ -92,10 +92,7 @@ export const ForApprovalPrfModal = ({ modalState, setModalState, closeModalActio
     isLoading: swrPrfIsLoading,
     error: swrPrfError,
     mutate: mutatePrfDetails,
-  } = useSWR(`${prfUrl}/prf/details/${selectedPrfId}`, fetchWithToken, {
-    shouldRetryOnError: false,
-    revalidateOnFocus: true,
-  });
+  } = useSWR(`${prfUrl}/prf/details/${selectedPrfId}`, fetchWithToken, {});
 
   // Initial zustand state update
   useEffect(() => {
@@ -158,7 +155,6 @@ export const ForApprovalPrfModal = ({ modalState, setModalState, closeModalActio
   }, [patchError]);
 
   const { windowWidth } = UseWindowDimensions();
-
   return (
     <>
       <Modal size={'full'} open={modalState} setOpen={setModalState}>
@@ -208,7 +204,7 @@ export const ForApprovalPrfModal = ({ modalState, setModalState, closeModalActio
                         mobile={employeeDetail.profile.mobileNumber}
                         employeeId={employeeDetail.employmentDetails.userId}
                         action={'approved'}
-                        tokenId={`${router.query.prfid}`}
+                        tokenId={selectedPrfId}
                         otpName={'prf'}
                         remarks={''}
                       />

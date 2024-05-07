@@ -52,6 +52,7 @@ export type EmploymentDetails = {
   isPdcSecretariat?: boolean;
   overtimeImmediateSupervisorId: string;
   officerOfTheDay: Array<OfficerOfTheDay>;
+  employeeFullName?: string;
 };
 
 export type EmployeeDetails = {

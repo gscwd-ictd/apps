@@ -109,6 +109,12 @@ export default function Prf({ user, employee }: PrfPageProps) {
   const {
     patchResponse,
     patchError,
+
+    errorForApproval,
+    errorPending,
+    errorDisapproved,
+    errorCancelled,
+
     getPrfDetailsForApprovalList,
     getPrfDetailsForApprovalListSuccess,
     getPrfDetailsForApprovalListFail,
@@ -129,6 +135,12 @@ export default function Prf({ user, employee }: PrfPageProps) {
   } = usePrfStore((state) => ({
     patchResponse: state.response.patchResponse,
     patchError: state.errors.errorResponse,
+
+    errorForApproval: state.errors.errorForApprovalList,
+    errorPending: state.errors.errorPendingList,
+    errorDisapproved: state.errors.errorDisapprovedList,
+    errorCancelled: state.errors.errorCancelledList,
+
     getPrfDetailsForApprovalList: state.getPrfDetailsForApprovalList,
     getPrfDetailsForApprovalListSuccess: state.getPrfDetailsForApprovalListSuccess,
     getPrfDetailsForApprovalListFail: state.getPrfDetailsForApprovalListFail,
@@ -157,7 +169,10 @@ export default function Prf({ user, employee }: PrfPageProps) {
     isLoading: swrPendingPrfListIsLoading,
     error: swrPendingPrfListError,
     mutate: mutatePendingPrfDetails,
-  } = useSWR(`${prfUrl}/prf/${employee.user._id}?status=pending`, fetchWithToken, {});
+  } = useSWR(`${prfUrl}/prf/${employee.user._id}?status=pending`, fetchWithToken, {
+    shouldRetryOnError: false,
+    revalidateOnFocus: true,
+  });
 
   // Initial zustand state update
   useEffect(() => {
@@ -183,7 +198,10 @@ export default function Prf({ user, employee }: PrfPageProps) {
     isLoading: swrDisapprovedPrfListIsLoading,
     error: swrDisapprovedPrfListError,
     mutate: mutateDisapprovedPrfDetails,
-  } = useSWR(`${prfUrl}/prf/${employee.user._id}?status=disapproved`, fetchWithToken, {});
+  } = useSWR(`${prfUrl}/prf/${employee.user._id}?status=disapproved`, fetchWithToken, {
+    shouldRetryOnError: false,
+    revalidateOnFocus: true,
+  });
 
   // Initial zustand state update
   useEffect(() => {
@@ -209,7 +227,10 @@ export default function Prf({ user, employee }: PrfPageProps) {
     isLoading: swrForApprovalPrfListIsLoading,
     error: swrForApprovalPrfListError,
     mutate: mutateForApprovalPrfDetails,
-  } = useSWR(`${prfUrl}/prf-trail/employee/${employee.user._id}`, fetchWithToken, {});
+  } = useSWR(`${prfUrl}/prf-trail/employee/${employee.user._id}`, fetchWithToken, {
+    shouldRetryOnError: false,
+    revalidateOnFocus: true,
+  });
 
   // Initial zustand state update
   useEffect(() => {
@@ -235,7 +256,7 @@ export default function Prf({ user, employee }: PrfPageProps) {
     isLoading: swrCancelledPrfListIsLoading,
     error: swrCancelledPrfListError,
     mutate: mutateCancelledPrfDetails,
-  } = useSWR(`${prfUrl}/prf/cancelled`, fetchWithToken, {
+  } = useSWR(`${prfUrl}/prf/${employee.user._id}/?status=cancelled`, fetchWithToken, {
     shouldRetryOnError: false,
     revalidateOnFocus: true,
   });
@@ -363,8 +384,30 @@ export default function Prf({ user, employee }: PrfPageProps) {
       {!isEmpty(patchResponse) ? (
         <ToastNotification toastType="success" notifMessage={`PRF Action Submitted.`} />
       ) : null}
+
       {/* Disapprove PRF Failed Error */}
       {!isEmpty(patchError) ? <ToastNotification toastType="error" notifMessage={`${patchError}`} /> : null}
+
+      {/* Fetch Pending PRF Error */}
+      {!isEmpty(errorPending) ? (
+        <ToastNotification toastType="error" notifMessage={`${errorPending}: Failed to load Pending PRF.`} />
+      ) : null}
+
+      {/* Fetch For Approval PRF Error */}
+      {!isEmpty(errorForApproval) ? (
+        <ToastNotification toastType="error" notifMessage={`${errorForApproval}: Failed to load For Approval PRF.`} />
+      ) : null}
+
+      {/* Fetch Disapproved PRF Error */}
+      {!isEmpty(errorDisapproved) ? (
+        <ToastNotification toastType="error" notifMessage={`${errorDisapproved}: Failed to load Disapproved PRF.`} />
+      ) : null}
+
+      {/* Fetch Cancelled PRF Error */}
+      {!isEmpty(errorCancelled) ? (
+        <ToastNotification toastType="error" notifMessage={`${errorCancelled}: Failed to load Cancelled PRF.`} />
+      ) : null}
+
       {/* Pending PRF Modal */}
       <PendingPrfModal
         modalState={pendingPrfModalIsOpen}

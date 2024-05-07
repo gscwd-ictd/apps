@@ -97,12 +97,14 @@ export const ApprovalAccomplishmentModal = ({ modalState, setModalState, closeMo
       status: null,
       remarks: '',
       actualHrs: null,
+      approvedBy: employeeDetails.employmentDetails.userId,
     },
   });
 
   useEffect(() => {
     setValue('employeeId', overtimeAccomplishmentEmployeeId);
     setValue('overtimeApplicationId', overtimeAccomplishmentApplicationId);
+    setValue('approvedBy', employeeDetails.employmentDetails.userId);
   }, [watch('status')]);
 
   useEffect(() => {
@@ -134,7 +136,6 @@ export const ApprovalAccomplishmentModal = ({ modalState, setModalState, closeMo
   // Upon success/fail of swr request, zustand state will be updated
   useEffect(() => {
     if (!isEmpty(swrOvertimeAccomplishment)) {
-      // console.log(swrOvertimeAccomplishment);
       getAccomplishmentDetailsSuccess(swrOvertimeAccomplishmentIsLoading, swrOvertimeAccomplishment);
     }
 
@@ -341,6 +342,18 @@ export const ApprovalAccomplishmentModal = ({ modalState, setModalState, closeMo
                       </div>
                     </div>
 
+                    <div className="flex flex-col justify-start items-start w-full sm:w-1/2 px-0.5 pb-3  ">
+                      <label className="text-slate-500 text-md whitespace-nowrap pb-0.5">
+                        {accomplishmentDetails.status === OvertimeAccomplishmentStatus.DISAPPROVED
+                          ? 'Disapproved By:'
+                          : 'Approved By:'}
+                      </label>
+
+                      <div className="w-auto ml-5">
+                        <label className="text-md font-medium">{accomplishmentDetails.approvedBy ?? '---'}</label>
+                      </div>
+                    </div>
+
                     <div className="flex flex-col justify-start items-start w-full px-0.5 pb-3  ">
                       <label className="text-slate-500 text-md whitespace-nowrap pb-0.5">Accomplishment:</label>
 
@@ -375,7 +388,7 @@ export const ApprovalAccomplishmentModal = ({ modalState, setModalState, closeMo
                           placeholder="Number of hours"
                           required
                           defaultValue={0}
-                          max="24"
+                          max={watch('status') === OvertimeAccomplishmentStatus.DISAPPROVED ? '0' : '24'}
                           step={0.1}
                           min={watch('status') === OvertimeAccomplishmentStatus.DISAPPROVED ? '0' : '0.1'}
                           {...register('actualHrs')}
@@ -424,7 +437,7 @@ export const ApprovalAccomplishmentModal = ({ modalState, setModalState, closeMo
           >
             {/* contents */}
             <ApprovalCaptcha
-              employeeId={employeeDetails.user._id}
+              employeeId={employeeDetails.employmentDetails.userId}
               dataToSubmitOvertimeAccomplishment={dataToSubmit}
               tokenId={overtimeDetails.id}
               captchaName={'Accomplishment Captcha'}

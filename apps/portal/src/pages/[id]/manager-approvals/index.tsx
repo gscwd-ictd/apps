@@ -107,8 +107,8 @@ export default function Approvals({
                         icon={<HiClipboard size={26} />}
                         subtitle="Show all Overtime requests"
                         notificationCount={
-                          pendingApprovalsCount.pendingOvertimeApprovals != 0
-                            ? pendingApprovalsCount.pendingOvertimeApprovals
+                          pendingApprovalsCount.pendingOvertimesCount != 0
+                            ? pendingApprovalsCount.pendingOvertimesCount
                             : 0
                         }
                         className="bg-indigo-500"
