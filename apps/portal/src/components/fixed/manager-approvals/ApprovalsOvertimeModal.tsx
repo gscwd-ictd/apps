@@ -169,7 +169,6 @@ export const OvertimeModal = ({ modalState, setModalState, closeModalAction }: M
   // Upon success/fail of swr request, zustand state will be updated
   useEffect(() => {
     if (!isEmpty(swrOvertimeDetails)) {
-      console.log(swrOvertimeDetails);
       getOvertimeDetailsSuccess(swrOvertimeDetailsIsLoading, swrOvertimeDetails);
     }
 

@@ -100,7 +100,6 @@ export const ApprovalCaptcha: FunctionComponent<CaptchaProps> = ({
     } else {
       //overtime accomplishment approval
       if (dataToSubmitOvertimeAccomplishment) {
-        console.log(dataToSubmitOvertimeAccomplishment);
         patchOvertimeAccomplishment();
         const { error, result } = await patchPortal(
           '/v1/overtime/accomplishments/approval',

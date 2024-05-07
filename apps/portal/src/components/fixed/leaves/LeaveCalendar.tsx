@@ -265,7 +265,6 @@ export default function Calendar({
           if (!isEmpty(data.data.dtr.timeIn) || !isEmpty(data.data.dtr.timeOut)) {
             isDateFound = true;
             setLastDateOfDuty(data.data.date);
-            // console.log(data.data.date, 'last date with duty');
           } else {
             isDateFound = false;
             dateToSearch = add(dateToSearch, { days: -1 });
