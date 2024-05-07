@@ -12,33 +12,24 @@ const axiosApi = axios.create({
 });
 
 export const getPendingPrfs = async (employeeId: string) => {
-  const { data } = await axios.get(
-    `${API_URL}/prf/${employeeId}?status=pending`
-  );
+  const { data } = await axios.get(`${API_URL}/prf/${employeeId}?status=pending`);
 
   return data;
 };
 
 export const getDisapprovedPrfs = async (employeeId: string) => {
-  const { data } = await axios.get(
-    `${API_URL}/prf/${employeeId}?status=disapproved`
-  );
+  const { data } = await axios.get(`${API_URL}/prf/${employeeId}?status=disapproved`);
 
   return data;
 };
 
 export const getForApprovalPrfs = async (employeeId: string) => {
-  const { data } = await axios.get(
-    `${API_URL}/prf-trail/employee/${employeeId}`
-  );
+  const { data } = await axios.get(`${API_URL}/prf-trail/employee/${employeeId}`);
 
   return data;
 };
 
-export const getPrfById = async (
-  prfId: string,
-  context: GetServerSidePropsContext
-) => {
+export const getPrfById = async (prfId: string, context: GetServerSidePropsContext) => {
   const { data } = await axios.get(`${API_URL}/prf/details/${prfId}`, {
     // make sure to make use of session cookie
     withCredentials: true,
@@ -50,10 +41,7 @@ export const getPrfById = async (
   return data;
 };
 
-export const getPrfTrailByPrfId = async (
-  prfId: string,
-  context: GetServerSidePropsContext
-) => {
+export const getPrfTrailByPrfId = async (prfId: string, context: GetServerSidePropsContext) => {
   const { data } = await axios.get(`${API_URL}/prf-trail/${prfId}`, {
     // make sure to make use of session cookie
     withCredentials: true,
@@ -89,34 +77,23 @@ export const patchPrfRequest = async (url: string, data: any, config = {}) =>
       return { error: false, result: response.data };
     })
     .catch((error) => {
-      if (error.message === 'Network Error')
-        return { error: true, result: `Cannot connect to the server.` };
+      if (error.message === 'Network Error') return { error: true, result: `Cannot connect to the server.` };
 
       return { error: true, result: error.response.data.message };
     });
 
-export const savePrf = async (prfData: CreatedPrf) =>
-  await post(`${API_URL}/prf`, prfData);
+export const savePrf = async (prfData: CreatedPrf) => await post(`${API_URL}/prf`, prfData);
 
-export const createPrf = (
-  selectedPositions: Array<Position>,
-  withExam: boolean,
-  employeeId: string
-) => {
+export const createPrf = (selectedPositions: Array<Position>, withExam: boolean, employeeId: string) => {
   // create an empty array that will hold all requested positions
   const requestedPositions: Array<RequestedPosition> = [];
 
   // loop through all selected positions
   selectedPositions.forEach((position: Position) => {
     // remove unnecesary fields from selected positions
-    const trimmedData = (({
-      designation,
-      sequenceNo,
-      itemNumber,
-      positionTitle,
-      isSelected,
-      ...rest
-    }) => rest)(position);
+    const trimmedData = (({ designation, sequenceNo, itemNumber, positionTitle, isSelected, ...rest }) => rest)(
+      position
+    );
 
     // insert the trimmed object to requested positions array
     requestedPositions.push(trimmedData);

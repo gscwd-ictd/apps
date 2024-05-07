@@ -23,7 +23,6 @@ export async function confirmOtpSms(otpToken: string, otpCode: string) {
     );
     return data;
   } catch (error: any) {
-    // console.log(error.response.data);
     return error;
   }
 }

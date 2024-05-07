@@ -180,7 +180,7 @@ export const PrfOtpContents: FunctionComponent<OtpProps> = ({
 
     const data = await confirmOtpCode(otpCode, tokenId, otpName);
     if (data) {
-      const { error, result } = await patchPrfRequest(`/prf-trail/${selectedPrfId}`, {
+      const { error, result } = await patchPrfRequest(`/prf-trail/${tokenId}`, {
         status: PrfStatus.APPROVED,
         employeeId: employeeId,
         remarks: remarks,
@@ -339,7 +339,7 @@ export const PrfOtpContents: FunctionComponent<OtpProps> = ({
             <div className="text-center text-sm mb-4">Position Request has been {action}.</div>
 
             <Button
-              btnLabel="Close"
+              btnLabel="CLOSE"
               variant="primary"
               className={`${isSubmitLoading == true ? 'cursor-not-allowed' : 'w-full'} `}
               onClick={(e) => handleClose(e)}
