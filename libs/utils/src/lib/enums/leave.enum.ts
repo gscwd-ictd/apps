@@ -13,6 +13,7 @@ export enum LeaveStatus {
   APPROVED = 'approved',
   CANCELLED = 'cancelled',
   FOR_HRMO_APPROVAL = 'for hrmo approval',
+  FOR_HRMO_CREDIT_CERTIFICATION = 'for hrmo credit certification',
   FOR_SUPERVISOR_APPROVAL = 'for supervisor approval',
   FOR_HRDM_APPROVAL = 'for hrdm approval',
   DISAPPROVED_BY_SUPERVISOR = 'disapproved by supervisor',

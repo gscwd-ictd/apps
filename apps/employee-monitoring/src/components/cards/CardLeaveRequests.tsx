@@ -62,7 +62,7 @@ export const CardLeaveRequests: FunctionComponent = () => {
   useEffect(() => {
     if (!isEmpty(LeaveApplications)) {
       const forApprovalPassSlipsCount = LeaveApplications.filter(
-        (passSlip) => passSlip.status === LeaveStatus.FOR_HRMO_APPROVAL
+        (passSlip) => passSlip.status === LeaveStatus.FOR_HRMO_CREDIT_CERTIFICATION
       );
       setCountHrmoApproval(forApprovalPassSlipsCount.length.toString());
     }
