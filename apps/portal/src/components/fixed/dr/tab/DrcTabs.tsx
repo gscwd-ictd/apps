@@ -22,10 +22,8 @@ export const DrcTabs = ({ positions }: DrcTabsProps) => {
 
   return (
     <>
-      <div
-        className={`lg:h-auto lg:pt-0 lg:pb-10 max-h-[44rem] py-4 w-full px-5 overflow-y-auto`}
-      >
-        <ul className="flex flex-col md:flex-row lg:flex-col text-gray-500">
+      <div className={`lg:h-auto lg:pt-0 lg:pb-10 max-h-[44rem] py-4 w-full px-5 overflow-y-auto`}>
+        <ul className="flex flex-col text-gray-500 md:flex-row lg:flex-col">
           <TabHeader
             tab={tab}
             tabIndex={1}
@@ -34,10 +32,8 @@ export const DrcTabs = ({ positions }: DrcTabsProps) => {
             }}
             title="Unfilled Positions"
             icon={<HiOutlineCheckCircle size={26} />}
-            subtitle="Show all positions that are for DRC setting"
-            notificationCount={
-              !isEmpty(positions.unfilled) ? positions.unfilled.length : 0
-            }
+            subtitle="Show all positions that have no DRCs"
+            notificationCount={!isEmpty(positions.unfilled) ? positions.unfilled.length : 0}
             className="bg-red-500"
           />
 
@@ -49,10 +45,8 @@ export const DrcTabs = ({ positions }: DrcTabsProps) => {
             }}
             title="Filled positions"
             icon={<HiCheck size={26} />}
-            subtitle="Show all filled positions with DRCs"
-            notificationCount={
-              !isEmpty(positions.filled) ? positions.filled.length : 0
-            }
+            subtitle="Show all positions with filled DRCs"
+            notificationCount={!isEmpty(positions.filled) ? positions.filled.length : 0}
             className="bg-gray-500"
           />
         </ul>

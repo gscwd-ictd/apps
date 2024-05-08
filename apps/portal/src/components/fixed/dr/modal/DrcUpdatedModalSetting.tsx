@@ -21,6 +21,7 @@ import { SelectedSupportDrcs } from './DrcSelectedSupports';
 import { useUpdatedDrcStore } from 'apps/portal/src/store/updated-drc.store';
 import { UpdatedSelectedCoreDrcs } from './UpdatedSelectedCoreDrcs';
 import { UpdatedSelectedSupportDrcs } from './UpdatedSelectedSupportDrcs';
+import { employeeCeliaDananDummy } from 'apps/portal/src/types/employee.type';
 
 export const DrcUpdatedModalSetting = () => {
   // get from position store
@@ -69,13 +70,45 @@ export const DrcUpdatedModalSetting = () => {
     setModalPage: state.setModalPage,
   }));
 
-  // useSWR available dnrs
+  // useSWR available dnrs removed
+  // const {
+  //   data: swrAvailableDnrs,
+  //   error: swrAvailableDnrsError,
+  //   isLoading: swrAvailableDnrsIsLoading,
+  // } = useSWR(
+  //   `/occupational-group-duties-responsibilities/duties-responsibilities/${selectedPosition.positionId}`,
+  //   fetcherHRIS,
+  //   {
+  //     shouldRetryOnError: false,
+  //     revalidateOnFocus: true,
+  //     revalidateIfStale: true,
+  //     revalidateOnMount: true,
+  //   }
+  // );
+
+  // useSWR existing dnrs
+  // const {
+  //   data: swrExistingDnrs,
+  //   error: swrExistingDnrsError,
+  //   isLoading: swrExistingDnrsIsLoading,
+  // } = useSWR(
+  //   `/occupational-group-duties-responsibilities/${employee.employmentDetails.assignment.positionId}/${selectedPosition.positionId}`,
+  //   fetcherHRIS,
+  //   {
+  //     shouldRetryOnError: false,
+  //     revalidateOnFocus: true,
+  //     revalidateIfStale: true,
+  //     revalidateOnMount: true,
+  //   }
+  // );
+
   const {
-    data: swrAvailableDnrs,
-    error: swrAvailableDnrsError,
-    isLoading: swrAvailableDnrsIsLoading,
+    data: swrExistingDnrs,
+    error: swrExistingDnrsError,
+    isLoading: swrExistingDnrsIsLoading,
   } = useSWR(
-    `/occupational-group-duties-responsibilities/duties-responsibilities/${selectedPosition.positionId}`,
+    // `/position-duties-responsibilities/${employee.employmentDetails.assignment.positionId}/${selectedPosition.positionId}`,
+    `/position-duties-responsibilities/${employeeCeliaDananDummy.employmentDetails.assignment.positionId}/${selectedPosition.positionId}`,
     fetcherHRIS,
     {
       shouldRetryOnError: false,
@@ -85,21 +118,9 @@ export const DrcUpdatedModalSetting = () => {
     }
   );
 
-  // useSWR existing dnrs
-  const {
-    data: swrExistingDnrs,
-    error: swrExistingDnrsError,
-    isLoading: swrExistingDnrsIsLoading,
-  } = useSWR(
-    `/occupational-group-duties-responsibilities/${employee.employmentDetails.assignment.positionId}/${selectedPosition.positionId}`,
-    fetcherHRIS,
-    {
-      shouldRetryOnError: false,
-      revalidateOnFocus: true,
-      revalidateIfStale: true,
-      revalidateOnMount: true,
-    }
-  );
+  useEffect(() => {
+    if (!isEmpty(swrExistingDnrs)) console.log(swrExistingDnrs);
+  }, [swrExistingDnrs]);
 
   // combine available and existing dnrs and returns an array of DutyResponsibility
   const combineAvailableAndExistingDnrs = (
@@ -257,10 +278,12 @@ export const DrcUpdatedModalSetting = () => {
 
   return (
     <div className="h-auto px-5 rounded">
-      <div className="flex flex-col pt-2 mb-8 font-semibold text-gray-500">
-        <span className="text-xl text-slate-500">{selectedPosition.positionTitle}</span>
-        <span className="text-sm font-normal">{selectedPosition.itemNumber}</span>
-        <span className="text-xs font-normal">{selectedPosition.designation}</span>
+      <div className="flex flex-col pt-2 mb-8 font-semibold text-gray-500 ">
+        <div className="p-2 rounded bg-slate-50">
+          <div className="text-xl text-gray-600">{selectedPosition.positionTitle}</div>
+          <div className="text-sm font-normal">{selectedPosition.itemNumber}</div>
+          <div className="text-xs font-normal">{selectedPosition.designation}</div>
+        </div>
 
         {/** HERE */}
         <div className="flex flex-col w-full mt-5">
@@ -271,7 +294,7 @@ export const DrcUpdatedModalSetting = () => {
                 <HiPuzzle />
               </div>
 
-              {swrAvailableDnrsIsLoading ? (
+              {swrExistingDnrsIsLoading && action === 'update' ? (
                 <LoadingVisual size={5} />
               ) : (
                 <>
@@ -289,7 +312,7 @@ export const DrcUpdatedModalSetting = () => {
             <div className="w-full  mt-2 mb-5 h-[14rem]  bg-slate-50 rounded  overflow-y-scroll overflow-x-auto">
               <>
                 {/* <h1 className="text-2xl font-normal text-gray-300">No selected core duties & responsibilities</h1> */}
-                {swrExistingDnrsIsLoading ? (
+                {swrExistingDnrsIsLoading && action === 'update' ? (
                   <div className="flex justify-center w-full h-full place-items-center">
                     {<LoadingVisual size={12} />}{' '}
                   </div>
@@ -299,7 +322,7 @@ export const DrcUpdatedModalSetting = () => {
                       <>
                         <div className="flex items-center justify-center h-full">
                           <h1 className="text-2xl font-normal text-gray-300">
-                            No selected core duties, responsibilities, & competencies
+                            No added core duties, responsibilities, & competencies
                           </h1>
                         </div>
                       </>
@@ -320,7 +343,7 @@ export const DrcUpdatedModalSetting = () => {
                 Support Duties, Responsibilities, & Competencies <HiPuzzle />
               </div>
 
-              {swrAvailableDnrsIsLoading ? (
+              {swrExistingDnrsIsLoading ? (
                 <LoadingVisual size={5} />
               ) : (
                 <Button
@@ -346,7 +369,7 @@ export const DrcUpdatedModalSetting = () => {
                       <>
                         <div className="flex items-center justify-center h-full">
                           <h1 className="text-2xl font-normal text-gray-300">
-                            No selected support duties, responsibilities, & competencies
+                            No added support duties, responsibilities, & competencies
                           </h1>
                         </div>
                       </>

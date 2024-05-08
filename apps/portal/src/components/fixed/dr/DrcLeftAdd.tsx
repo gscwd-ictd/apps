@@ -178,8 +178,9 @@ export const DrcLeftAdd = (): JSX.Element => {
         if (drc.sequenceNo === indexToUpdate) {
           drc.duty = dutyText;
           drc.onEdit = false;
-          if (!isEmpty(drc.pdId)) {
-            setTempPositionDuties([...tempPositionDuties, { pdId: drc.pdId }]);
+          //! Check this logic later
+          if (!isEmpty(drc.pdrId) && tempPositionDuties.some((fdrc) => fdrc.pdrId === drc.pdrId) === false) {
+            setTempPositionDuties([...tempPositionDuties, { pdrId: drc.pdrId }]);
           }
           setIndexToUpdate(null);
           setDutyText('');
@@ -211,7 +212,7 @@ export const DrcLeftAdd = (): JSX.Element => {
     <>
       <div className="flex flex-col h-full gap-2">
         <textarea
-          className="w-full h-[50%] border border-slate-300 rounded focus:border-teal-500 focus:outline-none focus:ring-0 placeholder:text-center placeholder:text-gray-300"
+          className="w-full h-[50%] border border-slate-200 rounded focus:border-indigo-500 focus:outline-none focus:ring-0 placeholder:text-center placeholder:text-gray-300"
           placeholder="Type duties and responsibilities here"
           value={dutyText}
           onChange={(e) => setDutyText(e.target.value)}
@@ -231,7 +232,7 @@ export const DrcLeftAdd = (): JSX.Element => {
                   ? true
                   : false
               }
-              className="w-full h-full text-white bg-teal-500 rounded-md hover:bg-teal-600 active:bg-teal-700 disabled:cursor-not-allowed"
+              className="w-full h-full text-white bg-indigo-400 rounded-md hover:bg-indigo-500 active:bg-indigo-600 disabled:cursor-not-allowed"
             >
               Add
             </button>
@@ -248,7 +249,7 @@ export const DrcLeftAdd = (): JSX.Element => {
                   ? true
                   : false
               }
-              className="w-full h-full text-white bg-teal-500 rounded-md hover:bg-teal-600 active:bg-teal-700 disabled:cursor-not-allowed"
+              className="w-full h-full text-white bg-indigo-400 rounded-md hover:bg-indigo-500 active:bg-indigo-600 disabled:cursor-not-allowed"
             >
               Update Duty
             </button>

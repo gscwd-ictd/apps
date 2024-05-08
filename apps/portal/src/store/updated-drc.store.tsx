@@ -84,13 +84,13 @@ export type DrcState = {
   positionExistingDrcsOnPosting: ExistingDrcResponse;
 
   // updated position duties
-  positionDuties: Array<{ pdId: string }>;
+  positionDuties: Array<{ pdrId: string }>;
 
   // temp updated position duties
-  tempPositionDuties: Array<{ pdId: string }>;
+  tempPositionDuties: Array<{ pdrId: string }>;
 
   // set temp updated position duties
-  setTempPositionDuties: (tempPositionDuties: Array<{ pdId: string }>) => void;
+  setTempPositionDuties: (tempPositionDuties: Array<{ pdrId: string }>) => void;
 
   // set updated position duties
   // setPositionDuties: (positionDuties: Array<{ pdId: string }>) => void;
@@ -164,7 +164,7 @@ export const useUpdatedDrcStore = create<DrcState>()(
     positionDuties: [],
     tempPositionDuties: [],
 
-    setTempPositionDuties: (tempPositionDuties: Array<{ pdId: string }>) => set({ tempPositionDuties }),
+    setTempPositionDuties: (tempPositionDuties: Array<{ pdrId: string }>) => set({ tempPositionDuties }),
 
     setIndexToUpdate: (indexToUpdate) => set({ indexToUpdate }),
     setDutyText: (dutyText) => set({ dutyText }),
@@ -247,6 +247,7 @@ export const useUpdatedDrcStore = create<DrcState>()(
         // positionDuties: updatedPdIds.map((pdrc) => {
         //   return { pdId: pdrc.pdId };
         // }),
+        positionDuties: get().tempPositionDuties,
         tempAddedDrcs: { core: [], support: [] },
         selectedDrcType: null,
       }));

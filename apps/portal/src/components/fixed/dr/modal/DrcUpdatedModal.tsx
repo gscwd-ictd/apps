@@ -47,6 +47,7 @@ const DrcUpdatedModal: FunctionComponent = () => {
 
   // use updated drc store
   const {
+    positionDuties,
     addedDrcs,
     initialDrcsOnLoad,
     selectedDrcType,
@@ -56,7 +57,9 @@ const DrcUpdatedModal: FunctionComponent = () => {
     addTempToAddedDrcs,
     setDutyText,
     setIndexToUpdate,
+    setTempPositionDuties,
   } = useUpdatedDrcStore((state) => ({
+    positionDuties: state.positionDuties,
     addedDrcs: state.addedDrcs,
     initialDrcsOnLoad: state.initialDrcsOnLoad,
     selectedDrcType: state.selectedDrcType,
@@ -66,6 +69,7 @@ const DrcUpdatedModal: FunctionComponent = () => {
     addTempToAddedDrcs: state.addTempToAddedDrcs,
     setIndexToUpdate: state.setIndexToUpdate,
     setDutyText: state.setDutyText,
+    setTempPositionDuties: state.setTempPositionDuties,
   }));
 
   // use position store
@@ -110,6 +114,7 @@ const DrcUpdatedModal: FunctionComponent = () => {
       prevPage();
     } else if (modal.page === 3) {
       // cancelCheckedDnrsAction();
+      setTempPositionDuties(positionDuties);
       setIndexToUpdate(null);
       setDutyText('');
       cancelTempDrcsAction();
@@ -171,7 +176,7 @@ const DrcUpdatedModal: FunctionComponent = () => {
                 {modal.page === 1 ? (
                   'Select a position title'
                 ) : modal.page === 2 ? (
-                  'Add core or support'
+                  'Add core or support '
                 ) : modal.page === 3 ? (
                   <div className="flex">
                     <div className="flex flex-col w-full">
@@ -181,11 +186,21 @@ const DrcUpdatedModal: FunctionComponent = () => {
                     <div className="flex items-end justify-end w-full">
                       <div>
                         {selectedDrcType === 'core' ? (
-                          <span>{tempAddedDrcs.core.length === 0 ? 'None' : tempAddedDrcs.core.length} assigned</span>
+                          <>
+                            {tempAddedDrcs.core.length === 0 ? (
+                              'None assigned'
+                            ) : (
+                              <span className="text-emerald-600">{tempAddedDrcs.core.length} assigned</span>
+                            )}
+                          </>
                         ) : (
-                          <span>
-                            {tempAddedDrcs.support.length === 0 ? 'None' : tempAddedDrcs.support.length} assigned
-                          </span>
+                          <>
+                            {tempAddedDrcs.support.length === 0 ? (
+                              'None assigned'
+                            ) : (
+                              <span className="text-emerald-600">{tempAddedDrcs.support.length} assigned</span>
+                            )}
+                          </>
                         )}
                       </div>
                     </div>

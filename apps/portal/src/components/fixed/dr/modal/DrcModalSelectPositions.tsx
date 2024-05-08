@@ -1,12 +1,6 @@
 /* eslint-disable @nx/enforce-module-boundaries */
 import { usePositionStore } from 'apps/portal/src/store/position.store';
-import {
-  FormEvent,
-  FunctionComponent,
-  MutableRefObject,
-  useEffect,
-  useRef,
-} from 'react';
+import { FormEvent, FunctionComponent, MutableRefObject, useEffect, useRef } from 'react';
 import useSWR from 'swr';
 import { useEmployeeStore } from 'apps/portal/src/store/employee.store';
 import fetcherHRIS from 'apps/portal/src/utils/helpers/fetchers/FetcherHRIS';
@@ -42,22 +36,31 @@ export const DrcModalSelectPositions: FunctionComponent = () => {
     poolOfDnrs: state.originalPoolOfDnrs,
   }));
 
+  // const employee = useEmployeeStore((state) => state.employeeDetails);
+  // const {
+  //   data: swrPositions,
+  //   error: swrError,
+  //   isLoading: swrLoading,
+  //   mutate: mutatePositions,
+  // } = useSWR(
+  //   `occupational-group-duties-responsibilities/${employee.employmentDetails.assignment.positionId}`,
+  //   fetcherHRIS,
+  //   { shouldRetryOnError: false, revalidateOnFocus: false }
+  // );
+
   const employee = useEmployeeStore((state) => state.employeeDetails);
   const {
     data: swrPositions,
     error: swrError,
     isLoading: swrLoading,
     mutate: mutatePositions,
-  } = useSWR(
-    `occupational-group-duties-responsibilities/${employee.employmentDetails.assignment.positionId}`,
-    fetcherHRIS,
-    { shouldRetryOnError: false, revalidateOnFocus: false }
-  );
+  } = useSWR(`position-duties-responsibilities/${employee.employmentDetails.assignment.positionId}`, fetcherHRIS, {
+    shouldRetryOnError: false,
+    revalidateOnFocus: false,
+  });
 
   // initialize ref for search input
-  const searchRef = useRef(
-    null
-  ) as unknown as MutableRefObject<HTMLInputElement>;
+  const searchRef = useRef(null) as unknown as MutableRefObject<HTMLInputElement>;
 
   // on search function used for filtering positions
   const onSearch = (event: FormEvent<HTMLInputElement>) => {
@@ -142,10 +145,16 @@ export const DrcModalSelectPositions: FunctionComponent = () => {
           <section>
             <div className="flex justify-end px-3 mb-1 text-sm">
               <p className="text-gray-600">
-                {filteredPositions.length}{' '}
-                {filteredPositions.length < 1
-                  ? 'position found'
-                  : 'positions found'}
+                {filteredPositions.length} {filteredPositions.length < 1 ? 'position found' : 'positions found'}
+                {/* {filteredPositions
+                  ? `${
+                      filteredPositions.length === 1
+                        ? '1 position found'
+                        : filteredPositions.length > 1
+                        ? `${filteredPositions.length} positions found`
+                        : '0 positions found'
+                    }`
+                  : '0 positions found'} */}
               </p>
             </div>
             <div className="relative px-3 mt-2 mb-5">
@@ -160,10 +169,7 @@ export const DrcModalSelectPositions: FunctionComponent = () => {
               />
               {filteredValue !== '' ? (
                 <>
-                  <button
-                    className="absolute -right-0 mr-7 focus:outline-none"
-                    onClick={onClearSearch}
-                  >
+                  <button className="absolute -right-0 mr-7 focus:outline-none" onClick={onClearSearch}>
                     <HiXCircle className="w-6 h-6 mt-3 transition-colors ease-in-out text-slate-300 hover:text-slate-400" />
                   </button>
                 </>

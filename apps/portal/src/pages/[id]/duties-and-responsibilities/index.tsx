@@ -37,21 +37,38 @@ export default function DutiesResponsibilities({
 
   const setEmployee = useEmployeeStore((state) => state.setEmployeeDetails);
 
+  // const {
+  //   data: swrUnfilledPositions,
+  //   isLoading: swrUnfilledIsLoading,
+  //   error: swrUnfilledError,
+  // } = useSWR(
+  //   `/occupational-group-duties-responsibilities/${employeeDetails.employmentDetails.assignment.positionId}/pending`,
+  //   fetcherHRIS
+  // );
+
   const {
     data: swrUnfilledPositions,
     isLoading: swrUnfilledIsLoading,
     error: swrUnfilledError,
   } = useSWR(
-    `/occupational-group-duties-responsibilities/${employeeDetails.employmentDetails.assignment.positionId}/pending`,
+    `/position-duties-responsibilities/${employeeDetails.employmentDetails.assignment.positionId}/pending`,
     fetcherHRIS
   );
 
+  // const {
+  //   data: swrFilledPositions,
+  //   isLoading: swrFilledIsLoading,
+  //   error: swrFilledError,
+  // } = useSWR(
+  //   `/occupational-group-duties-responsibilities/${employeeDetails.employmentDetails.assignment.positionId}/finished`,
+  //   fetcherHRIS
+  // );
   const {
     data: swrFilledPositions,
     isLoading: swrFilledIsLoading,
     error: swrFilledError,
   } = useSWR(
-    `/occupational-group-duties-responsibilities/${employeeDetails.employmentDetails.assignment.positionId}/finished`,
+    `/position-duties-responsibilities/${employeeDetails.employmentDetails.assignment.positionId}/finished`,
     fetcherHRIS
   );
 

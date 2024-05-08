@@ -1,6 +1,6 @@
 /* eslint-disable @nx/enforce-module-boundaries */
 import { Menu, Transition } from '@headlessui/react';
-import { Fragment, useEffect } from 'react';
+import { Fragment, useEffect, useState } from 'react';
 import useSWR from 'swr';
 import { useDnrStore } from 'apps/portal/src/store/dnr.store';
 import { usePositionStore } from 'apps/portal/src/store/position.store';
@@ -30,13 +30,6 @@ export const UpCompetencyDropdown = ({ index }: CompetencyDropDownProps) => {
   const { selectedPosition } = usePositionStore((state) => ({
     selectedPosition: state.selectedPosition,
   }));
-
-  // use dnr store
-  // const { checkedDnrs, setCheckedDnrs, selectedDrcType } = useDnrStore((state) => ({
-  //   checkedDnrs: state.checkedDnrs,
-  //   selectedDrcType: state.selectedDrcType,
-  //   setCheckedDnrs: state.setCheckedDnrs,
-  // }));
 
   // use updated drc store
   const { selectedDrcType, setTempAddedDrcs, tempAddedDrcs } = useUpdatedDrcStore((state) => ({
@@ -111,8 +104,11 @@ export const UpCompetencyDropdown = ({ index }: CompetencyDropDownProps) => {
     <>
       <Menu as="div" className="relative inline-block text-left">
         <div>
-          <Menu.Button className="h-full px-5 py-2 text-white transition-colors ease-in-out bg-teal-500 rounded-l text-md whitespace-nowrap hover:bg-teal-600 active:bg-teal-700">
-            <p>Select Competency</p>
+          <Menu.Button
+            className={`-full px-5 py-2 text-indigo-700 transition-colors ease-in-out  rounded-l text-md whitespace-nowrap bg-indigo-50 hover:bg-indigo-100 active:bg-indigo-200  
+             `}
+          >
+            <p className="font-medium">Select Competency</p>
           </Menu.Button>
         </div>
         <Transition
@@ -134,15 +130,17 @@ export const UpCompetencyDropdown = ({ index }: CompetencyDropDownProps) => {
                     <Menu.Item>
                       {({ active }) => (
                         <button
-                          onClick={() => handleSelectedDefaultCompetency(index, item)}
+                          onClick={() => {
+                            handleSelectedDefaultCompetency(index, item);
+                          }}
                           className={`${
-                            active ? 'bg-indigo-200 text-gray-900' : 'text-gray-500'
+                            active ? 'bg-indigo-200/50 text-gray-900' : 'text-gray-500'
                           } group flex w-full items-center text-left py-3 pl-4 pr-2`}
                         >
-                          <div className="flex flex-row w-full gap-2 divide-x">
+                          <div className="flex flex-row w-full gap-2 divide-x-2">
                             <div className="w-[10%] pr-1">{item.code}</div>
-                            <div className="w-[60%] px-1">{item.name}</div>
-                            <div className="w-[30%] pl-1">{item.level}</div>
+                            <div className="w-[55%] px-1">{item.name}</div>
+                            <div className="w-[35%] pl-1">{item.level}</div>
                           </div>
                         </button>
                       )}

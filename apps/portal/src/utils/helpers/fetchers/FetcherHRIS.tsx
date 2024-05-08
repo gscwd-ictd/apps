@@ -38,7 +38,7 @@ axiosApi.interceptors.response.use(
   (error) => Promise.reject(error)
 );
 
-const fetcherHRIS = async (url: string, config: AxiosRequestConfig) =>
+const fetcherHRIS = async (url: string, config: AxiosRequestConfig = {}) =>
   await axiosApi
     .get(url, config)
     .then((res) => res)

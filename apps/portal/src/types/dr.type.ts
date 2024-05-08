@@ -17,7 +17,7 @@ export type DutyResponsibility = {
 
 export type UpdatedDutyResponsibility = {
   duty: string;
-  pdId?: string;
+  pdrId?: string;
   percentage?: number;
   competency?: Competency;
   pcplId?: string;
