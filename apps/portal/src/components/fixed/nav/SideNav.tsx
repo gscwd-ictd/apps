@@ -4,7 +4,7 @@ import { HiOutlineBell, HiOutlineHome, HiOutlineNewspaper } from 'react-icons/hi
 import { ProfileMenuDropdown } from './ProfileMenuDropdown';
 import { SideNavLink } from './SideNavLink';
 import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { ManagerMenuDropdown } from './ManagerMenuDropdown';
 import { GeneralManagerMenuDropdown } from './GeneralManagerMenuDropdown';
 import { CommitteeMenuDropdown } from './CommitteeMenuDropdown';
@@ -15,7 +15,6 @@ import { EmployeeDetails } from 'apps/portal/src/types/employee.type';
 import { useApprovalStore } from '../../../store/approvals.store';
 import { fetchWithToken } from 'apps/portal/src/utils/hoc/fetcher';
 import useSWR from 'swr';
-import { ToastNotification } from '@gscwd-apps/oneui';
 import { useEmployeeStore } from '../../../store/employee.store';
 import { SalaryGradeConverter } from 'libs/utils/src/lib/functions/SalaryGradeConverter';
 import { useFinalLeaveApprovalStore } from '../../../store/final-leave-approvals.store';

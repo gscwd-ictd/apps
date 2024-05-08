@@ -1,10 +1,4 @@
-import React, {
-  FunctionComponent,
-  MutableRefObject,
-  useEffect,
-  useRef,
-  useState,
-} from 'react';
+import React, { FunctionComponent, useEffect, useState } from 'react';
 import { usePrfStore } from '../../../../store/prf.store';
 import { Position } from '../../../../types/prf.types';
 import { Checkbox } from '../../../modular/forms/Checkbox';
@@ -36,14 +30,10 @@ export const PositionsList: FunctionComponent = () => {
   const filteredPositions = usePrfStore((state) => state.filteredPositions);
 
   // access function to set selected positions in the store
-  const setSelectedPositions = usePrfStore(
-    (state) => state.setSelectedPositions
-  );
+  const setSelectedPositions = usePrfStore((state) => state.setSelectedPositions);
 
   // access function to set filtered positions in the store
-  const setFilteredPositions = usePrfStore(
-    (state) => state.setFilteredPositions
-  );
+  const setFilteredPositions = usePrfStore((state) => state.setFilteredPositions);
 
   // update selected positions
   useEffect(() => setSelectedPositions(positions), [positions]);
@@ -55,8 +45,7 @@ export const PositionsList: FunctionComponent = () => {
     // loop through positions array and filter according to position title
     positions.filter((position: Position) => {
       // check if there is a match
-      if (position.positionTitle.match(new RegExp(searchValue, 'i')))
-        filteredResult.push(position);
+      if (position.positionTitle.match(new RegExp(searchValue, 'i'))) filteredResult.push(position);
     });
 
     // set search value to current value of the search input
@@ -71,10 +60,7 @@ export const PositionsList: FunctionComponent = () => {
       <div className="flex flex-col h-full gap-3">
         <div className="px-4 space-y-1">
           <section className="flex justify-end">
-            <PositionCounter
-              positions={positions}
-              selectedPositions={selectedPositions}
-            />
+            <PositionCounter positions={positions} selectedPositions={selectedPositions} />
           </section>
 
           <section>
@@ -90,20 +76,14 @@ export const PositionsList: FunctionComponent = () => {
         {filteredPositions.length === 0 ? (
           <EmptySearchResult searchValue={searchValue} />
         ) : (
-          <FilteredList
-            positions={positions}
-            filteredPositions={filteredPositions}
-          />
+          <FilteredList positions={positions} filteredPositions={filteredPositions} />
         )}
       </div>
     </>
   );
 };
 
-const FilteredList: FunctionComponent<FilteredListProps> = ({
-  positions,
-  filteredPositions,
-}) => {
+const FilteredList: FunctionComponent<FilteredListProps> = ({ positions, filteredPositions }) => {
   // access function to update positions in the store
   const updatePositions = usePrfStore((state) => state.updatePositions);
 
@@ -117,15 +97,8 @@ const FilteredList: FunctionComponent<FilteredListProps> = ({
                 onClick={() => updatePositions(positions, position.sequenceNo)}
                 className="hover:bg-slate-50 rounded-md px-5 flex items-center justify-between cursor-pointer border-b border-b-gray-100"
               >
-                <List
-                  title={`${position.positionTitle}`}
-                  subtitle={`${position.designation}`}
-                />
-                <Checkbox
-                  checkboxId={`position-${index}`}
-                  checked={position.isSelected}
-                  onChange={() => null}
-                />
+                <List title={`${position.positionTitle}`} subtitle={`${position.designation}`} />
+                <Checkbox checkboxId={`position-${index}`} checked={position.isSelected} onChange={() => null} />
               </div>
             </React.Fragment>
           );
@@ -135,16 +108,12 @@ const FilteredList: FunctionComponent<FilteredListProps> = ({
   );
 };
 
-const EmptySearchResult: FunctionComponent<EmptySearchResultProps> = ({
-  searchValue,
-}) => {
+const EmptySearchResult: FunctionComponent<EmptySearchResultProps> = ({ searchValue }) => {
   return (
     <>
       <div className="flex justify-center text-center w-full h-full overflow-x-hidden px-10">
         {/*eslint-disable-next-line react/no-unescaped-entities*/}
-        <h3 className="text-gray-300 font-semibold text-lg">
-          No search result found for {searchValue}
-        </h3>
+        <h3 className="text-gray-300 font-semibold text-lg">No search result found for {searchValue}</h3>
       </div>
     </>
   );

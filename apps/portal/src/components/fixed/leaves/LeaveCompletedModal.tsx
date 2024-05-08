@@ -86,7 +86,7 @@ export const LeaveCompletedModal = ({ modalState, setModalState, closeModalActio
   }, [completedLeaveModalIsOpen, leaveId]);
 
   const { windowWidth } = UseWindowDimensions();
-
+  console.log(selectedLeaveLedger[0]?.sickLeaveBalance);
   // cancel action for Leave Completed Modal
   const closeCancelLeaveModal = async () => {
     setCancelLeaveModalIsOpen(false);

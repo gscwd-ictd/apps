@@ -15,7 +15,7 @@ import React from 'react';
 import 'react-toastify/dist/ReactToastify.css';
 import { getUserDetails, withCookieSession } from '../../../utils/helpers/session';
 import { fetchWithToken } from 'apps/portal/src/utils/hoc/fetcher';
-import { isEmpty, isEqual } from 'lodash';
+import { isEmpty } from 'lodash';
 import { usePdcApprovalsStore } from 'apps/portal/src/store/pdc-approvals.store';
 import { ToastNotification, fuzzySort, useDataTable } from '@gscwd-apps/oneui';
 import { useRouter } from 'next/router';
