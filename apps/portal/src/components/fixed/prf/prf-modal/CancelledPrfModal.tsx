@@ -41,44 +41,25 @@ type ModalProps = {
 export const CancelledPrfModal = ({ modalState, setModalState, closeModalAction }: ModalProps) => {
   const {
     selectedPrfId,
-    patchResponse,
-    viewPositionModalIsOpen,
-    selectedPosition,
-    setCancelledPrfModalIsOpen,
+    cancelledPrfModalIsOpen,
     getPrfDetails,
     getPrfDetailsSuccess,
     getPrfDetailsFail,
-
     getPrfTrail,
     getPrfTrailSuccess,
     getPrfTrailFail,
-    patchPrfFail,
-    setViewPositionModalIsOpen,
-    setSelectedPosition,
-    patchPrfSuccess,
-    emptyResponseAndError,
   } = usePrfStore((state) => ({
     selectedPrfId: state.selectedPrfId,
-    patchResponse: state.response.patchResponse,
-    viewPositionModalIsOpen: state.viewPositionModalIsOpen,
-    selectedPosition: state.selectedPosition,
-    setSelectedPosition: state.setSelectedPosition,
-    setCancelledPrfModalIsOpen: state.setCancelledPrfModalIsOpen,
+    cancelledPrfModalIsOpen: state.cancelledPrfModalIsOpen,
     getPrfDetails: state.getPrfDetails,
     getPrfDetailsSuccess: state.getPrfDetailsSuccess,
     getPrfDetailsFail: state.getPrfDetailsFail,
     getPrfTrail: state.getPrfTrail,
     getPrfTrailSuccess: state.getPrfTrailSuccess,
     getPrfTrailFail: state.getPrfTrailFail,
-    emptyResponseAndError: state.emptyResponseAndError,
-    patchPrfSuccess: state.patchPrfSuccess,
-    patchPrfFail: state.patchPrfFail,
-    setViewPositionModalIsOpen: state.setViewPositionModalIsOpen,
   }));
 
   const employeeDetail = useEmployeeStore((state) => state.employeeDetails);
-
-  const router = useRouter();
 
   const prfUrl = process.env.NEXT_PUBLIC_HRIS_URL;
   // use useSWR, provide the URL and fetchWithSession function as a parameter
@@ -89,7 +70,7 @@ export const CancelledPrfModal = ({ modalState, setModalState, closeModalAction 
     isLoading: swrPrfIsLoading,
     error: swrPrfError,
     mutate: mutatePrfDetails,
-  } = useSWR(`${prfUrl}/prf/details/${selectedPrfId}`, fetchWithToken, {
+  } = useSWR(cancelledPrfModalIsOpen ? `${prfUrl}/prf/details/${selectedPrfId}` : null, fetchWithToken, {
     shouldRetryOnError: false,
     revalidateOnFocus: true,
   });
@@ -118,7 +99,7 @@ export const CancelledPrfModal = ({ modalState, setModalState, closeModalAction 
     isLoading: swrPrfTrailIsLoading,
     error: swrPrfTrailError,
     mutate: mutatePrfTrail,
-  } = useSWR(`${prfUrl}/prf-trail/${selectedPrfId}`, fetchWithToken, {
+  } = useSWR(cancelledPrfModalIsOpen ? `${prfUrl}/prf-trail/${selectedPrfId}` : null, fetchWithToken, {
     shouldRetryOnError: false,
     revalidateOnFocus: true,
   });

@@ -15,7 +15,6 @@ import { DateTimeFormatter } from 'libs/utils/src/lib/functions/DateTimeFormatte
 import { GetDateDifference } from 'libs/utils/src/lib/functions/GetDateDifference';
 import { OvertimeAccomplishmentStatus, OvertimeStatus } from 'libs/utils/src/lib/enums/overtime.enum';
 import { useTimeLogStore } from 'apps/portal/src/store/timelogs.store';
-import { ScheduleBases } from 'libs/utils/src/lib/enums/schedule.enum';
 import { useEmployeeStore } from 'apps/portal/src/store/employee.store';
 import { useDtrStore } from 'apps/portal/src/store/dtr.store';
 import { fetchWithToken } from 'apps/portal/src/utils/hoc/fetcher';
@@ -156,20 +155,6 @@ export const OvertimeAccomplishmentModal = ({ modalState, setModalState, closeMo
       } else {
         setFinalEncodedHours(Number(encodedHours.toFixed(2)));
       }
-      // }
-      //if emergency OT
-      // else {
-      //   // apply 3-1 rule only
-      //   if (Number(encodedHours.toFixed(2)) >= 4) {
-      //     numberOfBreaks = (Number(encodedHours) / 4).toFixed(2); // for 3-1 rule
-      //     let temporaryHours = Number(encodedHours - Math.floor(numberOfBreaks));
-      //     setFinalEncodedHours(Number(temporaryHours.toFixed(2)));
-      //   }
-      //   //no break time (less than 4 hours)
-      //   else {
-      //     setFinalEncodedHours(Number(encodedHours.toFixed(2)));
-      //   }
-      // }
     }
     //if regular work day - 3-1 rule only
     else {
@@ -184,20 +169,6 @@ export const OvertimeAccomplishmentModal = ({ modalState, setModalState, closeMo
       else {
         setFinalEncodedHours(Number(encodedHours.toFixed(2)));
       }
-      // }
-      //if emergency OT
-      // else {
-      //   // apply 3-1 rule only
-      //   if (Number(encodedHours.toFixed(2)) >= 4) {
-      //     numberOfBreaks = (Number(encodedHours) / 4).toFixed(2); // for 3-1 rule
-      //     let temporaryHours = Number(encodedHours - Math.floor(numberOfBreaks));
-      //     setFinalEncodedHours(Number(temporaryHours.toFixed(2)));
-      //   }
-      //   //no break time (less than 4 hours)
-      //   else {
-      //     setFinalEncodedHours(Number(encodedHours.toFixed(2)));
-      //   }
-      // }
     }
   }, [encodedHours]);
 
@@ -283,35 +254,6 @@ export const OvertimeAccomplishmentModal = ({ modalState, setModalState, closeMo
                 <div className="w-full h-full flex flex-col gap-2 ">
                   <div className="w-full flex flex-col gap-2 px-4 rounded">
                     <div className="w-full flex flex-col gap-0">
-                      {/* Emergency OT but IVMS is incomplete/empty and OT day is Restday or Holiday - for Office Only */}
-                      {/* {overtimeAccomplishmentDetails.plannedDate <= overtimeAccomplishmentDetails.dateOfOTApproval &&
-                      schedule.scheduleBase === ScheduleBases.OFFICE &&
-                      (!overtimeAccomplishmentDetails.ivmsTimeIn || !overtimeAccomplishmentDetails.ivmsTimeOut) &&
-                      (isHoliday || isRestday) ? (
-                        <AlertNotification
-                          alertType="error"
-                          notifMessage={
-                            'Empty or Incomplete Time Log detected. Please conduct a Time Log Correction in the DTR page for this date as this was an Emergency Overtime conducted during a holiday or rest day.'
-                          }
-                          dismissible={false}
-                        />
-                      ) : null} */}
-
-                      {/* Emergency OT but IVMS is incomplete/empty and OT day is REGULAR SCHEDULED WORK DAY - for Office Only */}
-                      {/* {overtimeAccomplishmentDetails.plannedDate <= overtimeAccomplishmentDetails.dateOfOTApproval &&
-                      schedule.scheduleBase === ScheduleBases.OFFICE &&
-                      (!overtimeAccomplishmentDetails.ivmsTimeIn || !overtimeAccomplishmentDetails.ivmsTimeOut) &&
-                      !isHoliday &&
-                      !isRestday ? (
-                        <AlertNotification
-                          alertType="error"
-                          notifMessage={
-                            'Empty or Incomplete Time Log detected. Submission is not possible as this was an Emergency Overtime conducted during a regular scheduled work day.'
-                          }
-                          dismissible={false}
-                        />
-                      ) : null} */}
-
                       {overtimeAccomplishmentDetails.status === OvertimeAccomplishmentStatus.PENDING ? (
                         <AlertNotification
                           alertType="warning"
@@ -682,7 +624,7 @@ export const OvertimeAccomplishmentModal = ({ modalState, setModalState, closeMo
                           <label className="text-slate-500 text-md whitespace-nowrap pb-0.5">Accomplishments:</label>
 
                           <div className="w-auto ml-5 mr-5">
-                            <label className="text-md font-medium">
+                            <label className="text-md font-medium whitespace-pre-line">
                               {overtimeAccomplishmentDetails.accomplishments}
                             </label>
                           </div>
@@ -713,7 +655,9 @@ export const OvertimeAccomplishmentModal = ({ modalState, setModalState, closeMo
 
                           <div className="w-auto ml-5">
                             <label className=" text-md font-medium">
-                              {overtimeAccomplishmentDetails.actualHrs ?? '---'}
+                              {overtimeAccomplishmentDetails.actualHrs
+                                ? Number(overtimeAccomplishmentDetails.actualHrs).toFixed(2)
+                                : '---'}
                             </label>
                           </div>
                         </div>

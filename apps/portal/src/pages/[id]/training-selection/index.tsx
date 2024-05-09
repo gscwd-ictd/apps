@@ -17,7 +17,7 @@ import { getUserDetails, withCookieSession } from '../../../utils/helpers/sessio
 import { fetchWithToken } from 'apps/portal/src/utils/hoc/fetcher';
 import { isEmpty, isEqual } from 'lodash';
 import { useTrainingSelectionStore } from 'apps/portal/src/store/training-selection.store';
-import { ToastNotification, fuzzySort, useDataTable } from '@gscwd-apps/oneui';
+import { ToastNotification, useDataTable } from '@gscwd-apps/oneui';
 import TrainingDetailsModal from 'apps/portal/src/components/fixed/training-selection/TrainingDetailsModal';
 import { useRouter } from 'next/router';
 import { DataTablePortal } from 'libs/oneui/src/components/Tables/DataTablePortal';

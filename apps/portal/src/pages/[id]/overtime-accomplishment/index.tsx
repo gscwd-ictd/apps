@@ -155,19 +155,15 @@ export default function OvertimeAccomplishment({
 
       {/* Overtime Accomplishment List Load Faled */}
       {!isEmpty(errorOvertimeAccomplishment) ? (
-        <>
-          <ToastNotification
-            toastType="error"
-            notifMessage={`${errorOvertimeAccomplishment}: Failed to load Overtime Accomplishment List.`}
-          />
-        </>
+        <ToastNotification
+          toastType="error"
+          notifMessage={`${errorOvertimeAccomplishment}: Failed to load Overtime Accomplishment List.`}
+        />
       ) : null}
 
       {/* Submit Accomplishment Error*/}
       {!isEmpty(errorResponse) ? (
-        <>
-          <ToastNotification toastType="error" notifMessage={`${errorResponse}: Failed to Submit.`} />
-        </>
+        <ToastNotification toastType="error" notifMessage={`${errorResponse}: Failed to Submit.`} />
       ) : null}
 
       {/* Submit Accomplishment Success*/}

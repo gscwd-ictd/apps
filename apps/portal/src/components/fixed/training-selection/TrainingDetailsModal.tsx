@@ -2,14 +2,9 @@
 import { AlertNotification, Button, LoadingSpinner, Modal, ToastNotification } from '@gscwd-apps/oneui';
 import { HiX } from 'react-icons/hi';
 import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
-import {
-  NomineeStatus,
-  NomineeType,
-  TrainingNominationStatus,
-  TrainingStatus,
-} from 'libs/utils/src/lib/enums/training.enum';
+import { NomineeType, TrainingNominationStatus, TrainingStatus } from 'libs/utils/src/lib/enums/training.enum';
 import { useTrainingSelectionStore } from 'apps/portal/src/store/training-selection.store';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import TrainingNominationModal from './TrainingNominationModal';
 import { DateFormatter } from 'libs/utils/src/lib/functions/DateFormatter';
 import useSWR from 'swr';

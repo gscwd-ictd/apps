@@ -99,9 +99,9 @@ export const ApprovalCaptcha: FunctionComponent<CaptchaProps> = ({
       setErrorCaptcha('Incorrect Captcha!');
     } else {
       //overtime accomplishment approval
-      if (dataToSubmitOvertimeAccomplishment) {
-        console.log(dataToSubmitOvertimeAccomplishment);
-        patchOvertimeAccomplishment();
+      patchOvertimeAccomplishment();
+      if (dataToSubmitOvertimeAccomplishment && !dataToSubmitApproveAllAccomplishment) {
+        console.log(dataToSubmitOvertimeAccomplishment, 'single entry');
         const { error, result } = await patchPortal(
           '/v1/overtime/accomplishments/approval',
           dataToSubmitOvertimeAccomplishment
@@ -114,8 +114,8 @@ export const ApprovalCaptcha: FunctionComponent<CaptchaProps> = ({
         }
       }
       //approve all pending accomplishment
-      else if (dataToSubmitApproveAllAccomplishment) {
-        patchOvertimeAccomplishment();
+      else if (dataToSubmitApproveAllAccomplishment && !dataToSubmitOvertimeAccomplishment) {
+        console.log(dataToSubmitApproveAllAccomplishment, 'all entry');
         const { error, result } = await patchPortal(
           '/v1/overtime/accomplishments/approval/all',
           dataToSubmitApproveAllAccomplishment
@@ -226,7 +226,7 @@ export const ApprovalCaptcha: FunctionComponent<CaptchaProps> = ({
               <button
                 className={`
                mb-2 text-white bg-red-500 h-10 transition-all rounded hover:bg-red-600 active:bg-red-600 outline-red-500 w-56`}
-                onClick={(e) => setCaptchaModalIsOpen(false)}
+                onClick={(e) => handleClose()}
               >
                 <label className="font-bold cursor-pointer">CANCEL</label>
               </button>
