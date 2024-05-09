@@ -7,32 +7,16 @@ import { fetchWithToken } from 'apps/portal/src/utils/hoc/fetcher';
 import useSWR from 'swr';
 import { useEffect, useState } from 'react';
 import { isEmpty } from 'lodash';
-
-import dayjs from 'dayjs';
-import { GetServerSideProps, GetServerSidePropsContext } from 'next';
-import {
-  HiOutlineUser,
-  HiOutlineDocumentDuplicate,
-  HiOutlineCalendar,
-  HiOutlinePencil,
-  HiArrowSmLeft,
-} from 'react-icons/hi';
+import { HiOutlineUser, HiOutlineDocumentDuplicate, HiOutlineCalendar, HiOutlinePencil } from 'react-icons/hi';
 import { PrfTimeline } from '../../../../components/fixed/prf/prf-view/PrfTimeline';
 import { PageTitle } from '../../../../components/modular/html/PageTitle';
-import {
-  getEmployeeDetailsFromHr,
-  getEmployeeProfile,
-} from '../../../../utils/helpers/http-requests/employee-requests';
-import { getPrfById, getPrfTrailByPrfId, patchPrfRequest } from '../../../../utils/helpers/prf.requests';
-import { EmployeeDetailsPrf, EmployeeProfile } from '../../../../types/employee.type';
-import { Position, PrfDetails, PrfStatus, PrfTrail } from '../../../../types/prf.types';
-import { withCookieSession } from '../../../../../src/utils/helpers/session';
+import { patchPrfRequest } from '../../../../utils/helpers/prf.requests';
+import { Position } from '../../../../types/prf.types';
 import { useEmployeeStore } from 'apps/portal/src/store/employee.store';
 import { SpinnerDotted } from 'spinners-react';
 import { DateFormatter } from 'libs/utils/src/lib/functions/DateFormatter';
 import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
 import { PrfPositionCard } from './PrfPositionCard';
-import { ViewPositionModal } from '../prf-view-position/ViewPositionModal';
 
 type ModalProps = {
   modalState: boolean;
@@ -43,26 +27,19 @@ type ModalProps = {
 export const PendingPrfModal = ({ modalState, setModalState, closeModalAction }: ModalProps) => {
   const {
     selectedPrfId,
-    patchResponse,
-    selectedPosition,
-
-    setSelectedPosition,
+    pendingPrfModalIsOpen,
     setPendingPrfIsModalOpen,
     getPrfDetails,
     getPrfDetailsSuccess,
     getPrfDetailsFail,
-
     getPrfTrail,
     getPrfTrailSuccess,
     getPrfTrailFail,
     patchPrfFail,
     patchPrfSuccess,
-    emptyResponseAndError,
   } = usePrfStore((state) => ({
     selectedPrfId: state.selectedPrfId,
-    patchResponse: state.response.patchResponse,
-    selectedPosition: state.selectedPosition,
-    setSelectedPosition: state.setSelectedPosition,
+    pendingPrfModalIsOpen: state.pendingPrfModalIsOpen,
     setPendingPrfIsModalOpen: state.setPendingPrfModalIsOpen,
     getPrfDetails: state.getPrfDetails,
     getPrfDetailsSuccess: state.getPrfDetailsSuccess,
@@ -70,7 +47,6 @@ export const PendingPrfModal = ({ modalState, setModalState, closeModalAction }:
     getPrfTrail: state.getPrfTrail,
     getPrfTrailSuccess: state.getPrfTrailSuccess,
     getPrfTrailFail: state.getPrfTrailFail,
-    emptyResponseAndError: state.emptyResponseAndError,
     patchPrfSuccess: state.patchPrfSuccess,
     patchPrfFail: state.patchPrfFail,
   }));
@@ -78,8 +54,6 @@ export const PendingPrfModal = ({ modalState, setModalState, closeModalAction }:
   const setViewPositionModalIsOpen = usePrfStore((state) => state.setViewPositionModalIsOpen);
 
   const employeeDetail = useEmployeeStore((state) => state.employeeDetails);
-
-  const router = useRouter();
 
   const prfUrl = process.env.NEXT_PUBLIC_HRIS_URL;
   // use useSWR, provide the URL and fetchWithSession function as a parameter
@@ -90,7 +64,7 @@ export const PendingPrfModal = ({ modalState, setModalState, closeModalAction }:
     isLoading: swrPrfIsLoading,
     error: swrPrfError,
     mutate: mutatePrfDetails,
-  } = useSWR(`${prfUrl}/prf/details/${selectedPrfId}`, fetchWithToken, {
+  } = useSWR(pendingPrfModalIsOpen ? `${prfUrl}/prf/details/${selectedPrfId}` : null, fetchWithToken, {
     shouldRetryOnError: false,
     revalidateOnFocus: true,
   });
@@ -121,7 +95,7 @@ export const PendingPrfModal = ({ modalState, setModalState, closeModalAction }:
     isLoading: swrPrfTrailIsLoading,
     error: swrPrfTrailError,
     mutate: mutatePrfTrail,
-  } = useSWR(`${prfUrl}/prf-trail/${selectedPrfId}`, fetchWithToken, {
+  } = useSWR(pendingPrfModalIsOpen ? `${prfUrl}/prf-trail/${selectedPrfId}` : null, fetchWithToken, {
     shouldRetryOnError: false,
     revalidateOnFocus: true,
   });
@@ -137,8 +111,10 @@ export const PendingPrfModal = ({ modalState, setModalState, closeModalAction }:
     } else if (!error) {
       // request is done set loading to false and set the update response
       patchPrfSuccess(result);
-      setPendingPrfIsModalOpen(false);
       setCancelModalIsOpen(false);
+      setTimeout(() => {
+        setPendingPrfIsModalOpen(false);
+      }, 200);
     }
   };
 

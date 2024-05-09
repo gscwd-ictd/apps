@@ -4,22 +4,18 @@ import { HiX } from 'react-icons/hi';
 import { SpinnerDotted } from 'spinners-react';
 import { useEmployeeStore } from '../../../store/employee.store';
 import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
-import { LabelInput } from 'libs/oneui/src/components/Inputs/LabelInput';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { useEffect, useState } from 'react';
 import { useApprovalStore } from 'apps/portal/src/store/approvals.store';
 import useSWR from 'swr';
 import { fetchWithToken } from 'apps/portal/src/utils/hoc/fetcher';
 import { isEmpty } from 'lodash';
-import { UseTwelveHourFormat } from 'libs/utils/src/lib/functions/TwelveHourFormatter';
 import { OvertimeAccomplishmentApprovalPatch } from 'libs/utils/src/lib/types/overtime.type';
 import { OvertimeAccomplishmentStatus } from 'libs/utils/src/lib/enums/overtime.enum';
 import { SelectOption } from 'libs/utils/src/lib/types/select.type';
 import { GenerateCaptcha } from '../captcha/CaptchaGenerator';
 import { ApprovalCaptcha } from './ApprovalOtp/ApprovalCaptcha';
 import { DateFormatter } from 'libs/utils/src/lib/functions/DateFormatter';
-import { useOvertimeAccomplishmentStore } from 'apps/portal/src/store/overtime-accomplishment.store';
-import dayjs from 'dayjs';
 import { DateTimeFormatter } from 'libs/utils/src/lib/functions/DateTimeFormatter';
 
 type ModalProps = {
@@ -105,7 +101,7 @@ export const ApprovalAccomplishmentModal = ({ modalState, setModalState, closeMo
     setValue('employeeId', overtimeAccomplishmentEmployeeId);
     setValue('overtimeApplicationId', overtimeAccomplishmentApplicationId);
     setValue('approvedBy', employeeDetails.employmentDetails.userId);
-  }, [watch('status')]);
+  }, [watch('status'), captchaModalIsOpen]);
 
   useEffect(() => {
     reset();
@@ -164,10 +160,6 @@ export const ApprovalAccomplishmentModal = ({ modalState, setModalState, closeMo
 
   return (
     <>
-      {/* {!isEmpty(swrTimeLogsOnDayAndNextError) ? (
-        <ToastNotification toastType="error" notifMessage={`IVMS Entries: ${swrTimeLogsOnDayAndNextError.message}.`} />
-      ) : null} */}
-
       <Modal size={`${windowWidth > 1024 ? 'md' : 'full'}`} open={modalState} setOpen={setModalState}>
         <Modal.Header>
           <h3 className="font-semibold text-gray-700">
@@ -261,7 +253,9 @@ export const ApprovalAccomplishmentModal = ({ modalState, setModalState, closeMo
                       <label className="text-slate-500 text-md whitespace-nowrap pb-0.5">Approved Hours:</label>
 
                       <div className="w-auto ml-5">
-                        <label className="text-md font-medium">{accomplishmentDetails.actualHrs ?? '---'}</label>
+                        <label className="text-md font-medium">
+                          {accomplishmentDetails.actualHrs ? Number(accomplishmentDetails.actualHrs).toFixed(2) : '---'}
+                        </label>
                       </div>
                     </div>
 
@@ -357,8 +351,8 @@ export const ApprovalAccomplishmentModal = ({ modalState, setModalState, closeMo
                     <div className="flex flex-col justify-start items-start w-full px-0.5 pb-3  ">
                       <label className="text-slate-500 text-md whitespace-nowrap pb-0.5">Accomplishment:</label>
 
-                      <div className="w-auto ml-5">
-                        <label className="text-md font-medium">
+                      <div className="w-auto ml-5 ">
+                        <label className="text-md font-medium whitespace-pre-line">
                           {accomplishmentDetails.accomplishments ?? 'Not yet filled out'}
                         </label>
                       </div>

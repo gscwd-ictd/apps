@@ -170,8 +170,8 @@ export default function Prf({ user, employee }: PrfPageProps) {
     error: swrPendingPrfListError,
     mutate: mutatePendingPrfDetails,
   } = useSWR(`${prfUrl}/prf/${employee.user._id}?status=pending`, fetchWithToken, {
-    shouldRetryOnError: false,
-    revalidateOnFocus: true,
+    // shouldRetryOnError: false,
+    // revalidateOnFocus: true,
   });
 
   // Initial zustand state update
@@ -199,8 +199,8 @@ export default function Prf({ user, employee }: PrfPageProps) {
     error: swrDisapprovedPrfListError,
     mutate: mutateDisapprovedPrfDetails,
   } = useSWR(`${prfUrl}/prf/${employee.user._id}?status=disapproved`, fetchWithToken, {
-    shouldRetryOnError: false,
-    revalidateOnFocus: true,
+    // shouldRetryOnError: false,
+    // revalidateOnFocus: true,
   });
 
   // Initial zustand state update
@@ -228,8 +228,7 @@ export default function Prf({ user, employee }: PrfPageProps) {
     error: swrForApprovalPrfListError,
     mutate: mutateForApprovalPrfDetails,
   } = useSWR(`${prfUrl}/prf-trail/employee/${employee.user._id}`, fetchWithToken, {
-    shouldRetryOnError: false,
-    revalidateOnFocus: true,
+    revalidateOnMount: true,
   });
 
   // Initial zustand state update
@@ -257,8 +256,8 @@ export default function Prf({ user, employee }: PrfPageProps) {
     error: swrCancelledPrfListError,
     mutate: mutateCancelledPrfDetails,
   } = useSWR(`${prfUrl}/prf/${employee.user._id}/?status=cancelled`, fetchWithToken, {
-    shouldRetryOnError: false,
-    revalidateOnFocus: true,
+    // shouldRetryOnError: false,
+    // revalidateOnFocus: true,
   });
 
   // initialize zustand loading state
@@ -287,8 +286,13 @@ export default function Prf({ user, employee }: PrfPageProps) {
       mutateCancelledPrfDetails();
       setTimeout(() => {
         emptyResponseAndError();
-      }, 2000);
-      if (swrForApprovalPrfDetailsList.length <= 1 || swrCancelledPrfDetailsList.length <= 1) {
+      }, 5000);
+      if (activeItem == 0 && swrPendingPrfDetailsList.length <= 1) {
+        setTimeout(() => {
+          router.reload();
+        }, 2000);
+      }
+      if (activeItem == 1 && swrForApprovalPrfDetailsList.length <= 1) {
         setTimeout(() => {
           router.reload();
         }, 2000);
@@ -464,7 +468,10 @@ export default function Prf({ user, employee }: PrfPageProps) {
               </div>
             </Button>
           </ContentHeader>
-          {swrForApprovalPrfListIsLoading && swrDisapprovedPrfListIsLoading && swrPendingPrfListIsLoading ? (
+          {swrForApprovalPrfListIsLoading &&
+          swrDisapprovedPrfListIsLoading &&
+          swrPendingPrfListIsLoading &&
+          swrCancelledPrfListIsLoading ? (
             <div className="static flex flex-col items-center w-full h-96 justify-items-center place-items-center">
               <SpinnerDotted
                 speed={70}

@@ -1,6 +1,6 @@
 import { useEmployeeStore } from '../../../../../src/store/employee.store';
 import dayjs from 'dayjs';
-import React, { useEffect } from 'react';
+import React from 'react';
 import { FunctionComponent } from 'react';
 import {
   HiOutlineCalendar,
@@ -33,9 +33,7 @@ export const RequestSummary: FunctionComponent = () => {
         <header className="shrink-0 w-[18rem]">
           <div className="space-y-1">
             <header className="mb-7 pb-2 space-y-1">
-              <h1 className="text-xl font-medium text-gray-600">
-                Request Summary
-              </h1>
+              <h1 className="text-xl font-medium text-gray-600">Request Summary</h1>
               <p className="text-sm text-gray-500">HRD-001-2</p>
             </header>
 
@@ -55,21 +53,15 @@ export const RequestSummary: FunctionComponent = () => {
 
             <section className="flex items-center gap-4">
               <HiOutlineCalendar className="text-gray-700 shrink-0" />
-              <p className="font-medium text-gray-600">
-                {dayjs().format('MMMM DD, YYYY')}
-              </p>
+              <p className="font-medium text-gray-600">{dayjs().format('MMMM DD, YYYY')}</p>
             </section>
 
             <section className="flex items-center gap-4">
               <HiOutlinePencil className="text-gray-700 shrink-0" />
               {withExam ? (
-                <p className="text-indigo-500 font-medium">
-                  Examination is required
-                </p>
+                <p className="text-indigo-500 font-medium">Examination is required</p>
               ) : (
-                <p className="text-orange-500 font-medium">
-                  No examination required
-                </p>
+                <p className="text-orange-500 font-medium">No examination required</p>
               )}
             </section>
           </div>
@@ -81,24 +73,16 @@ export const RequestSummary: FunctionComponent = () => {
               <div
                 key={index}
                 className={`${
-                  position.remarks
-                    ? 'hover:border-l-green-600'
-                    : 'hover:border-l-red-500'
+                  position.remarks ? 'hover:border-l-green-600' : 'hover:border-l-red-500'
                 } hover:scale-105 hover:shadow-slate-200 mb-4 flex items-center justify-between border-l-4 py-3 px-5 border-gray-100 shadow-2xl shadow-slate-100 transition-all`}
               >
                 <section className="space-y-3 w-full">
                   <header>
                     <section className="flex items-center justify-between">
-                      <h3 className="font-medium text-gray-600 text-lg">
-                        {position.positionTitle}
-                      </h3>
-                      <p className="text-sm text-gray-600">
-                        {position.itemNumber}
-                      </p>
+                      <h3 className="font-medium text-gray-600 text-lg">{position.positionTitle}</h3>
+                      <p className="text-sm text-gray-600">{position.itemNumber}</p>
                     </section>
-                    <p className="text-sm text-gray-400">
-                      {position.designation}
-                    </p>
+                    <p className="text-sm text-gray-400">{position.designation}</p>
                   </header>
 
                   <main>
@@ -110,9 +94,7 @@ export const RequestSummary: FunctionComponent = () => {
                     ) : (
                       <section className="flex items-center gap-2">
                         <HiOutlineExclamation className="h-5 w-5 text-rose-400" />
-                        <p className="text-red-400">
-                          No remarks stated but it is recommended.
-                        </p>
+                        <p className="text-red-400">No remarks stated but it is recommended.</p>
                       </section>
                     )}
                   </main>

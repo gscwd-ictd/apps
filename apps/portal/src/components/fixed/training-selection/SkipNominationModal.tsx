@@ -2,10 +2,8 @@
 import { Button, Modal } from '@gscwd-apps/oneui';
 import { HiX } from 'react-icons/hi';
 import { isEmpty } from 'lodash';
-import { useEffect, useState } from 'react';
-import { useEmployeeStore } from '../../../store/employee.store';
+import { useEffect } from 'react';
 import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
-import { postPortal } from 'apps/portal/src/utils/helpers/portal-axios-helper';
 import { useTrainingSelectionStore } from 'apps/portal/src/store/training-selection.store';
 
 type ModalProps = {
