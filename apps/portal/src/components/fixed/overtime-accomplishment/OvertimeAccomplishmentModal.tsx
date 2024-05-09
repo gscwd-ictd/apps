@@ -624,7 +624,7 @@ export const OvertimeAccomplishmentModal = ({ modalState, setModalState, closeMo
                           <label className="text-slate-500 text-md whitespace-nowrap pb-0.5">Accomplishments:</label>
 
                           <div className="w-auto ml-5 mr-5">
-                            <label className="text-md font-medium">
+                            <label className="text-md font-medium whitespace-pre-line">
                               {overtimeAccomplishmentDetails.accomplishments}
                             </label>
                           </div>

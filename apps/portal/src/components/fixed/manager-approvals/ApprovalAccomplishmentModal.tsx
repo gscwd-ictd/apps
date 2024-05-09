@@ -101,7 +101,7 @@ export const ApprovalAccomplishmentModal = ({ modalState, setModalState, closeMo
     setValue('employeeId', overtimeAccomplishmentEmployeeId);
     setValue('overtimeApplicationId', overtimeAccomplishmentApplicationId);
     setValue('approvedBy', employeeDetails.employmentDetails.userId);
-  }, [watch('status')]);
+  }, [watch('status'), captchaModalIsOpen]);
 
   useEffect(() => {
     reset();
@@ -351,8 +351,8 @@ export const ApprovalAccomplishmentModal = ({ modalState, setModalState, closeMo
                     <div className="flex flex-col justify-start items-start w-full px-0.5 pb-3  ">
                       <label className="text-slate-500 text-md whitespace-nowrap pb-0.5">Accomplishment:</label>
 
-                      <div className="w-auto ml-5">
-                        <label className="text-md font-medium">
+                      <div className="w-auto ml-5 ">
+                        <label className="text-md font-medium whitespace-pre-line">
                           {accomplishmentDetails.accomplishments ?? 'Not yet filled out'}
                         </label>
                       </div>
