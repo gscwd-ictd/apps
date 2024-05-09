@@ -141,7 +141,6 @@ export default function Calendar({
           if (
             (leaveName === LeaveName.VACATION ||
               leaveName === LeaveName.FORCED ||
-              leaveName === LeaveName.SPECIAL_PRIVILEGE ||
               leaveName === LeaveName.SOLO_PARENT) &&
             dayjs(`${specifiedDate}`).diff(`${today}`, 'day') >= 0 &&
             dayjs(`${specifiedDate}`).diff(`${today}`, 'day') <= 10 &&
