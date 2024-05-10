@@ -174,10 +174,11 @@ export const WesDocument = ({ formatDate, workExperiencesSheet, isSubmitted, app
           <Document
             author="General Santos City Water District"
             subject="Attachment to CS Form No. 212."
-            title="Work Exoerience Sheet"
+            title="Work Experience Sheet"
           >
             {/* Page 1 */}
             <Page size={[612.3, 935.4]} style={styles.page}>
+              {/* <Text style={styles.pageNumber} render={({ pageNumber, totalPages }) => `${pageNumber} / ${totalPages}`} fixed /> */}
               {/* <Text style={styles.pageNumber} render={({ pageNumber, totalPages }) => `${pageNumber} / ${totalPages}`} fixed /> */}
 
               <Text

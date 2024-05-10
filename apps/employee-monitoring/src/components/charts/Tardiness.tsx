@@ -31,7 +31,6 @@ export const TardinessChart = () => {
     isLoading: swrLoading,
   } = useSWR('/stats/lates/department', fetcherEMS, {
     onErrorRetry: (error, key, config, revalidate, { retryCount }) => {
-      // Only retry up to 5 times.
       if (retryCount >= 2) return;
     },
   });
