@@ -206,7 +206,6 @@ const Index = () => {
         {!isEmpty(ErrorOfficersOfTheDay) ? (
           <ToastNotification toastType="error" notifMessage={ErrorOfficersOfTheDay} />
         ) : null}
-
         <Can I="access" this="Officer_of_the_day">
           <div className="mx-5">
             <Card>
@@ -223,7 +222,6 @@ const Index = () => {
                       <i className="bx bxs-plus-square"></i>&nbsp; Add Officer Of The Day
                     </button>
                   </div>
-
                   <DataTable model={table} showGlobalFilter={true} showColumnFilter={false} paginate={true} />
                 </div>
               )}

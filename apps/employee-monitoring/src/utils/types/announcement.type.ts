@@ -1,16 +1,18 @@
 /* eslint-disable @nx/enforce-module-boundaries */
 export type Announcement = {
-  _id: string;
+  id: string;
   title: string;
-  date: string;
   description: string;
   url: string;
-  image: string;
+  photoUrl: string;
   status: string;
+  fileName: string;
+  eventAnnouncementDate: string;
+  file: File;
 };
 
-export type FormPostAnnouncement = Omit<Announcement, '_id'> & { app: string };
+export type FormPostAnnouncement = Omit<Announcement, 'id'> & { app: string; file: File };
 
-export type AnnouncementId = Pick<Announcement, '_id'>;
+export type AnnouncementId = Pick<Announcement, 'id'>;
 
 export type FormDeleteAnnouncement = AnnouncementId;
