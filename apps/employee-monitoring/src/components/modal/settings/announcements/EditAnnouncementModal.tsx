@@ -14,6 +14,7 @@ import { AlertNotification, Button, LoadingSpinner, Modal, ToastNotification } f
 import { LabelInput } from 'apps/employee-monitoring/src/components/inputs/LabelInput';
 
 import { SelectListRF } from '../../../inputs/SelectListRF';
+import { PhotoIcon } from '@heroicons/react/20/solid';
 
 const announcementStatus = [
   { label: 'Active', value: 'active' },
@@ -70,7 +71,7 @@ const EditAnnouncementModal: FunctionComponent<EditModalProps> = ({
 }) => {
   // zustand store initialization
   const {
-    UpdateAnnouncementResponse,
+    UpdateAnnouncement,
     SetUpdateAnnouncement,
 
     ErrorAnnouncement,
@@ -78,7 +79,7 @@ const EditAnnouncementModal: FunctionComponent<EditModalProps> = ({
 
     EmptyResponse,
   } = useAnnouncementsStore((state) => ({
-    UpdateAnnouncementResponse: state.updateAnnouncement,
+    UpdateAnnouncement: state.updateAnnouncement,
     SetUpdateAnnouncement: state.setUpdateAnnouncement,
 
     ErrorAnnouncement: state.errorAnnouncement,
@@ -146,7 +147,6 @@ const EditAnnouncementModal: FunctionComponent<EditModalProps> = ({
           return false;
         })
         .test('fileSizeAndDimensions', 'Image must be less than or equal to 5MB and 843x843 pixels', async (value) => {
-          // If value is not a FileList or it's empty, pass the test
           if (!(value instanceof FileList) || value.length === 0) {
             return true;
           }
@@ -190,9 +190,6 @@ const EditAnnouncementModal: FunctionComponent<EditModalProps> = ({
 
   // form submission
   const onSubmit: SubmitHandler<Announcement> = async (data: Announcement) => {
-    // const isValid = await trigger(); // manually trigger validation
-    // if (!isValid) return; // if form is not valid, stop here
-
     EmptyResponse();
     handlePatchResult(data);
   };
@@ -268,7 +265,7 @@ const EditAnnouncementModal: FunctionComponent<EditModalProps> = ({
   return (
     <>
       {/* Notification */}
-      {!isEmpty(UpdateAnnouncementResponse) ? (
+      {!isEmpty(UpdateAnnouncement) ? (
         <ToastNotification toastType="success" notifMessage="Announcement details updated successfully" />
       ) : null}
       {!isEmpty(ErrorAnnouncement) ? <ToastNotification toastType="error" notifMessage={ErrorAnnouncement} /> : null}
@@ -361,11 +358,17 @@ const EditAnnouncementModal: FunctionComponent<EditModalProps> = ({
                   />
                 </div>
                 {/* Image preview */}
-                <img
-                  src={!previewUrl ? hasExistingPhotoUrl : previewUrl}
-                  alt="Preview"
-                  className="w-24 h-24 object-cover rounded-lg flex-shrink-0 flex-grow-0"
-                />
+                {previewUrl || hasExistingPhotoUrl ? (
+                  <img
+                    src={!previewUrl ? hasExistingPhotoUrl : previewUrl}
+                    alt="Preview"
+                    className="w-24 h-24 object-cover rounded-lg flex-shrink-0 flex-grow-0"
+                  />
+                ) : (
+                  <div className="flex flex-col items-center justify-center w-24 h-24 object-cover rounded-lg flex-shrink-0 flex-grow-0 bg-gray-200">
+                    <PhotoIcon className="w-10 h-10 text-gray-400" />
+                  </div>
+                )}
               </div>
 
               {/* Active / inactive announcement select */}

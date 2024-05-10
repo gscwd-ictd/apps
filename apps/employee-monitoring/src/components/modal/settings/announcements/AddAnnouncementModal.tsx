@@ -1,5 +1,5 @@
 /* eslint-disable @nx/enforce-module-boundaries */
-import { FunctionComponent, useEffect } from 'react';
+import { FunctionComponent, useEffect, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
@@ -14,6 +14,7 @@ import { LabelInput } from '../../../inputs/LabelInput';
 import { isEmpty } from 'lodash';
 
 import { SelectListRF } from '../../../inputs/SelectListRF';
+import { PhotoIcon } from '@heroicons/react/20/solid';
 
 const announcementStatus = [
   { label: 'Active', value: 'active' },
@@ -134,6 +135,20 @@ const AddAnnouncementModal: FunctionComponent<AddModalProps> = ({ modalState, se
     EmptyResponse: state.emptyResponse,
   }));
 
+  // image preview
+  const [previewUrl, setPreviewUrl] = useState('');
+
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setPreviewUrl(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
   // React hook form
   const {
     reset,
@@ -191,6 +206,7 @@ const AddAnnouncementModal: FunctionComponent<AddModalProps> = ({ modalState, se
   useEffect(() => {
     if (!modalState) {
       reset();
+      setPreviewUrl('');
     }
   }, [modalState]);
 
@@ -279,15 +295,31 @@ const AddAnnouncementModal: FunctionComponent<AddModalProps> = ({ modalState, se
               </div>
 
               {/* Image input */}
-              <LabelInput
-                id={'file'}
-                label={'Image'}
-                type={'file'}
-                controller={{ ...register('file') }}
-                isError={errors.file ? true : false}
-                errorMessage={errors.file?.message}
-                accept={'.jpg,.png'}
-              />
+              <div className="flex flex-row gap-4">
+                <div className="mb-6 flex-shrink-0 flex-grow">
+                  <LabelInput
+                    id={'file'}
+                    label={'Image'}
+                    type={'file'}
+                    controller={{ ...register('file'), onChange: handleFileChange }}
+                    isError={errors.file ? true : false}
+                    errorMessage={errors.file?.message}
+                    accept={'.jpg,.png'}
+                  />
+                </div>
+                {/* Image preview */}
+                {!previewUrl ? (
+                  <div className="flex flex-col items-center justify-center w-24 h-24 object-cover rounded-lg flex-shrink-0 flex-grow-0 bg-gray-200">
+                    <PhotoIcon className="w-10 h-10 text-gray-400" />
+                  </div>
+                ) : (
+                  <img
+                    src={previewUrl}
+                    alt="Preview"
+                    className="w-24 h-24 object-cover rounded-lg flex-shrink-0 flex-grow-0"
+                  />
+                )}
+              </div>
 
               {/* Active / inactive announcement select*/}
               <SelectListRF

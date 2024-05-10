@@ -61,16 +61,10 @@ const Index = () => {
     SetGetAnnouncements,
 
     PostAnnouncement,
-    SetPostAnnouncement,
 
     UpdateAnnouncement,
-    SetUpdateAnnouncement,
 
     DeleteAnnouncement,
-    SetDeleteAnnouncement,
-
-    ErrorAnnouncement,
-    SetErrorAnnouncement,
 
     ErrorAnnouncements,
     SetErrorAnnouncements,
@@ -81,16 +75,10 @@ const Index = () => {
     SetGetAnnouncements: state.setGetAnnouncements,
 
     PostAnnouncement: state.postAnnouncement,
-    SetPostAnnouncement: state.setPostAnnouncement,
 
     UpdateAnnouncement: state.updateAnnouncement,
-    SetUpdateAnnouncement: state.setUpdateAnnouncement,
 
     DeleteAnnouncement: state.deleteAnnouncement,
-    SetDeleteAnnouncement: state.setDeleteAnnouncement,
-
-    ErrorAnnouncement: state.errorAnnouncement,
-    SetErrorAnnouncement: state.setErrorAnnouncement,
 
     ErrorAnnouncements: state.errorAnnouncements,
     SetErrorAnnouncements: state.setErrorAnnouncements,
