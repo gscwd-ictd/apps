@@ -7,4 +7,5 @@ export type Position = {
   remarks?: string;
   state?: boolean;
   sequenceNo?: number;
+  salaryGrade?: number;
 };

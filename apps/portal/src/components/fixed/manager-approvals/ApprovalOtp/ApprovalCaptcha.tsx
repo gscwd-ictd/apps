@@ -102,16 +102,16 @@ export const ApprovalCaptcha: FunctionComponent<CaptchaProps> = ({
       patchOvertimeAccomplishment();
       if (dataToSubmitOvertimeAccomplishment && !dataToSubmitApproveAllAccomplishment) {
         console.log(dataToSubmitOvertimeAccomplishment, 'single entry');
-        const { error, result } = await patchPortal(
-          '/v1/overtime/accomplishments/approval',
-          dataToSubmitOvertimeAccomplishment
-        );
-        if (error) {
-          patchOvertimeAccomplishmentFail(result);
-        } else {
-          patchOvertimeAccomplishmentSuccess(result);
-          handleClose(); // close confirmation of decline modal
-        }
+        // const { error, result } = await patchPortal(
+        //   '/v1/overtime/accomplishments/approval',
+        //   dataToSubmitOvertimeAccomplishment
+        // );
+        // if (error) {
+        //   patchOvertimeAccomplishmentFail(result);
+        // } else {
+        //   patchOvertimeAccomplishmentSuccess(result);
+        //   handleClose(); // close confirmation of decline modal
+        // }
       }
       //approve all pending accomplishment
       else if (dataToSubmitApproveAllAccomplishment && !dataToSubmitOvertimeAccomplishment) {

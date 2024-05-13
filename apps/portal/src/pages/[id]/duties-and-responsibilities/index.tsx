@@ -91,6 +91,7 @@ export default function DutiesResponsibilities({
   // unfilled positions set
   useEffect(() => {
     if (!isEmpty(swrUnfilledPositions)) {
+      console.log(swrUnfilledPositions.data);
       getUnfilledDrcPositionsSuccess(swrUnfilledPositions.data);
     }
     if (!isEmpty(swrUnfilledError)) {

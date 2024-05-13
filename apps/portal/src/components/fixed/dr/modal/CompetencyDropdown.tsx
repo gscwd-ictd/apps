@@ -16,17 +16,14 @@ type CompetencyDropDownProps = {
 
 export const CompetencyDropdown = ({ index }: CompetencyDropDownProps) => {
   // use competency store
-  const {
-    competencies,
-    getCompetencies,
-    getCompetenciesFail,
-    getCompetenciesSuccess,
-  } = useCompetencyStore((state) => ({
-    competencies: state.competencies,
-    getCompetenciesFail: state.getCompetenciesFail,
-    getCompetenciesSuccess: state.getCompetenciesSuccess,
-    getCompetencies: state.getCompetencies,
-  }));
+  const { competencies, getCompetencies, getCompetenciesFail, getCompetenciesSuccess } = useCompetencyStore(
+    (state) => ({
+      competencies: state.competencies,
+      getCompetenciesFail: state.getCompetenciesFail,
+      getCompetenciesSuccess: state.getCompetenciesSuccess,
+      getCompetencies: state.getCompetencies,
+    })
+  );
 
   // use position store
   const { selectedPosition } = usePositionStore((state) => ({
@@ -34,13 +31,11 @@ export const CompetencyDropdown = ({ index }: CompetencyDropDownProps) => {
   }));
 
   // use dnr store
-  const { checkedDnrs, setCheckedDnrs, selectedDrcType } = useDnrStore(
-    (state) => ({
-      checkedDnrs: state.checkedDnrs,
-      selectedDrcType: state.selectedDrcType,
-      setCheckedDnrs: state.setCheckedDnrs,
-    })
-  );
+  const { checkedDnrs, setCheckedDnrs, selectedDrcType } = useDnrStore((state) => ({
+    checkedDnrs: state.checkedDnrs,
+    selectedDrcType: state.selectedDrcType,
+    setCheckedDnrs: state.setCheckedDnrs,
+  }));
 
   // const prodUrl = `${process.env.NEXT_PUBLIC_HRIS_URL}/competency-proficiency-level/single/functional/${selectedPosition.positionId}`;
 
@@ -51,9 +46,13 @@ export const CompetencyDropdown = ({ index }: CompetencyDropDownProps) => {
     error: swrErrorCompetencies,
     mutate: swrMutateCompetencies,
   } = useSWR(
-    `/competency-proficiency-level/single/functional/${selectedPosition.positionId}/`,
+    selectedPosition.salaryGrade && selectedPosition.salaryGrade >= 20
+      ? `/competency-proficiency-level/single/managerial/${selectedPosition.positionId}/`
+      : `/competency-proficiency-level/single/functional/${selectedPosition.positionId}/`,
     fetcherHRIS,
-    { shouldRetryOnError: false }
+    {
+      shouldRetryOnError: false,
+    }
   );
 
   const handleSelectedDefaultCompetency = (index: number, item: Competency) => {
@@ -92,7 +91,12 @@ export const CompetencyDropdown = ({ index }: CompetencyDropDownProps) => {
   // swr get success or fail
   useEffect(() => {
     if (!isEmpty(swrCompetencies)) {
-      getCompetenciesSuccess(swrCompetencies.data.functional);
+      console.log(swrCompetencies.data);
+      if (selectedPosition.salaryGrade && selectedPosition.salaryGrade >= 20) {
+        getCompetenciesSuccess(swrCompetencies.data.managerial);
+      } else {
+        getCompetenciesSuccess(swrCompetencies.data.functional);
+      }
     }
     if (swrErrorCompetencies) {
       getCompetenciesFail(swrErrorCompetencies);
@@ -133,13 +137,9 @@ export const CompetencyDropdown = ({ index }: CompetencyDropDownProps) => {
                     <Menu.Item>
                       {({ active }) => (
                         <button
-                          onClick={() =>
-                            handleSelectedDefaultCompetency(index, item)
-                          }
+                          onClick={() => handleSelectedDefaultCompetency(index, item)}
                           className={`${
-                            active
-                              ? 'bg-indigo-200 text-gray-900'
-                              : 'text-gray-500'
+                            active ? 'bg-indigo-200 text-gray-900' : 'text-gray-500'
                           } group flex w-full items-center text-left py-3 pl-4 pr-2`}
                         >
                           <div className="flex flex-row w-full gap-2 divide-x">
