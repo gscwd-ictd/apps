@@ -91,7 +91,6 @@ export const CompetencyDropdown = ({ index }: CompetencyDropDownProps) => {
   // swr get success or fail
   useEffect(() => {
     if (!isEmpty(swrCompetencies)) {
-      console.log(swrCompetencies.data);
       if (selectedPosition.salaryGrade && selectedPosition.salaryGrade >= 20) {
         getCompetenciesSuccess(swrCompetencies.data.managerial);
       } else {
