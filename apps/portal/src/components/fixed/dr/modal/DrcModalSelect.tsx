@@ -29,9 +29,7 @@ export const DrcModalSelect = (): JSX.Element => {
   }));
 
   // initialize ref for search input
-  const searchValueRef = useRef(
-    null
-  ) as unknown as MutableRefObject<HTMLInputElement>;
+  const searchValueRef = useRef(null) as unknown as MutableRefObject<HTMLInputElement>;
 
   // set focus whenever filtered drs change
   useEffect(() => {
@@ -42,21 +40,26 @@ export const DrcModalSelect = (): JSX.Element => {
   const onSearch = (event: FormEvent<HTMLInputElement>) => {
     // get the current value of the search input
     const value = event.currentTarget.value;
-
     // create an array that will contain the search results
-    const filteredResult: Array<DutyResponsibility> = [];
-
+    // const filteredResult: Array<DutyResponsibility> = [];
     // loop through dr array and filter according to dr description
-    availableDnrs.filter((dr: DutyResponsibility) => {
-      // check if there is a match
-      if (dr.description.match(new RegExp(value, 'i'))) {
-        // insert the matching description inside the filtered result
-        filteredResult.push(dr);
+    // availableDnrs.filter((dr: DutyResponsibility) => {
+    //   // check if there is a match
+    //   if (dr.description.match(new RegExp(value, 'i'))) {
+    //     // insert the matching description inside the filtered result
+    //     filteredResult.push(dr);
+    //   }
+    // });
+
+    const filteredResult: Array<DutyResponsibility> = availableDnrs.filter((dr: DutyResponsibility) => {
+      const newDesc = dr.description.toLowerCase();
+      if (newDesc.includes(value.toLowerCase())) {
+        return dr;
       }
     });
+
     // set search value to current value of the search input
     setFilteredDnrValue(value);
-
     // update the state of the filtered DRs
     setFilteredAvailableDnrs(filteredResult);
   };
@@ -85,19 +88,15 @@ export const DrcModalSelect = (): JSX.Element => {
       <div className="grid grid-cols-1 mb-5 lg:grid-cols-6">
         <section className="col-span-1 lg:col-span-3">
           <div className="flex justify-between px-3 mb-1 text-sm">
-            <p className="font-medium text-gray-500 uppercase">
-              {selectedDrcType}
-            </p>
+            <p className="font-medium text-gray-500 uppercase">{selectedDrcType}</p>
             {selectedDrcType === 'core' && (
               <p className="text-gray-600">
-                {checkedDnrs.core.length} out of {availableDnrs.length} items
-                selected
+                {checkedDnrs.core.length} out of {availableDnrs.length} items selected
               </p>
             )}
             {selectedDrcType === 'support' && (
               <p className="text-gray-600">
-                {checkedDnrs.support.length} out of {availableDnrs.length} items
-                selected
+                {checkedDnrs.support.length} out of {availableDnrs.length} items selected
               </p>
             )}
           </div>
@@ -109,14 +108,11 @@ export const DrcModalSelect = (): JSX.Element => {
               onChange={(event) => onSearch(event)}
               type="text"
               className="w-full py-3 pl-10 pr-12 border-gray-200 rounded"
-              placeholder="Search for a position"
+              placeholder="Search for a duty"
             ></input>
             {filteredDnrValue !== '' ? (
               <>
-                <button
-                  className="absolute -right-0 mr-7 focus:outline-none"
-                  onClick={onClearSearch}
-                >
+                <button className="absolute -right-0 mr-7 focus:outline-none" onClick={onClearSearch}>
                   <HiXCircle className="w-6 h-6 mt-3 transition-colors ease-in-out text-slate-300 hover:text-slate-400" />
                 </button>
               </>
@@ -135,19 +131,15 @@ export const DrcModalSelect = (): JSX.Element => {
         </section>
         <section className="col-span-1 lg:col-span-3 h-[34rem] bg-opacity-50 px-5 pt-5">
           {(selectedDrcType === 'core' && checkedDnrs.core.length === 0) ||
-          (selectedDrcType === 'support' &&
-            checkedDnrs.support.length === 0) ? (
+          (selectedDrcType === 'support' && checkedDnrs.support.length === 0) ? (
             <>
               <div className="flex flex-col items-center justify-center w-full h-full gap-5">
                 <UndrawSelecting width={250} height={250} />
-                <h1 className="text-2xl text-gray-300">
-                  Select at least 1 duty & responsibility to proceed.
-                </h1>
+                <h1 className="text-2xl text-gray-300">Select at least 1 duty & responsibility to proceed.</h1>
               </div>
             </>
           ) : (selectedDrcType === 'core' && checkedDnrs.core.length > 0) ||
-            (selectedDrcType === 'support' &&
-              checkedDnrs.support.length > 0) ? (
+            (selectedDrcType === 'support' && checkedDnrs.support.length > 0) ? (
             <>
               <div className="h-[34rem] w-full overflow-y-scroll px-2 pt-1">
                 {/* <SelectedDRCard /> */}
