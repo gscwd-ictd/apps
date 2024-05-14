@@ -15,7 +15,6 @@ import { DateTimeFormatter } from 'libs/utils/src/lib/functions/DateTimeFormatte
 import { GetDateDifference } from 'libs/utils/src/lib/functions/GetDateDifference';
 import { OvertimeAccomplishmentStatus, OvertimeStatus } from 'libs/utils/src/lib/enums/overtime.enum';
 import { useTimeLogStore } from 'apps/portal/src/store/timelogs.store';
-import { ScheduleBases } from 'libs/utils/src/lib/enums/schedule.enum';
 import { useEmployeeStore } from 'apps/portal/src/store/employee.store';
 import { useDtrStore } from 'apps/portal/src/store/dtr.store';
 import { fetchWithToken } from 'apps/portal/src/utils/hoc/fetcher';
@@ -60,8 +59,6 @@ export const OvertimeAccomplishmentModal = ({ modalState, setModalState, closeMo
   const employeeDetails = useEmployeeStore((state) => state.employeeDetails);
 
   const { windowWidth } = UseWindowDimensions();
-  const [overtimeIsHoliday, setOvertimeIsHoliday] = useState<boolean>(false);
-  const [overtimeIsRestday, setOvertimeIsRestday] = useState<boolean>(false);
   const [encodedHours, setEncodedHours] = useState<number>(0);
   const [finalEncodedHours, setFinalEncodedHours] = useState<number>(
     overtimeAccomplishmentDetails?.computedEncodedHours ?? 0
@@ -109,7 +106,6 @@ export const OvertimeAccomplishmentModal = ({ modalState, setModalState, closeMo
     }
   }, [pendingOvertimeAccomplishmentModalIsOpen]);
 
-  // console.log(dayjs(overtimeAccomplishmentDetails.entriesForTheDay[0]).format('YYYY-MM-DDThh:mm'));
   useEffect(() => {
     setFinalEncodedHours(overtimeAccomplishmentDetails.computedEncodedHours);
   }, [employeeDetails, overtimeAccomplishmentDetails]);
@@ -159,20 +155,6 @@ export const OvertimeAccomplishmentModal = ({ modalState, setModalState, closeMo
       } else {
         setFinalEncodedHours(Number(encodedHours.toFixed(2)));
       }
-      // }
-      //if emergency OT
-      // else {
-      //   // apply 3-1 rule only
-      //   if (Number(encodedHours.toFixed(2)) >= 4) {
-      //     numberOfBreaks = (Number(encodedHours) / 4).toFixed(2); // for 3-1 rule
-      //     let temporaryHours = Number(encodedHours - Math.floor(numberOfBreaks));
-      //     setFinalEncodedHours(Number(temporaryHours.toFixed(2)));
-      //   }
-      //   //no break time (less than 4 hours)
-      //   else {
-      //     setFinalEncodedHours(Number(encodedHours.toFixed(2)));
-      //   }
-      // }
     }
     //if regular work day - 3-1 rule only
     else {
@@ -187,20 +169,6 @@ export const OvertimeAccomplishmentModal = ({ modalState, setModalState, closeMo
       else {
         setFinalEncodedHours(Number(encodedHours.toFixed(2)));
       }
-      // }
-      //if emergency OT
-      // else {
-      //   // apply 3-1 rule only
-      //   if (Number(encodedHours.toFixed(2)) >= 4) {
-      //     numberOfBreaks = (Number(encodedHours) / 4).toFixed(2); // for 3-1 rule
-      //     let temporaryHours = Number(encodedHours - Math.floor(numberOfBreaks));
-      //     setFinalEncodedHours(Number(temporaryHours.toFixed(2)));
-      //   }
-      //   //no break time (less than 4 hours)
-      //   else {
-      //     setFinalEncodedHours(Number(encodedHours.toFixed(2)));
-      //   }
-      // }
     }
   }, [encodedHours]);
 
@@ -241,51 +209,8 @@ export const OvertimeAccomplishmentModal = ({ modalState, setModalState, closeMo
     }
   }, [swrFaceScan, swrFaceScanError]);
 
-  //get DTR for OT date and next day
-  // const timeLogsOnDayAndNextUrl = `${process.env.NEXT_PUBLIC_EMPLOYEE_MONITORING_URL}/v1/daily-time-record/employees/entries/logs/${employeeDetails.employmentDetails.companyId}/${overtimeAccomplishmentDetails.plannedDate}`;
-  // use useSWR, provide the URL and fetchWithSession function as a parameter
-
-  // const {
-  //   data: swrTimeLogsOnDayAndNext,
-  //   isLoading: swrTimeLogsOnDayAndNextIsLoading,
-  //   error: swrTimeLogsOnDayAndNextError,
-  // } = useSWR(
-  //   (pendingOvertimeAccomplishmentModalIsOpen || completedOvertimeAccomplishmentModalIsOpen) &&
-  //     employeeDetails.employmentDetails.companyId &&
-  //     overtimeAccomplishmentDetails.plannedDate
-  //     ? timeLogsOnDayAndNextUrl
-  //     : null,
-  //   fetchWithToken,
-  //   {
-  //     shouldRetryOnError: true,
-  //     revalidateOnFocus: true,
-  //   }
-  // );
-
-  // Initial zustand state update
-  // useEffect(() => {
-  //   if (swrTimeLogsOnDayAndNextIsLoading) {
-  //     getTimeLogsOnDayAndNext(swrTimeLogsOnDayAndNextIsLoading);
-  //   }
-  // }, [swrTimeLogsOnDayAndNextIsLoading]);
-
-  // // Upon success/fail of swr request, zustand state will be updated
-  // useEffect(() => {
-  //   if (!isEmpty(swrTimeLogsOnDayAndNext)) {
-  //     getTimeLogsOnDayAndNextSuccess(swrTimeLogsOnDayAndNextIsLoading, swrTimeLogsOnDayAndNext);
-  //   }
-
-  //   if (!isEmpty(swrTimeLogsOnDayAndNextError)) {
-  //     getTimeLogsOnDayAndNextFail(swrTimeLogsOnDayAndNextIsLoading, swrTimeLogsOnDayAndNextError.message);
-  //   }
-  // }, [swrTimeLogsOnDayAndNext, swrTimeLogsOnDayAndNextError]);
-
   return (
     <>
-      {/* {!isEmpty(swrTimeLogsOnDayAndNextError) ? (
-        <ToastNotification toastType="error" notifMessage={`IVMS Entries: ${swrTimeLogsOnDayAndNextError.message}.`} />
-      ) : null} */}
-
       {!isEmpty(swrFaceScanError) ? (
         <ToastNotification toastType="error" notifMessage={`Face Scans: ${swrFaceScanError.message}.`} />
       ) : null}
@@ -329,35 +254,6 @@ export const OvertimeAccomplishmentModal = ({ modalState, setModalState, closeMo
                 <div className="w-full h-full flex flex-col gap-2 ">
                   <div className="w-full flex flex-col gap-2 px-4 rounded">
                     <div className="w-full flex flex-col gap-0">
-                      {/* Emergency OT but IVMS is incomplete/empty and OT day is Restday or Holiday - for Office Only */}
-                      {/* {overtimeAccomplishmentDetails.plannedDate <= overtimeAccomplishmentDetails.dateOfOTApproval &&
-                      schedule.scheduleBase === ScheduleBases.OFFICE &&
-                      (!overtimeAccomplishmentDetails.ivmsTimeIn || !overtimeAccomplishmentDetails.ivmsTimeOut) &&
-                      (isHoliday || isRestday) ? (
-                        <AlertNotification
-                          alertType="error"
-                          notifMessage={
-                            'Empty or Incomplete Time Log detected. Please conduct a Time Log Correction in the DTR page for this date as this was an Emergency Overtime conducted during a holiday or rest day.'
-                          }
-                          dismissible={false}
-                        />
-                      ) : null} */}
-
-                      {/* Emergency OT but IVMS is incomplete/empty and OT day is REGULAR SCHEDULED WORK DAY - for Office Only */}
-                      {/* {overtimeAccomplishmentDetails.plannedDate <= overtimeAccomplishmentDetails.dateOfOTApproval &&
-                      schedule.scheduleBase === ScheduleBases.OFFICE &&
-                      (!overtimeAccomplishmentDetails.ivmsTimeIn || !overtimeAccomplishmentDetails.ivmsTimeOut) &&
-                      !isHoliday &&
-                      !isRestday ? (
-                        <AlertNotification
-                          alertType="error"
-                          notifMessage={
-                            'Empty or Incomplete Time Log detected. Submission is not possible as this was an Emergency Overtime conducted during a regular scheduled work day.'
-                          }
-                          dismissible={false}
-                        />
-                      ) : null} */}
-
                       {overtimeAccomplishmentDetails.status === OvertimeAccomplishmentStatus.PENDING ? (
                         <AlertNotification
                           alertType="warning"
@@ -718,8 +614,8 @@ export const OvertimeAccomplishmentModal = ({ modalState, setModalState, closeMo
                       <div className={`flex flex-col justify-start items-start w-full px-0.5 pb-3`}>
                         <label className="text-slate-500 text-md whitespace-nowrap pb-0.5">Purpose:</label>
 
-                        <div className="w-auto ml-5 mr-5">
-                          <label className="text-md font-medium">{overtimeAccomplishmentDetails.purpose}</label>
+                        <div className="w-auto ml-5 mr-5 break-words">
+                          <label className="text-md font-medium ">{overtimeAccomplishmentDetails.purpose}</label>
                         </div>
                       </div>
 
@@ -728,7 +624,7 @@ export const OvertimeAccomplishmentModal = ({ modalState, setModalState, closeMo
                           <label className="text-slate-500 text-md whitespace-nowrap pb-0.5">Accomplishments:</label>
 
                           <div className="w-auto ml-5 mr-5">
-                            <label className="text-md font-medium">
+                            <label className="text-md font-medium whitespace-pre-line">
                               {overtimeAccomplishmentDetails.accomplishments}
                             </label>
                           </div>
@@ -759,7 +655,9 @@ export const OvertimeAccomplishmentModal = ({ modalState, setModalState, closeMo
 
                           <div className="w-auto ml-5">
                             <label className=" text-md font-medium">
-                              {overtimeAccomplishmentDetails.actualHrs ?? '---'}
+                              {overtimeAccomplishmentDetails.actualHrs
+                                ? Number(overtimeAccomplishmentDetails.actualHrs).toFixed(2)
+                                : '---'}
                             </label>
                           </div>
                         </div>

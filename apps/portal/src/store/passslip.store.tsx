@@ -1,13 +1,15 @@
 /* eslint-disable @nx/enforce-module-boundaries */
 import { create } from 'zustand';
-import { PassSlip, PassSlipId, EmployeePassSlipList } from '../../../../libs/utils/src/lib/types/pass-slip.type';
+import { PassSlip, EmployeePassSlipList } from '../../../../libs/utils/src/lib/types/pass-slip.type';
 import { devtools } from 'zustand/middleware';
+import { SelectOption } from 'libs/utils/src/lib/types/select.type';
 
 export type PassSlipCount = {
   passSlipCount: number;
 };
 export type PassSlipState = {
   //PASS SLIP TO SUBMIT
+  supervisors: Array<SelectOption>; //list of supervisor dropdown for pass slip application
   passSlips: {
     allowedToApplyForNew: boolean;
     forApproval: Array<PassSlip>;
@@ -23,11 +25,13 @@ export type PassSlipState = {
     loadingPassSlips: boolean;
     loadingPassSlipCount: boolean;
     loadingResponse: boolean;
+    loadingSupervisors: boolean;
   };
   error: {
     errorPassSlips: string;
     errorPassSlipCount: string;
     errorResponse: string;
+    errorSupervisors: string;
   };
 
   passSlipCount: PassSlipCount;
@@ -38,6 +42,11 @@ export type PassSlipState = {
   completedPassSlipModalIsOpen: boolean;
   disputePassSlipModalIsOpen: boolean;
   tab: number;
+
+  //supervisor drop down for pass slip application
+  getSupervisors: (loading: boolean) => void;
+  getSupervisorsSuccess: (loading: boolean, response) => void;
+  getSupervisorsFail: (loading: boolean, error: string) => void;
 
   getPassSlipCount: (loading: boolean) => void;
   getPassSlipCountSuccess: (loading: boolean, response) => void;
@@ -74,6 +83,7 @@ export type PassSlipState = {
 
 export const usePassSlipStore = create<PassSlipState>()(
   devtools((set) => ({
+    supervisors: [] as Array<SelectOption>,
     passSlips: {
       allowedToApplyForNew: false,
       forApproval: [],
@@ -88,11 +98,13 @@ export const usePassSlipStore = create<PassSlipState>()(
       loadingPassSlips: false,
       loadingPassSlipCount: false,
       loadingResponse: false,
+      loadingSupervisors: false,
     },
     error: {
       errorPassSlips: '',
       errorPassSlipCount: '',
       errorResponse: '',
+      errorSupervisors: '',
     },
 
     passSlipCount: {} as PassSlipCount,
@@ -135,6 +147,46 @@ export const usePassSlipStore = create<PassSlipState>()(
 
     getPassSlip: (passSlip: PassSlip) => {
       set((state) => ({ ...state, passSlip }));
+    },
+
+    //GET PASS SLIP COUNT ACTIONS
+    getSupervisors: (loading: boolean) => {
+      set((state) => ({
+        ...state,
+        supervisors: {} as Array<SelectOption>,
+
+        loading: {
+          ...state.loading,
+          loadingSupervisors: loading,
+        },
+        error: {
+          ...state.error,
+          errorSupervisors: '',
+        },
+      }));
+    },
+    getSupervisorsSuccess: (loading: boolean, response: Array<SelectOption>) => {
+      set((state) => ({
+        ...state,
+        supervisors: response,
+        loading: {
+          ...state.loading,
+          loadingSupervisors: loading,
+        },
+      }));
+    },
+    getSupervisorsFail: (loading: boolean, error: string) => {
+      set((state) => ({
+        ...state,
+        loading: {
+          ...state.loading,
+          loadingSupervisors: loading,
+        },
+        error: {
+          ...state.error,
+          errorSupervisors: error,
+        },
+      }));
     },
 
     //GET PASS SLIP COUNT ACTIONS

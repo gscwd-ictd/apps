@@ -2,14 +2,12 @@
 import { FunctionComponent, useEffect, useState } from 'react';
 import { Notice } from '../../../modular/alerts/Notice';
 import { Button } from '../../../modular/forms/buttons/Button';
-import { TextField } from '../../../modular/forms/TextField';
 import PortalSVG from '../../svg/PortalSvg';
 import { getCountDown } from '../../otp-requests/OtpCountDown';
 import { requestOtpCode } from '../../otp-requests/OtpRequest';
 import { confirmOtpCode } from '../../otp-requests/OtpConfirm';
 import { patchPrfRequest } from '../../../../utils/helpers/prf.requests';
 import { PrfStatus } from '../../../../types/prf.types';
-import { useRouter } from 'next/router';
 import { usePrfStore } from '../../../../../src/store/prf.store';
 import AuthCode from 'react-auth-code-input';
 
@@ -51,15 +49,15 @@ export const PrfOtpContents: FunctionComponent<OtpProps> = ({
     animate: false,
   });
 
-  const { selectedPrfId, patchPrf, patchPrfSuccess, patchPrfFail, setPrfOtpModalIsOpen, setForApprovalPrfModalIsOpen } =
-    usePrfStore((state) => ({
-      selectedPrfId: state.selectedPrfId,
+  const { patchPrf, patchPrfSuccess, patchPrfFail, setPrfOtpModalIsOpen, setForApprovalPrfModalIsOpen } = usePrfStore(
+    (state) => ({
       setPrfOtpModalIsOpen: state.setPrfOtpModalIsOpen,
       setForApprovalPrfModalIsOpen: state.setForApprovalPrfModalIsOpen,
       patchPrf: state.patchPrf,
       patchPrfSuccess: state.patchPrfSuccess,
       patchPrfFail: state.patchPrfFail,
-    }));
+    })
+  );
 
   useEffect(() => {
     if (!localStorage.getItem(`${otpName}OtpEndTime_${tokenId}`)) {
@@ -177,15 +175,15 @@ export const PrfOtpContents: FunctionComponent<OtpProps> = ({
   async function handleFinalSubmit(e: any) {
     e.preventDefault();
     setIsSubmitLoading(true);
-
+    patchPrf();
     const data = await confirmOtpCode(otpCode, tokenId, otpName);
     if (data) {
-      const { error, result } = await patchPrfRequest(`/prf-trail/${selectedPrfId}`, {
+      const { error, result } = await patchPrfRequest(`/prf-trail/${tokenId}`, {
         status: PrfStatus.APPROVED,
         employeeId: employeeId,
         remarks: remarks,
       });
-      patchPrf();
+
       //check if there's an error in otp confirmation
       if (data.errorMessage) {
         setOtpFieldError(data.otpFieldError);
@@ -339,7 +337,7 @@ export const PrfOtpContents: FunctionComponent<OtpProps> = ({
             <div className="text-center text-sm mb-4">Position Request has been {action}.</div>
 
             <Button
-              btnLabel="Close"
+              btnLabel="CLOSE"
               variant="primary"
               className={`${isSubmitLoading == true ? 'cursor-not-allowed' : 'w-full'} `}
               onClick={(e) => handleClose(e)}

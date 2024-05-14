@@ -113,6 +113,7 @@ export const ConfirmationApprovalModal = ({
     } else if (confirmName === ManagerOtpApproval.OVERTIME) {
       data = {
         managerId: employeeId,
+        approvedBy: employeeId,
         remarks: remarks,
         status: actionOvertime,
         overtimeApplicationId: tokenId,
@@ -130,7 +131,6 @@ export const ConfirmationApprovalModal = ({
 
   const handlePatchResult = async (data) => {
     let patchUrl;
-
     if (confirmName === ManagerOtpApproval.LEAVE) {
       patchUrl = '/v1/leave/supervisor';
     } else if (confirmName === ManagerOtpApproval.PASSSLIP) {

@@ -13,7 +13,7 @@ import { GetServerSidePropsContext } from 'next';
 
 //     } catch (error) {
 
-//         console.log(error)
+//
 //     }
 // }
 
@@ -31,11 +31,7 @@ export const fetchWithSession = async (url: string) => {
 };
 
 // use this to fetch data using token
-export const fetchWithToken = async (
-  method: 'GET' | 'POST' | 'PATCH' | 'DELETE',
-  url: string,
-  token: string
-) => {
+export const fetchWithToken = async (method: 'GET' | 'POST' | 'PATCH' | 'DELETE', url: string, token: string) => {
   const { data } = await axios({
     method,
     url,

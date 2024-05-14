@@ -48,6 +48,7 @@ type TrailDetails = {
   position: string;
   designation: string;
   updatedAt: Date;
+  photoUrl?: string;
 };
 
 export enum PrfStatus {
@@ -57,6 +58,7 @@ export enum PrfStatus {
   PENDING = 'Pending',
   FOR_APPROVAL = 'For approval',
   NOT_APPLICABLE = 'NA',
+  CANCELLED = 'Cancelled',
 }
 
 export type ForApprovalPrf = {

@@ -1,7 +1,12 @@
 /* eslint-disable @nx/enforce-module-boundaries */
-import { GetServerSideProps } from 'next';
+import { GetServerSideProps, GetServerSidePropsContext } from 'next';
 import { useEffect, useState } from 'react';
-import { EmployeeDetails } from '../../../types/employee.type';
+import {
+  EmployeeDetails,
+  employeeCeliaDananDummy,
+  employeeGabalesDummy,
+  employeeTurijaDummy,
+} from '../../../types/employee.type';
 import { User } from '../../../types/user.type';
 import { Roles } from '../../../utils/constants/user-roles';
 import { usePrfStore } from '../../../store/prf.store';
@@ -33,6 +38,8 @@ import useSWR from 'swr';
 import { isEmpty } from 'lodash';
 import { fetchWithToken } from 'apps/portal/src/utils/hoc/fetcher';
 import { useRouter } from 'next/router';
+import { CancelledPrfList } from 'apps/portal/src/components/fixed/prf/prf-index/CancelledPrfList';
+import CancelledPrfModal from 'apps/portal/src/components/fixed/prf/prf-modal/CancelledPrfModal';
 
 type PrfPageProps = {
   user: User;
@@ -56,12 +63,16 @@ export default function Prf({ user, employee }: PrfPageProps) {
 
   const disapprovedPrfs = usePrfStore((state) => state.disapprovedPrfs);
 
+  const cancelledPrfs = usePrfStore((state) => state.cancelledPrfs);
+
   const pendingPrfModalIsOpen = usePrfStore((state) => state.pendingPrfModalIsOpen);
   const forApprovalPrfModalIsOpen = usePrfStore((state) => state.forApprovalPrfModalIsOpen);
   const disapprovedPrfModalIsOpen = usePrfStore((state) => state.disapprovedPrfModalIsOpen);
+  const cancelledPrfModalIsOpen = usePrfStore((state) => state.cancelledPrfModalIsOpen);
   const setPendingPrfModalIsOpen = usePrfStore((state) => state.setPendingPrfModalIsOpen);
   const setForApprovalPrfModalIsOpen = usePrfStore((state) => state.setForApprovalPrfModalIsOpen);
   const setDisapprovedPrfModalIsOpen = usePrfStore((state) => state.setDisapprovedPrfModalIsOpen);
+  const setCancelledPrfModalIsOpen = usePrfStore((state) => state.setCancelledPrfModalIsOpen);
 
   const activeItem = usePrfStore((state) => state.activeItem);
 
@@ -98,6 +109,12 @@ export default function Prf({ user, employee }: PrfPageProps) {
   const {
     patchResponse,
     patchError,
+
+    errorForApproval,
+    errorPending,
+    errorDisapproved,
+    errorCancelled,
+
     getPrfDetailsForApprovalList,
     getPrfDetailsForApprovalListSuccess,
     getPrfDetailsForApprovalListFail,
@@ -110,10 +127,20 @@ export default function Prf({ user, employee }: PrfPageProps) {
     getPrfDetailsDisapprovedListSuccess,
     getPrfDetailsDisapprovedListFail,
 
+    getPrfDetailsCancelledList,
+    getPrfDetailsCancelledListSuccess,
+    getPrfDetailsCancelledListFail,
+
     emptyResponseAndError,
   } = usePrfStore((state) => ({
     patchResponse: state.response.patchResponse,
     patchError: state.errors.errorResponse,
+
+    errorForApproval: state.errors.errorForApprovalList,
+    errorPending: state.errors.errorPendingList,
+    errorDisapproved: state.errors.errorDisapprovedList,
+    errorCancelled: state.errors.errorCancelledList,
+
     getPrfDetailsForApprovalList: state.getPrfDetailsForApprovalList,
     getPrfDetailsForApprovalListSuccess: state.getPrfDetailsForApprovalListSuccess,
     getPrfDetailsForApprovalListFail: state.getPrfDetailsForApprovalListFail,
@@ -125,6 +152,10 @@ export default function Prf({ user, employee }: PrfPageProps) {
     getPrfDetailsDisapprovedList: state.getPrfDetailsDisapprovedList,
     getPrfDetailsDisapprovedListSuccess: state.getPrfDetailsDisapprovedListSuccess,
     getPrfDetailsDisapprovedListFail: state.getPrfDetailsDisapprovedListFail,
+
+    getPrfDetailsCancelledList: state.getPrfDetailsCancelledList,
+    getPrfDetailsCancelledListSuccess: state.getPrfDetailsCancelledListSuccess,
+    getPrfDetailsCancelledListFail: state.getPrfDetailsCancelledListFail,
 
     emptyResponseAndError: state.emptyResponseAndError,
   }));
@@ -138,7 +169,10 @@ export default function Prf({ user, employee }: PrfPageProps) {
     isLoading: swrPendingPrfListIsLoading,
     error: swrPendingPrfListError,
     mutate: mutatePendingPrfDetails,
-  } = useSWR(`${prfUrl}/prf/${employee.user._id}?status=pending`, fetchWithToken, {});
+  } = useSWR(`${prfUrl}/prf/${employee.user._id}?status=pending`, fetchWithToken, {
+    // shouldRetryOnError: false,
+    // revalidateOnFocus: true,
+  });
 
   // Initial zustand state update
   useEffect(() => {
@@ -164,7 +198,10 @@ export default function Prf({ user, employee }: PrfPageProps) {
     isLoading: swrDisapprovedPrfListIsLoading,
     error: swrDisapprovedPrfListError,
     mutate: mutateDisapprovedPrfDetails,
-  } = useSWR(`${prfUrl}/prf/${employee.user._id}?status=disapproved`, fetchWithToken, {});
+  } = useSWR(`${prfUrl}/prf/${employee.user._id}?status=disapproved`, fetchWithToken, {
+    // shouldRetryOnError: false,
+    // revalidateOnFocus: true,
+  });
 
   // Initial zustand state update
   useEffect(() => {
@@ -190,7 +227,9 @@ export default function Prf({ user, employee }: PrfPageProps) {
     isLoading: swrForApprovalPrfListIsLoading,
     error: swrForApprovalPrfListError,
     mutate: mutateForApprovalPrfDetails,
-  } = useSWR(`${prfUrl}/prf-trail/employee/${employee.user._id}`, fetchWithToken, {});
+  } = useSWR(`${prfUrl}/prf-trail/employee/${employee.user._id}`, fetchWithToken, {
+    revalidateOnMount: true,
+  });
 
   // Initial zustand state update
   useEffect(() => {
@@ -210,15 +249,50 @@ export default function Prf({ user, employee }: PrfPageProps) {
     }
   }, [swrForApprovalPrfDetailsList, swrForApprovalPrfListError]);
 
+  // get cancelled prf detail list
+  const {
+    data: swrCancelledPrfDetailsList,
+    isLoading: swrCancelledPrfListIsLoading,
+    error: swrCancelledPrfListError,
+    mutate: mutateCancelledPrfDetails,
+  } = useSWR(`${prfUrl}/prf/${employee.user._id}/?status=cancelled`, fetchWithToken, {
+    // shouldRetryOnError: false,
+    // revalidateOnFocus: true,
+  });
+
+  // initialize zustand loading state
+  useEffect(() => {
+    if (swrCancelledPrfListIsLoading) {
+      getPrfDetailsCancelledList(swrCancelledPrfListIsLoading);
+    }
+  }, [swrCancelledPrfListIsLoading]);
+
+  // upon success/fail of swr request, zustand state will be updated
+  useEffect(() => {
+    if (!isEmpty(swrCancelledPrfDetailsList)) {
+      getPrfDetailsCancelledListSuccess(swrCancelledPrfListIsLoading, swrCancelledPrfDetailsList);
+    }
+
+    if (!isEmpty(swrCancelledPrfListError)) {
+      getPrfDetailsCancelledListFail(swrCancelledPrfListIsLoading, swrCancelledPrfListError.message);
+    }
+  }, [swrCancelledPrfDetailsList, swrCancelledPrfListError]);
+
   useEffect(() => {
     if (!isEmpty(patchResponse)) {
       mutateForApprovalPrfDetails();
       mutatePendingPrfDetails();
       mutateDisapprovedPrfDetails();
+      mutateCancelledPrfDetails();
       setTimeout(() => {
         emptyResponseAndError();
-      }, 2000);
-      if (swrForApprovalPrfDetailsList.length <= 1) {
+      }, 5000);
+      if (activeItem == 0 && swrPendingPrfDetailsList.length <= 1) {
+        setTimeout(() => {
+          router.reload();
+        }, 2000);
+      }
+      if (activeItem == 1 && swrForApprovalPrfDetailsList.length <= 1) {
         setTimeout(() => {
           router.reload();
         }, 2000);
@@ -295,14 +369,17 @@ export default function Prf({ user, employee }: PrfPageProps) {
     });
   }, []);
 
-  const closePendingPrfModal = async () => {
+  const closePendingPrfModal = () => {
     setPendingPrfModalIsOpen(false);
   };
-  const closeForApprovalPrfModal = async () => {
+  const closeForApprovalPrfModal = () => {
     setForApprovalPrfModalIsOpen(false);
   };
-  const closeDisapprovedPrfModal = async () => {
+  const closeDisapprovedPrfModal = () => {
     setDisapprovedPrfModalIsOpen(false);
+  };
+  const closeCancelledPrfModal = () => {
+    setCancelledPrfModalIsOpen(false);
   };
 
   return (
@@ -315,25 +392,49 @@ export default function Prf({ user, employee }: PrfPageProps) {
       {/* Disapprove PRF Failed Error */}
       {!isEmpty(patchError) ? <ToastNotification toastType="error" notifMessage={`${patchError}`} /> : null}
 
+      {/* Fetch Pending PRF Error */}
+      {!isEmpty(errorPending) ? (
+        <ToastNotification toastType="error" notifMessage={`${errorPending}: Failed to load Pending PRF.`} />
+      ) : null}
+
+      {/* Fetch For Approval PRF Error */}
+      {!isEmpty(errorForApproval) ? (
+        <ToastNotification toastType="error" notifMessage={`${errorForApproval}: Failed to load For Approval PRF.`} />
+      ) : null}
+
+      {/* Fetch Disapproved PRF Error */}
+      {!isEmpty(errorDisapproved) ? (
+        <ToastNotification toastType="error" notifMessage={`${errorDisapproved}: Failed to load Disapproved PRF.`} />
+      ) : null}
+
+      {/* Fetch Cancelled PRF Error */}
+      {!isEmpty(errorCancelled) ? (
+        <ToastNotification toastType="error" notifMessage={`${errorCancelled}: Failed to load Cancelled PRF.`} />
+      ) : null}
+
       {/* Pending PRF Modal */}
       <PendingPrfModal
         modalState={pendingPrfModalIsOpen}
         setModalState={setPendingPrfModalIsOpen}
         closeModalAction={closePendingPrfModal}
       />
-
       {/* Disapproved PRF Modal */}
       <DisapprovedPrfModal
         modalState={disapprovedPrfModalIsOpen}
         setModalState={setDisapprovedPrfModalIsOpen}
         closeModalAction={closeDisapprovedPrfModal}
       />
-
       {/* For Approval PRF Modal */}
       <ForApprovalPrfModal
         modalState={forApprovalPrfModalIsOpen}
         setModalState={setForApprovalPrfModalIsOpen}
         closeModalAction={closeForApprovalPrfModal}
+      />
+      {/* Cancelled PRF Modal */}
+      <CancelledPrfModal
+        modalState={cancelledPrfModalIsOpen}
+        setModalState={setCancelledPrfModalIsOpen}
+        closeModalAction={closeCancelledPrfModal}
       />
 
       <Modal
@@ -350,10 +451,8 @@ export default function Prf({ user, employee }: PrfPageProps) {
         onCancel={handleCancel}
         onConfirm={handleConfirm}
       />
-
       <PageTitle title="Position Request" />
       <SideNav employeeDetails={employee} />
-
       <MainContainer>
         <div className={`w-full pl-4 pr-4 lg:pl-32 lg:pr-32`}>
           <ContentHeader title="Position Request" subtitle="Request for new personnel" backUrl={`/${router.query.id}`}>
@@ -369,8 +468,11 @@ export default function Prf({ user, employee }: PrfPageProps) {
               </div>
             </Button>
           </ContentHeader>
-          {swrForApprovalPrfListIsLoading && swrDisapprovedPrfListIsLoading && swrPendingPrfListIsLoading ? (
-            <div className="w-full h-96 static flex flex-col justify-items-center items-center place-items-center">
+          {swrForApprovalPrfListIsLoading &&
+          swrDisapprovedPrfListIsLoading &&
+          swrPendingPrfListIsLoading &&
+          swrCancelledPrfListIsLoading ? (
+            <div className="static flex flex-col items-center w-full h-96 justify-items-center place-items-center">
               <SpinnerDotted
                 speed={70}
                 thickness={70}
@@ -392,6 +494,8 @@ export default function Prf({ user, employee }: PrfPageProps) {
                     {activeItem === 1 && <ForApprovalPrfList />}
 
                     {activeItem === 2 && <DisapprovedPrfList />}
+
+                    {activeItem === 3 && <CancelledPrfList />}
                   </div>
                 </div>
               </>

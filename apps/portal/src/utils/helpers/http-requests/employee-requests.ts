@@ -4,9 +4,7 @@ import { PendingUser } from '../../../types/user.type';
 
 const baseUrl = process.env.NEXT_PUBLIC_PORTAL_URL;
 
-export const getEmployeeDetailsFromHr = async (
-  context?: GetServerSidePropsContext
-) => {
+export const getEmployeeDetailsFromHr = async (context?: GetServerSidePropsContext) => {
   // call api to get employee details
   const { data } = await axios.get(`${baseUrl}/employees/hr-details`, {
     // make sure to make use of session cookie
@@ -20,10 +18,7 @@ export const getEmployeeDetailsFromHr = async (
   return data;
 };
 
-export const getEmployeeProfile = async (
-  userId: string,
-  context?: GetServerSidePropsContext
-) => {
+export const getEmployeeProfile = async (userId: string, context?: GetServerSidePropsContext) => {
   const { data } = await axios.get(`${baseUrl}/employees?user=${userId}`, {
     // make sure to make use of session cookie
     withCredentials: true,
@@ -41,9 +36,9 @@ export const createEmployee = async (pendingUser: PendingUser) => {
       withCredentials: true,
     });
   } catch (error) {
-    console.log(
-      error,
-      'employee-requests: error coming from create employee profile'
-    );
+    // console.log(
+    //   error,
+    //   'employee-requests: error coming from create employee profile'
+    // );
   }
 };

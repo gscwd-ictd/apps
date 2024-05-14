@@ -41,6 +41,7 @@ export default function PassSlip({ employeeDetails }: InferGetServerSidePropsTyp
     responsePatch,
     responsePost,
     responseCancel,
+    errorSupervisors,
 
     setApplyPassSlipModalIsOpen,
     setPendingPassSlipModalIsOpen,
@@ -60,6 +61,7 @@ export default function PassSlip({ employeeDetails }: InferGetServerSidePropsTyp
     responsePatch: state.response.patchResponse,
     responsePost: state.response.postResponse,
     responseCancel: state.response.cancelResponse,
+    errorSupervisors: state.error.errorSupervisors,
 
     setApplyPassSlipModalIsOpen: state.setApplyPassSlipModalIsOpen,
     setPendingPassSlipModalIsOpen: state.setPendingPassSlipModalIsOpen,
@@ -135,7 +137,6 @@ export default function PassSlip({ employeeDetails }: InferGetServerSidePropsTyp
   // Upon success/fail of swr request, zustand state will be updated
   useEffect(() => {
     if (!isEmpty(swrPassSlips)) {
-      // console.log(swrPassSlips);
       getPassSlipListSuccess(swrIsLoading, swrPassSlips);
     }
 
@@ -224,6 +225,11 @@ export default function PassSlip({ employeeDetails }: InferGetServerSidePropsTyp
         {/* Cancel Pass Slip Success */}
         {!isEmpty(responseCancel) ? (
           <ToastNotification toastType="success" notifMessage="Pass Slip Cancellation Successful!" />
+        ) : null}
+
+        {/* Cancel Pass Slip Success */}
+        {!isEmpty(errorSupervisors) ? (
+          <ToastNotification toastType="error" notifMessage="Failed to load Supervisor List." />
         ) : null}
       </>
 

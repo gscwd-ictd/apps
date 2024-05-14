@@ -47,7 +47,7 @@ export function MySelectList({
   const [highlightedIndex, setHighlightedIndex] = useState<number>(0);
   const containerRef = useRef<HTMLDivElement>(null);
   const [searchedItem, setSearchedItem] = useState<Array<SelectOption>>([]); //filtered list based on searchInput
-  const [searchedInput, setSearchedInput] = useState<string>(null);
+  const [searchedInput, setSearchedInput] = useState<string>('');
   const [listToSearch, setListToSearch] = useState<Array<SelectOption>>([]);
 
   const handleSearchItem = (name: string) => {

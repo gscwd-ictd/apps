@@ -1,35 +1,22 @@
 /* eslint-disable @nx/enforce-module-boundaries */
-import { Modal, ToastNotification } from '@gscwd-apps/oneui';
+import { Button, Modal, ToastNotification } from '@gscwd-apps/oneui';
 import { HiX } from 'react-icons/hi';
 import { useRouter } from 'next/router';
 import { usePrfStore } from 'apps/portal/src/store/prf.store';
 import { fetchWithToken } from 'apps/portal/src/utils/hoc/fetcher';
 import useSWR from 'swr';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { isEmpty } from 'lodash';
-
-import dayjs from 'dayjs';
-import { GetServerSideProps, GetServerSidePropsContext } from 'next';
-import {
-  HiOutlineUser,
-  HiOutlineDocumentDuplicate,
-  HiOutlineCalendar,
-  HiOutlinePencil,
-  HiArrowSmLeft,
-} from 'react-icons/hi';
+import { HiOutlineUser, HiOutlineDocumentDuplicate, HiOutlineCalendar, HiOutlinePencil } from 'react-icons/hi';
 import { PrfTimeline } from '../../../../components/fixed/prf/prf-view/PrfTimeline';
 import { PageTitle } from '../../../../components/modular/html/PageTitle';
-import {
-  getEmployeeDetailsFromHr,
-  getEmployeeProfile,
-} from '../../../../utils/helpers/http-requests/employee-requests';
-import { getPrfById, getPrfTrailByPrfId } from '../../../../utils/helpers/prf.requests';
-import { EmployeeDetailsPrf, EmployeeProfile } from '../../../../types/employee.type';
-import { Position, PrfDetails, PrfTrail } from '../../../../types/prf.types';
-import { withCookieSession } from '../../../../../src/utils/helpers/session';
+import { patchPrfRequest } from '../../../../utils/helpers/prf.requests';
+import { Position } from '../../../../types/prf.types';
 import { useEmployeeStore } from 'apps/portal/src/store/employee.store';
 import { SpinnerDotted } from 'spinners-react';
 import { DateFormatter } from 'libs/utils/src/lib/functions/DateFormatter';
+import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
+import { PrfPositionCard } from './PrfPositionCard';
 
 type ModalProps = {
   modalState: boolean;
@@ -40,19 +27,19 @@ type ModalProps = {
 export const PendingPrfModal = ({ modalState, setModalState, closeModalAction }: ModalProps) => {
   const {
     selectedPrfId,
-    patchResponse,
+    pendingPrfModalIsOpen,
     setPendingPrfIsModalOpen,
     getPrfDetails,
     getPrfDetailsSuccess,
     getPrfDetailsFail,
-
     getPrfTrail,
     getPrfTrailSuccess,
     getPrfTrailFail,
-    emptyResponseAndError,
+    patchPrfFail,
+    patchPrfSuccess,
   } = usePrfStore((state) => ({
     selectedPrfId: state.selectedPrfId,
-    patchResponse: state.response.patchResponse,
+    pendingPrfModalIsOpen: state.pendingPrfModalIsOpen,
     setPendingPrfIsModalOpen: state.setPendingPrfModalIsOpen,
     getPrfDetails: state.getPrfDetails,
     getPrfDetailsSuccess: state.getPrfDetailsSuccess,
@@ -60,12 +47,13 @@ export const PendingPrfModal = ({ modalState, setModalState, closeModalAction }:
     getPrfTrail: state.getPrfTrail,
     getPrfTrailSuccess: state.getPrfTrailSuccess,
     getPrfTrailFail: state.getPrfTrailFail,
-    emptyResponseAndError: state.emptyResponseAndError,
+    patchPrfSuccess: state.patchPrfSuccess,
+    patchPrfFail: state.patchPrfFail,
   }));
 
-  const employeeDetail = useEmployeeStore((state) => state.employeeDetails);
+  const setViewPositionModalIsOpen = usePrfStore((state) => state.setViewPositionModalIsOpen);
 
-  const router = useRouter();
+  const employeeDetail = useEmployeeStore((state) => state.employeeDetails);
 
   const prfUrl = process.env.NEXT_PUBLIC_HRIS_URL;
   // use useSWR, provide the URL and fetchWithSession function as a parameter
@@ -76,10 +64,12 @@ export const PendingPrfModal = ({ modalState, setModalState, closeModalAction }:
     isLoading: swrPrfIsLoading,
     error: swrPrfError,
     mutate: mutatePrfDetails,
-  } = useSWR(`${prfUrl}/prf/details/${selectedPrfId}`, fetchWithToken, {
+  } = useSWR(pendingPrfModalIsOpen ? `${prfUrl}/prf/details/${selectedPrfId}` : null, fetchWithToken, {
     shouldRetryOnError: false,
     revalidateOnFocus: true,
   });
+
+  const [cancelModalIsOpen, setCancelModalIsOpen] = useState(false);
 
   // Initial zustand state update
   useEffect(() => {
@@ -105,10 +95,28 @@ export const PendingPrfModal = ({ modalState, setModalState, closeModalAction }:
     isLoading: swrPrfTrailIsLoading,
     error: swrPrfTrailError,
     mutate: mutatePrfTrail,
-  } = useSWR(`${prfUrl}/prf-trail/${selectedPrfId}`, fetchWithToken, {
+  } = useSWR(pendingPrfModalIsOpen ? `${prfUrl}/prf-trail/${selectedPrfId}` : null, fetchWithToken, {
     shouldRetryOnError: false,
     revalidateOnFocus: true,
   });
+
+  // call the function to cancel the request
+  const handleCancelRequest = async () => {
+    const { error, result } = await patchPrfRequest(`/prf/`, {
+      _id: selectedPrfId,
+    });
+    if (error) {
+      // request is done set loading to false and set the error message
+      patchPrfFail(result);
+    } else if (!error) {
+      // request is done set loading to false and set the update response
+      patchPrfSuccess(result);
+      setCancelModalIsOpen(false);
+      setTimeout(() => {
+        setPendingPrfIsModalOpen(false);
+      }, 200);
+    }
+  };
 
   // Initial zustand state update
   useEffect(() => {
@@ -128,15 +136,17 @@ export const PendingPrfModal = ({ modalState, setModalState, closeModalAction }:
     }
   }, [prfTrail, swrPrfTrailError]);
 
+  const { windowWidth } = UseWindowDimensions();
+
   return (
     <>
       <Modal size={'full'} open={modalState} setOpen={setModalState}>
         <Modal.Header>
           <h3 className="font-semibold text-gray-700">
-            <div className="px-5 flex justify-between">
+            <div className="flex justify-between px-5">
               <span className="text-xl md:text-2xl">Pending PRF</span>
               <button
-                className="hover:bg-slate-100 outline-slate-100 outline-8 px-2 rounded-full"
+                className="px-2 rounded-full hover:bg-slate-100 outline-slate-100 outline-8"
                 onClick={closeModalAction}
               >
                 <HiX />
@@ -172,7 +182,7 @@ export const PendingPrfModal = ({ modalState, setModalState, closeModalAction }:
                   <>
                     <PageTitle title={prfDetails.prfNo} />
 
-                    <div className="flex flex-col w-full h-auto py-10 overflow-hidden pl-4 pr-4 lg:pl-32 lg:pr-32">
+                    <div className="flex flex-col w-full h-auto py-10 pl-4 pr-4 overflow-hidden lg:pl-32 lg:pr-32">
                       <header className="flex items-center justify-between">
                         <section className="shrink-0">
                           <h1 className="text-2xl font-semibold text-gray-700">Pending Request</h1>
@@ -185,8 +195,8 @@ export const PendingPrfModal = ({ modalState, setModalState, closeModalAction }:
                       </section>
 
                       <main>
-                        <main className="flex flex-col lg:flex-row h-full">
-                          <aside className="shrink-0 w-[20rem]">
+                        <main className="flex flex-col h-full lg:flex-row">
+                          <aside className="shrink-0 sm:w-full lg:w-[20rem] ">
                             <section className="flex items-center gap-4">
                               <HiOutlineUser className="text-gray-700 shrink-0" />
                               <p className="font-medium text-gray-600 truncate">
@@ -216,43 +226,24 @@ export const PendingPrfModal = ({ modalState, setModalState, closeModalAction }:
                                 <p className="font-medium text-orange-500">No examination required</p>
                               )}
                             </section>
+
+                            <section className="flex flex-col w-full gap-2 mt-10">
+                              <Button
+                                variant="danger"
+                                onClick={() => {
+                                  setCancelModalIsOpen(true);
+                                }}
+                              >
+                                Cancel this Request
+                              </Button>
+                            </section>
                           </aside>
                           <section className="w-full pt-4 lg:pt-0">
-                            <main className="scale-95 h-auto w-full overflow-y-auto px-5">
-                              {prfDetails.prfPositions.map((position: Position, index: number) => {
-                                return (
-                                  <div
-                                    key={index}
-                                    className={`${
-                                      position.remarks ? 'hover:border-l-green-600' : 'hover:border-l-red-500'
-                                    } cursor-pointer hover:shadow-slate-200 mb-4 flex items-center justify-between border-l-4 py-3 px-5 border-gray-100 shadow-2xl shadow-slate-100 transition-all`}
-                                  >
-                                    <section className="w-full space-y-3">
-                                      <header>
-                                        <section className="flex items-center justify-between">
-                                          <h3 className="text-lg font-medium text-gray-600">
-                                            {position.positionTitle}
-                                          </h3>
-                                          <p className="text-sm text-gray-600">{position.itemNumber}</p>
-                                        </section>
-                                        <p className="text-sm text-gray-400">{position.designation}</p>
-                                      </header>
-
-                                      <main>
-                                        {position.remarks ? (
-                                          <section className="flex items-center gap-2">
-                                            <p className="text-emerald-600">{position.remarks}</p>
-                                          </section>
-                                        ) : (
-                                          <section className="flex items-center gap-2">
-                                            <p className="text-red-400">No remarks set for this position.</p>
-                                          </section>
-                                        )}
-                                      </main>
-                                    </section>
-                                  </div>
-                                );
-                              })}
+                            <main className="w-full h-auto px-5 overflow-y-auto scale-95">
+                              {prfDetails?.prfPositions.length > 0 &&
+                                prfDetails?.prfPositions.map((position: Position, index: number) => {
+                                  return <PrfPositionCard position={position} key={index} />;
+                                })}
                             </main>
                           </section>
                         </main>
@@ -260,6 +251,47 @@ export const PendingPrfModal = ({ modalState, setModalState, closeModalAction }:
                     </div>
                   </>
                 ) : null}
+
+                <Modal
+                  size={`${windowWidth > 1024 ? 'sm' : 'xl'}`}
+                  open={cancelModalIsOpen}
+                  setOpen={setCancelModalIsOpen}
+                >
+                  <Modal.Header>
+                    <h3 className="text-xl font-semibold text-gray-700">
+                      <div className="flex justify-between px-2">
+                        <span>Cancel Position Request</span>
+                        <button
+                          className="px-2 rounded-full hover:bg-slate-100 outline-slate-100 outline-8"
+                          onClick={() => {
+                            setCancelModalIsOpen(false);
+                          }}
+                        >
+                          <HiX />
+                        </button>
+                      </div>
+                    </h3>
+                  </Modal.Header>
+                  <Modal.Body>
+                    <div className="flex flex-col w-full h-full gap-2 px-4 text-md ">
+                      <span className="font-medium text-gray-700">
+                        Are you sure you want to cancel this {prfDetails?.prfNo}?
+                      </span>
+                    </div>
+                  </Modal.Body>
+                  <Modal.Footer>
+                    <div className="flex justify-end gap-2 px-4">
+                      <div className="flex gap-4 ">
+                        <Button variant={'primary'} onClick={handleCancelRequest} className="w-[6rem]">
+                          Yes
+                        </Button>
+                        <Button variant={'default'} onClick={() => setCancelModalIsOpen(false)} className="w-[6rem]">
+                          No
+                        </Button>
+                      </div>
+                    </div>
+                  </Modal.Footer>
+                </Modal>
               </>
             )}
           </>

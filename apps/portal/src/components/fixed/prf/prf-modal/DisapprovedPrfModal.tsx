@@ -30,6 +30,8 @@ import { withCookieSession } from '../../../../utils/helpers/session';
 import { useEmployeeStore } from 'apps/portal/src/store/employee.store';
 import { SpinnerDotted } from 'spinners-react';
 import { DateFormatter } from 'libs/utils/src/lib/functions/DateFormatter';
+import { PrfPositionCard } from './PrfPositionCard';
+import { ViewPositionModal } from '../prf-view-position/ViewPositionModal';
 
 type ModalProps = {
   modalState: boolean;
@@ -40,25 +42,22 @@ type ModalProps = {
 export const DisapprovedPrfModal = ({ modalState, setModalState, closeModalAction }: ModalProps) => {
   const {
     selectedPrfId,
-    patchResponse,
+    disapprovedPrfModalIsOpen,
     getPrfDetails,
     getPrfDetailsSuccess,
     getPrfDetailsFail,
-
     getPrfTrail,
     getPrfTrailSuccess,
     getPrfTrailFail,
-    emptyResponseAndError,
   } = usePrfStore((state) => ({
     selectedPrfId: state.selectedPrfId,
-    patchResponse: state.response.patchResponse,
+    disapprovedPrfModalIsOpen: state.disapprovedPrfModalIsOpen,
     getPrfDetails: state.getPrfDetails,
     getPrfDetailsSuccess: state.getPrfDetailsSuccess,
     getPrfDetailsFail: state.getPrfDetailsFail,
     getPrfTrail: state.getPrfTrail,
     getPrfTrailSuccess: state.getPrfTrailSuccess,
     getPrfTrailFail: state.getPrfTrailFail,
-    emptyResponseAndError: state.emptyResponseAndError,
   }));
 
   const employeeDetail = useEmployeeStore((state) => state.employeeDetails);
@@ -74,7 +73,7 @@ export const DisapprovedPrfModal = ({ modalState, setModalState, closeModalActio
     isLoading: swrPrfIsLoading,
     error: swrPrfError,
     mutate: mutatePrfDetails,
-  } = useSWR(`${prfUrl}/prf/details/${selectedPrfId}`, fetchWithToken, {
+  } = useSWR(disapprovedPrfModalIsOpen ? `${prfUrl}/prf/details/${selectedPrfId}` : null, fetchWithToken, {
     shouldRetryOnError: false,
     revalidateOnFocus: true,
   });
@@ -103,7 +102,7 @@ export const DisapprovedPrfModal = ({ modalState, setModalState, closeModalActio
     isLoading: swrPrfTrailIsLoading,
     error: swrPrfTrailError,
     mutate: mutatePrfTrail,
-  } = useSWR(`${prfUrl}/prf-trail/${selectedPrfId}`, fetchWithToken, {
+  } = useSWR(disapprovedPrfModalIsOpen ? `${prfUrl}/prf-trail/${selectedPrfId}` : null, fetchWithToken, {
     shouldRetryOnError: false,
     revalidateOnFocus: true,
   });
@@ -131,10 +130,10 @@ export const DisapprovedPrfModal = ({ modalState, setModalState, closeModalActio
       <Modal size={'full'} open={modalState} setOpen={setModalState}>
         <Modal.Header>
           <h3 className="font-semibold text-gray-700">
-            <div className="px-5 flex justify-between">
+            <div className="flex justify-between px-5">
               <span className="text-xl md:text-2xl">Disapproved PRF</span>
               <button
-                className="hover:bg-slate-100 outline-slate-100 outline-8 px-2 rounded-full"
+                className="px-2 rounded-full hover:bg-slate-100 outline-slate-100 outline-8"
                 onClick={closeModalAction}
               >
                 <HiX />
@@ -170,7 +169,7 @@ export const DisapprovedPrfModal = ({ modalState, setModalState, closeModalActio
                   <>
                     <PageTitle title={prfDetails.prfNo} />
 
-                    <div className="flex flex-col w-full h-auto py-10 overflow-hidden pl-4 pr-4 lg:pl-32 lg:pr-32">
+                    <div className="flex flex-col w-full h-auto py-10 pl-4 pr-4 overflow-hidden lg:pl-32 lg:pr-32">
                       <header className="flex items-center justify-between">
                         <section className="shrink-0">
                           <h1 className="text-2xl font-semibold text-gray-700">Disapproved Request</h1>
@@ -183,7 +182,7 @@ export const DisapprovedPrfModal = ({ modalState, setModalState, closeModalActio
                       </section>
 
                       <main>
-                        <main className="flex flex-col lg:flex-row h-full">
+                        <main className="flex flex-col h-full lg:flex-row">
                           <aside className="shrink-0 w-[20rem]">
                             <section className="flex items-center gap-4">
                               <HiOutlineUser className="text-gray-700 shrink-0" />
@@ -216,40 +215,9 @@ export const DisapprovedPrfModal = ({ modalState, setModalState, closeModalActio
                             </section>
                           </aside>
                           <section className="w-full pt-4 lg:pt-0">
-                            <main className="scale-95 h-full w-full overflow-y-auto px-5">
+                            <main className="w-full h-full px-5 overflow-y-auto scale-95">
                               {prfDetails.prfPositions.map((position: Position, index: number) => {
-                                return (
-                                  <div
-                                    key={index}
-                                    className={`${
-                                      position.remarks ? 'hover:border-l-green-600' : 'hover:border-l-red-500'
-                                    } cursor-pointer hover:shadow-slate-200 mb-4 flex items-center justify-between border-l-4 py-3 px-5 border-gray-100 shadow-2xl shadow-slate-100 transition-all`}
-                                  >
-                                    <section className="w-full space-y-3">
-                                      <header>
-                                        <section className="flex items-center justify-between">
-                                          <h3 className="text-lg font-medium text-gray-600">
-                                            {position.positionTitle}
-                                          </h3>
-                                          <p className="text-sm text-gray-600">{position.itemNumber}</p>
-                                        </section>
-                                        <p className="text-sm text-gray-400">{position.designation}</p>
-                                      </header>
-
-                                      <main>
-                                        {position.remarks ? (
-                                          <section className="flex items-center gap-2">
-                                            <p className="text-emerald-600">{position.remarks}</p>
-                                          </section>
-                                        ) : (
-                                          <section className="flex items-center gap-2">
-                                            <p className="text-red-400">No remarks set for this position.</p>
-                                          </section>
-                                        )}
-                                      </main>
-                                    </section>
-                                  </div>
-                                );
+                                return <PrfPositionCard position={position} key={index} />;
                               })}
                             </main>
                           </section>

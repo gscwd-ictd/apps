@@ -19,11 +19,7 @@ export const CardOvertimeRequests: FunctionComponent = () => {
     error: swrError,
   } = useSWR('/overtime', fetcherEMS, {
     onErrorRetry: (error, key, config, revalidate, { retryCount }) => {
-      // Only retry up to 10 times.
-      if (retryCount >= 5) return;
-
-      // Retry after 5 seconds.
-      setTimeout(() => revalidate({ retryCount }), 15000);
+      if (retryCount >= 2) return;
     },
   });
 

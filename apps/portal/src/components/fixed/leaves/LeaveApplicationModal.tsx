@@ -17,7 +17,6 @@ import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
 import { LeaveMonetizationType, LeaveName } from 'libs/utils/src/lib/enums/leave.enum';
 import { useLeaveLedgerStore } from 'apps/portal/src/store/leave-ledger.store';
 import { LeaveLedgerEntry } from 'libs/utils/src/lib/types/leave-ledger-entry.type';
-import { ArrowPathIcon } from '@heroicons/react/20/solid';
 
 type LeaveApplicationModalProps = {
   modalState: boolean;

@@ -12,8 +12,8 @@ export type Duty = {
 };
 
 export type WorkExperienceSheet = WorkExperience & {
-  immediateSupervisor: string;
-  nameOfOffice: string;
+  supervisor: string;
+  office: string;
   accomplishments: Array<Accomplishment>;
   duties: Array<Duty>;
   workExperienceId: string;
@@ -21,15 +21,11 @@ export type WorkExperienceSheet = WorkExperience & {
 
 export type WorkExpSheetState = {
   selectedWorkExperience: WorkExperienceSheet;
-  setSelectedWorkExperience: (
-    selectedWorkExperience: WorkExperienceSheet
-  ) => void;
+  setSelectedWorkExperience: (selectedWorkExperience: WorkExperienceSheet) => void;
   workExperiences: Array<WorkExperienceSheet>;
   setWorkExperiences: (workExperiences: Array<WorkExperienceSheet>) => void;
   workExperiencesSheet: Array<WorkExperienceSheet>;
-  setWorkExperiencesSheet: (
-    workExperiencesSheet: Array<WorkExperienceSheet>
-  ) => void;
+  setWorkExperiencesSheet: (workExperiencesSheet: Array<WorkExperienceSheet>) => void;
   workSheet: WorkExperienceSheet;
   setWorkSheet: (workSheet: WorkExperienceSheet) => void;
   isLoaded: boolean;
@@ -54,9 +50,7 @@ export const useWorkExpSheetStore = create<WorkExpSheetState>((set) => ({
     set((state) => ({ ...state, workExperiences }));
   },
   workExperiencesSheet: [],
-  setWorkExperiencesSheet: (
-    workExperiencesSheet: Array<WorkExperienceSheet>
-  ) => {
+  setWorkExperiencesSheet: (workExperiencesSheet: Array<WorkExperienceSheet>) => {
     set((state) => ({ ...state, workExperiencesSheet }));
   },
   workSheet: {
@@ -70,11 +64,11 @@ export const useWorkExpSheetStore = create<WorkExpSheetState>((set) => ({
     appointmentStatus: '',
     companyName: '',
     from: '',
-    immediateSupervisor: '',
+    supervisor: '',
     positionTitle: '',
     to: '',
     workExperienceId: '',
-    nameOfOffice: '',
+    office: '',
     _id: '',
   } as WorkExperienceSheet,
   setWorkSheet: (workSheet: WorkExperienceSheet) => {

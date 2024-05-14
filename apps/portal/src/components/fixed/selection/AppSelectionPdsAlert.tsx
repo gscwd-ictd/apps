@@ -1,5 +1,5 @@
 /* eslint-disable @nx/enforce-module-boundaries */
-import { Alert, Modal } from '@gscwd-apps/oneui';
+import { Modal } from '@gscwd-apps/oneui';
 import { useAppSelectionStore } from 'apps/portal/src/store/selection.store';
 import { useEffect } from 'react';
 import { AppSelectionPds } from './AppSelectionPds';
@@ -11,11 +11,7 @@ type AppSelectionPdsAlertProps = {
   closeAlertAction: () => void;
 };
 
-export const AppSelectionPdsAlert = ({
-  alertState,
-  setAlertState,
-  closeAlertAction,
-}: AppSelectionPdsAlertProps) => {
+export const AppSelectionPdsAlert = ({ alertState, setAlertState, closeAlertAction }: AppSelectionPdsAlertProps) => {
   const { selectedApplicantDetails } = useAppSelectionStore((state) => ({
     selectedApplicantDetails: state.selectedApplicantDetails,
   }));
@@ -27,11 +23,7 @@ export const AppSelectionPdsAlert = ({
   const { windowWidth } = UseWindowDimensions();
 
   return (
-    <Modal
-      open={alertState}
-      setOpen={setAlertState}
-      size={`${windowWidth > 1024 ? 'lg' : 'xl'}`}
-    >
+    <Modal open={alertState} setOpen={setAlertState} size={`${windowWidth > 1024 ? 'lg' : 'xl'}`}>
       <Modal.Body>
         <AppSelectionPds
           applicantDetails={{

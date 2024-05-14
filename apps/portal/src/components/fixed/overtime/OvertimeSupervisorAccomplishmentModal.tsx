@@ -3,17 +3,14 @@ import { AlertNotification, Button, Modal } from '@gscwd-apps/oneui';
 import { HiX } from 'react-icons/hi';
 import { SpinnerDotted } from 'spinners-react';
 import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
-import { LabelInput } from 'libs/oneui/src/components/Inputs/LabelInput';
 import { useEffect } from 'react';
 import useSWR from 'swr';
 import { fetchWithToken } from 'apps/portal/src/utils/hoc/fetcher';
 import { isEmpty } from 'lodash';
 import { useOvertimeStore } from 'apps/portal/src/store/overtime.store';
-import { UseTwelveHourFormat } from 'libs/utils/src/lib/functions/TwelveHourFormatter';
 import { OvertimeAccomplishmentStatus } from 'libs/utils/src/lib/enums/overtime.enum';
 import OvertimeAccomplishmentReportPdfModal from './OvertimeAccomplishmentReportPdfModal';
 import { DateFormatter } from 'libs/utils/src/lib/functions/DateFormatter';
-import dayjs from 'dayjs';
 import { DateTimeFormatter } from 'libs/utils/src/lib/functions/DateTimeFormatter';
 
 type ModalProps = {
@@ -73,7 +70,6 @@ export const OvertimeSupervisorAccomplishmentModal = ({ modalState, setModalStat
   // Upon success/fail of swr request, zustand state will be updated
   useEffect(() => {
     if (!isEmpty(swrOvertimeAccomplishment)) {
-      // console.log(swrOvertimeAccomplishment);
       getAccomplishmentDetailsSuccess(swrOvertimeAccomplishmentIsLoading, swrOvertimeAccomplishment);
     }
 
