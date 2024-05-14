@@ -84,8 +84,9 @@ const ViewLeaveApplicationModal: FunctionComponent<ViewLeaveApplicationModalProp
   }));
 
   // leave ledger store
-  const { leaveLedger, selectedLeaveLedger, setSelectedLeaveLedger } = useLeaveLedgerStore((state) => ({
+  const { leaveLedger, setLeaveLedger, selectedLeaveLedger, setSelectedLeaveLedger } = useLeaveLedgerStore((state) => ({
     leaveLedger: state.leaveLedger,
+    setLeaveLedger: state.setLeaveLedger,
     selectedLeaveLedger: state.selectedLeaveLedger,
     setSelectedLeaveLedger: state.setSelectedLeaveLedger,
   }));
@@ -107,7 +108,7 @@ const ViewLeaveApplicationModal: FunctionComponent<ViewLeaveApplicationModalProp
   // fetch leave ledger
   const { data: swrLeaveLedger, error: swrLedgerError } = useSWR(
     modalState && !isEmpty(leaveApplicationDetails)
-      ? `/leave/ledger/${rowData.employee.employeeId}/${leaveApplicationDetails.employeeDetails.companyId}`
+      ? `/leave/ledger/${rowData.employee?.employeeId}/${leaveApplicationDetails.employeeDetails?.companyId}`
       : null,
     fetcherEMS,
     {
@@ -225,6 +226,8 @@ const ViewLeaveApplicationModal: FunctionComponent<ViewLeaveApplicationModalProp
   useEffect(() => {
     if (!isEmpty(swrLeaveLedger)) {
       setSelectedLeaveLedger(swrLeaveLedger.data, rowData.id);
+
+      setLeaveLedger(swrLeaveLedger.data);
     }
   }, [swrLeaveLedger]);
 
@@ -233,6 +236,13 @@ const ViewLeaveApplicationModal: FunctionComponent<ViewLeaveApplicationModalProp
       onSubmit();
     }
   }, [leaveConfirmAction, confirmModalIsOpen]);
+
+  useEffect(() => {
+    console.log(leaveLedger[leaveLedger.length - 1]);
+  }, [
+    leaveLedger,
+    // swrLeaveLedger
+  ]);
 
   return (
     <>
@@ -457,7 +467,8 @@ const ViewLeaveApplicationModal: FunctionComponent<ViewLeaveApplicationModalProp
 
                 <div className="grid grid-cols-2 grid-rows-1 px-3 sm:gap-2 md:gap:2 lg:gap-0">
                   {leaveApplicationDetails.leaveApplicationBasicInfo?.leaveType === LeaveType.SPECIAL &&
-                    leaveApplicationDetails.leaveApplicationBasicInfo.status === LeaveStatus.FOR_HRMO_APPROVAL && (
+                    leaveApplicationDetails.leaveApplicationBasicInfo.status ===
+                      LeaveStatus.FOR_HRMO_CREDIT_CERTIFICATION && (
                       <div className="w-full px-2">
                         <LabelValue
                           label={`Maximum Credit Value is ${parseInt(
@@ -471,7 +482,8 @@ const ViewLeaveApplicationModal: FunctionComponent<ViewLeaveApplicationModalProp
                     )}
 
                   {leaveApplicationDetails.leaveApplicationBasicInfo?.leaveType === LeaveType.SPECIAL &&
-                    leaveApplicationDetails.leaveApplicationBasicInfo.status === LeaveStatus.FOR_HRMO_APPROVAL && (
+                    leaveApplicationDetails.leaveApplicationBasicInfo.status ===
+                      LeaveStatus.FOR_HRMO_CREDIT_CERTIFICATION && (
                       <div className="w-full pr-2">
                         <SelectListRF
                           id="action"
@@ -552,50 +564,167 @@ const ViewLeaveApplicationModal: FunctionComponent<ViewLeaveApplicationModalProp
                               <td className="border border-slate-400 text-center">Less this application</td>
                               <td className="border border-slate-400 text-center bg-green-100">Balance</td>
                             </tr>
-                            <tr className="border border-slate-400">
-                              <td className="border border-slate-400 text-center">
-                                {rowData.leaveName === LeaveName.VACATION
-                                  ? (
-                                      Number(parseFloat(`${selectedLeaveLedger[0]?.vacationLeaveBalance}`).toFixed(3)) +
-                                      Number(parseFloat(`${selectedLeaveLedger[0]?.vacationLeave}`).toFixed(3)) * -1
-                                    ).toFixed(3)
-                                  : rowData.leaveName === LeaveName.FORCED
-                                  ? (
-                                      Number(parseFloat(`${selectedLeaveLedger[0]?.forcedLeaveBalance}`).toFixed(3)) +
-                                      Number(parseFloat(`${selectedLeaveLedger[0]?.forcedLeave}`).toFixed(3)) * -1
-                                    ).toFixed(3)
-                                  : rowData.leaveName === LeaveName.SICK
-                                  ? (
-                                      Number(parseFloat(`${selectedLeaveLedger[0]?.sickLeaveBalance}`).toFixed(3)) +
-                                      Number(parseFloat(`${selectedLeaveLedger[0]?.sickLeave}`).toFixed(3)) * -1
-                                    ).toFixed(3)
-                                  : rowData.leaveName === LeaveName.SPECIAL_PRIVILEGE
-                                  ? (
-                                      Number(
-                                        parseFloat(`${selectedLeaveLedger[0]?.specialPrivilegeLeaveBalance}`).toFixed(3)
-                                      ) +
-                                      Number(
-                                        parseFloat(`${selectedLeaveLedger[0]?.specialPrivilegeLeave}`).toFixed(3)
-                                      ) *
-                                        -1
-                                    ).toFixed(3)
-                                  : 'N/A'}
-                              </td>
-                              <td className="border border-slate-400 text-center">
-                                {rowData.leaveDates?.length.toFixed(3)}
-                              </td>
-                              <td className="border border-slate-400 text-center bg-green-100">
-                                {rowData.leaveName === LeaveName.VACATION
-                                  ? selectedLeaveLedger[0]?.vacationLeaveBalance
-                                  : rowData.leaveName === LeaveName.FORCED
-                                  ? selectedLeaveLedger[0]?.forcedLeaveBalance
-                                  : rowData.leaveName === LeaveName.SICK
-                                  ? selectedLeaveLedger[0]?.sickLeaveBalance
-                                  : rowData.leaveName === LeaveName.SPECIAL_PRIVILEGE
-                                  ? selectedLeaveLedger[0]?.specialPrivilegeLeaveBalance
-                                  : 'N/A'}
-                              </td>
-                            </tr>
+
+                            {/* VACATION */}
+                            {rowData.leaveName === LeaveName.VACATION ? (
+                              <tr className="border border-slate-400">
+                                <td className="border border-slate-400 text-center">
+                                  {rowData.status === LeaveStatus.FOR_HRMO_CREDIT_CERTIFICATION ||
+                                  rowData.status === LeaveStatus.FOR_SUPERVISOR_APPROVAL ||
+                                  rowData.status === LeaveStatus.FOR_HRDM_APPROVAL ||
+                                  rowData.status === LeaveStatus.FOR_HRMO_APPROVAL // REMOVE IF CREDIT CERTIFICATION IS IN PLACE
+                                    ? Number(
+                                        parseFloat(
+                                          `${leaveLedger[leaveLedger.length - 1]?.vacationLeaveBalance}`
+                                        ).toFixed(3)
+                                      ).toFixed(3)
+                                    : (
+                                        Number(
+                                          parseFloat(`${selectedLeaveLedger[0]?.vacationLeaveBalance}`).toFixed(3)
+                                        ) +
+                                        Number(parseFloat(`${selectedLeaveLedger[0]?.vacationLeave}`).toFixed(3)) * -1
+                                      ).toFixed(3)}
+                                </td>
+
+                                <td className="border border-slate-400 text-center">
+                                  {rowData.leaveDates?.length.toFixed(3)}
+                                </td>
+
+                                <td className="border border-slate-400 text-center bg-green-100">
+                                  {rowData.status === LeaveStatus.FOR_HRMO_CREDIT_CERTIFICATION ||
+                                  rowData.status === LeaveStatus.FOR_SUPERVISOR_APPROVAL ||
+                                  rowData.status === LeaveStatus.FOR_HRDM_APPROVAL ||
+                                  rowData.status === LeaveStatus.FOR_HRMO_APPROVAL // REMOVE IF CREDIT CERTIFICATION IS IN PLACE
+                                    ? Number(
+                                        parseFloat(
+                                          `${leaveLedger[leaveLedger.length - 1]?.vacationLeaveBalance}`
+                                        ).toFixed(3)
+                                      ) - Number(parseFloat(`${rowData.leaveDates?.length}`).toFixed(3))
+                                    : selectedLeaveLedger[0]?.vacationLeaveBalance}
+                                </td>
+                              </tr>
+                            ) : null}
+
+                            {/* FORCED */}
+                            {rowData.leaveName === LeaveName.FORCED ? (
+                              <tr className="border border-slate-400">
+                                <td className="border border-slate-400 text-center">
+                                  {rowData.status === LeaveStatus.FOR_HRMO_CREDIT_CERTIFICATION ||
+                                  rowData.status === LeaveStatus.FOR_SUPERVISOR_APPROVAL ||
+                                  rowData.status === LeaveStatus.FOR_HRDM_APPROVAL ||
+                                  rowData.status === LeaveStatus.FOR_HRMO_APPROVAL // REMOVE IF CREDIT CERTIFICATION IS IN PLACE
+                                    ? Number(
+                                        parseFloat(
+                                          `${leaveLedger[leaveLedger.length - 1]?.forcedLeaveBalance}`
+                                        ).toFixed(3)
+                                      ).toFixed(3)
+                                    : (
+                                        Number(parseFloat(`${selectedLeaveLedger[0]?.forcedLeaveBalance}`).toFixed(3)) +
+                                        Number(parseFloat(`${selectedLeaveLedger[0]?.forcedLeave}`).toFixed(3)) * -1
+                                      ).toFixed(3)}
+                                </td>
+
+                                <td className="border border-slate-400 text-center">
+                                  {rowData.leaveDates?.length.toFixed(3)}
+                                </td>
+
+                                <td className="border border-slate-400 text-center bg-green-100">
+                                  {rowData.status === LeaveStatus.FOR_HRMO_CREDIT_CERTIFICATION ||
+                                  rowData.status === LeaveStatus.FOR_SUPERVISOR_APPROVAL ||
+                                  rowData.status === LeaveStatus.FOR_HRDM_APPROVAL ||
+                                  rowData.status === LeaveStatus.FOR_HRMO_APPROVAL // REMOVE IF CREDIT CERTIFICATION IS IN PLACE
+                                    ? Number(
+                                        parseFloat(
+                                          `${leaveLedger[leaveLedger.length - 1]?.forcedLeaveBalance}`
+                                        ).toFixed(3)
+                                      ) - Number(parseFloat(`${rowData.leaveDates?.length}`).toFixed(3))
+                                    : selectedLeaveLedger[0]?.forcedLeaveBalance}
+                                </td>
+                              </tr>
+                            ) : null}
+
+                            {/* SICK */}
+                            {rowData.leaveName === LeaveName.SICK ? (
+                              <tr className="border border-slate-400">
+                                <td className="border border-slate-400 text-center">
+                                  {rowData.status === LeaveStatus.FOR_HRMO_CREDIT_CERTIFICATION ||
+                                  rowData.status === LeaveStatus.FOR_SUPERVISOR_APPROVAL ||
+                                  rowData.status === LeaveStatus.FOR_HRDM_APPROVAL ||
+                                  rowData.status === LeaveStatus.FOR_HRMO_APPROVAL // REMOVE IF CREDIT CERTIFICATION IS IN PLACE
+                                    ? Number(
+                                        parseFloat(`${leaveLedger[leaveLedger.length - 1]?.sickLeaveBalance}`).toFixed(
+                                          3
+                                        )
+                                      ).toFixed(3)
+                                    : (
+                                        Number(parseFloat(`${selectedLeaveLedger[0]?.sickLeaveBalance}`).toFixed(3)) +
+                                        Number(parseFloat(`${selectedLeaveLedger[0]?.sickLeave}`).toFixed(3)) * -1
+                                      ).toFixed(3)}
+                                </td>
+
+                                <td className="border border-slate-400 text-center">
+                                  {rowData.leaveDates?.length.toFixed(3)}
+                                </td>
+
+                                <td className="border border-slate-400 text-center bg-green-100">
+                                  {rowData.status === LeaveStatus.FOR_HRMO_CREDIT_CERTIFICATION ||
+                                  rowData.status === LeaveStatus.FOR_SUPERVISOR_APPROVAL ||
+                                  rowData.status === LeaveStatus.FOR_HRDM_APPROVAL ||
+                                  rowData.status === LeaveStatus.FOR_HRMO_APPROVAL // REMOVE IF CREDIT CERTIFICATION IS IN PLACE
+                                    ? Number(
+                                        parseFloat(`${leaveLedger[leaveLedger.length - 1]?.sickLeaveBalance}`).toFixed(
+                                          3
+                                        )
+                                      ) - Number(parseFloat(`${rowData.leaveDates?.length}`).toFixed(3))
+                                    : selectedLeaveLedger[0]?.sickLeaveBalance}
+                                </td>
+                              </tr>
+                            ) : null}
+
+                            {/* SPECIAL PRIVILAGE */}
+                            {rowData.leaveName === LeaveName.SPECIAL_PRIVILEGE ? (
+                              <tr className="border border-slate-400">
+                                <td className="border border-slate-400 text-center">
+                                  {rowData.status === LeaveStatus.FOR_HRMO_CREDIT_CERTIFICATION ||
+                                  rowData.status === LeaveStatus.FOR_SUPERVISOR_APPROVAL ||
+                                  rowData.status === LeaveStatus.FOR_HRDM_APPROVAL ||
+                                  rowData.status === LeaveStatus.FOR_HRMO_APPROVAL // REMOVE IF CREDIT CERTIFICATION IS IN PLACE
+                                    ? Number(
+                                        parseFloat(
+                                          `${leaveLedger[leaveLedger.length - 1]?.specialPrivilegeLeaveBalance}`
+                                        ).toFixed(3)
+                                      ).toFixed(3)
+                                    : (
+                                        Number(
+                                          parseFloat(`${selectedLeaveLedger[0]?.specialPrivilegeLeaveBalance}`).toFixed(
+                                            3
+                                          )
+                                        ) +
+                                        Number(
+                                          parseFloat(`${selectedLeaveLedger[0]?.specialPrivilegeLeave}`).toFixed(3)
+                                        ) *
+                                          -1
+                                      ).toFixed(3)}
+                                </td>
+
+                                <td className="border border-slate-400 text-center">
+                                  {rowData.leaveDates?.length.toFixed(3)}
+                                </td>
+
+                                <td className="border border-slate-400 text-center bg-green-100">
+                                  {rowData.status === LeaveStatus.FOR_HRMO_CREDIT_CERTIFICATION ||
+                                  rowData.status === LeaveStatus.FOR_SUPERVISOR_APPROVAL ||
+                                  rowData.status === LeaveStatus.FOR_HRDM_APPROVAL ||
+                                  rowData.status === LeaveStatus.FOR_HRMO_APPROVAL // REMOVE IF CREDIT CERTIFICATION IS IN PLACE
+                                    ? Number(
+                                        parseFloat(
+                                          `${leaveLedger[leaveLedger.length - 1]?.specialPrivilegeLeaveBalance}`
+                                        ).toFixed(3)
+                                      ) - Number(parseFloat(`${rowData.leaveDates?.length}`).toFixed(3))
+                                    : selectedLeaveLedger[0]?.specialPrivilegeLeaveBalance}
+                                </td>
+                              </tr>
+                            ) : null}
                           </tbody>
                         </table>
                       </div>
@@ -617,7 +746,8 @@ const ViewLeaveApplicationModal: FunctionComponent<ViewLeaveApplicationModalProp
               >
                 Close
               </button>
-              {leaveApplicationDetails.leaveApplicationBasicInfo?.status === LeaveStatus.FOR_HRMO_APPROVAL &&
+              {leaveApplicationDetails.leaveApplicationBasicInfo?.status ===
+                LeaveStatus.FOR_HRMO_CREDIT_CERTIFICATION &&
                 watch('action') !== null && (
                   <button
                     className="px-3 w-[5rem] py-2 text-sm text-white bg-blue-400 rounded"
@@ -639,13 +769,14 @@ const ViewLeaveApplicationModal: FunctionComponent<ViewLeaveApplicationModalProp
               >
                 Close
               </button>
-              {leaveApplicationDetails.leaveApplicationBasicInfo?.status === LeaveStatus.FOR_HRMO_APPROVAL && (
+              {leaveApplicationDetails.leaveApplicationBasicInfo?.status ===
+                LeaveStatus.FOR_HRMO_CREDIT_CERTIFICATION && (
                 <button
                   className="px-3 w-[5rem] py-2 text-sm text-white bg-blue-400 rounded"
                   type="button"
                   onClick={() => openConfirmModal(Action.APPROVE)}
                 >
-                  Approve
+                  Certify Credits
                 </button>
               )}
             </div>

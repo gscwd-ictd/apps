@@ -32,6 +32,7 @@ type LeaveLedgerState = {
 
   selectedLeaveLedger: Array<LeaveLedgerEntry>;
   setSelectedLeaveLedger: (leaveLedger: Array<LeaveLedgerEntry>, leaveApplicationId: string) => void;
+  setLeaveLedger: (leaveLedger: Array<LeaveLedgerEntry>) => void;
 
   getLeaveLedger: () => void;
   getLeaveLedgerSuccess: (response: Array<LeaveLedgerEntry>) => void;
@@ -65,6 +66,12 @@ export const useLeaveLedgerStore = create<LeaveLedgerState>()(
       set((state) => ({
         ...state,
         selectedLeaveLedger: leaveLedger.filter((ledger) => ledger.leaveApplicationId == leaveApplicationId),
+      }));
+    },
+    setLeaveLedger: (leaveLedger: Array<LeaveLedgerEntry>) => {
+      set((state) => ({
+        ...state,
+        leaveLedger: leaveLedger,
       }));
     },
 

@@ -1,8 +1,7 @@
 /* eslint-disable @nx/enforce-module-boundaries */
 import { Menu, Transition } from '@headlessui/react';
 import { useApprovalStore } from 'apps/portal/src/store/approvals.store';
-import { useEmployeeStore } from 'apps/portal/src/store/employee.store';
-import { EmployeeDetails, OfficerOfTheDay } from 'apps/portal/src/types/employee.type';
+import { OfficerOfTheDay } from 'apps/portal/src/types/employee.type';
 import { UserRole } from 'apps/portal/src/utils/enums/userRoles';
 import { isEmpty, isEqual } from 'lodash';
 import { useRouter } from 'next/router';

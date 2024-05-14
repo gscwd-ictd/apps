@@ -42,30 +42,22 @@ type ModalProps = {
 export const DisapprovedPrfModal = ({ modalState, setModalState, closeModalAction }: ModalProps) => {
   const {
     selectedPrfId,
-    patchResponse,
-    selectedPosition,
+    disapprovedPrfModalIsOpen,
     getPrfDetails,
     getPrfDetailsSuccess,
     getPrfDetailsFail,
-    setSelectedPosition,
-    setViewPositionModalIsOpen,
     getPrfTrail,
     getPrfTrailSuccess,
     getPrfTrailFail,
-    emptyResponseAndError,
   } = usePrfStore((state) => ({
     selectedPrfId: state.selectedPrfId,
-    patchResponse: state.response.patchResponse,
-    selectedPosition: state.selectedPosition,
-    setViewPositionModalIsOpen: state.setViewPositionModalIsOpen,
-    setSelectedPosition: state.setSelectedPosition,
+    disapprovedPrfModalIsOpen: state.disapprovedPrfModalIsOpen,
     getPrfDetails: state.getPrfDetails,
     getPrfDetailsSuccess: state.getPrfDetailsSuccess,
     getPrfDetailsFail: state.getPrfDetailsFail,
     getPrfTrail: state.getPrfTrail,
     getPrfTrailSuccess: state.getPrfTrailSuccess,
     getPrfTrailFail: state.getPrfTrailFail,
-    emptyResponseAndError: state.emptyResponseAndError,
   }));
 
   const employeeDetail = useEmployeeStore((state) => state.employeeDetails);
@@ -81,7 +73,7 @@ export const DisapprovedPrfModal = ({ modalState, setModalState, closeModalActio
     isLoading: swrPrfIsLoading,
     error: swrPrfError,
     mutate: mutatePrfDetails,
-  } = useSWR(`${prfUrl}/prf/details/${selectedPrfId}`, fetchWithToken, {
+  } = useSWR(disapprovedPrfModalIsOpen ? `${prfUrl}/prf/details/${selectedPrfId}` : null, fetchWithToken, {
     shouldRetryOnError: false,
     revalidateOnFocus: true,
   });
@@ -110,7 +102,7 @@ export const DisapprovedPrfModal = ({ modalState, setModalState, closeModalActio
     isLoading: swrPrfTrailIsLoading,
     error: swrPrfTrailError,
     mutate: mutatePrfTrail,
-  } = useSWR(`${prfUrl}/prf-trail/${selectedPrfId}`, fetchWithToken, {
+  } = useSWR(disapprovedPrfModalIsOpen ? `${prfUrl}/prf-trail/${selectedPrfId}` : null, fetchWithToken, {
     shouldRetryOnError: false,
     revalidateOnFocus: true,
   });

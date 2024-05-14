@@ -1,12 +1,6 @@
 /* eslint-disable @nx/enforce-module-boundaries */
 import { usePositionStore } from 'apps/portal/src/store/position.store';
-import {
-  FormEvent,
-  FunctionComponent,
-  MutableRefObject,
-  useEffect,
-  useRef,
-} from 'react';
+import { FormEvent, FunctionComponent, MutableRefObject, useEffect, useRef } from 'react';
 import useSWR from 'swr';
 import { useEmployeeStore } from 'apps/portal/src/store/employee.store';
 import fetcherHRIS from 'apps/portal/src/utils/helpers/fetchers/FetcherHRIS';
@@ -55,9 +49,7 @@ export const DrcModalSelectPositions: FunctionComponent = () => {
   );
 
   // initialize ref for search input
-  const searchRef = useRef(
-    null
-  ) as unknown as MutableRefObject<HTMLInputElement>;
+  const searchRef = useRef(null) as unknown as MutableRefObject<HTMLInputElement>;
 
   // on search function used for filtering positions
   const onSearch = (event: FormEvent<HTMLInputElement>) => {
@@ -65,19 +57,33 @@ export const DrcModalSelectPositions: FunctionComponent = () => {
     const value = event.currentTarget.value;
 
     // create an array that will contain the search results
-    const filteredResult: Array<Position> = [];
+    // const filteredResult: Array<Position> = [];
 
-    // loop through positions array and filter according to position title
-    positions.filter((position: Position) => {
-      // check if there is a match
+    // // loop through positions array and filter according to position title
+    // positions.filter((position: Position) => {
+    //   // check if there is a match
+    //   if (
+    //     position.positionTitle.match(new RegExp(value, 'i')) ||
+    //     position.itemNumber.match(new RegExp(value, 'i')) ||
+    //     position.designation.match(new RegExp(value, 'i'))
+    //   ) {
+    //     // insert the matching position inside the filtered result
+
+    //     filteredResult.push(position);
+    //   }
+    // });
+
+    const filteredResult: Array<Position> = positions.filter((position: Position) => {
+      const newPosition = position.positionTitle.toLowerCase();
+      const newItemNumber = position.itemNumber.toLowerCase();
+      const newDesignation = position.designation.toLowerCase();
+
       if (
-        position.positionTitle.match(new RegExp(value, 'i')) ||
-        position.itemNumber.match(new RegExp(value, 'i')) ||
-        position.designation.match(new RegExp(value, 'i'))
+        newPosition.includes(value.toLowerCase()) ||
+        newItemNumber.includes(value.toLowerCase()) ||
+        newDesignation.includes(value.toLowerCase())
       ) {
-        // insert the matching position inside the filtered result
-
-        filteredResult.push(position);
+        return position;
       }
     });
 
@@ -142,10 +148,7 @@ export const DrcModalSelectPositions: FunctionComponent = () => {
           <section>
             <div className="flex justify-end px-3 mb-1 text-sm">
               <p className="text-gray-600">
-                {filteredPositions.length}{' '}
-                {filteredPositions.length < 1
-                  ? 'position found'
-                  : 'positions found'}
+                {filteredPositions.length} {filteredPositions.length < 1 ? 'position found' : 'positions found'}
               </p>
             </div>
             <div className="relative px-3 mt-2 mb-5">
@@ -160,10 +163,7 @@ export const DrcModalSelectPositions: FunctionComponent = () => {
               />
               {filteredValue !== '' ? (
                 <>
-                  <button
-                    className="absolute -right-0 mr-7 focus:outline-none"
-                    onClick={onClearSearch}
-                  >
+                  <button className="absolute -right-0 mr-7 focus:outline-none" onClick={onClearSearch}>
                     <HiXCircle className="w-6 h-6 mt-3 transition-colors ease-in-out text-slate-300 hover:text-slate-400" />
                   </button>
                 </>

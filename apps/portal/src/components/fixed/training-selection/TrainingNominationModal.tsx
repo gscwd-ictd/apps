@@ -7,11 +7,6 @@ import { SelectOption } from 'libs/utils/src/lib/types/select.type';
 import { MySelectList } from '../../modular/inputs/SelectList';
 import { HiCheck, HiX } from 'react-icons/hi';
 import { isEmpty } from 'lodash';
-import e from 'cors';
-
-// const listOfEmployees: Array<SelectOption> = [
-//   { label: 'Ricardo Vicente Narvaiza', value: '0' },
-// ];
 
 type TrainingNominationModalProps = {
   modalState: boolean;
@@ -50,15 +45,6 @@ export const TrainingNominationModal = ({
   const [combinedNominatedEmployees, setCombinedNominatedEmployees] = useState<Array<SelectOption>>([]); // pool of selected and auxiliary employees
   const [isDuplicatedNominee, setIsDuplicatedNominee] = useState<boolean>(false);
   const [initialLoad, setInitialLoad] = useState<boolean>(true);
-
-  // const addRecommendedNominee = (employee: SelectOption) => {
-  //   if (
-  //     !selectedEmployees.some((e) => e.value === employee.value) &&
-  //     !selectedAuxiliaryEmployees.some((e) => e.value === employee.value)
-  //   ) {
-  //     setSelectedEmployees([employee, ...selectedEmployees]);
-  //   }
-  // };
 
   useEffect(() => {
     if (trainingNominationModalIsOpen) {

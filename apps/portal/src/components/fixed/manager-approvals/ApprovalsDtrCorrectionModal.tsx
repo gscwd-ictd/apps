@@ -1,12 +1,11 @@
 /* eslint-disable @nx/enforce-module-boundaries */
-import { AlertNotification, Button, CaptchaModal, LoadingSpinner, Modal, OtpModal } from '@gscwd-apps/oneui';
+import { AlertNotification, Button, LoadingSpinner, Modal, OtpModal } from '@gscwd-apps/oneui';
 import { HiX } from 'react-icons/hi';
 import { useEffect } from 'react';
 import { useApprovalStore } from '../../../store/approvals.store';
 import { SelectOption } from '../../../../../../libs/utils/src/lib/types/select.type';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { useEmployeeStore } from '../../../store/employee.store';
-import { passSlipAction } from 'apps/portal/src/types/approvals.type';
 import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
 import { ApprovalOtpContents } from './ApprovalOtp/ApprovalOtpContents';
 import { DtrCorrectionStatus } from 'libs/utils/src/lib/enums/dtr.enum';
