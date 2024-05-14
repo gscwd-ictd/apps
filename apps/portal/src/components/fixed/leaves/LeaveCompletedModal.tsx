@@ -167,6 +167,9 @@ export const LeaveCompletedModal = ({ modalState, setModalState, closeModalActio
                           ? 'success'
                           : leaveIndividualDetail?.leaveApplicationBasicInfo?.status === LeaveStatus.CANCELLED
                           ? 'error'
+                          : leaveIndividualDetail?.leaveApplicationBasicInfo?.status ===
+                            LeaveStatus.FOR_HRMO_CREDIT_CERTIFICATION
+                          ? 'warning'
                           : 'info'
                       }
                       notifMessage={
