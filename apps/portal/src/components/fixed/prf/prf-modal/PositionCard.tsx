@@ -9,9 +9,7 @@ type PositionCardProps = {
   position: Position;
 };
 
-export const PositionCard: FunctionComponent<PositionCardProps> = ({
-  position,
-}) => {
+export const PositionCard: FunctionComponent<PositionCardProps> = ({ position }) => {
   // access current value of all positions
   const positions = usePrfStore((state) => state.positions);
 
@@ -22,25 +20,17 @@ export const PositionCard: FunctionComponent<PositionCardProps> = ({
   const updatePositions = usePrfStore((state) => state.updatePositions);
 
   // access function to set value for selected positions
-  const setSelectedPositions = usePrfStore(
-    (state) => state.setSelectedPositions
-  );
-
-  const setError = usePrfStore((state) => state.setError);
+  const setSelectedPositions = usePrfStore((state) => state.setSelectedPositions);
 
   // handle changes on remarks
-  const onRemarksChange = (
-    selectedId: string,
-    event: FormEvent<HTMLInputElement>
-  ) => {
+  const onRemarksChange = (selectedId: string, event: FormEvent<HTMLInputElement>) => {
     // create a copy of selected positions
     const updatedWithRemarks = [...selectedPositions];
 
     // loop through the copy of selected positions
     updatedWithRemarks.map((position: Position) => {
       // check if position remarks index is the current index of this loop
-      if (position.positionId === selectedId)
-        position.remarks = event.currentTarget.value;
+      if (position.positionId === selectedId) position.remarks = event.currentTarget.value;
     });
 
     // set the new value of selected positions
@@ -70,9 +60,7 @@ export const PositionCard: FunctionComponent<PositionCardProps> = ({
 
               <div>
                 <h3 className="md:truncate">{position.positionTitle}</h3>
-                <p className="text-sm text-gray-400 md:truncate w-full lg:w-[30rem]">
-                  {position.designation}
-                </p>
+                <p className="text-sm text-gray-400 md:truncate w-full lg:w-[30rem]">{position.designation}</p>
               </div>
             </div>
           </div>

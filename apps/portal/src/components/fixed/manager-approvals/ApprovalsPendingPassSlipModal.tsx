@@ -11,7 +11,6 @@ import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
 import { ApprovalOtpContents } from './ApprovalOtp/ApprovalOtpContents';
 import { ManagerOtpApproval } from 'libs/utils/src/lib/enums/approval.enum';
 import { ConfirmationApprovalModal } from './ApprovalOtp/ConfirmationApprovalModal';
-import { DateFormatter } from 'libs/utils/src/lib/functions/DateFormatter';
 import { NatureOfBusiness, PassSlipStatus } from 'libs/utils/src/lib/enums/pass-slip.enum';
 import { UseTwelveHourFormat } from 'libs/utils/src/lib/functions/TwelveHourFormatter';
 import { ApprovalCaptcha } from './ApprovalOtp/ApprovalCaptcha';

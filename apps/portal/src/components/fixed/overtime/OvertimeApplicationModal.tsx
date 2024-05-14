@@ -2,7 +2,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { HiX } from 'react-icons/hi';
 import { AlertNotification, Button, LoadingSpinner, Modal } from '@gscwd-apps/oneui';
-import { SubmitHandler, useFieldArray, useForm } from 'react-hook-form';
+import { SubmitHandler, useForm } from 'react-hook-form';
 import { postPortal } from '../../../utils/helpers/portal-axios-helper';
 import { SelectOption } from '../../../../../../libs/utils/src/lib/types/select.type';
 import { useEmployeeStore } from '../../../store/employee.store';

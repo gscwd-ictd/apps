@@ -7,33 +7,16 @@ import { fetchWithToken } from 'apps/portal/src/utils/hoc/fetcher';
 import useSWR from 'swr';
 import { useEffect, useState } from 'react';
 import { isEmpty } from 'lodash';
-
-import dayjs from 'dayjs';
-import { GetServerSideProps, GetServerSidePropsContext } from 'next';
-import {
-  HiOutlineUser,
-  HiOutlineDocumentDuplicate,
-  HiOutlineCalendar,
-  HiOutlinePencil,
-  HiArrowSmLeft,
-} from 'react-icons/hi';
-import { PrfTimeline } from '../prf-view/PrfTimeline';
+import { HiOutlineUser, HiOutlineDocumentDuplicate, HiOutlineCalendar, HiOutlinePencil } from 'react-icons/hi';
 import { PageTitle } from '../../../modular/html/PageTitle';
-import {
-  getEmployeeDetailsFromHr,
-  getEmployeeProfile,
-} from '../../../../utils/helpers/http-requests/employee-requests';
-import { getPrfById, getPrfTrailByPrfId, patchPrfRequest } from '../../../../utils/helpers/prf.requests';
-import { EmployeeDetailsPrf, EmployeeProfile } from '../../../../types/employee.type';
-import { Position, PrfDetails, PrfStatus, PrfTrail } from '../../../../types/prf.types';
-import { withCookieSession } from '../../../../utils/helpers/session';
+import { patchPrfRequest } from '../../../../utils/helpers/prf.requests';
+import { Position, PrfStatus } from '../../../../types/prf.types';
 import { useEmployeeStore } from 'apps/portal/src/store/employee.store';
 import { SpinnerDotted } from 'spinners-react';
 import { PrfOtpContents } from '../prfOtp/PrfOtpContents';
 import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
 import { DateFormatter } from 'libs/utils/src/lib/functions/DateFormatter';
 import { PrfPositionCard } from './PrfPositionCard';
-import { ViewPositionModal } from '../prf-view-position/ViewPositionModal';
 
 type ModalProps = {
   modalState: boolean;
@@ -44,7 +27,7 @@ type ModalProps = {
 export const ForApprovalPrfModal = ({ modalState, setModalState, closeModalAction }: ModalProps) => {
   const {
     selectedPrfId,
-
+    forApprovalPrfModalIsOpen,
     getPrfDetailsForApproval,
     getPrfDetailsForApprovalSuccess,
     getPrfDetailsForApprovalFail,
@@ -63,6 +46,7 @@ export const ForApprovalPrfModal = ({ modalState, setModalState, closeModalActio
   } = usePrfStore((state) => ({
     selectedPrfId: state.selectedPrfId,
     selectedPosition: state.selectedPosition,
+    forApprovalPrfModalIsOpen: state.forApprovalPrfModalIsOpen,
     getPrfDetailsForApproval: state.getPrfDetailsForApproval,
     getPrfDetailsForApprovalSuccess: state.getPrfDetailsForApprovalSuccess,
     getPrfDetailsForApprovalFail: state.getPrfDetailsForApprovalFail,
@@ -92,7 +76,7 @@ export const ForApprovalPrfModal = ({ modalState, setModalState, closeModalActio
     isLoading: swrPrfIsLoading,
     error: swrPrfError,
     mutate: mutatePrfDetails,
-  } = useSWR(`${prfUrl}/prf/details/${selectedPrfId}`, fetchWithToken, {});
+  } = useSWR(forApprovalPrfModalIsOpen ? `${prfUrl}/prf/details/${selectedPrfId}` : null, fetchWithToken, {});
 
   // Initial zustand state update
   useEffect(() => {
@@ -124,17 +108,16 @@ export const ForApprovalPrfModal = ({ modalState, setModalState, closeModalActio
   }, [isDeclineModalOpen]);
 
   const handleDecline = async (e) => {
+    patchPrf();
     if (!isEmpty(remarks)) {
       const { error, result } = await patchPrfRequest(`/prf-trail/${selectedPrfId}`, {
         status: PrfStatus.DISAPPROVED,
         employeeId: employeeDetail.employmentDetails.userId,
         remarks,
       });
-      patchPrf();
       if (error) {
         // request is done set loading to false and set the error message
         patchPrfFail(result);
-        setIsDeclineModalOpen(false);
       } else if (!error) {
         // request is done set loading to false and set the update response
         patchPrfSuccess(result);
@@ -149,7 +132,7 @@ export const ForApprovalPrfModal = ({ modalState, setModalState, closeModalActio
   useEffect(() => {
     if (!isEmpty(patchError)) {
       setTimeout(() => {
-        emptyResponseAndError();
+        // emptyResponseAndError();
       }, 3000);
     }
   }, [patchError]);

@@ -195,12 +195,10 @@ export default function Overtime({ employeeDetails }: InferGetServerSidePropsTyp
       <>
         {/* Employee List Load Failed */}
         {!isEmpty(swrEmployeeListError) ? (
-          <>
-            <ToastNotification
-              toastType="error"
-              notifMessage={`${swrEmployeeListError}: Failed to load Employee List.`}
-            />
-          </>
+          <ToastNotification
+            toastType="error"
+            notifMessage={`${swrEmployeeListError}: Failed to load Employee List.`}
+          />
         ) : null}
 
         {/* Post/Submit Overtime Application Success*/}
@@ -247,12 +245,10 @@ export default function Overtime({ employeeDetails }: InferGetServerSidePropsTyp
 
         {/* List of Overtime Load Failed */}
         {!isEmpty(swrOvertimeListError) ? (
-          <>
-            <ToastNotification
-              toastType="error"
-              notifMessage={`${swrOvertimeListError}: Failed to load Overtime List.`}
-            />
-          </>
+          <ToastNotification
+            toastType="error"
+            notifMessage={`${swrOvertimeListError}: Failed to load Overtime List.`}
+          />
         ) : null}
       </>
 

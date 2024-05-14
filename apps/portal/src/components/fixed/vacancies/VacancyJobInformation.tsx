@@ -2,10 +2,6 @@ import { JobOpeningDetails, JobCompetencies } from '../../../types/vacancies.typ
 import { useWorkExpStore } from 'apps/portal/src/store/workexperience.store';
 
 export const VacancyJobInformation = (props: { data: JobOpeningDetails }): JSX.Element => {
-  const { hasApplied } = useWorkExpStore((state) => ({
-    hasApplied: state.hasApplied,
-  }));
-
   return (
     <>
       <div className="px-2 py-4 m-2 text-gray-800 bg-slate-100 rounded-xl">

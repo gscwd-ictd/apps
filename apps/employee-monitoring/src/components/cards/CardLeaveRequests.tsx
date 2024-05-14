@@ -20,11 +20,7 @@ export const CardLeaveRequests: FunctionComponent = () => {
     isLoading: swrIsLoading,
   } = useSWR('/leave/hrmo', fetcherEMS, {
     onErrorRetry: (error, key, config, revalidate, { retryCount }) => {
-      // Only retry up to 5 times.
-      if (retryCount >= 5) return;
-
-      // Retry after 15 seconds.
-      setTimeout(() => revalidate({ retryCount }), 15000);
+      if (retryCount >= 2) return;
     },
   });
 
@@ -62,7 +58,7 @@ export const CardLeaveRequests: FunctionComponent = () => {
   useEffect(() => {
     if (!isEmpty(LeaveApplications)) {
       const forApprovalPassSlipsCount = LeaveApplications.filter(
-        (passSlip) => passSlip.status === LeaveStatus.FOR_HRMO_APPROVAL
+        (passSlip) => passSlip.status === LeaveStatus.FOR_HRMO_CREDIT_CERTIFICATION
       );
       setCountHrmoApproval(forApprovalPassSlipsCount.length.toString());
     }

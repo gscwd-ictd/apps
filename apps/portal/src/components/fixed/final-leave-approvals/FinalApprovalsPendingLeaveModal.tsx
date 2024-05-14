@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react';
 import { HiX } from 'react-icons/hi';
 import { Modal } from 'libs/oneui/src/components/Modal';
 import { Button } from 'libs/oneui/src/components/Button';
-import { isEmpty } from 'lodash';
 import { SpinnerDotted } from 'spinners-react';
 import { AlertNotification, OtpModal } from '@gscwd-apps/oneui';
 import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
