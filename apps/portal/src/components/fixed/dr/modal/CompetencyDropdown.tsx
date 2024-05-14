@@ -130,7 +130,7 @@ export const CompetencyDropdown = ({ index }: CompetencyDropDownProps) => {
           <Menu.Items
             className={`shadow-gray absolute z-[100] mb-2 mt-2 w-[26rem] origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-lg shadow-gray-100 ring-1 ring-black ring-opacity-5 focus:outline-none`}
           >
-            {competencies &&
+            {competencies.length > 0 ? (
               competencies.map((item: Competency, idx: number) => {
                 return (
                   <div key={idx}>
@@ -152,7 +152,10 @@ export const CompetencyDropdown = ({ index }: CompetencyDropDownProps) => {
                     </Menu.Item>
                   </div>
                 );
-              })}
+              })
+            ) : (
+              <div className="h-[4rem] flex justify-center items-center">No competencies set</div>
+            )}
           </Menu.Items>
         </Transition>
       </Menu>
