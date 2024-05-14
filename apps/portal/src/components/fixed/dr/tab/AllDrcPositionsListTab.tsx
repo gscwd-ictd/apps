@@ -5,6 +5,7 @@ import { usePositionStore } from 'apps/portal/src/store/position.store';
 import { Position } from 'apps/portal/src/types/position.type';
 import dayjs from 'dayjs';
 import { DateFormatter } from 'libs/utils/src/lib/functions/DateFormatter';
+import BadgePill from '../../../modular/badges/BadgePill';
 
 type AllDrcPositionsListTabProps = {
   positions: Array<FinishedPosition>;
@@ -26,11 +27,10 @@ export const AllDrcPositionsListTab = ({ positions, tab }: AllDrcPositionsListTa
 
   const onSelect = (position: Position, tab: number) => {
     let action: Actions = null;
-    if (tab === 1) {
-      action = Actions.CREATE;
-    } else if (tab === 2) {
-      action = Actions.UPDATE;
-    }
+    if (tab === 1 && position.hasEmployee === 0) action = Actions.CREATE;
+    else if (tab === 1 && position.hasEmployee === 1) action = Actions.VIEW;
+    else if (tab === 2 && position.hasEmployee === 0) action = Actions.UPDATE;
+    else if (tab === 2 && position.hasEmployee === 1) action = Actions.VIEW;
 
     // set action whether create or update
     setAction(action);
@@ -55,9 +55,30 @@ export const AllDrcPositionsListTab = ({ positions, tab }: AllDrcPositionsListTa
                   className="flex items-center justify-between px-5 py-4 transition-colors ease-in-out bg-white border-b rounded-tr-none rounded-bl-none cursor-pointer rounded-xl border-b-gray-200 hover:bg-indigo-50"
                 >
                   <div className="w-full px-1 py-2">
-                    <h1 className="text-xl font-medium text-gray-600">{position.positionTitle}</h1>
-                    <p className="text-md text-gray-600 font-semibold">{position.itemNumber}</p>
-                    <p className="text-xs text-gray-500">{position.designation}</p>
+                    <div className="flex items-center w-full gap-2">
+                      <div className="text-xl font-medium text-gray-600">{position.positionTitle}</div>
+                      {tab === 1 ? (
+                        <div>
+                          <BadgePill label="Vacant" variant="default" />
+                        </div>
+                      ) : (
+                        <div className="flex gap-2">
+                          <div>
+                            <BadgePill
+                              label={position.employeeName === null ? 'Vacant' : position.employeeName}
+                              variant={position.employeeName === null ? 'default' : 'error'}
+                            />
+                          </div>
+                          {position.hasOnGoingPrf === 1 ? (
+                            <div>
+                              <BadgePill label="PRF" variant="error" />
+                            </div>
+                          ) : null}
+                        </div>
+                      )}
+                    </div>
+                    <div className="font-semibold text-gray-600 text-md">{position.itemNumber}</div>
+                    <div className="text-xs text-gray-500">{position.designation}</div>
                     {tab === 1 && (
                       <p className="text-sm text-indigo-500">No duties, responsibilities, and competencies</p>
                     )}

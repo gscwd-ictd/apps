@@ -131,7 +131,7 @@ const DrcModal: FunctionComponent = () => {
       >
         <Modal.Header withCloseBtn>
           <div className="flex justify-between w-full">
-            <div className="flex w-full flex-col px-5">
+            <div className="flex flex-col w-full px-5">
               <h3 className="text-xl font-semibold text-gray-700 md:text-2xl">
                 {modal.page === 6 ? 'Setting Successful' : 'Set Duties, Responsibilities, and Competencies'}
               </h3>
@@ -151,7 +151,7 @@ const DrcModal: FunctionComponent = () => {
               </div>
             </div>
 
-            <i className="bx bx-x text-2xl" role="button" onClick={closeDrcModal} tabIndex={-1}></i>
+            <i className="text-2xl bx bx-x" role="button" onClick={closeDrcModal} tabIndex={-1}></i>
           </div>
         </Modal.Header>
         <Modal.Body>
@@ -163,7 +163,7 @@ const DrcModal: FunctionComponent = () => {
               onClick={cancelBtn}
               className="w-[6rem] disabled:bg-white disabled:cursor-not-allowed text-gray-700 text-opacity-85 bg-white border border-gray-300 px-3 text-sm transition-all ease-in-out duration-100 font-semibold tracking-wide py-2 rounded whitespace-nowrap focus:outline-none focus:ring-4 hover:shadow-lg active:shadow-md active:ring-0 active:scale-95"
             >
-              {modal.page === 1 ? 'Close' : 'Cancel'}
+              {modal.page === 1 ? 'Close' : modal.page === 4 ? 'Previous' : 'Cancel'}
             </button>
             {modal.page !== 1 ? (
               <button

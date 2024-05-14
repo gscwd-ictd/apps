@@ -1,23 +1,13 @@
 /* eslint-disable @nx/enforce-module-boundaries */
 import { Alert } from '@gscwd-apps/oneui';
-import {
-  useAlertConfirmationStore,
-  useAlertSuccessStore,
-} from 'apps/portal/src/store/alert.store';
-import {
-  DutiesResponsibilitiesList,
-  DutyResponsibilityList,
-  useDnrStore,
-} from 'apps/portal/src/store/dnr.store';
+import { useAlertConfirmationStore, useAlertSuccessStore } from 'apps/portal/src/store/alert.store';
+import { DutiesResponsibilitiesList, DutyResponsibilityList, useDnrStore } from 'apps/portal/src/store/dnr.store';
 import { useEmployeeStore } from 'apps/portal/src/store/employee.store';
 import { Actions, useModalStore } from 'apps/portal/src/store/modal.store';
 import { usePositionStore } from 'apps/portal/src/store/position.store';
 import { UpdatedDRCD } from 'apps/portal/src/types/dr.type';
 import fetcherHRIS from 'apps/portal/src/utils/helpers/fetchers/FetcherHRIS';
-import {
-  patchHRIS,
-  postHRIS,
-} from 'apps/portal/src/utils/helpers/fetchers/HRIS-axios-helper';
+import { patchHRIS, postHRIS } from 'apps/portal/src/utils/helpers/fetchers/HRIS-axios-helper';
 import { isEmpty } from 'lodash';
 import { HiExclamationCircle } from 'react-icons/hi';
 import { useSWRConfig } from 'swr';
@@ -25,13 +15,12 @@ import { AssignUpdatedDrcs, UpdateFinalDrcs } from '../utils/drcFunctions';
 
 export const DrcAlertConfirmation = () => {
   // use alert confirmation store
-  const { confirmationIsOpen, setConfIsOpen, closeConf, openConf } =
-    useAlertConfirmationStore((state) => ({
-      confirmationIsOpen: state.isOpen,
-      setConfIsOpen: state.setIsOpen,
-      closeConf: state.setClose,
-      openConf: state.setOpen,
-    }));
+  const { confirmationIsOpen, setConfIsOpen, closeConf, openConf } = useAlertConfirmationStore((state) => ({
+    confirmationIsOpen: state.isOpen,
+    setConfIsOpen: state.setIsOpen,
+    closeConf: state.setClose,
+    openConf: state.setOpen,
+  }));
 
   // use dnr store
   const {
@@ -64,19 +53,14 @@ export const DrcAlertConfirmation = () => {
   const openAlertSuccess = useAlertSuccessStore((state) => state.setOpen);
 
   // use position store
-  const {
-    selectedPosition,
-    postPosition,
-    postPositionFail,
-    postPositionSuccess,
-    emptySelectedPosition,
-  } = usePositionStore((state) => ({
-    selectedPosition: state.selectedPosition,
-    postPosition: state.postPosition,
-    postPositionSuccess: state.postPositionSuccess,
-    postPositionFail: state.postPositionFail,
-    emptySelectedPosition: state.emptySelectedPosition,
-  }));
+  const { selectedPosition, postPosition, postPositionFail, postPositionSuccess, emptySelectedPosition } =
+    usePositionStore((state) => ({
+      selectedPosition: state.selectedPosition,
+      postPosition: state.postPosition,
+      postPositionSuccess: state.postPositionSuccess,
+      postPositionFail: state.postPositionFail,
+      emptySelectedPosition: state.emptySelectedPosition,
+    }));
 
   const { mutate } = useSWRConfig();
 
@@ -145,11 +129,7 @@ export const DrcAlertConfirmation = () => {
       }
     } else if (action === Actions.UPDATE) {
       // handleUpdateData(selectedDnrs.core,selectedDnrs.support, availableDnrs)
-      const drcsForUpdate = await AssignUpdatedDrcs(
-        selectedDnrs.core,
-        selectedDnrs.support,
-        availableDnrs
-      );
+      const drcsForUpdate = await AssignUpdatedDrcs(selectedDnrs.core, selectedDnrs.support, availableDnrs);
 
       const updateDrcs = await handleUpdateData(drcsForUpdate);
       if (updateDrcs.error === true) {
@@ -222,10 +202,8 @@ export const DrcAlertConfirmation = () => {
   };
 
   // call this for positions where there are existing drcs
-  const handleUpdateData = async (drcds: {
-    forUpdating: UpdatedDRCD;
-    forPosting: DutiesResponsibilitiesList;
-  }) => {
+  const handleUpdateData = async (drcds: { forUpdating: UpdatedDRCD; forPosting: DutiesResponsibilitiesList }) => {
+    console.log({ add: drcds.forPosting, update: drcds.forUpdating });
     const { error, result } = await patchHRIS(
       `/occupational-group-duties-responsibilities/${employee.employmentDetails.assignment.positionId}/${selectedPosition.positionId}`, //! Change employee
       { add: drcds.forPosting, update: drcds.forUpdating }
@@ -242,24 +220,17 @@ export const DrcAlertConfirmation = () => {
             <div className="w-full text-lg font-normal text-left text-slate-700 ">
               <div className="flex gap-2 place-items-center">
                 <HiExclamationCircle size={30} className="text-yellow-400" />
-                <div className="text-3xl font-semibold text-gray-700">
-                  Action
-                </div>
+                <div className="text-3xl font-semibold text-gray-700">Action</div>
               </div>
               {action === 'create' ? (
                 'This action cannot be undone.'
               ) : action === 'update' ? (
                 <div className="flex gap-2 font-light text-left text-md">
-                  <div>
-                    This will update the existing duties, responsibilities, and
-                    competencies.
-                  </div>
+                  <div>This will update the existing duties, responsibilities, and competencies.</div>
                 </div>
               ) : null}
             </div>
-            <div className="w-full mt-5 text-lg font-light text-left text-slate-700 ">
-              Do you want to proceed?
-            </div>
+            <div className="w-full mt-5 text-lg font-light text-left text-slate-700 ">Do you want to proceed?</div>
           </div>
         </Alert.Description>
         <Alert.Footer alignEnd>
