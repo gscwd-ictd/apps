@@ -17,7 +17,7 @@ type DeleteModalProps = {
   rowData: Announcement;
 };
 
-const DeleteCustomGroupModal: FunctionComponent<DeleteModalProps> = ({
+const DeleteAnnouncementModal: FunctionComponent<DeleteModalProps> = ({
   modalState,
   setModalState,
   closeModalAction,
@@ -118,4 +118,4 @@ const DeleteCustomGroupModal: FunctionComponent<DeleteModalProps> = ({
   );
 };
 
-export default DeleteCustomGroupModal;
+export default DeleteAnnouncementModal;
