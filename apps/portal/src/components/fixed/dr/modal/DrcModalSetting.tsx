@@ -14,6 +14,7 @@ import { Button } from '../../../modular/common/forms/Button';
 import LoadingVisual from '../../loading/LoadingVisual';
 import { SelectedCoreDrcs } from './DrcSelectedCores';
 import { SelectedSupportDrcs } from './DrcSelectedSupports';
+import BadgePill from '../../../modular/badges/BadgePill';
 
 export const DrcModalSetting = () => {
   // get from position store
@@ -268,6 +269,11 @@ export const DrcModalSetting = () => {
         <span className="text-xl text-slate-500">{selectedPosition.positionTitle}</span>
         <span className="text-sm font-normal">{selectedPosition.itemNumber}</span>
         <span className="text-xs font-normal">{selectedPosition.designation}</span>
+        {selectedPosition.employeeName != null && (
+          <div className="font-normal mt-2">
+            <BadgePill label={selectedPosition.employeeName} variant="success" />
+          </div>
+        )}
 
         {/** HERE */}
         <div className="flex flex-col w-full mt-5">
@@ -287,11 +293,15 @@ export const DrcModalSetting = () => {
                       btnLabel={
                         availableDnrs.length === 0
                           ? 'No more duties available in pool, please contact the HR to add more duties'
-                          : '+ Add Core'
+                          : selectedPosition.hasOngoingPrf === 0 || selectedPosition.hasOngoingPrf === undefined
+                          ? '+ Add Core'
+                          : 'Cannot Add'
                       }
                       btnVariant="white"
                       className="w-auto lg:min-w-[16rem] border-none text-indigo-600 "
-                      isDisabled={availableDnrs.length === 0 ? true : false}
+                      isDisabled={
+                        availableDnrs.length === 0 ? true : selectedPosition.hasOngoingPrf === 1 ? true : false
+                      }
                       onClick={() => openDrcModalSelection(DrcTypes.CORE)}
                     />
                   )}
@@ -341,10 +351,14 @@ export const DrcModalSetting = () => {
                       btnLabel={
                         availableDnrs.length === 0
                           ? 'No more duties available in pool, please contact the HR to add more duties'
-                          : '+ Add Support'
+                          : selectedPosition.hasOngoingPrf === 0 || selectedPosition.hasOngoingPrf === undefined
+                          ? '+ Add Support'
+                          : 'Cannot Add'
                       }
                       btnVariant="white"
-                      isDisabled={availableDnrs.length === 0 ? true : false}
+                      isDisabled={
+                        availableDnrs.length === 0 ? true : selectedPosition.hasOngoingPrf === 1 ? true : false
+                      }
                       className="w-auto lg:min-w-[16rem] border-none text-indigo-600"
                       onClick={() => openDrcModalSelection(DrcTypes.SUPPORT)}
                     />

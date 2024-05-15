@@ -54,36 +54,37 @@ export const AllDrcPositionsListTab = ({ positions, tab }: AllDrcPositionsListTa
                   onClick={() => onSelect(position, tab)}
                   className="flex items-center justify-between px-5 py-4 transition-colors ease-in-out bg-white border-b rounded-tr-none rounded-bl-none cursor-pointer rounded-xl border-b-gray-200 hover:bg-indigo-50"
                 >
+                  {/* <div>{position.hasOnGoingPrf == 0 ? 'ZERO' : `${position.hasOnGoingPrf.toString()}`}</div> */}
                   <div className="w-full px-1 py-2">
                     <div className="flex items-center w-full gap-2">
                       <div className="text-xl font-medium text-gray-600">{position.positionTitle}</div>
                       {tab === 1 ? (
                         <div>
-                          <BadgePill label="Vacant" variant="default" />
+                          <BadgePill label="Vacant" variant="primary" />
                         </div>
                       ) : (
                         <div className="flex gap-2">
-                          <div>
-                            <BadgePill
-                              label={position.employeeName === null ? 'Vacant' : position.employeeName}
-                              variant={position.employeeName === null ? 'default' : 'error'}
-                            />
-                          </div>
-                          {position.hasOnGoingPrf === 1 && (
+                          {position.employeeName == null && (
                             <div>
-                              <BadgePill label="PRF" variant="error" />
+                              <BadgePill label="Vacant" variant="primary" />
                             </div>
                           )}
+                          {position.hasOngoingPrf === 1 ? (
+                            <div>
+                              <BadgePill label="Ongoing PRF" variant="warning" />
+                            </div>
+                          ) : null}
                         </div>
                       )}
                     </div>
                     <div className="font-semibold text-gray-600 text-md">{position.itemNumber}</div>
-                    <div className="text-xs text-gray-500">{position.designation}</div>
+                    <div className="text-xs text-gray-500 mb-2">{position.designation}</div>
+                    {position.employeeName != null && <BadgePill label={position.employeeName} variant="success" />}
                     {tab === 1 && (
-                      <p className="text-sm text-indigo-500">No duties, responsibilities, and competencies</p>
+                      <p className="text-sm text-indigo-500 mt-4">No duties, responsibilities, and competencies</p>
                     )}
                     {tab === 2 && (
-                      <p className="text-sm text-indigo-500">
+                      <p className="text-sm text-indigo-500 mt-4">
                         Updated at {DateFormatter(position.updatedAt, 'MMMM DD, YYYY')}
                       </p>
                     )}

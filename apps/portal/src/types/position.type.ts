@@ -7,7 +7,7 @@ export type Position = {
   remarks?: string;
   state?: boolean;
   sequenceNo?: number;
-  hasOnGoingPrf?: number;
+  hasOngoingPrf?: 0 | 1;
   hasEmployee?: number;
   employeeName?: string | null;
 };

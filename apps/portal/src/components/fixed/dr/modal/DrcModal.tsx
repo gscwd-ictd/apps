@@ -1,5 +1,5 @@
 /* eslint-disable @nx/enforce-module-boundaries */
-import { Button, Modal } from '@gscwd-apps/oneui';
+import { Modal } from '@gscwd-apps/oneui';
 import { useAlertConfirmationStore } from 'apps/portal/src/store/alert.store';
 import { useDnrStore } from 'apps/portal/src/store/dnr.store';
 import { useModalStore } from 'apps/portal/src/store/modal.store';
