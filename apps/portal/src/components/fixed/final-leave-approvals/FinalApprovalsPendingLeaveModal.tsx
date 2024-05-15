@@ -141,7 +141,8 @@ export const FinalApprovalsPendingLeaveModal = ({
                       alertType={
                         leaveIndividualDetail?.status === LeaveStatus.FOR_HRDM_APPROVAL ||
                         leaveIndividualDetail?.status === LeaveStatus.FOR_HRMO_APPROVAL ||
-                        leaveIndividualDetail?.status === LeaveStatus.FOR_SUPERVISOR_APPROVAL
+                        leaveIndividualDetail?.status === LeaveStatus.FOR_SUPERVISOR_APPROVAL ||
+                        leaveIndividualDetail?.status === LeaveStatus.FOR_HRMO_CREDIT_CERTIFICATION
                           ? 'warning'
                           : leaveIndividualDetail?.status === LeaveStatus.DISAPPROVED_BY_SUPERVISOR ||
                             leaveIndividualDetail?.status === LeaveStatus.DISAPPROVED_BY_HRDM ||
@@ -156,15 +157,17 @@ export const FinalApprovalsPendingLeaveModal = ({
                         leaveIndividualDetail?.status === LeaveStatus.FOR_HRDM_APPROVAL
                           ? 'For HRDM Review'
                           : leaveIndividualDetail?.status === LeaveStatus.FOR_HRMO_APPROVAL
-                          ? 'For HRMO Review '
+                          ? 'For HRMO Review'
+                          : leaveIndividualDetail?.status === LeaveStatus.FOR_HRMO_CREDIT_CERTIFICATION
+                          ? 'For HRMO Credit Certification'
                           : leaveIndividualDetail?.status === LeaveStatus.FOR_SUPERVISOR_APPROVAL
-                          ? 'For Supervisor Review '
+                          ? 'For Supervisor Review'
                           : leaveIndividualDetail?.status === LeaveStatus.DISAPPROVED_BY_HRDM
-                          ? 'Disapproved by HRDM '
+                          ? 'Disapproved by HRDM'
                           : leaveIndividualDetail?.status === LeaveStatus.DISAPPROVED_BY_HRMO
-                          ? 'Disapproved by HRMO '
+                          ? 'Disapproved by HRMO'
                           : leaveIndividualDetail?.status === LeaveStatus.DISAPPROVED_BY_SUPERVISOR
-                          ? 'Disapproved by Supervisor '
+                          ? 'Disapproved by Supervisor'
                           : leaveIndividualDetail?.status === LeaveStatus.CANCELLED
                           ? 'Cancelled'
                           : leaveIndividualDetail?.status === LeaveStatus.APPROVED

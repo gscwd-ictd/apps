@@ -120,7 +120,8 @@ export const CancelLeaveModal = ({ modalState, setModalState, closeModalAction }
     if (
       leaveIndividualDetail.leaveApplicationBasicInfo.status === LeaveStatus.FOR_HRDM_APPROVAL ||
       leaveIndividualDetail.leaveApplicationBasicInfo.status === LeaveStatus.FOR_HRMO_APPROVAL ||
-      leaveIndividualDetail.leaveApplicationBasicInfo.status === LeaveStatus.FOR_SUPERVISOR_APPROVAL
+      leaveIndividualDetail.leaveApplicationBasicInfo.status === LeaveStatus.FOR_SUPERVISOR_APPROVAL ||
+      leaveIndividualDetail.leaveApplicationBasicInfo.status === LeaveStatus.FOR_HRMO_CREDIT_CERTIFICATION
     ) {
       //FOR PENDING LEAVE CANCELLATION
       let data = {
@@ -210,7 +211,8 @@ export const CancelLeaveModal = ({ modalState, setModalState, closeModalAction }
 
           {leaveIndividualDetail?.leaveApplicationBasicInfo?.status === LeaveStatus.FOR_HRDM_APPROVAL ||
           leaveIndividualDetail?.leaveApplicationBasicInfo?.status === LeaveStatus.FOR_HRMO_APPROVAL ||
-          leaveIndividualDetail?.leaveApplicationBasicInfo?.status === LeaveStatus.FOR_SUPERVISOR_APPROVAL ? (
+          leaveIndividualDetail?.leaveApplicationBasicInfo?.status === LeaveStatus.FOR_SUPERVISOR_APPROVAL ||
+          leaveIndividualDetail?.leaveApplicationBasicInfo?.status === LeaveStatus.FOR_HRMO_CREDIT_CERTIFICATION ? (
             <div className="w-full h-full flex flex-col gap-2 text-lg text-center px-4">
               {`Are you sure you want to cancel this application?`}
             </div>
@@ -276,7 +278,8 @@ export const CancelLeaveModal = ({ modalState, setModalState, closeModalAction }
             <div className="max-w-auto flex">
               {leaveIndividualDetail?.leaveApplicationBasicInfo?.status != LeaveStatus.FOR_HRDM_APPROVAL &&
               leaveIndividualDetail?.leaveApplicationBasicInfo?.status != LeaveStatus.FOR_HRMO_APPROVAL &&
-              leaveIndividualDetail?.leaveApplicationBasicInfo?.status != LeaveStatus.FOR_SUPERVISOR_APPROVAL ? (
+              leaveIndividualDetail?.leaveApplicationBasicInfo?.status != LeaveStatus.FOR_SUPERVISOR_APPROVAL &&
+              leaveIndividualDetail?.leaveApplicationBasicInfo?.status != LeaveStatus.FOR_HRMO_CREDIT_CERTIFICATION ? (
                 leaveDates.length > 0 ? (
                   <Button
                     variant={'primary'}

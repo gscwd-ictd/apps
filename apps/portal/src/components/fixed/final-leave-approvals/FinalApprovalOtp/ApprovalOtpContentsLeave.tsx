@@ -6,7 +6,7 @@ import { Button } from '../../../modular/forms/buttons/Button';
 import { TextField } from '../../../modular/forms/TextField';
 import PortalSVG from '../../svg/PortalSvg';
 import { leaveAction } from '../../../../types/approvals.type';
-import { patchPortal } from '../../../../utils/helpers/portal-axios-helper';
+import { patchPortal, patchPortalUrl } from '../../../../utils/helpers/portal-axios-helper';
 import { getCountDown } from '../../otp-requests/OtpCountDown';
 import { requestOtpCode } from '../../otp-requests/OtpRequest';
 import { confirmOtpCode } from '../../otp-requests/OtpConfirm';
@@ -159,20 +159,29 @@ export const ApprovalOtpContentsLeave: FunctionComponent<OtpProps> = ({
   };
 
   const handlePatchResult = async (data: leaveAction) => {
-    const { error, result } = await patchPortal('/v1/leave/hrdm', data);
+    const { error, result } = await patchPortalUrl('/leave-application', data);
+    console.log(data);
     if (error) {
       patchLeaveFail(result);
+      console.log(error);
     } else {
       patchLeaveSuccess(result);
+      console.log(result);
     }
   };
 
   useEffect(() => {
     if (otpComplete) {
+      let finalRemarks;
+      if (!remarks) {
+        finalRemarks = null;
+      } else {
+        finalRemarks = remarks;
+      }
       const data = {
         id: tokenId,
         status: action,
-        hrdmDisapprovalRemarks: remarks,
+        hrdmDisapprovalRemarks: finalRemarks,
       };
       localStorage.removeItem(`${otpName}OtpToken_${tokenId}`);
       localStorage.removeItem(`${otpName}OtpEndTime_${tokenId}`);

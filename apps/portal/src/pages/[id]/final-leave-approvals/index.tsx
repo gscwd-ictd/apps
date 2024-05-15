@@ -161,7 +161,8 @@ export default function FinalLeaveApprovals({
     if (
       rowData.status == LeaveStatus.APPROVED ||
       rowData.status == LeaveStatus.FOR_SUPERVISOR_APPROVAL ||
-      rowData.status == LeaveStatus.FOR_HRMO_APPROVAL
+      rowData.status == LeaveStatus.FOR_HRMO_APPROVAL ||
+      rowData.status == LeaveStatus.FOR_HRMO_CREDIT_CERTIFICATION
     ) {
       if (!approvedLeaveModalIsOpen) {
         setApprovedLeaveModalIsOpen(true);

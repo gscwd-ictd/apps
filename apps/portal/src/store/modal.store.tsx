@@ -32,7 +32,10 @@ export const useModalStore = create<ModalStoreState>()(
   devtools((set, get) => ({
     modal: { isOpen: false, page: 1 },
     setModal: (modal: ModalState) => set((state) => ({ ...state, modal })),
-
+    action: null,
+    setAction: (action: Actions) => {
+      set((state) => ({ ...state, action }));
+    },
     openModal: () => set((state) => ({ ...state, modal: { isOpen: true, page: 1 } })),
 
     closeModal: () => set((state) => ({ ...state, modal: { isOpen: false, page: 1 } })),
@@ -44,10 +47,6 @@ export const useModalStore = create<ModalStoreState>()(
         ...state,
         modal: { ...state.modal, page: get().modal.page + 1 },
       })),
-
-    action: null,
-
-    setAction: (action: Actions) => set((state) => ({ ...state, action })),
 
     prevPage: () =>
       set((state) => ({
