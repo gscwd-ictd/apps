@@ -2,9 +2,15 @@
 import axios from 'axios';
 
 const API_URL = process.env.NEXT_PUBLIC_EMPLOYEE_MONITORING_URL;
+const API_URL_PORTAL = process.env.NEXT_PUBLIC_PORTAL_URL;
 
 const axiosApi = axios.create({
   baseURL: API_URL,
+  withCredentials: true,
+});
+
+const axiosApiPortal = axios.create({
+  baseURL: API_URL_PORTAL,
   withCredentials: true,
 });
 
@@ -26,8 +32,7 @@ export const getPortal = async (url: string, config = {}) =>
       return { error: false, result: response.data };
     })
     .catch((error) => {
-      if (error.message === 'Network Error')
-        return { error: true, result: `Cannot connect to the server.` };
+      if (error.message === 'Network Error') return { error: true, result: `Cannot connect to the server.` };
 
       return { error: true, result: error.response.data.message };
     });
@@ -40,8 +45,7 @@ export const postPortal = async (url: string, data: any, config = {}) =>
       return { error: false, result: response.data };
     })
     .catch((error) => {
-      if (error.message === 'Network Error')
-        return { error: true, result: `Cannot connect to the server.` };
+      if (error.message === 'Network Error') return { error: true, result: `Cannot connect to the server.` };
 
       return { error: true, result: error.response.data.message };
     });
@@ -54,13 +58,12 @@ export const putPortal = async (url: string, data: any, config = {}) =>
       return { error: false, result: response.data };
     })
     .catch((error) => {
-      if (error.message === 'Network Error')
-        return { error: true, result: `Cannot connect to the server.` };
+      if (error.message === 'Network Error') return { error: true, result: `Cannot connect to the server.` };
 
       return { error: true, result: error.response.data.message };
     });
 
-// PATCH
+// PATCH EMS ENV
 export const patchPortal = async (url: string, data: any, config = {}) =>
   await axiosApi
     .patch(url, { ...data }, { ...config })
@@ -68,8 +71,20 @@ export const patchPortal = async (url: string, data: any, config = {}) =>
       return { error: false, result: response.data };
     })
     .catch((error) => {
-      if (error.message === 'Network Error')
-        return { error: true, result: `Cannot connect to the server.` };
+      if (error.message === 'Network Error') return { error: true, result: `Cannot connect to the server.` };
+
+      return { error: true, result: error.response.data.message };
+    });
+
+// PATCH PORTAL ENV
+export const patchPortalUrl = async (url: string, data: any, config = {}) =>
+  await axiosApiPortal
+    .patch(url, { ...data }, { ...config })
+    .then((response) => {
+      return { error: false, result: response.data };
+    })
+    .catch((error) => {
+      if (error.message === 'Network Error') return { error: true, result: `Cannot connect to the server.` };
 
       return { error: true, result: error.response.data.message };
     });
@@ -82,8 +97,7 @@ export const deletePortal = async (url: string, config = {}) =>
       return { error: false, result: response.data };
     })
     .catch((error) => {
-      if (error.message === 'Network Error')
-        return { error: true, result: `Cannot connect to the server.` };
+      if (error.message === 'Network Error') return { error: true, result: `Cannot connect to the server.` };
 
       return { error: true, result: error.response.data.message };
     });

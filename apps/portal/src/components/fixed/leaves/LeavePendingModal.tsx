@@ -137,6 +137,9 @@ export const LeavePendingModal = ({ modalState, setModalState, closeModalAction 
                           : leaveIndividualDetail?.leaveApplicationBasicInfo?.status === LeaveStatus.FOR_HRMO_APPROVAL
                           ? 'For HRMO Review'
                           : leaveIndividualDetail?.leaveApplicationBasicInfo?.status ===
+                            LeaveStatus.FOR_HRMO_CREDIT_CERTIFICATION
+                          ? 'For HRMO Credit Certification'
+                          : leaveIndividualDetail?.leaveApplicationBasicInfo?.status ===
                             LeaveStatus.FOR_SUPERVISOR_APPROVAL
                           ? 'Reviewed by HRMO: For Supervisor Review'
                           : leaveIndividualDetail?.leaveApplicationBasicInfo?.status.charAt(0).toUpperCase() +
