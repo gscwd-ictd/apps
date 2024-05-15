@@ -6,6 +6,7 @@ import { Competency, DutyResponsibility } from 'apps/portal/src/types/dr.type';
 import { HiBadgeCheck, HiExclamationCircle, HiLockClosed, HiLockOpen, HiX } from 'react-icons/hi';
 import UseRenderBadgePill from '../../badge-pill/BadgePill';
 import { Table, TableHeader } from '../../table/Table';
+import { usePositionStore } from 'apps/portal/src/store/position.store';
 
 export const SelectedSupportDrcs = (): JSX.Element => {
   const {
@@ -27,6 +28,8 @@ export const SelectedSupportDrcs = (): JSX.Element => {
     setAvailableDnrs: state.setAvailableDnrs,
     setFilteredAvailableDnrs: state.setFilteredAvailableDnrs,
   }));
+
+  const selectedPosition = usePositionStore((state) => state.selectedPosition);
 
   const handleRemove = (positionIndexToRemove: number, positionIdToRemove: string) => {
     // copy the selected drs from context to local constant variable
@@ -199,29 +202,37 @@ export const SelectedSupportDrcs = (): JSX.Element => {
                     <div className="flex items-center justify-center gap-2">
                       {dr.onEdit ? (
                         <>
-                          <HiLockOpen
-                            size={26}
-                            className="bg-transparent rounded hover:cursor-pointer"
-                            fill="#fc0303"
+                          <button
                             onClick={() => handleEditToggle(dr.odrId, dr.onEdit!)}
-                          />
+                            disabled={selectedPosition.hasOngoingPrf === 1 ? true : false}
+                          >
+                            <HiLockOpen
+                              size={26}
+                              className="bg-transparent rounded hover:cursor-pointer"
+                              fill="#fc0303"
+                            />
+                          </button>
                         </>
                       ) : (
                         <>
-                          <HiLockClosed
-                            size={26}
-                            className="bg-transparent rounded hover:cursor-pointer"
-                            fill="#7b42f5"
+                          <button
                             onClick={() => handleEditToggle(dr.odrId, dr.onEdit!)}
-                          />
+                            disabled={selectedPosition.hasOngoingPrf === 1 ? true : false}
+                          >
+                            <HiLockClosed
+                              size={26}
+                              className="bg-transparent rounded hover:cursor-pointer"
+                              fill="#7b42f5"
+                            />
+                          </button>
                         </>
                       )}
-                      <HiX
-                        className="bg-red-500 rounded hover:cursor-pointer"
-                        fill="white"
-                        size={26}
+                      <button
                         onClick={() => handleRemove(index, dr.odrId)}
-                      />
+                        disabled={selectedPosition.hasOngoingPrf === 1 ? true : false}
+                      >
+                        <HiX className="bg-red-500 rounded hover:cursor-pointer" fill="white" size={26} />
+                      </button>
                     </div>
                   </div>
                 </div>
