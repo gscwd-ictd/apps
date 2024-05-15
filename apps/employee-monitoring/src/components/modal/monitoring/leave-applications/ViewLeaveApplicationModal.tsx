@@ -238,7 +238,7 @@ const ViewLeaveApplicationModal: FunctionComponent<ViewLeaveApplicationModalProp
   }, [leaveConfirmAction, confirmModalIsOpen]);
 
   useEffect(() => {
-    console.log(leaveLedger[leaveLedger.length - 1]);
+    // console.log(leaveLedger[leaveLedger.length - 1]);
   }, [
     leaveLedger,
     // swrLeaveLedger
