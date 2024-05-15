@@ -142,7 +142,6 @@ export const DrcModalSelect = (): JSX.Element => {
             (selectedDrcType === 'support' && checkedDnrs.support.length > 0) ? (
             <>
               <div className="h-[34rem] w-full overflow-y-scroll px-2 pt-1">
-                {/* <SelectedDRCard /> */}
                 <DrcSelectedDrcCard />
               </div>
             </>

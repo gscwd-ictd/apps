@@ -114,7 +114,6 @@ export const ApprovalCaptcha: FunctionComponent<CaptchaProps> = ({
       }
       //approve all pending accomplishment
       else if (dataToSubmitApproveAllAccomplishment && !dataToSubmitOvertimeAccomplishment) {
-        console.log(dataToSubmitApproveAllAccomplishment, 'all entry');
         const { error, result } = await patchPortal(
           '/v1/overtime/accomplishments/approval/all',
           dataToSubmitApproveAllAccomplishment
