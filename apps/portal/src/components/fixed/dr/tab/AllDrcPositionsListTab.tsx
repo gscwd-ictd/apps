@@ -27,8 +27,8 @@ export const AllDrcPositionsListTab = ({ positions, tab }: AllDrcPositionsListTa
 
   const onSelect = (position: Position, tab: number) => {
     let action: Actions = null;
-    if (tab === 1 && position.hasEmployee === 0) action = Actions.CREATE;
-    else if (tab === 1 && position.hasEmployee === 1) action = Actions.VIEW;
+    if (tab === 1 && (position.hasEmployee === 0 || position.hasEmployee === undefined)) action = Actions.CREATE;
+    // else if (tab === 1 && position.hasEmployee === 1) action = Actions.VIEW;
     else if (tab === 2 && position.hasEmployee === 0) action = Actions.UPDATE;
     else if (tab === 2 && position.hasEmployee === 1) action = Actions.VIEW;
 
@@ -83,10 +83,10 @@ export const AllDrcPositionsListTab = ({ positions, tab }: AllDrcPositionsListTa
                       <div className="text-sm text-green-700">{position.employeeName}</div>
                     )}
                     {tab === 1 && (
-                      <p className="text-sm text-indigo-500 mt-4">No duties, responsibilities, and competencies</p>
+                      <p className="mt-4 text-sm text-indigo-500">No duties, responsibilities, and competencies</p>
                     )}
                     {tab === 2 && (
-                      <p className="text-sm text-indigo-500 mt-4">
+                      <p className="mt-4 text-sm text-indigo-500">
                         Updated at {DateFormatter(position.updatedAt, 'MMMM DD, YYYY')}
                       </p>
                     )}

@@ -68,7 +68,6 @@ export const DrcAlertConfirmation = () => {
   const employee = useEmployeeStore((state) => state.employeeDetails);
 
   const onSubmitConfirm = async () => {
-    closeConf();
     if (action === Actions.CREATE) {
       const drcsForPosting = await UpdateFinalDrcs(selectedDnrs);
       postPosition();
