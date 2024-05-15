@@ -6,6 +6,7 @@ import { devtools } from 'zustand/middleware';
 export enum Actions {
   CREATE = 'create',
   UPDATE = 'update',
+  VIEW = 'view',
 }
 
 type ModalState = {
@@ -37,14 +38,11 @@ export const useModalStore = create<ModalStoreState>()(
     setModalAction: (action: Actions) => {
       set((state) => ({ ...state, action }));
     },
-    openModal: () =>
-      set((state) => ({ ...state, modal: { isOpen: true, page: 1 } })),
+    openModal: () => set((state) => ({ ...state, modal: { isOpen: true, page: 1 } })),
 
-    closeModal: () =>
-      set((state) => ({ ...state, modal: { isOpen: false, page: 1 } })),
+    closeModal: () => set((state) => ({ ...state, modal: { isOpen: false, page: 1 } })),
 
-    setModalPage: (page: number) =>
-      set((state) => ({ ...state, modal: { ...state.modal, page } })),
+    setModalPage: (page: number) => set((state) => ({ ...state, modal: { ...state.modal, page } })),
 
     nextPage: () =>
       set((state) => ({

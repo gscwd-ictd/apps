@@ -4,13 +4,7 @@ import { LoadingSpinner } from '@gscwd-apps/oneui';
 import { useDnrStore } from 'apps/portal/src/store/dnr.store';
 import { Competency, DutyResponsibility } from 'apps/portal/src/types/dr.type';
 
-import {
-  HiBadgeCheck,
-  HiExclamationCircle,
-  HiLockClosed,
-  HiLockOpen,
-  HiX,
-} from 'react-icons/hi';
+import { HiBadgeCheck, HiExclamationCircle, HiLockClosed, HiLockOpen, HiX } from 'react-icons/hi';
 import UseRenderBadgePill from '../../badge-pill/BadgePill';
 import { Table, TableHeader } from '../../table/Table';
 
@@ -35,10 +29,7 @@ export const SelectedCoreDrcs = (): JSX.Element => {
     setFilteredAvailableDnrs: state.setFilteredAvailableDnrs,
   }));
 
-  const handleRemove = (
-    positionIndexToRemove: number,
-    odrIdToRemove: string
-  ) => {
+  const handleRemove = (positionIndexToRemove: number, odrIdToRemove: string) => {
     // copy the selected drs from context to a local constant variable
     const updatedSelectedCoreDnrs = [...selectedDnrs.core];
 
@@ -61,9 +52,8 @@ export const SelectedCoreDrcs = (): JSX.Element => {
 
     // sort the array alphabetically
     const sortedNewPool = [
-      ...updatedAvailableDnrs.sort(
-        (a: DutyResponsibility, b: DutyResponsibility) =>
-          a.description!.localeCompare(b.description!)
+      ...updatedAvailableDnrs.sort((a: DutyResponsibility, b: DutyResponsibility) =>
+        a.description!.localeCompare(b.description!)
       ),
     ];
 
@@ -120,8 +110,7 @@ export const SelectedCoreDrcs = (): JSX.Element => {
 
     tempSelectedDnrs.map((dr: DutyResponsibility, index: number) => {
       if (dr.odrId === odrId) {
-        if (e.currentTarget.valueAsNumber >= 0)
-          dr.percentage = e.currentTarget.valueAsNumber;
+        if (e.currentTarget.valueAsNumber >= 0) dr.percentage = e.currentTarget.valueAsNumber;
         else dr.percentage = 0;
       }
       // dr.sequenceNo = index;
@@ -134,21 +123,21 @@ export const SelectedCoreDrcs = (): JSX.Element => {
   return (
     <>
       <div className="min-w-[50rem] grid grid-cols-12 gap-1 pt-2 text-xs">
-        <div className="col-span-1 "></div>
+        <div className="flex justify-center col-span-1 font-normal ">#</div>
         <div className="col-span-6 ">
-          <label className="font-normal flex justify-start">Description</label>
+          <label className="flex justify-start font-normal">Description</label>
         </div>
         <div className="col-span-1 ">
-          <label className="font-normal flex justify-center">Code</label>
+          <label className="flex justify-center font-normal">Code</label>
         </div>
         <div className="col-span-1 ">
-          <label className="font-normal flex justify-center">Level</label>
+          <label className="flex justify-center font-normal">Level</label>
         </div>
         <div className="col-span-1">
-          <label className="font-normal flex justify-center">Percentage</label>
+          <label className="flex justify-center font-normal">Percentage</label>
         </div>
         <div className="col-span-2 ">
-          <label className="font-normal flex justify-center">Actions</label>
+          <label className="flex justify-center font-normal">Actions</label>
         </div>
 
         {isLoading ? (
@@ -157,7 +146,7 @@ export const SelectedCoreDrcs = (): JSX.Element => {
           selectedDnrs &&
           selectedDnrs.core.map((dr: DutyResponsibility, index: number) => {
             return (
-              <div key={index} className="grid col-span-12 grid-cols-12 gap-1">
+              <div key={index} className="grid grid-cols-12 col-span-12 gap-0 pt-2 odd:bg-indigo-50 even:bg-inherit">
                 <div className="col-span-1 ">
                   <div className="flex justify-center">
                     {dr.percentage! > 0 &&
@@ -176,23 +165,23 @@ export const SelectedCoreDrcs = (): JSX.Element => {
                 </div>
                 <div className="col-span-6 ">
                   <div className="flex flex-row justify-start peer-hover:text-white">
-                    <p className="text-sm font-light text-gray-600 w-full overflow-hidden text-black text-ellipsis ">
+                    <p className="w-full overflow-hidden text-sm font-light text-gray-600 whitespace-pre-line text-ellipsis ">
                       {dr.description}
                     </p>
                   </div>
                 </div>
                 <div className="col-span-1 ">
-                  <div className="text-sm font-light flex justify-center text-gray-800">
+                  <div className="flex justify-center text-sm font-light text-gray-800">
                     {UseRenderBadgePill(dr.competency.code)}
                   </div>
                 </div>
                 <div className="col-span-1">
-                  <label className="text-sm font-light flex justify-center text-gray-800">
+                  <label className="flex justify-center text-sm font-light text-gray-800">
                     {UseRenderBadgePill(dr.competency.level)}
                   </label>
                 </div>
                 <div className="col-span-1">
-                  <div className="text-sm font-light flex gap-1 items-center justify-center ">
+                  <div className="flex items-center justify-center gap-1 text-sm font-light ">
                     <input
                       type="number"
                       className={`w-[4rem] h-[1.5rem] text-gray-800 rounded outline-none border-0 border-gray-100 text-center ${
@@ -200,9 +189,7 @@ export const SelectedCoreDrcs = (): JSX.Element => {
                       }`}
                       max={100}
                       value={dr.percentage ? dr.percentage : 0}
-                      onChange={(e) =>
-                        onChangePercentage(e, dr.odrId, dr.sequenceNo!)
-                      }
+                      onChange={(e) => onChangePercentage(e, dr.odrId, dr.sequenceNo!)}
                       disabled={dr.onEdit ? false : true}
                     />
 

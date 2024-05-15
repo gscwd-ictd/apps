@@ -4,10 +4,7 @@ import { useEmployeeStore } from 'apps/portal/src/store/employee.store';
 import { Actions, useModalStore } from 'apps/portal/src/store/modal.store';
 import { usePositionStore } from 'apps/portal/src/store/position.store';
 import { Competency } from 'apps/portal/src/types/competency.type';
-import {
-  DutiesResponsibilities,
-  DutyResponsibility,
-} from 'apps/portal/src/types/dr.type';
+import { DutiesResponsibilities, DutyResponsibility } from 'apps/portal/src/types/dr.type';
 import fetcherHRIS from 'apps/portal/src/utils/helpers/fetchers/FetcherHRIS';
 import { isEmpty } from 'lodash';
 import { useEffect, useState } from 'react';
@@ -17,6 +14,7 @@ import { Button } from '../../../modular/common/forms/Button';
 import LoadingVisual from '../../loading/LoadingVisual';
 import { SelectedCoreDrcs } from './DrcSelectedCores';
 import { SelectedSupportDrcs } from './DrcSelectedSupports';
+import BadgePill from '../../../modular/badges/BadgePill';
 
 export const DrcModalSetting = () => {
   // get from position store
@@ -127,18 +125,14 @@ export const DrcModalSetting = () => {
     // map the existing core dnrs
     if (existingDnrs.core && existingDnrs.core.length > 0) {
       existingDnrs.core.map((dr: DutyResponsibility) => {
-        originalPool.push(
-          (({ competency, percentage, state, onEdit, ...rest }) => rest)(dr)
-        );
+        originalPool.push((({ competency, percentage, state, onEdit, ...rest }) => rest)(dr));
       });
     }
 
     // map the existing support dnrs
     if (existingDnrs.support && existingDnrs.support.length > 0) {
       existingDnrs.support.map((dr: DutyResponsibility) => {
-        originalPool.push(
-          (({ competency, percentage, state, onEdit, ...rest }) => rest)(dr)
-        );
+        originalPool.push((({ competency, percentage, state, onEdit, ...rest }) => rest)(dr));
       });
     }
     return originalPool.sort((a: DutyResponsibility, b: DutyResponsibility) =>
@@ -157,9 +151,8 @@ export const DrcModalSetting = () => {
     if (!isEmpty(swrAvailableDnrs) && availableDnrsIsLoaded === false) {
       // sort by description
       const poolOfDnrs = [
-        ...swrAvailableDnrs.data.sort(
-          (a: DutyResponsibility, b: DutyResponsibility) =>
-            a.description.localeCompare(b.description)
+        ...swrAvailableDnrs.data.sort((a: DutyResponsibility, b: DutyResponsibility) =>
+          a.description.localeCompare(b.description)
         ),
       ];
 
@@ -183,12 +176,7 @@ export const DrcModalSetting = () => {
 
       getAvailableDnrsSuccess(poolOfDnrs);
     }
-  }, [
-    swrAvailableDnrs,
-    swrAvailableDnrsError,
-    selectedPosition,
-    availableDnrsIsLoaded,
-  ]);
+  }, [swrAvailableDnrs, swrAvailableDnrsError, selectedPosition, availableDnrsIsLoaded]);
 
   // get existing dnrs (to remove from existing pool)
   useEffect(() => {
@@ -205,9 +193,7 @@ export const DrcModalSetting = () => {
       if (coreDrcs && coreDrcs.length > 0) {
         // sort the array by description
         coreDrcs
-          .sort((a: DutyResponsibility, b: DutyResponsibility) =>
-            a.description.localeCompare(b.description)
-          )
+          .sort((a: DutyResponsibility, b: DutyResponsibility) => a.description.localeCompare(b.description))
 
           // assign the selected state-wise values to the array
           .map((dr: DutyResponsibility, index: number) => {
@@ -229,9 +215,7 @@ export const DrcModalSetting = () => {
       if (supportDrcs && supportDrcs.length > 0) {
         // sort the array by description
         supportDrcs
-          .sort((a: DutyResponsibility, b: DutyResponsibility) =>
-            a.description.localeCompare(b.description)
-          )
+          .sort((a: DutyResponsibility, b: DutyResponsibility) => a.description.localeCompare(b.description))
 
           // assign the selected state-wise values to the array
           .map((dr: DutyResponsibility, index: number) => {
@@ -258,14 +242,7 @@ export const DrcModalSetting = () => {
     } else if (swrExistingDnrsError) {
       getExistingDnrsFail(swrExistingDnrsError);
     }
-  }, [
-    swrExistingDnrs,
-    swrExistingDnrsError,
-    action,
-    selectedPosition,
-    availableDnrsIsLoaded,
-    existingDnrsIsLoaded,
-  ]);
+  }, [swrExistingDnrs, swrExistingDnrsError, action, selectedPosition, availableDnrsIsLoaded, existingDnrsIsLoaded]);
 
   // trigger loading if useSWR is called for available dnrs
   useEffect(() => {
@@ -289,15 +266,12 @@ export const DrcModalSetting = () => {
   return (
     <div className="h-auto px-5 rounded">
       <div className="flex flex-col pt-2 mb-8 font-semibold text-gray-500">
-        <span className="text-xl text-slate-500">
-          {selectedPosition.positionTitle}
-        </span>
-        <span className="text-sm font-normal">
-          {selectedPosition.itemNumber}
-        </span>
-        <span className="text-xs font-normal">
-          {selectedPosition.designation}
-        </span>
+        <span className="text-xl text-slate-500">{selectedPosition.positionTitle}</span>
+        <span className="text-md font-normal">{selectedPosition.itemNumber}</span>
+        <span className="text-sm font-normal">{selectedPosition.designation}</span>
+        {selectedPosition.employeeName != null && (
+          <div className="font-semibold text-sm">{selectedPosition.employeeName}</div>
+        )}
 
         {/** HERE */}
         <div className="flex flex-col w-full mt-5">
@@ -311,17 +285,25 @@ export const DrcModalSetting = () => {
               {swrAvailableDnrsIsLoading ? (
                 <LoadingVisual size={5} />
               ) : (
-                <Button
-                  btnLabel={
-                    availableDnrs.length === 0
-                      ? 'No more duties available in pool, please contact the HR to add more duties'
-                      : '+ Add Core'
-                  }
-                  btnVariant="white"
-                  className="w-auto lg:min-w-[16rem] border-none text-indigo-600 "
-                  isDisabled={availableDnrs.length === 0 ? true : false}
-                  onClick={() => openDrcModalSelection(DrcTypes.CORE)}
-                />
+                <>
+                  {action === Actions.VIEW ? null : (
+                    <Button
+                      btnLabel={
+                        availableDnrs.length === 0
+                          ? 'No more duties available in pool, please contact the HR to add more duties'
+                          : selectedPosition.hasOngoingPrf === 0 || selectedPosition.hasOngoingPrf === undefined
+                          ? '+ Add Core'
+                          : 'Cannot Add'
+                      }
+                      btnVariant="white"
+                      className="w-auto lg:min-w-[16rem] border-none text-indigo-600 "
+                      isDisabled={
+                        availableDnrs.length === 0 ? true : selectedPosition.hasOngoingPrf === 1 ? true : false
+                      }
+                      onClick={() => openDrcModalSelection(DrcTypes.CORE)}
+                    />
+                  )}
+                </>
               )}
             </div>
             {/**Core Duties Box */}
@@ -338,8 +320,7 @@ export const DrcModalSetting = () => {
                       <>
                         <div className="flex items-center justify-center h-full">
                           <h1 className="text-2xl font-normal text-gray-300">
-                            No selected core duties, responsibilities, &
-                            competencies
+                            No selected core duties, responsibilities, & competencies
                           </h1>
                         </div>
                       </>
@@ -362,17 +343,25 @@ export const DrcModalSetting = () => {
               {swrAvailableDnrsIsLoading ? (
                 <LoadingVisual size={5} />
               ) : (
-                <Button
-                  btnLabel={
-                    availableDnrs.length === 0
-                      ? 'No more duties available in pool, please contact the HR to add more duties'
-                      : '+ Add Support'
-                  }
-                  btnVariant="white"
-                  isDisabled={availableDnrs.length === 0 ? true : false}
-                  className="w-auto lg:min-w-[16rem] border-none text-indigo-600"
-                  onClick={() => openDrcModalSelection(DrcTypes.SUPPORT)}
-                />
+                <>
+                  {action === Actions.VIEW ? null : (
+                    <Button
+                      btnLabel={
+                        availableDnrs.length === 0
+                          ? 'No more duties available in pool, please contact the HR to add more duties'
+                          : selectedPosition.hasOngoingPrf === 0 || selectedPosition.hasOngoingPrf === undefined
+                          ? '+ Add Support'
+                          : 'Cannot Add'
+                      }
+                      btnVariant="white"
+                      isDisabled={
+                        availableDnrs.length === 0 ? true : selectedPosition.hasOngoingPrf === 1 ? true : false
+                      }
+                      className="w-auto lg:min-w-[16rem] border-none text-indigo-600"
+                      onClick={() => openDrcModalSelection(DrcTypes.SUPPORT)}
+                    />
+                  )}
+                </>
               )}
             </div>
             {/** Support Duties Box */}
@@ -389,8 +378,7 @@ export const DrcModalSetting = () => {
                       <>
                         <div className="flex items-center justify-center h-full">
                           <h1 className="text-2xl font-normal text-gray-300">
-                            No selected support duties, responsibilities, &
-                            competencies
+                            No selected support duties, responsibilities, & competencies
                           </h1>
                         </div>
                       </>

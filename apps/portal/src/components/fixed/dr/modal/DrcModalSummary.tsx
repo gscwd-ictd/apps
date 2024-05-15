@@ -15,12 +15,8 @@ export const DrcModalSummary = () => {
         <div className="min-h-[42rem]">
           <section className="flex justify-between grid-cols-2 text-gray-500">
             <div className="col-span-1">
-              <div className="text-xl font-semibold ">
-                {selectedPosition.positionTitle}
-              </div>
-              <div className="text-sm font-normal ">
-                {selectedPosition.itemNumber}
-              </div>
+              <div className="text-xl font-semibold ">{selectedPosition.positionTitle}</div>
+              <div className="text-sm font-normal ">{selectedPosition.itemNumber}</div>
             </div>
           </section>
           <section className="text-gray-500">
@@ -34,9 +30,7 @@ export const DrcModalSummary = () => {
                   <div className="flex flex-col justify-between w-full overflow-x-auto">
                     <TableConfirmation array={selectedDnrs.core} />
                   </div>
-                  <div className="flex justify-center text-xl w-full">
-                    *** Nothing Follows ***
-                  </div>
+                  <div className="flex justify-center w-full text-xl">*** Nothing Follows ***</div>
                 </>
               ) : (
                 <div className="flex items-center justify-center">
@@ -58,9 +52,7 @@ export const DrcModalSummary = () => {
                   <div className="flex flex-col justify-between w-full overflow-x-auto">
                     <TableConfirmation array={selectedDnrs.support} />
                   </div>
-                  <div className="flex justify-center text-xl w-full">
-                    *** Nothing Follows ***
-                  </div>
+                  <div className="flex justify-center w-full text-xl">*** Nothing Follows ***</div>
                 </>
               ) : (
                 <div className="flex items-center justify-center">
