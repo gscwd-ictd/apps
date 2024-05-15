@@ -22,6 +22,7 @@ import LeaveApplicationConfirmModal from './LeaveApplicationConfirmModal';
 import { patchEmpMonitoring } from 'apps/employee-monitoring/src/utils/helper/employee-monitoring-axios-helper';
 import { useLeaveLedgerStore } from 'apps/employee-monitoring/src/store/leave-ledger.store';
 import { DateTimeFormatter } from 'libs/utils/src/lib/functions/DateTimeFormatter';
+import { TextSize } from 'libs/utils/src/lib/enums/text-size.enum';
 
 type ViewLeaveApplicationModalProps = {
   rowData: MonitoringLeave;
@@ -330,7 +331,7 @@ const ViewLeaveApplicationModal: FunctionComponent<ViewLeaveApplicationModalProp
                       label="Status"
                       direction="top-to-bottom"
                       textSize="md"
-                      value={rowData.status ? UseRenderLeaveStatus(rowData.status, 'text-sm') : ''}
+                      value={rowData.status ? UseRenderLeaveStatus(rowData.status, TextSize.TEXT_SM) : ''}
                     />
                   </div>
 
@@ -769,16 +770,15 @@ const ViewLeaveApplicationModal: FunctionComponent<ViewLeaveApplicationModalProp
                 Close
               </button>
               {leaveApplicationDetails.leaveApplicationBasicInfo?.status ===
-                LeaveStatus.FOR_HRMO_CREDIT_CERTIFICATION ||
-                (leaveApplicationDetails.leaveApplicationBasicInfo?.status === LeaveStatus.FOR_HRMO_APPROVAL && (
-                  <button
-                    className="px-3 w-[5rem] py-2 text-sm text-white bg-blue-400 rounded"
-                    type="button"
-                    onClick={() => openConfirmModal(Action.APPROVE)}
-                  >
-                    Certify Credits
-                  </button>
-                ))}
+                LeaveStatus.FOR_HRMO_CREDIT_CERTIFICATION && (
+                <button
+                  className="px-3 w-[5rem] py-2 text-sm text-white bg-blue-400 rounded"
+                  type="button"
+                  onClick={() => openConfirmModal(Action.APPROVE)}
+                >
+                  Certify Credits
+                </button>
+              )}
             </div>
           </Modal.Footer>
         )}
