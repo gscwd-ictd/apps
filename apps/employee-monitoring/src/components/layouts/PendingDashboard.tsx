@@ -1,5 +1,4 @@
 import { CardLeaveRequests } from '../cards/CardLeaveRequests';
-import { CardMiniStats } from '../cards/CardMiniStats';
 import { CardOvertimeRequests } from '../cards/CardOvertimeRequests';
 import { CardPassSlipRequests } from '../cards/CardPassSlipRequests';
 
