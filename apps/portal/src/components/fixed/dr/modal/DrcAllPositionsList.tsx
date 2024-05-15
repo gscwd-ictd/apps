@@ -47,11 +47,18 @@ export const DrcAllPositionsList = (): JSX.Element => {
                 <div className="w-full">
                   <div className="flex items-center justify-start w-full gap-2 ">
                     <div className="font-medium text-gray-600 ">{position.positionTitle}</div>
-                    <div>
-                      <BadgePill
-                        label={position.employeeName === null ? 'Vacant' : position.employeeName}
-                        variant={position.employeeName === null ? 'default' : 'error'}
-                      />
+                    <div className="flex gap-2 ">
+                      <div>
+                        <BadgePill
+                          label={position.employeeName === null ? 'Vacant' : position.employeeName}
+                          variant={position.employeeName === null ? 'default' : 'error'}
+                        />
+                      </div>
+                      {position.hasOnGoingPrf === 1 && (
+                        <div>
+                          <BadgePill label="PRF" variant="error" />
+                        </div>
+                      )}
                     </div>
                   </div>
                   <div className="text-sm font-semibold text-black ">{position.itemNumber}</div>

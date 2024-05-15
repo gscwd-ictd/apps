@@ -180,27 +180,27 @@ export default function DutiesResponsibilities({
   );
 }
 
-export const getServerSideProps: GetServerSideProps = async (context: GetServerSidePropsContext) => {
-  const employeeDetails = employeeCeliaDananDummy;
-  return { props: { employeeDetails } };
-};
+// export const getServerSideProps: GetServerSideProps = async (context: GetServerSidePropsContext) => {
+//   const employeeDetails = employeeCeliaDananDummy;
+//   return { props: { employeeDetails } };
+// };
 
-// export const getServerSideProps: GetServerSideProps = withCookieSession(async (context: GetServerSidePropsContext) => {
-//   const employeeDetails = getUserDetails();
+export const getServerSideProps: GetServerSideProps = withCookieSession(async (context: GetServerSidePropsContext) => {
+  const employeeDetails = getUserDetails();
 
-//   // check if user role is rank_and_file or job order = kick out
-//   if (
-//     employeeDetails.employmentDetails.userRole === UserRole.RANK_AND_FILE ||
-//     employeeDetails.employmentDetails.userRole === UserRole.JOB_ORDER
-//   ) {
-//     // if true, the employee is not allowed to access this page
-//     return {
-//       redirect: {
-//         permanent: false,
-//         destination: `/${employeeDetails.user._id}`,
-//       },
-//     };
-//   } else {
-//     return { props: { employeeDetails } };
-//   }
-// });
+  // check if user role is rank_and_file or job order = kick out
+  if (
+    employeeDetails.employmentDetails.userRole === UserRole.RANK_AND_FILE ||
+    employeeDetails.employmentDetails.userRole === UserRole.JOB_ORDER
+  ) {
+    // if true, the employee is not allowed to access this page
+    return {
+      redirect: {
+        permanent: false,
+        destination: `/${employeeDetails.user._id}`,
+      },
+    };
+  } else {
+    return { props: { employeeDetails } };
+  }
+});

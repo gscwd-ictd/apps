@@ -69,11 +69,11 @@ export const AllDrcPositionsListTab = ({ positions, tab }: AllDrcPositionsListTa
                               variant={position.employeeName === null ? 'default' : 'error'}
                             />
                           </div>
-                          {position.hasOnGoingPrf === 1 ? (
+                          {position.hasOnGoingPrf === 1 && (
                             <div>
                               <BadgePill label="PRF" variant="error" />
                             </div>
-                          ) : null}
+                          )}
                         </div>
                       )}
                     </div>
