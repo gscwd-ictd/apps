@@ -12,18 +12,19 @@ import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
 
 const DrcModal: FunctionComponent = () => {
   // use modal store
-  const { modal, action, setModal, closeModal, nextPage, prevPage, openModal, setModalAction, setModalPage } =
-    useModalStore((state) => ({
+  const { modal, action, setModal, closeModal, nextPage, prevPage, openModal, setAction, setModalPage } = useModalStore(
+    (state) => ({
       modal: state.modal,
-      action: state.modalAction,
+      action: state.action,
       setModal: state.setModal,
       setModalPage: state.setModalPage,
       openModal: state.openModal,
       closeModal: state.closeModal,
-      setModalAction: state.setModalAction,
+      setAction: state.setAction,
       nextPage: state.nextPage,
       prevPage: state.prevPage,
-    }));
+    })
+  );
 
   // use dnr store
   const {
@@ -58,6 +59,7 @@ const DrcModal: FunctionComponent = () => {
     emptySelectedPosition();
     closeModal();
     cancelDrcPage();
+    setAction(null);
   };
 
   // confirm action modal
@@ -79,6 +81,7 @@ const DrcModal: FunctionComponent = () => {
     // put your logic here
     if (modal.page === 1) closeModal();
     else if (modal.page === 2) {
+      setAction(null);
       emptySelectedPosition();
       cancelDrcPage();
       prevPage();

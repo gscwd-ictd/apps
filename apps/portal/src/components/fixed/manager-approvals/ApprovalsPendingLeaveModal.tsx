@@ -137,7 +137,8 @@ export const ApprovalsPendingLeaveModal = ({
                       alertType={
                         leaveIndividualDetail?.status === LeaveStatus.FOR_HRDM_APPROVAL ||
                         leaveIndividualDetail?.status === LeaveStatus.FOR_HRMO_APPROVAL ||
-                        leaveIndividualDetail?.status === LeaveStatus.FOR_SUPERVISOR_APPROVAL
+                        leaveIndividualDetail?.status === LeaveStatus.FOR_SUPERVISOR_APPROVAL ||
+                        leaveIndividualDetail?.status === LeaveStatus.FOR_HRMO_CREDIT_CERTIFICATION
                           ? 'warning'
                           : leaveIndividualDetail?.status === LeaveStatus.DISAPPROVED_BY_SUPERVISOR ||
                             leaveIndividualDetail?.status === LeaveStatus.DISAPPROVED_BY_HRDM ||
@@ -152,15 +153,17 @@ export const ApprovalsPendingLeaveModal = ({
                         leaveIndividualDetail?.status === LeaveStatus.FOR_HRDM_APPROVAL
                           ? 'For HRDM Review'
                           : leaveIndividualDetail?.status === LeaveStatus.FOR_HRMO_APPROVAL
-                          ? 'For HRMO Review '
+                          ? 'For HRMO Review'
+                          : leaveIndividualDetail?.status === LeaveStatus.FOR_HRMO_CREDIT_CERTIFICATION
+                          ? 'For HRMO Credit Certification'
                           : leaveIndividualDetail?.status === LeaveStatus.FOR_SUPERVISOR_APPROVAL
-                          ? 'For Supervisor Review '
+                          ? 'For Supervisor Review'
                           : leaveIndividualDetail?.status === LeaveStatus.DISAPPROVED_BY_HRDM
-                          ? 'Disapproved by HRDM '
+                          ? 'Disapproved by HRDM'
                           : leaveIndividualDetail?.status === LeaveStatus.DISAPPROVED_BY_HRMO
-                          ? 'Disapproved by HRMO '
+                          ? 'Disapproved by HRMO'
                           : leaveIndividualDetail?.status === LeaveStatus.DISAPPROVED_BY_SUPERVISOR
-                          ? 'Disapproved by Supervisor '
+                          ? 'Disapproved by Supervisor'
                           : leaveIndividualDetail?.status === LeaveStatus.CANCELLED
                           ? 'Cancelled'
                           : leaveIndividualDetail?.status === LeaveStatus.APPROVED
@@ -310,7 +313,7 @@ export const ApprovalsPendingLeaveModal = ({
                     leaveIndividualDetail?.leaveName === LeaveName.SICK ||
                     leaveIndividualDetail?.leaveName === LeaveName.SPECIAL_LEAVE_BENEFITS_FOR_WOMEN ||
                     (leaveIndividualDetail?.leaveName === LeaveName.STUDY && leaveIndividualDetail?.studyLeaveOther) ? (
-                      <div className="flex flex-col sm:flex-col justify-start items-start w-full sm:w-1/2 px-0.5 pb-3">
+                      <div className="flex flex-col sm:flex-col justify-start items-start w-full px-0.5 pb-3">
                         <label className="text-slate-500 text-md whitespace-nowrap pb-0.5 ">Specific Details:</label>
                         <div className="w-auto ml-5 mr-5">
                           <label className=" text-md font-medium">
@@ -366,8 +369,7 @@ export const ApprovalsPendingLeaveModal = ({
                     ) : null}
                   </div>
 
-                  {leaveIndividualDetail?.status != LeaveStatus.FOR_HRDM_APPROVAL &&
-                  leaveIndividualDetail?.status != LeaveStatus.FOR_HRMO_APPROVAL ? (
+                  {leaveIndividualDetail?.status === LeaveStatus.FOR_SUPERVISOR_APPROVAL ? (
                     <form id="LeaveAction" onSubmit={handleSubmit(onSubmit)}>
                       <div className="w-full flex flex-col md:flex-row gap-1 md:gap-2 justify-end items-start md:items-center">
                         <span className="text-slate-500 text-md">Action:</span>
@@ -431,8 +433,7 @@ export const ApprovalsPendingLeaveModal = ({
         <Modal.Footer>
           <div className="flex justify-end gap-2 px-4">
             <div className="w-full flex justify-end">
-              {leaveIndividualDetail?.status != LeaveStatus.FOR_HRDM_APPROVAL &&
-              leaveIndividualDetail?.status != LeaveStatus.FOR_HRMO_APPROVAL ? (
+              {leaveIndividualDetail?.status === LeaveStatus.FOR_SUPERVISOR_APPROVAL ? (
                 <Button form={`LeaveAction`} variant={'primary'} size={'md'} loading={false} type="submit">
                   Submit
                 </Button>

@@ -18,6 +18,8 @@ function UseRenderLeaveStatus(status: LeaveStatus | string, textSize?: TextSize)
           ? 'warning'
           : status === LeaveStatus.FOR_HRMO_APPROVAL || status === 'for hrmo approval'
           ? 'warning'
+          : status === LeaveStatus.FOR_HRMO_CREDIT_CERTIFICATION || status === 'for hrmo credit certification'
+          ? 'warning'
           : status === LeaveStatus.FOR_SUPERVISOR_APPROVAL || status === 'for supervisor approval'
           ? 'warning'
           : status === LeaveStatus.DISAPPROVED_BY_HRDM || status === 'disapproved by hrdm'
@@ -31,6 +33,8 @@ function UseRenderLeaveStatus(status: LeaveStatus | string, textSize?: TextSize)
       label={
         status === LeaveStatus.FOR_HRMO_APPROVAL
           ? 'For HRMO Review'
+          : status === LeaveStatus.FOR_HRMO_CREDIT_CERTIFICATION
+          ? 'For HRMO Credit Certification'
           : status === LeaveStatus.FOR_SUPERVISOR_APPROVAL
           ? 'For Supervisor Review'
           : status === LeaveStatus.FOR_HRDM_APPROVAL
