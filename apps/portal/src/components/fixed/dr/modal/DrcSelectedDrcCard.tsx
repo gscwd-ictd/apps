@@ -6,13 +6,7 @@ import { HiClipboardList, HiOutlineX } from 'react-icons/hi';
 import { CompetencyDropdown } from './CompetencyDropdown';
 
 export const DrcSelectedDrcCard = (): JSX.Element => {
-  const {
-    checkedDnrs,
-    selectedDrcType,
-    availableDnrs,
-    setAvailableDnrs,
-    setCheckedDnrs,
-  } = useDnrStore((state) => ({
+  const { checkedDnrs, selectedDrcType, availableDnrs, setAvailableDnrs, setCheckedDnrs } = useDnrStore((state) => ({
     selectedDrcType: state.selectedDrcType,
     availableDnrs: state.availableDnrs,
     setAvailableDnrs: state.setAvailableDnrs,
@@ -47,9 +41,7 @@ export const DrcSelectedDrcCard = (): JSX.Element => {
       //! remove the selected core dr
       // updatedCheckedCoreDRs.splice(positionIndexToRemove, 1);
 
-      const updatedRemovedCheckedCoreDnrs = updatedCheckedCoreDRs.filter(
-        (drc) => drc.drId !== drId
-      );
+      const updatedRemovedCheckedCoreDnrs = updatedCheckedCoreDRs.filter((drc) => drc.drId !== drId);
 
       // map and re-assign the sequence no
       updatedRemovedCheckedCoreDnrs.map((drc, index: number) => {
@@ -82,9 +74,7 @@ export const DrcSelectedDrcCard = (): JSX.Element => {
       //! remove the selected support dr
       // updatedCheckedSupportDRs.splice(positionIndexToRemove, 1);
 
-      const updatedRemovedCheckedSupportDnrs = updatedCheckedSupportDRs.filter(
-        (drc) => drc.drId !== drId
-      );
+      const updatedRemovedCheckedSupportDnrs = updatedCheckedSupportDRs.filter((drc) => drc.drId !== drId);
 
       // map and re-assign the sequence no
       updatedRemovedCheckedSupportDnrs.map((drc, index: number) => {
@@ -108,10 +98,7 @@ export const DrcSelectedDrcCard = (): JSX.Element => {
   };
 
   // percentage on change
-  const handlePercentage = (
-    event: FormEvent<HTMLInputElement>,
-    drId: string
-  ) => {
+  const handlePercentage = (event: FormEvent<HTMLInputElement>, drId: string) => {
     if (selectedDrcType === 'core') {
       // create a copy of selected core drs
       const updatedCoreDRs = [...checkedDnrs.core];
@@ -120,8 +107,7 @@ export const DrcSelectedDrcCard = (): JSX.Element => {
       updatedCoreDRs.map((dr: DutyResponsibility) => {
         // check if core dr percentage index is the current index
         if (dr.drId === drId) {
-          if (event.currentTarget.valueAsNumber >= 0)
-            dr.percentage = event.currentTarget.valueAsNumber;
+          if (event.currentTarget.valueAsNumber >= 0) dr.percentage = event.currentTarget.valueAsNumber;
           else dr.percentage = 0;
         }
       });
@@ -137,8 +123,7 @@ export const DrcSelectedDrcCard = (): JSX.Element => {
       updatedSupportDRs.map((dr: DutyResponsibility, index: number) => {
         // check if core dr percentage index is the current index
         if (dr.drId === drId) {
-          if (event.currentTarget.valueAsNumber >= 0)
-            dr.percentage = event.currentTarget.valueAsNumber;
+          if (event.currentTarget.valueAsNumber >= 0) dr.percentage = event.currentTarget.valueAsNumber;
           else dr.percentage = 0;
         }
       });
@@ -154,17 +139,14 @@ export const DrcSelectedDrcCard = (): JSX.Element => {
         <>
           {checkedDnrs.core.map((dr: DutyResponsibility, index: number) => {
             return (
-              <div
-                className="p-5 mb-5 bg-white rounded shadow-lg shadow-slate-100 ring-1 ring-slate-100 "
-                key={index}
-              >
+              <div className="p-5 mb-5 bg-white rounded shadow-lg shadow-slate-100 ring-1 ring-slate-100 " key={index}>
                 <div className="flex items-center gap-5">
                   <div className="flex items-center justify-center w-12 h-10 rounded bg-indigo-50">
                     <HiClipboardList className="w-6 h-6 text-indigo-500" />
                   </div>
                   <div className="flex items-start justify-between w-full">
                     <div>
-                      <h5 className="font-light text-md">{dr.description}</h5>
+                      <h5 className="font-light text-md whitespace-pre-line">{dr.description}</h5>
                     </div>
                     <div
                       onClick={() => handleRemove(dr.drId)}
@@ -180,9 +162,7 @@ export const DrcSelectedDrcCard = (): JSX.Element => {
                   <CompetencyDropdown index={index} />
                   <label
                     className={`w-full p-2 truncate rounded-r outline-none work ${
-                      dr.competency.pcplId
-                        ? 'bg-green-200 text-green-800'
-                        : 'bg-red-200/80 text-red-700'
+                      dr.competency.pcplId ? 'bg-green-200 text-green-800' : 'bg-red-200/80 text-red-700'
                     }`}
                   >
                     {dr.competency.pcplId
@@ -211,17 +191,14 @@ export const DrcSelectedDrcCard = (): JSX.Element => {
         <>
           {checkedDnrs.support.map((dr: DutyResponsibility, index: number) => {
             return (
-              <div
-                className="p-5 mb-5 bg-white rounded shadow-lg shadow-slate-100 ring-1 ring-slate-100"
-                key={index}
-              >
+              <div className="p-5 mb-5 bg-white rounded shadow-lg shadow-slate-100 ring-1 ring-slate-100" key={index}>
                 <div className="flex items-center gap-5">
                   <div className="flex items-center justify-center w-12 h-10 rounded bg-indigo-50">
                     <HiClipboardList className="w-6 h-6 text-indigo-500" />
                   </div>
                   <div className="flex items-start justify-between w-full">
                     <div>
-                      <h5 className="font-light text-md">{dr.description}</h5>
+                      <h5 className="font-light text-md whitespace-pre-line">{dr.description}</h5>
                     </div>
                     <div
                       onClick={() => handleRemove(dr.drId)}
@@ -237,9 +214,7 @@ export const DrcSelectedDrcCard = (): JSX.Element => {
                   <CompetencyDropdown index={index} />
                   <label
                     className={`w-full p-2 truncate rounded-r outline-none work ${
-                      dr.competency.pcplId
-                        ? 'bg-green-200 text-green-800'
-                        : 'bg-red-200/80 text-red-700'
+                      dr.competency.pcplId ? 'bg-green-200 text-green-800' : 'bg-red-200/80 text-red-700'
                     }`}
                   >
                     {dr.competency.pcplId

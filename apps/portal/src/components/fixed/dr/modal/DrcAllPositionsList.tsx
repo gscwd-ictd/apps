@@ -61,11 +61,9 @@ export const DrcAllPositionsList = (): JSX.Element => {
                     </div>
                   </div>
                   <div className="text-sm font-semibold text-black ">{position.itemNumber}</div>
-                  <div className="text-xs text-gray-500 mb-2 ">{position.designation}</div>
+                  <div className="text-xs text-gray-500">{position.designation}</div>
                   {position.employeeName != null && (
-                    <div>
-                      <BadgePill label={position.employeeName} variant="success" />
-                    </div>
+                    <div className="text-green-700 text-sm">{position.employeeName}</div>
                   )}
                 </div>
 

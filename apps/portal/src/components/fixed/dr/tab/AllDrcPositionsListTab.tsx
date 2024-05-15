@@ -78,8 +78,10 @@ export const AllDrcPositionsListTab = ({ positions, tab }: AllDrcPositionsListTa
                       )}
                     </div>
                     <div className="font-semibold text-gray-600 text-md">{position.itemNumber}</div>
-                    <div className="text-xs text-gray-500 mb-2">{position.designation}</div>
-                    {position.employeeName != null && <BadgePill label={position.employeeName} variant="success" />}
+                    <div className="text-xs text-gray-500">{position.designation}</div>
+                    {position.employeeName != null && (
+                      <div className="text-sm text-green-700">{position.employeeName}</div>
+                    )}
                     {tab === 1 && (
                       <p className="text-sm text-indigo-500 mt-4">No duties, responsibilities, and competencies</p>
                     )}

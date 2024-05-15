@@ -267,12 +267,10 @@ export const DrcModalSetting = () => {
     <div className="h-auto px-5 rounded">
       <div className="flex flex-col pt-2 mb-8 font-semibold text-gray-500">
         <span className="text-xl text-slate-500">{selectedPosition.positionTitle}</span>
-        <span className="text-sm font-normal">{selectedPosition.itemNumber}</span>
-        <span className="text-xs font-normal">{selectedPosition.designation}</span>
+        <span className="text-md font-normal">{selectedPosition.itemNumber}</span>
+        <span className="text-sm font-normal">{selectedPosition.designation}</span>
         {selectedPosition.employeeName != null && (
-          <div className="font-normal mt-2">
-            <BadgePill label={selectedPosition.employeeName} variant="success" />
-          </div>
+          <div className="font-semibold text-sm">{selectedPosition.employeeName}</div>
         )}
 
         {/** HERE */}
