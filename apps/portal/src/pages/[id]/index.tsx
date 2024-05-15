@@ -54,6 +54,8 @@ export default function Dashboard({ userDetails }: InferGetServerSidePropsType<t
   const [leaveCredits, setLeaveCredits] = useState<number>(0);
   const [estimatedAmount, setEstimatedAmount] = useState<number>(0);
 
+  console.log(userDetails);
+
   const {
     leaveCalculatorModalIsOpen,
     setLeaveCalculatorModalIsOpen,
@@ -532,5 +534,6 @@ export default function Dashboard({ userDetails }: InferGetServerSidePropsType<t
 //use for official user
 export const getServerSideProps: GetServerSideProps = withCookieSession(async (context: GetServerSidePropsContext) => {
   const userDetails = getUserDetails();
+
   return { props: { userDetails } };
 });
