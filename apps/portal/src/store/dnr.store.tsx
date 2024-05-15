@@ -299,6 +299,7 @@ export const useDnrStore = create<DnrState>()(
         ...state,
         availableDnrsIsLoaded: false,
         existingDnrsIsLoaded: false,
+        checkedDnrs: DUTIES_RESPONSIBILITIES,
         selectedDnrs: DUTIES_RESPONSIBILITIES,
       })),
 

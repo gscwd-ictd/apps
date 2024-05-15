@@ -73,7 +73,8 @@ export const ApprovalsCompletedLeaveModal = ({
                       alertType={
                         leaveIndividualDetail?.status === LeaveStatus.FOR_HRDM_APPROVAL ||
                         leaveIndividualDetail?.status === LeaveStatus.FOR_HRMO_APPROVAL ||
-                        leaveIndividualDetail?.status === LeaveStatus.FOR_SUPERVISOR_APPROVAL
+                        leaveIndividualDetail?.status === LeaveStatus.FOR_SUPERVISOR_APPROVAL ||
+                        leaveIndividualDetail?.status === LeaveStatus.FOR_HRMO_CREDIT_CERTIFICATION
                           ? 'warning'
                           : leaveIndividualDetail?.status === LeaveStatus.DISAPPROVED_BY_SUPERVISOR ||
                             leaveIndividualDetail?.status === LeaveStatus.DISAPPROVED_BY_HRDM ||
@@ -89,6 +90,8 @@ export const ApprovalsCompletedLeaveModal = ({
                           ? 'For HRDM Review'
                           : leaveIndividualDetail?.status === LeaveStatus.FOR_HRMO_APPROVAL
                           ? 'For HRMO Review '
+                          : leaveIndividualDetail?.status === LeaveStatus.FOR_HRMO_CREDIT_CERTIFICATION
+                          ? 'For HRMO Credit Certification '
                           : leaveIndividualDetail?.status === LeaveStatus.FOR_SUPERVISOR_APPROVAL
                           ? 'For Supervisor Review '
                           : leaveIndividualDetail?.status === LeaveStatus.DISAPPROVED_BY_HRDM

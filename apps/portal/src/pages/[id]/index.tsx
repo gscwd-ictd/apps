@@ -54,8 +54,6 @@ export default function Dashboard({ userDetails }: InferGetServerSidePropsType<t
   const [leaveCredits, setLeaveCredits] = useState<number>(0);
   const [estimatedAmount, setEstimatedAmount] = useState<number>(0);
 
-  console.log(userDetails);
-
   const {
     leaveCalculatorModalIsOpen,
     setLeaveCalculatorModalIsOpen,
