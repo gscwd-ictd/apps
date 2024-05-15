@@ -65,10 +65,8 @@ export const PassSlipCompletedModal = ({
                   <AlertNotification
                     alertType="success"
                     notifMessage={`Approved ${
-                      GetDateDifference(
-                        `${passSlip.dateOfApplication} 00:00:00`,
-                        `${dayjs().format('YYYY-MM-DD HH:mm:ss')} `
-                      ).days
+                      GetDateDifference(`${passSlip.dateOfApplication}`, `${dayjs().format('YYYY-MM-DD HH:mm:ss')} `)
+                        .days
                     } days ago`}
                     dismissible={false}
                   />
@@ -269,8 +267,8 @@ export const PassSlipCompletedModal = ({
               passSlip.natureOfBusiness != NatureOfBusiness.UNDERTIME &&
               !passSlip.disputeRemarks &&
               passSlip.timeIn &&
-              GetDateDifference(`${passSlip.dateOfApplication} 00:00:00`, `${dayjs().format('YYYY-MM-DD HH:mm:ss')} `)
-                .days <= 3 ? (
+              GetDateDifference(`${passSlip.dateOfApplication}`, `${dayjs().format('YYYY-MM-DD HH:mm:ss')} `).days <=
+                3 ? (
                 <Button variant={'warning'} size={'md'} loading={false} onClick={(e) => modalAction(e)} type="submit">
                   File Dispute
                 </Button>
