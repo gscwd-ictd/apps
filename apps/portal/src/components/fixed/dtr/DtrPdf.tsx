@@ -160,9 +160,11 @@ export const DtrPdf: FunctionComponent<DtrPdfProps> = ({ employeeData, employeeD
 
   // check if date is rest day
   const checkIfRestDay = (remark: string) => {
-    if (remark.includes('Rest Day')) return true;
-
-    return false;
+    if (remark?.includes('Rest Day')) {
+      return true;
+    } else {
+      return false;
+    }
   };
 
   // check if date is holiday

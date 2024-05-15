@@ -3,13 +3,7 @@
 import { LoadingSpinner } from '@gscwd-apps/oneui';
 import { useDnrStore } from 'apps/portal/src/store/dnr.store';
 import { Competency, DutyResponsibility } from 'apps/portal/src/types/dr.type';
-import {
-  HiBadgeCheck,
-  HiExclamationCircle,
-  HiLockClosed,
-  HiLockOpen,
-  HiX,
-} from 'react-icons/hi';
+import { HiBadgeCheck, HiExclamationCircle, HiLockClosed, HiLockOpen, HiX } from 'react-icons/hi';
 import UseRenderBadgePill from '../../badge-pill/BadgePill';
 import { Table, TableHeader } from '../../table/Table';
 
@@ -34,10 +28,7 @@ export const SelectedSupportDrcs = (): JSX.Element => {
     setFilteredAvailableDnrs: state.setFilteredAvailableDnrs,
   }));
 
-  const handleRemove = (
-    positionIndexToRemove: number,
-    positionIdToRemove: string
-  ) => {
+  const handleRemove = (positionIndexToRemove: number, positionIdToRemove: string) => {
     // copy the selected drs from context to local constant variable
     const updatedSelectedSupportDnrs = [...selectedDnrs.support];
 
@@ -60,9 +51,8 @@ export const SelectedSupportDrcs = (): JSX.Element => {
 
     // sort the array alphabetically
     const sortedNewPool = [
-      ...updatedAvailableDnrs.sort(
-        (a: DutyResponsibility, b: DutyResponsibility) =>
-          a.description!.localeCompare(b.description!)
+      ...updatedAvailableDnrs.sort((a: DutyResponsibility, b: DutyResponsibility) =>
+        a.description!.localeCompare(b.description!)
       ),
     ];
 
@@ -119,8 +109,7 @@ export const SelectedSupportDrcs = (): JSX.Element => {
 
     tempSelectedDnrs.map((dr: DutyResponsibility, index: number) => {
       if (dr.odrId === odrId) {
-        if (e.currentTarget.valueAsNumber >= 0)
-          dr.percentage = e.currentTarget.valueAsNumber;
+        if (e.currentTarget.valueAsNumber >= 0) dr.percentage = e.currentTarget.valueAsNumber;
         else dr.percentage = 0;
       }
       tempUpdatedSelectedDnrs.push(dr);
@@ -135,122 +124,109 @@ export const SelectedSupportDrcs = (): JSX.Element => {
         <div className="min-w-[50rem] grid grid-cols-12 gap-1 pt-2 text-xs">
           <div className="col-span-1 "></div>
           <div className="col-span-6 ">
-            <label className="font-normal lex justify-start">Description</label>
+            <label className="justify-start font-normal lex">Description</label>
           </div>
           <div className="col-span-1 ">
-            <label className="font-normal flex justify-center">Code</label>
+            <label className="flex justify-center font-normal">Code</label>
           </div>
           <div className="col-span-1 ">
-            <label className="font-normal flex justify-center">Level</label>
+            <label className="flex justify-center font-normal">Level</label>
           </div>
           <div className="col-span-1">
-            <label className="font-normal flex justify-center">
-              Percentage
-            </label>
+            <label className="flex justify-center font-normal">Percentage</label>
           </div>
           <div className="col-span-2">
-            <label className="font-normal flex justify-center">Actions</label>
+            <label className="flex justify-center font-normal">Actions</label>
           </div>
 
           {isLoading ? (
             <LoadingSpinner size="lg" />
           ) : (
             selectedDnrs &&
-            selectedDnrs.support.map(
-              (dr: DutyResponsibility, index: number) => {
-                return (
-                  <div
-                    key={index}
-                    className="grid col-span-12 grid-cols-12 gap-1"
-                  >
-                    <div className="col-span-1 ">
-                      <div className="flex justify-center">
-                        {dr.percentage! > 0 &&
-                        dr.onEdit === false &&
-                        !Number.isNaN(dr.percentage) &&
-                        JSON.stringify(dr.competency) !== '{}' ? (
-                          <>
-                            <HiBadgeCheck size={20} fill="#7b42f5" />
-                          </>
-                        ) : (
-                          <>
-                            <HiExclamationCircle size={20} fill="#f54242" />
-                          </>
-                        )}
-                      </div>
-                    </div>
-                    <div className="col-span-6 ">
-                      <div className="flex flex-row justify-start peer-hover:text-white">
-                        <p className="text-sm font-light text-gray-600 w-full overflow-hidden text-black text-ellipsis ">
-                          {dr.description}
-                        </p>
-                      </div>
-                    </div>
-                    <div className="col-span-1">
-                      <label className="xs:text-xs sm:text-xs md:text-xs lg:text-sm font-light flex justify-center text-gray-800">
-                        {UseRenderBadgePill(dr.competency.code)}
-                      </label>
-                    </div>
-                    <div className="col-span-1">
-                      <label className="xs:text-xs sm:text-xs md:text-xs lg:text-sm font-light flex justify-center text-gray-800">
-                        {UseRenderBadgePill(dr.competency.level)}
-                      </label>
-                    </div>
-                    <div className="col-span-1">
-                      <div className="text-sm font-light  flex gap-1 items-center justify-center ">
-                        <input
-                          type="number"
-                          className={`w-[4rem] h-[1.5rem] text-gray-800 rounded outline-none border-0  border-gray-100 text-center ${
-                            dr.onEdit ? 'bg-red-200' : 'bg-transparent'
-                          }`}
-                          max={100}
-                          value={dr.percentage ? dr.percentage : 0}
-                          onChange={(e) =>
-                            onChangePercentage(e, dr.odrId, dr.sequenceNo!)
-                          }
-                          disabled={dr.onEdit ? false : true}
-                        />
-
-                        <span className="font-semibold">%</span>
-                      </div>
-                    </div>
-                    <div className="col-span-2">
-                      <div className="flex items-center justify-center gap-2">
-                        {dr.onEdit ? (
-                          <>
-                            <HiLockOpen
-                              size={26}
-                              className="bg-transparent rounded hover:cursor-pointer"
-                              fill="#fc0303"
-                              onClick={() =>
-                                handleEditToggle(dr.odrId, dr.onEdit!)
-                              }
-                            />
-                          </>
-                        ) : (
-                          <>
-                            <HiLockClosed
-                              size={26}
-                              className="bg-transparent rounded hover:cursor-pointer"
-                              fill="#7b42f5"
-                              onClick={() =>
-                                handleEditToggle(dr.odrId, dr.onEdit!)
-                              }
-                            />
-                          </>
-                        )}
-                        <HiX
-                          className="bg-red-500 rounded hover:cursor-pointer"
-                          fill="white"
-                          size={26}
-                          onClick={() => handleRemove(index, dr.odrId)}
-                        />
-                      </div>
+            selectedDnrs.support.map((dr: DutyResponsibility, index: number) => {
+              return (
+                <div key={index} className="grid grid-cols-12 col-span-12 gap-0 pt-2 odd:bg-indigo-50 even:bg-inherit">
+                  <div className="col-span-1 ">
+                    <div className="flex justify-center">
+                      {dr.percentage! > 0 &&
+                      dr.onEdit === false &&
+                      !Number.isNaN(dr.percentage) &&
+                      JSON.stringify(dr.competency) !== '{}' ? (
+                        <>
+                          <HiBadgeCheck size={20} fill="#7b42f5" />
+                        </>
+                      ) : (
+                        <>
+                          <HiExclamationCircle size={20} fill="#f54242" />
+                        </>
+                      )}
                     </div>
                   </div>
-                );
-              }
-            )
+                  <div className="col-span-6 ">
+                    <div className="flex flex-row justify-start peer-hover:text-white">
+                      <p className="w-full overflow-hidden text-sm font-light text-gray-600 whitespace-pre-line text-ellipsis ">
+                        {dr.description}
+                      </p>
+                    </div>
+                  </div>
+                  <div className="col-span-1">
+                    <label className="flex justify-center font-light text-gray-800 xs:text-xs sm:text-xs md:text-xs lg:text-sm">
+                      {UseRenderBadgePill(dr.competency.code)}
+                    </label>
+                  </div>
+                  <div className="col-span-1">
+                    <label className="flex justify-center font-light text-gray-800 xs:text-xs sm:text-xs md:text-xs lg:text-sm">
+                      {UseRenderBadgePill(dr.competency.level)}
+                    </label>
+                  </div>
+                  <div className="col-span-1">
+                    <div className="flex items-center justify-center gap-1 text-sm font-light ">
+                      <input
+                        type="number"
+                        className={`w-[4rem] h-[1.5rem] text-gray-800 rounded outline-none border-0  border-gray-100 text-center ${
+                          dr.onEdit ? 'bg-red-200' : 'bg-transparent'
+                        }`}
+                        max={100}
+                        value={dr.percentage ? dr.percentage : 0}
+                        onChange={(e) => onChangePercentage(e, dr.odrId, dr.sequenceNo!)}
+                        disabled={dr.onEdit ? false : true}
+                      />
+
+                      <span className="font-semibold">%</span>
+                    </div>
+                  </div>
+                  <div className="col-span-2">
+                    <div className="flex items-center justify-center gap-2">
+                      {dr.onEdit ? (
+                        <>
+                          <HiLockOpen
+                            size={26}
+                            className="bg-transparent rounded hover:cursor-pointer"
+                            fill="#fc0303"
+                            onClick={() => handleEditToggle(dr.odrId, dr.onEdit!)}
+                          />
+                        </>
+                      ) : (
+                        <>
+                          <HiLockClosed
+                            size={26}
+                            className="bg-transparent rounded hover:cursor-pointer"
+                            fill="#7b42f5"
+                            onClick={() => handleEditToggle(dr.odrId, dr.onEdit!)}
+                          />
+                        </>
+                      )}
+                      <HiX
+                        className="bg-red-500 rounded hover:cursor-pointer"
+                        fill="white"
+                        size={26}
+                        onClick={() => handleRemove(index, dr.odrId)}
+                      />
+                    </div>
+                  </div>
+                </div>
+              );
+            })
           )}
         </div>
       </>
