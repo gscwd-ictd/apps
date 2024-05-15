@@ -568,6 +568,7 @@ const ViewLeaveApplicationModal: FunctionComponent<ViewLeaveApplicationModalProp
                             {/* VACATION */}
                             {rowData.leaveName === LeaveName.VACATION ? (
                               <tr className="border border-slate-400">
+                                3
                                 <td className="border border-slate-400 text-center">
                                   {rowData.status === LeaveStatus.FOR_HRMO_CREDIT_CERTIFICATION ||
                                   rowData.status === LeaveStatus.FOR_SUPERVISOR_APPROVAL ||
@@ -585,11 +586,9 @@ const ViewLeaveApplicationModal: FunctionComponent<ViewLeaveApplicationModalProp
                                         Number(parseFloat(`${selectedLeaveLedger[0]?.vacationLeave}`).toFixed(3)) * -1
                                       ).toFixed(3)}
                                 </td>
-
                                 <td className="border border-slate-400 text-center">
                                   {rowData.leaveDates?.length.toFixed(3)}
                                 </td>
-
                                 <td className="border border-slate-400 text-center bg-green-100">
                                   {rowData.status === LeaveStatus.FOR_HRMO_CREDIT_CERTIFICATION ||
                                   rowData.status === LeaveStatus.FOR_SUPERVISOR_APPROVAL ||
@@ -770,15 +769,16 @@ const ViewLeaveApplicationModal: FunctionComponent<ViewLeaveApplicationModalProp
                 Close
               </button>
               {leaveApplicationDetails.leaveApplicationBasicInfo?.status ===
-                LeaveStatus.FOR_HRMO_CREDIT_CERTIFICATION && (
-                <button
-                  className="px-3 w-[5rem] py-2 text-sm text-white bg-blue-400 rounded"
-                  type="button"
-                  onClick={() => openConfirmModal(Action.APPROVE)}
-                >
-                  Certify Credits
-                </button>
-              )}
+                LeaveStatus.FOR_HRMO_CREDIT_CERTIFICATION ||
+                (leaveApplicationDetails.leaveApplicationBasicInfo?.status === LeaveStatus.FOR_HRMO_APPROVAL && (
+                  <button
+                    className="px-3 w-[5rem] py-2 text-sm text-white bg-blue-400 rounded"
+                    type="button"
+                    onClick={() => openConfirmModal(Action.APPROVE)}
+                  >
+                    Certify Credits
+                  </button>
+                ))}
             </div>
           </Modal.Footer>
         )}
