@@ -160,13 +160,10 @@ export const ApprovalOtpContentsLeave: FunctionComponent<OtpProps> = ({
 
   const handlePatchResult = async (data: leaveAction) => {
     const { error, result } = await patchPortalUrl('/leave-application', data);
-    console.log(data);
     if (error) {
       patchLeaveFail(result);
-      console.log(error);
     } else {
       patchLeaveSuccess(result);
-      console.log(result);
     }
   };
 
