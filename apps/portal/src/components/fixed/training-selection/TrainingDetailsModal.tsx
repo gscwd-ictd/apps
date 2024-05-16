@@ -33,6 +33,7 @@ export const TrainingDetailsModal = ({ modalState, setModalState, closeModalActi
     confirmNominationModalIsOpen,
     trainingModalIsOpen,
     skipNominationModalIsOpen,
+    postResponseApply,
     setSkipNominationModalIsOpen,
     setConfirmNominationModalIsOpen,
     setTrainingNominationModalIsOpen,
@@ -56,6 +57,7 @@ export const TrainingDetailsModal = ({ modalState, setModalState, closeModalActi
     trainingModalIsOpen: state.trainingModalIsOpen,
     loadingResponse: state.loading.loadingResponse,
     skipNominationModalIsOpen: state.skipNominationModalIsOpen,
+    postResponseApply: state.response.postResponseApply,
     setSkipNominationModalIsOpen: state.setSkipNominationModalIsOpen,
     setConfirmNominationModalIsOpen: state.setConfirmNominationModalIsOpen,
     setTrainingNominationModalIsOpen: state.setTrainingNominationModalIsOpen,
@@ -128,7 +130,7 @@ export const TrainingDetailsModal = ({ modalState, setModalState, closeModalActi
   // Initial zustand state update
   useEffect(() => {
     mutateNominatedEmployees();
-  }, [individualTrainingDetails.distributionId]);
+  }, [individualTrainingDetails.distributionId, postResponseApply]);
 
   useEffect(() => {
     if (trainingModalIsOpen) {

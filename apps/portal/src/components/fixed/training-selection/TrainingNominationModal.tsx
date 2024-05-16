@@ -47,24 +47,24 @@ export const TrainingNominationModal = ({
   const [initialLoad, setInitialLoad] = useState<boolean>(true);
 
   useEffect(() => {
-    if (trainingNominationModalIsOpen) {
-      if (isEmpty(nominatedEmployees) && isEmpty(auxiliaryEmployees)) {
-        setInitialLoad(true);
-        setEmployeePool(
-          employeeList.sort(function (a, b) {
-            return a.label.localeCompare(b.label);
-          })
-        );
-        setSelectedEmployees([]); //store
-        setSelectedAuxiliaryEmployees([]); //store
-        setTimeout(() => {
-          setInitialLoad(false);
-        }, 200);
-      } else {
-        const uniqueNames = Array.from(new Set([...nominatedEmployees, ...auxiliaryEmployees]));
-        handleInitialEmployeePool(uniqueNames);
-      }
+    // if (trainingNominationModalIsOpen) {
+    if (isEmpty(nominatedEmployees) && isEmpty(auxiliaryEmployees)) {
+      setInitialLoad(true);
+      setEmployeePool(
+        employeeList.sort(function (a, b) {
+          return a.label.localeCompare(b.label);
+        })
+      );
+      setSelectedEmployees([]); //store
+      setSelectedAuxiliaryEmployees([]); //store
+      setTimeout(() => {
+        setInitialLoad(false);
+      }, 200);
+    } else {
+      const uniqueNames = Array.from(new Set([...nominatedEmployees, ...auxiliaryEmployees]));
+      handleInitialEmployeePool(uniqueNames);
     }
+    // }
   }, [trainingNominationModalIsOpen]);
 
   //initial rearrangement of employee pool - should run once during opening of modal
