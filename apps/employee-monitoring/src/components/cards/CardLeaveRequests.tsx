@@ -1,76 +1,18 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @nx/enforce-module-boundaries */
 import { isEmpty } from 'lodash';
-import { FunctionComponent, useEffect, useState } from 'react';
-import { useLeaveApplicationStore } from 'apps/employee-monitoring/src/store/leave-application.store';
-import fetcherEMS from '../../utils/fetcher/FetcherEMS';
+import { FunctionComponent } from 'react';
 import { CardMiniStats } from './CardMiniStats';
-import useSWR from 'swr';
-import { LeaveStatus } from 'libs/utils/src/lib/enums/leave.enum';
-import { ToastNotification } from '@gscwd-apps/oneui';
+import { useChartsStore } from '../../store/chart.store';
 
-export const CardLeaveRequests: FunctionComponent = () => {
-  // leave count
-  const [countHrmoApproval, setCountHrmoApproval] = useState<string>('--');
-
-  // fetch data for list of leave applications
-  const {
-    data: swrLeaves,
-    error: swrError,
-    isLoading: swrIsLoading,
-  } = useSWR('/leave/hrmo', fetcherEMS, {
-    onErrorRetry: (error, key, config, revalidate, { retryCount }) => {
-      if (retryCount >= 2) return;
-    },
-  });
-
-  // Zustand initialization
-  const {
-    LeaveApplications,
-    ErrorLeaveApplications,
-
-    GetLeaveApplications,
-    GetLeaveApplicationsSuccess,
-    GetLeaveApplicationsFail,
-  } = useLeaveApplicationStore((state) => ({
-    LeaveApplications: state.leaveApplications,
-    ErrorLeaveApplications: state.error.errorLeaveApplications,
-
-    GetLeaveApplications: state.getLeaveApplications,
-    GetLeaveApplicationsSuccess: state.getLeaveApplicationsSuccess,
-    GetLeaveApplicationsFail: state.getLeaveApplicationsFail,
+export const CardLeaveRequests: FunctionComponent<{ isLoading: boolean }> = ({ isLoading }) => {
+  // Zustand init
+  const { PendingLeaveApplications } = useChartsStore((state) => ({
+    PendingLeaveApplications: state.getDashboardStats.pendingLeaveApplications,
   }));
-
-  // initialize loading
-  useEffect(() => {
-    if (swrIsLoading) GetLeaveApplications();
-  }, [swrIsLoading]);
-
-  // get passlips success or fail
-  useEffect(() => {
-    // success
-    if (!isEmpty(swrLeaves)) GetLeaveApplicationsSuccess(swrLeaves.data);
-
-    // fail
-    if (!isEmpty(swrError)) GetLeaveApplicationsFail(swrError.message);
-  }, [swrLeaves, swrError]);
-
-  useEffect(() => {
-    if (!isEmpty(LeaveApplications)) {
-      const forApprovalPassSlipsCount = LeaveApplications.filter(
-        (passSlip) => passSlip.status === LeaveStatus.FOR_HRMO_CREDIT_CERTIFICATION
-      );
-      setCountHrmoApproval(forApprovalPassSlipsCount.length.toString());
-    }
-  }, [LeaveApplications]);
 
   return (
     <>
-      {/* Error Notifications */}
-      {!isEmpty(ErrorLeaveApplications) ? (
-        <ToastNotification toastType="error" notifMessage={'Network Error: Failed to retrieve data'} />
-      ) : null}
-
       <CardMiniStats
         className="border rounded-md shadow hover:bg-slate-200 hover:cursor-pointer"
         icon={
@@ -88,8 +30,8 @@ export const CardLeaveRequests: FunctionComponent = () => {
           </svg>
         }
         title="Leave Application Pending Approval"
-        value={!isEmpty(LeaveApplications) ? countHrmoApproval : 0}
-        isLoading={swrIsLoading}
+        value={!isEmpty(PendingLeaveApplications) ? PendingLeaveApplications : 0}
+        isLoading={isLoading}
       />
     </>
   );
