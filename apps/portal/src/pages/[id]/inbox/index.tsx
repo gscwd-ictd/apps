@@ -169,38 +169,38 @@ export default function PassSlip({ employeeDetails }: InferGetServerSidePropsTyp
   // const trainingMessagesUrl = `http://172.20.10.58:4001/trainings/employees/${employeeDetails.employmentDetails.userId}`;
 
   //NEW
-  // const trainingMessagesUrl = `${process.env.NEXT_PUBLIC_PORTAL_URL}/trainings/employees/${employeeDetails.employmentDetails.userId}`;
+  const trainingMessagesUrl = `${process.env.NEXT_PUBLIC_PORTAL_URL}/trainings/employees/${employeeDetails.employmentDetails.userId}`;
   // use useSWR, provide the URL and fetchWithSession function as a parameter
 
-  // const {
-  //   data: swrTrainingMessages,
-  //   isLoading: swrIsLoadingTrainingMessages,
-  //   error: swrTrainingMessageError,
-  //   mutate: mutateTrainingMessages,
-  // } = useSWR(employeeDetails.employmentDetails.userId ? trainingMessagesUrl : null, fetchWithToken);
+  const {
+    data: swrTrainingMessages,
+    isLoading: swrIsLoadingTrainingMessages,
+    error: swrTrainingMessageError,
+    mutate: mutateTrainingMessages,
+  } = useSWR(employeeDetails.employmentDetails.userId ? trainingMessagesUrl : null, fetchWithToken);
 
-  // // Initial zustand state update
-  // useEffect(() => {
-  //   if (swrIsLoadingTrainingMessages) {
-  //     getTrainingMessageList(swrIsLoadingTrainingMessages);
-  //   }
-  // }, [swrIsLoadingTrainingMessages]);
+  // Initial zustand state update
+  useEffect(() => {
+    if (swrIsLoadingTrainingMessages) {
+      getTrainingMessageList(swrIsLoadingTrainingMessages);
+    }
+  }, [swrIsLoadingTrainingMessages]);
 
-  // // Upon success/fail of swr request, zustand state will be updated
-  // useEffect(() => {
-  //   if (!isEmpty(swrTrainingMessages)) {
-  //     getTrainingMessageListSuccess(swrIsLoadingTrainingMessages, swrTrainingMessages);
-  //   }
+  // Upon success/fail of swr request, zustand state will be updated
+  useEffect(() => {
+    if (!isEmpty(swrTrainingMessages)) {
+      getTrainingMessageListSuccess(swrIsLoadingTrainingMessages, swrTrainingMessages);
+    }
 
-  //   if (!isEmpty(swrTrainingMessageError)) {
-  //     getTrainingMessageListFail(swrIsLoadingTrainingMessages, swrTrainingMessageError.message);
-  //   }
-  // }, [swrTrainingMessages, swrTrainingMessageError]);
+    if (!isEmpty(swrTrainingMessageError)) {
+      getTrainingMessageListFail(swrIsLoadingTrainingMessages, swrTrainingMessageError.message);
+    }
+  }, [swrTrainingMessages, swrTrainingMessageError]);
 
   useEffect(() => {
     if (!isEmpty(patchResponseApply) || !isEmpty(putResponseApply)) {
       mutatePsbMessages();
-      // mutateTrainingMessages();
+      mutateTrainingMessages();
       setTimeout(() => {
         emptyResponseAndError();
       }, 5000);
