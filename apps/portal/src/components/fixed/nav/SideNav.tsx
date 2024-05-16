@@ -254,10 +254,13 @@ export const SideNav = ({ employeeDetails }: NavDetails) => {
                 destination={`/${router.query.id}/inbox`}
               />
 
-              <SideNavLink
-                icon={<HiOutlineNewspaper className="w-6 h-6 text-indigo-500" />}
-                destination={`/${router.query.id}/vacancies`}
-              />
+              {/* VACANCIES */}
+              {!isEqual(employeeDetails.employmentDetails.userRole, UserRole.JOB_ORDER) ? (
+                <SideNavLink
+                  icon={<HiOutlineNewspaper className="w-6 h-6 text-indigo-500" />}
+                  destination={`/${router.query.id}/vacancies`}
+                />
+              ) : null}
             </>
           ) : null}
         </ul>
