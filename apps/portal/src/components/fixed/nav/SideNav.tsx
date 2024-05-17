@@ -4,7 +4,7 @@ import { HiOutlineBell, HiOutlineHome, HiOutlineNewspaper } from 'react-icons/hi
 import { ProfileMenuDropdown } from './ProfileMenuDropdown';
 import { SideNavLink } from './SideNavLink';
 import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { ManagerMenuDropdown } from './ManagerMenuDropdown';
 import { GeneralManagerMenuDropdown } from './GeneralManagerMenuDropdown';
 import { CommitteeMenuDropdown } from './CommitteeMenuDropdown';
@@ -20,7 +20,9 @@ import { SalaryGradeConverter } from 'libs/utils/src/lib/functions/SalaryGradeCo
 import { useFinalLeaveApprovalStore } from '../../../store/final-leave-approvals.store';
 import { usePrfStore } from '../../../store/prf.store';
 import { useAppSelectionStore } from '../../../store/selection.store';
-import { useAppEndStore } from 'apps/portal/src/store/endorsement.store';
+import { useAppEndStore } from '../../../store/endorsement.store';
+import { useInboxStore } from '../../../store/inbox.store';
+import { NomineeStatus } from 'libs/utils/src/lib/enums/training.enum';
 
 export type EmployeeLocalStorage = {
   employeeId: string;
@@ -156,6 +158,128 @@ export const SideNav = ({ employeeDetails }: NavDetails) => {
     patchResponseAppSelection,
   ]);
 
+  //FOR INBOX NOTIF
+  const {
+    patchResponseApply,
+    putResponseApply,
+    psbMessages,
+    trainingMessages,
+    getPsbMessageList,
+    getPsbMessageListSuccess,
+    getPsbMessageListFail,
+
+    getTrainingMessageList,
+    getTrainingMessageListSuccess,
+    getTrainingMessageListFail,
+
+    emptyResponseAndError,
+  } = useInboxStore((state) => ({
+    patchResponseApply: state.response.patchResponseApply,
+    putResponseApply: state.response.putResponseApply,
+    psbMessages: state.message.psbMessages,
+    trainingMessages: state.message.trainingMessages,
+
+    getPsbMessageList: state.getPsbMessageList,
+    getPsbMessageListSuccess: state.getPsbMessageListSuccess,
+    getPsbMessageListFail: state.getPsbMessageListFail,
+
+    getTrainingMessageList: state.getTrainingMessageList,
+    getTrainingMessageListSuccess: state.getTrainingMessageListSuccess,
+    getTrainingMessageListFail: state.getTrainingMessageListFail,
+
+    emptyResponseAndError: state.emptyResponseAndError,
+  }));
+
+  //For Inbox Notification - red dot
+  const [currentPendingPsbCount, setcurrentPendingPsbCount] = useState<number>(0);
+  const [currentPendingTrainingCount, setcurrentPendingTrainingCount] = useState<number>(0);
+
+  const unacknowledgedPsbUrl = `${process.env.NEXT_PUBLIC_HRIS_URL}/vacant-position-postings/psb/schedules/${employeeDetails.employmentDetails.userId}/unacknowledged`;
+  // use useSWR, provide the URL and fetchWithSession function as a parameter
+
+  const {
+    data: swrPsbMessages,
+    isLoading: swrIsLoadingPsbMessages,
+    error: swrPsbMessageError,
+    mutate: mutatePsbMessages,
+  } = useSWR(
+    Boolean(employeeDetails.employmentDetails.isHRMPSB) === true ? unacknowledgedPsbUrl : null,
+    fetchWithToken
+  );
+
+  // Initial zustand state update
+  useEffect(() => {
+    if (swrIsLoadingPsbMessages) {
+      getPsbMessageList(swrIsLoadingPsbMessages);
+    }
+  }, [swrIsLoadingPsbMessages]);
+
+  // Upon success/fail of swr request, zustand state will be updated
+  useEffect(() => {
+    if (!isEmpty(swrPsbMessages)) {
+      getPsbMessageListSuccess(swrIsLoadingPsbMessages, swrPsbMessages);
+    }
+
+    if (!isEmpty(swrPsbMessageError)) {
+      getPsbMessageListFail(swrIsLoadingPsbMessages, swrPsbMessageError.message);
+    }
+  }, [swrPsbMessages, swrPsbMessageError]);
+
+  //count any pending psb inbox action
+  useEffect(() => {
+    let pendingPsb = [];
+    pendingPsb = psbMessages.filter((e) => !e.details.acknowledgedSchedule && !e.details.declinedSchedule);
+    setcurrentPendingPsbCount(pendingPsb.length);
+  }, [patchResponseApply, swrPsbMessages]);
+
+  const trainingMessagesUrl = `${process.env.NEXT_PUBLIC_PORTAL_URL}/trainings/employees/${employeeDetails.employmentDetails.userId}`;
+  // use useSWR, provide the URL and fetchWithSession function as a parameter
+
+  const {
+    data: swrTrainingMessages,
+    isLoading: swrIsLoadingTrainingMessages,
+    error: swrTrainingMessageError,
+    mutate: mutateTrainingMessages,
+  } = useSWR(
+    employeeDetails.employmentDetails.userId &&
+      !isEqual(employeeDetails.employmentDetails.userRole, UserRole.RANK_AND_FILE) &&
+      !isEqual(employeeDetails.employmentDetails.userRole, UserRole.JOB_ORDER)
+      ? trainingMessagesUrl
+      : null,
+    fetchWithToken
+  );
+
+  // Initial zustand state update
+  useEffect(() => {
+    if (swrIsLoadingTrainingMessages) {
+      getTrainingMessageList(swrIsLoadingTrainingMessages);
+    }
+  }, [swrIsLoadingTrainingMessages]);
+
+  // Upon success/fail of swr request, zustand state will be updated
+  useEffect(() => {
+    if (!isEmpty(swrTrainingMessages)) {
+      getTrainingMessageListSuccess(swrIsLoadingTrainingMessages, swrTrainingMessages);
+    }
+
+    if (!isEmpty(swrTrainingMessageError)) {
+      getTrainingMessageListFail(swrIsLoadingTrainingMessages, swrTrainingMessageError.message);
+    }
+  }, [swrTrainingMessages, swrTrainingMessageError]);
+
+  useEffect(() => {
+    let pendingTraining = [];
+    pendingTraining = trainingMessages.filter((e) => e.nomineeStatus === NomineeStatus.PENDING);
+    setcurrentPendingTrainingCount(pendingTraining.length);
+  }, [putResponseApply, trainingMessages]);
+
+  useEffect(() => {
+    if (!isEmpty(patchResponseApply) || !isEmpty(putResponseApply)) {
+      mutatePsbMessages();
+      mutateTrainingMessages();
+    }
+  }, [patchResponseApply, putResponseApply]);
+
   return (
     <>
       {/* Approval List Load Failed Error */}
@@ -249,17 +373,24 @@ export const SideNav = ({ employeeDetails }: NavDetails) => {
                 </li>
               ) : null}
 
-              <SideNavLink
-                icon={<HiOutlineBell className="w-6 h-6 text-indigo-500" />}
-                destination={`/${router.query.id}/inbox`}
-              />
+              <div>
+                <SideNavLink
+                  icon={<HiOutlineBell className="w-6 h-6 text-indigo-500" />}
+                  destination={`/${router.query.id}/inbox`}
+                />
+                {currentPendingPsbCount > 0 || currentPendingTrainingCount > 0 ? (
+                  <span className="absolute w-3 h-3 -mt-8 ml-8 bg-red-600 rounded-full select-none" />
+                ) : null}
+              </div>
 
               {/* VACANCIES */}
               {!isEqual(employeeDetails.employmentDetails.userRole, UserRole.JOB_ORDER) ? (
-                <SideNavLink
-                  icon={<HiOutlineNewspaper className="w-6 h-6 text-indigo-500" />}
-                  destination={`/${router.query.id}/vacancies`}
-                />
+                <div>
+                  <SideNavLink
+                    icon={<HiOutlineNewspaper className="w-6 h-6 text-indigo-500" />}
+                    destination={`/${router.query.id}/vacancies`}
+                  />
+                </div>
               ) : null}
             </>
           ) : null}

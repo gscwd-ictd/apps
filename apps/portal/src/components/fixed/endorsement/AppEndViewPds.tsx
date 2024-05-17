@@ -452,8 +452,8 @@ export const AppEndViewPds = ({ pds }: AppEndViewPdsProps) => {
                                       <LabelFieldPreview
                                         label="Year Ended:"
                                         field={
-                                          (isEmpty(to.toString()) || to === null) &&
-                                          (isEmpty(yearGraduated.toString()) || yearGraduated === null)
+                                          (isEmpty(to?.toString()) || to === null) &&
+                                          (isEmpty(yearGraduated?.toString()) || yearGraduated === null)
                                             ? 'Present'
                                             : to
                                         }
@@ -505,8 +505,8 @@ export const AppEndViewPds = ({ pds }: AppEndViewPdsProps) => {
                                       <LabelFieldPreview
                                         label="Year Ended:"
                                         field={
-                                          (isEmpty(to.toString()) || to === null) &&
-                                          (isEmpty(yearGraduated.toString()) || yearGraduated === null)
+                                          (isEmpty(to?.toString()) || to === null) &&
+                                          (isEmpty(yearGraduated?.toString()) || yearGraduated === null)
                                             ? 'Present'
                                             : to
                                         }
@@ -557,8 +557,8 @@ export const AppEndViewPds = ({ pds }: AppEndViewPdsProps) => {
                                       <LabelFieldPreview
                                         label="Year Ended:"
                                         field={
-                                          (isEmpty(to.toString()) || to === null) &&
-                                          (isEmpty(yearGraduated.toString()) || yearGraduated === null)
+                                          (isEmpty(to?.toString()) || to === null) &&
+                                          (isEmpty(yearGraduated?.toString()) || yearGraduated === null)
                                             ? 'Present'
                                             : to
                                         }
@@ -875,21 +875,21 @@ export const AppEndViewPds = ({ pds }: AppEndViewPdsProps) => {
                             <LabelQNA
                               question="a. Within the third degree?"
                               cols={3}
-                              answer={pds.officeRelation.withinThirdDegree.toString() === 'true' ? 'Yes' : 'No'}
+                              answer={pds?.officeRelation?.withinThirdDegree?.toString() === 'true' ? 'Yes' : 'No'}
                               details1=""
                             />
                             <LabelQNA
                               question="b. Within the fourth degree (for Local Government Unit - Career Employees)?"
                               cols={3}
-                              answer={pds.officeRelation.withinFourthDegree.toString() === 'true' ? 'Yes' : 'No'}
+                              answer={pds?.officeRelation?.withinFourthDegree?.toString() === 'true' ? 'Yes' : 'No'}
                               details1=""
                             />
                             <LabelQNA
                               question="Details"
                               answer={
-                                (isEmpty(pds.officeRelation.details) &&
+                                (isEmpty(pds?.officeRelation?.details) &&
                                   pds.officeRelation.withinThirdDegree.toString() === 'true') ||
-                                (isEmpty(pds.officeRelation.details) &&
+                                (isEmpty(pds?.officeRelation?.details) &&
                                   pds.officeRelation.withinFourthDegree.toString() === 'true') ? (
                                   <span className="text-sm text-indigo-600">No answer provided</span>
                                 ) : (
@@ -906,7 +906,7 @@ export const AppEndViewPds = ({ pds }: AppEndViewPdsProps) => {
                               question="a. Have you ever been found guilty of any administrative offense?"
                               answer={pds.guiltyCharged.isGuilty.toString() === 'true' ? 'Yes' : 'No'}
                               details1={
-                                isEmpty(pds.guiltyCharged.guiltyDetails) &&
+                                isEmpty(pds?.guiltyCharged?.guiltyDetails) &&
                                 pds.guiltyCharged.isGuilty.toString() === 'true' ? (
                                   <span className="text-sm text-indigo-600">No answer provided</span>
                                 ) : (
@@ -919,7 +919,7 @@ export const AppEndViewPds = ({ pds }: AppEndViewPdsProps) => {
                               question="b. Have you been criminally charged before any court?"
                               answer={pds.guiltyCharged.isCharged.toString() === 'true' ? 'Yes' : 'No'}
                               details1={
-                                (isEmpty(pds.guiltyCharged.chargedDateFiled) ||
+                                (isEmpty(pds?.guiltyCharged?.chargedDateFiled) ||
                                   pds.guiltyCharged.chargedDateFiled !== null) &&
                                 pds.guiltyCharged.isCharged.toString() === 'true' ? (
                                   <span className="text-sm text-indigo-600">No answer provided</span>
@@ -928,7 +928,7 @@ export const AppEndViewPds = ({ pds }: AppEndViewPdsProps) => {
                                 )
                               }
                               details2={
-                                isEmpty(pds.guiltyCharged.chargedCaseStatus) &&
+                                isEmpty(pds?.guiltyCharged?.chargedCaseStatus) &&
                                 pds.guiltyCharged.isCharged.toString() === 'true' ? (
                                   <span className="text-sm text-indigo-600">No answer provided</span>
                                 ) : (
@@ -944,7 +944,8 @@ export const AppEndViewPds = ({ pds }: AppEndViewPdsProps) => {
                               question=" Have you ever been convicted of any crime or violation of any law, decree, ordinance or regulation by any court or tribunal?"
                               answer={pds.convicted.isConvicted.toString() === 'true' ? 'Yes' : 'No'}
                               details1={
-                                isEmpty(pds.convicted.details) && pds.convicted.isConvicted.toString() === 'true' ? (
+                                isEmpty(pds?.convicted?.details) &&
+                                pds?.convicted?.isConvicted?.toString() === 'true' ? (
                                   <span className="text-sm text-indigo-600">No answer provided</span>
                                 ) : (
                                   pds.convicted.details
@@ -960,7 +961,7 @@ export const AppEndViewPds = ({ pds }: AppEndViewPdsProps) => {
                       termination, end of term, finished contract or phased out (abolition) in the public or private sector?"
                               answer={pds.separatedService.isSeparated.toString() === 'true' ? 'Yes' : 'No'}
                               details1={
-                                isEmpty(pds.separatedService.details) &&
+                                isEmpty(pds?.separatedService?.details) &&
                                 pds.separatedService.isSeparated.toString() === 'true' ? (
                                   <span className="text-sm text-indigo-600">No answer provided</span>
                                 ) : (
@@ -978,7 +979,7 @@ export const AppEndViewPds = ({ pds }: AppEndViewPdsProps) => {
                               }
                               answer={pds.candidateResigned.isCandidate.toString() === 'true' ? 'Yes' : 'No'}
                               details1={
-                                isEmpty(pds.candidateResigned.candidateDetails) &&
+                                isEmpty(pds?.candidateResigned?.candidateDetails) &&
                                 pds.candidateResigned.isCandidate.toString() === 'true' ? (
                                   <span className="text-sm text-indigo-600">No answer provided</span>
                                 ) : (
@@ -992,7 +993,7 @@ export const AppEndViewPds = ({ pds }: AppEndViewPdsProps) => {
                               }
                               answer={pds.candidateResigned.isResigned.toString() === 'true' ? 'Yes' : 'No'}
                               details1={
-                                isEmpty(pds.candidateResigned.resignedDetails) &&
+                                isEmpty(pds?.candidateResigned?.resignedDetails) &&
                                 pds.candidateResigned.isResigned.toString() === 'true' ? (
                                   <span className="text-sm text-indigo-600">No answer provided</span>
                                 ) : (
@@ -1011,7 +1012,8 @@ export const AppEndViewPds = ({ pds }: AppEndViewPdsProps) => {
                               }
                               answer={pds.immigrant.isImmigrant.toString() === 'true' ? 'Yes' : 'No'}
                               details1={
-                                isEmpty(pds.immigrant.details) && pds.immigrant.isImmigrant.toString() === 'true' ? (
+                                isEmpty(pds?.immigrant?.details) &&
+                                pds?.immigrant?.isImmigrant?.toString() === 'true' ? (
                                   <span className="text-sm text-indigo-600">No answer provided</span>
                                 ) : (
                                   pds.immigrant.details
@@ -1029,7 +1031,7 @@ export const AppEndViewPds = ({ pds }: AppEndViewPdsProps) => {
                                 pds.indigenousPwdSoloParent.isIndigenousMember.toString() === 'true' ? 'Yes' : 'No'
                               }
                               details1={
-                                isEmpty(pds.indigenousPwdSoloParent.indigenousMemberDetails) &&
+                                isEmpty(pds?.indigenousPwdSoloParent?.indigenousMemberDetails) &&
                                 pds.indigenousPwdSoloParent.isIndigenousMember.toString() === 'true' ? (
                                   <span className="text-sm text-indigo-600">No answer provided</span>
                                 ) : (
@@ -1041,7 +1043,7 @@ export const AppEndViewPds = ({ pds }: AppEndViewPdsProps) => {
                               question={'b. Are you a person with disability?'}
                               answer={pds.indigenousPwdSoloParent.isPwd.toString() === 'true' ? 'Yes' : 'No'}
                               details1={
-                                isEmpty(pds.indigenousPwdSoloParent.pwdIdNumber) &&
+                                isEmpty(pds?.indigenousPwdSoloParent?.pwdIdNumber) &&
                                 pds.indigenousPwdSoloParent.isPwd.toString() === 'true' ? (
                                   <span className="text-sm text-indigo-600">No answer provided</span>
                                 ) : (
@@ -1053,7 +1055,7 @@ export const AppEndViewPds = ({ pds }: AppEndViewPdsProps) => {
                               question={'c. Are you a solo parent?'}
                               answer={pds.indigenousPwdSoloParent.isSoloParent.toString() === 'true' ? 'Yes' : 'No'}
                               details1={
-                                isEmpty(pds.indigenousPwdSoloParent.soloParentIdNumber) &&
+                                isEmpty(pds?.indigenousPwdSoloParent?.soloParentIdNumber) &&
                                 pds.indigenousPwdSoloParent.isSoloParent.toString() === 'true' ? (
                                   <span className="text-sm text-indigo-600">No answer provided</span>
                                 ) : (
