@@ -26,7 +26,7 @@ export const AuthmiddlewareContext = createContext({} as AuthmiddlewareState);
 //   _id: '123',
 //   fullName: 'User Test',
 //   isSuperUser: true,
-//   photoUrl: 'http://172.20.110.45:3001/static/media/avatar-2.feb0f89d.jpg',
+//   photoUrl: '/user-photo.jpg',
 //   email: 'user@gscwd.com',
 //   userAccess: [
 //     { I: 'access', this: 'Settings' },

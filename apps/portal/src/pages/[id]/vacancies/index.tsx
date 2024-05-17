@@ -27,6 +27,7 @@ import { JobApplicationCaptcha } from 'apps/portal/src/components/fixed/vacancie
 import { SpinnerDotted } from 'spinners-react';
 import { ContentBody } from 'apps/portal/src/components/modular/custom/containers/ContentBody';
 import { ContentHeader } from 'apps/portal/src/components/modular/custom/containers/ContentHeader';
+import { Roles } from 'apps/portal/src/utils/constants/user-roles';
 
 export default function Vacancies({
   data,
@@ -385,22 +386,35 @@ export default function Vacancies({
 }
 
 //get list of all posted job positions
-export const getServerSideProps: GetServerSideProps = withCookieSession(async (context: GetServerSidePropsContext) => {
-  try {
-    const userDetails = getUserDetails(); //get employee details from ssid token - using _id only
-    const { data } = await axios.get(`${process.env.NEXT_PUBLIC_HRIS_URL}/vacant-position-postings/publications/`);
-    if (data) {
-      return {
-        props: {
-          data,
-          employeeId: userDetails.user._id,
-          employeeDetails: userDetails,
-        },
-      };
-    } else {
+
+export const getServerSideProps: GetServerSideProps = withCookieSession(async () => {
+  const userDetails = getUserDetails(); //get employee details from ssid token - using _id only
+
+  // check if user role is rank_and_file
+  if (userDetails.employmentDetails.userRole === Roles.JOB_ORDER) {
+    // if true, the employee is not allowed to access this page
+    return {
+      redirect: {
+        permanent: false,
+        destination: `/${userDetails.user._id}`,
+      },
+    };
+  } else {
+    try {
+      const { data } = await axios.get(`${process.env.NEXT_PUBLIC_HRIS_URL}/vacant-position-postings/publications/`);
+      if (data) {
+        return {
+          props: {
+            data,
+            employeeId: userDetails.user._id,
+            employeeDetails: userDetails,
+          },
+        };
+      } else {
+        return { props: {} };
+      }
+    } catch (error) {
       return { props: {} };
     }
-  } catch (error) {
-    return { props: {} };
   }
 });
