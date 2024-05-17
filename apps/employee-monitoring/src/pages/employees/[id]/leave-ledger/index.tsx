@@ -80,35 +80,8 @@ export default function Index({ employeeData }: InferGetServerSidePropsType<type
           <Card>
             <div className="flex flex-col gap-2">
               {/* HEADER */}
-              <div className="grid xs:pb-2 sm:-mb-10 md:-mb-10 lg:-mb-10 xs:grid-rows-2 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2">
-                {/* <section className="flex items-center gap-4 px-2">
-                  {employeeData.photoUrl ? (
-                    <div className="flex flex-wrap justify-center">
-                      <div className="w-[6rem]">
-                        <img
-                          src={employeeData.photoUrl}
-                          alt="user-circle"
-                          className="h-auto max-w-full align-middle border-none rounded-full shadow"
-                        />
-                      </div>
-                    </div>
-                  ) : (
-                    <i className="text-gray-400 text-7xl bx bxs-user-circle"></i>
-                  )}
-
-                  <div className="flex flex-col">
-                    <div className="text-2xl font-semibold text-gray-600">
-                      {employeeData ? employeeData.fullName : null}
-                    </div>
-                    <div className="text-xl text-gray-500">
-                      {employeeData ? employeeData.assignment.positionTitle : null}
-                    </div>
-                    <div className="text-xl font-medium text-gray-600">
-                      {employeeData ? employeeData.companyId : null}
-                    </div>
-                  </div>
-                </section> */}
-                <section className="flex items-center gap-4 px-2">
+              <div className="flex mb-10 ">
+                <section className="flex items-center gap-4 px-2 w-full">
                   {employeeData.photoUrl ? (
                     <div className="flex flex-wrap justify-center">
                       <div className="w-[6rem]">
@@ -134,8 +107,34 @@ export default function Index({ employeeData }: InferGetServerSidePropsType<type
                   </div>
                 </section>
 
-                <section className="flex justify-end w-full">
-                  <div className="">
+                <section className="inline-grid grid-cols-1 gap-4 justify-items-end w-full">
+                  <div className="px-5 py-2 bg-gray-200 rounded w-2/5">
+                    <span className="text-sm font-medium">Legend</span>
+                    <div className="grid grid-rows-2">
+                      <div className="flex items-center gap-1">
+                        <span className="text-xs font-light w-5/6">Forced Leave - </span>
+                        <i className="text-2xl text-red-200 bx bxs-checkbox w-1/5"></i>
+                      </div>
+                      <div className="flex items-center gap-1">
+                        <span className="text-xs font-light w-5/6">Vacation Leave -</span>
+                        <i className="text-2xl text-green-200 bx bxs-checkbox w-1/5"></i>
+                      </div>
+                      <div className="flex items-center gap-1">
+                        <span className="text-xs font-light w-5/6">Sick Leave -</span>
+                        <i className="text-2xl text-orange-200 bx bxs-checkbox w-1/5"></i>
+                      </div>
+                      <div className="flex items-center gap-1">
+                        <span className="text-xs font-light w-5/6">Special Privilege Leave -</span>
+                        <i className="text-2xl text-cyan-200 bx bxs-checkbox w-1/5"></i>
+                      </div>
+                      <div className="flex items-center gap-1">
+                        <span className="text-xs font-light w-5/6">Special Leave Benefit-</span>
+                        <i className="text-2xl text-blue-200 bx bxs-checkbox w-1/5"></i>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="w-fit">
                     <button
                       type="button"
                       className="text-white bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-blue-300 font-medium rounded-md text-xs p-2.5 text-center inline-flex items-center  dark:bg-blue-400 dark:hover:bg-blue-500 dark:focus:ring-blue-600"

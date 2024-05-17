@@ -100,6 +100,30 @@ export const LeaveLedgerTable: FunctionComponent<LeaveLedgerTableProps> = ({ emp
     else if (actionType === ActionType.DEBIT && value != 0) return <span className="text-red-600">{value}</span>;
   };
 
+  // change row column color depending on the leave type
+  const leaveRowBg = (entry: LeaveLedgerEntry) => {
+    if (!isEmpty(entry.leaveApplicationId)) {
+      if (entry.forcedLeave < 0) {
+        // forced leave
+        return 'bg-red-200';
+      } else if (entry.vacationLeave < 0) {
+        // vacation leave
+        return 'bg-green-200';
+      } else if (entry.sickLeave < 0) {
+        // sick leave
+        return 'bg-orange-200';
+      } else if (entry.specialPrivilegeLeave < 0) {
+        // special privilege leave
+        return 'bg-cyan-200';
+      } else if (entry.specialLeaveBenefit < 0) {
+        // special leave benefit
+        return 'bg-blue-200';
+      } else {
+        return '';
+      }
+    }
+  };
+
   // if a result is returned
   useEffect(() => {
     // success
@@ -129,6 +153,10 @@ export const LeaveLedgerTable: FunctionComponent<LeaveLedgerTableProps> = ({ emp
     }
   }, [PostLeaveAdjustment]);
 
+  useEffect(() => {
+    if (!isEmpty(leaveLedger)) console.log(leaveLedger);
+  }, [leaveLedger]);
+
   if (swrIsLoading)
     return (
       <>
@@ -145,8 +173,7 @@ export const LeaveLedgerTable: FunctionComponent<LeaveLedgerTableProps> = ({ emp
         rowData={remarksAndLeaveDates}
       />
 
-      {/* Leave Ledger Table */}
-
+      {/* Leave Stats */}
       <div className="w-full grid-cols-4 gap-5 pb-5 sm:flex sm:flex-col lg:flex lg:flex-row">
         <div className="h-[6rem] w-full">
           <CardMiniStats
@@ -201,6 +228,7 @@ export const LeaveLedgerTable: FunctionComponent<LeaveLedgerTableProps> = ({ emp
         </div>
       </div>
 
+      {/* Leave Ledger Table */}
       <div className="w-full overflow-auto  max-h-[28rem]">
         <table className="w-full border table-fixed bg-slate-50">
           <thead className="sticky top-0 bg-slate-50">
@@ -220,11 +248,12 @@ export const LeaveLedgerTable: FunctionComponent<LeaveLedgerTableProps> = ({ emp
               <th className="px-2 py-2 font-semibold text-center text-gray-900 uppercase">View More</th>
             </tr>
           </thead>
+
           <tbody className="text-sm max-h-[28rem]">
             {!isEmpty(leaveLedger) ? (
               leaveLedger.map((entry, index) => {
                 return (
-                  <tr className="divide-x divide-y" key={index}>
+                  <tr className={`${leaveRowBg(entry)} divide-x divide-y`} key={index}>
                     <td className="items-center p-2 break-words border-b text-start">
                       {dayjs(entry.period).format('MM/DD/YYYY')}
                     </td>
