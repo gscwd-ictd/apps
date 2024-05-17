@@ -4,6 +4,7 @@ import { useInboxStore } from 'apps/portal/src/store/inbox.store';
 import { useEmployeeStore } from 'apps/portal/src/store/employee.store';
 import { PsbMessageContent } from 'apps/portal/src/types/inbox.type';
 import { useEffect, useState } from 'react';
+import { NomineeStatus } from 'libs/utils/src/lib/enums/training.enum';
 // eslint-disable-next-line @nx/enforce-module-boundaries
 
 type TabsProps = {
@@ -11,16 +12,25 @@ type TabsProps = {
 };
 
 export const InboxTabs = ({ tab }: TabsProps) => {
-  const { setTab, psbMessages, overtimeMessages, trainingMessages, patchResponseApply } = useInboxStore((state) => ({
-    setTab: state.setTab,
-    psbMessages: state.message.psbMessages,
-    overtimeMessages: state.message.overtimeMessages,
-    trainingMessages: state.message.trainingMessages,
-    patchResponseApply: state.response.patchResponseApply,
-  }));
+  const { setTab, psbMessages, overtimeMessages, trainingMessages, patchResponseApply, putResponseApply } =
+    useInboxStore((state) => ({
+      setTab: state.setTab,
+      psbMessages: state.message.psbMessages,
+      overtimeMessages: state.message.overtimeMessages,
+      trainingMessages: state.message.trainingMessages,
+      patchResponseApply: state.response.patchResponseApply,
+      putResponseApply: state.response.putResponseApply,
+    }));
 
   const employeeDetails = useEmployeeStore((state) => state.employeeDetails);
   const [currentPendingPsbCount, setcurrentPendingPsbCount] = useState<number>(0);
+  const [currentPendingTrainingCount, setcurrentPendingTrainingCount] = useState<number>(0);
+
+  useEffect(() => {
+    let pendingTraining = [];
+    pendingTraining = trainingMessages.filter((e) => e.nomineeStatus === NomineeStatus.PENDING);
+    setcurrentPendingTrainingCount(pendingTraining.length);
+  }, [putResponseApply, trainingMessages]);
 
   //count any pending psb inbox action
   useEffect(() => {
@@ -80,7 +90,7 @@ export const InboxTabs = ({ tab }: TabsProps) => {
             title="Training"
             icon={<HiMail size={26} />}
             subtitle="Notifications"
-            notificationCount={trainingMessages ? trainingMessages.length : 0}
+            notificationCount={currentPendingTrainingCount}
             className="bg-indigo-500"
           />
           {Boolean(employeeDetails.employmentDetails.isHRMPSB) === true ? (
