@@ -121,6 +121,8 @@ export const LeaveLedgerTable: FunctionComponent<LeaveLedgerTableProps> = ({ emp
       } else {
         return '';
       }
+    } else {
+      return '';
     }
   };
 
@@ -131,7 +133,7 @@ export const LeaveLedgerTable: FunctionComponent<LeaveLedgerTableProps> = ({ emp
       // check if leave ledger is empty
       if (!isEmpty(swrLeaveLedger.data)) {
         // mutate leave dates from string to array of string
-        const tempLeaveLedger = swrLeaveLedger.data.map((leaveLedger) => {
+        const tempLeaveLedger = swrLeaveLedger.data.map((leaveLedger: LeaveLedgerEntry) => {
           const newLeaveDates = !isEmpty(leaveLedger.leaveDates) ? leaveLedger.leaveDates.toString().split(', ') : null;
           leaveLedger.leaveDates = newLeaveDates;
           return leaveLedger;

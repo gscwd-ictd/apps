@@ -14,6 +14,7 @@ import { LeaveLedgerTable } from 'apps/employee-monitoring/src/components/tables
 import LeaveLedgerAdjModal from 'apps/employee-monitoring/src/components/modal/employees/leave-ledger/LeaveLedgerAdjModal';
 import { useLeaveBenefitStore } from 'apps/employee-monitoring/src/store/leave-benefits.store';
 import { useLeaveLedgerStore } from 'apps/employee-monitoring/src/store/leave-ledger.store';
+import LeaveLedgerPdfModal from 'apps/employee-monitoring/src/components/modal/employees/leave-ledger/LeaveLedgerPdfModal';
 
 export default function Index({ employeeData }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   // Print modal function
@@ -73,6 +74,11 @@ export default function Index({ employeeData }: InferGetServerSidePropsType<type
           employeeId={employeeData.userId}
           closeModalAction={closeAdjustmentModalAction}
         />
+
+        {/* Modal is available if DTR is pulled */}
+        {!isEmpty(employeeData) ? (
+          <LeaveLedgerPdfModal printModalIsOpen={printModalIsOpen} toggle={toggle} employeeData={employeeData} />
+        ) : null}
 
         {/* LEAVE LEDGER */}
         <div className="px-5">
@@ -134,7 +140,7 @@ export default function Index({ employeeData }: InferGetServerSidePropsType<type
                     </div>
                   </div>
 
-                  <div className="w-fit">
+                  <div className="w-fit flex gap-2">
                     <button
                       type="button"
                       className="text-white bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-blue-300 font-medium rounded-md text-xs p-2.5 text-center inline-flex items-center  dark:bg-blue-400 dark:hover:bg-blue-500 dark:focus:ring-blue-600"
@@ -142,21 +148,17 @@ export default function Index({ employeeData }: InferGetServerSidePropsType<type
                     >
                       <i className="bx bxs-plus-square"></i>&nbsp; Adjustment
                     </button>
+
+                    <PrintButton onClick={toggle} />
                   </div>
                 </section>
               </div>
-
-              {/* <div className="flex justify-end gap-2">
-                <PrintButton onClick={toggle} />
-              </div> */}
 
               {/* LEAVE LEDGER TABLE */}
               <LeaveLedgerTable employeeData={employeeData} />
             </div>
           </Card>
         </div>
-
-        <DailyTimeRecordPdfModal printModalIsOpen={printModalIsOpen} toggle={toggle} employeeData={employeeData} />
       </div>
     </>
   );
