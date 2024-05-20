@@ -911,7 +911,7 @@ export const LeavePdf = ({ employeeDetails, leaveDetails, selectedLeaveLedger }:
                               fontSize: 10,
                             }}
                           >
-                            test
+                            {/* test */}
                           </Text>
                           <Text style={{}}>_________________________________________________</Text>
                           <Text
@@ -997,7 +997,7 @@ export const LeavePdf = ({ employeeDetails, leaveDetails, selectedLeaveLedger }:
                             fontSize: 10,
                           }}
                         >
-                          test
+                          {/* test */}
                         </Text>
                         <Text style={{}}>_________________________________________________</Text>
                         <Text
@@ -1111,7 +1111,7 @@ export const LeavePdf = ({ employeeDetails, leaveDetails, selectedLeaveLedger }:
                         marginBottom: -18,
                       }}
                     >
-                      test
+                      {/* test */}
                     </Text>
                     <Text style={{}}>______________________</Text>
 

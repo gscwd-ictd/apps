@@ -1,74 +1,18 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @nx/enforce-module-boundaries */
 import { isEmpty } from 'lodash';
-import { FunctionComponent, useEffect, useState } from 'react';
-import { usePassSlipStore } from '../../store/pass-slip.store';
-import fetcherEMS from '../../utils/fetcher/FetcherEMS';
+import { FunctionComponent } from 'react';
 import { CardMiniStats } from './CardMiniStats';
-import useSWR from 'swr';
-import { PassSlipStatus } from 'libs/utils/src/lib/enums/pass-slip.enum';
-import { ToastNotification } from '@gscwd-apps/oneui';
+import { useChartsStore } from '../../store/chart.store';
 
-export const CardPassSlipRequests: FunctionComponent = () => {
-  // pass slip count
-  const [countHrmoApproval, setCountHrmoApproval] = useState<string>('--');
-
-  // use swr pass slips
-  const {
-    data: swrPassSlips,
-    isLoading: swrIsLoading,
-    error: swrError,
-  } = useSWR('/pass-slip', fetcherEMS, {
-    onErrorRetry: (error, key, config, revalidate, { retryCount }) => {
-      // Only retry up to 10 times.
-      if (retryCount >= 5) return;
-
-      // Retry after 5 seconds.
-      setTimeout(() => revalidate({ retryCount }), 15000);
-    },
-  });
-
+export const CardPassSlipRequests: FunctionComponent<{ isLoading: boolean }> = ({ isLoading }) => {
   // Zustand init
-  const { PassSlips, ErrorPassSlips, GetPassSlips, GetPassSlipsFail, GetPassSlipsSuccess } = usePassSlipStore(
-    (state) => ({
-      PassSlips: state.passSlips,
-      GetPassSlips: state.getPassSlips,
-      GetPassSlipsSuccess: state.getPassSlipsSuccess,
-      GetPassSlipsFail: state.getPassSlipsFail,
-      ErrorPassSlips: state.error.errorPassSlips,
-    })
-  );
-
-  // initialize loading
-  useEffect(() => {
-    if (swrIsLoading) GetPassSlips();
-  }, [swrIsLoading]);
-
-  // get passlips success or fail
-  useEffect(() => {
-    // success
-    if (!isEmpty(swrPassSlips)) GetPassSlipsSuccess(swrPassSlips.data);
-
-    // fail
-    if (!isEmpty(swrError)) GetPassSlipsFail(swrError.message);
-  }, [swrPassSlips, swrError]);
-
-  useEffect(() => {
-    if (!isEmpty(PassSlips)) {
-      const forApprovalPassSlipsCount = PassSlips.filter(
-        (passSlip) => passSlip.status === PassSlipStatus.FOR_HRMO_APPROVAL
-      );
-      setCountHrmoApproval(forApprovalPassSlipsCount.length.toString());
-    }
-  }, [PassSlips]);
+  const { PendingPassSlips } = useChartsStore((state) => ({
+    PendingPassSlips: state.getDashboardStats.pendingPassSlips,
+  }));
 
   return (
     <>
-      {/* Error Notifications */}
-      {!isEmpty(ErrorPassSlips) ? (
-        <ToastNotification toastType="error" notifMessage={'Network Error: Failed to retrieve data'} />
-      ) : null}
-
       <CardMiniStats
         className="border rounded-md shadow hover:bg-slate-200 hover:cursor-pointer"
         icon={
@@ -86,8 +30,8 @@ export const CardPassSlipRequests: FunctionComponent = () => {
           </svg>
         }
         title="Pass Slip Pending Approval"
-        value={!isEmpty(PassSlips) ? countHrmoApproval : 0}
-        isLoading={swrIsLoading}
+        value={!isEmpty(PendingPassSlips) ? PendingPassSlips : 0}
+        isLoading={isLoading}
       />
     </>
   );

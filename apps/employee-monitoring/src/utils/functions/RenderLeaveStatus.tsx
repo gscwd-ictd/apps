@@ -2,19 +2,23 @@
 /* This function is used for rendering pass slip valuees */
 
 import { LeaveStatus } from 'libs/utils/src/lib/enums/leave.enum';
+import { TextSize } from 'libs/utils/src/lib/enums/text-size.enum';
 import BadgePill from '../../components/badges/BadgePill';
 
-function UseRenderLeaveStatus(status: LeaveStatus | string, textSize?: string) {
+function UseRenderLeaveStatus(status: LeaveStatus | string, textSize?: TextSize) {
   return (
     <BadgePill
+      textSize={textSize}
       variant={
         status === LeaveStatus.APPROVED || status === 'approved'
           ? 'success'
           : status === LeaveStatus.CANCELLED || status === 'cancelled'
-          ? 'error'
+          ? 'default'
           : status === LeaveStatus.FOR_HRDM_APPROVAL || status === 'for hrdm approval'
           ? 'warning'
           : status === LeaveStatus.FOR_HRMO_APPROVAL || status === 'for hrmo approval'
+          ? 'warning'
+          : status === LeaveStatus.FOR_HRMO_CREDIT_CERTIFICATION || status === 'for hrmo credit certification'
           ? 'warning'
           : status === LeaveStatus.FOR_SUPERVISOR_APPROVAL || status === 'for supervisor approval'
           ? 'warning'
@@ -28,11 +32,13 @@ function UseRenderLeaveStatus(status: LeaveStatus | string, textSize?: string) {
       }
       label={
         status === LeaveStatus.FOR_HRMO_APPROVAL
-          ? 'For HRMO Approval'
+          ? 'For HRMO Review'
+          : status === LeaveStatus.FOR_HRMO_CREDIT_CERTIFICATION
+          ? 'For HRMO Credit Certification'
           : status === LeaveStatus.FOR_SUPERVISOR_APPROVAL
-          ? 'For Supervisor Approval'
+          ? 'For Supervisor Review'
           : status === LeaveStatus.FOR_HRDM_APPROVAL
-          ? 'For HRDM Approval'
+          ? 'For HRDM Review'
           : status === LeaveStatus.APPROVED
           ? 'Approved'
           : status === LeaveStatus.DISAPPROVED_BY_HRDM
@@ -43,9 +49,8 @@ function UseRenderLeaveStatus(status: LeaveStatus | string, textSize?: string) {
           ? 'Disapproved By HRMO'
           : status === LeaveStatus.CANCELLED
           ? 'Cancelled'
-          : null
+          : status
       }
-      textSize={textSize}
     />
   );
 }

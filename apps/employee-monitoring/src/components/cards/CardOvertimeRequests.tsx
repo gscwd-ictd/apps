@@ -1,72 +1,18 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @nx/enforce-module-boundaries */
 import { isEmpty } from 'lodash';
-import { FunctionComponent, useEffect, useState } from 'react';
-import { useOvertimeStore } from 'apps/employee-monitoring/src/store/overtime.store';
-import fetcherEMS from '../../utils/fetcher/FetcherEMS';
+import { FunctionComponent } from 'react';
 import { CardMiniStats } from './CardMiniStats';
-import useSWR from 'swr';
-import { ToastNotification } from '@gscwd-apps/oneui';
+import { useChartsStore } from '../../store/chart.store';
 
-export const CardOvertimeRequests: FunctionComponent = () => {
-  // ot count
-  const [countOtApplication, setCountOtApplication] = useState<string>('--');
-
-  // fetch data for list of overtime applications
-  const {
-    data: swrOvertimeApplications,
-    isLoading: swrIsLoading,
-    error: swrError,
-  } = useSWR('/overtime', fetcherEMS, {
-    onErrorRetry: (error, key, config, revalidate, { retryCount }) => {
-      // Only retry up to 10 times.
-      if (retryCount >= 5) return;
-
-      // Retry after 5 seconds.
-      setTimeout(() => revalidate({ retryCount }), 15000);
-    },
-  });
-
-  // Zustand initialization
-  const {
-    OvertimeApplications,
-    SetOvertimeApplications,
-
-    ErrorOvertimeApplications,
-    SetErrorOvertimeApplications,
-  } = useOvertimeStore((state) => ({
-    OvertimeApplications: state.overtimeApplications,
-    SetOvertimeApplications: state.setOvertimeApplications,
-
-    ErrorOvertimeApplications: state.errorOvertimeApplications,
-    SetErrorOvertimeApplications: state.setErrorOvertimeApplications,
+export const CardOvertimeRequests: FunctionComponent<{ isLoading: boolean }> = ({ isLoading }) => {
+  // Zustand init
+  const { OvertimeApplications } = useChartsStore((state) => ({
+    OvertimeApplications: state.getDashboardStats.overtimeApplications,
   }));
-
-  // Set store state of overtime
-  useEffect(() => {
-    if (!isEmpty(swrOvertimeApplications)) {
-      SetOvertimeApplications(swrOvertimeApplications.data);
-    }
-
-    if (!isEmpty(swrError)) {
-      SetErrorOvertimeApplications(swrError.message);
-    }
-  }, [swrOvertimeApplications, swrError]);
-
-  // Set count variable
-  useEffect(() => {
-    if (!isEmpty(OvertimeApplications)) {
-      setCountOtApplication(OvertimeApplications.length.toString());
-    }
-  }, [OvertimeApplications]);
 
   return (
     <>
-      {/* Error Notifications */}
-      {!isEmpty(ErrorOvertimeApplications) ? (
-        <ToastNotification toastType="error" notifMessage={'Network Error: Failed to retrieve data'} />
-      ) : null}
-
       <CardMiniStats
         className="border rounded-md shadow hover:bg-slate-200 hover:cursor-pointer"
         icon={
@@ -83,8 +29,8 @@ export const CardOvertimeRequests: FunctionComponent = () => {
           </svg>
         }
         title="Overtime Applications"
-        value={!isEmpty(OvertimeApplications) ? countOtApplication : 0}
-        isLoading={swrIsLoading}
+        value={!isEmpty(OvertimeApplications) ? OvertimeApplications : 0}
+        isLoading={isLoading}
       />
     </>
   );
