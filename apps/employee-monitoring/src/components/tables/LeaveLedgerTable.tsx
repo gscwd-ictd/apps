@@ -155,10 +155,6 @@ export const LeaveLedgerTable: FunctionComponent<LeaveLedgerTableProps> = ({ emp
     }
   }, [PostLeaveAdjustment]);
 
-  useEffect(() => {
-    if (!isEmpty(leaveLedger)) console.log(leaveLedger);
-  }, [leaveLedger]);
-
   if (swrIsLoading)
     return (
       <>
