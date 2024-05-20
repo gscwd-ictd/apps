@@ -350,7 +350,9 @@ export const LeaveLedgerPdf: FunctionComponent<LeaveLedgerPdfProps> = ({ employe
                             </View>
                             <View style={[styles.tableData, styles.w5]}>
                               <Text style={[styles.tableDataText]}>
-                                {!isEmpty(entry.forcedLeave) ? entry.forcedLeave : ''}
+                                {!isEmpty(entry.forcedLeave) && parseFloat(entry.forcedLeave.toString()) !== 0
+                                  ? entry.forcedLeave
+                                  : ''}
                               </Text>
                             </View>
                             <View style={[styles.tableData, styles.w5]}>
@@ -358,7 +360,9 @@ export const LeaveLedgerPdf: FunctionComponent<LeaveLedgerPdfProps> = ({ employe
                             </View>
                             <View style={[styles.tableData, styles.w5]}>
                               <Text style={[styles.tableDataText]}>
-                                {!isEmpty(entry.vacationLeave) ? entry.vacationLeave : ''}
+                                {!isEmpty(entry.vacationLeave) && parseFloat(entry.vacationLeave.toString()) !== 0
+                                  ? entry.vacationLeave
+                                  : ''}
                               </Text>
                             </View>
                             <View style={[styles.tableData, styles.w5]}>
@@ -366,7 +370,9 @@ export const LeaveLedgerPdf: FunctionComponent<LeaveLedgerPdfProps> = ({ employe
                             </View>
                             <View style={[styles.tableData, styles.w5]}>
                               <Text style={[styles.tableDataText]}>
-                                {!isEmpty(entry.sickLeave) ? entry.sickLeave : ''}
+                                {!isEmpty(entry.sickLeave) && parseFloat(entry.sickLeave.toString()) !== 0
+                                  ? entry.sickLeave
+                                  : null}
                               </Text>
                             </View>
                             <View style={[styles.tableData, styles.w5]}>
@@ -374,7 +380,10 @@ export const LeaveLedgerPdf: FunctionComponent<LeaveLedgerPdfProps> = ({ employe
                             </View>
                             <View style={[styles.tableData, styles.w5]}>
                               <Text style={[styles.tableDataText]}>
-                                {!isEmpty(entry.specialPrivilegeLeave) ? entry.specialPrivilegeLeave : ''}
+                                {!isEmpty(entry.specialPrivilegeLeave) &&
+                                parseFloat(entry.specialPrivilegeLeave.toString()) !== 0
+                                  ? entry.specialPrivilegeLeave
+                                  : null}
                               </Text>
                             </View>
                             <View style={[styles.tableData, styles.w5]}>
@@ -382,7 +391,10 @@ export const LeaveLedgerPdf: FunctionComponent<LeaveLedgerPdfProps> = ({ employe
                             </View>
                             <View style={[styles.tableData, styles.w5]}>
                               <Text style={[styles.tableDataText]}>
-                                {!isEmpty(entry.specialLeaveBenefit) ? entry.specialLeaveBenefit : ''}
+                                {!isEmpty(entry.specialLeaveBenefit) &&
+                                parseFloat(entry.specialLeaveBenefit.toString()) !== 0
+                                  ? entry.specialLeaveBenefit
+                                  : null}
                               </Text>
                             </View>
                             <View style={[styles.tableData, styles.w5]}>
