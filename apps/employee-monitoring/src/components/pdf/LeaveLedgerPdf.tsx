@@ -349,31 +349,41 @@ export const LeaveLedgerPdf: FunctionComponent<LeaveLedgerPdfProps> = ({ employe
                               <Text style={[styles.tableDataText]}>{entry.particulars}</Text>
                             </View>
                             <View style={[styles.tableData, styles.w5]}>
-                              <Text style={[styles.tableDataText]}>{entry.forcedLeave}</Text>
+                              <Text style={[styles.tableDataText]}>
+                                {!isEmpty(entry.forcedLeave) ? entry.forcedLeave : ''}
+                              </Text>
                             </View>
                             <View style={[styles.tableData, styles.w5]}>
                               <Text style={[styles.tableDataText]}>{entry.forcedLeaveBalance}</Text>
                             </View>
                             <View style={[styles.tableData, styles.w5]}>
-                              <Text style={[styles.tableDataText]}>{entry.vacationLeave}</Text>
+                              <Text style={[styles.tableDataText]}>
+                                {!isEmpty(entry.vacationLeave) ? entry.vacationLeave : ''}
+                              </Text>
                             </View>
                             <View style={[styles.tableData, styles.w5]}>
                               <Text style={[styles.tableDataText]}>{entry.vacationLeaveBalance}</Text>
                             </View>
                             <View style={[styles.tableData, styles.w5]}>
-                              <Text style={[styles.tableDataText]}>{entry.sickLeave}</Text>
+                              <Text style={[styles.tableDataText]}>
+                                {!isEmpty(entry.sickLeave) ? entry.sickLeave : ''}
+                              </Text>
                             </View>
                             <View style={[styles.tableData, styles.w5]}>
                               <Text style={[styles.tableDataText]}>{entry.sickLeaveBalance}</Text>
                             </View>
                             <View style={[styles.tableData, styles.w5]}>
-                              <Text style={[styles.tableDataText]}>{entry.specialPrivilegeLeave}</Text>
+                              <Text style={[styles.tableDataText]}>
+                                {!isEmpty(entry.specialPrivilegeLeave) ? entry.specialPrivilegeLeave : ''}
+                              </Text>
                             </View>
                             <View style={[styles.tableData, styles.w5]}>
                               <Text style={[styles.tableDataText]}>{entry.specialPrivilegeLeaveBalance}</Text>
                             </View>
                             <View style={[styles.tableData, styles.w5]}>
-                              <Text style={[styles.tableDataText]}>{entry.specialLeaveBenefit}</Text>
+                              <Text style={[styles.tableDataText]}>
+                                {!isEmpty(entry.specialLeaveBenefit) ? entry.specialLeaveBenefit : ''}
+                              </Text>
                             </View>
                             <View style={[styles.tableData, styles.w5]}>
                               <Text style={[styles.tableDataText]}>{entry.specialLeaveBenefitBalance}</Text>
