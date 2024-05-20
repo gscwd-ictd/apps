@@ -110,7 +110,7 @@ export default function Vacancies({
       setHasApplied(applicantApplication.hasApplied);
     }
   };
-  console.log(data);
+
   const handleWorkExperience = async (employeeId: string) => {
     const data = await getWorkExp(employeeId);
 
