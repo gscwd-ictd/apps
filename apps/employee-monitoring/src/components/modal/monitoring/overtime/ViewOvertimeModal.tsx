@@ -6,6 +6,7 @@ import { LabelValue } from '../../../labels/LabelValue';
 import { Overtime } from 'libs/utils/src/lib/types/overtime.type';
 import UseRenderOvertimeStatus from 'apps/employee-monitoring/src/utils/functions/RenderOvertimeStatus';
 import { EmployeesUnderOvertimeTable } from '../../../tables/EmployeesUnderOvertimeTable';
+import { DateTimeFormatter } from 'libs/utils/src/lib/functions/DateTimeFormatter';
 
 type ViewOvertimeModalProps = {
   modalState: boolean;
@@ -71,6 +72,22 @@ const ViewOvertimeModal: FunctionComponent<ViewOvertimeModalProps> = ({
                     direction="top-to-bottom"
                     textSize="md"
                     value={rowData.estimatedHours ? rowData.estimatedHours : 'N/A'}
+                  />
+                </div>
+
+                <div className="grid px-5 sm:grid-rows-2 sm:grid-cols-1 md:grid-rows-2 md:grid-cols-1 lg:grid-rows-1 lg:grid-cols-2 sm:gap-2 md:gap:2 lg:gap-0">
+                  <LabelValue
+                    label="Approved By"
+                    direction="top-to-bottom"
+                    textSize="md"
+                    value={rowData.approvedBy ? rowData.approvedBy : 'N/A'}
+                  />
+
+                  <LabelValue
+                    label="Date Approved"
+                    direction="top-to-bottom"
+                    textSize="md"
+                    value={rowData.dateApproved ? DateTimeFormatter(rowData.dateApproved) : '-- -- ----'}
                   />
                 </div>
 
