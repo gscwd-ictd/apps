@@ -18,6 +18,7 @@ import { PassSlipStatus } from 'libs/utils/src/lib/enums/pass-slip.enum';
 import { isEmpty } from 'lodash';
 import { useEffect, useState } from 'react';
 import useSWR from 'swr';
+import UpdatePassSlipModal from 'apps/employee-monitoring/src/components/modal/monitoring/pass-slips/UpdatePassSlipTimeLogs';
 
 export default function Index() {
   const [currentRowData, setCurrentRowData] = useState<PassSlip>({} as PassSlip);
@@ -46,6 +47,10 @@ export default function Index() {
     CancelPassSlipFail,
     CancelPassSlipSuccess,
 
+    UpdatePassSlipTimeLogs,
+    UpdatePassSlipTimeLogsFail,
+    UpdatePassSlipTimeLogsSuccess,
+
     emptyErrorsAndResponse,
   } = usePassSlipStore((state) => ({
     passSlips: state.passSlips,
@@ -60,6 +65,10 @@ export default function Index() {
     CancelPassSlip: state.response.cancelPassSlip,
     CancelPassSlipFail: state.cancelPassSlipFail,
     CancelPassSlipSuccess: state.cancelPassSlipSuccess,
+
+    UpdatePassSlipTimeLogs: state.response.updatePassSlipTimeLogs,
+    UpdatePassSlipTimeLogsFail: state.updatePassSlipTimeLogsFail,
+    UpdatePassSlipTimeLogsSuccess: state.updatePassSlipTimeLogsSuccess,
 
     emptyErrorsAndResponse: state.emptyErrorsAndResponse,
   }));
@@ -80,6 +89,14 @@ export default function Index() {
   };
   const closeCancelModal = () => setCancelModalIsOpen(false);
 
+  // Update modal function
+  const [updateModalIsOpen, setUpdateModalIsOpen] = useState<boolean>(false);
+  const openUpdateModal = (rowData: PassSlip) => {
+    setUpdateModalIsOpen(true);
+    setCurrentRowData(rowData);
+  };
+  const closeUpdateModal = () => setUpdateModalIsOpen(false);
+
   // Render row actions in the table component
   const renderRowActions = (rowData: PassSlip) => {
     return (
@@ -91,6 +108,15 @@ export default function Index() {
         >
           <i className="bx bx-show"></i>
         </button>
+        {rowData.status === PassSlipStatus.APPROVED ? (
+          <button
+            type="button"
+            className="text-white bg-gray-400 hover:bg-gray-500  focus:outline-none focus:ring-gray-300 font-medium rounded-lg text-sm p-2.5 text-center inline-flex items-center mr-2 "
+            onClick={() => openUpdateModal(rowData)}
+          >
+            <i className="bx bxs-edit"></i>
+          </button>
+        ) : null}
         {rowData.status !== PassSlipStatus.UNUSED &&
         rowData.status !== PassSlipStatus.CANCELLED &&
         rowData.status !== PassSlipStatus.FOR_HRMO_APPROVAL ? (
@@ -177,10 +203,10 @@ export default function Index() {
   }, [swrPassSlips, swrError]);
 
   useEffect(() => {
-    if (!isEmpty(ResponseHrmoApprovalPassSlip) || !isEmpty(CancelPassSlip)) {
+    if (!isEmpty(ResponseHrmoApprovalPassSlip) || !isEmpty(CancelPassSlip) || !isEmpty(UpdatePassSlipTimeLogs)) {
       mutatePassSlipApplications();
     }
-  }, [ResponseHrmoApprovalPassSlip, CancelPassSlip]);
+  }, [ResponseHrmoApprovalPassSlip, CancelPassSlip, UpdatePassSlipTimeLogs]);
 
   return (
     <>
@@ -203,6 +229,10 @@ export default function Index() {
           <ToastNotification toastType="success" notifMessage="Pass slip cancelled successfully" />
         ) : null}
 
+        {!isEmpty(UpdatePassSlipTimeLogs) ? (
+          <ToastNotification toastType="success" notifMessage="Time logs updated successfully" />
+        ) : null}
+
         {/* view modal */}
         <ViewPassSlipModal
           modalState={viewModalIsOpen}
@@ -215,6 +245,14 @@ export default function Index() {
           modalState={cancelModalIsOpen}
           setModalState={setCancelModalIsOpen}
           closeModalAction={closeCancelModal}
+          formData={currentRowData}
+        />
+
+        {/* update modal */}
+        <UpdatePassSlipModal
+          modalState={updateModalIsOpen}
+          setModalState={setUpdateModalIsOpen}
+          closeModalAction={closeUpdateModal}
           formData={currentRowData}
         />
 

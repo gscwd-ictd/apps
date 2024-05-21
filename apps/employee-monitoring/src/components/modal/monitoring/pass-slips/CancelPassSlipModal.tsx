@@ -12,14 +12,14 @@ import { AlertNotification, LoadingSpinner, Modal, ToastNotification } from '@gs
 
 import dayjs from 'dayjs';
 
-type CancelModalProps = {
+type CancelPassSlipModalProps = {
   modalState: boolean;
   setModalState: React.Dispatch<React.SetStateAction<boolean>>;
   closeModalAction: () => void;
   formData: PassSlip;
 };
 
-const CancelPassSlipModal: FunctionComponent<CancelModalProps> = ({
+const CancelPassSlipModal: FunctionComponent<CancelPassSlipModalProps> = ({
   modalState,
   setModalState,
   closeModalAction,
@@ -77,8 +77,8 @@ const CancelPassSlipModal: FunctionComponent<CancelModalProps> = ({
 
           <div className="w-full">
             <div className="flex flex-col w-full gap-5">
-              <p className="px-2 text-md font-medium text-center text-gray-600">Do you want to cancel pass slip for:</p>
-              <div className="mt-5 text-gray-600">
+              <p className="text-md font-medium text-center text-gray-600">Do you want to cancel pass slip for:</p>
+              <div className="text-gray-600 p-5">
                 <div className="flex flex-row justify-between">
                   Name: <span className="font-bold">{formData.employeeName}</span>
                 </div>
@@ -90,9 +90,6 @@ const CancelPassSlipModal: FunctionComponent<CancelModalProps> = ({
                 </div>
                 <div className="flex flex-row justify-between">
                   Nature of Business: <span className="font-bold">{formData.natureOfBusiness}</span>
-                </div>
-                <div className="flex flex-row justify-between">
-                  Status: <span className="font-bold">{formData.status ? formData.status.toUpperCase() : ''}</span>
                 </div>
               </div>
             </div>
