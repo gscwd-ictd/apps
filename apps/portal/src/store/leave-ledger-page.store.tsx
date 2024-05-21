@@ -34,6 +34,9 @@ type LeaveLedgerState = {
   leaveLedgerModalIsOpen: boolean;
   setLeaveLedgerModalIsOpen: (leaveLedgerModalIsOpen: boolean) => void;
 
+  leaveLedgerPdfModalIsOpen: boolean;
+  setLeaveLedgerPdfModalIsOpen: (leaveLedgerPdfModalIsOpen: boolean) => void;
+
   getLeaveLedger: () => void;
   getLeaveLedgerSuccess: (response: Array<LeaveLedgerEntry>) => void;
   getLeaveLedgerFail: (error: string) => void;
@@ -64,6 +67,11 @@ export const useLeaveLedgerPageStore = create<LeaveLedgerState>()(
     leaveLedgerModalIsOpen: false,
     setLeaveLedgerModalIsOpen: (leaveLedgerModalIsOpen: boolean) => {
       set((state) => ({ ...state, leaveLedgerModalIsOpen }));
+    },
+
+    leaveLedgerPdfModalIsOpen: false,
+    setLeaveLedgerPdfModalIsOpen: (leaveLedgerPdfModalIsOpen: boolean) => {
+      set((state) => ({ ...state, leaveLedgerPdfModalIsOpen }));
     },
 
     getLeaveLedger: () =>
