@@ -1,9 +1,11 @@
 /* eslint-disable @nx/enforce-module-boundaries */
 import { Button, Modal } from '@gscwd-apps/oneui';
-import { HiX } from 'react-icons/hi';
+import { HiPrinter, HiX } from 'react-icons/hi';
 import { useEmployeeStore } from '../../../store/employee.store';
 import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
 import { LeaveLedgerTable } from '../table/LeaveLedgerTable';
+import LeaveLedgerPdfModal from './LeaveLedgerPdfModal';
+import { useLeaveLedgerPageStore } from 'apps/portal/src/store/leave-ledger-page.store';
 
 type LeaveLedgerModalProps = {
   modalState: boolean;
@@ -14,10 +16,27 @@ type LeaveLedgerModalProps = {
 export const LeaveLedgerModal = ({ modalState, setModalState, closeModalAction }: LeaveLedgerModalProps) => {
   const employeeDetails = useEmployeeStore((state) => state.employeeDetails);
 
+  const { leaveLedgerPdfModalIsOpen, setLeaveLedgerPdfModalIsOpen } = useLeaveLedgerPageStore((state) => ({
+    leaveLedgerPdfModalIsOpen: state.leaveLedgerPdfModalIsOpen,
+    setLeaveLedgerPdfModalIsOpen: state.setLeaveLedgerPdfModalIsOpen,
+  }));
+
+  // cancel action for Leave Application Modal
+  const closeLeaveLedgerPdfModal = async () => {
+    setLeaveLedgerPdfModalIsOpen(false);
+  };
+
   const { windowWidth } = UseWindowDimensions();
 
   return (
     <>
+      <LeaveLedgerPdfModal
+        modalState={leaveLedgerPdfModalIsOpen}
+        setModalState={setLeaveLedgerPdfModalIsOpen}
+        employeeData={employeeDetails}
+        closeModalAction={closeLeaveLedgerPdfModal}
+      />
+
       <Modal size={`${windowWidth > 1024 ? 'xl' : 'full'}`} open={modalState} setOpen={setModalState}>
         <Modal.Header>
           <h3 className="font-semibold text-gray-700">
@@ -33,7 +52,16 @@ export const LeaveLedgerModal = ({ modalState, setModalState, closeModalAction }
           </h3>
         </Modal.Header>
         <Modal.Body>
-          <LeaveLedgerTable employeeData={employeeDetails} />
+          <div className="flex flex-col px-4">
+            <div className="flex items-end justify-end pb-2">
+              <Button onClick={(e) => setLeaveLedgerPdfModalIsOpen(true)} className="hidden lg:block" size={`md`}>
+                <div className="flex items-center w-full gap-2">
+                  <HiPrinter /> Print Ledger
+                </div>
+              </Button>
+            </div>
+            <LeaveLedgerTable employeeData={employeeDetails} />
+          </div>
         </Modal.Body>
         <Modal.Footer>
           <div className="flex justify-end gap-2 px-4">
