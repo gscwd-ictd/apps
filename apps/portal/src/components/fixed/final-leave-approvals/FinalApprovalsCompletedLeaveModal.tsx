@@ -9,11 +9,10 @@ import { useFinalLeaveApprovalStore } from 'apps/portal/src/store/final-leave-ap
 import { DateFormatter } from 'libs/utils/src/lib/functions/DateFormatter';
 import { useEffect, useState } from 'react';
 import { DateTimeFormatter } from 'libs/utils/src/lib/functions/DateTimeFormatter';
-import { useLeaveLedgerPageStore } from 'apps/portal/src/store/leave-ledger-page.store';
 import useSWR from 'swr';
-import { useLeaveLedgerStore } from 'apps/portal/src/store/leave-ledger.store';
 import { fetchWithToken } from 'apps/portal/src/utils/hoc/fetcher';
 import { isEmpty } from 'lodash';
+import { useFinalLeaveApprovalLeaveLedgerStore } from 'apps/portal/src/store/final-leave-approvals-leave-ledger.store';
 
 type ApprovalsCompletedLeaveModalProps = {
   modalState: boolean;
@@ -48,7 +47,7 @@ export const ApprovalsCompletedLeaveModal = ({
     getLeaveLedger,
     getLeaveLedgerSuccess,
     getLeaveLedgerFail,
-  } = useLeaveLedgerStore((state) => ({
+  } = useFinalLeaveApprovalLeaveLedgerStore((state) => ({
     leaveLedger: state.leaveLedger,
     selectedLeaveLedger: state.selectedLeaveLedger,
     setSelectedLeaveLedger: state.setSelectedLeaveLedger,
@@ -57,17 +56,22 @@ export const ApprovalsCompletedLeaveModal = ({
     getLeaveLedgerFail: state.getLeaveLedgerFail,
   }));
 
-  const leaveLedgerUrl = `${process.env.NEXT_PUBLIC_EMPLOYEE_MONITORING_URL}/v1/leave/ledger/${leaveIndividualDetail.employee.employeeId}/}`;
-  // const leaveLedgerUrl = `${process.env.NEXT_PUBLIC_EMPLOYEE_MONITORING_URL}/v1/leave/ledger/${leaveIndividualDetail.employee.employeeId}/${leaveIndividualDetail.}`;
+  const leaveLedgerUrl = `${process.env.NEXT_PUBLIC_EMPLOYEE_MONITORING_URL}/v1/leave/ledger/${leaveIndividualDetail?.employee?.employeeId}/${leaveIndividualDetail?.employee?.companyId}`;
 
   const {
     data: swrLeaveLedger,
     isLoading: swrLeaveLedgerLoading,
     error: swrLeaveLedgerError,
-  } = useSWR(modalState && leaveIndividualDetail.employee.employeeId ? leaveLedgerUrl : null, fetchWithToken, {
-    shouldRetryOnError: false,
-    revalidateOnFocus: false,
-  });
+  } = useSWR(
+    modalState && leaveIndividualDetail.employee.employeeId && leaveIndividualDetail?.employee?.companyId
+      ? leaveLedgerUrl
+      : null,
+    fetchWithToken,
+    {
+      shouldRetryOnError: false,
+      revalidateOnFocus: false,
+    }
+  );
 
   // Initial zustand state update
   useEffect(() => {
@@ -396,7 +400,16 @@ export const ApprovalsCompletedLeaveModal = ({
 
                     <div className="w-full pb-4">
                       <span className="text-slate-500 text-md">
-                        Employee's {leaveIndividualDetail?.leaveName} Credits at the time of this application:
+                        Employee's{' '}
+                        {leaveIndividualDetail?.leaveName === LeaveName.VACATION ||
+                        leaveIndividualDetail?.leaveName === LeaveName.FORCED
+                          ? 'VL+FL'
+                          : leaveIndividualDetail?.leaveName === LeaveName.SICK
+                          ? 'SL'
+                          : leaveIndividualDetail?.leaveName === LeaveName.SPECIAL_PRIVILEGE
+                          ? 'SPL'
+                          : 'Leave'}{' '}
+                        Credits at the time of this application:
                       </span>
                       <table className="mt-2 bg-slate-50 text-slate-600 border-collapse border-spacing-0 border border-slate-400 w-full rounded-md">
                         <tbody>
@@ -407,28 +420,28 @@ export const ApprovalsCompletedLeaveModal = ({
                           </tr>
                           <tr className="border border-slate-400">
                             <td className="border border-slate-400 text-center">
-                              {leaveIndividualDetail?.leaveName === LeaveName.VACATION
+                              {leaveIndividualDetail?.leaveName === LeaveName.VACATION ||
+                              leaveIndividualDetail?.leaveName === LeaveName.FORCED
                                 ? (
-                                    Number(parseFloat(`${selectedLeaveLedger[0]?.vacationLeaveBalance}`).toFixed(3)) +
-                                    Number(parseFloat(`${selectedLeaveLedger[0]?.vacationLeave}`).toFixed(3)) * -1
+                                    parseFloat(`${selectedLeaveLedger[0]?.vacationLeaveBalance}`) +
+                                    parseFloat(`${selectedLeaveLedger[0]?.vacationLeave}`) * -1 +
+                                    (parseFloat(`${selectedLeaveLedger[0]?.forcedLeaveBalance}`) +
+                                      parseFloat(`${selectedLeaveLedger[0]?.forcedLeave}`) * -1)
                                   ).toFixed(3)
-                                : leaveIndividualDetail?.leaveName === LeaveName.FORCED
+                                : // : leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.FORCED
+                                // ? (
+                                //     parseFloat(`${selectedLeaveLedger[0]?.forcedLeaveBalance}`) +
+                                //     parseFloat(`${selectedLeaveLedger[0]?.forcedLeave}`) * -1
+                                //   ).toFixed(3)
+                                leaveIndividualDetail?.leaveName === LeaveName.SICK
                                 ? (
-                                    Number(parseFloat(`${selectedLeaveLedger[0]?.forcedLeaveBalance}`).toFixed(3)) +
-                                    Number(parseFloat(`${selectedLeaveLedger[0]?.forcedLeave}`).toFixed(3)) * -1
-                                  ).toFixed(3)
-                                : leaveIndividualDetail?.leaveName === LeaveName.SICK
-                                ? (
-                                    Number(parseFloat(`${selectedLeaveLedger[0]?.sickLeaveBalance}`).toFixed(3)) +
-                                    Number(parseFloat(`${selectedLeaveLedger[0]?.sickLeave}`).toFixed(3)) * -1
+                                    parseFloat(`${selectedLeaveLedger[0]?.sickLeaveBalance}`) +
+                                    parseFloat(`${selectedLeaveLedger[0]?.sickLeave}`) * -1
                                   ).toFixed(3)
                                 : leaveIndividualDetail?.leaveName === LeaveName.SPECIAL_PRIVILEGE
                                 ? (
-                                    Number(
-                                      parseFloat(`${selectedLeaveLedger[0]?.specialPrivilegeLeaveBalance}`).toFixed(3)
-                                    ) +
-                                    Number(parseFloat(`${selectedLeaveLedger[0]?.specialPrivilegeLeave}`).toFixed(3)) *
-                                      -1
+                                    parseFloat(`${selectedLeaveLedger[0]?.specialPrivilegeLeaveBalance}`) +
+                                    parseFloat(`${selectedLeaveLedger[0]?.specialPrivilegeLeave}`) * -1
                                   ).toFixed(3)
                                 : 'N/A'}
                             </td>
@@ -436,11 +449,15 @@ export const ApprovalsCompletedLeaveModal = ({
                               {leaveIndividualDetail?.leaveDates?.length.toFixed(3)}
                             </td>
                             <td className="border border-slate-400 text-center bg-green-100">
-                              {leaveIndividualDetail?.leaveName === LeaveName.VACATION
-                                ? selectedLeaveLedger[0]?.vacationLeaveBalance
-                                : leaveIndividualDetail?.leaveName === LeaveName.FORCED
-                                ? selectedLeaveLedger[0]?.forcedLeaveBalance
-                                : leaveIndividualDetail?.leaveName === LeaveName.SICK
+                              {leaveIndividualDetail?.leaveName === LeaveName.VACATION ||
+                              leaveIndividualDetail?.leaveName === LeaveName.FORCED
+                                ? (
+                                    parseFloat(`${selectedLeaveLedger[0]?.vacationLeaveBalance}`) +
+                                    parseFloat(`${selectedLeaveLedger[0]?.forcedLeaveBalance}`)
+                                  ).toFixed(3)
+                                : // : leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.FORCED
+                                // ? selectedLeaveLedger[0]?.forcedLeaveBalance
+                                leaveIndividualDetail?.leaveName === LeaveName.SICK
                                 ? selectedLeaveLedger[0]?.sickLeaveBalance
                                 : leaveIndividualDetail?.leaveName === LeaveName.SPECIAL_PRIVILEGE
                                 ? selectedLeaveLedger[0]?.specialPrivilegeLeaveBalance
