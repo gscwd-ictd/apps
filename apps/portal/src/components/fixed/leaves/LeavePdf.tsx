@@ -160,6 +160,7 @@ export const LeavePdf = ({ employeeDetails, leaveDetails, selectedLeaveLedger }:
 
   useEffect(() => {
     setIsClient(true);
+    console.log(leaveDetails);
   }, []);
 
   return (
@@ -167,8 +168,7 @@ export const LeavePdf = ({ employeeDetails, leaveDetails, selectedLeaveLedger }:
       {isClient && (
         <PDFViewer width={'100%'} height={2800} showToolbar>
           <Document title="Leave">
-            {/* FOLIO */}
-            <Page size={[612.0, 792.0]}>
+            <Page size={'A4'}>
               <View style={styles.page}>
                 <Text style={{ position: 'absolute', fontSize: 6 }}>CIVIL SERVICES FORM NO. 6</Text>
                 <Text style={{ position: 'absolute', fontSize: 6, marginTop: 10 }}>Revised 2020</Text>
@@ -752,10 +752,15 @@ export const LeavePdf = ({ employeeDetails, leaveDetails, selectedLeaveLedger }:
                           justifyContent: 'flex-end',
                         }}
                       >
-                        {/* <Image
-                        style={{ width: 50, position: 'absolute', marginLeft: 432, marginTop: -13 }}
-                        src={leaveDetails?.leaveApplicationBasicInfo. ?? ''}
-                      /> */}
+                        <Image
+                          style={{
+                            width: 30,
+                            position: 'absolute',
+                            marginLeft: 0,
+                            paddingBottom: 15,
+                          }}
+                          src={leaveDetails?.leaveApplicationBasicInfo?.employeeSignature ?? '/'}
+                        />
                         <Text style={{ paddingTop: 6, paddingLeft: 6 }}>
                           _________________________________________________
                         </Text>
@@ -902,7 +907,7 @@ export const LeavePdf = ({ employeeDetails, leaveDetails, selectedLeaveLedger }:
                         >
                           <Image
                             style={{
-                              width: 25,
+                              width: 30,
                               position: 'absolute',
                               marginLeft: 0,
                               paddingBottom: 20,
@@ -993,7 +998,7 @@ export const LeavePdf = ({ employeeDetails, leaveDetails, selectedLeaveLedger }:
                       >
                         <Image
                           style={{
-                            width: 25,
+                            width: 30,
                             position: 'absolute',
                             marginLeft: 0,
                             paddingBottom: 25,
@@ -1112,10 +1117,10 @@ export const LeavePdf = ({ employeeDetails, leaveDetails, selectedLeaveLedger }:
                   >
                     <Image
                       style={{
-                        width: 30,
+                        width: 40,
                         position: 'absolute',
                         marginLeft: 0,
-                        paddingBottom: 30,
+                        paddingBottom: 35,
                       }}
                       src={leaveDetails?.leaveApplicationBasicInfo?.hrdmSignature ?? '/'}
                     />

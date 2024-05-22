@@ -788,15 +788,35 @@ export const DtrPdf: FunctionComponent<DtrPdfProps> = ({ employeeData, employeeD
                     <Text style={[{ padding: '10 0 10 0' }]}>REMARKS:</Text>
 
                     <Text style={[{ paddingBottom: 30 }]}>Verified by:</Text>
-                    <Text
-                      style={[
-                        {
-                          borderBottom: '1px solid #000',
-                          width: '80%',
-                        },
-                      ]}
-                    ></Text>
-                    <Text style={[{ padding: '2 0 0 2' }]}>Employee&apos;s Signature</Text>
+                    <View
+                      style={{
+                        width: '100%',
+                        textAlign: 'center',
+                        display: 'flex',
+                        alignItems: 'flex-start',
+                        justifyContent: 'flex-end',
+                      }}
+                    >
+                      <Image
+                        style={{
+                          width: 40,
+                          position: 'absolute',
+                          marginLeft: 'auto',
+                          marginRight: 'auto',
+                          paddingBottom: 0,
+                        }}
+                        src={employeeData.employmentDetails.signatureUrl ?? '/'}
+                      />
+                      <Text
+                        style={[
+                          {
+                            borderBottom: '1px solid #000',
+                            width: '80%',
+                          },
+                        ]}
+                      ></Text>
+                      <Text style={[{ padding: '2 0 0 2' }]}>Employee&apos;s Signature</Text>
+                    </View>
                   </View>
 
                   {/* RIGHT */}
