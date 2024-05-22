@@ -69,7 +69,6 @@ export const LeaveCompletedModal = ({ modalState, setModalState, closeModalActio
       );
 
       if (!isEmpty(data)) {
-        console.log(data);
         setSelectedLeaveLedger(leaveLedger, data.leaveApplicationBasicInfo.id);
         getLeaveIndividualDetailSuccess(false, data);
       }

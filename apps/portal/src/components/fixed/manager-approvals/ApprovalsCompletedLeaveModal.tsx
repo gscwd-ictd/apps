@@ -79,7 +79,6 @@ export const ApprovalsCompletedLeaveModal = ({
 
   // Upon success/fail of swr request, zustand state will be updated
   useEffect(() => {
-    console.log(swrLeaveLedger);
     if (!isEmpty(swrLeaveLedger)) {
       setSelectedLeaveLedger(swrLeaveLedger, leaveIndividualDetail.id);
       getLeaveLedgerSuccess(swrLeaveLedgerLoading, swrLeaveLedger);

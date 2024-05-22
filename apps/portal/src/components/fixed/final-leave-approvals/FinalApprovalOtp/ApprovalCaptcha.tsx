@@ -157,7 +157,7 @@ export const ApprovalCaptcha: FunctionComponent<CaptchaProps> = ({
           <button
             className={`
                mb-2 text-white bg-red-500 h-10 transition-all rounded hover:bg-red-600 active:bg-red-600 outline-red-500 w-56`}
-            onClick={(e) => handleClose()}
+            onClick={(e) => setCaptchaLeaveModalIsOpen(false)}
           >
             <label className="font-bold cursor-pointer">CANCEL</label>
           </button>

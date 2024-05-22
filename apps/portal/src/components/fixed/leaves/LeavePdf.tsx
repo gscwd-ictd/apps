@@ -160,7 +160,6 @@ export const LeavePdf = ({ employeeDetails, leaveDetails, selectedLeaveLedger }:
 
   useEffect(() => {
     setIsClient(true);
-    console.log(leaveDetails);
   }, []);
 
   return (
