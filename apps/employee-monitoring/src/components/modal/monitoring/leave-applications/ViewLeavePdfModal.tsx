@@ -76,6 +76,7 @@ const ViewLeavePdfModal: FunctionComponent<ViewLeavePdfModalProps> = ({
   // Upon success/fail of swr request, zustand state will be updated
   useEffect(() => {
     if (!isEmpty(swrLeaveDetails)) {
+      console.log(swrLeaveDetails.data);
       GetLeaveIndividualDetailSuccess(swrLeaveDetailsLoading, swrLeaveDetails.data);
     }
 
@@ -90,10 +91,6 @@ const ViewLeavePdfModal: FunctionComponent<ViewLeavePdfModalProps> = ({
       setSelectedLeaveLedger(swrLeaveLedger.data, rowData.id);
     }
   }, [swrLeaveLedger]);
-
-  // useEffect(() => {
-  //   console.log(leaveIndividualDetail);
-  // }, [leaveIndividualDetail]);
 
   return (
     <>

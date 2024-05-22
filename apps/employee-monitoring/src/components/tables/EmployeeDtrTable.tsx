@@ -15,6 +15,7 @@ import duration from 'dayjs/plugin/duration';
 import { LoadingSpinner, ToastNotification } from '@gscwd-apps/oneui';
 import { ScheduleBase } from '../../utils/enum/schedule-bases.enum';
 import { EmployeeWithDetails } from 'libs/utils/src/lib/types/employee.type';
+import EditRemarksModal from '../modal/employees/EditRemarksModal';
 
 dayjs.extend(localizedFormat);
 dayjs.extend(customParseFormat);
@@ -28,17 +29,23 @@ export const EmployeeDtrTable: FunctionComponent<EmployeeDtrTableProps> = ({ emp
   // Edit modal function
   const [currentRowData, setCurrentRowData] = useState<EmployeeDtrWithSchedule>({} as EmployeeDtrWithSchedule);
 
-  // edit modal state
+  // open edit action modal
   const [editModalIsOpen, setEditModalIsOpen] = useState<boolean>(false);
 
-  // open edit action modal function
   const openEditActionModal = (rowData: EmployeeDtrWithSchedule) => {
     setEditModalIsOpen(true);
     setCurrentRowData(rowData);
   };
-
-  // close edit action modal function
   const closeEditActionModal = () => setEditModalIsOpen(false);
+
+  // open remark action modal
+  const [editRemarksModalIsOpen, setEditRemarksModalIsOpen] = useState<boolean>(false);
+
+  const openEditRemarskModal = (rowData: EmployeeDtrWithSchedule) => {
+    setEditRemarksModalIsOpen(true);
+    setCurrentRowData(rowData);
+  };
+  const closeEditRemarksActionModal = () => setEditRemarksModalIsOpen(false);
 
   const {
     employeeDtr,
@@ -166,6 +173,13 @@ export const EmployeeDtrTable: FunctionComponent<EmployeeDtrTableProps> = ({ emp
         rowData={currentRowData}
       />
 
+      <EditRemarksModal
+        modalState={editRemarksModalIsOpen}
+        setModalState={setEditRemarksModalIsOpen}
+        closeModalAction={closeEditRemarksActionModal}
+        rowData={currentRowData}
+      />
+
       {!isEmpty(errorEmployeeDtr) ? (
         <ToastNotification
           notifMessage="Something went wrong in fetching the DTR. Please try again later."
@@ -283,7 +297,7 @@ export const EmployeeDtrTable: FunctionComponent<EmployeeDtrTableProps> = ({ emp
                               {logs.dtr.remarks ? logs.dtr.remarks : '-'}
                             </td>
                             <td className="py-2 text-center ">
-                              <div>
+                              <div className="flex justify-center gap-1">
                                 <button
                                   className="px-1 text-white bg-green-600 rounded disabled:bg-red-600"
                                   onClick={() => openEditActionModal(logs)}
@@ -294,6 +308,13 @@ export const EmployeeDtrTable: FunctionComponent<EmployeeDtrTableProps> = ({ emp
                                   }
                                 >
                                   <i className="text-lg text-inherit bx bx-edit"></i>
+                                </button>
+
+                                <button
+                                  className="px-1 text-white bg-blue-600 rounded disabled:bg-red-600"
+                                  onClick={() => openEditRemarskModal(logs)}
+                                >
+                                  <i className="text-lg text-inherit bx bx-comment-edit"></i>
                                 </button>
                               </div>
                             </td>
@@ -415,7 +436,7 @@ export const EmployeeDtrTable: FunctionComponent<EmployeeDtrTableProps> = ({ emp
                         </div>
 
                         {/* ACTION */}
-                        <div className="flex items-center justify-center w-full col-span-1 border">
+                        <div className="flex items-center justify-center w-full col-span-1 border gap-1">
                           <button
                             className="px-1 text-white bg-green-600 rounded disabled:bg-red-600"
                             onClick={() => openEditActionModal(logs)}
@@ -424,6 +445,13 @@ export const EmployeeDtrTable: FunctionComponent<EmployeeDtrTableProps> = ({ emp
                             }
                           >
                             <i className="text-lg text-inherit bx bx-edit"></i>
+                          </button>
+
+                          <button
+                            className="px-1 text-white bg-blue-600 rounded disabled:bg-red-600"
+                            onClick={() => openEditRemarskModal(logs)}
+                          >
+                            <i className="text-lg text-inherit bx bx-comment-edit"></i>
                           </button>
                         </div>
                       </section>
