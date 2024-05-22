@@ -65,6 +65,9 @@ export type ApprovalState = {
   otpLeaveModalIsOpen: boolean;
   setOtpLeaveModalIsOpen: (otpLeaveModalIsOpen: boolean) => void;
 
+  captchaLeaveModalIsOpen: boolean;
+  setCaptchaLeaveModalIsOpen: (captchaLeaveModalIsOpen: boolean) => void;
+
   patchLeave: () => void;
   patchLeaveSuccess: (response) => void;
   patchLeaveFail: (error: string) => void;
@@ -123,6 +126,7 @@ export const useFinalLeaveApprovalStore = create<ApprovalState>()(
     leaveApplications: [],
 
     otpLeaveModalIsOpen: false,
+    captchaLeaveModalIsOpen: false,
 
     declineApplicationModalIsOpen: false,
     pendingLeaveModalIsOpen: false,
@@ -158,6 +162,10 @@ export const useFinalLeaveApprovalStore = create<ApprovalState>()(
 
     setOtpLeaveModalIsOpen: (otpLeaveModalIsOpen: boolean) => {
       set((state) => ({ ...state, otpLeaveModalIsOpen }));
+    },
+
+    setCaptchaLeaveModalIsOpen: (captchaLeaveModalIsOpen: boolean) => {
+      set((state) => ({ ...state, captchaLeaveModalIsOpen }));
     },
 
     setPendingLeaveModalIsOpen: (pendingLeaveModalIsOpen: boolean) => {

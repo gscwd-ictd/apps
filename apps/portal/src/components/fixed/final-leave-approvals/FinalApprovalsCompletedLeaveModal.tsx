@@ -397,76 +397,80 @@ export const ApprovalsCompletedLeaveModal = ({
                         </div>
                       </div>
                     ) : null}
-
-                    <div className="w-full pb-4">
-                      <span className="text-slate-500 text-md">
-                        Employee's{' '}
-                        {leaveIndividualDetail?.leaveName === LeaveName.VACATION ||
-                        leaveIndividualDetail?.leaveName === LeaveName.FORCED
-                          ? 'VL+FL'
-                          : leaveIndividualDetail?.leaveName === LeaveName.SICK
-                          ? 'SL'
-                          : leaveIndividualDetail?.leaveName === LeaveName.SPECIAL_PRIVILEGE
-                          ? 'SPL'
-                          : 'Leave'}{' '}
-                        Credits at the time of this application:
-                      </span>
-                      <table className="mt-2 bg-slate-50 text-slate-600 border-collapse border-spacing-0 border border-slate-400 w-full rounded-md">
-                        <tbody>
-                          <tr className="border border-slate-400">
-                            <td className="border border-slate-400 text-center">Total Earned</td>
-                            <td className="border border-slate-400 text-center">Less this application</td>
-                            <td className="border border-slate-400 text-center bg-green-100">Balance</td>
-                          </tr>
-                          <tr className="border border-slate-400">
-                            <td className="border border-slate-400 text-center">
-                              {leaveIndividualDetail?.leaveName === LeaveName.VACATION ||
-                              leaveIndividualDetail?.leaveName === LeaveName.FORCED
-                                ? (
-                                    parseFloat(`${selectedLeaveLedger[0]?.vacationLeaveBalance}`) +
-                                    parseFloat(`${selectedLeaveLedger[0]?.vacationLeave}`) * -1 +
-                                    (parseFloat(`${selectedLeaveLedger[0]?.forcedLeaveBalance}`) +
-                                      parseFloat(`${selectedLeaveLedger[0]?.forcedLeave}`) * -1)
-                                  ).toFixed(3)
-                                : // : leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.FORCED
-                                // ? (
-                                //     parseFloat(`${selectedLeaveLedger[0]?.forcedLeaveBalance}`) +
-                                //     parseFloat(`${selectedLeaveLedger[0]?.forcedLeave}`) * -1
-                                //   ).toFixed(3)
-                                leaveIndividualDetail?.leaveName === LeaveName.SICK
-                                ? (
-                                    parseFloat(`${selectedLeaveLedger[0]?.sickLeaveBalance}`) +
-                                    parseFloat(`${selectedLeaveLedger[0]?.sickLeave}`) * -1
-                                  ).toFixed(3)
-                                : leaveIndividualDetail?.leaveName === LeaveName.SPECIAL_PRIVILEGE
-                                ? (
-                                    parseFloat(`${selectedLeaveLedger[0]?.specialPrivilegeLeaveBalance}`) +
-                                    parseFloat(`${selectedLeaveLedger[0]?.specialPrivilegeLeave}`) * -1
-                                  ).toFixed(3)
-                                : 'N/A'}
-                            </td>
-                            <td className="border border-slate-400 text-center">
-                              {leaveIndividualDetail?.leaveDates?.length.toFixed(3)}
-                            </td>
-                            <td className="border border-slate-400 text-center bg-green-100">
-                              {leaveIndividualDetail?.leaveName === LeaveName.VACATION ||
-                              leaveIndividualDetail?.leaveName === LeaveName.FORCED
-                                ? (
-                                    parseFloat(`${selectedLeaveLedger[0]?.vacationLeaveBalance}`) +
-                                    parseFloat(`${selectedLeaveLedger[0]?.forcedLeaveBalance}`)
-                                  ).toFixed(3)
-                                : // : leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.FORCED
-                                // ? selectedLeaveLedger[0]?.forcedLeaveBalance
-                                leaveIndividualDetail?.leaveName === LeaveName.SICK
-                                ? selectedLeaveLedger[0]?.sickLeaveBalance
-                                : leaveIndividualDetail?.leaveName === LeaveName.SPECIAL_PRIVILEGE
-                                ? selectedLeaveLedger[0]?.specialPrivilegeLeaveBalance
-                                : 'N/A'}
-                            </td>
-                          </tr>
-                        </tbody>
-                      </table>
-                    </div>
+                    {leaveIndividualDetail?.leaveName === LeaveName.VACATION ||
+                    leaveIndividualDetail?.leaveName === LeaveName.FORCED ||
+                    leaveIndividualDetail?.leaveName === LeaveName.SICK ||
+                    leaveIndividualDetail?.leaveName === LeaveName.SPECIAL_PRIVILEGE ? (
+                      <div className="w-full pb-4">
+                        <span className="text-slate-500 text-md">
+                          Employee's{' '}
+                          {leaveIndividualDetail?.leaveName === LeaveName.VACATION ||
+                          leaveIndividualDetail?.leaveName === LeaveName.FORCED
+                            ? 'VL+FL'
+                            : leaveIndividualDetail?.leaveName === LeaveName.SICK
+                            ? 'SL'
+                            : leaveIndividualDetail?.leaveName === LeaveName.SPECIAL_PRIVILEGE
+                            ? 'SPL'
+                            : 'Leave'}{' '}
+                          Credits at the time of this application:
+                        </span>
+                        <table className="mt-2 bg-slate-50 text-slate-600 border-collapse border-spacing-0 border border-slate-400 w-full rounded-md">
+                          <tbody>
+                            <tr className="border border-slate-400">
+                              <td className="border border-slate-400 text-center">Total Earned</td>
+                              <td className="border border-slate-400 text-center">Less this application</td>
+                              <td className="border border-slate-400 text-center bg-green-100">Balance</td>
+                            </tr>
+                            <tr className="border border-slate-400">
+                              <td className="border border-slate-400 text-center">
+                                {leaveIndividualDetail?.leaveName === LeaveName.VACATION ||
+                                leaveIndividualDetail?.leaveName === LeaveName.FORCED
+                                  ? (
+                                      parseFloat(`${selectedLeaveLedger[0]?.vacationLeaveBalance}`) +
+                                      parseFloat(`${selectedLeaveLedger[0]?.vacationLeave}`) * -1 +
+                                      (parseFloat(`${selectedLeaveLedger[0]?.forcedLeaveBalance}`) +
+                                        parseFloat(`${selectedLeaveLedger[0]?.forcedLeave}`) * -1)
+                                    ).toFixed(3)
+                                  : // : leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.FORCED
+                                  // ? (
+                                  //     parseFloat(`${selectedLeaveLedger[0]?.forcedLeaveBalance}`) +
+                                  //     parseFloat(`${selectedLeaveLedger[0]?.forcedLeave}`) * -1
+                                  //   ).toFixed(3)
+                                  leaveIndividualDetail?.leaveName === LeaveName.SICK
+                                  ? (
+                                      parseFloat(`${selectedLeaveLedger[0]?.sickLeaveBalance}`) +
+                                      parseFloat(`${selectedLeaveLedger[0]?.sickLeave}`) * -1
+                                    ).toFixed(3)
+                                  : leaveIndividualDetail?.leaveName === LeaveName.SPECIAL_PRIVILEGE
+                                  ? (
+                                      parseFloat(`${selectedLeaveLedger[0]?.specialPrivilegeLeaveBalance}`) +
+                                      parseFloat(`${selectedLeaveLedger[0]?.specialPrivilegeLeave}`) * -1
+                                    ).toFixed(3)
+                                  : 'N/A'}
+                              </td>
+                              <td className="border border-slate-400 text-center">
+                                {leaveIndividualDetail?.leaveDates?.length.toFixed(3)}
+                              </td>
+                              <td className="border border-slate-400 text-center bg-green-100">
+                                {leaveIndividualDetail?.leaveName === LeaveName.VACATION ||
+                                leaveIndividualDetail?.leaveName === LeaveName.FORCED
+                                  ? (
+                                      parseFloat(`${selectedLeaveLedger[0]?.vacationLeaveBalance}`) +
+                                      parseFloat(`${selectedLeaveLedger[0]?.forcedLeaveBalance}`)
+                                    ).toFixed(3)
+                                  : // : leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.FORCED
+                                  // ? selectedLeaveLedger[0]?.forcedLeaveBalance
+                                  leaveIndividualDetail?.leaveName === LeaveName.SICK
+                                  ? selectedLeaveLedger[0]?.sickLeaveBalance
+                                  : leaveIndividualDetail?.leaveName === LeaveName.SPECIAL_PRIVILEGE
+                                  ? selectedLeaveLedger[0]?.specialPrivilegeLeaveBalance
+                                  : 'N/A'}
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    ) : null}
                   </div>
                 </div>
               </div>

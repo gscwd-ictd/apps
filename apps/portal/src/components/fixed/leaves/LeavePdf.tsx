@@ -172,8 +172,7 @@ export const LeavePdf = ({ employeeDetails, leaveDetails, selectedLeaveLedger }:
               <View style={styles.page}>
                 <Text style={{ position: 'absolute', fontSize: 6 }}>CIVIL SERVICES FORM NO. 6</Text>
                 <Text style={{ position: 'absolute', fontSize: 6, marginTop: 10 }}>Revised 2020</Text>
-
-                <Text style={{ position: 'absolute', fontSize: 16, right: 0 }}>010678</Text>
+                {/* <Text style={{ position: 'absolute', fontSize: 16, right: 0 }}>010678</Text> */}
                 <View
                   style={{
                     display: 'flex',
@@ -1149,7 +1148,7 @@ export const LeavePdf = ({ employeeDetails, leaveDetails, selectedLeaveLedger }:
                 </View>
               </View>
             </Page>
-            <Page size={[612.0, 792.0]}>
+            <Page size={'A4'}>
               <View style={styles.page}>
                 <View style={styles.container3}>
                   <Text>INSTRUCTIONS AND REQUIREMENTS</Text>

@@ -32,7 +32,6 @@ export const ApprovalCaptcha: FunctionComponent<CaptchaProps> = ({
   const [password, setPassword] = useState<string>('');
   const [captchaPassword, setCaptchaPassword] = useState<string>('');
   const [isCaptchaError, setIsCaptchaError] = useState<boolean>(false);
-  const [errorCaptcha, setErrorCaptcha] = useState<string>('');
 
   // generate captcha
   const getCaptcha = () => {
@@ -96,7 +95,6 @@ export const ApprovalCaptcha: FunctionComponent<CaptchaProps> = ({
     if (password != captchaPassword || password == '' || captchaPassword == '') {
       setIsCaptchaError(true);
       setWiggleEffect(true);
-      setErrorCaptcha('Incorrect Captcha!');
     } else {
       //overtime accomplishment approval
       patchOvertimeAccomplishment();

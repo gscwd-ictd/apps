@@ -797,16 +797,26 @@ export const DtrPdf: FunctionComponent<DtrPdfProps> = ({ employeeData, employeeD
                         justifyContent: 'flex-end',
                       }}
                     >
-                      <Image
+                      <View
                         style={{
-                          width: 40,
-                          position: 'absolute',
-                          marginLeft: 'auto',
-                          marginRight: 'auto',
-                          paddingBottom: 0,
+                          width: '80%',
+                          textAlign: 'center',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
                         }}
-                        src={employeeData.employmentDetails.signatureUrl ?? '/'}
-                      />
+                      >
+                        <Image
+                          style={{
+                            width: 30,
+                            position: 'absolute',
+                            paddingBottom: 20,
+                            textAlign: 'center',
+                          }}
+                          src={employeeData.employmentDetails.signatureUrl ?? '/'}
+                        />
+                      </View>
+
                       <Text
                         style={[
                           {
