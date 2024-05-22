@@ -9,6 +9,10 @@ import { LeaveName, LeaveStatus } from 'libs/utils/src/lib/enums/leave.enum';
 import { DateFormatter } from 'libs/utils/src/lib/functions/DateFormatter';
 import { useEffect, useState } from 'react';
 import { DateTimeFormatter } from 'libs/utils/src/lib/functions/DateTimeFormatter';
+import { fetchWithToken } from 'apps/portal/src/utils/hoc/fetcher';
+import { useSupervisorLeaveApprovalLeaveLedgerStore } from 'apps/portal/src/store/supervisor-leave-approvals-leave-ledger.store';
+import useSWR from 'swr';
+import { isEmpty } from 'lodash';
 
 type ApprovalsCompletedLeaveModalProps = {
   modalState: boolean;
@@ -31,6 +35,60 @@ export const ApprovalsCompletedLeaveModal = ({
   useEffect(() => {
     setMoreLeaveDates(false);
   }, [modalState]);
+
+  //FOR LEAVE LEDGER TABLE BELOW
+  const {
+    leaveLedger,
+    selectedLeaveLedger,
+    setSelectedLeaveLedger,
+    getLeaveLedger,
+    getLeaveLedgerSuccess,
+    getLeaveLedgerFail,
+  } = useSupervisorLeaveApprovalLeaveLedgerStore((state) => ({
+    leaveLedger: state.leaveLedger,
+    selectedLeaveLedger: state.selectedLeaveLedger,
+    setSelectedLeaveLedger: state.setSelectedLeaveLedger,
+    getLeaveLedger: state.getLeaveLedger,
+    getLeaveLedgerSuccess: state.getLeaveLedgerSuccess,
+    getLeaveLedgerFail: state.getLeaveLedgerFail,
+  }));
+
+  const leaveLedgerUrl = `${process.env.NEXT_PUBLIC_EMPLOYEE_MONITORING_URL}/v1/leave/ledger/${leaveIndividualDetail?.employee?.employeeId}/${leaveIndividualDetail?.employee?.companyId}`;
+
+  const {
+    data: swrLeaveLedger,
+    isLoading: swrLeaveLedgerLoading,
+    error: swrLeaveLedgerError,
+  } = useSWR(
+    modalState && leaveIndividualDetail.employee.employeeId && leaveIndividualDetail?.employee?.companyId
+      ? leaveLedgerUrl
+      : null,
+    fetchWithToken,
+    {
+      shouldRetryOnError: false,
+      revalidateOnFocus: false,
+    }
+  );
+
+  // Initial zustand state update
+  useEffect(() => {
+    if (swrLeaveLedgerLoading) {
+      getLeaveLedger(swrLeaveLedgerLoading);
+    }
+  }, [swrLeaveLedgerLoading]);
+
+  // Upon success/fail of swr request, zustand state will be updated
+  useEffect(() => {
+    if (!isEmpty(swrLeaveLedger)) {
+      setSelectedLeaveLedger(swrLeaveLedger, leaveIndividualDetail.id);
+      getLeaveLedgerSuccess(swrLeaveLedgerLoading, swrLeaveLedger);
+      // getLatestBalance(swrLeaveLedger);
+    }
+
+    if (!isEmpty(swrLeaveLedgerError)) {
+      getLeaveLedgerFail(swrLeaveLedgerLoading, swrLeaveLedgerError.message);
+    }
+  }, [swrLeaveLedger, swrLeaveLedgerError]);
 
   return (
     <>
@@ -334,6 +392,81 @@ export const ApprovalsCompletedLeaveModal = ({
                               : 'N/A'}
                           </label>
                         </div>
+                      </div>
+                    ) : null}
+
+                    {leaveIndividualDetail?.leaveName === LeaveName.VACATION ||
+                    leaveIndividualDetail?.leaveName === LeaveName.FORCED ||
+                    leaveIndividualDetail?.leaveName === LeaveName.SICK ||
+                    leaveIndividualDetail?.leaveName === LeaveName.SPECIAL_PRIVILEGE ? (
+                      <div className="w-full pb-4">
+                        <span className="text-slate-500 text-md">
+                          Employee's{' '}
+                          {leaveIndividualDetail?.leaveName === LeaveName.VACATION ||
+                          leaveIndividualDetail?.leaveName === LeaveName.FORCED
+                            ? 'VL+FL'
+                            : leaveIndividualDetail?.leaveName === LeaveName.SICK
+                            ? 'SL'
+                            : leaveIndividualDetail?.leaveName === LeaveName.SPECIAL_PRIVILEGE
+                            ? 'SPL'
+                            : 'Leave'}{' '}
+                          Credits at the time of this application:
+                        </span>
+                        <table className="mt-2 bg-slate-50 text-slate-600 border-collapse border-spacing-0 border border-slate-400 w-full rounded-md">
+                          <tbody>
+                            <tr className="border border-slate-400">
+                              <td className="border border-slate-400 text-center">Total Earned</td>
+                              <td className="border border-slate-400 text-center">Less this application</td>
+                              <td className="border border-slate-400 text-center bg-green-100">Balance</td>
+                            </tr>
+                            <tr className="border border-slate-400">
+                              <td className="border border-slate-400 text-center">
+                                {leaveIndividualDetail?.leaveName === LeaveName.VACATION ||
+                                leaveIndividualDetail?.leaveName === LeaveName.FORCED
+                                  ? (
+                                      parseFloat(`${selectedLeaveLedger[0]?.vacationLeaveBalance}`) +
+                                      parseFloat(`${selectedLeaveLedger[0]?.vacationLeave}`) * -1 +
+                                      (parseFloat(`${selectedLeaveLedger[0]?.forcedLeaveBalance}`) +
+                                        parseFloat(`${selectedLeaveLedger[0]?.forcedLeave}`) * -1)
+                                    ).toFixed(3)
+                                  : // : leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.FORCED
+                                  // ? (
+                                  //     parseFloat(`${selectedLeaveLedger[0]?.forcedLeaveBalance}`) +
+                                  //     parseFloat(`${selectedLeaveLedger[0]?.forcedLeave}`) * -1
+                                  //   ).toFixed(3)
+                                  leaveIndividualDetail?.leaveName === LeaveName.SICK
+                                  ? (
+                                      parseFloat(`${selectedLeaveLedger[0]?.sickLeaveBalance}`) +
+                                      parseFloat(`${selectedLeaveLedger[0]?.sickLeave}`) * -1
+                                    ).toFixed(3)
+                                  : leaveIndividualDetail?.leaveName === LeaveName.SPECIAL_PRIVILEGE
+                                  ? (
+                                      parseFloat(`${selectedLeaveLedger[0]?.specialPrivilegeLeaveBalance}`) +
+                                      parseFloat(`${selectedLeaveLedger[0]?.specialPrivilegeLeave}`) * -1
+                                    ).toFixed(3)
+                                  : 'N/A'}
+                              </td>
+                              <td className="border border-slate-400 text-center">
+                                {leaveIndividualDetail?.leaveDates?.length.toFixed(3)}
+                              </td>
+                              <td className="border border-slate-400 text-center bg-green-100">
+                                {leaveIndividualDetail?.leaveName === LeaveName.VACATION ||
+                                leaveIndividualDetail?.leaveName === LeaveName.FORCED
+                                  ? (
+                                      parseFloat(`${selectedLeaveLedger[0]?.vacationLeaveBalance}`) +
+                                      parseFloat(`${selectedLeaveLedger[0]?.forcedLeaveBalance}`)
+                                    ).toFixed(3)
+                                  : // : leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.FORCED
+                                  // ? selectedLeaveLedger[0]?.forcedLeaveBalance
+                                  leaveIndividualDetail?.leaveName === LeaveName.SICK
+                                  ? selectedLeaveLedger[0]?.sickLeaveBalance
+                                  : leaveIndividualDetail?.leaveName === LeaveName.SPECIAL_PRIVILEGE
+                                  ? selectedLeaveLedger[0]?.specialPrivilegeLeaveBalance
+                                  : 'N/A'}
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
                       </div>
                     ) : null}
                   </div>

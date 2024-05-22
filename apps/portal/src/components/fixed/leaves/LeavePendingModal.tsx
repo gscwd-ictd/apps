@@ -45,6 +45,7 @@ export const LeavePendingModal = ({ modalState, setModalState, closeModalAction 
     getLeaveIndividualDetailFail: state.getLeaveIndividualDetailFail,
   }));
 
+  //swr fetch for these are found in Leave Application Modal
   const { vacationLeaveBalance, forcedLeaveBalance, sickLeaveBalance, specialPrivilegeLeaveBalance } =
     useLeaveLedgerStore((state) => ({
       vacationLeaveBalance: state.vacationLeaveBalance,
@@ -413,10 +414,11 @@ export const LeavePendingModal = ({ modalState, setModalState, closeModalAction 
                           </tr>
                           <tr className="border-slate-400">
                             <td className="border border-slate-400 text-center">
-                              {leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.VACATION
-                                ? vacationLeaveBalance
-                                : leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.FORCED
-                                ? forcedLeaveBalance
+                              {leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.VACATION ||
+                              leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.FORCED
+                                ? (parseFloat(`${vacationLeaveBalance}`) + parseFloat(`${forcedLeaveBalance}`)).toFixed(
+                                    3
+                                  )
                                 : leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.SICK
                                 ? sickLeaveBalance
                                 : leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName ===
@@ -428,34 +430,23 @@ export const LeavePendingModal = ({ modalState, setModalState, closeModalAction 
                               {leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveDates?.length.toFixed(3)}
                             </td>
                             <td className="border border-slate-400 text-center bg-green-100">
-                              {leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.VACATION
+                              {leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.VACATION ||
+                              leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.FORCED
                                 ? (
-                                    Number(parseFloat(`${vacationLeaveBalance}`).toFixed(3)) -
-                                    Number(
-                                      leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveDates?.length.toFixed(3)
-                                    )
-                                  ).toFixed(3)
-                                : leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.FORCED
-                                ? (
-                                    Number(parseFloat(`${forcedLeaveBalance}`).toFixed(3)) -
-                                    Number(
-                                      leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveDates?.length.toFixed(3)
-                                    )
+                                    parseFloat(`${vacationLeaveBalance}`) +
+                                    parseFloat(`${forcedLeaveBalance}`) -
+                                    leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveDates?.length
                                   ).toFixed(3)
                                 : leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.SICK
                                 ? (
-                                    Number(parseFloat(`${sickLeaveBalance}`).toFixed(3)) -
-                                    Number(
-                                      leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveDates?.length.toFixed(3)
-                                    )
+                                    parseFloat(`${sickLeaveBalance}`) -
+                                    leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveDates?.length
                                   ).toFixed(3)
                                 : leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName ===
                                   LeaveName.SPECIAL_PRIVILEGE
                                 ? (
-                                    Number(parseFloat(`${specialPrivilegeLeaveBalance}`).toFixed(3)) -
-                                    Number(
-                                      leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveDates?.length.toFixed(3)
-                                    )
+                                    parseFloat(`${specialPrivilegeLeaveBalance}`) -
+                                    leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveDates?.length
                                   ).toFixed(3)
                                 : 'N/A'}
                             </td>

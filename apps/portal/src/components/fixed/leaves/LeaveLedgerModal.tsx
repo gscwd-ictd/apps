@@ -5,7 +5,7 @@ import { useEmployeeStore } from '../../../store/employee.store';
 import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
 import { LeaveLedgerTable } from '../table/LeaveLedgerTable';
 import LeaveLedgerPdfModal from './LeaveLedgerPdfModal';
-import { useLeaveLedgerPageStore } from 'apps/portal/src/store/leave-ledger-page.store';
+import { useLeaveLedgerStore } from 'apps/portal/src/store/leave-ledger.store';
 
 type LeaveLedgerModalProps = {
   modalState: boolean;
@@ -16,7 +16,7 @@ type LeaveLedgerModalProps = {
 export const LeaveLedgerModal = ({ modalState, setModalState, closeModalAction }: LeaveLedgerModalProps) => {
   const employeeDetails = useEmployeeStore((state) => state.employeeDetails);
 
-  const { leaveLedgerPdfModalIsOpen, setLeaveLedgerPdfModalIsOpen } = useLeaveLedgerPageStore((state) => ({
+  const { leaveLedgerPdfModalIsOpen, setLeaveLedgerPdfModalIsOpen } = useLeaveLedgerStore((state) => ({
     leaveLedgerPdfModalIsOpen: state.leaveLedgerPdfModalIsOpen,
     setLeaveLedgerPdfModalIsOpen: state.setLeaveLedgerPdfModalIsOpen,
   }));

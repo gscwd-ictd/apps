@@ -53,6 +53,7 @@ export type EmploymentDetails = {
   overtimeImmediateSupervisorId: string;
   officerOfTheDay: Array<OfficerOfTheDay>;
   employeeFullName?: string;
+  signatureUrl?: string;
 };
 
 export type EmployeeDetails = {

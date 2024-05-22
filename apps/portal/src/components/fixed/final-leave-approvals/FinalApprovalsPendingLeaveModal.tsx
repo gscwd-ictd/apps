@@ -3,7 +3,7 @@ import { HiX } from 'react-icons/hi';
 import { Modal } from 'libs/oneui/src/components/Modal';
 import { Button } from 'libs/oneui/src/components/Button';
 import { SpinnerDotted } from 'spinners-react';
-import { AlertNotification, OtpModal } from '@gscwd-apps/oneui';
+import { AlertNotification, CaptchaModal, OtpModal } from '@gscwd-apps/oneui';
 import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
 import { SelectOption } from 'libs/utils/src/lib/types/select.type';
 import { SubmitHandler, useForm } from 'react-hook-form';
@@ -12,9 +12,14 @@ import { LeaveName, LeaveStatus } from 'libs/utils/src/lib/enums/leave.enum';
 import { useEmployeeStore } from 'apps/portal/src/store/employee.store';
 import { useFinalLeaveApprovalStore } from 'apps/portal/src/store/final-leave-approvals.store';
 import { ConfirmationLeaveModal } from './FinalApprovalOtp/ConfirmationLeaveModal';
-import { ApprovalOtpContentsLeave } from './FinalApprovalOtp/ApprovalOtpContentsLeave';
 import { DateFormatter } from 'libs/utils/src/lib/functions/DateFormatter';
 import { DateTimeFormatter } from 'libs/utils/src/lib/functions/DateTimeFormatter';
+import { isEmpty } from 'lodash';
+import { fetchWithToken } from 'apps/portal/src/utils/hoc/fetcher';
+import useSWR from 'swr';
+import { LeaveLedgerEntry } from 'libs/utils/src/lib/types/leave-ledger-entry.type';
+import { useFinalLeaveApprovalLeaveLedgerStore } from 'apps/portal/src/store/final-leave-approvals-leave-ledger.store';
+import { ApprovalCaptcha } from './FinalApprovalOtp/ApprovalCaptcha';
 
 type ApprovalsPendingLeaveModalProps = {
   modalState: boolean;
@@ -40,6 +45,8 @@ export const FinalApprovalsPendingLeaveModal = ({
     setOtpLeaveModalIsOpen,
     declineApplicationModalIsOpen,
     setDeclineApplicationModalIsOpen,
+    captchaLeaveModalIsOpen,
+    setCaptchaLeaveModalIsOpen,
   } = useFinalLeaveApprovalStore((state) => ({
     leaveIndividualDetail: state.leaveIndividualDetail,
     leaveId: state.leaveId,
@@ -49,6 +56,8 @@ export const FinalApprovalsPendingLeaveModal = ({
     setOtpLeaveModalIsOpen: state.setOtpLeaveModalIsOpen,
     declineApplicationModalIsOpen: state.declineApplicationModalIsOpen,
     setDeclineApplicationModalIsOpen: state.setDeclineApplicationModalIsOpen,
+    captchaLeaveModalIsOpen: state.captchaLeaveModalIsOpen,
+    setCaptchaLeaveModalIsOpen: state.setCaptchaLeaveModalIsOpen,
   }));
 
   const [reason, setReason] = useState<string>('');
@@ -79,7 +88,7 @@ export const FinalApprovalsPendingLeaveModal = ({
   const onSubmit: SubmitHandler<leaveAction> = (data: leaveAction) => {
     setValue('id', leaveIndividualDetail.id);
     if (data.status === LeaveStatus.APPROVED) {
-      setOtpLeaveModalIsOpen(true);
+      setCaptchaLeaveModalIsOpen(true);
     } else {
       setDeclineApplicationModalIsOpen(true);
     }
@@ -102,6 +111,85 @@ export const FinalApprovalsPendingLeaveModal = ({
     setPendingLeaveModalIsOpen(false);
   };
 
+  //FOR LEAVE LEDGER TABLE BELOW
+  const {
+    leaveLedger,
+    selectedLeaveLedger,
+    vacationLeaveBalance,
+    forcedLeaveBalance,
+    sickLeaveBalance,
+    specialPrivilegeLeaveBalance,
+    setVacationLeaveBalance,
+    setForcedLeaveBalance,
+    setSickLeaveBalance,
+    setSpecialPrivilegeLeaveBalance,
+    setSelectedLeaveLedger,
+    getLeaveLedger,
+    getLeaveLedgerSuccess,
+    getLeaveLedgerFail,
+  } = useFinalLeaveApprovalLeaveLedgerStore((state) => ({
+    leaveLedger: state.leaveLedger,
+    selectedLeaveLedger: state.selectedLeaveLedger,
+    vacationLeaveBalance: state.vacationLeaveBalance,
+    forcedLeaveBalance: state.forcedLeaveBalance,
+    sickLeaveBalance: state.sickLeaveBalance,
+    specialPrivilegeLeaveBalance: state.specialPrivilegeLeaveBalance,
+    setVacationLeaveBalance: state.setVacationLeaveBalance,
+    setForcedLeaveBalance: state.setForcedLeaveBalance,
+    setSickLeaveBalance: state.setSickLeaveBalance,
+    setSpecialPrivilegeLeaveBalance: state.setSpecialPrivilegeLeaveBalance,
+    setSelectedLeaveLedger: state.setSelectedLeaveLedger,
+    getLeaveLedger: state.getLeaveLedger,
+    getLeaveLedgerSuccess: state.getLeaveLedgerSuccess,
+    getLeaveLedgerFail: state.getLeaveLedgerFail,
+  }));
+
+  // get the latest balance by last index value
+  const getLatestBalance = (leaveLedger: Array<LeaveLedgerEntry>) => {
+    const lastIndexValue = leaveLedger[leaveLedger.length - 1];
+    setForcedLeaveBalance(lastIndexValue.forcedLeaveBalance);
+    setVacationLeaveBalance(lastIndexValue.vacationLeaveBalance ?? 0);
+    setSickLeaveBalance(lastIndexValue.sickLeaveBalance ?? 0);
+    setSpecialPrivilegeLeaveBalance(lastIndexValue.specialPrivilegeLeaveBalance ?? 0);
+  };
+
+  const leaveLedgerUrl = `${process.env.NEXT_PUBLIC_EMPLOYEE_MONITORING_URL}/v1/leave/ledger/${leaveIndividualDetail?.employee?.employeeId}/${leaveIndividualDetail?.employee?.companyId}`;
+
+  const {
+    data: swrLeaveLedger,
+    isLoading: swrLeaveLedgerLoading,
+    error: swrLeaveLedgerError,
+  } = useSWR(
+    modalState && leaveIndividualDetail.employee.employeeId && leaveIndividualDetail?.employee?.companyId
+      ? leaveLedgerUrl
+      : null,
+    fetchWithToken,
+    {
+      shouldRetryOnError: false,
+      revalidateOnFocus: false,
+    }
+  );
+
+  // Initial zustand state update
+  useEffect(() => {
+    if (swrLeaveLedgerLoading) {
+      getLeaveLedger(swrLeaveLedgerLoading);
+    }
+  }, [swrLeaveLedgerLoading]);
+
+  // Upon success/fail of swr request, zustand state will be updated
+  useEffect(() => {
+    if (!isEmpty(swrLeaveLedger)) {
+      setSelectedLeaveLedger(swrLeaveLedger, leaveIndividualDetail.id);
+      getLeaveLedgerSuccess(swrLeaveLedgerLoading, swrLeaveLedger);
+      getLatestBalance(swrLeaveLedger);
+    }
+
+    if (!isEmpty(swrLeaveLedgerError)) {
+      getLeaveLedgerFail(swrLeaveLedgerLoading, swrLeaveLedgerError.message);
+    }
+  }, [swrLeaveLedger, swrLeaveLedgerError]);
+
   const { windowWidth } = UseWindowDimensions();
   return (
     <>
@@ -121,17 +209,15 @@ export const FinalApprovalsPendingLeaveModal = ({
         </Modal.Header>
         <Modal.Body>
           {!leaveIndividualDetail ? (
-            <>
-              <div className="w-full h-[90%]  static flex flex-col justify-items-center items-center place-items-center">
-                <SpinnerDotted
-                  speed={70}
-                  thickness={70}
-                  className="flex w-full h-full transition-all "
-                  color="slateblue"
-                  size={100}
-                />
-              </div>
-            </>
+            <div className="w-full h-[90%]  static flex flex-col justify-items-center items-center place-items-center">
+              <SpinnerDotted
+                speed={70}
+                thickness={70}
+                className="flex w-full h-full transition-all "
+                color="slateblue"
+                size={100}
+              />
+            </div>
           ) : (
             <div className="flex flex-col w-full h-full ">
               <div className="flex flex-col w-full h-full gap-2 ">
@@ -340,6 +426,71 @@ export const FinalApprovalsPendingLeaveModal = ({
                         </div>
                       </div>
                     ) : null}
+
+                    {leaveIndividualDetail?.leaveName === LeaveName.VACATION ||
+                    leaveIndividualDetail?.leaveName === LeaveName.FORCED ||
+                    leaveIndividualDetail?.leaveName === LeaveName.SICK ||
+                    leaveIndividualDetail?.leaveName === LeaveName.SPECIAL_PRIVILEGE ? (
+                      <div className="w-full pb-4 mt-2">
+                        <span className="text-slate-500 text-md">
+                          Employee's{' '}
+                          {leaveIndividualDetail?.leaveName === LeaveName.VACATION ||
+                          leaveIndividualDetail?.leaveName === LeaveName.FORCED
+                            ? 'VL+FL'
+                            : leaveIndividualDetail?.leaveName === LeaveName.SICK
+                            ? 'SL'
+                            : leaveIndividualDetail?.leaveName === LeaveName.SPECIAL_PRIVILEGE
+                            ? 'SPL'
+                            : 'Leave'}{' '}
+                          Credits at the time of this application:
+                        </span>
+                        <table className="mt-2 bg-slate-50 text-slate-600 border-collapse border-spacing-0 border border-slate-400 w-full ">
+                          <tbody className="rounded-md border">
+                            <tr className="">
+                              <td className="border border-slate-400 text-center">Total Earned</td>
+                              <td className="border border-slate-400 text-center">Less this application</td>
+                              <td className="border border-slate-400 text-center bg-green-100">Balance</td>
+                            </tr>
+                            <tr className="border-slate-400">
+                              <td className="border border-slate-400 text-center">
+                                {leaveIndividualDetail?.leaveName === LeaveName.VACATION ||
+                                leaveIndividualDetail?.leaveName === LeaveName.FORCED
+                                  ? (
+                                      parseFloat(`${vacationLeaveBalance}`) + parseFloat(`${forcedLeaveBalance}`)
+                                    ).toFixed(3)
+                                  : leaveIndividualDetail?.leaveName === LeaveName.SICK
+                                  ? sickLeaveBalance
+                                  : leaveIndividualDetail?.leaveName === LeaveName.SPECIAL_PRIVILEGE
+                                  ? specialPrivilegeLeaveBalance
+                                  : 'N/A'}
+                              </td>
+                              <td className="border border-slate-400 text-center">
+                                {leaveIndividualDetail?.leaveDates?.length.toFixed(3)}
+                              </td>
+                              <td className="border border-slate-400 text-center bg-green-100">
+                                {leaveIndividualDetail?.leaveName === LeaveName.VACATION ||
+                                leaveIndividualDetail?.leaveName === LeaveName.FORCED
+                                  ? (
+                                      parseFloat(`${vacationLeaveBalance}`) +
+                                      parseFloat(`${forcedLeaveBalance}`) -
+                                      leaveIndividualDetail?.leaveDates?.length
+                                    ).toFixed(3)
+                                  : leaveIndividualDetail?.leaveName === LeaveName.SICK
+                                  ? (
+                                      parseFloat(`${sickLeaveBalance}`) - leaveIndividualDetail?.leaveDates?.length
+                                    ).toFixed(3)
+                                  : leaveIndividualDetail?.leaveName === LeaveName.SPECIAL_PRIVILEGE
+                                  ? (
+                                      parseFloat(`${specialPrivilegeLeaveBalance}`) -
+                                      leaveIndividualDetail?.leaveDates?.length
+                                    ).toFixed(3)
+                                  : 'N/A'}
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    ) : null}
                   </div>
                   <form id="LeaveAction" onSubmit={handleSubmit(onSubmit)}>
                     <div className="w-full flex flex-col md:flex-row gap-1 md:gap-2 justify-end items-start md:items-center">
@@ -376,12 +527,26 @@ export const FinalApprovalsPendingLeaveModal = ({
               </div>
             </div>
           )}
-          <OtpModal
+
+          <CaptchaModal
+            modalState={captchaLeaveModalIsOpen}
+            setModalState={setCaptchaLeaveModalIsOpen}
+            title={'FINAL LEAVE APPROVAL CAPTCHA'}
+          >
+            {/* contents */}
+            <ApprovalCaptcha
+              employeeId={employeeDetail.user._id}
+              action={watch('status')}
+              tokenId={leaveIndividualDetail.id}
+              captchaName={'Final Leave Approval'}
+            />
+          </CaptchaModal>
+
+          {/* <OtpModal
             modalState={otpLeaveModalIsOpen}
             setModalState={setOtpLeaveModalIsOpen}
             title={'FINAL LEAVE APPROVAL OTP'}
           >
-            {/* contents */}
             <ApprovalOtpContentsLeave
               mobile={employeeDetail.profile.mobileNumber}
               employeeId={employeeDetail.user._id}
@@ -389,7 +554,8 @@ export const FinalApprovalsPendingLeaveModal = ({
               tokenId={leaveIndividualDetail.id}
               otpName={'hrdmLeaveApproval'}
             />
-          </OtpModal>
+          </OtpModal> */}
+
           <ConfirmationLeaveModal
             modalState={declineApplicationModalIsOpen}
             setModalState={setDeclineApplicationModalIsOpen}

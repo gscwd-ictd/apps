@@ -189,6 +189,7 @@ export type SupervisorLeaveDetails = {
   employee: {
     employeeId: string;
     employeeName: string;
+    companyId: string;
   };
   supervisor: {
     supervisorId: string;
