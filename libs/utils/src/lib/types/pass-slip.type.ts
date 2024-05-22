@@ -75,3 +75,11 @@ export type HrmoApprovalPassSlip = {
   status: string;
   hrmoDisapprovalRemarks?: string;
 };
+
+export type UpdatePassSlipTimeLogs = {
+  id: string;
+  employeeName?: string;
+  dateOfApplication?: string;
+  timeIn: string;
+  timeOut: string;
+};
