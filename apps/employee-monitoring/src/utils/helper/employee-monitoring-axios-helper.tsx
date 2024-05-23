@@ -44,10 +44,36 @@ export const postEmpMonitoring = async (url: string, data: any, config = {}) =>
       return { error: true, result: error.response.data.message };
     });
 
+// POST WITH FILE
+export const postEmpMonitoringWithFile = async (url: string, data: any, config = {}) =>
+  await axiosApi
+    .post(url, data, config)
+    .then((response) => {
+      return { error: false, result: response.data };
+    })
+    .catch((error) => {
+      if (error.message === 'Network Error') return { error: true, result: `Cannot connect to the server.` };
+
+      return { error: true, result: error.response.data.message };
+    });
+
 // PUT
 export const putEmpMonitoring = async (url: string, data: any, config = {}) =>
   await axiosApi
     .put(url, { ...data }, { ...config })
+    .then((response) => {
+      return { error: false, result: response.data };
+    })
+    .catch((error) => {
+      if (error.message === 'Network Error') return { error: true, result: `Cannot connect to the server.` };
+
+      return { error: true, result: error.response.data.message };
+    });
+
+// PUT WITH FILE
+export const putEmpMonitoringWithFile = async (url: string, data: any, config = {}) =>
+  await axiosApi
+    .put(url, data, config)
     .then((response) => {
       return { error: false, result: response.data };
     })

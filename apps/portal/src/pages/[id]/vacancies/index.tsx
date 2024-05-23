@@ -340,7 +340,7 @@ export default function Vacancies({
                     </div>
                     <div className="w-full">
                       {isEmpty(jobDetails?.error) && jobDetails && messageContent ? (
-                        <div className="flex flex-col items-center w-full text-gray-700 h-1/2 md:h-full md:ml-4 md:mr-4 bg-red-200">
+                        <div className="flex flex-col items-center w-full text-gray-700 h-1/2 md:h-full md:ml-4 md:mr-4 ">
                           <div
                             className={`${
                               isMessageOpen ? 'w-full md:ml-10 md:mr-10 px-4 flex flex-col bg-white' : 'hidden'

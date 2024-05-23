@@ -3,10 +3,9 @@
 import { FunctionComponent, useEffect, useState } from 'react';
 import { Notice } from '../../../modular/alerts/Notice';
 import { Button } from '../../../modular/forms/buttons/Button';
-import { TextField } from '../../../modular/forms/TextField';
 import PortalSVG from '../../svg/PortalSvg';
 import { leaveAction } from '../../../../types/approvals.type';
-import { patchPortal, patchPortalUrl } from '../../../../utils/helpers/portal-axios-helper';
+import { patchPortalUrl } from '../../../../utils/helpers/portal-axios-helper';
 import { getCountDown } from '../../otp-requests/OtpCountDown';
 import { requestOtpCode } from '../../otp-requests/OtpRequest';
 import { confirmOtpCode } from '../../otp-requests/OtpConfirm';

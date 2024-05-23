@@ -6,18 +6,22 @@ import { deleteEmpMonitoring } from 'apps/employee-monitoring/src/utils/helper/e
 
 // store and type
 import { useAnnouncementsStore } from 'apps/employee-monitoring/src/store/announcement.store';
-import { Announcement, FormDeleteAnnouncement } from 'apps/employee-monitoring/src/utils/types/announcement.type';
+import {
+  Announcement,
+  AnnouncementTableColumns,
+  FormDeleteAnnouncement,
+} from 'apps/employee-monitoring/src/utils/types/announcement.type';
 
-import { AlertNotification, LoadingSpinner, Modal } from '@gscwd-apps/oneui';
+import { AlertNotification, LoadingSpinner, Modal, ToastNotification } from '@gscwd-apps/oneui';
 
 type DeleteModalProps = {
   modalState: boolean;
   setModalState: React.Dispatch<React.SetStateAction<boolean>>;
   closeModalAction: () => void;
-  rowData: Announcement;
+  rowData: AnnouncementTableColumns;
 };
 
-const DeleteCustomGroupModal: FunctionComponent<DeleteModalProps> = ({
+const DeleteAnnouncementModal: FunctionComponent<DeleteModalProps> = ({
   modalState,
   setModalState,
   closeModalAction,
@@ -25,47 +29,51 @@ const DeleteCustomGroupModal: FunctionComponent<DeleteModalProps> = ({
 }) => {
   // zustand store initialization
   const {
-    DeleteAnnouncementResponse,
+    DeleteAnnouncement,
     SetDeleteAnnouncement,
-
     SetErrorAnnouncement,
+
     EmptyResponse,
   } = useAnnouncementsStore((state) => ({
-    DeleteAnnouncementResponse: state.deleteAnnouncement,
+    DeleteAnnouncement: state.deleteAnnouncement,
     SetDeleteAnnouncement: state.setDeleteAnnouncement,
-
     SetErrorAnnouncement: state.setErrorAnnouncement,
+
     EmptyResponse: state.emptyResponse,
   }));
 
   const {
     handleSubmit,
-    formState: { errors, isSubmitting: deleteFormLoading },
-  } = useForm<FormDeleteAnnouncement>();
+    reset,
+    formState: { isSubmitting: deleteFormLoading },
+  } = useForm();
 
   // form submission
-  const onSubmit: SubmitHandler<FormDeleteAnnouncement> = () => {
-    if (!isEmpty(rowData._id)) {
+  const onSubmit = () => {
+    if (!isEmpty(rowData.id)) {
       EmptyResponse();
-
-      handleDeleteResult();
+      handleDeleteResult(rowData.id);
     }
   };
 
-  const handleDeleteResult = async () => {
-    const { error, result } = await deleteEmpMonitoring(`/announcements/${rowData._id}`);
+  const handleDeleteResult = async (id: string) => {
+    const { error, result } = await deleteEmpMonitoring(`/events-announcements/${id}`);
 
     if (error) {
-      SetErrorAnnouncement(result);
+      SetErrorAnnouncement('Error occurred when deleting announcement. Please try again later.');
     } else {
       SetDeleteAnnouncement(result);
-
       closeModalAction();
+      reset();
     }
   };
 
   return (
     <>
+      {/* Notification */}
+      {!isEmpty(DeleteAnnouncement) ? (
+        <ToastNotification toastType="success" notifMessage="Announcement removed successfully" />
+      ) : null}
       <Modal open={modalState} setOpen={setModalState} steady size="xs">
         <Modal.Body>
           {/* Notifications */}
@@ -74,11 +82,11 @@ const DeleteCustomGroupModal: FunctionComponent<DeleteModalProps> = ({
               logo={<LoadingSpinner size="xs" />}
               alertType="info"
               notifMessage="Submitting request"
-              dismissible={true}
+              dismissible={false}
             />
           ) : null}
 
-          <form onSubmit={handleSubmit(onSubmit)} id="deleteCustomGroupForm">
+          <form onSubmit={handleSubmit(onSubmit)} id="deleteAnnouncementForm">
             <div className="w-full">
               <div className="flex flex-col w-full gap-5">
                 <p className="px-2 mt-5 text-md font-medium text-center text-gray-600">
@@ -93,7 +101,7 @@ const DeleteCustomGroupModal: FunctionComponent<DeleteModalProps> = ({
           <div className="flex justify-between w-full gap-2">
             <button
               type="submit"
-              form="deleteCustomGroupForm"
+              form="deleteAnnouncementForm"
               className="w-full text-white h-[3rem] bg-red-500 rounded disabled:cursor-not-allowed hover:bg-red-400 active:bg-red-300"
               disabled={deleteFormLoading ? true : false}
             >
@@ -114,4 +122,4 @@ const DeleteCustomGroupModal: FunctionComponent<DeleteModalProps> = ({
   );
 };
 
-export default DeleteCustomGroupModal;
+export default DeleteAnnouncementModal;

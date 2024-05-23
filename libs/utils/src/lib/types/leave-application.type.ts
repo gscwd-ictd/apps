@@ -61,6 +61,10 @@ export type EmployeeLeaveDetails = {
       positionTitle: string;
       salary: string;
     };
+    firstName: string;
+    middleName: string;
+    lastName: string;
+    nameExtension: string;
     photoUrl: string;
     companyId: string;
     userId: string;
@@ -76,13 +80,6 @@ export type EmployeeLeaveDetails = {
     status: LeaveStatus;
     leaveType?: LeaveType | null;
     maximumCredits?: number | null;
-    supervisorApprovalDate: string;
-    supervisorDisapprovalRemarks: string;
-    supervisorId: string;
-    supervisorName: string;
-    hrdmApprovalDate: string;
-    hrdmDisapprovalRemarks: string;
-    hrmoApprovalDate: string;
     cancelReason: string;
     cancelDate: string;
     leaveDateStatus: LeaveDateStatus;
@@ -90,6 +87,23 @@ export type EmployeeLeaveDetails = {
     forCancellationLeaveDates: Array<string>;
     leaveDateCancellationRemarks: string;
     isLateFiling: boolean;
+
+    employeeName: string;
+    employeeSignature: string;
+
+    hrmoApprovalDate: string;
+    hrmoApprovedByName: string;
+    hrmoSignature: string;
+
+    supervisorApprovalDate: string;
+    supervisorName: string;
+    supervisorSignature: string;
+    supervisorDisapprovalRemarks: string;
+
+    hrdmApprovalDate: string;
+    hrdmApprovedByName: string;
+    hrdmSignature: string;
+    hrdmDisapprovalRemarks: string;
   };
   leaveApplicationDetails: {
     inPhilippinesOrAbroad?: string;
@@ -175,6 +189,7 @@ export type SupervisorLeaveDetails = {
   employee: {
     employeeId: string;
     employeeName: string;
+    companyId: string;
   };
   supervisor: {
     supervisorId: string;

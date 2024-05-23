@@ -11,12 +11,12 @@ import duration from 'dayjs/plugin/duration';
 import { LoadingSpinner } from '@gscwd-apps/oneui';
 import { LeaveLedgerEntry } from 'libs/utils/src/lib/types/leave-ledger-entry.type';
 import { fetchWithToken } from 'apps/portal/src/utils/hoc/fetcher';
-import { useLeaveLedgerPageStore } from 'apps/portal/src/store/leave-ledger-page.store';
 import { CardMiniStats } from '../cards/CardMiniStats';
 import { ActionType } from 'libs/utils/src/lib/enums/leave-ledger.type';
 import RemarksAndLeaveDatesModal from '../leaves/RemarksAndLeaveDatesModal';
 import { EmployeeDetails } from 'apps/portal/src/types/employee.type';
 import { useLeaveStore } from '../../../../src/store/leave.store';
+import { useLeaveLedgerStore } from 'apps/portal/src/store/leave-ledger.store';
 
 dayjs.extend(localizedFormat);
 dayjs.extend(customParseFormat);
@@ -32,14 +32,14 @@ type RemarksAndLeaveDates = {
 };
 
 export const LeaveLedgerTable: FunctionComponent<LeaveLedgerTableProps> = ({ employeeData }) => {
-  const { getLeaveLedgerFail, getLeaveLedgerSuccess, leaveLedger, leaveLedgerModalIsOpen } = useLeaveLedgerPageStore(
-    (state) => ({
+  const { getLeaveLedger, getLeaveLedgerFail, getLeaveLedgerSuccess, leaveLedger, leaveLedgerModalIsOpen } =
+    useLeaveLedgerStore((state) => ({
       leaveLedger: state.leaveLedger,
+      getLeaveLedger: state.getLeaveLedger,
       getLeaveLedgerSuccess: state.getLeaveLedgerSuccess,
       getLeaveLedgerFail: state.getLeaveLedgerFail,
       leaveLedgerModalIsOpen: state.leaveLedgerModalIsOpen,
-    })
-  );
+    }));
 
   const { leaveDetailsPdfModalIsOpen, applyLeaveModalIsOpen, pendingLeaveModalIsOpen, completedLeaveModalIsOpen } =
     useLeaveStore((state) => ({
@@ -70,13 +70,6 @@ export const LeaveLedgerTable: FunctionComponent<LeaveLedgerTableProps> = ({ emp
   // leave dates and remarks modal
   const [modalRemarksIsOpen, setModalRemarksIsOpen] = useState<boolean>(false);
 
-  // zustand store initialization
-  const { PostLeaveAdjustment, errorEntry, errorLedger } = useLeaveLedgerPageStore((state) => ({
-    PostLeaveAdjustment: state.postLeaveAdjustment,
-    errorEntry: state.error.errorEntry,
-    errorLedger: state.error.errorLedger,
-  }));
-
   const leaveLedgerUrl = `${process.env.NEXT_PUBLIC_EMPLOYEE_MONITORING_URL}/v1/leave/ledger/${employeeData.user._id}/${employeeData.employmentDetails.companyId}`;
 
   const {
@@ -96,7 +89,7 @@ export const LeaveLedgerTable: FunctionComponent<LeaveLedgerTableProps> = ({ emp
       : null,
     fetchWithToken,
     {
-      shouldRetryOnError: true,
+      shouldRetryOnError: false,
       revalidateOnFocus: false,
     }
   );
@@ -129,6 +122,13 @@ export const LeaveLedgerTable: FunctionComponent<LeaveLedgerTableProps> = ({ emp
     else if (actionType === ActionType.DEBIT && value != 0) return <span className="text-red-600">{value}</span>;
   };
 
+  // Initial zustand state update
+  useEffect(() => {
+    if (swrIsLoading) {
+      getLeaveLedger(swrIsLoading);
+    }
+  }, [swrIsLoading]);
+
   // if a result is returned
   useEffect(() => {
     // success
@@ -136,27 +136,20 @@ export const LeaveLedgerTable: FunctionComponent<LeaveLedgerTableProps> = ({ emp
       // check if leave ledger is empty
       if (!isEmpty(swrLeaveLedger)) {
         // mutate leave dates from string to array of string
-        const tempLeaveLedger = swrLeaveLedger.map((leaveLedger) => {
+        const tempLeaveLedger = leaveLedger.map((leaveLedger) => {
           const newLeaveDates = !isEmpty(leaveLedger.leaveDates) ? leaveLedger.leaveDates.toString().split(', ') : null;
           leaveLedger.leaveDates = newLeaveDates;
           return leaveLedger;
         });
 
-        getLeaveLedgerSuccess(tempLeaveLedger);
+        getLeaveLedgerSuccess(swrIsLoading, tempLeaveLedger);
         getLatestBalance(tempLeaveLedger);
       }
     }
 
     // error
-    if (!isEmpty(swrError)) getLeaveLedgerFail(swrError.message);
+    if (!isEmpty(swrError)) getLeaveLedgerFail(swrIsLoading, swrError.message);
   }, [swrLeaveLedger, swrError]);
-
-  // Reset responses from all modal actions
-  useEffect(() => {
-    if (!isEmpty(PostLeaveAdjustment)) {
-      mutateLeaveLedger();
-    }
-  }, [PostLeaveAdjustment]);
 
   if (swrIsLoading)
     return (

@@ -13,15 +13,15 @@ type ResponseLeaveLedger = {
   postResponse: LeaveLedgerEntry;
 };
 
-type LoadingLeaveLedger = {
-  loadingLedger: boolean;
-  loadingEntry: boolean;
-};
+// type LoadingLeaveLedger = {
+//   loadingLedger: boolean;
+//   loadingEntry: boolean;
+// };
 
-type ErrorLeaveLedger = {
-  errorLedger: string;
-  errorEntry: string;
-};
+// type ErrorLeaveLedger = {
+//   errorLedger: string;
+//   errorEntry: string;
+// };
 
 export type LeaveLedgerState = {
   leaveLedger: Array<LeaveLedgerEntry>;
@@ -35,11 +35,11 @@ export type LeaveLedgerState = {
 
   loading: {
     loadingLeaveLedger: boolean;
-    loading: LoadingLeaveLedger; //leave ledger modal
+    // loading: LoadingLeaveLedger; //leave ledger modal
   };
   error: {
     errorLeaveLedger: string;
-    error: ErrorLeaveLedger; //leave ledger modal
+    // error: ErrorLeaveLedger; //leave ledger modal
   };
 
   selectedLeaveBenefit: MutatedLeaveBenefit;
@@ -61,7 +61,7 @@ export type LeaveLedgerState = {
   getLeaveLedgerFail: (loading: boolean, error: string) => void;
 };
 
-export const useLeaveLedgerStore = create<LeaveLedgerState>()(
+export const useSupervisorLeaveApprovalLeaveLedgerStore = create<LeaveLedgerState>()(
   devtools((set) => ({
     leaveLedger: [],
     vacationLeaveBalance: 0,
@@ -75,14 +75,9 @@ export const useLeaveLedgerStore = create<LeaveLedgerState>()(
 
     loading: {
       loadingLeaveLedger: false,
-      loading: {
-        loadingEntry: false,
-        loadingLedger: false,
-      },
     },
     error: {
       errorLeaveLedger: '',
-      error: { errorEntry: '', errorLedger: '' },
     },
 
     leaveLedgerModalIsOpen: false,
