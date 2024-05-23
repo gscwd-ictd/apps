@@ -238,13 +238,6 @@ const ViewLeaveApplicationModal: FunctionComponent<ViewLeaveApplicationModalProp
     }
   }, [leaveConfirmAction, confirmModalIsOpen]);
 
-  useEffect(() => {
-    // console.log(leaveLedger[leaveLedger.length - 1]);
-  }, [
-    leaveLedger,
-    // swrLeaveLedger
-  ]);
-
   return (
     <>
       <LeaveApplicationConfirmModal
@@ -566,25 +559,22 @@ const ViewLeaveApplicationModal: FunctionComponent<ViewLeaveApplicationModalProp
                               <td className="border border-slate-400 text-center bg-green-100">Balance</td>
                             </tr>
 
-                            {/* VACATION */}
-                            {rowData.leaveName === LeaveName.VACATION ? (
+                            {/* VACATION & FORCED */}
+                            {rowData.leaveName === LeaveName.VACATION || rowData.leaveName === LeaveName.FORCED ? (
                               <tr className="border border-slate-400">
-                                3
                                 <td className="border border-slate-400 text-center">
                                   {rowData.status === LeaveStatus.FOR_HRMO_CREDIT_CERTIFICATION ||
                                   rowData.status === LeaveStatus.FOR_SUPERVISOR_APPROVAL ||
-                                  rowData.status === LeaveStatus.FOR_HRDM_APPROVAL ||
-                                  rowData.status === LeaveStatus.FOR_HRMO_APPROVAL // REMOVE IF CREDIT CERTIFICATION IS IN PLACE
-                                    ? Number(
-                                        parseFloat(
-                                          `${leaveLedger[leaveLedger.length - 1]?.vacationLeaveBalance}`
-                                        ).toFixed(3)
+                                  rowData.status === LeaveStatus.FOR_HRDM_APPROVAL
+                                    ? (
+                                        parseFloat(`${leaveLedger[leaveLedger.length - 1]?.vacationLeaveBalance}`) +
+                                        parseFloat(`${leaveLedger[leaveLedger.length - 1]?.forcedLeaveBalance}`)
                                       ).toFixed(3)
                                     : (
-                                        Number(
-                                          parseFloat(`${selectedLeaveLedger[0]?.vacationLeaveBalance}`).toFixed(3)
-                                        ) +
-                                        Number(parseFloat(`${selectedLeaveLedger[0]?.vacationLeave}`).toFixed(3)) * -1
+                                        parseFloat(`${selectedLeaveLedger[0]?.vacationLeaveBalance}`) +
+                                        parseFloat(`${selectedLeaveLedger[0]?.vacationLeave}`) * -1 +
+                                        parseFloat(`${selectedLeaveLedger[0]?.forcedLeaveBalance}`) +
+                                        parseFloat(`${selectedLeaveLedger[0]?.forcedLeave}`) * -1
                                       ).toFixed(3)}
                                 </td>
                                 <td className="border border-slate-400 text-center">
@@ -593,52 +583,16 @@ const ViewLeaveApplicationModal: FunctionComponent<ViewLeaveApplicationModalProp
                                 <td className="border border-slate-400 text-center bg-green-100">
                                   {rowData.status === LeaveStatus.FOR_HRMO_CREDIT_CERTIFICATION ||
                                   rowData.status === LeaveStatus.FOR_SUPERVISOR_APPROVAL ||
-                                  rowData.status === LeaveStatus.FOR_HRDM_APPROVAL ||
-                                  rowData.status === LeaveStatus.FOR_HRMO_APPROVAL // REMOVE IF CREDIT CERTIFICATION IS IN PLACE
-                                    ? Number(
-                                        parseFloat(
-                                          `${leaveLedger[leaveLedger.length - 1]?.vacationLeaveBalance}`
-                                        ).toFixed(3)
-                                      ) - Number(parseFloat(`${rowData.leaveDates?.length}`).toFixed(3))
-                                    : selectedLeaveLedger[0]?.vacationLeaveBalance}
-                                </td>
-                              </tr>
-                            ) : null}
-
-                            {/* FORCED */}
-                            {rowData.leaveName === LeaveName.FORCED ? (
-                              <tr className="border border-slate-400">
-                                <td className="border border-slate-400 text-center">
-                                  {rowData.status === LeaveStatus.FOR_HRMO_CREDIT_CERTIFICATION ||
-                                  rowData.status === LeaveStatus.FOR_SUPERVISOR_APPROVAL ||
-                                  rowData.status === LeaveStatus.FOR_HRDM_APPROVAL ||
-                                  rowData.status === LeaveStatus.FOR_HRMO_APPROVAL // REMOVE IF CREDIT CERTIFICATION IS IN PLACE
-                                    ? Number(
-                                        parseFloat(
-                                          `${leaveLedger[leaveLedger.length - 1]?.forcedLeaveBalance}`
-                                        ).toFixed(3)
+                                  rowData.status === LeaveStatus.FOR_HRDM_APPROVAL
+                                    ? (
+                                        parseFloat(`${leaveLedger[leaveLedger.length - 1]?.vacationLeaveBalance}`) +
+                                        parseFloat(`${leaveLedger[leaveLedger.length - 1]?.forcedLeaveBalance}`) -
+                                        parseFloat(`${rowData.leaveDates?.length}`)
                                       ).toFixed(3)
                                     : (
-                                        Number(parseFloat(`${selectedLeaveLedger[0]?.forcedLeaveBalance}`).toFixed(3)) +
-                                        Number(parseFloat(`${selectedLeaveLedger[0]?.forcedLeave}`).toFixed(3)) * -1
+                                        parseFloat(`${selectedLeaveLedger[0]?.vacationLeaveBalance}`) +
+                                        parseFloat(`${selectedLeaveLedger[0]?.forcedLeaveBalance}`)
                                       ).toFixed(3)}
-                                </td>
-
-                                <td className="border border-slate-400 text-center">
-                                  {rowData.leaveDates?.length.toFixed(3)}
-                                </td>
-
-                                <td className="border border-slate-400 text-center bg-green-100">
-                                  {rowData.status === LeaveStatus.FOR_HRMO_CREDIT_CERTIFICATION ||
-                                  rowData.status === LeaveStatus.FOR_SUPERVISOR_APPROVAL ||
-                                  rowData.status === LeaveStatus.FOR_HRDM_APPROVAL ||
-                                  rowData.status === LeaveStatus.FOR_HRMO_APPROVAL // REMOVE IF CREDIT CERTIFICATION IS IN PLACE
-                                    ? Number(
-                                        parseFloat(
-                                          `${leaveLedger[leaveLedger.length - 1]?.forcedLeaveBalance}`
-                                        ).toFixed(3)
-                                      ) - Number(parseFloat(`${rowData.leaveDates?.length}`).toFixed(3))
-                                    : selectedLeaveLedger[0]?.forcedLeaveBalance}
                                 </td>
                               </tr>
                             ) : null}
@@ -649,8 +603,7 @@ const ViewLeaveApplicationModal: FunctionComponent<ViewLeaveApplicationModalProp
                                 <td className="border border-slate-400 text-center">
                                   {rowData.status === LeaveStatus.FOR_HRMO_CREDIT_CERTIFICATION ||
                                   rowData.status === LeaveStatus.FOR_SUPERVISOR_APPROVAL ||
-                                  rowData.status === LeaveStatus.FOR_HRDM_APPROVAL ||
-                                  rowData.status === LeaveStatus.FOR_HRMO_APPROVAL // REMOVE IF CREDIT CERTIFICATION IS IN PLACE
+                                  rowData.status === LeaveStatus.FOR_HRDM_APPROVAL
                                     ? Number(
                                         parseFloat(`${leaveLedger[leaveLedger.length - 1]?.sickLeaveBalance}`).toFixed(
                                           3
@@ -669,8 +622,7 @@ const ViewLeaveApplicationModal: FunctionComponent<ViewLeaveApplicationModalProp
                                 <td className="border border-slate-400 text-center bg-green-100">
                                   {rowData.status === LeaveStatus.FOR_HRMO_CREDIT_CERTIFICATION ||
                                   rowData.status === LeaveStatus.FOR_SUPERVISOR_APPROVAL ||
-                                  rowData.status === LeaveStatus.FOR_HRDM_APPROVAL ||
-                                  rowData.status === LeaveStatus.FOR_HRMO_APPROVAL // REMOVE IF CREDIT CERTIFICATION IS IN PLACE
+                                  rowData.status === LeaveStatus.FOR_HRDM_APPROVAL
                                     ? Number(
                                         parseFloat(`${leaveLedger[leaveLedger.length - 1]?.sickLeaveBalance}`).toFixed(
                                           3
@@ -681,14 +633,13 @@ const ViewLeaveApplicationModal: FunctionComponent<ViewLeaveApplicationModalProp
                               </tr>
                             ) : null}
 
-                            {/* SPECIAL PRIVILAGE */}
+                            {/* SPECIAL PRIVILEGE */}
                             {rowData.leaveName === LeaveName.SPECIAL_PRIVILEGE ? (
                               <tr className="border border-slate-400">
                                 <td className="border border-slate-400 text-center">
                                   {rowData.status === LeaveStatus.FOR_HRMO_CREDIT_CERTIFICATION ||
                                   rowData.status === LeaveStatus.FOR_SUPERVISOR_APPROVAL ||
-                                  rowData.status === LeaveStatus.FOR_HRDM_APPROVAL ||
-                                  rowData.status === LeaveStatus.FOR_HRMO_APPROVAL // REMOVE IF CREDIT CERTIFICATION IS IN PLACE
+                                  rowData.status === LeaveStatus.FOR_HRDM_APPROVAL
                                     ? Number(
                                         parseFloat(
                                           `${leaveLedger[leaveLedger.length - 1]?.specialPrivilegeLeaveBalance}`
@@ -714,8 +665,7 @@ const ViewLeaveApplicationModal: FunctionComponent<ViewLeaveApplicationModalProp
                                 <td className="border border-slate-400 text-center bg-green-100">
                                   {rowData.status === LeaveStatus.FOR_HRMO_CREDIT_CERTIFICATION ||
                                   rowData.status === LeaveStatus.FOR_SUPERVISOR_APPROVAL ||
-                                  rowData.status === LeaveStatus.FOR_HRDM_APPROVAL ||
-                                  rowData.status === LeaveStatus.FOR_HRMO_APPROVAL // REMOVE IF CREDIT CERTIFICATION IS IN PLACE
+                                  rowData.status === LeaveStatus.FOR_HRDM_APPROVAL
                                     ? Number(
                                         parseFloat(
                                           `${leaveLedger[leaveLedger.length - 1]?.specialPrivilegeLeaveBalance}`

@@ -6,7 +6,11 @@ import { deleteEmpMonitoring } from 'apps/employee-monitoring/src/utils/helper/e
 
 // store and type
 import { useAnnouncementsStore } from 'apps/employee-monitoring/src/store/announcement.store';
-import { Announcement, FormDeleteAnnouncement } from 'apps/employee-monitoring/src/utils/types/announcement.type';
+import {
+  Announcement,
+  AnnouncementTableColumns,
+  FormDeleteAnnouncement,
+} from 'apps/employee-monitoring/src/utils/types/announcement.type';
 
 import { AlertNotification, LoadingSpinner, Modal, ToastNotification } from '@gscwd-apps/oneui';
 
@@ -14,7 +18,7 @@ type DeleteModalProps = {
   modalState: boolean;
   setModalState: React.Dispatch<React.SetStateAction<boolean>>;
   closeModalAction: () => void;
-  rowData: Announcement;
+  rowData: AnnouncementTableColumns;
 };
 
 const DeleteAnnouncementModal: FunctionComponent<DeleteModalProps> = ({
