@@ -34,6 +34,7 @@ import { useLeaveMonetizationCalculatorStore } from '../../store/leave-monetizat
 import dayjs from 'dayjs';
 import { usePassSlipStore } from '../../store/passslip.store';
 import { employeeCeliaDananDummy } from '../../types/employee.type';
+import { useAnnouncementsStore } from '../../store/announcements.store';
 
 export type NavDetails = {
   fullName: string;
@@ -53,6 +54,10 @@ export default function Dashboard({ userDetails }: InferGetServerSidePropsType<t
   const [leaveCreditMultiplier, setLeaveCreditMultiplier] = useState<number>(0.0481927);
   const [leaveCredits, setLeaveCredits] = useState<number>(0);
   const [estimatedAmount, setEstimatedAmount] = useState<number>(0);
+
+  const { errorAnnouncements } = useAnnouncementsStore((state) => ({
+    errorAnnouncements: state.error.errorAnnouncements,
+  }));
 
   const {
     leaveCalculatorModalIsOpen,
@@ -382,6 +387,10 @@ export default function Dashboard({ userDetails }: InferGetServerSidePropsType<t
 
       {!isEmpty(swrPassSlipCountError) ? (
         <ToastNotification toastType="error" notifMessage={`Pass Slip Count: ${swrPassSlipCountError.message}.`} />
+      ) : null}
+
+      {!isEmpty(errorAnnouncements) ? (
+        <ToastNotification toastType="error" notifMessage={`Announcements: ${errorAnnouncements}.`} />
       ) : null}
 
       <Head>

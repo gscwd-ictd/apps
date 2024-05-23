@@ -69,7 +69,7 @@ export default function Carousel() {
     isLoading: swrAnnouncementsIsLoading,
     error: swrAnnouncementsError,
     mutate: mutateAnnouncements,
-  } = useSWR(announcementsUrl, fetchWithToken);
+  } = useSWR(announcementsUrl, fetchWithToken, { shouldRetryOnError: false, revalidateOnFocus: true });
 
   // Initial zustand state update
   useEffect(() => {
