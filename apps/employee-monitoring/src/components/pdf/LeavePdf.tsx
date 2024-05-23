@@ -4,10 +4,11 @@
 import { Page, Text, Document, StyleSheet, PDFViewer, View, Image } from '@react-pdf/renderer';
 import React, { useEffect, useState } from 'react';
 
-import { EmployeeDetails } from '../../utils/types/employee.type';
-import { EmployeeLeaveDetails, MonitoringLeave } from 'libs/utils/src/lib/types/leave-application.type';
+import { EmployeeLeaveDetails } from 'libs/utils/src/lib/types/leave-application.type';
 import { LeaveName, LeaveStatus } from 'libs/utils/src/lib/enums/leave.enum';
 import { LeaveLedgerEntry } from 'libs/utils/src/lib/types/leave-ledger-entry.type';
+import { DateTimeFormatter } from 'libs/utils/src/lib/functions/DateTimeFormatter';
+import { isEmpty } from 'lodash';
 
 const styles = StyleSheet.create({
   page: {
@@ -151,35 +152,29 @@ const styles = StyleSheet.create({
 });
 
 type LeavePdfProps = {
-  rowData: MonitoringLeave;
-  // employeeDetails: EmployeeDetails;
   leaveDetails: EmployeeLeaveDetails;
   selectedLeaveLedger: Array<LeaveLedgerEntry>;
 };
 
-export const LeavePdf = ({ rowData, leaveDetails, selectedLeaveLedger }: LeavePdfProps): JSX.Element => {
+export const LeavePdf = ({ leaveDetails, selectedLeaveLedger }: LeavePdfProps): JSX.Element => {
   const [isClient, setIsClient] = useState<boolean>(false);
 
   useEffect(() => {
     setIsClient(true);
   }, []);
 
-  // useEffect(() => {
-  //   console.log(leaveDetails);
-  // }, [leaveDetails]);
-
   return (
     <>
       {isClient && (
         <PDFViewer width={'100%'} height={2000} showToolbar>
           <Document title="Leave">
-            {/* FOLIO */}
-            <Page size={[612.0, 792.0]}>
+            {/* LEAVE FORM PAGE */}
+            <Page size={'A4'}>
               <View style={styles.page}>
-                <Text style={{ position: 'absolute', fontSize: 6 }}>CIVIL SERVICES FORM NO. 6</Text>
-                <Text style={{ position: 'absolute', fontSize: 6, marginTop: 10 }}>Revised 2020</Text>
+                <Text style={{ position: 'absolute', fontSize: 5 }}>CIVIL SERVICES FORM NO. 6</Text>
+                <Text style={{ position: 'absolute', fontSize: 5, marginTop: 8 }}>Revised 2020</Text>
 
-                <Text style={{ position: 'absolute', fontSize: 16, right: 0 }}>010678</Text>
+                <Text style={{ position: 'absolute', fontSize: 16, right: 0 }}></Text>
                 <View
                   style={{
                     display: 'flex',
@@ -196,7 +191,7 @@ export const LeavePdf = ({ rowData, leaveDetails, selectedLeaveLedger }: LeavePd
                     <Text
                       style={{
                         fontSize: 14,
-                        paddingTop: 20,
+                        paddingTop: 15,
                         fontFamily: 'Helvetica-Bold',
                       }}
                     >
@@ -217,6 +212,8 @@ export const LeavePdf = ({ rowData, leaveDetails, selectedLeaveLedger }: LeavePd
                 </View>
 
                 <View style={{ height: 5 }}></View>
+
+                {/*  QUESTION 1 & 2 */}
                 <View style={styles.container}>
                   <View
                     style={{
@@ -255,8 +252,7 @@ export const LeavePdf = ({ rowData, leaveDetails, selectedLeaveLedger }: LeavePd
                         textAlign: 'center',
                       }}
                     >
-                      {rowData.employee?.employeeName}
-                      {/* {employeeDetails.profile.lastName} */}
+                      {leaveDetails.employeeDetails?.lastName}
                     </Text>
                     <Text style={{ marginRight: 80 }}>(Last)</Text>
                     <Text
@@ -269,7 +265,10 @@ export const LeavePdf = ({ rowData, leaveDetails, selectedLeaveLedger }: LeavePd
                         textAlign: 'center',
                       }}
                     >
-                      {/* {employeeDetails.profile.firstName} */}
+                      {leaveDetails.employeeDetails?.firstName}{' '}
+                      {!isEmpty(leaveDetails.employeeDetails?.nameExtension)
+                        ? leaveDetails.employeeDetails?.nameExtension
+                        : ''}
                     </Text>
                     <Text style={{ marginRight: 80 }}>(First)</Text>
                     <Text
@@ -282,11 +281,13 @@ export const LeavePdf = ({ rowData, leaveDetails, selectedLeaveLedger }: LeavePd
                         textAlign: 'center',
                       }}
                     >
-                      {/* {employeeDetails.profile.middleName} */}
+                      {leaveDetails.employeeDetails?.middleName}
                     </Text>
                     <Text style={{ marginRight: 50 }}>(Middle)</Text>
                   </View>
                 </View>
+
+                {/* QUESTION 3, 4, & 5 */}
                 <View style={styles.container2}>
                   <View
                     style={{
@@ -312,7 +313,7 @@ export const LeavePdf = ({ rowData, leaveDetails, selectedLeaveLedger }: LeavePd
                         width: '100px',
                       }}
                     >
-                      {leaveDetails.leaveApplicationBasicInfo?.dateOfFiling}
+                      {DateTimeFormatter(leaveDetails.leaveApplicationBasicInfo?.dateOfFiling, 'MMMM DD, YYYY')}
                     </Text>
                     <Text style={{ marginRight: 1 }}>___________________</Text>
                     <Text style={{ marginRight: 1 }}>4. POSITION</Text>
@@ -343,10 +344,11 @@ export const LeavePdf = ({ rowData, leaveDetails, selectedLeaveLedger }: LeavePd
                     <Text style={{ marginRight: 1 }}>___________________</Text>
                   </View>
                 </View>
+
+                {/* QUESTION 6 */}
                 <View style={styles.container3}>
                   <Text>6. DETAILS OF APPLICATION</Text>
                 </View>
-                {/* MAIN */}
                 <View
                   style={{
                     display: 'flex',
@@ -501,7 +503,7 @@ export const LeavePdf = ({ rowData, leaveDetails, selectedLeaveLedger }: LeavePd
                       }}
                     >
                       <Text>6.B DETAILS OF LEAVE</Text>
-                      <Text style={styles.inCase}>In case of Vacation/Special Priviledge Leave:</Text>
+                      <Text style={styles.inCase}>In case of Vacation/Special Privilege Leave:</Text>
                       <View style={styles.leaveLabelContainer2}>
                         <Text style={styles.checkbox}>
                           {(leaveDetails.leaveApplicationBasicInfo?.leaveName === LeaveName.VACATION ||
@@ -512,7 +514,6 @@ export const LeavePdf = ({ rowData, leaveDetails, selectedLeaveLedger }: LeavePd
                             : null}
                         </Text>
                         <Text style={styles.leaveLabel}>Within the Philippines</Text>
-                        {/* <Text style={{ fontSize: 6, paddingLeft: 25 }}>_______________________________</Text> */}
                         <Text
                           style={{
                             fontSize: 7.5,
@@ -670,9 +671,6 @@ export const LeavePdf = ({ rowData, leaveDetails, selectedLeaveLedger }: LeavePd
                       </View>
                       <View style={styles.leaveLabelContainer2}>
                         <Text style={styles.leaveLabel}>Other purpose:</Text>
-                        {/* <Text style={{ fontSize: 6, paddingLeft: 8 }}>
-                          _________________________________________________
-                        </Text> */}
                         <Text
                           style={{
                             fontSize: 7.5,
@@ -755,9 +753,22 @@ export const LeavePdf = ({ rowData, leaveDetails, selectedLeaveLedger }: LeavePd
                         <Text style={styles.checkbox}></Text>
                         <Text style={styles.leaveLabel}>Requested</Text>
                       </View>
-                      <Text style={{ paddingTop: 6, paddingLeft: 6 }}>
-                        _________________________________________________
-                      </Text>
+                      <View style={{ width: '100%' }}>
+                        <Image
+                          style={{
+                            width: '25%',
+                            position: 'absolute',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            left: '35%',
+                          }}
+                          src={leaveDetails.leaveApplicationBasicInfo?.employeeSignature}
+                        />
+                        <Text style={{ paddingLeft: 6, paddingTop: 22 }}>
+                          _________________________________________________
+                        </Text>
+                      </View>
+
                       <Text
                         style={{
                           textAlign: 'center',
@@ -770,6 +781,8 @@ export const LeavePdf = ({ rowData, leaveDetails, selectedLeaveLedger }: LeavePd
                     </View>
                   </View>
                 </View>
+
+                {/* QUESTION 7 */}
                 <View style={styles.container3}>
                   <Text>7. DETAILS OF ACTION ON APPLICATION</Text>
                 </View>
@@ -794,7 +807,6 @@ export const LeavePdf = ({ rowData, leaveDetails, selectedLeaveLedger }: LeavePd
                       }}
                     >
                       <Text>7.A CERTIFICATION OF LEAVE CREDITS</Text>
-
                       <Text
                         style={{
                           position: 'absolute',
@@ -814,7 +826,9 @@ export const LeavePdf = ({ rowData, leaveDetails, selectedLeaveLedger }: LeavePd
                       >
                         As of _______________________________
                       </Text>
+
                       <View style={{ paddingLeft: 10, paddingRight: 10 }}>
+                        {/* Leave Credit Table */}
                         <View style={styles.containerTable}>
                           <View style={{ display: 'flex', flexDirection: 'row' }}>
                             <View style={styles.containerTableRow4}></View>
@@ -831,21 +845,24 @@ export const LeavePdf = ({ rowData, leaveDetails, selectedLeaveLedger }: LeavePd
                             </View>
                             <View style={styles.containerTableRow}>
                               <Text>
-                                {Number(parseFloat(`${selectedLeaveLedger[0]?.vacationLeaveBalance}`).toFixed(3)) +
-                                  Number(parseFloat(`${selectedLeaveLedger[0]?.vacationLeave}`).toFixed(3)) * -1 +
-                                  (Number(parseFloat(`${selectedLeaveLedger[0]?.forcedLeaveBalance}`).toFixed(3)) +
-                                    Number(parseFloat(`${selectedLeaveLedger[0]?.forcedLeave}`).toFixed(3)) * -1)}
+                                {(
+                                  parseFloat(`${selectedLeaveLedger[0]?.vacationLeaveBalance}`) +
+                                  parseFloat(`${selectedLeaveLedger[0]?.vacationLeave}`) * -1 +
+                                  parseFloat(`${selectedLeaveLedger[0]?.forcedLeaveBalance}`) +
+                                  parseFloat(`${selectedLeaveLedger[0]?.forcedLeave}`) * -1
+                                ).toFixed(3)}
                               </Text>
                             </View>
                             <View style={styles.containerTableRow2}>
                               <Text>
                                 {(
-                                  Number(parseFloat(`${selectedLeaveLedger[0]?.sickLeaveBalance}`).toFixed(3)) +
-                                  Number(parseFloat(`${selectedLeaveLedger[0]?.sickLeave}`).toFixed(3)) * -1
+                                  parseFloat(`${selectedLeaveLedger[0]?.sickLeaveBalance}`) +
+                                  parseFloat(`${selectedLeaveLedger[0]?.sickLeave}`) * -1
                                 ).toFixed(3)}
                               </Text>
                             </View>
                           </View>
+
                           <View style={{ display: 'flex', flexDirection: 'row' }}>
                             <View style={styles.containerTableRow3}>
                               <Text>Less this application</Text>
@@ -867,55 +884,56 @@ export const LeavePdf = ({ rowData, leaveDetails, selectedLeaveLedger }: LeavePd
                               </Text>
                             </View>
                           </View>
+
                           <View style={{ display: 'flex', flexDirection: 'row' }}>
                             <View style={styles.containerTableRow3}>
                               <Text>Balance</Text>
                             </View>
                             <View style={styles.containerTableRow}>
                               <Text>
-                                {Number(parseFloat(`${selectedLeaveLedger[0]?.vacationLeaveBalance}`).toFixed(3)) +
-                                  Number(parseFloat(`${selectedLeaveLedger[0]?.forcedLeaveBalance}`).toFixed(3))}
+                                {(
+                                  parseFloat(`${selectedLeaveLedger[0]?.vacationLeaveBalance}`) +
+                                  parseFloat(`${selectedLeaveLedger[0]?.forcedLeaveBalance}`)
+                                ).toFixed(3)}
                               </Text>
                             </View>
                             <View style={styles.containerTableRow2}>
-                              <Text>
-                                {Number(parseFloat(`${selectedLeaveLedger[0]?.sickLeaveBalance}`).toFixed(3))}
-                              </Text>
+                              <Text>{parseFloat(`${selectedLeaveLedger[0]?.sickLeaveBalance}`).toFixed(3)}</Text>
                             </View>
                           </View>
                         </View>
 
-                        <Text style={{ paddingTop: 20, paddingLeft: 6 }}>
-                          _________________________________________________
-                        </Text>
-                        {/* <Image
-                        style={{ width: 50, position: 'absolute', marginLeft: 432, marginTop: -13 }}
-                        src={leaveDetails?.leaveApplicationBasicInfo. ?? ''}
-                      /> */}
-                        <Text
-                          style={{
-                            position: 'absolute',
-                            bottom: 0,
-                            marginBottom: 16,
-                            textAlign: 'center',
-                            width: '100%',
-                            fontSize: 10,
-                          }}
-                        >
-                          test
-                        </Text>
-                        <Text
-                          style={{
-                            textAlign: 'center',
-                            fontSize: 8,
-                            paddingBottom: 5,
-                            paddingTop: 2,
-                          }}
-                        >
-                          Authorized Officer
-                        </Text>
+                        <View style={{ width: '100%' }}>
+                          <Image
+                            style={{
+                              width: '20%',
+                              position: 'absolute',
+                              justifyContent: 'center',
+                              alignItems: 'center',
+                              left: '40%',
+                              paddingTop: 5,
+                            }}
+                            src={leaveDetails.leaveApplicationBasicInfo?.hrmoSignature}
+                          />
+                          <Text style={{ textAlign: 'center', paddingTop: 22 }}>
+                            {leaveDetails.leaveApplicationBasicInfo?.hrmoApprovedByName}
+                          </Text>
+                          <Text style={{ paddingLeft: 6, paddingTop: -8 }}>
+                            _________________________________________________
+                          </Text>
+                          <Text
+                            style={{
+                              textAlign: 'center',
+                              fontSize: 7,
+                              paddingTop: -8,
+                            }}
+                          >
+                            Authorized Officer
+                          </Text>
+                        </View>
                       </View>
                     </View>
+
                     <View
                       style={{
                         display: 'flex',
@@ -956,42 +974,41 @@ export const LeavePdf = ({ rowData, leaveDetails, selectedLeaveLedger }: LeavePd
                             ? leaveDetails.leaveApplicationBasicInfo?.supervisorDisapprovalRemarks
                             : leaveDetails.leaveApplicationBasicInfo?.hrdmDisapprovalRemarks
                             ? leaveDetails.leaveApplicationBasicInfo?.hrdmDisapprovalRemarks
-                            : 'N/A'}
+                            : ''}
                         </Text>
                         <Text style={{ padding: 5 }}>____________________________________________</Text>
                         <Text style={{ padding: 5 }}>____________________________________________</Text>
                         <Text style={{ padding: 5 }}>____________________________________________</Text>
                       </View>
-                      {/* INSERT OFFICER NAME WITH SIGNATORY */}
-                      {/* <Image
-                        style={{ width: 50, position: 'absolute', marginLeft: 432, marginTop: -13 }}
-                        src={leaveDetails?.leaveApplicationBasicInfo. ?? ''}
-                      /> */}
-                      <Text
-                        style={{
-                          position: 'absolute',
-                          bottom: 0,
-                          marginBottom: 18,
-                          textAlign: 'center',
-                          width: '100%',
-                          fontSize: 10,
-                        }}
-                      >
-                        {/* INSERT OFFICER NAME WITH SIGNATORY */}
-                      </Text>
-                      <Text style={{ paddingTop: 20, paddingLeft: 6 }}>
-                        _________________________________________________
-                      </Text>
-                      <Text
-                        style={{
-                          textAlign: 'center',
-                          fontSize: 8,
-                          paddingBottom: 5,
-                          paddingTop: 2,
-                        }}
-                      >
-                        Authorized Officer
-                      </Text>
+
+                      <View style={{ width: '100%' }}>
+                        <Image
+                          style={{
+                            width: '25%',
+                            position: 'absolute',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            left: '40%',
+                            paddingTop: 0,
+                          }}
+                          src={leaveDetails.leaveApplicationBasicInfo?.supervisorSignature}
+                        />
+                        <Text style={{ textAlign: 'center', paddingTop: 22 }}>
+                          {leaveDetails.leaveApplicationBasicInfo?.supervisorName}
+                        </Text>
+                        <Text style={{ paddingLeft: 6, paddingTop: -8 }}>
+                          _________________________________________________
+                        </Text>
+                        <Text
+                          style={{
+                            textAlign: 'center',
+                            fontSize: 7,
+                            paddingTop: -8,
+                          }}
+                        >
+                          Authorized Officer
+                        </Text>
+                      </View>
                     </View>
                   </View>
                   <View
@@ -1061,7 +1078,7 @@ export const LeavePdf = ({ rowData, leaveDetails, selectedLeaveLedger }: LeavePd
                             ? leaveDetails.leaveApplicationBasicInfo?.supervisorDisapprovalRemarks
                             : leaveDetails.leaveApplicationBasicInfo?.hrdmDisapprovalRemarks
                             ? leaveDetails.leaveApplicationBasicInfo?.hrdmDisapprovalRemarks
-                            : 'N/A'}
+                            : ''}
                         </Text>
                         <Text style={{ padding: 5 }}>____________________________________________</Text>
                         <Text style={{ padding: 5 }}>____________________________________________</Text>
@@ -1077,39 +1094,39 @@ export const LeavePdf = ({ rowData, leaveDetails, selectedLeaveLedger }: LeavePd
                       paddingBottom: 20,
                     }}
                   >
-                    {/* INSERT OFFICER NAME WITH SIGNATORY */}
-                    {/* <Image
-                        style={{ width: 50, position: 'absolute', marginLeft: 432, marginTop: -13 }}
-                        src={leaveDetails?.leaveApplicationBasicInfo. ?? ''}
-                      /> */}
-                    <Text style={{ paddingTop: 6, paddingBottom: 4 }}>______________________</Text>
-
-                    <Text
-                      style={{
-                        position: 'absolute',
-                        bottom: 0,
-                        marginBottom: 40,
-                        textAlign: 'center',
-                        width: '100%',
-                        fontSize: 10,
-                      }}
-                    >
-                      {/* INSERT OFFICER NAME WITH SIGNATORY */}
-                    </Text>
-                    <Text
-                      style={{
-                        textAlign: 'center',
-                        fontSize: 8,
-                        paddingBottom: 5,
-                      }}
-                    >
-                      Authorized Officer
-                    </Text>
+                    <View style={{ width: '100%' }}>
+                      <Image
+                        style={{
+                          width: '12%',
+                          position: 'absolute',
+                          justifyContent: 'center',
+                          alignItems: 'center',
+                          left: '45%',
+                          paddingTop: 0,
+                        }}
+                        src={leaveDetails.leaveApplicationBasicInfo?.hrdmSignature}
+                      />
+                      <Text style={{ textAlign: 'center', paddingTop: 22, fontSize: 9 }}>
+                        {leaveDetails.leaveApplicationBasicInfo?.hrdmApprovedByName}
+                      </Text>
+                      <Text style={{ paddingLeft: 6, paddingTop: -15 }}>_____________________</Text>
+                      <Text
+                        style={{
+                          textAlign: 'center',
+                          fontSize: 7,
+                          paddingTop: -15,
+                        }}
+                      >
+                        Authorized Officer
+                      </Text>
+                    </View>
                   </View>
                 </View>
               </View>
             </Page>
-            <Page size={[612.0, 792.0]}>
+
+            {/* LEAVE DESCRIPTION PAGE */}
+            <Page size={'A4'}>
               <View style={styles.page}>
                 <View style={styles.container3}>
                   <Text>INSTRUCTIONS AND REQUIREMENTS</Text>

@@ -167,13 +167,11 @@ export const LeavePdf = ({ employeeDetails, leaveDetails, selectedLeaveLedger }:
       {isClient && (
         <PDFViewer width={'100%'} height={2800} showToolbar>
           <Document title="Leave">
-            {/* FOLIO */}
-            <Page size={[612.0, 792.0]}>
+            <Page size={'A4'}>
               <View style={styles.page}>
                 <Text style={{ position: 'absolute', fontSize: 6 }}>CIVIL SERVICES FORM NO. 6</Text>
                 <Text style={{ position: 'absolute', fontSize: 6, marginTop: 10 }}>Revised 2020</Text>
-
-                <Text style={{ position: 'absolute', fontSize: 16, right: 0 }}>010678</Text>
+                {/* <Text style={{ position: 'absolute', fontSize: 16, right: 0 }}>010678</Text> */}
                 <View
                   style={{
                     display: 'flex',
@@ -591,7 +589,6 @@ export const LeavePdf = ({ employeeDetails, leaveDetails, selectedLeaveLedger }:
                       </View>
                       <View style={styles.leaveLabelContainer2}>
                         <Text style={styles.checkbox}>
-                          {' '}
                           {leaveDetails.leaveApplicationBasicInfo.leaveName === LeaveName.SICK &&
                           leaveDetails.leaveApplicationDetails.hospital &&
                           leaveDetails.leaveApplicationDetails.hospital === 'Out Patient'
@@ -753,10 +750,15 @@ export const LeavePdf = ({ employeeDetails, leaveDetails, selectedLeaveLedger }:
                           justifyContent: 'flex-end',
                         }}
                       >
-                        {/* <Image
-                        style={{ width: 50, position: 'absolute', marginLeft: 432, marginTop: -13 }}
-                        src={leaveDetails?.leaveApplicationBasicInfo. ?? ''}
-                      /> */}
+                        <Image
+                          style={{
+                            width: 30,
+                            position: 'absolute',
+                            marginLeft: 0,
+                            paddingBottom: 15,
+                          }}
+                          src={leaveDetails?.leaveApplicationBasicInfo?.employeeSignature ?? '/'}
+                        />
                         <Text style={{ paddingTop: 6, paddingLeft: 6 }}>
                           _________________________________________________
                         </Text>
@@ -833,17 +835,19 @@ export const LeavePdf = ({ employeeDetails, leaveDetails, selectedLeaveLedger }:
                             </View>
                             <View style={styles.containerTableRow}>
                               <Text>
-                                {Number(parseFloat(`${selectedLeaveLedger[0]?.vacationLeaveBalance}`).toFixed(3)) +
-                                  Number(parseFloat(`${selectedLeaveLedger[0]?.vacationLeave}`).toFixed(3)) * -1 +
-                                  (Number(parseFloat(`${selectedLeaveLedger[0]?.forcedLeaveBalance}`).toFixed(3)) +
-                                    Number(parseFloat(`${selectedLeaveLedger[0]?.forcedLeave}`).toFixed(3)) * -1)}
+                                {(
+                                  parseFloat(`${selectedLeaveLedger[0]?.vacationLeaveBalance}`) +
+                                  parseFloat(`${selectedLeaveLedger[0]?.vacationLeave}`) * -1 +
+                                  (parseFloat(`${selectedLeaveLedger[0]?.forcedLeaveBalance}`) +
+                                    parseFloat(`${selectedLeaveLedger[0]?.forcedLeave}`) * -1)
+                                ).toFixed(3)}
                               </Text>
                             </View>
                             <View style={styles.containerTableRow2}>
                               <Text>
                                 {(
-                                  Number(parseFloat(`${selectedLeaveLedger[0]?.sickLeaveBalance}`).toFixed(3)) +
-                                  Number(parseFloat(`${selectedLeaveLedger[0]?.sickLeave}`).toFixed(3)) * -1
+                                  parseFloat(`${selectedLeaveLedger[0]?.sickLeaveBalance}`) +
+                                  parseFloat(`${selectedLeaveLedger[0]?.sickLeave}`) * -1
                                 ).toFixed(3)}
                               </Text>
                             </View>
@@ -875,22 +879,18 @@ export const LeavePdf = ({ employeeDetails, leaveDetails, selectedLeaveLedger }:
                             </View>
                             <View style={styles.containerTableRow}>
                               <Text>
-                                {Number(parseFloat(`${selectedLeaveLedger[0]?.vacationLeaveBalance}`).toFixed(3)) +
-                                  Number(parseFloat(`${selectedLeaveLedger[0]?.forcedLeaveBalance}`).toFixed(3))}
+                                {(
+                                  parseFloat(`${selectedLeaveLedger[0]?.vacationLeaveBalance}`) +
+                                  parseFloat(`${selectedLeaveLedger[0]?.forcedLeaveBalance}`)
+                                ).toFixed(3)}
                               </Text>
                             </View>
                             <View style={styles.containerTableRow2}>
-                              <Text>
-                                {Number(parseFloat(`${selectedLeaveLedger[0]?.sickLeaveBalance}`).toFixed(3))}
-                              </Text>
+                              <Text>{parseFloat(`${selectedLeaveLedger[0]?.sickLeaveBalance}`).toFixed(3)}</Text>
                             </View>
                           </View>
                         </View>
 
-                        {/* <Image
-                        style={{ width: 50, position: 'absolute', marginLeft: 432, marginTop: -13 }}
-                        src={leaveDetails?.leaveApplicationBasicInfo. ?? ''}
-                      /> */}
                         <View
                           style={{
                             width: '100%',
@@ -903,6 +903,15 @@ export const LeavePdf = ({ employeeDetails, leaveDetails, selectedLeaveLedger }:
                             paddingTop: 25,
                           }}
                         >
+                          <Image
+                            style={{
+                              width: 30,
+                              position: 'absolute',
+                              marginLeft: 0,
+                              paddingBottom: 20,
+                            }}
+                            src={leaveDetails?.leaveApplicationBasicInfo?.hrmoSignature ?? '/'}
+                          />
                           <Text
                             style={{
                               marginBottom: -9,
@@ -911,7 +920,7 @@ export const LeavePdf = ({ employeeDetails, leaveDetails, selectedLeaveLedger }:
                               fontSize: 10,
                             }}
                           >
-                            {/* test */}
+                            {leaveDetails?.leaveApplicationBasicInfo?.hrmoApprovedByName}
                           </Text>
                           <Text style={{}}>_________________________________________________</Text>
                           <Text
@@ -985,10 +994,15 @@ export const LeavePdf = ({ employeeDetails, leaveDetails, selectedLeaveLedger }:
                           paddingTop: 23,
                         }}
                       >
-                        {/* <Image
-                        style={{ width: 50, position: 'absolute', marginLeft: 432, marginTop: -13 }}
-                        src={leaveDetails?.leaveApplicationBasicInfo. ?? ''}
-                      /> */}
+                        <Image
+                          style={{
+                            width: 30,
+                            position: 'absolute',
+                            marginLeft: 0,
+                            paddingBottom: 25,
+                          }}
+                          src={leaveDetails?.leaveApplicationBasicInfo?.supervisorSignature ?? '/'}
+                        />
                         <Text
                           style={{
                             marginBottom: -9,
@@ -997,7 +1011,7 @@ export const LeavePdf = ({ employeeDetails, leaveDetails, selectedLeaveLedger }:
                             fontSize: 10,
                           }}
                         >
-                          {/* test */}
+                          {leaveDetails?.leaveApplicationBasicInfo?.supervisorName}
                         </Text>
                         <Text style={{}}>_________________________________________________</Text>
                         <Text
@@ -1099,10 +1113,15 @@ export const LeavePdf = ({ employeeDetails, leaveDetails, selectedLeaveLedger }:
                       justifyContent: 'flex-end',
                     }}
                   >
-                    {/* <Image
-                        style={{ width: 50,  marginTop: -13 }}
-                        src={leaveDetails?.leaveApplicationBasicInfo. ?? ''}
-                      /> */}
+                    <Image
+                      style={{
+                        width: 40,
+                        position: 'absolute',
+                        marginLeft: 0,
+                        paddingBottom: 35,
+                      }}
+                      src={leaveDetails?.leaveApplicationBasicInfo?.hrdmSignature ?? '/'}
+                    />
                     <Text
                       style={{
                         textAlign: 'center',
@@ -1111,7 +1130,7 @@ export const LeavePdf = ({ employeeDetails, leaveDetails, selectedLeaveLedger }:
                         marginBottom: -18,
                       }}
                     >
-                      {/* test */}
+                      {leaveDetails?.leaveApplicationBasicInfo?.hrdmApprovedByName}
                     </Text>
                     <Text style={{}}>______________________</Text>
 
@@ -1128,7 +1147,7 @@ export const LeavePdf = ({ employeeDetails, leaveDetails, selectedLeaveLedger }:
                 </View>
               </View>
             </Page>
-            <Page size={[612.0, 792.0]}>
+            <Page size={'A4'}>
               <View style={styles.page}>
                 <View style={styles.container3}>
                   <Text>INSTRUCTIONS AND REQUIREMENTS</Text>

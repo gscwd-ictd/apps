@@ -111,20 +111,24 @@ export const DtrTable = ({ employeeDetails }: DtrTableProps) => {
                           key={index}
                           className={`${
                             logs.holidayType === HolidayTypes.REGULAR
-                              ? 'bg-rose-300'
+                              ? 'bg-red-200'
                               : logs.holidayType === HolidayTypes.SPECIAL
                               ? 'bg-blue-300'
                               : logs.dtr.remarks === 'Rest Day'
                               ? 'bg-gray-200'
+                              : logs.dtrCorrection
+                              ? 'bg-amber-200'
                               : ''
                           }`}
                         >
                           <td
                             className={`${
                               logs.holidayType === HolidayTypes.REGULAR
-                                ? 'border-rose-300'
+                                ? 'border-red-200'
                                 : logs.holidayType === HolidayTypes.SPECIAL
                                 ? 'border-blue-300'
+                                : logs.dtrCorrection
+                                ? 'border-amber-200'
                                 : ''
                             } py-2 text-center border`}
                           >
@@ -138,9 +142,11 @@ export const DtrTable = ({ employeeDetails }: DtrTableProps) => {
                                 : ''
                             } ${
                               logs.holidayType === HolidayTypes.REGULAR
-                                ? 'border-rose-300'
+                                ? 'border-red-200'
                                 : logs.holidayType === HolidayTypes.SPECIAL
                                 ? 'border-blue-300'
+                                : logs.dtrCorrection
+                                ? 'border-amber-200'
                                 : ''
                             } py-2 text-center border`}
                           >
@@ -149,9 +155,11 @@ export const DtrTable = ({ employeeDetails }: DtrTableProps) => {
                           <td
                             className={`${
                               logs.holidayType === HolidayTypes.REGULAR
-                                ? 'border-rose-300'
+                                ? 'border-red-200'
                                 : logs.holidayType === HolidayTypes.SPECIAL
                                 ? 'border-blue-300'
+                                : logs.dtrCorrection
+                                ? 'border-amber-200'
                                 : ''
                             } py-2 text-center border`}
                           >
@@ -160,9 +168,11 @@ export const DtrTable = ({ employeeDetails }: DtrTableProps) => {
                           <td
                             className={`${
                               logs.holidayType === HolidayTypes.REGULAR
-                                ? 'border-rose-300'
+                                ? 'border-red-200'
                                 : logs.holidayType === HolidayTypes.SPECIAL
                                 ? 'border-blue-300'
+                                : logs.dtrCorrection
+                                ? 'border-amber-200'
                                 : ''
                             } py-2 text-center border ${
                               UseLateLunchInChecker(logs.dtr.lunchIn, logs.schedule.lunchIn) == true &&
@@ -181,9 +191,11 @@ export const DtrTable = ({ employeeDetails }: DtrTableProps) => {
                                 : ''
                             } ${
                               logs.holidayType === HolidayTypes.REGULAR
-                                ? 'border-rose-300'
+                                ? 'border-red-200'
                                 : logs.holidayType === HolidayTypes.SPECIAL
                                 ? 'border-blue-300'
+                                : logs.dtrCorrection
+                                ? 'border-amber-200'
                                 : ''
                             } py-2 text-center border`}
                           >
@@ -192,23 +204,29 @@ export const DtrTable = ({ employeeDetails }: DtrTableProps) => {
                           <td
                             className={`${
                               logs.holidayType === HolidayTypes.REGULAR
-                                ? 'border-rose-300'
+                                ? 'border-red-200'
                                 : logs.holidayType === HolidayTypes.SPECIAL
                                 ? 'border-blue-300'
+                                : logs.dtrCorrection
+                                ? 'border-amber-200'
                                 : ''
                             } py-2 text-center border`}
                           >
-                            {logs.dtr.remarks}
-                            {logs.dtrCorrection ? (
-                              <label className="capitalize">Time Log Correction {logs.dtrCorrection.status}</label>
-                            ) : null}
+                            <div className="flex flex-col gap-0">
+                              <label>{logs.dtr.remarks}</label>
+                              {logs.dtrCorrection ? (
+                                <label className="capitalize">Time Log Correction {logs.dtrCorrection.status}</label>
+                              ) : null}
+                            </div>
                           </td>
                           <td
                             className={`${
                               logs.holidayType === HolidayTypes.REGULAR
-                                ? 'border-rose-300'
+                                ? 'border-red-200'
                                 : logs.holidayType === HolidayTypes.SPECIAL
                                 ? 'border-blue-300'
+                                : logs.dtrCorrection
+                                ? 'border-amber-200'
                                 : ''
                             } py-2 text-center border`}
                           >

@@ -10,6 +10,8 @@ export type Overtime = {
   estimatedHours: number;
   purpose: string;
   status: OvertimeStatus;
+  dateApproved: string;
+  approvedBy: string;
 };
 
 export type OvertimeImmediateSupervisor = {

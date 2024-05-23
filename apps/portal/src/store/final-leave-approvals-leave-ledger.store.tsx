@@ -61,7 +61,7 @@ export type LeaveLedgerState = {
   getLeaveLedgerFail: (loading: boolean, error: string) => void;
 };
 
-export const useLeaveLedgerStore = create<LeaveLedgerState>()(
+export const useFinalLeaveApprovalLeaveLedgerStore = create<LeaveLedgerState>()(
   devtools((set) => ({
     leaveLedger: [],
     vacationLeaveBalance: 0,

@@ -121,7 +121,6 @@ const UpdateTimeLogModal: FunctionComponent<EditDailySchedModalProps> = ({
   const closeConfirmationModal = async () => {
     setConfirmUpdateModalIsOpen(false);
   };
-
   const { windowWidth } = UseWindowDimensions();
 
   return (
@@ -151,32 +150,63 @@ const UpdateTimeLogModal: FunctionComponent<EditDailySchedModalProps> = ({
           </div>
         </Modal.Header>
         <Modal.Body>
-          {rowData?.hasPendingDtrCorrection ? (
-            <AlertNotification
-              alertType={'warning'}
-              notifMessage={'You currently have a pending Time Log Correction application for this date.'}
-              dismissible={false}
-            />
-          ) : null}
-
-          {rowData?.dtrCorrection?.status === DtrCorrectionStatus.APPROVED ? (
-            <AlertNotification
-              alertType={'success'}
-              notifMessage={'Time Log Correction Approved.'}
-              dismissible={false}
-            />
-          ) : null}
-
-          {rowData?.dtrCorrection?.status === DtrCorrectionStatus.DISAPPROVED ? (
-            <AlertNotification
-              alertType={'error'}
-              notifMessage={'Time Log Correction Disapproved.'}
-              dismissible={false}
-            />
-          ) : null}
-
           <form onSubmit={handleSubmit(onSubmit)} id="editEmployeeDtrModal">
-            <div className="flex flex-col w-full gap-5 px-5 mt-5">
+            <div className="flex flex-col w-full gap-5 px-5">
+              <div className="flex flex-col w-full gap-0">
+                {/* <AlertNotification
+                  alertType={'info'}
+                  notifMessage={
+                    'When submitting Time Log Corrections, the fields Time In, Time Out, and Remarks are required to be filled out. Lunch Out and Lunch In fields are optional.'
+                  }
+                  dismissible={false}
+                /> */}
+
+                {!rowData?.hasPendingDtrCorrection &&
+                rowData?.dtrCorrection?.status !== DtrCorrectionStatus.APPROVED ? (
+                  <AlertNotification
+                    alertType={'info'}
+                    notifMessage={
+                      'When submitting Time Log Corrections, the fields Time In, Time Out, and Remarks are required to be filled out. Lunch Out and Lunch In fields are optional.'
+                    }
+                    dismissible={false}
+                  />
+                ) : null}
+
+                {!rowData?.dtr?.timeIn && !rowData?.dtr?.timeOut ? (
+                  <AlertNotification
+                    alertType={'info'}
+                    notifMessage={
+                      'Cannot request for Time Log Correction since no Time In and Time Out logs were found.'
+                    }
+                    dismissible={false}
+                  />
+                ) : null}
+
+                {rowData?.hasPendingDtrCorrection ? (
+                  <AlertNotification
+                    alertType={'warning'}
+                    notifMessage={'You currently have a pending Time Log Correction application for this date.'}
+                    dismissible={false}
+                  />
+                ) : null}
+
+                {rowData?.dtrCorrection?.status === DtrCorrectionStatus.APPROVED ? (
+                  <AlertNotification
+                    alertType={'success'}
+                    notifMessage={'Time Log Correction Approved.'}
+                    dismissible={false}
+                  />
+                ) : null}
+
+                {rowData?.dtrCorrection?.status === DtrCorrectionStatus.DISAPPROVED ? (
+                  <AlertNotification
+                    alertType={'error'}
+                    notifMessage={'Time Log Correction Disapproved.'}
+                    dismissible={false}
+                  />
+                ) : null}
+              </div>
+
               <div className="">
                 <LabelValue
                   label="Date"
@@ -416,11 +446,9 @@ const UpdateTimeLogModal: FunctionComponent<EditDailySchedModalProps> = ({
 
                 <div className="flex flex-col justify-start items-start w-full px-0.5 pb-3  ">
                   {rowData?.dtrCorrection?.remarks ? (
-                    <>
-                      <label className="font-medium text-gray-900 dark:text-gray-800 text-sm whitespace-nowrap pb-0.5 ">
-                        Remarks:
-                      </label>
-                    </>
+                    <label className="font-medium text-gray-900 dark:text-gray-800 text-sm whitespace-nowrap pb-0.5 ">
+                      Remarks:
+                    </label>
                   ) : null}
 
                   <div className="w-full">
@@ -434,12 +462,12 @@ const UpdateTimeLogModal: FunctionComponent<EditDailySchedModalProps> = ({
                         required
                         textSize="sm"
                         id="remarks"
-                        label="Remarks"
+                        label="Remarks:"
                         type="textarea"
                         rows={3}
                         isDirty={dirtyFields.remarks}
                         step="any"
-                        placeholder="Enter remarks"
+                        placeholder="Please enter remarks"
                         controller={{
                           ...register('remarks', {
                             onChange: (e) => {

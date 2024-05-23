@@ -1,12 +1,17 @@
 /* eslint-disable @nx/enforce-module-boundaries */
 import { create } from 'zustand';
 import { devtools } from 'zustand/middleware';
-import { PassSlip, HrmoApprovalPassSlip } from '../../../../libs/utils/src/lib/types/pass-slip.type';
+import {
+  PassSlip,
+  HrmoApprovalPassSlip,
+  UpdatePassSlipTimeLogs,
+} from '../../../../libs/utils/src/lib/types/pass-slip.type';
 
 type ResponsePassSlip = {
   getPassSlip: PassSlip;
   hrmoApprovalPassSlip: HrmoApprovalPassSlip;
   cancelPassSlip: PassSlip;
+  updatePassSlipTimeLogs: UpdatePassSlipTimeLogs;
 };
 
 type LoadingPassSlip = {
@@ -33,6 +38,10 @@ type PassSlipState = {
   cancelPassSlipSuccess: (response: PassSlip) => void;
   cancelPassSlipFail: (error: string) => void;
 
+  updatePassSlipTimeLogs: () => void;
+  updatePassSlipTimeLogsSuccess: (response: UpdatePassSlipTimeLogs) => void;
+  updatePassSlipTimeLogsFail: (error: string) => void;
+
   updateHrmoApprovalPassSlip: () => void;
   updateHrmoApprovalPassSlipSuccess: (response: HrmoApprovalPassSlip) => void;
   updateHrmoApprovalPassSlipFail: (error: string) => void;
@@ -47,6 +56,7 @@ export const usePassSlipStore = create<PassSlipState>()(
       getPassSlip: {} as PassSlip,
       hrmoApprovalPassSlip: {} as HrmoApprovalPassSlip,
       cancelPassSlip: {} as PassSlip,
+      updatePassSlipTimeLogs: {} as UpdatePassSlipTimeLogs,
     },
     loading: { loadingPassSlip: false, loadingPassSlips: false },
     error: { errorPassSlip: '', errorPassSlips: '' },
@@ -125,6 +135,32 @@ export const usePassSlipStore = create<PassSlipState>()(
         loading: { ...state.loading, loadingPassSlip: false },
       })),
 
+    updatePassSlipTimeLogs: () =>
+      set((state) => ({
+        ...state,
+        response: {
+          ...state.response,
+          updatePassSlipTimeLogs: {} as UpdatePassSlipTimeLogs,
+        },
+        loading: { ...state.loading, loadingPassSlip: true },
+        error: { ...state.error, errorPassSlip: '' },
+      })),
+    updatePassSlipTimeLogsSuccess: (response: UpdatePassSlipTimeLogs) =>
+      set((state) => ({
+        ...state,
+        response: {
+          ...state.response,
+          updatePassSlipTimeLogs: response,
+        },
+        loading: { ...state.loading, loadingPassSlip: false },
+      })),
+    updatePassSlipTimeLogsFail: (error: string) =>
+      set((state) => ({
+        ...state,
+        error: { ...state.error, errorPassSlip: error },
+        loading: { ...state.loading, loadingPassSlip: false },
+      })),
+
     emptyErrorsAndResponse: () =>
       set((state) => ({
         ...state,
@@ -132,6 +168,7 @@ export const usePassSlipStore = create<PassSlipState>()(
           ...state.response,
           hrmoApprovalPassSlip: {} as HrmoApprovalPassSlip,
           cancelPassSlip: {} as PassSlip,
+          updatePassSlipTimeLogs: {} as UpdatePassSlipTimeLogs,
         },
         error: {
           ...state.error,

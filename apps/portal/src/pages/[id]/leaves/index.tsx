@@ -25,7 +25,6 @@ import { NavButtonDetails } from 'apps/portal/src/types/nav.type';
 import { UseNameInitials } from 'apps/portal/src/utils/hooks/useNameInitials';
 import { useLeaveLedgerStore } from 'apps/portal/src/store/leave-ledger.store';
 import { useRouter } from 'next/router';
-import { useLeaveLedgerPageStore } from 'apps/portal/src/store/leave-ledger-page.store';
 import LeaveLedgerModal from 'apps/portal/src/components/fixed/leaves/LeaveLedgerModal';
 
 export default function Leaves({ employeeDetails }: InferGetServerSidePropsType<typeof getServerSideProps>) {
@@ -76,17 +75,11 @@ export default function Leaves({ employeeDetails }: InferGetServerSidePropsType<
 
   const router = useRouter();
 
-  const { errorLedger } = useLeaveLedgerStore((state) => ({
-    errorLedger: state.error.errorLeaveLedger,
+  const { leaveLedgerModalIsOpen, setLeaveLedgerModalIsOpen, errorLeaveLedger } = useLeaveLedgerStore((state) => ({
+    leaveLedgerModalIsOpen: state.leaveLedgerModalIsOpen,
+    setLeaveLedgerModalIsOpen: state.setLeaveLedgerModalIsOpen,
+    errorLeaveLedger: state.error.errorLeaveLedger,
   }));
-
-  const { leaveLedgerModalIsOpen, setLeaveLedgerModalIsOpen, errorLeaveEntry, errorLeaveLedger } =
-    useLeaveLedgerPageStore((state) => ({
-      leaveLedgerModalIsOpen: state.leaveLedgerModalIsOpen,
-      setLeaveLedgerModalIsOpen: state.setLeaveLedgerModalIsOpen,
-      errorLeaveEntry: state.error.errorEntry,
-      errorLeaveLedger: state.error.errorLedger,
-    }));
 
   // open the view leave ledger modal
   const openLeaveLedgerModal = () => {
@@ -178,13 +171,6 @@ export default function Leaves({ employeeDetails }: InferGetServerSidePropsType<
   return (
     <>
       <>
-        {/* Leave Ledger Load Failed */}
-        {!isEmpty(errorLedger) ? (
-          <>
-            <ToastNotification toastType="error" notifMessage={`${errorLedger}: Failed to load Leave Ledger.`} />
-          </>
-        ) : null}
-
         {/* Individual Leave Details Load Failed Error COMPLETED MODAL */}
         {!isEmpty(errorLeaveDetails) && completedLeaveModalIsOpen ? (
           <>
