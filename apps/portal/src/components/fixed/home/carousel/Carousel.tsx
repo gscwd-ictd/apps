@@ -102,8 +102,8 @@ export default function Carousel() {
               <div className="w-screen h-full bg-gray-100 flex flex-col pt-4 pb-4 pl-8 pr-8 gap-2">
                 <label className="text-lg text-slate-600 uppercase">{announce.title}</label>
                 <label className="hidden lg:block text-sm text-slate-500 text-justify">
-                  {announce.description.length > 345
-                    ? `${announce.description.substring(0, 345)}...`
+                  {announce.description.length > 340
+                    ? `${announce.description.substring(0, 340)}...`
                     : announce.description}
                 </label>
 
