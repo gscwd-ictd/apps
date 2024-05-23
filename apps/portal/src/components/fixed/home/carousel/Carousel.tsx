@@ -89,8 +89,6 @@ export default function Carousel() {
     }
   }, [swrAnnouncements, swrAnnouncementsError]);
 
-  let test =
-    'For Pass Slip, Leave Application, and other HR transactions, please proceed to the 2nd floor HRD office. Pass Slip transaction will also be catered at the Multi-purpose Hall office, just look for Mr. Wilhem Aquino. purpose Hall office, just look for Mr. Wilhem Aquino. Hall office, just look for Mr. Wilhem Aquino.5 12312 For Pass Slip, Leave Application, and other HR transactions, please proceed to the 2nd floor HRD office. Pass Slip transaction will also be catered at the Multi-purpose Hall office, just look for Mr. Wilhem Aquino. purpose Hall office, just look for Mr. Wilhem Aquino. Hall office, just look for Mr. Wilhem Aquino.5 12312';
   return (
     <>
       <div
