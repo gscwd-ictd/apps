@@ -9,6 +9,7 @@ import { EmployeeLeaveDetails, MonitoringLeave } from 'libs/utils/src/lib/types/
 import { LeaveName, LeaveStatus } from 'libs/utils/src/lib/enums/leave.enum';
 import { LeaveLedgerEntry } from 'libs/utils/src/lib/types/leave-ledger-entry.type';
 import { DateTimeFormatter } from 'libs/utils/src/lib/functions/DateTimeFormatter';
+import { isEmpty } from 'lodash';
 
 const styles = StyleSheet.create({
   page: {
@@ -267,7 +268,10 @@ export const LeavePdf = ({ rowData, leaveDetails, selectedLeaveLedger }: LeavePd
                         textAlign: 'center',
                       }}
                     >
-                      {leaveDetails.employeeDetails?.firstName + ' ' + leaveDetails.employeeDetails?.nameExtension}
+                      {leaveDetails.employeeDetails?.firstName}{' '}
+                      {!isEmpty(leaveDetails.employeeDetails?.nameExtension)
+                        ? leaveDetails.employeeDetails?.nameExtension
+                        : ''}
                     </Text>
                     <Text style={{ marginRight: 80 }}>(First)</Text>
                     <Text
