@@ -3,7 +3,7 @@ import React, { FunctionComponent, useContext, useEffect, useState } from 'react
 import useSWR from 'swr';
 import fetcherEMS from 'apps/employee-monitoring/src/utils/fetcher/FetcherEMS';
 import LeavePdf from '../../../pdf/LeavePdf';
-import { LoadingSpinner, Modal, PageContentContext, ToastNotification } from '@gscwd-apps/oneui';
+import { LoadingSpinner, Modal, ToastNotification } from '@gscwd-apps/oneui';
 import { MonitoringLeave } from 'libs/utils/src/lib/types/leave-application.type';
 import { isEmpty } from 'lodash';
 import { useLeaveApplicationStore } from 'apps/employee-monitoring/src/store/leave-application.store';
@@ -118,12 +118,7 @@ const ViewLeavePdfModal: FunctionComponent<ViewLeavePdfModalProps> = ({
             <LoadingSpinner size="lg" />
           ) : (
             <>
-              <LeavePdf
-                rowData={rowData}
-                // employeeDetails={leaveApplicationDetails}
-                leaveDetails={leaveIndividualDetail}
-                selectedLeaveLedger={selectedLeaveLedger}
-              />
+              <LeavePdf leaveDetails={leaveIndividualDetail} selectedLeaveLedger={selectedLeaveLedger} />
             </>
           )}
         </Modal.Body>
