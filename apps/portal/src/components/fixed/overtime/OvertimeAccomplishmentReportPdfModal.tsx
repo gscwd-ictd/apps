@@ -122,7 +122,7 @@ export const OvertimeAccomplishmentReportPdfModal = ({ modalState, setModalState
           ) : (
             <PDFViewer width={'100%'} height={1000} showToolbar>
               <Document title="Overtime Accomplishment Report">
-                <Page size={[612.0, 396.0]}>
+                <Page size={'A4'} orientation="portrait">
                   <View style={styles.page}>
                     <View style={styles.controlNumber}>{/* <Text>NO. 1</Text> */}</View>
                     <PdfHeader />
