@@ -7,7 +7,7 @@ import fetcherEMS from 'apps/employee-monitoring/src/utils/fetcher/FetcherEMS';
 
 // store and type
 import { useAnnouncementsStore } from 'apps/employee-monitoring/src/store/announcement.store';
-import { Announcement } from 'apps/employee-monitoring/src/utils/types/announcement.type';
+import { Announcement, AnnouncementTableColumns } from 'apps/employee-monitoring/src/utils/types/announcement.type';
 
 import { DataTable, LoadingSpinner, ToastNotification, useDataTable } from '@gscwd-apps/oneui';
 import { Card } from 'apps/employee-monitoring/src/components/cards/Card';
@@ -30,7 +30,7 @@ const Index = () => {
 
   // Edit modal function
   const [editModalIsOpen, setEditModalIsOpen] = useState<boolean>(false);
-  const openEditActionModal = (rowData: Announcement) => {
+  const openEditActionModal = (rowData: AnnouncementTableColumns) => {
     setEditModalIsOpen(true);
     setCurrentRowData(rowData);
   };
@@ -38,14 +38,14 @@ const Index = () => {
 
   // Delete modal function
   const [deleteModalIsOpen, setDeleteModalIsOpen] = useState<boolean>(false);
-  const openDeleteActionModal = (rowData: Announcement) => {
+  const openDeleteActionModal = (rowData: AnnouncementTableColumns) => {
     setDeleteModalIsOpen(true);
     setCurrentRowData(rowData);
   };
   const closeDeleteActionModal = () => setDeleteModalIsOpen(false);
 
   // Current row data in the table that has been clicked
-  const [currentRowData, setCurrentRowData] = useState<Announcement>({} as Announcement);
+  const [currentRowData, setCurrentRowData] = useState<AnnouncementTableColumns>({} as AnnouncementTableColumns);
 
   // fetch data for list of announcements
   const {
@@ -87,7 +87,7 @@ const Index = () => {
   }));
 
   // Render row actions in the table component
-  const renderRowActions = (rowData: Announcement) => {
+  const renderRowActions = (rowData: AnnouncementTableColumns) => {
     return (
       <div className="text-center">
         <button
@@ -110,7 +110,7 @@ const Index = () => {
   };
 
   // Define table columns
-  const columnHelper = createColumnHelper<Announcement>();
+  const columnHelper = createColumnHelper<AnnouncementTableColumns>();
   const columns = [
     columnHelper.accessor('id', {
       cell: (info) => info.getValue(),

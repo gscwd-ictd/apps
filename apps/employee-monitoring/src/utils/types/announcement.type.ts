@@ -11,6 +11,17 @@ export type Announcement = {
   file: File;
 };
 
+export type AnnouncementTableColumns = {
+  id: string;
+  title: string;
+  description: string;
+  url: string;
+  photoUrl: string;
+  status: string;
+  fileName: string;
+  eventAnnouncementDate: string;
+};
+
 export type FormPostAnnouncement = Omit<Announcement, 'id'> & { app: string; file: File };
 
 export type AnnouncementId = Pick<Announcement, 'id'>;

@@ -8,7 +8,7 @@ import { putEmpMonitoringWithFile } from 'apps/employee-monitoring/src/utils/hel
 
 // store and type
 import { useAnnouncementsStore } from 'apps/employee-monitoring/src/store/announcement.store';
-import { Announcement } from 'apps/employee-monitoring/src/utils/types/announcement.type';
+import { Announcement, AnnouncementTableColumns } from 'apps/employee-monitoring/src/utils/types/announcement.type';
 
 import { AlertNotification, Button, LoadingSpinner, Modal, ToastNotification } from '@gscwd-apps/oneui';
 import { LabelInput } from 'apps/employee-monitoring/src/components/inputs/LabelInput';
@@ -25,7 +25,7 @@ type EditModalProps = {
   modalState: boolean;
   setModalState: React.Dispatch<React.SetStateAction<boolean>>;
   closeModalAction: () => void;
-  rowData: Announcement;
+  rowData: AnnouncementTableColumns;
 };
 
 enum AnnouncementKeys {
