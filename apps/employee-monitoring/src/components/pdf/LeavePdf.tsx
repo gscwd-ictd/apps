@@ -4,11 +4,11 @@
 import { Page, Text, Document, StyleSheet, PDFViewer, View, Image } from '@react-pdf/renderer';
 import React, { useEffect, useState } from 'react';
 
-import { EmployeeDetails } from '../../utils/types/employee.type';
-import { EmployeeLeaveDetails, MonitoringLeave } from 'libs/utils/src/lib/types/leave-application.type';
+import { EmployeeLeaveDetails } from 'libs/utils/src/lib/types/leave-application.type';
 import { LeaveName, LeaveStatus } from 'libs/utils/src/lib/enums/leave.enum';
 import { LeaveLedgerEntry } from 'libs/utils/src/lib/types/leave-ledger-entry.type';
 import { DateTimeFormatter } from 'libs/utils/src/lib/functions/DateTimeFormatter';
+import { isEmpty } from 'lodash';
 
 const styles = StyleSheet.create({
   page: {
@@ -152,13 +152,11 @@ const styles = StyleSheet.create({
 });
 
 type LeavePdfProps = {
-  rowData: MonitoringLeave;
-  // employeeDetails: EmployeeDetails;
   leaveDetails: EmployeeLeaveDetails;
   selectedLeaveLedger: Array<LeaveLedgerEntry>;
 };
 
-export const LeavePdf = ({ rowData, leaveDetails, selectedLeaveLedger }: LeavePdfProps): JSX.Element => {
+export const LeavePdf = ({ leaveDetails, selectedLeaveLedger }: LeavePdfProps): JSX.Element => {
   const [isClient, setIsClient] = useState<boolean>(false);
 
   useEffect(() => {
@@ -170,7 +168,7 @@ export const LeavePdf = ({ rowData, leaveDetails, selectedLeaveLedger }: LeavePd
       {isClient && (
         <PDFViewer width={'100%'} height={2000} showToolbar>
           <Document title="Leave">
-            {/* FOLIO */}
+            {/* LEAVE FORM PAGE */}
             <Page size={'A4'}>
               <View style={styles.page}>
                 <Text style={{ position: 'absolute', fontSize: 5 }}>CIVIL SERVICES FORM NO. 6</Text>
@@ -267,7 +265,10 @@ export const LeavePdf = ({ rowData, leaveDetails, selectedLeaveLedger }: LeavePd
                         textAlign: 'center',
                       }}
                     >
-                      {leaveDetails.employeeDetails?.firstName + ' ' + leaveDetails.employeeDetails?.nameExtension}
+                      {leaveDetails.employeeDetails?.firstName}{' '}
+                      {!isEmpty(leaveDetails.employeeDetails?.nameExtension)
+                        ? leaveDetails.employeeDetails?.nameExtension
+                        : ''}
                     </Text>
                     <Text style={{ marginRight: 80 }}>(First)</Text>
                     <Text
@@ -1123,6 +1124,8 @@ export const LeavePdf = ({ rowData, leaveDetails, selectedLeaveLedger }: LeavePd
                 </View>
               </View>
             </Page>
+
+            {/* LEAVE DESCRIPTION PAGE */}
             <Page size={'A4'}>
               <View style={styles.page}>
                 <View style={styles.container3}>
