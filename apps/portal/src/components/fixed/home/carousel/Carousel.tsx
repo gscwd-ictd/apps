@@ -89,6 +89,8 @@ export default function Carousel() {
     }
   }, [swrAnnouncements, swrAnnouncementsError]);
 
+  let test =
+    'For Pass Slip, Leave Application, and other HR transactions, please proceed to the 2nd floor HRD office. Pass Slip transaction will also be catered at the Multi-purpose Hall office, just look for Mr. Wilhem Aquino. purpose Hall office, just look for Mr. Wilhem Aquino. Hall office, just look for Mr. Wilhem Aquino.5 12312 For Pass Slip, Leave Application, and other HR transactions, please proceed to the 2nd floor HRD office. Pass Slip transaction will also be catered at the Multi-purpose Hall office, just look for Mr. Wilhem Aquino. purpose Hall office, just look for Mr. Wilhem Aquino. Hall office, just look for Mr. Wilhem Aquino.5 12312';
   return (
     <>
       <div
@@ -101,7 +103,11 @@ export default function Carousel() {
             <div key={index} className="keen-slider__slide number-slide1 w-screen h-screen">
               <div className="w-screen h-full bg-gray-100 flex flex-col pt-4 pb-4 pl-8 pr-8 gap-2">
                 <label className="text-lg text-slate-600 uppercase">{announce.title}</label>
-                <label className="hidden lg:block text-sm text-slate-500 text-justify">{announce.description}</label>
+                <label className="hidden lg:block text-sm text-slate-500 text-justify">
+                  {announce.description.length > 345
+                    ? `${announce.description.substring(0, 345)}...`
+                    : announce.description}
+                </label>
 
                 <label className="text-right text-sm text-slate-500 cursor-pointer">
                   {announce.url ? (
