@@ -108,21 +108,23 @@ export default function Carousel() {
       {finalAnnouncements.length > 0 &&
         finalAnnouncements.map((announce: Announcements, index) => (
           <div key={index} className="keen-slider__slide number-slide1 w-screen h-screen">
-            <div className="w-full h-full bg-gray-100 flex flex-col pt-4 pb-4 pl-8 pr-8 gap-2">
-              <label className="text-lg text-slate-600 uppercase">{announce.title}</label>
-              <label className="hidden lg:block text-sm text-slate-500 text-justify">
-                {announce.description.length > 250
-                  ? `${announce.description.substring(0, 250)}...`
-                  : announce.description}
-              </label>
+            <div className="w-full h-full bg-gray-100 flex flex-col justify-between pt-4 pb-8 pl-8 pr-8 gap-2">
+              <div className="flex flex-col justify-between gap-2">
+                <label className="text-lg text-slate-600 uppercase">{announce.title}</label>
+                <label className="hidden lg:block text-sm text-slate-500 text-justify">
+                  {announce.description.length > 250
+                    ? `${announce.description.substring(0, 250)}...`
+                    : announce.description}
+                </label>
 
-              <label className="text-right text-sm text-slate-500 cursor-pointer">
-                {announce.url ? (
-                  <a target="blank" href={announce.url}>
-                    Read More
-                  </a>
-                ) : null}
-              </label>
+                <label className="text-right text-sm text-slate-500 cursor-pointer">
+                  {announce.url ? (
+                    <a target="blank" href={announce.url}>
+                      Read More
+                    </a>
+                  ) : null}
+                </label>
+              </div>
               <Image src={announce.photoUrl} width={843} height={843} alt={announce.title} />
             </div>
           </div>
