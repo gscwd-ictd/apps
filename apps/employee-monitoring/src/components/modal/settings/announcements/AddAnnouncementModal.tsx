@@ -299,7 +299,7 @@ const AddAnnouncementModal: FunctionComponent<AddModalProps> = ({ modalState, se
                 <div className="mb-6 flex-shrink-0 flex-grow">
                   <LabelInput
                     id={'file'}
-                    label={'Image'}
+                    label={'Image (must be 843x843 pixels and 5MB in size)'}
                     type={'file'}
                     controller={{ ...register('file'), onChange: handleFileChange }}
                     isError={errors.file ? true : false}

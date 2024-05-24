@@ -350,7 +350,7 @@ const EditAnnouncementModal: FunctionComponent<EditModalProps> = ({
                 <div className="mb-6 flex-shrink-0 flex-grow">
                   <LabelInput
                     id={'file'}
-                    label={'Image'}
+                    label={'Image (must be 843x843 pixels and 5MB in size)'}
                     type={'file'}
                     controller={{ ...register('file'), onChange: handleFileChange }}
                     isError={errors.file ? true : false}
@@ -358,7 +358,7 @@ const EditAnnouncementModal: FunctionComponent<EditModalProps> = ({
                     accept={'.jpg,.png'}
                   />
                 </div>
-                {/* Image preview */}
+                {/* Image preview */}{' '}
                 {previewUrl || hasExistingPhotoUrl ? (
                   <img
                     src={!previewUrl ? hasExistingPhotoUrl : previewUrl}
