@@ -15,6 +15,7 @@ import { LabelInput } from 'apps/employee-monitoring/src/components/inputs/Label
 
 import { SelectListRF } from '../../../inputs/SelectListRF';
 import { PhotoIcon } from '@heroicons/react/20/solid';
+import ConvertFullMonthNameToDigit from 'apps/employee-monitoring/src/utils/functions/ConvertFullMonthNameToDigit';
 
 const announcementStatus = [
   { label: 'Active', value: 'active' },
@@ -101,7 +102,11 @@ const EditAnnouncementModal: FunctionComponent<EditModalProps> = ({
     if (file) {
       const reader = new FileReader();
       reader.onloadend = () => {
-        setPreviewUrl(reader.result as string);
+        const img = new Image();
+        img.src = reader.result as string;
+        img.onload = () => {
+          setPreviewUrl(img.src);
+        };
       };
       reader.readAsDataURL(file);
     }
@@ -182,7 +187,6 @@ const EditAnnouncementModal: FunctionComponent<EditModalProps> = ({
     setValue,
     handleSubmit,
     formState: { errors, isSubmitting: updateFormLoading },
-    trigger,
   } = useForm<Announcement>({
     mode: 'onSubmit',
     resolver: yupResolver(yupSchema),
@@ -223,42 +227,39 @@ const EditAnnouncementModal: FunctionComponent<EditModalProps> = ({
     }
   };
 
+  // Set default values in the form
   useEffect(() => {
     if (!isEmpty(rowData)) {
-      const keys = Object.values(AnnouncementKeys);
+      const keys = Object.keys(rowData);
 
       // traverse to each object and setValue
-      // set eventAnnouncementDate key to local date string
-      keys.forEach((key) => {
-        let value = rowData[key as AnnouncementKeys];
-        if (key === AnnouncementKeys.EVENTANNOUNCEMENTDATE && value) {
-          const date = new Date(String(value));
-          value = date.toLocaleDateString('en-CA', {
-            timeZone: 'Asia/Manila',
-            year: 'numeric',
-            month: '2-digit',
-            day: '2-digit',
+      keys.forEach((key: AnnouncementKeys) => {
+        if (key === 'eventAnnouncementDate') {
+          setValue('eventAnnouncementDate', ConvertFullMonthNameToDigit(rowData[key]), {
+            shouldValidate: true,
+            shouldDirty: true,
+          });
+        } else {
+          setValue(key, rowData[key], {
+            shouldValidate: true,
+            shouldDirty: true,
           });
         }
-        return setValue(key, value, {
-          shouldValidate: false,
-          shouldDirty: true,
-        });
       });
     }
   }, [rowData]);
 
-  // If modal is open, reset input values
+  // If modal is closed, reset input values
   useEffect(() => {
     if (!modalState) {
       reset({
         title: rowData.title,
         description: rowData.description,
-        eventAnnouncementDate: rowData.eventAnnouncementDate,
+        eventAnnouncementDate: ConvertFullMonthNameToDigit(rowData.eventAnnouncementDate),
         url: rowData.url,
         status: rowData.status,
       });
-      setPreviewUrl(hasExistingPhotoUrl ? hasExistingPhotoUrl : '');
+      setPreviewUrl('');
     }
   }, [modalState]);
 
@@ -314,7 +315,7 @@ const EditAnnouncementModal: FunctionComponent<EditModalProps> = ({
                   label={'Description'}
                   controller={{ ...register('description') }}
                   type={'textarea'}
-                  rows={3}
+                  rows={6}
                   isError={errors.description ? true : false}
                   errorMessage={errors.description?.message}
                 />
@@ -340,7 +341,7 @@ const EditAnnouncementModal: FunctionComponent<EditModalProps> = ({
                   controller={{ ...register('url') }}
                   isError={errors.url ? true : false}
                   errorMessage={errors.url?.message}
-                  prefix="/"
+                  prefix="http://"
                 />
               </div>
 

@@ -202,7 +202,7 @@ const AddAnnouncementModal: FunctionComponent<AddModalProps> = ({ modalState, se
     }
   };
 
-  // If modal is open, reset input values
+  // If modal is closed, reset input values
   useEffect(() => {
     if (!modalState) {
       reset();
@@ -264,7 +264,7 @@ const AddAnnouncementModal: FunctionComponent<AddModalProps> = ({ modalState, se
                   label={'Description'}
                   controller={{ ...register('description') }}
                   type={'textarea'}
-                  rows={3}
+                  rows={6}
                   isError={errors.description ? true : false}
                   errorMessage={errors.description?.message}
                 />
@@ -290,7 +290,7 @@ const AddAnnouncementModal: FunctionComponent<AddModalProps> = ({ modalState, se
                   controller={{ ...register('url') }}
                   isError={errors.url ? true : false}
                   errorMessage={errors.url?.message}
-                  prefix="/"
+                  prefix="http://"
                 />
               </div>
 
