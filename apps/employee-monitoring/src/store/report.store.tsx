@@ -11,6 +11,8 @@ import {
   ReportOnEmpLeaveCreditBalance,
   ReportOnEmpLeaveCreditBalanceWMoney,
   ReportOnSummaryLeaveWithoutPay,
+  ReportOnEmpSickLeaveCredits,
+  ReportOnEmpRehabLeaveCredits,
 } from '../utils/types/report.type';
 
 export type ReportsState = {
@@ -75,6 +77,18 @@ export type ReportsState = {
 
   errorReportOnSummaryLeaveWithoutPayDoc: string;
   setErrorReportOnSummaryLeaveWithoutPayDoc: (errorReportOnSummaryLeaveWithoutPayDoc: string) => void;
+
+  reportOnEmpSickLeaveCreditsDoc: ReportOnEmpSickLeaveCredits;
+  setReportOnEmpSickLeaveCreditsDoc: (reportOnEmpSickLeaveCreditsDoc: ReportOnEmpSickLeaveCredits) => void;
+
+  errorReportOnEmpSickLeaveCreditsDoc: string;
+  setErrorReportOnEmpSickLeaveCreditsDoc: (errorReportOnEmpSickLeaveCreditsDoc: string) => void;
+
+  reportOnEmpRehabLeaveDoc: ReportOnEmpRehabLeaveCredits;
+  setReportOnEmpRehabLeaveDoc: (reportOnEmpRehabLeaveDoc: ReportOnEmpRehabLeaveCredits) => void;
+
+  errorReportOnEmpRehabLeaveDoc: string;
+  setErrorReportOnEmpRehabLeaveDoc: (errorReportOnEmpRehabLeaveDoc: string) => void;
 
   emptyResponse: () => void;
 };
@@ -157,6 +171,19 @@ export const useReportsStore = create<ReportsState>()(
     errorReportOnSummaryLeaveWithoutPayDoc: '',
     setErrorReportOnSummaryLeaveWithoutPayDoc: (errorReportOnSummaryLeaveWithoutPayDoc) =>
       set({ errorReportOnSummaryLeaveWithoutPayDoc }),
+
+    reportOnEmpSickLeaveCreditsDoc: {} as ReportOnEmpSickLeaveCredits,
+    setReportOnEmpSickLeaveCreditsDoc: (reportOnEmpSickLeaveCreditsDoc) => set({ reportOnEmpSickLeaveCreditsDoc }),
+
+    errorReportOnEmpSickLeaveCreditsDoc: '',
+    setErrorReportOnEmpSickLeaveCreditsDoc: (errorReportOnEmpSickLeaveCreditsDoc) =>
+      set({ errorReportOnEmpSickLeaveCreditsDoc }),
+
+    reportOnEmpRehabLeaveDoc: {} as ReportOnEmpRehabLeaveCredits,
+    setReportOnEmpRehabLeaveDoc: (reportOnEmpRehabLeaveDoc) => set({ reportOnEmpRehabLeaveDoc }),
+
+    errorReportOnEmpRehabLeaveDoc: '',
+    setErrorReportOnEmpRehabLeaveDoc: (errorReportOnEmpRehabLeaveDoc) => set({ errorReportOnEmpRehabLeaveDoc }),
 
     emptyResponse: () =>
       set({

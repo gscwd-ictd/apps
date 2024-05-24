@@ -141,7 +141,7 @@ export const ReportOnOfficialBusinessPassSlipPdf: FunctionComponent<ReportOnOffi
                       <Text style={[styles.tableHeaderText, styles.upperText, styles.boldText]}>Names</Text>
                     </View>
                     <View style={[styles.tableHeader, styles.w10]}>
-                      <Text style={[styles.tableHeaderText]}>No. of times PB</Text>
+                      <Text style={[styles.tableHeaderText]}>No. of times OB</Text>
                     </View>
                     <View style={[styles.tableHeader, styles.w23]}>
                       <Text style={[styles.tableHeaderText]}>Date/s</Text>

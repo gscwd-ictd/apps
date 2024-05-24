@@ -7,12 +7,16 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import { Card } from '../../components/cards/Card';
 import { BreadCrumbs } from '../../components/navigations/BreadCrumbs';
-import { Button } from '@gscwd-apps/oneui';
+import { Button, ToastNotification } from '@gscwd-apps/oneui';
 import { SelectListRF } from '../../components/inputs/SelectListRF';
 import { LabelInput } from '../../components/inputs/LabelInput';
 import ConvertFullMonthNameToDigit from '../../utils/functions/ConvertFullMonthNameToDigit';
 import ConvertToYearMonth from '../../utils/functions/ConvertToYearMonth';
 import { useEffect } from 'react';
+import fetcherHRMS from 'apps/employee-monitoring/src/utils/fetcher/FetcherHRMS';
+import useSWR from 'swr';
+import { useEmployeeStore } from 'apps/employee-monitoring/src/store/employee.store';
+import { isEmpty } from 'lodash';
 
 // yup error handling initialization
 const yupSchema = yup.object().shape({
@@ -114,6 +118,22 @@ const yupSchema = yup.object().shape({
 });
 
 export default function Index() {
+  // fetch data for list of employees
+  const {
+    data: employees,
+    error: employeesError,
+    isLoading: employeesLoading,
+  } = useSWR('/employees/options', fetcherHRMS, {
+    shouldRetryOnError: false,
+    revalidateOnFocus: false,
+  });
+
+  // zustand initialization for employees
+  const { EmployeeOptions, SetEmployeeOptions } = useEmployeeStore((state) => ({
+    EmployeeOptions: state.employeeOptions,
+    SetEmployeeOptions: state.setEmployeeOptions,
+  }));
+
   // React hook form
   const {
     reset,
@@ -129,6 +149,7 @@ export default function Index() {
       dateFrom: null,
       dateTo: null,
       monthYear: null,
+      employeeId: null,
     },
     resolver: yupResolver(yupSchema),
   });
@@ -143,6 +164,9 @@ export default function Index() {
       data.dateTo
     )}`;
     const paramMonthYear = `&month_year=${ConvertToYearMonth(data.monthYear)}`;
+    const paramToFromWithEmployee = `&date_from=${ConvertFullMonthNameToDigit(
+      data.dateFrom
+    )}&date_to=${ConvertFullMonthNameToDigit(data.dateTo)}&employee_id=${data.employeeId}`;
 
     // condition if param needs to be month & year OR date to & date from
     if (
@@ -152,6 +176,13 @@ export default function Index() {
       data.reportName === Reports[8].value
     ) {
       window.open(url + paramMonthYear, '_blank', 'noopener,noreferrer');
+      reset();
+    } else if (
+      data.reportName === Reports[4].value ||
+      data.reportName === Reports[9].value ||
+      data.reportName === Reports[10].value
+    ) {
+      window.open(url + paramToFromWithEmployee, '_blank', 'noopener,noreferrer');
       reset();
     } else {
       window.open(url + paramToFrom, '_blank', 'noopener,noreferrer');
@@ -166,6 +197,7 @@ export default function Index() {
     }
   };
 
+  // register the right fields depending on the report params
   useEffect(() => {
     if (
       watchReportName === Reports[5].value ||
@@ -177,13 +209,32 @@ export default function Index() {
 
       unregister('dateFrom');
       unregister('dateTo');
-    } else {
-      unregister('monthYear');
-
+      unregister('employeeId');
+    } else if (
+      watchReportName === Reports[4].value ||
+      watchReportName === Reports[9].value ||
+      watchReportName === Reports[10].value
+    ) {
       register('dateFrom');
       register('dateTo');
+      register('employeeId');
+
+      unregister('monthYear');
+    } else {
+      register('dateFrom');
+      register('dateTo');
+
+      unregister('monthYear');
+      unregister('employeeId');
     }
   }, [register, unregister, watchReportName]);
+
+  // Upon success of swr request, zustand state will be updated
+  useEffect(() => {
+    if (!isEmpty(employees)) {
+      SetEmployeeOptions(employees.data);
+    }
+  }, [employees]);
 
   return (
     <>
@@ -202,10 +253,13 @@ export default function Index() {
 
           <div className="sm:px-2 md:px-2 lg:px-5">
             <Card>
+              {/* Notifications */}
+              {!isEmpty(employeesError) ? <ToastNotification toastType="error" notifMessage={employeesError} /> : null}
+
               <form onSubmit={handleSubmit(onSubmit)} id="submitReportForm">
                 <div className="grid gap-2">
                   {/* Report select input */}
-                  <div>
+                  <div className="mb-4">
                     <SelectListRF
                       id="reportName"
                       selectList={Reports}
@@ -233,6 +287,52 @@ export default function Index() {
                             controller={{ ...register('monthYear') }}
                             isError={errors.monthYear ? true : false}
                             errorMessage={errors.monthYear?.message}
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  ) : watchReportName === Reports[4].value ||
+                    watchReportName === Reports[9].value ||
+                    watchReportName === Reports[10].value ? (
+                    <div>
+                      <div className="grid grid-cols-2 gap-2">
+                        {/* Date From input */}
+                        <div>
+                          <LabelInput
+                            id="dateFrom"
+                            label={'Date From'}
+                            type="date"
+                            controller={{ ...register('dateFrom') }}
+                            isError={errors.dateFrom ? true : false}
+                            errorMessage={errors.dateFrom?.message}
+                          />
+                        </div>
+
+                        {/* Date To input */}
+                        <div>
+                          <LabelInput
+                            id="dateTo"
+                            label={'Date To'}
+                            type="date"
+                            controller={{ ...register('dateTo') }}
+                            isError={errors.dateTo ? true : false}
+                            errorMessage={errors.dateTo?.message}
+                          />
+                        </div>
+
+                        {/* employee */}
+                        <div>
+                          <SelectListRF
+                            id="employeeId"
+                            selectList={EmployeeOptions}
+                            controller={{
+                              ...register('employeeId'),
+                            }}
+                            label="Employee"
+                            isError={errors.employeeId ? true : false}
+                            errorMessage={errors.employeeId?.message}
+                            disabled={employeesLoading}
+                            isLoading={employeesLoading}
                           />
                         </div>
                       </div>
