@@ -55,6 +55,7 @@ export const ApprovalCaptcha: FunctionComponent<CaptchaProps> = ({
     setCaptchaModalIsOpen,
     setApproveAllCaptchaModalIsOpen,
     setDisputedPassSlipModalIsOpen,
+    setOvertimeAccomplishmentModalIsOpen,
     patchOvertimeAccomplishment,
     patchOvertimeAccomplishmentFail,
     patchOvertimeAccomplishmentSuccess,
@@ -66,6 +67,7 @@ export const ApprovalCaptcha: FunctionComponent<CaptchaProps> = ({
     setCaptchaModalIsOpen: state.setCaptchaModalIsOpen, //for overtime accomplishment captcha
     setApproveAllCaptchaModalIsOpen: state.setApproveAllCaptchaModalIsOpen,
     setDisputedPassSlipModalIsOpen: state.setDisputedPassSlipModalIsOpen,
+    setOvertimeAccomplishmentModalIsOpen: state.setOvertimeAccomplishmentModalIsOpen,
     patchOvertimeAccomplishment: state.patchOvertimeAccomplishment,
     patchOvertimeAccomplishmentFail: state.patchOvertimeAccomplishmentFail,
     patchOvertimeAccomplishmentSuccess: state.patchOvertimeAccomplishmentSuccess,
@@ -86,8 +88,14 @@ export const ApprovalCaptcha: FunctionComponent<CaptchaProps> = ({
     setApproveAllCaptchaModalIsOpen(false);
     setTimeout(() => {
       setDisputedPassSlipModalIsOpen(false);
-      // setOvertimeAccomplishmentModalIsOpen(false); //then close Accomplishment modal
+      setOvertimeAccomplishmentModalIsOpen(false); //then close Accomplishment modal
     }, 200);
+  };
+
+  //CLOSE FUNCTION FOR CAPTCHA ONLY
+  const handleCloseCaptcha = () => {
+    setCaptchaModalIsOpen(false);
+    setApproveAllCaptchaModalIsOpen(false);
   };
 
   // SUBMIT
@@ -222,7 +230,7 @@ export const ApprovalCaptcha: FunctionComponent<CaptchaProps> = ({
               <button
                 className={`
                mb-2 text-white bg-red-500 h-10 transition-all rounded hover:bg-red-600 active:bg-red-600 outline-red-500 w-56`}
-                onClick={(e) => handleClose()}
+                onClick={(e) => handleCloseCaptcha()}
               >
                 <label className="font-bold cursor-pointer">CANCEL</label>
               </button>
