@@ -76,6 +76,7 @@ const styles = StyleSheet.create({
     borderBottom: '1px solid #000000',
     width: '31.5%',
     padding: 5,
+    fontSize: 8,
   },
   containerTableRow2: {
     display: 'flex',
@@ -85,6 +86,7 @@ const styles = StyleSheet.create({
     borderBottom: '1px solid #000000',
     width: '31.5%',
     padding: 5,
+    fontSize: 8,
   },
   containerTableRow3: {
     display: 'flex',
@@ -95,7 +97,7 @@ const styles = StyleSheet.create({
     borderBottom: '1px solid #000000',
     width: '37%',
     padding: 5,
-    fontSize: 9,
+    fontSize: 8,
   },
   containerTableRow4: {
     display: 'flex',

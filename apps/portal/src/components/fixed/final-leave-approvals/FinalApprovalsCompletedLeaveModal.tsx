@@ -397,10 +397,11 @@ export const ApprovalsCompletedLeaveModal = ({
                         </div>
                       </div>
                     ) : null}
-                    {leaveIndividualDetail?.leaveName === LeaveName.VACATION ||
-                    leaveIndividualDetail?.leaveName === LeaveName.FORCED ||
-                    leaveIndividualDetail?.leaveName === LeaveName.SICK ||
-                    leaveIndividualDetail?.leaveName === LeaveName.SPECIAL_PRIVILEGE ? (
+                    {(leaveIndividualDetail?.leaveName === LeaveName.VACATION ||
+                      leaveIndividualDetail?.leaveName === LeaveName.FORCED ||
+                      leaveIndividualDetail?.leaveName === LeaveName.SICK ||
+                      leaveIndividualDetail?.leaveName === LeaveName.SPECIAL_PRIVILEGE) &&
+                    leaveIndividualDetail?.status === LeaveStatus.APPROVED ? (
                       <div className="w-full pb-4">
                         <span className="text-slate-500 text-md">
                           Employee's{' '}
