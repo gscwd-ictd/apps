@@ -92,7 +92,6 @@ const styles = StyleSheet.create({
   w33_33: { width: '33.33%' },
   w27: { width: '27%' },
   w25: { width: '25%' },
-  w22: { width: '22%' },
   w15: { width: '15%' },
   w10: { width: '10%' },
   w3: { width: '3%' },

@@ -36,9 +36,6 @@ export const createEmployee = async (pendingUser: PendingUser) => {
       withCredentials: true,
     });
   } catch (error) {
-    // console.log(
-    //   error,
-    //   'employee-requests: error coming from create employee profile'
-    // );
+    // Do nothing
   }
 };

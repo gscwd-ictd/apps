@@ -32,22 +32,32 @@ const yupSchema = yup.object().shape({
         }
 
         // Report on Personal Business Pass Slip
-        if (report === Reports[1].value) {
+        else if (report === Reports[1].value) {
           return true;
         }
 
         // Report on Official Business Pass Slip
-        if (report === Reports[2].value) {
+        else if (report === Reports[2].value) {
           return true;
         }
 
         // Detailed Report on Personal Business Pass Slip
-        if (report === Reports[3].value) {
+        else if (report === Reports[3].value) {
           return true;
         }
 
         // Detailed Report on Official Business Pass Slip
-        if (report === Reports[4].value) {
+        else if (report === Reports[4].value) {
+          return true;
+        }
+
+        // Report on Summary of Sick Leave
+        else if (report === Reports[9].value) {
+          return true;
+        }
+
+        // Report on Summary of Rehabilitation Leave
+        else if (report === Reports[10].value) {
           return true;
         } else return false;
       },
@@ -57,30 +67,41 @@ const yupSchema = yup.object().shape({
   dateTo: yup
     .date()
     .max(new Date(), 'Must not be greater than current date')
-    .when('reportName', {
-      is: (report: string) => {
+    .min(yup.ref('dateFrom'), 'Must be greater than date from')
+    .when(['reportName', 'dateFrom'], {
+      is: (report: string, dateFrom: Date, schema: any) => {
         // Report on Attendance
         if (report === Reports[0].value) {
           return true;
         }
 
         // Report on Personal Business Pass Slip
-        if (report === Reports[1].value) {
+        else if (report === Reports[1].value) {
           return true;
         }
 
         // Report on Official Business Pass Slip
-        if (report === Reports[2].value) {
+        else if (report === Reports[2].value) {
           return true;
         }
 
         // Detailed Report on Personal Business Pass Slip
-        if (report === Reports[3].value) {
+        else if (report === Reports[3].value) {
           return true;
         }
 
         // Detailed Report on Official Business Pass Slip
-        if (report === Reports[4].value) {
+        else if (report === Reports[4].value) {
+          return true;
+        }
+
+        // Report on Summary of Sick Leave
+        else if (report === Reports[9].value) {
+          return true;
+        }
+
+        // Report on Summary of Rehabilitation Leave
+        else if (report === Reports[10].value) {
           return true;
         } else return false;
       },
@@ -98,23 +119,24 @@ const yupSchema = yup.object().shape({
         }
 
         // Report on Employee Leave Credit Balance
-        if (report === Reports[6].value) {
+        else if (report === Reports[6].value) {
           return true;
         }
 
         // Report on Employee Leave Credit Balance with Money
-        if (report === Reports[7].value) {
+        else if (report === Reports[7].value) {
           return true;
         }
 
         // Report on Summary of Leave Without Pay
-        if (report === Reports[8].value) {
+        else if (report === Reports[8].value) {
           return true;
         } else return false;
       },
       then: yup.date().required('Month year is required').nullable(),
     })
     .nullable(),
+  employeeId: yup.string().nullable(),
 });
 
 export default function Index() {
@@ -178,6 +200,7 @@ export default function Index() {
       window.open(url + paramMonthYear, '_blank', 'noopener,noreferrer');
       reset();
     } else if (
+      // conditions if param needs from, to, and employee(if empty mean all)
       data.reportName === Reports[4].value ||
       data.reportName === Reports[9].value ||
       data.reportName === Reports[10].value
@@ -229,7 +252,7 @@ export default function Index() {
     }
   }, [register, unregister, watchReportName]);
 
-  // Upon success of swr request, zustand state will be updated
+  // upon success of swr request, zustand state will be updated
   useEffect(() => {
     if (!isEmpty(employees)) {
       SetEmployeeOptions(employees.data);
