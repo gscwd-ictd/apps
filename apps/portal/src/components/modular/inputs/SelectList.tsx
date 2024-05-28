@@ -48,7 +48,7 @@ export function MySelectList({
   const containerRef = useRef<HTMLDivElement>(null);
   const [searchedItem, setSearchedItem] = useState<Array<SelectOption>>([]); //filtered list based on searchInput
   const [searchedInput, setSearchedInput] = useState<string>('');
-  const [listToSearch, setListToSearch] = useState<Array<SelectOption>>([]);
+  const [listToSearch, setListToSearch] = useState<Array<SelectOption>>(options);
 
   const handleSearchItem = (name: string) => {
     setSearchedInput(name);
@@ -63,6 +63,10 @@ export function MySelectList({
       setListToSearch(options);
     }
   }, [searchedItem]);
+
+  useEffect(() => {
+    setListToSearch(options);
+  }, [options]);
 
   // clear all values inside the input
   const clearOptions = () => {
