@@ -66,6 +66,7 @@ const styles = StyleSheet.create({
     borderTop: '1px solid #000000',
     borderLeft: '1px solid #000000',
     borderRight: '1px solid #000000',
+    marginBottom: 6,
   },
   containerTableRow: {
     display: 'flex',
@@ -76,6 +77,7 @@ const styles = StyleSheet.create({
     borderBottom: '1px solid #000000',
     width: '31.5%',
     padding: 5,
+    fontSize: 8,
   },
   containerTableRow2: {
     display: 'flex',
@@ -85,6 +87,7 @@ const styles = StyleSheet.create({
     borderBottom: '1px solid #000000',
     width: '31.5%',
     padding: 5,
+    fontSize: 8,
   },
   containerTableRow3: {
     display: 'flex',
@@ -95,7 +98,7 @@ const styles = StyleSheet.create({
     borderBottom: '1px solid #000000',
     width: '37%',
     padding: 5,
-    fontSize: 9,
+    fontSize: 8,
   },
   containerTableRow4: {
     display: 'flex',
@@ -891,44 +894,29 @@ export const LeavePdf = ({ employeeDetails, leaveDetails, selectedLeaveLedger }:
                           </View>
                         </View>
 
-                        <View
-                          style={{
-                            width: '100%',
-                            textAlign: 'center',
-                            fontFamily: 'Helvetica',
-                            paddingBottom: 5,
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'flex-end',
-                            paddingTop: 25,
-                          }}
-                        >
+                        <View style={{ width: '100%' }}>
                           <Image
                             style={{
-                              width: 30,
+                              width: '20%',
                               position: 'absolute',
-                              marginLeft: 0,
-                              paddingBottom: 20,
+                              justifyContent: 'center',
+                              alignItems: 'center',
+                              left: '40%',
+                              paddingTop: 5,
                             }}
-                            src={leaveDetails?.leaveApplicationBasicInfo?.hrmoSignature ?? '/'}
+                            src={leaveDetails.leaveApplicationBasicInfo?.hrmoSignature ?? '/'}
                           />
-                          <Text
-                            style={{
-                              marginBottom: -9,
-                              textAlign: 'center',
-                              width: '100%',
-                              fontSize: 10,
-                            }}
-                          >
-                            {leaveDetails?.leaveApplicationBasicInfo?.hrmoApprovedByName}
+                          <Text style={{ textAlign: 'center', paddingTop: 22 }}>
+                            {leaveDetails.leaveApplicationBasicInfo?.hrmoApprovedByName ?? ''}
                           </Text>
-                          <Text style={{}}>_________________________________________________</Text>
+                          <Text style={{ paddingLeft: 6, paddingTop: -8 }}>
+                            _________________________________________________
+                          </Text>
                           <Text
                             style={{
                               textAlign: 'center',
-                              fontSize: 8,
-                              paddingBottom: 5,
-                              paddingTop: 2,
+                              fontSize: 7,
+                              paddingTop: -8,
                             }}
                           >
                             Authorized Officer
@@ -976,50 +964,35 @@ export const LeavePdf = ({ employeeDetails, leaveDetails, selectedLeaveLedger }:
                             ? leaveDetails.leaveApplicationBasicInfo.supervisorDisapprovalRemarks
                             : leaveDetails.leaveApplicationBasicInfo.hrdmDisapprovalRemarks
                             ? leaveDetails.leaveApplicationBasicInfo.hrdmDisapprovalRemarks
-                            : 'N/A'}
+                            : ''}
                         </Text>
                         <Text style={{ padding: 5 }}>____________________________________________</Text>
                         <Text style={{ padding: 5 }}>____________________________________________</Text>
                         <Text style={{ padding: 5 }}>____________________________________________</Text>
                       </View>
-                      <View
-                        style={{
-                          width: '100%',
-                          textAlign: 'center',
-                          fontFamily: 'Helvetica',
-                          paddingBottom: 5,
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'flex-end',
-                          paddingTop: 23,
-                        }}
-                      >
+                      <View style={{ width: '100%' }}>
                         <Image
                           style={{
-                            width: 30,
+                            width: '25%',
                             position: 'absolute',
-                            marginLeft: 0,
-                            paddingBottom: 25,
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            left: '40%',
+                            paddingTop: 0,
                           }}
-                          src={leaveDetails?.leaveApplicationBasicInfo?.supervisorSignature ?? '/'}
+                          src={leaveDetails.leaveApplicationBasicInfo?.supervisorSignature ?? '/'}
                         />
-                        <Text
-                          style={{
-                            marginBottom: -9,
-                            textAlign: 'center',
-                            width: '100%',
-                            fontSize: 10,
-                          }}
-                        >
-                          {leaveDetails?.leaveApplicationBasicInfo?.supervisorName}
+                        <Text style={{ textAlign: 'center', paddingTop: 22 }}>
+                          {leaveDetails.leaveApplicationBasicInfo?.supervisorName ?? ''}
                         </Text>
-                        <Text style={{}}>_________________________________________________</Text>
+                        <Text style={{ paddingLeft: 6, paddingTop: -8 }}>
+                          _________________________________________________
+                        </Text>
                         <Text
                           style={{
                             textAlign: 'center',
-                            fontSize: 8,
-                            paddingBottom: 5,
-                            paddingTop: 2,
+                            fontSize: 7,
+                            paddingTop: -8,
                           }}
                         >
                           Authorized Officer
@@ -1094,7 +1067,7 @@ export const LeavePdf = ({ employeeDetails, leaveDetails, selectedLeaveLedger }:
                             ? leaveDetails.leaveApplicationBasicInfo.supervisorDisapprovalRemarks
                             : leaveDetails.leaveApplicationBasicInfo.hrdmDisapprovalRemarks
                             ? leaveDetails.leaveApplicationBasicInfo.hrdmDisapprovalRemarks
-                            : 'N/A'}
+                            : ''}
                         </Text>
                         <Text style={{ padding: 5 }}>____________________________________________</Text>
                         <Text style={{ padding: 5 }}>____________________________________________</Text>
@@ -1108,41 +1081,34 @@ export const LeavePdf = ({ employeeDetails, leaveDetails, selectedLeaveLedger }:
                       textAlign: 'center',
                       fontFamily: 'Helvetica',
                       paddingBottom: 20,
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'flex-end',
                     }}
                   >
-                    <Image
-                      style={{
-                        width: 40,
-                        position: 'absolute',
-                        marginLeft: 0,
-                        paddingBottom: 35,
-                      }}
-                      src={leaveDetails?.leaveApplicationBasicInfo?.hrdmSignature ?? '/'}
-                    />
-                    <Text
-                      style={{
-                        textAlign: 'center',
-                        width: '100%',
-                        fontSize: 10,
-                        marginBottom: -18,
-                      }}
-                    >
-                      {leaveDetails?.leaveApplicationBasicInfo?.hrdmApprovedByName}
-                    </Text>
-                    <Text style={{}}>______________________</Text>
-
-                    <Text
-                      style={{
-                        textAlign: 'center',
-                        fontSize: 8,
-                        paddingBottom: 5,
-                      }}
-                    >
-                      Authorized Officer
-                    </Text>
+                    <View style={{ width: '100%' }}>
+                      <Image
+                        style={{
+                          width: '12%',
+                          position: 'absolute',
+                          justifyContent: 'center',
+                          alignItems: 'center',
+                          left: '45%',
+                          paddingTop: 0,
+                        }}
+                        src={leaveDetails.leaveApplicationBasicInfo?.hrdmSignature ?? '/'}
+                      />
+                      <Text style={{ textAlign: 'center', paddingTop: 22, fontSize: 9 }}>
+                        {leaveDetails.leaveApplicationBasicInfo?.hrdmApprovedByName ?? ''}
+                      </Text>
+                      <Text style={{ paddingLeft: 6, paddingTop: -15 }}>_____________________</Text>
+                      <Text
+                        style={{
+                          textAlign: 'center',
+                          fontSize: 7,
+                          paddingTop: -15,
+                        }}
+                      >
+                        Authorized Officer
+                      </Text>
+                    </View>
                   </View>
                 </View>
               </View>

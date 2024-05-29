@@ -90,15 +90,11 @@ const styles = StyleSheet.create({
   // Width Styles
   w100: { width: '100%' },
   w33_33: { width: '33.33%' },
-  w30: { width: '30%' },
-  w23: { width: '23%' },
-  w17: { width: '17%' },
-  w16_25: { width: '16.25%' },
+  w27: { width: '27%' },
+  w25: { width: '25%' },
   w15: { width: '15%' },
-  w13: { width: '13%' },
   w10: { width: '10%' },
-  w7: { width: '7%' },
-  w5: { width: '5%' },
+  w3: { width: '3%' },
 });
 
 export const DetailedReportOnOfficialBusinessPassSlipPdf: FunctionComponent<
@@ -137,21 +133,24 @@ export const DetailedReportOnOfficialBusinessPassSlipPdf: FunctionComponent<
                   {/* COLUMN HEADERS  */}
                   <View style={[styles.rowContainer, styles.borderTop, styles.rowBorder]}>
                     {/* NUMBER */}
-                    <View style={[styles.tableHeader, styles.w5]}></View>
-                    <View style={[styles.tableHeader, styles.w30, { fontSize: 7 }]}>
+                    <View style={[styles.tableHeader, styles.w3]}></View>
+                    <View style={[styles.tableHeader, styles.w25, { fontSize: 7 }]}>
                       <Text style={[styles.tableHeaderText, styles.upperText, styles.boldText]}>Names</Text>
                     </View>
-                    <View style={[styles.tableHeader, styles.w16_25]}>
+                    <View style={[styles.tableHeader, styles.w10]}>
                       <Text style={[styles.tableHeaderText]}>Date</Text>
                     </View>
-                    <View style={[styles.tableHeader, styles.w16_25]}>
+                    <View style={[styles.tableHeader, styles.w10]}>
                       <Text style={[styles.tableHeaderText]}>No. Of Minutes Consumed</Text>
                     </View>
-                    <View style={[styles.tableHeader, styles.w16_25]}>
+                    <View style={[styles.tableHeader, styles.w10]}>
                       <Text style={[styles.tableHeaderText]}>Conversion (mins / 60) x .125</Text>
                     </View>
-                    <View style={[styles.tableHeader, styles.w16_25, { borderRight: 'none' }]}>
+                    <View style={[styles.tableHeader, styles.w15]}>
                       <Text style={[styles.tableHeaderText]}>Time Out & Time In</Text>
+                    </View>
+                    <View style={[styles.tableHeader, styles.w27, { borderRight: 'none' }]}>
+                      <Text style={[styles.tableHeaderText]}>Reason</Text>
                     </View>
                   </View>
 
@@ -164,26 +163,28 @@ export const DetailedReportOnOfficialBusinessPassSlipPdf: FunctionComponent<
                             key={index}
                             wrap={false}
                           >
-                            <View style={[styles.tableData, styles.w5]}>
+                            <View style={[styles.tableData, styles.w3]}>
                               <Text style={[styles.tableDataText]}>{index + 1}</Text>
                             </View>
-                            <View style={[styles.tableData, styles.w30, { alignItems: 'flex-start' }]}>
+                            <View style={[styles.tableData, styles.w25, { alignItems: 'flex-start' }]}>
                               <Text style={[styles.tableDataText, { textAlign: 'left' }]}>
                                 {pbPassSlipData.name || '-'}
                               </Text>
                             </View>
-
-                            <View style={[styles.tableData, styles.w16_25]}>
+                            <View style={[styles.tableData, styles.w10]}>
                               <Text style={[styles.tableDataText]}>{pbPassSlipData.psDate || ''}</Text>
                             </View>
-                            <View style={[styles.tableData, styles.w16_25]}>
+                            <View style={[styles.tableData, styles.w10]}>
                               <Text style={[styles.tableDataText]}>{pbPassSlipData.noOfMinConsumed || ''}</Text>
                             </View>
-                            <View style={[styles.tableData, styles.w16_25]}>
+                            <View style={[styles.tableData, styles.w10]}>
                               <Text style={[styles.tableDataText]}>{pbPassSlipData.conversion || ''}</Text>
                             </View>
-                            <View style={[styles.tableData, styles.w16_25, { borderRight: 'none' }]}>
+                            <View style={[styles.tableData, styles.w15]}>
                               <Text style={[styles.tableDataText]}>{pbPassSlipData.timeInTimeOut || ''}</Text>
+                            </View>
+                            <View style={[styles.tableData, styles.w27, { borderRight: 'none' }]}>
+                              <Text style={[styles.tableDataText]}>{'reason'}</Text>
                             </View>
                           </View>
                         );

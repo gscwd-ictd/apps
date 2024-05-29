@@ -38,7 +38,7 @@ export const useTimeLogStore = create<TimeLogState>()(
       errorTimeLogs: '',
     },
 
-    //GET PASS SLIP ACTIONS
+    //GET TIME LOGS ACTIONS
     getTimeLogs: (loading: boolean) => {
       set((state) => ({
         ...state,

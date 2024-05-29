@@ -89,20 +89,6 @@ const SelectRdByNModal: FunctionComponent<SelectRdByNModalProps> = ({
         <Modal.Body>
           <div className="flex flex-col w-full min-h-[2.25rem] gap-1 px-5">
             <div className="flex items-center justify-center gap-2 mb-5">
-              {userphoto ? (
-                <div className="flex flex-wrap justify-center">
-                  <div className="w-[6rem]">
-                    <Image
-                      src={userphoto}
-                      alt="user-circle"
-                      className="h-auto max-w-full align-middle border-none rounded-full shadow"
-                    />
-                  </div>
-                </div>
-              ) : (
-                <i className="text-gray-400 text-7xl bx bxs-user-circle"></i>
-              )}
-
               <div className="flex flex-col w-full">
                 <p className="text-xl font-semibold">{rowData.fullName}</p>
                 <p className="font-light text-md">{rowData.positionTitle}</p>
