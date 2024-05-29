@@ -292,7 +292,7 @@ export default function Calendar({
   return (
     <>
       {!isEmpty(errorAllowableSpl) ? (
-        <ToastNotification toastType="error" notifMessage={`${errorAllowableSpl}: Failed to get last date of`} />
+        <ToastNotification toastType="error" notifMessage={`${errorAllowableSpl}: Failed to get last date of duty.`} />
       ) : null}
 
       {type === 'range' ? (
