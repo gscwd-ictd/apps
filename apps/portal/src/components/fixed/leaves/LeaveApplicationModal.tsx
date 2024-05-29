@@ -1092,7 +1092,8 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
                       {watch('typeOfLeaveDetails.leaveName') === LeaveName.FORCED ||
                       watch('typeOfLeaveDetails.leaveName') === LeaveName.VACATION ||
                       watch('typeOfLeaveDetails.leaveName') === LeaveName.SPECIAL_PRIVILEGE ||
-                      watch('typeOfLeaveDetails.leaveName') === LeaveName.SOLO_PARENT ? (
+                      watch('typeOfLeaveDetails.leaveName') === LeaveName.SOLO_PARENT ||
+                      watch('typeOfLeaveDetails.leaveName') === LeaveName.SICK ? (
                         <div className="flex gap-2 items-center">
                           <label className="text-slate-500 text-md font-medium">Late Filing:</label>
                           <Checkbox

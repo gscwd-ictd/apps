@@ -150,7 +150,7 @@ export default function Calendar({
           }
           //for SPL, between last duty date and today and not late filing
           if (
-            leaveName === LeaveName.SPECIAL_PRIVILEGE &&
+            (leaveName === LeaveName.SPECIAL_PRIVILEGE || leaveName === LeaveName.SICK) &&
             DateFormatter(specifiedDate, 'MM-DD-YYYY') > DateFormatter(lastDateOfDuty, 'MM-DD-YYYY') &&
             !isLateFiling
           ) {
@@ -393,7 +393,7 @@ export default function Calendar({
                             // isLateFiling === false &&
                             'text-slate-300',
                           //disable date selection for past dates from current day for SPL ONLY
-                          leaveName === LeaveName.SPECIAL_PRIVILEGE &&
+                          (leaveName === LeaveName.SPECIAL_PRIVILEGE || leaveName === LeaveName.SICK) &&
                             DateFormatter(day, 'MM-DD-YYYY') <= DateFormatter(lastDateOfDuty, 'MM-DD-YYYY') &&
                             isLateFiling === false &&
                             'text-slate-300',
