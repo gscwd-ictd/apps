@@ -75,6 +75,7 @@ const EditModuleModal: FunctionComponent<EditModalProps> = ({
   const onSubmit: SubmitHandler<Module> = (data: Module) => {
     EmptyResponse();
 
+    // console.log(data);
     handlePatchResult(data);
   };
 
@@ -92,32 +93,25 @@ const EditModuleModal: FunctionComponent<EditModalProps> = ({
   };
 
   // Remove the initial front slash
-  function FormatUrl(url: string | null) {
+  const FormatUrl = (url: string | null) => {
     if (url !== null) return url.substring(1);
     else return 'error';
-  }
+  };
 
   // Set default values in the form
   useEffect(() => {
-    if (!isEmpty(rowData)) {
+    if (!isEmpty(rowData) && modalState) {
       const keys = Object.keys(rowData);
 
-      // traverse to each object and setValue0
+      // traverse to each object and setValue
       keys.forEach((key: ModuleKeys) => {
-        if (key === 'url') {
-          setValue('url', FormatUrl(rowData[key]), {
-            shouldValidate: true,
-            shouldDirty: true,
-          });
-        } else {
-          setValue(key, rowData[key], {
-            shouldValidate: true,
-            shouldDirty: true,
-          });
-        }
+        setValue(key, rowData[key], {
+          shouldValidate: true,
+          shouldDirty: true,
+        });
       });
     }
-  }, [rowData]);
+  }, [modalState]);
 
   return (
     <>
@@ -180,14 +174,9 @@ const EditModuleModal: FunctionComponent<EditModalProps> = ({
                 <LabelInput
                   id={'url'}
                   label={'URL'}
-                  controller={{
-                    ...register('url', {
-                      setValueAs: (value) => '/' + value,
-                    }),
-                  }}
+                  controller={{ ...register('url') }}
                   isError={errors.url ? true : false}
                   errorMessage={errors.url?.message}
-                  prefix="/"
                 />
               </div>
             </form>

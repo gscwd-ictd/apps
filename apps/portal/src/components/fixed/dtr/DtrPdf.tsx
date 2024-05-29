@@ -115,7 +115,7 @@ const styles = StyleSheet.create({
   w50: { width: '50%' },
   w45: { width: '45%' },
   w40: { width: '40%' },
-  w37_5: { width: 'w37.5%' },
+  w37_5: { width: '37.5%' },
   w30: { width: '30%' },
   w25: { width: '25%' },
   w20: { width: '20%' },
@@ -635,8 +635,8 @@ export const DtrPdf: FunctionComponent<DtrPdfProps> = ({ employeeData, employeeD
                   {/* COLUMN HEADER */}
                   <View style={[styles.rowContainer]}>
                     {/* NO. OF TIMES LATE */}
-                    <View style={[styles.tableHeader2, styles.w11]}>
-                      <Text style={[styles.tableHeaderText]}>NO. OF TIMES LATE</Text>
+                    <View style={[styles.tableHeader2, styles.w9]}>
+                      <Text style={[styles.tableHeaderText]}>NO. OF {'\n'} TIMES LATE</Text>
                     </View>
 
                     {/* TOTAL MINUTES LATE */}
@@ -646,46 +646,48 @@ export const DtrPdf: FunctionComponent<DtrPdfProps> = ({ employeeData, employeeD
 
                     {/* DATE/S LATE */}
                     <View style={[styles.tableHeader2, styles.w15]}>
-                      <Text style={[styles.tableHeaderText]}>DATE/S LATE</Text>
+                      <Text style={[styles.tableHeaderText]}>DATES LATE</Text>
                     </View>
 
                     {/* NO. OF TIMES UNDERTIME */}
-                    <View style={[styles.tableHeader2, styles.w8]}>
-                      <Text style={[styles.tableHeaderText]}>NO. OF TIMES UNDERTIME</Text>
+                    <View style={[styles.tableHeader2, styles.w11]}>
+                      <Text style={[styles.tableHeaderText]}>NO. OF TIMES {'\n'} UNDERTIME</Text>
                     </View>
 
                     {/* TOTAL MINUTES UNDERTIME */}
-                    <View style={[styles.tableHeader2, styles.w9]}>
-                      <Text style={[styles.tableHeaderText, { paddingHorizontal: 3 }]}>TOTAL MINUTES UNDERTIME</Text>
+                    <View style={[styles.tableHeader2, styles.w11]}>
+                      <Text style={[styles.tableHeaderText, { paddingHorizontal: 3 }]}>
+                        TOTAL {'\n'} MINUTES {'\n'} UNDERTIME
+                      </Text>
                     </View>
 
                     {/* DATE/S UNDERTIME */}
-                    <View style={[styles.tableHeader2, styles.w15]}>
-                      <Text style={[styles.tableHeaderText, { paddingHorizontal: 3 }]}>DATE/S UNDERTIME</Text>
+                    <View style={[styles.tableHeader2, styles.w12]}>
+                      <Text style={[styles.tableHeaderText, { paddingHorizontal: 3 }]}>DATES {'\n'} UNDERTIME</Text>
                     </View>
 
                     {/* NO. OF TIMES HALF DAY (AM/PM) */}
                     <View style={[styles.tableHeader2, styles.w10]}>
                       <Text style={[styles.tableHeaderText, { paddingHorizontal: 3 }]}>
-                        NO. OF TIMES HALF DAY (AM/PM)
+                        NO. OF TIMES {'\n'} HALF DAY (AM/PM)
                       </Text>
                     </View>
 
                     {/* DATE/S HALF DAY */}
                     <View style={[styles.tableHeader2, styles.w12]}>
-                      <Text style={[styles.tableHeaderText]}>DATE/S HALF DAY</Text>
+                      <Text style={[styles.tableHeaderText, { paddingHorizontal: 3 }]}>DATES {'\n'} HALF DAY</Text>
                     </View>
 
                     {/* NO ATTENDANCE */}
                     <View style={[styles.tableHeader2, styles.w11, { borderRight: 'none' }]}>
-                      <Text style={[styles.tableHeaderText]}>NO ATTENDANCE</Text>
+                      <Text style={[styles.tableHeaderText]}>NO {'\n'} ATTENDANCE</Text>
                     </View>
                   </View>
 
                   {/* TABLE ROW */}
                   <View style={[styles.rowContainer, styles.borderTop]}>
                     {/* NO. OF TIMES LATE */}
-                    <View style={[styles.tableData, styles.w11]}>
+                    <View style={[styles.tableData, styles.w9]}>
                       <Text style={[styles.tableDataText]}>{employeeDtr.summary?.noOfTimesLate ?? '-'}</Text>
                     </View>
 
@@ -714,17 +716,17 @@ export const DtrPdf: FunctionComponent<DtrPdfProps> = ({ employeeData, employeeD
                     </View>
 
                     {/* NO. OF TIMES UNDERTIME */}
-                    <View style={[styles.tableData, styles.w8]}>
+                    <View style={[styles.tableData, styles.w11]}>
                       <Text style={[styles.tableDataText]}>{employeeDtr.summary?.noOfTimesUndertime ?? '-'}</Text>
                     </View>
 
                     {/* TOTAL MINUTES UNDERTIME */}
-                    <View style={[styles.tableData, styles.w9]}>
+                    <View style={[styles.tableData, styles.w11]}>
                       <Text style={[styles.tableDataText]}>{employeeDtr.summary?.totalMinutesUndertime ?? '-'}</Text>
                     </View>
 
                     {/* DATE/S UNDERTIME */}
-                    <View style={[styles.tableData, styles.w15]}>
+                    <View style={[styles.tableData, styles.w12]}>
                       <Text style={[styles.tableDataText]}>
                         {employeeDtr.summary?.undertimeDates && employeeDtr.summary?.undertimeDates.length > 0
                           ? employeeDtr.summary?.undertimeDates.map((day, index) => {
@@ -749,7 +751,21 @@ export const DtrPdf: FunctionComponent<DtrPdfProps> = ({ employeeData, employeeD
 
                     {/* DATE/S HALF DAY */}
                     <View style={[styles.tableData, styles.w12]}>
-                      <Text style={[styles.tableDataText]}>-</Text>
+                      <Text style={[styles.tableDataText]}>
+                        {employeeDtr.summary?.halfDayDates && employeeDtr.summary?.halfDayDates.length > 0
+                          ? employeeDtr.summary?.halfDayDates.map((day, index) => {
+                              return (
+                                <Text key={index}>
+                                  {index === employeeDtr.summary?.halfDayDates.length - 1 ? (
+                                    <Text>{day}</Text>
+                                  ) : (
+                                    <Text>{day}, </Text>
+                                  )}
+                                </Text>
+                              );
+                            })
+                          : '-'}
+                      </Text>
                     </View>
 
                     {/* NO ATTENDANCE */}

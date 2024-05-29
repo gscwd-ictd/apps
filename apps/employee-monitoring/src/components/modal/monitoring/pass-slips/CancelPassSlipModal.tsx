@@ -61,7 +61,7 @@ const CancelPassSlipModal: FunctionComponent<CancelPassSlipModalProps> = ({
 
   return (
     <>
-      <Modal open={modalState} setOpen={setModalState} steady size="xs">
+      <Modal open={modalState} setOpen={setModalState} steady size="sm">
         <Modal.Header>
           <h2 className="text-lg font-semibold">Cancel Pass Slip</h2>
         </Modal.Header>

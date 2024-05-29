@@ -13,13 +13,12 @@ import { DataTable, LoadingSpinner, ToastNotification, useDataTable } from '@gsc
 import { Card } from 'apps/employee-monitoring/src/components/cards/Card';
 import { BreadCrumbs } from 'apps/employee-monitoring/src/components/navigations/BreadCrumbs';
 import { createColumnHelper } from '@tanstack/react-table';
-import dayjs from 'dayjs';
 
 // modals
 import AddAnnouncementModal from 'apps/employee-monitoring/src/components/modal/settings/announcements/AddAnnouncementModal';
 import EditAnnouncementModal from 'apps/employee-monitoring/src/components/modal/settings/announcements/EditAnnouncementModal';
 import DeleteAnnouncementModal from 'apps/employee-monitoring/src/components/modal/settings/announcements/DeleteAnnouncementModal';
-import Image from 'next/image';
+
 import ConvertFullMonthNameToDigit from 'apps/employee-monitoring/src/utils/functions/ConvertFullMonthNameToDigit';
 
 const Index = () => {

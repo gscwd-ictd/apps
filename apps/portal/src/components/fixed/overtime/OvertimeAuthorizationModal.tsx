@@ -146,7 +146,7 @@ export const OvertimeAuthorizationModal = ({ modalState, setModalState, closeMod
               <Document title="Overtime Authorization Report">
                 {/* <Page size={[612.0, 396.0]} orientation="portrait"> */}
                 {/* <Page wrap={true} size={[612.0, 396.0]} orientation="portrait"> */}
-                <Page size={'LETTER'}>
+                <Page size={'A4'} orientation="portrait">
                   <View style={styles.page}>
                     <View style={styles.controlNumber}>
                       <Text>{/* NO. 1 */}</Text>

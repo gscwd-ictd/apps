@@ -45,7 +45,6 @@ export const DtrTable = ({ employeeDetails }: DtrTableProps) => {
 
   // close dtr pdf modal function
   const closeDtrPdfModal = () => setDtrPdfModalIsOpen(false);
-
   return (
     <>
       <DtrPdfModal
@@ -272,8 +271,9 @@ export const DtrTable = ({ employeeDetails }: DtrTableProps) => {
                   <td className="border p-1 text-gray-700">Dates Late</td>
                   <td className="border p-1 text-gray-700">No. of Times Undertime</td>
                   <td className="border p-1 text-gray-700">Total Minutes Undertime</td>
-                  <td className="border p-1 text-gray-700">Dates / Undertime</td>
-                  <td className="border p-1 text-gray-700">No. of Times Halfday</td>
+                  <td className="border p-1 text-gray-700">Dates Undertime</td>
+                  <td className="border p-1 text-gray-700">No. of Times Halfday (AM/PM)</td>
+                  <td className="border p-1 text-gray-700">Dates Half Day</td>
                   <td className="border p-1 text-gray-700">No Attendance</td>
                 </tr>
               </thead>
@@ -306,6 +306,18 @@ export const DtrTable = ({ employeeDetails }: DtrTableProps) => {
                       : '--'}
                   </td>
                   <td className="border p-1">{employeeDtr.summary?.noOfTimesHalfDay ?? '--'}</td>
+                  <td className="border p-1">
+                    {employeeDtr.summary?.halfDayDates && employeeDtr.summary?.halfDayDates.length > 0
+                      ? employeeDtr.summary?.halfDayDates.map((day, index) => {
+                          return (
+                            <span key={index}>
+                              {index === employeeDtr.summary?.halfDayDates.length - 1 ? <>{day}</> : <>{day}, </>}
+                            </span>
+                          );
+                        })
+                      : '--'}
+                  </td>
+
                   <td className="border p-1">
                     {employeeDtr.summary?.noAttendance && employeeDtr.summary?.noAttendance.length > 0
                       ? employeeDtr.summary?.noAttendance.map((day, index) => {
@@ -355,8 +367,9 @@ export const DtrTable = ({ employeeDetails }: DtrTableProps) => {
               <thead>
                 <tr className="text-sm font-medium text-center">
                   <td className="border p-1 text-gray-700">Total Minutes Undertime</td>
-                  <td className="border p-1 text-gray-700">Dates / Undertime</td>
+                  <td className="border p-1 text-gray-700">Dates Undertime</td>
                   <td className="border p-1 text-gray-700">No. of Times Halfday</td>
+                  <td className="border p-1 text-gray-700">Dates Half Day</td>
                   <td className="border p-1 text-gray-700">No Attendance</td>
                 </tr>
               </thead>
@@ -375,6 +388,17 @@ export const DtrTable = ({ employeeDetails }: DtrTableProps) => {
                       : '--'}
                   </td>
                   <td className="border p-1">{employeeDtr.summary?.noOfTimesHalfDay ?? '--'}</td>
+                  <td className="border p-1">
+                    {employeeDtr.summary?.halfDayDates && employeeDtr.summary?.halfDayDates.length > 0
+                      ? employeeDtr.summary?.halfDayDates.map((day, index) => {
+                          return (
+                            <span key={index}>
+                              {index === employeeDtr.summary?.halfDayDates.length - 1 ? <>{day}</> : <>{day}, </>}
+                            </span>
+                          );
+                        })
+                      : '--'}
+                  </td>
                   <td className="border p-1">
                     {employeeDtr.summary?.noAttendance && employeeDtr.summary?.noAttendance.length > 0
                       ? employeeDtr.summary?.noAttendance.map((day, index) => {

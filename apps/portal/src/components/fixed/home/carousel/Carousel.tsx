@@ -2,8 +2,14 @@
 import * as React from 'react';
 import { useKeenSlider } from 'keen-slider/react';
 import 'keen-slider/keen-slider.min.css';
-import { useState } from 'react';
-import { Announcements } from './Announcements';
+import { useEffect, useState } from 'react';
+import useSWR from 'swr';
+import { isEmpty } from 'lodash';
+import { Announcements } from 'libs/utils/src/lib/types/announcements.type';
+import { useAnnouncementsStore } from 'apps/portal/src/store/announcements.store';
+import { fetchWithToken } from 'apps/portal/src/utils/hoc/fetcher';
+import { defaultAnnouncements } from './Announcements';
+import Image from 'next/image';
 
 export default function Carousel() {
   const [next, setNext] = useState(false);
@@ -48,58 +54,81 @@ export default function Carousel() {
       },
     ]
   );
+  const [finalAnnouncements, setFinalAnnouncements] = useState<Announcements[]>([]);
+  const { announcements, getAnnouncements, getAnnouncementsSuccess, getAnnouncementsFail } = useAnnouncementsStore(
+    (state) => ({
+      announcements: state.announcements,
+      getAnnouncements: state.getAnnouncements,
+      getAnnouncementsSuccess: state.getAnnouncementsSuccess,
+      getAnnouncementsFail: state.getAnnouncementsFail,
+    })
+  );
+
+  const announcementsUrl = `${process.env.NEXT_PUBLIC_PORTAL_URL}/event-announcements/`;
+
+  const {
+    data: swrAnnouncements,
+    isLoading: swrAnnouncementsIsLoading,
+    error: swrAnnouncementsError,
+    mutate: mutateAnnouncements,
+  } = useSWR(announcementsUrl, fetchWithToken, { shouldRetryOnError: false, revalidateOnFocus: true });
+
+  // Initial zustand state update
+  useEffect(() => {
+    if (swrAnnouncementsIsLoading) {
+      getAnnouncements(swrAnnouncementsIsLoading);
+    }
+  }, [swrAnnouncementsIsLoading]);
+
+  // Upon success/fail of swr request, zustand state will be updated
+  useEffect(() => {
+    if (!isEmpty(swrAnnouncements)) {
+      getAnnouncementsSuccess(swrAnnouncementsIsLoading, swrAnnouncements);
+    }
+
+    if (!isEmpty(swrAnnouncementsError)) {
+      getAnnouncementsFail(swrAnnouncementsIsLoading, swrAnnouncementsError.message);
+    }
+  }, [swrAnnouncements, swrAnnouncementsError]);
+
+  useEffect(() => {
+    if (announcements.length > 0) {
+      setFinalAnnouncements(announcements);
+    } else {
+      setFinalAnnouncements(defaultAnnouncements);
+    }
+  }, [announcements]);
 
   return (
-    <>
-      <div
-        ref={sliderRef}
-        className="keen-slider w-full h-[150%] md:h-[280%] lg:h-screen pb-10 rounded-lg shadow bg-gray-100"
-      >
-        {Announcements.map((src, i) => (
-          <div
-            key={i}
-            className="keen-slider__slide number-slide1 w-screen h-screen"
-          >
-            <div className="w-screen h-full bg-gray-100 flex flex-col pt-4 pb-4 pl-8 pr-8 gap-2">
-              <label className="text-lg text-slate-600 uppercase">
-                {src.title}
-              </label>
-              <label className="hidden lg:block text-sm text-slate-500 text-justify">
-                {src.desc}
-              </label>
+    <div
+      //if announcement is only 1, disable sliding
+      ref={finalAnnouncements.length > 1 ? sliderRef : null}
+      className="keen-slider w-full h-[150%] md:h-[280%] lg:h-screen pb-10 rounded-lg shadow bg-gray-100"
+    >
+      {finalAnnouncements.length > 0 &&
+        finalAnnouncements.map((announce: Announcements, index) => (
+          <div key={index} className="keen-slider__slide number-slide1 w-screen h-screen">
+            <div className="w-full h-full bg-gray-100 flex flex-col justify-between pt-4 pb-8 pl-8 pr-8 gap-2">
+              <div className="flex flex-col justify-between gap-2">
+                <label className="text-lg text-slate-600 uppercase">{announce.title}</label>
+                <label className="hidden lg:block text-sm text-slate-500 text-justify">
+                  {announce.description.length > 250
+                    ? `${announce.description.substring(0, 250)}...`
+                    : announce.description}
+                </label>
 
-              <label className="text-right text-sm text-slate-500 cursor-pointer">
-                <a target="blank" href={src.link}>
-                  Read More
-                </a>
-              </label>
-              <img className="w-100 h-100" src={src.src}></img>
+                <label className="text-right text-sm text-slate-500 cursor-pointer">
+                  {announce.url ? (
+                    <a target="blank" href={announce.url}>
+                      Read More
+                    </a>
+                  ) : null}
+                </label>
+              </div>
+              <Image src={announce.photoUrl} width={843} height={843} alt={announce.title} />
             </div>
           </div>
         ))}
-
-        {/* <div className="keen-slider__slide number-slide1 w-screen h-screen">
-          <div className="w-screen h-full bg-gray-100 flex flex-col pt-4 pb-4 pl-8 pr-8 gap-2">
-            <label className="text-lg text-slate-600 uppercase">
-              July Birthday Celebrants
-            </label>
-
-            <label className="hidden lg:block text-sm text-slate-500 text-justify">
-              {`Happy Birthday to all July Celebrants! `}
-            </label>
-
-            <label className="text-right text-sm text-slate-500 cursor-pointer">
-              <a
-                target="blank"
-                href="https://www.facebook.com/gensanwd/videos/1959878211012530"
-              >
-                Read More
-              </a>
-            </label>
-            <img className="w-100 h-100" src="/05.jpg"></img>
-          </div>
-        </div> */}
-      </div>
-    </>
+    </div>
   );
 }

@@ -230,15 +230,6 @@ const ViewOfficeSsModal: FunctionComponent<ViewOfficeSsModalProps> = ({
     }
   }, [scheduleSheet]);
 
-  // useEffect(() => {
-  //   // console.log(selectedGroupId);
-  //   if (!isEmpty(selectedGroupId)) mutateScheduleSheet();
-  // }, [selectedGroupId]);
-
-  // useEffect(() => {
-  //   console.log(modalState);
-  // }, [modalState]);
-
   return (
     <>
       <Modal open={modalState} setOpen={setModalState} size="lg" steady>
