@@ -45,7 +45,6 @@ export const DtrTable = ({ employeeDetails }: DtrTableProps) => {
 
   // close dtr pdf modal function
   const closeDtrPdfModal = () => setDtrPdfModalIsOpen(false);
-  console.log(employeeDtr);
   return (
     <>
       <DtrPdfModal

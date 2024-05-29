@@ -39,7 +39,7 @@ export const TrainingNominationModal = ({
     trainingNominationModalIsOpen: state.trainingNominationModalIsOpen,
   }));
 
-  const [employeePool, setEmployeePool] = useState<Array<SelectOption>>([]);
+  const [employeePool, setEmployeePool] = useState<Array<SelectOption>>(employeeList);
   const [selectedEmployees, setSelectedEmployees] = useState<Array<SelectOption>>([]);
   const [selectedAuxiliaryEmployees, setSelectedAuxiliaryEmployees] = useState<Array<SelectOption>>([]);
   const [combinedNominatedEmployees, setCombinedNominatedEmployees] = useState<Array<SelectOption>>([]); // pool of selected and auxiliary employees
@@ -47,32 +47,31 @@ export const TrainingNominationModal = ({
   const [initialLoad, setInitialLoad] = useState<boolean>(true);
 
   useEffect(() => {
-    // if (trainingNominationModalIsOpen) {
-    if (isEmpty(nominatedEmployees) && isEmpty(auxiliaryEmployees)) {
-      setInitialLoad(true);
-      setEmployeePool(
-        employeeList.sort(function (a, b) {
-          return a.label.localeCompare(b.label);
-        })
-      );
-      setSelectedEmployees([]); //store
-      setSelectedAuxiliaryEmployees([]); //store
-      setTimeout(() => {
-        setInitialLoad(false);
-      }, 200);
-    } else {
-      const uniqueNames = Array.from(new Set([...nominatedEmployees, ...auxiliaryEmployees]));
-      handleInitialEmployeePool(uniqueNames);
+    if (trainingNominationModalIsOpen) {
+      if (isEmpty(nominatedEmployees) && isEmpty(auxiliaryEmployees)) {
+        setInitialLoad(true);
+        setEmployeePool(
+          employeeList.sort(function (a, b) {
+            return a.label.localeCompare(b.label);
+          })
+        );
+        setSelectedEmployees([]); //store
+        setSelectedAuxiliaryEmployees([]); //store
+
+        setTimeout(() => {
+          setInitialLoad(false);
+        }, 200);
+      } else {
+        const uniqueNames = Array.from(new Set([...nominatedEmployees, ...auxiliaryEmployees]));
+        handleInitialEmployeePool(uniqueNames);
+      }
     }
-    // }
   }, [trainingNominationModalIsOpen]);
 
   //initial rearrangement of employee pool - should run once during opening of modal
   const handleInitialEmployeePool = (uniqueNames: Array<SelectOption>) => {
     //remove employee from pool
-    const filtered = employeePool.filter((item) => uniqueNames.every(({ value }) => item[value] != value));
-    setEmployeePool(filtered);
-
+    setEmployeePool(employeeList.filter((item) => !uniqueNames.includes(item)));
     setSelectedEmployees(nominatedEmployees);
     setSelectedAuxiliaryEmployees(auxiliaryEmployees);
     setTimeout(() => {
@@ -90,22 +89,23 @@ export const TrainingNominationModal = ({
   useEffect(() => {
     if (!initialLoad && trainingNominationModalIsOpen) {
       //remove employee from pool
-      for (let a = 0; a < combinedNominatedEmployees.length; a++) {
-        if (employeePool.some((e) => e.value === combinedNominatedEmployees[a].value)) {
-          setEmployeePool(employeePool.filter((e) => e.value !== combinedNominatedEmployees[a].value));
-        }
-      }
-      //add back employee
-      for (let i = 0; i < employeeList.length; i++) {
-        if (!employeePool.includes(employeeList[i]) && !combinedNominatedEmployees.includes(employeeList[i])) {
-          const uniqueNames = Array.from(new Set([...employeePool, employeeList[i]]));
-          setEmployeePool(
-            uniqueNames.sort(function (a, b) {
-              return a.label.localeCompare(b.label);
-            })
-          );
-        }
-      }
+      // for (let a = 0; a < combinedNominatedEmployees.length; a++) {
+      //   if (employeePool.some((e) => e.value === combinedNominatedEmployees[a].value)) {
+      //     setEmployeePool(employeePool.filter((e) => e.value !== combinedNominatedEmployees[a].value));
+      //   }
+      // }
+      // // add back employee
+      // for (let i = 0; i < employeeList.length; i++) {
+      //   if (!employeePool.includes(employeeList[i]) && !combinedNominatedEmployees.includes(employeeList[i])) {
+      //     const uniqueNames = Array.from(new Set([...employeePool, employeeList[i]]));
+      //     setEmployeePool(
+      //       uniqueNames.sort(function (a, b) {
+      //         return a.label.localeCompare(b.label);
+      //       })
+      //     );
+      //   }
+      // }
+      setEmployeePool(employeeList.filter((item) => !combinedNominatedEmployees.includes(item)));
     }
   }, [combinedNominatedEmployees]);
 
@@ -200,6 +200,7 @@ export const TrainingNominationModal = ({
 
                 <MySelectList
                   isSelectedHidden={true}
+                  // withSearchBar={true}
                   id="employees"
                   label=""
                   multiple
@@ -216,6 +217,7 @@ export const TrainingNominationModal = ({
 
                 <MySelectList
                   isSelectedHidden={true}
+                  // withSearchBar={true}
                   id="employees"
                   label=""
                   multiple
