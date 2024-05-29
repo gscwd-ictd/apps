@@ -151,7 +151,7 @@ export default function Calendar({
           //for SPL, between last duty date and today and not late filing
           if (
             (leaveName === LeaveName.SPECIAL_PRIVILEGE || leaveName === LeaveName.SICK) &&
-            DateFormatter(specifiedDate, 'MM-DD-YYYY') > DateFormatter(lastDateOfDuty, 'MM-DD-YYYY') &&
+            DateFormatter(specifiedDate, 'MM-DD-YYYY') >= DateFormatter(lastDateOfDuty, 'MM-DD-YYYY') &&
             !isLateFiling
           ) {
             setSelectedDates((selectedDates) => [...selectedDates, specifiedDate]);
@@ -161,6 +161,7 @@ export default function Calendar({
             (leaveName === LeaveName.VACATION ||
               leaveName === LeaveName.FORCED ||
               leaveName === LeaveName.SPECIAL_PRIVILEGE ||
+              leaveName === LeaveName.SICK ||
               leaveName === LeaveName.SOLO_PARENT) &&
             dayjs(`${specifiedDate}`).diff(`${today}`, 'day') <= 10 &&
             isLateFiling
@@ -169,14 +170,15 @@ export default function Calendar({
           }
 
           //for sick leave and today is Monday
-          else if (
-            leaveName === LeaveName.SICK &&
-            // today.getDay() == 1 &&
-            // dayjs(`${today}`).diff(`${specifiedDate}`, 'day') <= 3 &&
-            dayjs(`${specifiedDate}`).diff(`${today}`, 'day') <= 10
-          ) {
-            setSelectedDates((selectedDates) => [...selectedDates, specifiedDate]);
-          }
+          // else if (
+          //   leaveName === LeaveName.SICK &&
+          //   // today.getDay() == 1 &&
+          //   // dayjs(`${today}`).diff(`${specifiedDate}`, 'day') <= 3 &&
+          //   dayjs(`${specifiedDate}`).diff(`${today}`, 'day') <= 10
+          // ) {
+          //   setSelectedDates((selectedDates) => [...selectedDates, specifiedDate]);
+          // }
+
           //for sick leave and today is Tuesday - Fri
           // else if (
           //   leaveName === LeaveName.SICK &&
@@ -282,7 +284,7 @@ export default function Calendar({
   //search for last date of duty from today
   useEffect(() => {
     setErrorAllowableSpl(null);
-    if (leaveName === LeaveName.SPECIAL_PRIVILEGE && applyLeaveModalIsOpen) {
+    if ((leaveName === LeaveName.SPECIAL_PRIVILEGE || leaveName === LeaveName.SICK) && applyLeaveModalIsOpen) {
       isLastDutyDate(today);
     }
   }, [leaveName, applyLeaveModalIsOpen]);
@@ -388,11 +390,12 @@ export default function Calendar({
                           (leaveName === LeaveName.VACATION ||
                             leaveName === LeaveName.FORCED ||
                             leaveName === LeaveName.SPECIAL_PRIVILEGE ||
+                            leaveName === LeaveName.SICK ||
                             leaveName === LeaveName.SOLO_PARENT) &&
                             dayjs(`${day}`).diff(`${today}`, 'day') > 10 &&
                             // isLateFiling === false &&
                             'text-slate-300',
-                          //disable date selection for past dates from current day for SPL ONLY
+                          //disable date selection for past dates from current day for SPL/SICK ONLY
                           (leaveName === LeaveName.SPECIAL_PRIVILEGE || leaveName === LeaveName.SICK) &&
                             DateFormatter(day, 'MM-DD-YYYY') <= DateFormatter(lastDateOfDuty, 'MM-DD-YYYY') &&
                             isLateFiling === false &&
