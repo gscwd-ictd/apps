@@ -74,10 +74,6 @@ const SelectRdByNModal: FunctionComponent<SelectRdByNModalProps> = ({
     else setSelectedRestDays(restDays);
   }, [modalState, rowData.restDays]);
 
-  useEffect(() => {
-    console.log(rowData);
-  }, [rowData]);
-
   return (
     <>
       <Modal open={modalState} setOpen={setModalState} size="sm" steady noShakeOnSteady={true}>
