@@ -151,7 +151,7 @@ export const LeaveCreditMonetizationCalculatorModal = ({
                           type="number"
                           className="border-slate-100 text-slate-500 h-12 text-md w-full rounded"
                           placeholder="VL and Forced Leave Credits"
-                          value={Number(vacationLeave) + Number(forcedLeave)}
+                          value={(Number(vacationLeave) + Number(forcedLeave)).toFixed(3)}
                           disabled
                         />
                       </div>
@@ -167,7 +167,7 @@ export const LeaveCreditMonetizationCalculatorModal = ({
                           type="number"
                           className="border-slate-100 text-slate-500 h-12 text-md w-full rounded"
                           placeholder="Sick Leave Credits"
-                          value={sickLeave}
+                          value={Number(sickLeave).toFixed(3)}
                           disabled
                         />
                       </div>
@@ -183,7 +183,7 @@ export const LeaveCreditMonetizationCalculatorModal = ({
                           type="number"
                           className="border-slate-100 text-slate-500 h-12 text-md w-full rounded"
                           placeholder="Total Leave Credit"
-                          value={Number(vacationLeave) + Number(forcedLeave) + Number(sickLeave)}
+                          value={(Number(vacationLeave) + Number(forcedLeave) + Number(sickLeave)).toFixed(3)}
                           disabled
                         />
                       </div>
@@ -200,7 +200,11 @@ export const LeaveCreditMonetizationCalculatorModal = ({
                           className="border-blue-400 border-2 text-slate-500 h-12 text-md w-full rounded"
                           placeholder="Enter Leave Credit"
                           onChange={(e: any) => computeEstimateAmount(e.target.value)}
-                          value={leaveCreditsToCompute}
+                          value={
+                            leaveCreditsToCompute % 1 != 0
+                              ? Number(leaveCreditsToCompute).toFixed(3)
+                              : leaveCreditsToCompute
+                          }
                         />
                       </div>
                     </div>
@@ -217,7 +221,7 @@ export const LeaveCreditMonetizationCalculatorModal = ({
                           id="monetization"
                           className="border-slate-100 text-slate-500 h-12 text-md w-full rounded"
                           placeholder="Estimated Monetization"
-                          value={estimatedAmount.toLocaleString()}
+                          value={Number(estimatedAmount).toFixed(3).toLocaleString()}
                         />
                       </div>
                     </div>
