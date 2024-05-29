@@ -188,7 +188,6 @@ const SelectedEmployeesSsTable = () => {
 
   // listens to date from and date to, if both are filled-out then set the state to true
   useEffect(() => {
-    // console.log(currentScheduleSheet.employees);
     if (!isEmpty(currentScheduleSheet.dateFrom) && !isEmpty(currentScheduleSheet.dateTo)) {
       setIsDateRangeFilled(true);
     }

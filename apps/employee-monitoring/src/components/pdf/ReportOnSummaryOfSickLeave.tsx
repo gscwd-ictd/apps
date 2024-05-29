@@ -4,12 +4,12 @@ import { Page, Text, Document, StyleSheet, PDFViewer, View } from '@react-pdf/re
 import React, { FunctionComponent, useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { isEmpty } from 'lodash';
-import { ReportOnOfficialBusinessPassSlip } from '../../utils/types/report.type';
+import { ReportOnEmpSickLeaveCredits } from '../../utils/types/report.type';
 import { DateFormatter } from 'libs/utils/src/lib/functions/DateFormatter';
 import { PdfHeader } from '@gscwd-apps/oneui';
 
-type ReportOnOfficialBusinessPassSlipProps = {
-  reportOnOfficialBusinessPassSlipData: ReportOnOfficialBusinessPassSlip;
+type ReportOnSummaryOfSickLeaveProps = {
+  reportOnEmpSickLeaveCreditsDoc: ReportOnEmpSickLeaveCredits;
 };
 
 const styles = StyleSheet.create({
@@ -90,18 +90,15 @@ const styles = StyleSheet.create({
   // Width Styles
   w100: { width: '100%' },
   w33_33: { width: '33.33%' },
+  w35: { width: '35%' },
   w30: { width: '30%' },
-  w23: { width: '23%' },
-  w17: { width: '17%' },
   w15: { width: '15%' },
-  w13: { width: '13%' },
   w10: { width: '10%' },
-  w7: { width: '7%' },
   w5: { width: '5%' },
 });
 
-export const ReportOnOfficialBusinessPassSlipPdf: FunctionComponent<ReportOnOfficialBusinessPassSlipProps> = ({
-  reportOnOfficialBusinessPassSlipData,
+export const ReportOnEmployeeSickLeaveCreditsPdf: FunctionComponent<ReportOnSummaryOfSickLeaveProps> = ({
+  reportOnEmpSickLeaveCreditsDoc,
 }) => {
   const [isClient, setIsClient] = useState<boolean>(false);
 
@@ -115,7 +112,7 @@ export const ReportOnOfficialBusinessPassSlipPdf: FunctionComponent<ReportOnOffi
     <>
       {isClient && (
         <PDFViewer width={'100%'} height={1400}>
-          <Document title="Report on Official Business Pass Slip">
+          <Document title="Report on Summary of Sick Leave">
             {/* FOLIO */}
             <Page size={[612.0, 936.0]} style={styles.page}>
               <View>
@@ -124,7 +121,7 @@ export const ReportOnOfficialBusinessPassSlipPdf: FunctionComponent<ReportOnOffi
 
                 {/* DOCUMENT TITLE */}
                 <View style={[styles.w100, styles.horizontalCenter]}>
-                  <Text style={[styles.documentTitle]}>REPORT ON OFFICIAL BUSINESS PASS SLIP</Text>
+                  <Text style={[styles.documentTitle]}>REPORT ON SUMMARY OF SICK LEAVE</Text>
                   <Text style={[styles.documentTitle]}>
                     FOR THE PERIOD OF {DateFormatter(`${router.query.date_from}`, 'MMMM DD, YYYY')} -{' '}
                     {DateFormatter(`${router.query.date_to}`, 'MMMM DD, YYYY')}
@@ -140,23 +137,20 @@ export const ReportOnOfficialBusinessPassSlipPdf: FunctionComponent<ReportOnOffi
                     <View style={[styles.tableHeader, styles.w30, { fontSize: 7 }]}>
                       <Text style={[styles.tableHeaderText, styles.upperText, styles.boldText]}>Names</Text>
                     </View>
-                    <View style={[styles.tableHeader, styles.w10]}>
-                      <Text style={[styles.tableHeaderText]}>No. of times OB</Text>
-                    </View>
-                    <View style={[styles.tableHeader, styles.w23]}>
-                      <Text style={[styles.tableHeaderText]}>Date/s</Text>
+                    <View style={[styles.tableHeader, styles.w15]}>
+                      <Text style={[styles.tableHeaderText]}>Date/s of Leave</Text>
                     </View>
                     <View style={[styles.tableHeader, styles.w15]}>
-                      <Text style={[styles.tableHeaderText]}>Total Minutes</Text>
+                      <Text style={[styles.tableHeaderText]}>Sick Leave Balance</Text>
                     </View>
-                    <View style={[styles.tableHeader, styles.w17, { borderRight: 'none' }]}>
-                      <Text style={[styles.tableHeaderText]}>Conversion (mins / 60) x .125</Text>
+                    <View style={[styles.tableHeader, styles.w35, { borderRight: 'none' }]}>
+                      <Text style={[styles.tableHeaderText]}>Reason</Text>
                     </View>
                   </View>
 
                   {/* DATA */}
-                  {!isEmpty(reportOnOfficialBusinessPassSlipData.report)
-                    ? reportOnOfficialBusinessPassSlipData.report?.map((pbPassSlipData, index) => {
+                  {!isEmpty(reportOnEmpSickLeaveCreditsDoc.report)
+                    ? reportOnEmpSickLeaveCreditsDoc.report?.map((sickLeaveEntry, index) => {
                         return (
                           <View
                             style={[styles.rowContainer, styles.borderTop, styles.rowBorder]}
@@ -168,21 +162,17 @@ export const ReportOnOfficialBusinessPassSlipPdf: FunctionComponent<ReportOnOffi
                             </View>
                             <View style={[styles.tableData, styles.w30, { alignItems: 'flex-start' }]}>
                               <Text style={[styles.tableDataText, { textAlign: 'left' }]}>
-                                {pbPassSlipData.name || '-'}
+                                {sickLeaveEntry.name || '-'}
                               </Text>
                             </View>
-
-                            <View style={[styles.tableData, styles.w10]}>
-                              <Text style={[styles.tableDataText]}>{pbPassSlipData.noOfTimes || ''}</Text>
-                            </View>
-                            <View style={[styles.tableData, styles.w23]}>
-                              <Text style={[styles.tableDataText]}>{pbPassSlipData.dates || ''}</Text>
+                            <View style={[styles.tableData, styles.w15]}>
+                              <Text style={[styles.tableDataText]}>{sickLeaveEntry.dates || ''}</Text>
                             </View>
                             <View style={[styles.tableData, styles.w15]}>
-                              <Text style={[styles.tableDataText]}>{pbPassSlipData.totalMinutes || ''}</Text>
+                              <Text style={[styles.tableDataText]}>{sickLeaveEntry.sickLeaveBalance || ''}</Text>
                             </View>
-                            <View style={[styles.tableData, styles.w17, { borderRight: 'none' }]}>
-                              <Text style={[styles.tableDataText]}>{pbPassSlipData.conversion || ''}</Text>
+                            <View style={[styles.tableData, styles.w35, { borderRight: 'none' }]}>
+                              <Text style={[styles.tableDataText]}>{sickLeaveEntry.reason || ''}</Text>
                             </View>
                           </View>
                         );
@@ -203,10 +193,10 @@ export const ReportOnOfficialBusinessPassSlipPdf: FunctionComponent<ReportOnOffi
                         },
                       ]}
                     >
-                      {reportOnOfficialBusinessPassSlipData.signatory?.preparedBy.name}
+                      {reportOnEmpSickLeaveCreditsDoc.signatory?.preparedBy.name}
                     </Text>
                     <Text style={[{ paddingTop: 2 }]}>
-                      {reportOnOfficialBusinessPassSlipData.signatory?.preparedBy.positionTitle}
+                      {reportOnEmpSickLeaveCreditsDoc.signatory?.preparedBy.positionTitle}
                     </Text>
                   </View>
 
@@ -221,10 +211,10 @@ export const ReportOnOfficialBusinessPassSlipPdf: FunctionComponent<ReportOnOffi
                         },
                       ]}
                     >
-                      {reportOnOfficialBusinessPassSlipData.signatory?.reviewedBy.name}
+                      {reportOnEmpSickLeaveCreditsDoc.signatory?.reviewedBy.name}
                     </Text>
                     <Text style={[{ paddingTop: 2 }]}>
-                      {reportOnOfficialBusinessPassSlipData.signatory?.reviewedBy.positionTitle}
+                      {reportOnEmpSickLeaveCreditsDoc.signatory?.reviewedBy.positionTitle}
                     </Text>
                   </View>
 
@@ -239,10 +229,10 @@ export const ReportOnOfficialBusinessPassSlipPdf: FunctionComponent<ReportOnOffi
                         },
                       ]}
                     >
-                      {reportOnOfficialBusinessPassSlipData.signatory?.approvedBy.name}
+                      {reportOnEmpSickLeaveCreditsDoc.signatory?.approvedBy.name}
                     </Text>
                     <Text style={[{ paddingTop: 2 }]}>
-                      {reportOnOfficialBusinessPassSlipData.signatory?.approvedBy.positionTitle}
+                      {reportOnEmpSickLeaveCreditsDoc.signatory?.approvedBy.positionTitle}
                     </Text>
                   </View>
                 </View>
@@ -255,4 +245,4 @@ export const ReportOnOfficialBusinessPassSlipPdf: FunctionComponent<ReportOnOffi
   );
 };
 
-export default ReportOnOfficialBusinessPassSlipPdf;
+export default ReportOnEmployeeSickLeaveCreditsPdf;

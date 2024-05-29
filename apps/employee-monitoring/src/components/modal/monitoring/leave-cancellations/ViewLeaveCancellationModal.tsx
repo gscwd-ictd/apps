@@ -137,10 +137,6 @@ const ViewLeaveCancellationModal: FunctionComponent<ViewLeaveCancellationModalPr
     }
   }, [leaveConfirmAction, confirmModalIsOpen]);
 
-  // useEffect(() => {
-  //   console.log(rowData);
-  // });
-
   return (
     <>
       <LeaveCancellationConfirmModal

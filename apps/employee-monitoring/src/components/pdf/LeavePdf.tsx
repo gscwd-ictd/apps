@@ -762,7 +762,7 @@ export const LeavePdf = ({ leaveDetails, selectedLeaveLedger }: LeavePdfProps): 
                             alignItems: 'center',
                             left: '35%',
                           }}
-                          src={leaveDetails.leaveApplicationBasicInfo?.employeeSignature}
+                          src={leaveDetails.leaveApplicationBasicInfo?.employeeSignature || '/'}
                         />
                         <Text style={{ paddingLeft: 6, paddingTop: 22 }}>
                           _________________________________________________
@@ -913,7 +913,7 @@ export const LeavePdf = ({ leaveDetails, selectedLeaveLedger }: LeavePdfProps): 
                               left: '40%',
                               paddingTop: 5,
                             }}
-                            src={leaveDetails.leaveApplicationBasicInfo?.hrmoSignature}
+                            src={leaveDetails.leaveApplicationBasicInfo?.hrmoSignature || '/'}
                           />
                           <Text style={{ textAlign: 'center', paddingTop: 22 }}>
                             {leaveDetails.leaveApplicationBasicInfo?.hrmoApprovedByName}
@@ -991,7 +991,7 @@ export const LeavePdf = ({ leaveDetails, selectedLeaveLedger }: LeavePdfProps): 
                             left: '40%',
                             paddingTop: 0,
                           }}
-                          src={leaveDetails.leaveApplicationBasicInfo?.supervisorSignature}
+                          src={leaveDetails.leaveApplicationBasicInfo?.supervisorSignature || '/'}
                         />
                         <Text style={{ textAlign: 'center', paddingTop: 22 }}>
                           {leaveDetails.leaveApplicationBasicInfo?.supervisorName}
@@ -1104,7 +1104,7 @@ export const LeavePdf = ({ leaveDetails, selectedLeaveLedger }: LeavePdfProps): 
                           left: '45%',
                           paddingTop: 0,
                         }}
-                        src={leaveDetails.leaveApplicationBasicInfo?.hrdmSignature}
+                        src={leaveDetails.leaveApplicationBasicInfo?.hrdmSignature || '/'}
                       />
                       <Text style={{ textAlign: 'center', paddingTop: 22, fontSize: 9 }}>
                         {leaveDetails.leaveApplicationBasicInfo?.hrdmApprovedByName}
