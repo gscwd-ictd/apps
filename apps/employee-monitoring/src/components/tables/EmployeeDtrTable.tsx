@@ -41,7 +41,7 @@ export const EmployeeDtrTable: FunctionComponent<EmployeeDtrTableProps> = ({ emp
   // open remark action modal
   const [editRemarksModalIsOpen, setEditRemarksModalIsOpen] = useState<boolean>(false);
 
-  const openEditRemarskModal = (rowData: EmployeeDtrWithSchedule) => {
+  const openEditRemarksModal = (rowData: EmployeeDtrWithSchedule) => {
     setEditRemarksModalIsOpen(true);
     setCurrentRowData(rowData);
   };
@@ -312,7 +312,7 @@ export const EmployeeDtrTable: FunctionComponent<EmployeeDtrTableProps> = ({ emp
 
                                 <button
                                   className="px-1 text-white bg-blue-600 rounded disabled:bg-red-600"
-                                  onClick={() => openEditRemarskModal(logs)}
+                                  onClick={() => openEditRemarksModal(logs)}
                                 >
                                   <i className="text-lg text-inherit bx bx-comment-edit"></i>
                                 </button>
@@ -449,7 +449,7 @@ export const EmployeeDtrTable: FunctionComponent<EmployeeDtrTableProps> = ({ emp
 
                           <button
                             className="px-1 text-white bg-blue-600 rounded disabled:bg-red-600"
-                            onClick={() => openEditRemarskModal(logs)}
+                            onClick={() => openEditRemarksModal(logs)}
                           >
                             <i className="text-lg text-inherit bx bx-comment-edit"></i>
                           </button>
@@ -470,8 +470,8 @@ export const EmployeeDtrTable: FunctionComponent<EmployeeDtrTableProps> = ({ emp
                 <td className="p-1 text-gray-700 border">No. of Times Undertime</td>
                 <td className="p-1 text-gray-700 border">Total Minutes Undertime</td>
                 <td className="p-1 text-gray-700 border">Dates/Undertime</td>
-                <td className="p-1 text-gray-700 border">No. of Times Halfday</td>
-                <td className="p-1 text-gray-700 border">Dates Halfday</td>
+                <td className="p-1 text-gray-700 border">No. of Times Half Day</td>
+                <td className="p-1 text-gray-700 border">Dates Half Day</td>
                 <td className="p-1 text-gray-700 border">No Attendance</td>
               </tr>
             </thead>

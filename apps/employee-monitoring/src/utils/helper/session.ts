@@ -64,7 +64,6 @@ export async function getCookieFromServer(cookie) {
 // updated cookie with session
 export function withCookieSession(serverSideProps: GetServerSideProps) {
   return async (context: GetServerSidePropsContext) => {
-    // console.log(context);
     try {
       // assign context cookie to cookie
       const cookie = context.req.headers.cookie;
@@ -84,7 +83,6 @@ export function withCookieSession(serverSideProps: GetServerSideProps) {
 
         // setUserDetails(data);
         setUserLoginDetails(data);
-        // console.log(data);
 
         return await serverSideProps(context);
       } else {

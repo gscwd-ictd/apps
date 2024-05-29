@@ -44,4 +44,14 @@ export const Reports = [
     label: 'Report on Summary of Leave Without Pay',
     value: 'report on summary of leave without pay',
   },
+  // 9
+  {
+    label: 'Report on Summary of Sick Leave',
+    value: 'report on summary of sick leave',
+  },
+  // 10
+  {
+    label: 'Report on Summary of Rehabilitation Leave',
+    value: 'report on summary of rehabilitation leave',
+  },
 ];

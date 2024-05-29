@@ -7,7 +7,7 @@ import { useRouter } from 'next/router';
 
 import { Card } from 'apps/employee-monitoring/src/components/cards/Card';
 import { BreadCrumbs } from 'apps/employee-monitoring/src/components/navigations/BreadCrumbs';
-import DetailedReportOnOfficialBusinessPassSlipPdf from 'apps/employee-monitoring/src/components/pdf/DetailedReportOnOfficialBusinessPassSlip';
+import ReportOnEmployeeSickLeaveCreditsPdf from 'apps/employee-monitoring/src/components/pdf/ReportOnSummaryOfSickLeave';
 import { useReportsStore } from 'apps/employee-monitoring/src/store/report.store';
 import { LoadingSpinner, ToastNotification } from '@gscwd-apps/oneui';
 import { Navigate } from 'apps/employee-monitoring/src/components/router/navigate';
@@ -15,9 +15,9 @@ import { Navigate } from 'apps/employee-monitoring/src/components/router/navigat
 const Index = () => {
   const router = useRouter();
 
-  // fetch data for Detailed Report On Official Business Pass Slip Document
+  // fetch data for Report On Summary of Sick Leave Document
   const {
-    data: swrDetailedReportOnOfficialBusinessPassSlipDocument,
+    data: swrReportOnSummaryOfSickLeaveDocument,
     error: swrError,
     isLoading: swrIsLoading,
   } = useSWR(
@@ -33,50 +33,50 @@ const Index = () => {
 
   // Zustand initialization
   const {
-    DetailedReportOnObPassSlipDoc,
-    SetDetailedReportOnObPassSlipDoc,
-    ErrorDetailedReportOnObPassSlipDoc,
-    SetErrorDetailedReportOnObPassSlipDoc,
+    ReportOnEmpSickLeaveCreditsDoc,
+    SetReportOnEmpSickLeaveCreditsDoc,
+    ErrorReportOnEmpSickLeaveCreditsDoc,
+    SetErrorReportOnEmpSickLeaveCreditsDoc,
   } = useReportsStore((state) => ({
-    DetailedReportOnObPassSlipDoc: state.detailedReportOnObPassSlipDoc,
-    SetDetailedReportOnObPassSlipDoc: state.setDetailedReportOnObPassSlipDoc,
+    ReportOnEmpSickLeaveCreditsDoc: state.reportOnEmpSickLeaveCreditsDoc,
+    SetReportOnEmpSickLeaveCreditsDoc: state.setReportOnEmpSickLeaveCreditsDoc,
 
-    ErrorDetailedReportOnObPassSlipDoc: state.errorDetailedReportOnObPassSlipDoc,
-    SetErrorDetailedReportOnObPassSlipDoc: state.setErrorDetailedReportOnObPassSlipDoc,
+    ErrorReportOnEmpSickLeaveCreditsDoc: state.errorReportOnEmpSickLeaveCreditsDoc,
+    SetErrorReportOnEmpSickLeaveCreditsDoc: state.setErrorReportOnEmpSickLeaveCreditsDoc,
   }));
 
   // Upon success/fail of swr request, zustand state will be updated
   useEffect(() => {
-    if (!isEmpty(swrDetailedReportOnOfficialBusinessPassSlipDocument)) {
-      SetDetailedReportOnObPassSlipDoc(swrDetailedReportOnOfficialBusinessPassSlipDocument.data);
+    if (!isEmpty(swrReportOnSummaryOfSickLeaveDocument)) {
+      SetReportOnEmpSickLeaveCreditsDoc(swrReportOnSummaryOfSickLeaveDocument.data);
     }
 
     if (!isEmpty(swrError)) {
-      SetErrorDetailedReportOnObPassSlipDoc(swrError.message);
+      SetErrorReportOnEmpSickLeaveCreditsDoc(swrError.message);
     }
-  }, [swrDetailedReportOnOfficialBusinessPassSlipDocument, swrError]);
+  }, [swrReportOnSummaryOfSickLeaveDocument, swrError]);
 
   return (
     <>
       <Can I="access" this="Reports">
         <div className="w-full">
           <BreadCrumbs
-            title="Detailed Report on Official Business Pass Slip"
+            title="Report on Summary of Sick Leave"
             crumbs={[
               {
                 layerNo: 1,
                 layerText: 'Reports',
                 path: '/reports',
               },
-              { layerNo: 2, layerText: 'Detailed Report on Official Business Pass Slip', path: '' },
+              { layerNo: 2, layerText: 'Report on Summary of Sick Leave', path: '' },
             ]}
           />
 
           {/* Error Notifications */}
-          {!isEmpty(ErrorDetailedReportOnObPassSlipDoc) ? (
+          {!isEmpty(ErrorReportOnEmpSickLeaveCreditsDoc) ? (
             <ToastNotification
               toastType="error"
-              notifMessage={'Network Error: Failed to retrieve Detailed Report on Official Business Pass Slip Document'}
+              notifMessage={'Network Error: Failed to retrieve Report on Summary of Sick Leave'}
             />
           ) : null}
 
@@ -85,9 +85,7 @@ const Index = () => {
               {swrIsLoading ? (
                 <LoadingSpinner size="lg" />
               ) : (
-                <DetailedReportOnOfficialBusinessPassSlipPdf
-                  detailedReportOnObPassSlipDoc={DetailedReportOnObPassSlipDoc}
-                />
+                <ReportOnEmployeeSickLeaveCreditsPdf reportOnEmpSickLeaveCreditsDoc={ReportOnEmpSickLeaveCreditsDoc} />
               )}
             </Card>
           </div>

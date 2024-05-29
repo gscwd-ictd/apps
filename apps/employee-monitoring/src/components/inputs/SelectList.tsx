@@ -27,15 +27,7 @@ type SelectProps = {
   disabled?: boolean;
 } & (SingleSelectProps | MultipleSelectProps);
 
-export function MySelectList({
-  multiple,
-  value,
-  onChange,
-  id,
-  label,
-  disabled = false,
-  options,
-}: SelectProps) {
+export function MySelectList({ multiple, value, onChange, id, label, disabled = false, options }: SelectProps) {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [highlightedIndex, setHighlightedIndex] = useState<number>(0);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -60,9 +52,7 @@ export function MySelectList({
 
   //
   const isOptionSelected = (option: SelectOption) => {
-    return multiple
-      ? value.some((v) => v.value === option.value)
-      : option === value;
+    return multiple ? value.some((v) => v.value === option.value) : option === value;
   };
 
   useEffect(() => {
@@ -106,10 +96,7 @@ export function MySelectList({
 
   return (
     <div className="flex flex-col w-full">
-      <label
-        htmlFor={id}
-        className="block mb-1 text-xs font-medium text-gray-900 dark:text-gray-800"
-      >
+      <label htmlFor={id} className="block mb-1 text-xs font-medium text-gray-900 dark:text-gray-800">
         {label}
       </label>
 
@@ -137,9 +124,7 @@ export function MySelectList({
                       >
                         <div className="flex items-center gap-1 py-0.5 px-2 text-xs text-white bg-blue-400 border rounded hover:cursor-grab hover:bg-red-400 border-gray-300/90">
                           {v.label}
-                          <span className="flex text-sm text-white">
-                            &times;
-                          </span>
+                          <span className="flex text-sm text-white">&times;</span>
                         </div>
                       </span>
                     ))
@@ -169,17 +154,8 @@ export function MySelectList({
           </div>
         </Popover.Trigger>
 
-        <Popover.Content
-          sideOffset={5}
-          avoidCollisions={true}
-          style={{ width: 'var(--radix-popover-trigger-width)' }}
-        >
-          {/* <ul
-            className={`${
-              isOpen ? 'block' : 'hidden'
-            } border absolute  rounded  max-h-[12em] bg-white z-50 overflow-y-auto w-full left-0 top-[calc(100%+.25em)] `}
-          > */}
-          <ul className="border  rounded  max-h-[10em] bg-white z-50 overflow-y-auto w-full">
+        <Popover.Content sideOffset={5} avoidCollisions={true} style={{ width: 'var(--radix-popover-trigger-width)' }}>
+          <ul className="border  rounded  max-h-[11em] bg-white z-50 overflow-y-auto w-full">
             {options.map((option, index) => (
               <li
                 onClick={(e) => {
@@ -188,7 +164,7 @@ export function MySelectList({
                 }}
                 key={option.value}
                 onMouseEnter={() => setHighlightedIndex(index)}
-                className={`px-2 py-1 text-xs  cursor-pointer select-none   ${
+                className={`px-2 py-1 text-sm  cursor-pointer select-none   ${
                   isOptionSelected(option) && index === highlightedIndex
                     ? 'bg-blue-100 hover:text-white text-gray-500  hover:bg-red-400 hover hover:cursor-grab '
                     : !isOptionSelected(option) && index === highlightedIndex

@@ -151,10 +151,6 @@ const Index = () => {
     // }
   }, [ApproveLeaveCancellation]);
 
-  // useEffect(() => {
-  //   console.log(LeaveCancellations);
-  // }, [LeaveCancellations]);
-
   return (
     <div>
       <BreadCrumbs title="Leave Cancellations" />
