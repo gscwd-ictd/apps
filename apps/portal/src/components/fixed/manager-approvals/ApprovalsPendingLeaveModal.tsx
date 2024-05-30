@@ -80,6 +80,7 @@ export const ApprovalsPendingLeaveModal = ({
     setMoreLeaveDates(false);
   }, [modalState]);
 
+  console.log(leaveIndividualDetail);
   const onSubmit: SubmitHandler<leaveAction> = (data: leaveAction) => {
     setValue('id', leaveIndividualDetail.id);
     if (data.status === LeaveStatus.FOR_HRDM_APPROVAL) {
@@ -379,9 +380,9 @@ export const ApprovalsPendingLeaveModal = ({
                           {leaveIndividualDetail?.leaveName === LeaveName.STUDY ? (
                             <>
                               <div className="text-md font-medium">
-                                {leaveIndividualDetail?.forBarBoardReview === '1'
+                                {leaveIndividualDetail?.forBarBoardReview
                                   ? 'For BAR/Board Examination Review '
-                                  : leaveIndividualDetail?.forMastersCompletion === '1'
+                                  : leaveIndividualDetail?.forMastersCompletion
                                   ? `Completion of Master's Degree `
                                   : 'Other'}
                               </div>
@@ -415,6 +416,9 @@ export const ApprovalsPendingLeaveModal = ({
                               : //SLB FOR WOMEN
                               leaveIndividualDetail?.leaveName === LeaveName.SPECIAL_LEAVE_BENEFITS_FOR_WOMEN
                               ? leaveIndividualDetail.splWomen
+                              : leaveIndividualDetail?.leaveName === LeaveName.STUDY &&
+                                leaveIndividualDetail?.studyLeaveOther
+                              ? leaveIndividualDetail?.studyLeaveOther
                               : //NON OF THE ABOVE
                                 ''}
                           </label>

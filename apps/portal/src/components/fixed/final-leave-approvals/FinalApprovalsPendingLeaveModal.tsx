@@ -385,9 +385,9 @@ export const FinalApprovalsPendingLeaveModal = ({
                           {leaveIndividualDetail?.leaveName === LeaveName.STUDY ? (
                             <>
                               <div className="text-md font-medium">
-                                {leaveIndividualDetail?.forBarBoardReview === '1'
+                                {leaveIndividualDetail?.forBarBoardReview
                                   ? 'For BAR/Board Examination Review '
-                                  : leaveIndividualDetail?.forMastersCompletion === '1'
+                                  : leaveIndividualDetail?.forMastersCompletion
                                   ? `Completion of Master's Degree `
                                   : 'Other'}
                               </div>
@@ -420,6 +420,9 @@ export const FinalApprovalsPendingLeaveModal = ({
                               : //SLB FOR WOMEN
                               leaveIndividualDetail?.leaveName === LeaveName.SPECIAL_LEAVE_BENEFITS_FOR_WOMEN
                               ? leaveIndividualDetail.splWomen
+                              : leaveIndividualDetail?.leaveName === LeaveName.STUDY &&
+                                leaveIndividualDetail?.studyLeaveOther
+                              ? leaveIndividualDetail?.studyLeaveOther
                               : //NON OF THE ABOVE
                                 ''}
                           </label>
