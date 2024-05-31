@@ -223,9 +223,13 @@ export const EmployeeDtrTable: FunctionComponent<EmployeeDtrTableProps> = ({ emp
                       let timeOutColor = '';
 
                       // time in color
-                      compareIfLate(logs.day, logs.dtr.timeIn, logs.schedule.timeIn) === true
-                        ? (timeInColor = underTime)
-                        : (timeInColor = normal);
+                      if (logs.isRestDay === true || logs.isHoliday === true) {
+                        timeInColor = normal;
+                      } else {
+                        compareIfLate(logs.day, logs.dtr.timeIn, logs.schedule.timeIn) === true
+                          ? (timeInColor = underTime)
+                          : (timeInColor = normal);
+                      }
 
                       // lunch out color
                       compareIfEarly(logs.day, logs.dtr.lunchOut, logs.schedule.lunchOut) ||
@@ -245,9 +249,13 @@ export const EmployeeDtrTable: FunctionComponent<EmployeeDtrTableProps> = ({ emp
                         : (lunchInColor = normal);
 
                       // time out color
-                      compareIfEarly(logs.day, logs.dtr.timeOut, logs.schedule.timeOut) === true
-                        ? (timeOutColor = underTime)
-                        : (timeOutColor = normal);
+                      if (logs.isRestDay === true || logs.isHoliday === true) {
+                        timeOutColor = normal;
+                      } else {
+                        compareIfEarly(logs.day, logs.dtr.timeOut, logs.schedule.timeOut) === true
+                          ? (timeOutColor = underTime)
+                          : (timeOutColor = normal);
+                      }
 
                       return (
                         <Fragment key={index}>
@@ -298,6 +306,7 @@ export const EmployeeDtrTable: FunctionComponent<EmployeeDtrTableProps> = ({ emp
                             </td>
                             <td className="py-2 text-center ">
                               <div className="flex justify-center gap-1">
+                                {/* Time log edit button */}
                                 <button
                                   className="px-1 text-white bg-green-600 rounded disabled:bg-red-600"
                                   onClick={() => openEditActionModal(logs)}
@@ -310,12 +319,13 @@ export const EmployeeDtrTable: FunctionComponent<EmployeeDtrTableProps> = ({ emp
                                   <i className="text-lg text-inherit bx bx-edit"></i>
                                 </button>
 
-                                <button
+                                {/* Remarks button */}
+                                {/* <button
                                   className="px-1 text-white bg-blue-600 rounded disabled:bg-red-600"
                                   onClick={() => openEditRemarksModal(logs)}
                                 >
                                   <i className="text-lg text-inherit bx bx-comment-edit"></i>
-                                </button>
+                                </button> */}
                               </div>
                             </td>
                           </tr>
@@ -437,6 +447,7 @@ export const EmployeeDtrTable: FunctionComponent<EmployeeDtrTableProps> = ({ emp
 
                         {/* ACTION */}
                         <div className="flex items-center justify-center w-full col-span-1 border gap-1">
+                          {/* Time log edit button */}
                           <button
                             className="px-1 text-white bg-green-600 rounded disabled:bg-red-600"
                             onClick={() => openEditActionModal(logs)}
@@ -447,12 +458,13 @@ export const EmployeeDtrTable: FunctionComponent<EmployeeDtrTableProps> = ({ emp
                             <i className="text-lg text-inherit bx bx-edit"></i>
                           </button>
 
-                          <button
+                          {/* Remarks button */}
+                          {/* <button
                             className="px-1 text-white bg-blue-600 rounded disabled:bg-red-600"
                             onClick={() => openEditRemarksModal(logs)}
                           >
                             <i className="text-lg text-inherit bx bx-comment-edit"></i>
-                          </button>
+                          </button> */}
                         </div>
                       </section>
                     );
@@ -461,6 +473,7 @@ export const EmployeeDtrTable: FunctionComponent<EmployeeDtrTableProps> = ({ emp
             </>
           ) : null}
 
+          {/* Aggregate data */}
           <table className="w-full mt-5 border table-auto ">
             <thead>
               <tr className="text-sm font-medium text-center">

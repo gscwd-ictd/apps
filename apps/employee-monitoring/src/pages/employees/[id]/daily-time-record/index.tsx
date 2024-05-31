@@ -51,6 +51,12 @@ export default function Index({ employeeData }: InferGetServerSidePropsType<type
     setEmployeeDtr({} as EmployeeDtrWithScheduleAndSummary);
   }, []);
 
+  useEffect(() => {
+    if (!isEmpty(employeeDtr)) {
+      console.log(employeeDtr.dtrDays);
+    }
+  }, [employeeDtr]);
+
   return (
     <>
       <div className="w-full">
