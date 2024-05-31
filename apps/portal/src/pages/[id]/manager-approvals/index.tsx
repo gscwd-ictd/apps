@@ -61,7 +61,7 @@ export default function Approvals({
 
             <ContentBody>
               <ul className="flex flex-col lg:flex-col text-gray-500 w-full md:w-1/2 justify-center items-center">
-                {/* show pass slip link if user is SG16+, an OIC, or not Rank and File */}
+                {/* show pass slip link if user is SG16+, an Officer of the Day, or not Rank and File */}
                 {finalSalaryGrade >= 16 ||
                 employeeDetails.employmentDetails.officerOfTheDay.length > 0 ||
                 employeeDetails.employmentDetails.userRole !== UserRole.RANK_AND_FILE ||
@@ -80,7 +80,7 @@ export default function Approvals({
                   />
                 ) : null}
 
-                {/* show other links if user is an OIC, or not Rank and File */}
+                {/* show other links if user is an Officer of the Day, or not Rank and File */}
                 {employeeDetails.employmentDetails.officerOfTheDay.length > 0 ||
                 (employeeDetails.employmentDetails.userRole !== UserRole.RANK_AND_FILE &&
                   employeeDetails.employmentDetails.userRole !== UserRole.JOB_ORDER) ? (
@@ -143,7 +143,7 @@ export const getServerSideProps: GetServerSideProps = withCookieSession(async (c
   //convert salary grade to number
   const finalSalaryGrade = SalaryGradeConverter(employeeDetails.employmentDetails.salaryGrade);
 
-  // check if user role is rank_and_file or job order, or not OIC or not SG16 and up = kick out
+  // check if user role is rank_and_file or job order, or not Officer of the Day or not SG16 and up = kick out
   if (
     (employeeDetails.employmentDetails.userRole === UserRole.RANK_AND_FILE ||
       employeeDetails.employmentDetails.userRole === UserRole.JOB_ORDER) &&

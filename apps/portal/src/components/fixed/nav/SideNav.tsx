@@ -325,7 +325,7 @@ export const SideNav = ({ employeeDetails }: NavDetails) => {
                 /* DIVISION MANAGER */
                 isEqual(employeeDetails.employmentDetails.userRole, UserRole.DIVISION_MANAGER) ||
                 isEqual(employeeDetails.employmentDetails.userRole, UserRole.OIC_DIVISION_MANAGER) ||
-                // OIC OR SG16+
+                // Officer of the Day OR SG16+
                 employeeDetails.employmentDetails.officerOfTheDay.length > 0 ||
                 employeeSalaryGrade >= 16 ? (
                   <>

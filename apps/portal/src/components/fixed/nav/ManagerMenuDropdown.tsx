@@ -46,7 +46,7 @@ export const ManagerMenuDropdown = ({
           >
             {
               //red dot
-              //if Manager only or Manager and is the OIC -- all notif
+              //if Manager only or Manager and is the Officer of the Day -- all notif
 
               // GENERAL MANAGER
               (isEqual(userRole, UserRole.OIC_GENERAL_MANAGER) ||
@@ -69,7 +69,7 @@ export const ManagerMenuDropdown = ({
                 pendingApprovalsCount.prfsForApprovalCount > 0 ||
                 pendingApprovalsCount.pendingApplicantEndorsementsCount > 0) ? (
                 <span className="absolute w-3 h-3 -mt-5 ml-9 bg-red-600 rounded-full select-none" />
-              ) : //if OIC and is Rank and File -- Approvals page notifs only
+              ) : //if Officer of the Day and is Rank and File -- Approvals page notifs only
               (isEqual(userRole, UserRole.RANK_AND_FILE) || isEqual(userRole, UserRole.JOB_ORDER)) &&
                 oic.length > 0 &&
                 isEmpty(errorPendingApprovalsCount) &&
@@ -130,7 +130,7 @@ export const ManagerMenuDropdown = ({
                   /* DIVISION MANAGER */
                   isEqual(userRole, UserRole.DIVISION_MANAGER) ||
                   isEqual(userRole, UserRole.OIC_DIVISION_MANAGER) ||
-                  // OIC OR SG16+
+                  // Officer of the Day OR SG16+
                   oic?.length > 0 ||
                   salaryGrade >= 16 ? (
                     <Menu.Item>
@@ -148,7 +148,7 @@ export const ManagerMenuDropdown = ({
 
                           {
                             //red dot
-                            //if Manager only or Manager and/or is the OIC -- all notif
+                            //if Manager only or Manager and/or is the Officer of the Day -- all notif
 
                             /*  GENERAL MANAGER */
                             (isEqual(userRole, UserRole.GENERAL_MANAGER) ||
