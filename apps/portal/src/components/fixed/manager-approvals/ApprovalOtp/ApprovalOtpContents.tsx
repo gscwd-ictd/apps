@@ -221,7 +221,6 @@ export const ApprovalOtpContents: FunctionComponent<OtpProps> = ({
 
   const handlePatchResultOtp = async (data) => {
     let otpPatchUrl;
-
     if (otpName === ManagerOtpApproval.LEAVE) {
       otpPatchUrl = '/v1/leave/supervisor';
     } else if (otpName === ManagerOtpApproval.PASSSLIP) {

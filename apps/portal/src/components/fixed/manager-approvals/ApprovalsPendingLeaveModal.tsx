@@ -80,7 +80,6 @@ export const ApprovalsPendingLeaveModal = ({
     setMoreLeaveDates(false);
   }, [modalState]);
 
-  console.log(leaveIndividualDetail);
   const onSubmit: SubmitHandler<leaveAction> = (data: leaveAction) => {
     setValue('id', leaveIndividualDetail.id);
     if (data.status === LeaveStatus.FOR_HRDM_APPROVAL) {

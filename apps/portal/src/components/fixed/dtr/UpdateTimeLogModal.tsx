@@ -391,7 +391,7 @@ const UpdateTimeLogModal: FunctionComponent<EditDailySchedModalProps> = ({
                           label="Requested Time In Update:"
                           step="any"
                           type="time"
-                          value={rowData.dtrCorrection.timeIn}
+                          value={rowData?.dtrCorrection?.timeIn ?? ''}
                           disabled={true}
                         />
                       </div>
@@ -406,7 +406,7 @@ const UpdateTimeLogModal: FunctionComponent<EditDailySchedModalProps> = ({
                           label="Requested Lunch Out Update:"
                           step="any"
                           type="time"
-                          value={rowData.dtrCorrection.lunchOut}
+                          value={rowData?.dtrCorrection?.lunchOut ?? ''}
                           disabled={true}
                         />
                       </div>
@@ -421,7 +421,7 @@ const UpdateTimeLogModal: FunctionComponent<EditDailySchedModalProps> = ({
                           label="Requested Lunch In Update:"
                           step="any"
                           type="time"
-                          value={rowData.dtrCorrection.lunchIn}
+                          value={rowData?.dtrCorrection?.lunchIn ?? ''}
                           disabled={true}
                         />
                       </div>
@@ -436,7 +436,7 @@ const UpdateTimeLogModal: FunctionComponent<EditDailySchedModalProps> = ({
                           label="Requested Time Out Update:"
                           step="any"
                           type="time"
-                          value={rowData.dtrCorrection.timeOut}
+                          value={rowData?.dtrCorrection?.timeOut ?? ''}
                           disabled={true}
                         />
                       </div>
@@ -453,7 +453,7 @@ const UpdateTimeLogModal: FunctionComponent<EditDailySchedModalProps> = ({
 
                   <div className="w-full">
                     {rowData?.dtrCorrection?.remarks ? (
-                      <label className=" text-sm ml-5">{rowData?.dtrCorrection?.remarks}</label>
+                      <label className=" text-sm ml-5">{rowData?.dtrCorrection?.remarks ?? 'N/A'}</label>
                     ) : rowData?.dtr?.timeIn &&
                       rowData?.dtr?.lunchOut &&
                       rowData?.dtr?.lunchIn &&
@@ -523,7 +523,11 @@ const UpdateTimeLogModal: FunctionComponent<EditDailySchedModalProps> = ({
                     !watch('remarks') ||
                     !watch('timeIn') ||
                     !watch('timeOut') ||
-                    (!rowData?.dtr?.timeIn && !rowData?.dtr?.timeOut)
+                    (!rowData?.dtr?.timeIn && !rowData?.dtr?.timeOut) ||
+                    (watch('timeIn') === removeSeconds(rowData?.dtr?.timeIn) &&
+                      watch('timeOut') === removeSeconds(rowData?.dtr?.timeOut) &&
+                      watch('lunchOut') === removeSeconds(rowData?.dtr?.lunchOut) &&
+                      watch('lunchIn') === removeSeconds(rowData?.dtr?.lunchIn))
                       ? true
                       : false
                   }
