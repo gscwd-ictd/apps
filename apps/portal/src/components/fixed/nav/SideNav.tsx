@@ -240,14 +240,7 @@ export const SideNav = ({ employeeDetails }: NavDetails) => {
     isLoading: swrIsLoadingTrainingMessages,
     error: swrTrainingMessageError,
     mutate: mutateTrainingMessages,
-  } = useSWR(
-    employeeDetails.employmentDetails.userId &&
-      !isEqual(employeeDetails.employmentDetails.userRole, UserRole.RANK_AND_FILE) &&
-      !isEqual(employeeDetails.employmentDetails.userRole, UserRole.JOB_ORDER)
-      ? trainingMessagesUrl
-      : null,
-    fetchWithToken
-  );
+  } = useSWR(employeeDetails.employmentDetails.userId ? trainingMessagesUrl : null, fetchWithToken);
 
   // Initial zustand state update
   useEffect(() => {
