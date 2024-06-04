@@ -148,10 +148,10 @@ export default function Calendar({
           ) {
             setSelectedDates((selectedDates) => [...selectedDates, specifiedDate]);
           }
-          //for SPL, between last duty date and today and not late filing
+          //for SPL/SICK, between last duty date and today and not late filing
           if (
             (leaveName === LeaveName.SPECIAL_PRIVILEGE || leaveName === LeaveName.SICK) &&
-            DateFormatter(specifiedDate, 'MM-DD-YYYY') >= DateFormatter(lastDateOfDuty, 'MM-DD-YYYY') &&
+            DateFormatter(specifiedDate, 'MM-DD-YYYY') > DateFormatter(lastDateOfDuty, 'MM-DD-YYYY') &&
             !isLateFiling
           ) {
             setSelectedDates((selectedDates) => [...selectedDates, specifiedDate]);

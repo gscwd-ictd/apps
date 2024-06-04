@@ -228,8 +228,8 @@ export const SideNav = ({ employeeDetails }: NavDetails) => {
   //count any pending psb inbox action
   useEffect(() => {
     let pendingPsb = [];
-    pendingPsb = psbMessages.filter((e) => !e.details.acknowledgedSchedule && !e.details.declinedSchedule);
-    setcurrentPendingPsbCount(pendingPsb.length);
+    pendingPsb = swrPsbMessages?.filter((e) => !e.details.acknowledgedSchedule && !e.details.declinedSchedule);
+    setcurrentPendingPsbCount(pendingPsb?.length);
   }, [patchResponseApply, swrPsbMessages]);
 
   const trainingMessagesUrl = `${process.env.NEXT_PUBLIC_PORTAL_URL}/trainings/employees/${employeeDetails.employmentDetails.userId}`;
@@ -240,14 +240,7 @@ export const SideNav = ({ employeeDetails }: NavDetails) => {
     isLoading: swrIsLoadingTrainingMessages,
     error: swrTrainingMessageError,
     mutate: mutateTrainingMessages,
-  } = useSWR(
-    employeeDetails.employmentDetails.userId &&
-      !isEqual(employeeDetails.employmentDetails.userRole, UserRole.RANK_AND_FILE) &&
-      !isEqual(employeeDetails.employmentDetails.userRole, UserRole.JOB_ORDER)
-      ? trainingMessagesUrl
-      : null,
-    fetchWithToken
-  );
+  } = useSWR(employeeDetails.employmentDetails.userId ? trainingMessagesUrl : null, fetchWithToken);
 
   // Initial zustand state update
   useEffect(() => {
@@ -269,9 +262,9 @@ export const SideNav = ({ employeeDetails }: NavDetails) => {
 
   useEffect(() => {
     let pendingTraining = [];
-    pendingTraining = trainingMessages.filter((e) => e.nomineeStatus === NomineeStatus.PENDING);
-    setcurrentPendingTrainingCount(pendingTraining.length);
-  }, [putResponseApply, trainingMessages]);
+    pendingTraining = swrTrainingMessages?.filter((e) => e.nomineeStatus === NomineeStatus.PENDING);
+    setcurrentPendingTrainingCount(pendingTraining?.length);
+  }, [putResponseApply, swrTrainingMessages]);
 
   useEffect(() => {
     if (!isEmpty(patchResponseApply) || !isEmpty(putResponseApply)) {
@@ -325,7 +318,7 @@ export const SideNav = ({ employeeDetails }: NavDetails) => {
                 /* DIVISION MANAGER */
                 isEqual(employeeDetails.employmentDetails.userRole, UserRole.DIVISION_MANAGER) ||
                 isEqual(employeeDetails.employmentDetails.userRole, UserRole.OIC_DIVISION_MANAGER) ||
-                // OIC OR SG16+
+                // Officer of the Day OR SG16+
                 employeeDetails.employmentDetails.officerOfTheDay.length > 0 ||
                 employeeSalaryGrade >= 16 ? (
                   <>
