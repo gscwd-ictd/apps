@@ -228,8 +228,8 @@ export const SideNav = ({ employeeDetails }: NavDetails) => {
   //count any pending psb inbox action
   useEffect(() => {
     let pendingPsb = [];
-    pendingPsb = psbMessages.filter((e) => !e.details.acknowledgedSchedule && !e.details.declinedSchedule);
-    setcurrentPendingPsbCount(pendingPsb.length);
+    pendingPsb = swrPsbMessages?.filter((e) => !e.details.acknowledgedSchedule && !e.details.declinedSchedule);
+    setcurrentPendingPsbCount(pendingPsb?.length);
   }, [patchResponseApply, swrPsbMessages]);
 
   const trainingMessagesUrl = `${process.env.NEXT_PUBLIC_PORTAL_URL}/trainings/employees/${employeeDetails.employmentDetails.userId}`;
@@ -262,9 +262,9 @@ export const SideNav = ({ employeeDetails }: NavDetails) => {
 
   useEffect(() => {
     let pendingTraining = [];
-    pendingTraining = trainingMessages.filter((e) => e.nomineeStatus === NomineeStatus.PENDING);
-    setcurrentPendingTrainingCount(pendingTraining.length);
-  }, [putResponseApply, trainingMessages]);
+    pendingTraining = swrTrainingMessages?.filter((e) => e.nomineeStatus === NomineeStatus.PENDING);
+    setcurrentPendingTrainingCount(pendingTraining?.length);
+  }, [putResponseApply, swrTrainingMessages]);
 
   useEffect(() => {
     if (!isEmpty(patchResponseApply) || !isEmpty(putResponseApply)) {

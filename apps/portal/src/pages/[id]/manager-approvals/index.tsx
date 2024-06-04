@@ -80,10 +80,9 @@ export default function Approvals({
                   />
                 ) : null}
 
-                {/* show other links if user is an Officer of the Day, or not Rank and File */}
-                {employeeDetails.employmentDetails.officerOfTheDay.length > 0 ||
-                (employeeDetails.employmentDetails.userRole !== UserRole.RANK_AND_FILE &&
-                  employeeDetails.employmentDetails.userRole !== UserRole.JOB_ORDER) ? (
+                {/* show other links if user is not Rank and File */}
+                {employeeDetails.employmentDetails.userRole !== UserRole.RANK_AND_FILE &&
+                employeeDetails.employmentDetails.userRole !== UserRole.JOB_ORDER ? (
                   <>
                     <TabHeader
                       tab={0}
