@@ -92,6 +92,8 @@ const styles = StyleSheet.create({
   w33_33: { width: '33.33%' },
   w40: { width: '40%' },
   w35: { width: '35%' },
+  w30: { width: '30%' },
+  w25: { width: '25%' },
   w20: { width: '20%' },
   w15: { width: '15%' },
   w10: { width: '10%' },
@@ -133,17 +135,19 @@ export const ReportOnEmployeeRehabLeaveCreditsPdf: FunctionComponent<ReportOnSum
                 <View style={styles.reportTable}>
                   {/* COLUMN HEADERS  */}
                   <View style={[styles.rowContainer, styles.borderTop, styles.rowBorder]}>
-                    {/* NUMBER */}
                     <View style={[styles.tableHeader, styles.w5]}></View>
-                    <View style={[styles.tableHeader, styles.w35, { fontSize: 7 }]}>
+                    <View style={[styles.tableHeader, styles.w25, { fontSize: 7 }]}>
                       <Text style={[styles.tableHeaderText, styles.upperText, styles.boldText]}>Names</Text>
                     </View>
-                    <View style={[styles.tableHeader, styles.w20]}>
+                    <View style={[styles.tableHeader, styles.w10]}>
+                      <Text style={[styles.tableHeaderText]}>Leave Count</Text>
+                    </View>
+                    <View style={[styles.tableHeader, styles.w30]}>
                       <Text style={[styles.tableHeaderText]}>Date/s of Leave</Text>
                     </View>
 
-                    <View style={[styles.tableHeader, styles.w40, { borderRight: 'none' }]}>
-                      <Text style={[styles.tableHeaderText]}>Reason</Text>
+                    <View style={[styles.tableHeader, styles.w30, { borderRight: 'none' }]}>
+                      <Text style={[styles.tableHeaderText]}>Date/s of Filling</Text>
                     </View>
                   </View>
 
@@ -159,16 +163,19 @@ export const ReportOnEmployeeRehabLeaveCreditsPdf: FunctionComponent<ReportOnSum
                             <View style={[styles.tableData, styles.w5]}>
                               <Text style={[styles.tableDataText]}>{index + 1}</Text>
                             </View>
-                            <View style={[styles.tableData, styles.w35, { alignItems: 'flex-start' }]}>
+                            <View style={[styles.tableData, styles.w25, { alignItems: 'flex-start' }]}>
                               <Text style={[styles.tableDataText, { textAlign: 'left' }]}>
                                 {rehabLeaveEntry.name || '-'}
                               </Text>
                             </View>
-                            <View style={[styles.tableData, styles.w20]}>
-                              <Text style={[styles.tableDataText]}>{rehabLeaveEntry.dates || ''}</Text>
+                            <View style={[styles.tableData, styles.w10]}>
+                              <Text style={[styles.tableDataText]}>{rehabLeaveEntry.leaveCount || ''}</Text>
                             </View>
-                            <View style={[styles.tableData, styles.w40, { borderRight: 'none' }]}>
-                              <Text style={[styles.tableDataText]}>{rehabLeaveEntry.reason || ''}</Text>
+                            <View style={[styles.tableData, styles.w30]}>
+                              <Text style={[styles.tableDataText]}>{rehabLeaveEntry.leaveDates || ''}</Text>
+                            </View>
+                            <View style={[styles.tableData, styles.w30, { borderRight: 'none' }]}>
+                              <Text style={[styles.tableDataText]}>{rehabLeaveEntry.dateOfFilling || ''}</Text>
                             </View>
                           </View>
                         );

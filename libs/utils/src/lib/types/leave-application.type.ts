@@ -155,11 +155,13 @@ export type LeaveId = Pick<EmployeeLeave, 'id'>;
 //! Changed 08/02/2023
 // Single row type for collated employee leaves
 export type MonitoringLeave = EmployeeLeave & {
+  referenceNo: string;
   employee: { employeeId: string; employeeName: string };
   supervisor: {
     supervisorId: string;
     supervisorName: string;
   };
+  isLateFiling: boolean;
 };
 
 export type SupervisorLeaveDetails = {
