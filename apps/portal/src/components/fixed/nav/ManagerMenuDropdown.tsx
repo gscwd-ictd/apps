@@ -14,7 +14,7 @@ type MenuDropdownProps = {
   labelColor?: string;
   userRole: string;
   salaryGrade: number;
-  oic: Array<OfficerOfTheDay>;
+  officerOfTheDay: Array<OfficerOfTheDay>;
 };
 
 export const ManagerMenuDropdown = ({
@@ -23,7 +23,7 @@ export const ManagerMenuDropdown = ({
   right = false,
   userRole = null,
   salaryGrade = 0,
-  oic = [],
+  officerOfTheDay = [],
 }: MenuDropdownProps): JSX.Element => {
   const { pendingApprovalsCount, errorPendingApprovalsCount } = useApprovalStore((state) => ({
     pendingApprovalsCount: state.pendingApprovalsCount,
@@ -71,7 +71,7 @@ export const ManagerMenuDropdown = ({
                 <span className="absolute w-3 h-3 -mt-5 ml-9 bg-red-600 rounded-full select-none" />
               ) : //if Officer of the Day and is Rank and File -- Approvals page notifs only
               (isEqual(userRole, UserRole.RANK_AND_FILE) || isEqual(userRole, UserRole.JOB_ORDER)) &&
-                oic.length > 0 &&
+                officerOfTheDay.length > 0 &&
                 isEmpty(errorPendingApprovalsCount) &&
                 (pendingApprovalsCount.pendingPassSlipsCount > 0 ||
                   pendingApprovalsCount.pendingLeavesCount > 0 ||
@@ -131,7 +131,7 @@ export const ManagerMenuDropdown = ({
                   isEqual(userRole, UserRole.DIVISION_MANAGER) ||
                   isEqual(userRole, UserRole.OIC_DIVISION_MANAGER) ||
                   // Officer of the Day OR SG16+
-                  oic?.length > 0 ||
+                  officerOfTheDay?.length > 0 ||
                   salaryGrade >= 16 ? (
                     <Menu.Item>
                       {({ active }) => (
@@ -162,7 +162,7 @@ export const ManagerMenuDropdown = ({
                               /* DIVISION MANAGER */
                               isEqual(userRole, UserRole.DIVISION_MANAGER) ||
                               isEqual(userRole, UserRole.OIC_DIVISION_MANAGER) ||
-                              oic.length > 0) &&
+                              officerOfTheDay.length > 0) &&
                             isEmpty(errorPendingApprovalsCount) &&
                             (pendingApprovalsCount.pendingPassSlipsCount > 0 ||
                               pendingApprovalsCount.pendingLeavesCount > 0 ||

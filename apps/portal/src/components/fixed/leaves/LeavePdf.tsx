@@ -174,7 +174,9 @@ export const LeavePdf = ({ employeeDetails, leaveDetails, selectedLeaveLedger }:
               <View style={styles.page}>
                 <Text style={{ position: 'absolute', fontSize: 6 }}>CIVIL SERVICES FORM NO. 6</Text>
                 <Text style={{ position: 'absolute', fontSize: 6, marginTop: 10 }}>Revised 2020</Text>
-                {/* <Text style={{ position: 'absolute', fontSize: 16, right: 0 }}>010678</Text> */}
+                <Text style={{ position: 'absolute', fontSize: 10, right: 0 }}>
+                  {leaveDetails?.leaveApplicationBasicInfo?.referenceNo}
+                </Text>
                 <View
                   style={{
                     display: 'flex',
@@ -701,28 +703,68 @@ export const LeavePdf = ({ employeeDetails, leaveDetails, selectedLeaveLedger }:
                         padding: 2,
                       }}
                     >
-                      <Text>6.C NUMBER OF WORKING DAYS APPLIED FOR</Text>
-                      <Text
+                      <View
                         style={{
-                          fontSize: 8,
-                          position: 'absolute',
-                          padding: 6,
-                          marginTop: 10,
-                          lineHeight: 2.1,
+                          display: 'flex',
+                          flexDirection: 'column',
                         }}
                       >
-                        {leaveDetails.leaveApplicationBasicInfo.leaveDates
-                          ? leaveDetails.leaveApplicationBasicInfo.leaveDates.length > 18
-                            ? `From ${leaveDetails.leaveApplicationBasicInfo.leaveDates[0]} To ${
-                                leaveDetails.leaveApplicationBasicInfo.leaveDates[
-                                  leaveDetails.leaveApplicationBasicInfo.leaveDates.length - 1
-                                ]
-                              }`
-                            : leaveDetails.leaveApplicationBasicInfo.leaveDates.join(', ')
-                          : null}
-                      </Text>
-                      <Text style={{ padding: 5 }}>_____________________________________________________</Text>
-                      <Text style={{ padding: 5 }}>_____________________________________________________</Text>
+                        <Text>6.C NUMBER OF WORKING DAYS APPLIED FOR</Text>
+                        <Text
+                          style={{
+                            fontSize: 8,
+                            position: 'absolute',
+                            padding: 6,
+                            marginTop: 8,
+                            lineHeight: 2.1,
+                          }}
+                        >
+                          {leaveDetails.leaveApplicationBasicInfo.leaveDates
+                            ? leaveDetails.leaveApplicationBasicInfo.leaveDates.length > 5
+                              ? `From ${leaveDetails.leaveApplicationBasicInfo.leaveDates[0]} To ${
+                                  leaveDetails.leaveApplicationBasicInfo.leaveDates[
+                                    leaveDetails.leaveApplicationBasicInfo.leaveDates.length - 1
+                                  ]
+                                }`
+                              : leaveDetails.leaveApplicationBasicInfo.leaveDates.join(', ')
+                            : null}
+                        </Text>
+                        <Text style={{ padding: 5 }}>_____________________________________________________</Text>
+                      </View>
+                      <View
+                        style={{
+                          display: 'flex',
+                          flexDirection: 'column',
+                        }}
+                      >
+                        <Text
+                          style={{
+                            paddingLeft: 6,
+                          }}
+                        >
+                          INCLUSIVE DATES
+                        </Text>
+                        <Text
+                          style={{
+                            fontSize: 8,
+                            position: 'absolute',
+                            padding: 6,
+                            marginTop: 8,
+                            lineHeight: 2.1,
+                          }}
+                        >
+                          {/* {leaveDetails.leaveApplicationBasicInfo.leaveDates
+                            ? leaveDetails.leaveApplicationBasicInfo.leaveDates.length > 18
+                              ? `From ${leaveDetails.leaveApplicationBasicInfo.leaveDates[0]} To ${
+                                  leaveDetails.leaveApplicationBasicInfo.leaveDates[
+                                    leaveDetails.leaveApplicationBasicInfo.leaveDates.length - 1
+                                  ]
+                                }`
+                              : leaveDetails.leaveApplicationBasicInfo.leaveDates.join(', ')
+                            : null} */}
+                        </Text>
+                        <Text style={{ padding: 5 }}>_____________________________________________________</Text>
+                      </View>
                     </View>
                     <View
                       style={{
@@ -1020,30 +1062,64 @@ export const LeavePdf = ({ employeeDetails, leaveDetails, selectedLeaveLedger }:
                       }}
                     >
                       <Text>7.C APPROVED FOR:</Text>
-                      <Text
+                      <View
                         style={{
-                          position: 'absolute',
-                          marginTop: 13,
-                          marginLeft: 13,
+                          display: 'flex',
+                          flexDirection: 'row',
+                          justifyContent: 'flex-start',
                         }}
                       >
-                        {leaveDetails.leaveApplicationBasicInfo.leaveName != LeaveName.LEAVE_WITHOUT_PAY
-                          ? leaveDetails?.leaveApplicationBasicInfo?.leaveDates?.length
-                          : 0}
-                      </Text>
-                      <Text>_______ days with pay</Text>
-                      <Text
+                        <Text
+                          style={{
+                            position: 'absolute',
+                            marginTop: 0,
+                            marginLeft: 13,
+                          }}
+                        >
+                          {leaveDetails.leaveApplicationBasicInfo.leaveName != LeaveName.LEAVE_WITHOUT_PAY
+                            ? leaveDetails?.leaveApplicationBasicInfo?.leaveDates?.length
+                            : 0}
+                        </Text>
+                        <Text>_______ days with pay</Text>
+                      </View>
+                      <View
                         style={{
-                          position: 'absolute',
-                          marginTop: 25,
-                          marginLeft: 13,
+                          display: 'flex',
+                          flexDirection: 'row',
+                          justifyContent: 'flex-start',
                         }}
                       >
-                        {leaveDetails.leaveApplicationBasicInfo.leaveName === LeaveName.LEAVE_WITHOUT_PAY
-                          ? leaveDetails?.leaveApplicationBasicInfo?.leaveDates?.length
-                          : 0}
-                      </Text>
-                      <Text>_______ days without pay</Text>
+                        <Text
+                          style={{
+                            position: 'absolute',
+                            marginTop: 0,
+                            marginLeft: 13,
+                          }}
+                        >
+                          {leaveDetails.leaveApplicationBasicInfo.leaveName === LeaveName.LEAVE_WITHOUT_PAY
+                            ? leaveDetails?.leaveApplicationBasicInfo?.leaveDates?.length
+                            : 0}
+                        </Text>
+                        <Text>_______ days without pay</Text>
+                      </View>
+                      <View
+                        style={{
+                          display: 'flex',
+                          flexDirection: 'row',
+                          justifyContent: 'flex-start',
+                        }}
+                      >
+                        <Text
+                          style={{
+                            position: 'absolute',
+                            marginTop: 0,
+                            marginLeft: 13,
+                          }}
+                        >
+                          {0}
+                        </Text>
+                        <Text>_______ others (Specify)</Text>
+                      </View>
                     </View>
                     <View
                       style={{

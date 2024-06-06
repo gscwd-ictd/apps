@@ -182,6 +182,7 @@ export const ApprovalsPendingLeaveModal = ({
     }
   }, [swrLeaveLedger, swrLeaveLedgerError]);
 
+  console.log(leaveIndividualDetail);
   const { windowWidth } = UseWindowDimensions();
   return (
     <>
@@ -286,6 +287,14 @@ export const ApprovalsPendingLeaveModal = ({
 
                       <div className="w-auto ml-5">
                         <label className="text-md font-medium">{leaveIndividualDetail?.leaveName}</label>
+                      </div>
+                    </div>
+
+                    <div className="flex flex-col justify-start items-start w-full sm:w-1/2 px-0.5 pb-3  ">
+                      <label className="text-slate-500 text-md whitespace-nowrap pb-0.5 ">Reference No.:</label>
+
+                      <div className="w-auto ml-5">
+                        <label className=" text-md font-medium">{leaveIndividualDetail?.referenceNo}</label>
                       </div>
                     </div>
 
@@ -397,7 +406,7 @@ export const ApprovalsPendingLeaveModal = ({
                     leaveIndividualDetail?.leaveName === LeaveName.SICK ||
                     leaveIndividualDetail?.leaveName === LeaveName.SPECIAL_LEAVE_BENEFITS_FOR_WOMEN ||
                     (leaveIndividualDetail?.leaveName === LeaveName.STUDY && leaveIndividualDetail?.studyLeaveOther) ? (
-                      <div className="flex flex-col sm:flex-col justify-start items-start w-full px-0.5 pb-3">
+                      <div className="flex flex-col sm:flex-col justify-start items-start w-full sm:w-1/2 px-0.5 pb-3">
                         <label className="text-slate-500 text-md whitespace-nowrap pb-0.5 ">Specific Details:</label>
                         <div className="w-auto ml-5 mr-5">
                           <label className=" text-md font-medium">
@@ -424,6 +433,16 @@ export const ApprovalsPendingLeaveModal = ({
                         </div>
                       </div>
                     ) : null}
+
+                    <div className="flex flex-col sm:flex-col justify-start items-start w-full sm:w-1/2 px-0.5 pb-3 ">
+                      <label className="text-slate-500 text-md whitespace-nowrap pb-0.5 ">Supervisor:</label>
+
+                      <div className="w-auto ml-5">
+                        <label className=" text-md font-medium">
+                          {leaveIndividualDetail?.supervisor?.supervisorName}
+                        </label>
+                      </div>
+                    </div>
 
                     {leaveIndividualDetail?.status === LeaveStatus.DISAPPROVED_BY_HRDM ||
                     leaveIndividualDetail?.status === LeaveStatus.DISAPPROVED_BY_SUPERVISOR ||
