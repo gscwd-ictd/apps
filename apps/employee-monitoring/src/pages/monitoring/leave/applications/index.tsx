@@ -135,6 +135,11 @@ const Index = () => {
     columnHelper.accessor('id', {
       cell: (info) => info.getValue(),
     }),
+    columnHelper.accessor('referenceNo', {
+      header: 'Reference No.',
+      enableColumnFilter: false,
+      cell: (info) => info.getValue(),
+    }),
     columnHelper.accessor('dateOfFiling', {
       header: 'Date of Filing',
       // filterFn: 'equalsString',
@@ -175,7 +180,7 @@ const Index = () => {
   const { table } = useDataTable({
     columns: columns,
     data: LeaveApplications,
-    columnVisibility: { id: false, employeeId: false },
+    columnVisibility: { id: false, leaveDates: false, employeeId: false },
   });
 
   // Initial zustand state update
