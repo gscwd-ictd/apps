@@ -166,6 +166,16 @@ export const LeavePendingModal = ({ modalState, setModalState, closeModalAction 
                     </div>
 
                     <div className="flex flex-col justify-start items-start w-full sm:w-1/2 px-0.5 pb-3  ">
+                      <label className="text-slate-500 text-md whitespace-nowrap pb-0.5 ">Reference No.:</label>
+
+                      <div className="w-auto ml-5">
+                        <label className=" text-md font-medium">
+                          {leaveIndividualDetail?.leaveApplicationBasicInfo?.referenceNo}
+                        </label>
+                      </div>
+                    </div>
+
+                    <div className="flex flex-col justify-start items-start w-full sm:w-1/2 px-0.5 pb-3  ">
                       <label className="text-slate-500 text-md whitespace-nowrap pb-0.5">Date of Application:</label>
 
                       <div className="w-auto ml-5">
@@ -403,7 +413,16 @@ export const LeavePendingModal = ({ modalState, setModalState, closeModalAction 
                   leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.SPECIAL_PRIVILEGE ? (
                     <div className="w-full pb-4 mt-2">
                       <span className="text-slate-500 text-md">
-                        Your current {leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName} Leave Credits:
+                        Your current{' '}
+                        {leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.VACATION ||
+                        leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.FORCED
+                          ? 'VL+FL'
+                          : leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.SICK
+                          ? 'SL'
+                          : leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.SPECIAL_PRIVILEGE
+                          ? 'SPL'
+                          : 'Leave'}{' '}
+                        Leave Credits:
                       </span>
                       <table className="mt-2 bg-slate-50 text-slate-600 border-collapse border-spacing-0 border border-slate-400 w-full ">
                         <tbody className="rounded-md border">

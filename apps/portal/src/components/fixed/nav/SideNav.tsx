@@ -326,7 +326,7 @@ export const SideNav = ({ employeeDetails }: NavDetails) => {
                       <ManagerMenuDropdown
                         userRole={employeeDetails.employmentDetails.userRole}
                         salaryGrade={employeeSalaryGrade}
-                        oic={employeeDetails.employmentDetails.officerOfTheDay}
+                        officerOfTheDay={employeeDetails.employmentDetails.officerOfTheDay}
                         right
                       />
                     </li>

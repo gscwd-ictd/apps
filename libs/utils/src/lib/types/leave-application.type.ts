@@ -104,6 +104,8 @@ export type EmployeeLeaveDetails = {
     hrdmApprovedByName: string;
     hrdmSignature: string;
     hrdmDisapprovalRemarks: string;
+
+    referenceNo: string | null;
   };
   leaveApplicationDetails: {
     inPhilippinesOrAbroad?: string;
@@ -125,6 +127,7 @@ export type EmployeeLeave = {
   dateOfFiling: string;
   leaveDates: Array<string>;
   status: LeaveStatus; //! changed this to enum
+  referenceNo: string | null;
 };
 
 // List of leaves per employee
@@ -185,7 +188,7 @@ export type SupervisorLeaveDetails = {
   cancelDate: string;
   cancelReason: string;
   isLateFiling: boolean;
-
+  referenceNo: string | null;
   employee: {
     employeeId: string;
     employeeName: string;
