@@ -106,7 +106,7 @@ const Index = () => {
   // Render row actions in the table component
   const renderRowActions = (rowData: MonitoringLeave) => {
     return (
-      <div className="text-center">
+      <div className="flex justify-start text-center">
         <button
           type="button"
           className="text-white bg-blue-400 hover:bg-blue-500 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm p-2.5 text-center inline-flex items-center mr-2 "
@@ -165,6 +165,11 @@ const Index = () => {
       header: 'Status',
       cell: (info) => UseRenderLeaveStatus(info.getValue()),
       filterFn: 'equals',
+    }),
+    columnHelper.accessor('isLateFiling', {
+      header: 'Is Late Filling',
+      filterFn: 'fuzzy',
+      cell: (info) => (info.getValue() ? 'True' : 'False'),
     }),
     columnHelper.display({
       id: 'actions',

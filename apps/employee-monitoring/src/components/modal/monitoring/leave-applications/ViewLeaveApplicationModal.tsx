@@ -1,5 +1,5 @@
 /* eslint-disable @nx/enforce-module-boundaries */
-import { Modal, PageContentContext } from '@gscwd-apps/oneui';
+import { Alert, AlertNotification, Modal, PageContentContext } from '@gscwd-apps/oneui';
 import dayjs from 'dayjs';
 import { LeaveName, LeaveStatus } from 'libs/utils/src/lib/enums/leave.enum';
 import { EmployeeLeaveDetails, MonitoringLeave } from 'libs/utils/src/lib/types/leave-application.type';
@@ -276,6 +276,11 @@ const ViewLeaveApplicationModal: FunctionComponent<ViewLeaveApplicationModalProp
         </Modal.Header>
 
         <Modal.Body>
+          {/* Alert notif if leave application is late filing */}
+          {rowData.isLateFiling ? (
+            <AlertNotification alertType="warning" notifMessage="Late Filling Application" dismissible={false} />
+          ) : null}
+
           {swrIsLoading ? (
             <Skeleton count={6} enableAnimation />
           ) : (
