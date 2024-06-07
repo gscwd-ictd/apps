@@ -183,7 +183,7 @@ export default function Index() {
   const { table } = useDataTable({
     columns: columns,
     data: passSlips,
-    columnVisibility: { id: false },
+    columnVisibility: { id: false, obTransportation: false },
   });
 
   // Reset responses on load of page

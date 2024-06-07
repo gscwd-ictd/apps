@@ -188,7 +188,9 @@ export default function Index() {
     const paramMonthYear = `&month_year=${ConvertToYearMonth(data.monthYear)}`;
     const paramToFromWithEmployee = `&date_from=${ConvertFullMonthNameToDigit(
       data.dateFrom
-    )}&date_to=${ConvertFullMonthNameToDigit(data.dateTo)}&employee_id=${data.employeeId}`;
+    )}&date_to=${ConvertFullMonthNameToDigit(data.dateTo)}&employee_id=${
+      !isEmpty(data.employeeId) ? data.employeeId : ''
+    }`;
 
     // condition if param needs to be month & year OR date to & date from
     if (

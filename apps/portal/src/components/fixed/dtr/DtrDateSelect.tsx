@@ -15,8 +15,9 @@ type DtrDateSelectProps = {
 };
 
 export const DtrDateSelect = ({ employeeDetails }: DtrDateSelectProps) => {
-  const { responseUpdateDtr } = useDtrStore((state) => ({
+  const { responseUpdateDtr, setDtrModalIsOpen } = useDtrStore((state) => ({
     responseUpdateDtr: state.response.employeeDailyRecord,
+    setDtrModalIsOpen: state.setDtrModalIsOpen,
   }));
 
   const selectedMonth = useDtrStore((state) => state.selectedMonth);
@@ -28,6 +29,7 @@ export const DtrDateSelect = ({ employeeDetails }: DtrDateSelectProps) => {
   const getEmployeeDtr = useDtrStore((state) => state.getEmployeeDtr);
   const getEmployeeDtrSuccess = useDtrStore((state) => state.getEmployeeDtrSuccess);
   const getEmployeeDtrFail = useDtrStore((state) => state.getEmployeeDtrFail);
+  const emptyResponseAndError = useDtrStore((state) => state.emptyResponseAndError);
 
   const monthNow = format(new Date(), 'M');
   const yearNow = format(new Date(), 'yyyy');
@@ -77,19 +79,10 @@ export const DtrDateSelect = ({ employeeDetails }: DtrDateSelectProps) => {
     setSelectedYear(year);
   };
 
-  // useEffect(() => {
-  //   setSelectedYear(yearNow);
-  //   setSelectedMonth(monthNow);
-  // }, [responseUpdateDtr]);
-
   useEffect(() => {
     setSelectedYear(format(new Date(), 'yyyy'));
     setSelectedMonth(format(new Date(), 'M'));
   }, []);
-
-  useEffect(() => {
-    searchDtr();
-  }, [responseUpdateDtr]);
 
   const searchDtr = async () => {
     getEmployeeDtr(true);

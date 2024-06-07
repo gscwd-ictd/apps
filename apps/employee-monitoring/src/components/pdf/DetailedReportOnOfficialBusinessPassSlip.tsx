@@ -184,7 +184,7 @@ export const DetailedReportOnOfficialBusinessPassSlipPdf: FunctionComponent<
                               <Text style={[styles.tableDataText]}>{pbPassSlipData.timeInTimeOut || ''}</Text>
                             </View>
                             <View style={[styles.tableData, styles.w27, { borderRight: 'none' }]}>
-                              <Text style={[styles.tableDataText]}>{'reason'}</Text>
+                              <Text style={[styles.tableDataText]}>{pbPassSlipData.reason || ''}</Text>
                             </View>
                           </View>
                         );

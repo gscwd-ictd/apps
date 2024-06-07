@@ -29,7 +29,7 @@ export const ProfileCard: React.FC<Props> = ({ fullName, position, division, pho
       <label className="text-md font-medium text-gray-400">{position}</label>
       <label className="text-xs font-medium text-gray-400">{division}</label>
       {employee.employmentDetails.officerOfTheDay.length > 0 ? (
-        <label className="text-sm font-medium text-green-400">Officer In-Charge</label>
+        <label className="text-sm font-medium text-green-400">Officer of the Day</label>
       ) : null}
     </div>
   );

@@ -28,6 +28,7 @@ export const ConfirmationUpdateTimeLogModal = ({
     confirmUpdateModalIsOpen,
     setConfirmUpdateModalIsOpen,
     setDtrModalIsOpen,
+    emptyResponseAndError,
   } = useDtrStore((state) => ({
     employeeDailyRecord: state.response.employeeDailyRecord,
     updateEmployeeDtr: state.updateEmployeeDtr,
@@ -36,6 +37,7 @@ export const ConfirmationUpdateTimeLogModal = ({
     confirmUpdateModalIsOpen: state.confirmUpdateModalIsOpen,
     setConfirmUpdateModalIsOpen: state.setConfirmUpdateModalIsOpen,
     setDtrModalIsOpen: state.setDtrModalIsOpen,
+    emptyResponseAndError: state.emptyResponseAndError,
   }));
 
   const handleSubmit = () => {

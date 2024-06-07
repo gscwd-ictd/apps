@@ -237,7 +237,7 @@ export const ProfileMenuDropdown = ({
                         </>
                       ) : null}
 
-                      {/* MANAGERIAL ACTIONS + OIC/SG16 */}
+                      {/* MANAGERIAL ACTIONS + Officer of the Day/SG16 */}
                       {isEqual(employeeDetails.employmentDetails.userRole, UserRole.OIC_GENERAL_MANAGER) ||
                       isEqual(employeeDetails.employmentDetails.userRole, UserRole.GENERAL_MANAGER) ||
                       isEqual(employeeDetails.employmentDetails.userRole, UserRole.ASSISTANT_GENERAL_MANAGER) ||
@@ -246,7 +246,7 @@ export const ProfileMenuDropdown = ({
                       isEqual(employeeDetails.employmentDetails.userRole, UserRole.OIC_DEPARTMENT_MANAGER) ||
                       isEqual(employeeDetails.employmentDetails.userRole, UserRole.DIVISION_MANAGER) ||
                       isEqual(employeeDetails.employmentDetails.userRole, UserRole.OIC_DIVISION_MANAGER) ||
-                      // OIC OR SG16+
+                      // Officer of the Day OR SG16+
                       employeeDetails.employmentDetails.officerOfTheDay.length > 0 ||
                       employeeSalaryGrade >= 16 ? (
                         <>

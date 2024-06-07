@@ -97,7 +97,7 @@ const styles = StyleSheet.create({
     borderBottom: '1px solid #000000',
     width: '37%',
     padding: 5,
-    fontSize: 9,
+    fontSize: 8,
   },
   containerTableRow4: {
     display: 'flex',
@@ -108,7 +108,7 @@ const styles = StyleSheet.create({
     borderBottom: '1px solid #000000',
     width: '37%',
     padding: 5,
-    fontSize: 9,
+    fontSize: 8,
   },
   checkbox: {
     border: '1px solid #000',
@@ -211,7 +211,9 @@ export const LeavePdf = ({ leaveDetails, selectedLeaveLedger }: LeavePdfProps): 
                   </Text>
                 </View>
 
-                <View style={{ height: 5 }}></View>
+                <View style={{ position: 'absolute', right: 0, fontSize: 10 }}>
+                  <Text>{leaveDetails.leaveApplicationBasicInfo.referenceNo}</Text>
+                </View>
 
                 {/*  QUESTION 1 & 2 */}
                 <View style={styles.container}>
@@ -701,7 +703,9 @@ export const LeavePdf = ({ leaveDetails, selectedLeaveLedger }: LeavePdfProps): 
                       </View>
                     </View>
                   </View>
+
                   <View style={{ display: 'flex', flexDirection: 'row' }}>
+                    {/* 6.C */}
                     <View
                       style={{
                         display: 'flex',
@@ -712,7 +716,67 @@ export const LeavePdf = ({ leaveDetails, selectedLeaveLedger }: LeavePdfProps): 
                         padding: 2,
                       }}
                     >
-                      <Text>6.C NUMBER OF WORKING DAYS APPLIED FOR</Text>
+                      {/* Number of Working Days */}
+                      <View
+                        style={{
+                          display: 'flex',
+                          flexDirection: 'column',
+                        }}
+                      >
+                        <Text>6.C NUMBER OF WORKING DAYS APPLIED FOR</Text>
+                        <Text
+                          style={{
+                            fontSize: 8,
+                            position: 'absolute',
+                            padding: 6,
+                            marginTop: 8,
+                            lineHeight: 2.1,
+                            textIndent: 5,
+                          }}
+                        >
+                          {leaveDetails.leaveApplicationBasicInfo.leaveDates.length} DAY/S
+                        </Text>
+                        <Text style={{ padding: 5 }}>_____________________________________________________</Text>
+                      </View>
+
+                      {/* Inclusive Dates */}
+                      <View
+                        style={{
+                          display: 'flex',
+                          flexDirection: 'column',
+                        }}
+                      >
+                        <Text
+                          style={{
+                            paddingLeft: 6,
+                          }}
+                        >
+                          INCLUSIVE DATES
+                        </Text>
+                        <Text
+                          style={{
+                            fontSize: 8,
+                            position: 'absolute',
+                            padding: 6,
+                            marginTop: 8,
+                            lineHeight: 2.1,
+                            textIndent: 5,
+                          }}
+                        >
+                          {leaveDetails.leaveApplicationBasicInfo.leaveDates
+                            ? leaveDetails.leaveApplicationBasicInfo.leaveDates.length > 5
+                              ? `From ${leaveDetails.leaveApplicationBasicInfo.leaveDates[0]} To ${
+                                  leaveDetails.leaveApplicationBasicInfo.leaveDates[
+                                    leaveDetails.leaveApplicationBasicInfo.leaveDates.length - 1
+                                  ]
+                                }`
+                              : leaveDetails.leaveApplicationBasicInfo.leaveDates.join(', ')
+                            : null}
+                        </Text>
+                        <Text style={{ padding: 5 }}>_____________________________________________________</Text>
+                      </View>
+
+                      {/* <Text>6.C NUMBER OF WORKING DAYS APPLIED FOR</Text>
                       <Text
                         style={{
                           fontSize: 8,
@@ -733,8 +797,10 @@ export const LeavePdf = ({ leaveDetails, selectedLeaveLedger }: LeavePdfProps): 
                           : null}
                       </Text>
                       <Text style={{ padding: 5 }}>_____________________________________________________</Text>
-                      <Text style={{ padding: 5 }}>_____________________________________________________</Text>
+                      <Text style={{ padding: 5 }}>_____________________________________________________</Text> */}
                     </View>
+
+                    {/* 6.D */}
                     <View
                       style={{
                         display: 'flex',
@@ -802,7 +868,7 @@ export const LeavePdf = ({ leaveDetails, selectedLeaveLedger }: LeavePdfProps): 
                         borderRight: '1px solid #000',
                         flexDirection: 'column',
                         width: '52%',
-                        fontSize: 9,
+                        fontSize: 8,
                         padding: 2,
                       }}
                     >
@@ -830,6 +896,7 @@ export const LeavePdf = ({ leaveDetails, selectedLeaveLedger }: LeavePdfProps): 
                       <View style={{ paddingLeft: 10, paddingRight: 10 }}>
                         {/* Leave Credit Table */}
                         <View style={styles.containerTable}>
+                          {/* Row 1 */}
                           <View style={{ display: 'flex', flexDirection: 'row' }}>
                             <View style={styles.containerTableRow4}></View>
                             <View style={styles.containerTableRow}>
@@ -839,6 +906,8 @@ export const LeavePdf = ({ leaveDetails, selectedLeaveLedger }: LeavePdfProps): 
                               <Text>Sick Leave</Text>
                             </View>
                           </View>
+
+                          {/* Row 2 */}
                           <View style={{ display: 'flex', flexDirection: 'row' }}>
                             <View style={styles.containerTableRow3}>
                               <Text>Total Earned</Text>
@@ -863,6 +932,7 @@ export const LeavePdf = ({ leaveDetails, selectedLeaveLedger }: LeavePdfProps): 
                             </View>
                           </View>
 
+                          {/* Row 3 */}
                           <View style={{ display: 'flex', flexDirection: 'row' }}>
                             <View style={styles.containerTableRow3}>
                               <Text>Less this application</Text>
@@ -885,6 +955,7 @@ export const LeavePdf = ({ leaveDetails, selectedLeaveLedger }: LeavePdfProps): 
                             </View>
                           </View>
 
+                          {/* Row 4 */}
                           <View style={{ display: 'flex', flexDirection: 'row' }}>
                             <View style={styles.containerTableRow3}>
                               <Text>Balance</Text>
