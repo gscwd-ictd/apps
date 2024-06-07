@@ -156,7 +156,7 @@ const UpdateTimeLogModal: FunctionComponent<EditDailySchedModalProps> = ({
                 {/* <AlertNotification
                   alertType={'info'}
                   notifMessage={
-                    'When submitting Time Log Corrections, the fields Time In, Time Out, and Remarks are required to be filled out. Lunch Out and Lunch In fields are optional.'
+                    'When submitting Time Log Corrections, the fields Time In, Time Out, and Reason are required to be filled out. Lunch Out and Lunch In fields are optional.'
                   }
                   dismissible={false}
                 /> */}
@@ -166,7 +166,7 @@ const UpdateTimeLogModal: FunctionComponent<EditDailySchedModalProps> = ({
                   <AlertNotification
                     alertType={'info'}
                     notifMessage={
-                      'When submitting Time Log Corrections, the fields Time In, Time Out, and Remarks are required to be filled out. Lunch Out and Lunch In fields are optional.'
+                      'When submitting Time Log Corrections, the fields Time In, Time Out, and Reason are required to be filled out. Lunch Out and Lunch In fields are optional.'
                     }
                     dismissible={false}
                   />
@@ -447,7 +447,7 @@ const UpdateTimeLogModal: FunctionComponent<EditDailySchedModalProps> = ({
                 <div className="flex flex-col justify-start items-start w-full px-0.5 pb-3  ">
                   {rowData?.dtrCorrection?.remarks ? (
                     <label className="font-medium text-gray-900 dark:text-gray-800 text-sm whitespace-nowrap pb-0.5 ">
-                      Remarks:
+                      Reason:
                     </label>
                   ) : null}
 
@@ -462,12 +462,12 @@ const UpdateTimeLogModal: FunctionComponent<EditDailySchedModalProps> = ({
                         required
                         textSize="sm"
                         id="remarks"
-                        label="Remarks:"
+                        label="Reason:"
                         type="textarea"
                         rows={3}
                         isDirty={dirtyFields.remarks}
                         step="any"
-                        placeholder="Please enter remarks"
+                        placeholder="Please enter reason for Time Log Correction"
                         controller={{
                           ...register('remarks', {
                             onChange: (e) => {
