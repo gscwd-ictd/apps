@@ -143,7 +143,7 @@ export default function Calendar({
               leaveName === LeaveName.FORCED ||
               leaveName === LeaveName.SOLO_PARENT) &&
             dayjs(`${specifiedDate}`).diff(`${today}`, 'day') >= 0 &&
-            dayjs(`${specifiedDate}`).diff(`${today}`, 'day') <= 10 &&
+            dayjs(`${specifiedDate}`).diff(`${today}`, 'day') <= 60 &&
             !isLateFiling
           ) {
             setSelectedDates((selectedDates) => [...selectedDates, specifiedDate]);
@@ -385,14 +385,13 @@ export default function Calendar({
                             dayjs(`${day}`).diff(`${today}`, 'day') < 0 &&
                             isLateFiling === false &&
                             'text-slate-300',
-
                           //disable date selection starting from 10th day from current day for VL/FL/SOLO/SPL
                           (leaveName === LeaveName.VACATION ||
                             leaveName === LeaveName.FORCED ||
                             leaveName === LeaveName.SPECIAL_PRIVILEGE ||
                             leaveName === LeaveName.SICK ||
                             leaveName === LeaveName.SOLO_PARENT) &&
-                            dayjs(`${day}`).diff(`${today}`, 'day') > 10 &&
+                            dayjs(`${day}`).diff(`${today}`, 'day') > 60 &&
                             // isLateFiling === false &&
                             'text-slate-300',
                           //disable date selection for past dates from current day for SPL/SICK ONLY
