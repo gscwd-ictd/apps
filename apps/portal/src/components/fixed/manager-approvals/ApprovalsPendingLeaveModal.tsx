@@ -182,7 +182,6 @@ export const ApprovalsPendingLeaveModal = ({
     }
   }, [swrLeaveLedger, swrLeaveLedgerError]);
 
-  console.log(leaveIndividualDetail);
   const { windowWidth } = UseWindowDimensions();
   return (
     <>
