@@ -50,6 +50,7 @@ const Index = () => {
   // Upon success/fail of swr request, zustand state will be updated
   useEffect(() => {
     if (!isEmpty(swrReportOnSummaryOfRehabLeaveDocument)) {
+      console.log(swrReportOnSummaryOfRehabLeaveDocument.data);
       SetReportOnEmpRehabLeaveDoc(swrReportOnSummaryOfRehabLeaveDocument.data);
     }
 
