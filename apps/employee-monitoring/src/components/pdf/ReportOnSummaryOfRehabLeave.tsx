@@ -147,7 +147,7 @@ export const ReportOnEmployeeRehabLeaveCreditsPdf: FunctionComponent<ReportOnSum
                     </View>
 
                     <View style={[styles.tableHeader, styles.w30, { borderRight: 'none' }]}>
-                      <Text style={[styles.tableHeaderText]}>Date/s of Filling</Text>
+                      <Text style={[styles.tableHeaderText]}>Date/s of Filing</Text>
                     </View>
                   </View>
 
@@ -175,7 +175,7 @@ export const ReportOnEmployeeRehabLeaveCreditsPdf: FunctionComponent<ReportOnSum
                               <Text style={[styles.tableDataText]}>{rehabLeaveEntry.leaveDates || ''}</Text>
                             </View>
                             <View style={[styles.tableData, styles.w30, { borderRight: 'none' }]}>
-                              <Text style={[styles.tableDataText]}>{rehabLeaveEntry.dateOfFilling || ''}</Text>
+                              <Text style={[styles.tableDataText]}>{rehabLeaveEntry.dateOfFiling || ''}</Text>
                             </View>
                           </View>
                         );

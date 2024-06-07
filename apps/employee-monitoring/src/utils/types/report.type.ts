@@ -166,7 +166,7 @@ export type EmployeeRoRl = {
   name: string;
   leaveCount: string;
   leaveDates: string;
-  dateOfFilling: string;
+  dateOfFiling: string;
 };
 export type ReportOnEmpRehabLeaveCredits = {
   report: Array<EmployeeRoRl>;
