@@ -296,6 +296,14 @@ export const FinalApprovalsPendingLeaveModal = ({
                     </div>
 
                     <div className="flex flex-col justify-start items-start w-full sm:w-1/2 px-0.5 pb-3  ">
+                      <label className="text-slate-500 text-md whitespace-nowrap pb-0.5 ">Reference No.:</label>
+
+                      <div className="w-auto ml-5">
+                        <label className=" text-md font-medium">{leaveIndividualDetail?.referenceNo}</label>
+                      </div>
+                    </div>
+
+                    <div className="flex flex-col justify-start items-start w-full sm:w-1/2 px-0.5 pb-3  ">
                       <label className="text-slate-500 text-md whitespace-nowrap pb-0.5">Leave Dates:</label>
 
                       <div className="w-auto ml-5">
@@ -385,9 +393,9 @@ export const FinalApprovalsPendingLeaveModal = ({
                           {leaveIndividualDetail?.leaveName === LeaveName.STUDY ? (
                             <>
                               <div className="text-md font-medium">
-                                {leaveIndividualDetail?.forBarBoardReview === '1'
+                                {leaveIndividualDetail?.forBarBoardReview
                                   ? 'For BAR/Board Examination Review '
-                                  : leaveIndividualDetail?.forMastersCompletion === '1'
+                                  : leaveIndividualDetail?.forMastersCompletion
                                   ? `Completion of Master's Degree `
                                   : 'Other'}
                               </div>
@@ -420,6 +428,9 @@ export const FinalApprovalsPendingLeaveModal = ({
                               : //SLB FOR WOMEN
                               leaveIndividualDetail?.leaveName === LeaveName.SPECIAL_LEAVE_BENEFITS_FOR_WOMEN
                               ? leaveIndividualDetail.splWomen
+                              : leaveIndividualDetail?.leaveName === LeaveName.STUDY &&
+                                leaveIndividualDetail?.studyLeaveOther
+                              ? leaveIndividualDetail?.studyLeaveOther
                               : //NON OF THE ABOVE
                                 ''}
                           </label>

@@ -174,7 +174,9 @@ export const LeavePdf = ({ employeeDetails, leaveDetails, selectedLeaveLedger }:
               <View style={styles.page}>
                 <Text style={{ position: 'absolute', fontSize: 6 }}>CIVIL SERVICES FORM NO. 6</Text>
                 <Text style={{ position: 'absolute', fontSize: 6, marginTop: 10 }}>Revised 2020</Text>
-                {/* <Text style={{ position: 'absolute', fontSize: 16, right: 0 }}>010678</Text> */}
+                <Text style={{ position: 'absolute', fontSize: 10, right: 0 }}>
+                  {leaveDetails?.leaveApplicationBasicInfo?.referenceNo}
+                </Text>
                 <View
                   style={{
                     display: 'flex',
@@ -212,6 +214,7 @@ export const LeavePdf = ({ employeeDetails, leaveDetails, selectedLeaveLedger }:
                 </View>
 
                 <View style={{ height: 5 }}></View>
+                {/* OFFICE and Employee Name */}
                 <View style={styles.container}>
                   <View
                     style={{
@@ -239,6 +242,7 @@ export const LeavePdf = ({ employeeDetails, leaveDetails, selectedLeaveLedger }:
                     >
                       {leaveDetails.employeeDetails.assignment.name}
                     </Text>
+                    {/* EMPLOYEE NAME */}
                     <Text style={{ marginRight: 50 }}>2. NAME</Text>
                     <Text
                       style={{
@@ -281,6 +285,7 @@ export const LeavePdf = ({ employeeDetails, leaveDetails, selectedLeaveLedger }:
                     <Text style={{ marginRight: 50 }}>(Middle)</Text>
                   </View>
                 </View>
+                {/* DATE OF FILING UP TO SALARY */}
                 <View style={styles.container2}>
                   <View
                     style={{
@@ -337,6 +342,7 @@ export const LeavePdf = ({ employeeDetails, leaveDetails, selectedLeaveLedger }:
                     <Text style={{ marginRight: 1 }}>___________________</Text>
                   </View>
                 </View>
+                {/* DETAILS OF APPLICATION */}
                 <View style={styles.container3}>
                   <Text>6. DETAILS OF APPLICATION</Text>
                 </View>
@@ -349,6 +355,7 @@ export const LeavePdf = ({ employeeDetails, leaveDetails, selectedLeaveLedger }:
                     width: '100%',
                   }}
                 >
+                  {/* LEAVE CHECKBOXES */}
                   <View style={{ display: 'flex', flexDirection: 'row' }}>
                     <View
                       style={{
@@ -484,6 +491,7 @@ export const LeavePdf = ({ employeeDetails, leaveDetails, selectedLeaveLedger }:
                         <Text style={styles.leaveLabel}>Others:</Text>
                       </View>
                     </View>
+                    {/* 6.B DETAILS OF LEAVE CHECKBOXES */}
                     <View
                       style={{
                         display: 'flex',
@@ -691,6 +699,7 @@ export const LeavePdf = ({ employeeDetails, leaveDetails, selectedLeaveLedger }:
                     </View>
                   </View>
                   <View style={{ display: 'flex', flexDirection: 'row' }}>
+                    {/* 6.C NUMBER OF WORKING DAYS APPLIED */}
                     <View
                       style={{
                         display: 'flex',
@@ -701,29 +710,64 @@ export const LeavePdf = ({ employeeDetails, leaveDetails, selectedLeaveLedger }:
                         padding: 2,
                       }}
                     >
-                      <Text>6.C NUMBER OF WORKING DAYS APPLIED FOR</Text>
-                      <Text
+                      <View
                         style={{
-                          fontSize: 8,
-                          position: 'absolute',
-                          padding: 6,
-                          marginTop: 10,
-                          lineHeight: 2.1,
+                          display: 'flex',
+                          flexDirection: 'column',
                         }}
                       >
-                        {leaveDetails.leaveApplicationBasicInfo.leaveDates
-                          ? leaveDetails.leaveApplicationBasicInfo.leaveDates.length > 18
-                            ? `From ${leaveDetails.leaveApplicationBasicInfo.leaveDates[0]} To ${
-                                leaveDetails.leaveApplicationBasicInfo.leaveDates[
-                                  leaveDetails.leaveApplicationBasicInfo.leaveDates.length - 1
-                                ]
-                              }`
-                            : leaveDetails.leaveApplicationBasicInfo.leaveDates.join(', ')
-                          : null}
-                      </Text>
-                      <Text style={{ padding: 5 }}>_____________________________________________________</Text>
-                      <Text style={{ padding: 5 }}>_____________________________________________________</Text>
+                        <Text>6.C NUMBER OF WORKING DAYS APPLIED FOR</Text>
+                        <Text
+                          style={{
+                            fontSize: 8,
+                            position: 'absolute',
+                            padding: 6,
+                            marginTop: 8,
+                            lineHeight: 2.1,
+                            textIndent: 5,
+                          }}
+                        >
+                          {leaveDetails.leaveApplicationBasicInfo.leaveDates.length} DAY/S
+                        </Text>
+                        <Text style={{ padding: 5 }}>_____________________________________________________</Text>
+                      </View>
+                      <View
+                        style={{
+                          display: 'flex',
+                          flexDirection: 'column',
+                        }}
+                      >
+                        <Text
+                          style={{
+                            paddingLeft: 6,
+                          }}
+                        >
+                          INCLUSIVE DATES
+                        </Text>
+                        <Text
+                          style={{
+                            fontSize: 8,
+                            position: 'absolute',
+                            padding: 6,
+                            marginTop: 8,
+                            lineHeight: 2.1,
+                            textIndent: 5,
+                          }}
+                        >
+                          {leaveDetails.leaveApplicationBasicInfo.leaveDates
+                            ? leaveDetails.leaveApplicationBasicInfo.leaveDates.length > 5
+                              ? `From ${leaveDetails.leaveApplicationBasicInfo.leaveDates[0]} To ${
+                                  leaveDetails.leaveApplicationBasicInfo.leaveDates[
+                                    leaveDetails.leaveApplicationBasicInfo.leaveDates.length - 1
+                                  ]
+                                }`
+                              : leaveDetails.leaveApplicationBasicInfo.leaveDates.join(', ')
+                            : null}
+                        </Text>
+                        <Text style={{ padding: 5 }}>_____________________________________________________</Text>
+                      </View>
                     </View>
+                    {/* 6.D COMMUTATION */}
                     <View
                       style={{
                         display: 'flex',
@@ -777,6 +821,7 @@ export const LeavePdf = ({ employeeDetails, leaveDetails, selectedLeaveLedger }:
                     </View>
                   </View>
                 </View>
+                {/* DETAILS OF ACTION ON APPLICATION - SIGNATORIES */}
                 <View style={styles.container3}>
                   <Text>7. DETAILS OF ACTION ON APPLICATION</Text>
                 </View>
@@ -789,6 +834,7 @@ export const LeavePdf = ({ employeeDetails, leaveDetails, selectedLeaveLedger }:
                   }}
                 >
                   <View style={{ display: 'flex', flexDirection: 'row' }}>
+                    {/* 7.A CERTIFICATION OF LEAVE CREDITS */}
                     <View
                       style={{
                         display: 'flex',
@@ -822,6 +868,7 @@ export const LeavePdf = ({ employeeDetails, leaveDetails, selectedLeaveLedger }:
                         As of _______________________________
                       </Text>
                       <View style={{ paddingLeft: 10, paddingRight: 10 }}>
+                        {/* LEAVE CREDIT TABLE */}
                         <View style={styles.containerTable}>
                           <View style={{ display: 'flex', flexDirection: 'row' }}>
                             <View style={styles.containerTableRow4}></View>
@@ -894,6 +941,7 @@ export const LeavePdf = ({ employeeDetails, leaveDetails, selectedLeaveLedger }:
                           </View>
                         </View>
 
+                        {/* HRMO SIGNATURE */}
                         <View style={{ width: '100%' }}>
                           <Image
                             style={{
@@ -924,6 +972,7 @@ export const LeavePdf = ({ employeeDetails, leaveDetails, selectedLeaveLedger }:
                         </View>
                       </View>
                     </View>
+                    {/* 7.B RECOMMENDATION */}
                     <View
                       style={{
                         display: 'flex',
@@ -970,6 +1019,7 @@ export const LeavePdf = ({ employeeDetails, leaveDetails, selectedLeaveLedger }:
                         <Text style={{ padding: 5 }}>____________________________________________</Text>
                         <Text style={{ padding: 5 }}>____________________________________________</Text>
                       </View>
+                      {/* SUPERVISOR SIGNATURE */}
                       <View style={{ width: '100%' }}>
                         <Image
                           style={{
@@ -1009,6 +1059,7 @@ export const LeavePdf = ({ employeeDetails, leaveDetails, selectedLeaveLedger }:
                       justifyContent: 'space-between',
                     }}
                   >
+                    {/* 7.C APPROVED FOR */}
                     <View
                       style={{
                         display: 'flex',
@@ -1020,31 +1071,66 @@ export const LeavePdf = ({ employeeDetails, leaveDetails, selectedLeaveLedger }:
                       }}
                     >
                       <Text>7.C APPROVED FOR:</Text>
-                      <Text
+                      <View
                         style={{
-                          position: 'absolute',
-                          marginTop: 13,
-                          marginLeft: 13,
+                          display: 'flex',
+                          flexDirection: 'row',
+                          justifyContent: 'flex-start',
                         }}
                       >
-                        {leaveDetails.leaveApplicationBasicInfo.leaveName != LeaveName.LEAVE_WITHOUT_PAY
-                          ? leaveDetails?.leaveApplicationBasicInfo?.leaveDates?.length
-                          : 0}
-                      </Text>
-                      <Text>_______ days with pay</Text>
-                      <Text
+                        <Text
+                          style={{
+                            position: 'absolute',
+                            marginTop: 0,
+                            marginLeft: 13,
+                          }}
+                        >
+                          {leaveDetails.leaveApplicationBasicInfo.leaveName != LeaveName.LEAVE_WITHOUT_PAY
+                            ? leaveDetails?.leaveApplicationBasicInfo?.leaveDates?.length
+                            : 0}
+                        </Text>
+                        <Text>_______ days with pay</Text>
+                      </View>
+                      <View
                         style={{
-                          position: 'absolute',
-                          marginTop: 25,
-                          marginLeft: 13,
+                          display: 'flex',
+                          flexDirection: 'row',
+                          justifyContent: 'flex-start',
                         }}
                       >
-                        {leaveDetails.leaveApplicationBasicInfo.leaveName === LeaveName.LEAVE_WITHOUT_PAY
-                          ? leaveDetails?.leaveApplicationBasicInfo?.leaveDates?.length
-                          : 0}
-                      </Text>
-                      <Text>_______ days without pay</Text>
+                        <Text
+                          style={{
+                            position: 'absolute',
+                            marginTop: 0,
+                            marginLeft: 13,
+                          }}
+                        >
+                          {leaveDetails.leaveApplicationBasicInfo.leaveName === LeaveName.LEAVE_WITHOUT_PAY
+                            ? leaveDetails?.leaveApplicationBasicInfo?.leaveDates?.length
+                            : 0}
+                        </Text>
+                        <Text>_______ days without pay</Text>
+                      </View>
+                      <View
+                        style={{
+                          display: 'flex',
+                          flexDirection: 'row',
+                          justifyContent: 'flex-start',
+                        }}
+                      >
+                        <Text
+                          style={{
+                            position: 'absolute',
+                            marginTop: 0,
+                            marginLeft: 13,
+                          }}
+                        >
+                          {0}
+                        </Text>
+                        <Text>_______ others (Specify)</Text>
+                      </View>
                     </View>
+                    {/* 7.D DISAPPROVED DUE TO REMARKS */}
                     <View
                       style={{
                         display: 'flex',
@@ -1075,6 +1161,7 @@ export const LeavePdf = ({ employeeDetails, leaveDetails, selectedLeaveLedger }:
                       </View>
                     </View>
                   </View>
+                  {/* HRDM SIGNATURE */}
                   <View
                     style={{
                       width: '100%',
@@ -1113,6 +1200,7 @@ export const LeavePdf = ({ employeeDetails, leaveDetails, selectedLeaveLedger }:
                 </View>
               </View>
             </Page>
+            {/* 2ND PAGE - INSTRUCTIONS */}
             <Page size={'A4'}>
               <View style={styles.page}>
                 <View style={styles.container3}>

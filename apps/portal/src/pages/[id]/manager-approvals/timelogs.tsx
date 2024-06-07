@@ -252,11 +252,10 @@ export const getServerSideProps: GetServerSideProps = withCookieSession(async (c
   //convert salary grade to number
   // const finalSalaryGrade = SalaryGradeConverter(employeeDetails.employmentDetails.salaryGrade);
 
-  // check if user role is rank_and_file or job order, or not OIC or not SG16 and up = kick out
+  // check if user role is rank_and_file or job order = kick out
   if (
-    (employeeDetails.employmentDetails.userRole === UserRole.RANK_AND_FILE ||
-      employeeDetails.employmentDetails.userRole === UserRole.JOB_ORDER) &&
-    employeeDetails.employmentDetails.officerOfTheDay.length <= 0
+    employeeDetails.employmentDetails.userRole === UserRole.RANK_AND_FILE ||
+    employeeDetails.employmentDetails.userRole === UserRole.JOB_ORDER
   ) {
     // if true, the employee is not allowed to access this page
     return {

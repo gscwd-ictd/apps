@@ -229,6 +229,16 @@ export const LeaveCompletedModal = ({ modalState, setModalState, closeModalActio
                     </div>
 
                     <div className="flex flex-col justify-start items-start w-full sm:w-1/2 px-0.5 pb-3  ">
+                      <label className="text-slate-500 text-md whitespace-nowrap pb-0.5 ">Reference No.:</label>
+
+                      <div className="w-auto ml-5">
+                        <label className=" text-md font-medium">
+                          {leaveIndividualDetail?.leaveApplicationBasicInfo?.referenceNo}
+                        </label>
+                      </div>
+                    </div>
+
+                    <div className="flex flex-col justify-start items-start w-full sm:w-1/2 px-0.5 pb-3  ">
                       <label className="text-slate-500 text-md whitespace-nowrap pb-0.5">Date of Application:</label>
 
                       <div className="w-auto ml-5">
@@ -468,9 +478,7 @@ export const LeaveCompletedModal = ({ modalState, setModalState, closeModalActio
                       leaveIndividualDetail?.leaveApplicationDetails?.studyLeaveOther) ? (
                       <div
                         className={`flex flex-col sm:flex-col justify-start items-start w-full ${
-                          leaveIndividualDetail?.leaveApplicationBasicInfo?.status === LeaveStatus.APPROVED
-                            ? ''
-                            : 'sm:w-1/2'
+                          leaveIndividualDetail?.leaveApplicationBasicInfo?.status === LeaveStatus.APPROVED ? '' : ''
                         } px-0.5 pb-3`}
                       >
                         <label className="text-slate-500 text-md whitespace-nowrap pb-0.5 ">Specific Details:</label>
@@ -494,14 +502,9 @@ export const LeaveCompletedModal = ({ modalState, setModalState, closeModalActio
                       </div>
                     ) : null}
 
-                    {leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveDateCancellationRemarks ? (
-                      <div
-                        className={`flex flex-col sm:flex-col justify-start items-start w-full ${
-                          leaveIndividualDetail?.leaveApplicationBasicInfo?.status === LeaveStatus.APPROVED
-                            ? ''
-                            : 'sm:w-1/2'
-                        } px-0.5 pb-3`}
-                      >
+                    {leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveDateCancellationRemarks &&
+                    leaveIndividualDetail?.leaveApplicationBasicInfo?.status === LeaveStatus.APPROVED ? (
+                      <div className={`flex flex-col sm:flex-col justify-start items-start w-full px-0.5 pb-3`}>
                         <label className="text-slate-500 text-md whitespace-nowrap pb-0.5 ">
                           Leave Date Cancellation Remarks:
                         </label>
@@ -563,7 +566,7 @@ export const LeaveCompletedModal = ({ modalState, setModalState, closeModalActio
                       LeaveStatus.DISAPPROVED_BY_SUPERVISOR ||
                     leaveIndividualDetail?.leaveApplicationBasicInfo?.status === LeaveStatus.DISAPPROVED_BY_HRMO ||
                     leaveIndividualDetail?.leaveApplicationBasicInfo?.status === LeaveStatus.CANCELLED ? (
-                      <div className="flex flex-col sm:flex-col justify-start items-start w-full sm:w-1/2 px-0.5 pb-3 ">
+                      <div className="flex flex-col sm:flex-col justify-start items-start w-full px-0.5 pb-3 ">
                         <label className="text-slate-500 text-md whitespace-nowrap pb-0.5 ">
                           {leaveIndividualDetail?.leaveApplicationBasicInfo?.status === LeaveStatus.DISAPPROVED_BY_HRDM
                             ? 'HRDM Remarks:'
@@ -585,7 +588,11 @@ export const LeaveCompletedModal = ({ modalState, setModalState, closeModalActio
                               : leaveIndividualDetail?.leaveApplicationBasicInfo?.status ===
                                 LeaveStatus.DISAPPROVED_BY_SUPERVISOR
                               ? leaveIndividualDetail?.leaveApplicationBasicInfo?.supervisorDisapprovalRemarks
-                              : leaveIndividualDetail?.leaveApplicationBasicInfo?.status === LeaveStatus.CANCELLED
+                              : leaveIndividualDetail?.leaveApplicationBasicInfo?.status === LeaveStatus.CANCELLED &&
+                                leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveDateCancellationRemarks
+                              ? leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveDateCancellationRemarks
+                              : leaveIndividualDetail?.leaveApplicationBasicInfo?.status === LeaveStatus.CANCELLED &&
+                                leaveIndividualDetail?.leaveApplicationBasicInfo?.cancelReason
                               ? leaveIndividualDetail?.leaveApplicationBasicInfo?.cancelReason == ''
                                 ? 'N/A'
                                 : leaveIndividualDetail?.leaveApplicationBasicInfo?.cancelReason

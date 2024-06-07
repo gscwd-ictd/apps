@@ -104,6 +104,8 @@ export type EmployeeLeaveDetails = {
     hrdmApprovedByName: string;
     hrdmSignature: string;
     hrdmDisapprovalRemarks: string;
+
+    referenceNo: string | null;
   };
   leaveApplicationDetails: {
     inPhilippinesOrAbroad?: string;
@@ -125,6 +127,7 @@ export type EmployeeLeave = {
   dateOfFiling: string;
   leaveDates: Array<string>;
   status: LeaveStatus; //! changed this to enum
+  referenceNo: string | null;
 };
 
 // List of leaves per employee
@@ -152,11 +155,13 @@ export type LeaveId = Pick<EmployeeLeave, 'id'>;
 //! Changed 08/02/2023
 // Single row type for collated employee leaves
 export type MonitoringLeave = EmployeeLeave & {
+  referenceNo: string;
   employee: { employeeId: string; employeeName: string };
   supervisor: {
     supervisorId: string;
     supervisorName: string;
   };
+  isLateFiling: boolean;
 };
 
 export type SupervisorLeaveDetails = {
@@ -185,7 +190,7 @@ export type SupervisorLeaveDetails = {
   cancelDate: string;
   cancelReason: string;
   isLateFiling: boolean;
-
+  referenceNo: string | null;
   employee: {
     employeeId: string;
     employeeName: string;

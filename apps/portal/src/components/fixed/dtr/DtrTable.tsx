@@ -136,7 +136,9 @@ export const DtrTable = ({ employeeDetails }: DtrTableProps) => {
                           <td
                             className={`border text-center py-2 ${
                               UseLateChecker(logs.dtr.timeIn, logs.schedule.timeIn) == true &&
-                              logs.schedule.scheduleBase === 'Office'
+                              logs.holidayType !== HolidayTypes.REGULAR &&
+                              logs.holidayType !== HolidayTypes.SPECIAL &&
+                              logs.dtr.remarks !== 'Rest Day'
                                 ? 'text-red-500'
                                 : ''
                             } ${
@@ -185,7 +187,9 @@ export const DtrTable = ({ employeeDetails }: DtrTableProps) => {
                           <td
                             className={`border text-center py-2 ${
                               UseUndertimeChecker(logs.dtr.timeOut, logs.schedule.timeOut) == true &&
-                              logs.schedule.scheduleBase === 'Office'
+                              logs.holidayType !== HolidayTypes.REGULAR &&
+                              logs.holidayType !== HolidayTypes.SPECIAL &&
+                              logs.dtr.remarks !== 'Rest Day'
                                 ? 'text-red-500'
                                 : ''
                             } ${

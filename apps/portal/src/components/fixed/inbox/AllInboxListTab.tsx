@@ -65,6 +65,17 @@ export const AllInboxListTab = ({ tab }: TabProps) => {
 
   return (
     <>
+      {tab === 1 ? (
+        <div className="flex justify-center pt-20">
+          <h1 className="text-4xl text-gray-300">No messages found at the moment</h1>
+        </div>
+      ) : null}
+      {tab === 2 ? (
+        <div className="flex justify-center pt-20">
+          <h1 className="text-4xl text-gray-300">No messages found at the moment</h1>
+        </div>
+      ) : null}
+
       {tab === 3 && overtimeMessages && overtimeMessages.length > 0 ? (
         <ul className={'mt-4 lg:mt-0'}>
           {overtimeMessages.map((item: OvertimeMessageContent, index: number) => {
