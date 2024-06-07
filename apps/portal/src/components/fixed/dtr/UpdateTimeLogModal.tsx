@@ -447,7 +447,7 @@ const UpdateTimeLogModal: FunctionComponent<EditDailySchedModalProps> = ({
                 <div className="flex flex-col justify-start items-start w-full px-0.5 pb-3  ">
                   {rowData?.dtrCorrection?.remarks ? (
                     <label className="font-medium text-gray-900 dark:text-gray-800 text-sm whitespace-nowrap pb-0.5 ">
-                      Remarks:
+                      Reason:
                     </label>
                   ) : null}
 
