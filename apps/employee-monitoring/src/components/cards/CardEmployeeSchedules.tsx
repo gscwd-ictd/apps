@@ -274,7 +274,7 @@ const CardEmployeeSchedules: FunctionComponent<CardEmployeeSchedulesProps> = ({ 
             <LoadingSpinner size="lg" />
           ) : (
             <>
-              <DataTable model={table} showColumnFilter={false} />
+              <DataTable model={table} showColumnFilter={false} paginate={true} />
             </>
           )}
         </div>
