@@ -133,7 +133,8 @@ export const OvertimeSummaryModal = ({ modalState, setModalState, closeModalActi
                       Selected Type
                     </option>
                     {employeeTypeList.map((item: Item, idx: number) => (
-                      <option value={item.value} key={idx} disabled={item.label === 'Job Order' ? true : false}>
+                      <option value={item.value} key={idx}>
+                        {/* <option value={item.value} key={idx} disabled={item.label === 'Job Order' ? true : false}> */}
                         {item.label}
                       </option>
                     ))}

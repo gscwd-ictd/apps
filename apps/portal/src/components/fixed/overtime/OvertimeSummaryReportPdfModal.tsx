@@ -219,7 +219,9 @@ export const OvertimeSummaryReportPdfModal = ({ modalState, setModalState, close
                     <View style={styles.controlNumber}>{/* <Text>NO. 1</Text> */}</View>
                     <PdfHeader />
                     <Text style={styles.pdfTitle}>{overtimeSummaryReport.assignedTo}</Text>
-                    <Text style={styles.pdfTitle}>OVERTIME SUMMARY FOR REGULAR EMPLOYEES</Text>
+                    <Text style={styles.pdfTitle}>
+                      OVERTIME SUMMARY FOR {selectedEmployeeType.toUpperCase()} EMPLOYEES
+                    </Text>
                     <Text style={[styles.pdfTitle, { paddingBottom: 10 }]}>
                       PERIOD COVERED:{' '}
                       <Text style={[styles.pdfTitle, { paddingLeft: 3, paddingRight: 3, textDecoration: 'underline' }]}>
@@ -312,7 +314,9 @@ export const OvertimeSummaryReportPdfModal = ({ modalState, setModalState, close
                         </View>
 
                         <View style={[styles.tableCol, { width: 40 }]}>
-                          <Text style={styles.tableCell}>AMOUNT (A X B X 1.25)</Text>
+                          <Text style={styles.tableCell}>
+                            AMOUNT (A X B{selectedEmployeeType !== 'job order' ? ' X 1.25' : ''})
+                          </Text>
                         </View>
 
                         <View style={[styles.tableCol, { width: 50 }]}>
@@ -320,13 +324,17 @@ export const OvertimeSummaryReportPdfModal = ({ modalState, setModalState, close
                         </View>
 
                         <View style={[styles.tableCol, { width: 40 }]}>
-                          <Text style={styles.tableCell}>AMOUNT (A X C X 1.5)</Text>
+                          <Text style={styles.tableCell}>
+                            AMOUNT (A X C{selectedEmployeeType !== 'job order' ? ' X 1.5' : ''})
+                          </Text>
                         </View>
                         <View style={[styles.tableCol, { width: 45 }]}>
                           <Text style={styles.tableCell}>SUBSTITUTE DUTY OT HOURS (D)</Text>
                         </View>
                         <View style={[styles.tableCol, { width: 45 }]}>
-                          <Text style={styles.tableCell}>SUBSTITUTE AMOUNT (A X D X 1.25)</Text>
+                          <Text style={styles.tableCell}>
+                            SUBSTITUTE AMOUNT (A X D{selectedEmployeeType !== 'job order' ? 'X 1.25' : ''})
+                          </Text>
                         </View>
 
                         <View style={styles.tableCol_dates_main}>
