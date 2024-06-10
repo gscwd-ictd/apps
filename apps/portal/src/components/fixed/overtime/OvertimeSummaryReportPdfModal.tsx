@@ -146,7 +146,7 @@ export const OvertimeSummaryReportPdfModal = ({ modalState, setModalState, close
 
   const employeeDetails = useEmployeeStore((state) => state.employeeDetails);
   const numberOfDays = dayjs(`${selectedYear}-${selectedMonth}-1`).daysInMonth();
-  const overtimeSummaryUrl = `${process.env.NEXT_PUBLIC_EMPLOYEE_MONITORING_URL}/v1/overtime/reports/${employeeDetails.user._id}/${selectedYear}/${selectedMonth}?half=${selectedPeriod}`;
+  const overtimeSummaryUrl = `${process.env.NEXT_PUBLIC_EMPLOYEE_MONITORING_URL}/v1/overtime/reports/${employeeDetails.user._id}/${selectedYear}/${selectedMonth}?half=${selectedPeriod}&nature_of_appointment=${selectedEmployeeType}`;
 
   const {
     data: swrOvertimeSummary,
@@ -383,11 +383,11 @@ export const OvertimeSummaryReportPdfModal = ({ modalState, setModalState, close
                             </View>
 
                             <View style={[styles.tableCol, { width: 52 }]}>
-                              <Text style={styles.tableCell}>{overtime.monthlyRate.toLocaleString()}</Text>
+                              <Text style={styles.tableCell}>{overtime?.monthlyRate?.toLocaleString()}</Text>
                             </View>
 
                             <View style={[styles.tableCol, { width: 40 }]}>
-                              <Text style={styles.tableCell}>{overtime.hourlyRate.toLocaleString()}</Text>
+                              <Text style={styles.tableCell}>{overtime?.hourlyRate?.toLocaleString()}</Text>
                             </View>
 
                             <View style={styles.tableCol_dates_main}>

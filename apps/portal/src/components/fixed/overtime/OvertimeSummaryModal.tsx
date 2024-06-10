@@ -45,7 +45,7 @@ const periodList: Array<SelectOption> = [
 ];
 
 const employeeTypeList: Array<SelectOption> = [
-  { label: 'Regular', value: 'regular' },
+  { label: 'Permanent', value: 'permanent' },
   { label: 'Casual', value: 'casual' },
   { label: 'Job Order', value: 'job order' },
 ];
