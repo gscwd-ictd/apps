@@ -220,7 +220,7 @@ export const OvertimeSummaryReportPdfModal = ({ modalState, setModalState, close
                     <PdfHeader />
                     <Text style={styles.pdfTitle}>{overtimeSummaryReport.assignedTo}</Text>
                     <Text style={styles.pdfTitle}>
-                      OVERTIME SUMMARY FOR {selectedEmployeeType.toUpperCase()} EMPLOYEES
+                      OVERTIME SUMMARY FOR {selectedEmployeeType?.toUpperCase()} EMPLOYEES
                     </Text>
                     <Text style={[styles.pdfTitle, { paddingBottom: 10 }]}>
                       PERIOD COVERED:{' '}
