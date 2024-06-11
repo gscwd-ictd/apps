@@ -290,20 +290,24 @@ export const TrainingDetailsModal = ({ modalState, setModalState, closeModalActi
 
                 <AlertNotification
                   alertType={
-                    individualTrainingDetails.nominationStatus === TrainingNominationStatus.NOMINATION_COMPLETED
+                    individualTrainingDetails.nominationStatus === TrainingNominationStatus.NOMINATION_COMPLETED ||
+                    individualTrainingDetails.nominationStatus === TrainingNominationStatus.NOMINATION_SUBMITTED
                       ? 'success'
                       : individualTrainingDetails.nominationStatus === TrainingNominationStatus.NOMINATION_PENDING
                       ? 'warning'
-                      : individualTrainingDetails.nominationStatus === TrainingNominationStatus.NOMINATION_INELIGIBLE
+                      : individualTrainingDetails.nominationStatus === TrainingNominationStatus.NOMINATION_INELIGIBLE ||
+                        individualTrainingDetails.nominationStatus === TrainingNominationStatus.NOMINATION_SKIPPED
                       ? 'error'
                       : 'info'
                   }
                   notifMessage={
-                    individualTrainingDetails.nominationStatus === TrainingNominationStatus.NOMINATION_COMPLETED
+                    individualTrainingDetails.nominationStatus === TrainingNominationStatus.NOMINATION_COMPLETED ||
+                    individualTrainingDetails.nominationStatus === TrainingNominationStatus.NOMINATION_SUBMITTED
                       ? 'Nomination Submitted'
                       : individualTrainingDetails.nominationStatus === TrainingNominationStatus.NOMINATION_PENDING
                       ? 'Nomination Pending'
-                      : individualTrainingDetails.nominationStatus === TrainingNominationStatus.NOMINATION_INELIGIBLE
+                      : individualTrainingDetails.nominationStatus === TrainingNominationStatus.NOMINATION_INELIGIBLE ||
+                        individualTrainingDetails.nominationStatus === TrainingNominationStatus.NOMINATION_SKIPPED
                       ? 'Nomination Skipped'
                       : individualTrainingDetails.nominationStatus
                   }
@@ -312,7 +316,7 @@ export const TrainingDetailsModal = ({ modalState, setModalState, closeModalActi
               </div>
 
               <div className="flex flex-wrap justify-between">
-                <div className="flex flex-col justify-between items-start w-full md:w-1/2 px-0.5 pb-3">
+                <div className="flex flex-col items-start w-full md:w-1/2 px-0.5 pb-3">
                   <label className="text-slate-500 text-md whitespace-nowrap sm:w-80 ">Course Title:</label>
 
                   <div className="w-auto pl-0 md:pl-4">
@@ -321,7 +325,7 @@ export const TrainingDetailsModal = ({ modalState, setModalState, closeModalActi
                     </label>
                   </div>
                 </div>
-                <div className="flex flex-col justify-between items-start w-full md:w-1/2 px-0.5 pb-3">
+                <div className="flex flex-col  items-start w-full md:w-1/2 px-0.5 pb-3">
                   <label className="text-slate-500 text-md whitespace-nowrap sm:w-80">Duration:</label>
 
                   <div className="w-auto">
@@ -549,7 +553,9 @@ export const TrainingDetailsModal = ({ modalState, setModalState, closeModalActi
           <div className="flex justify-end gap-2 px-4">
             <div className="max-w-auto flex gap-4 ">
               {individualTrainingDetails.nominationStatus === TrainingNominationStatus.NOMINATION_COMPLETED ||
-              individualTrainingDetails.nominationStatus === TrainingNominationStatus.NOMINATION_INELIGIBLE ? (
+              individualTrainingDetails.nominationStatus === TrainingNominationStatus.NOMINATION_INELIGIBLE ||
+              individualTrainingDetails.nominationStatus === TrainingNominationStatus.NOMINATION_SKIPPED ||
+              individualTrainingDetails.nominationStatus === TrainingNominationStatus.NOMINATION_SUBMITTED ? (
                 <Button variant={'default'} size={'md'} loading={false} type="submit" onClick={closeModalAction}>
                   Close
                 </Button>
