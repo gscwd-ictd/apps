@@ -373,7 +373,7 @@ export const PassSlipApplicationModal = ({
 
                     <div className="flex flex-col gap-2 md:gap-2">
                       <label className="text-slate-500 text-md font-medium">
-                        Purpose/Desination:
+                        Purpose/Destination:
                         <span className="text-red-600">*</span>
                       </label>
                       <textarea
