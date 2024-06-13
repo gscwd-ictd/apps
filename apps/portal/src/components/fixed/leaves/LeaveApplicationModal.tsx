@@ -630,11 +630,23 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
                       className="mb-1"
                     />
                   ) : null}
-                  {/* Vacation Leave Credits Notifications */}
+
+                  {/* Forced Leave Credits Notifications */}
                   {roundedFinalForcedLeaveBalance < 0 && watch('typeOfLeaveDetails.leaveName') === LeaveName.FORCED ? (
                     <AlertNotification
                       alertType="warning"
                       notifMessage="Insufficient Forced Leave Credits."
+                      dismissible={false}
+                      className="mb-1"
+                    />
+                  ) : null}
+
+                  {/* Forced Leave Credits Notifications */}
+                  {Number(leaveDates.length > Math.round(vacationLeaveBalance)) &&
+                  watch('typeOfLeaveDetails.leaveName') === LeaveName.FORCED ? (
+                    <AlertNotification
+                      alertType="warning"
+                      notifMessage="Filed Force Leave must not exceed the rounded off Vacation Leave Balance."
                       dismissible={false}
                       className="mb-1"
                     />
@@ -648,6 +660,7 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
                       className="mb-1"
                     />
                   ) : null}
+
                   {/* Sick Leave Credits Notifications */}
                   {roundedFinalSickLeaveBalance < 0 && watch('typeOfLeaveDetails.leaveName') === LeaveName.SICK ? (
                     <AlertNotification
@@ -1426,6 +1439,9 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
                     ? true
                     : //both fields have no input
                     leaveCreditsInput <= 0 && watch('typeOfLeaveDetails.leaveName') === LeaveName.MONETIZATION
+                    ? true
+                    : Number(leaveDates.length > Math.round(vacationLeaveBalance)) &&
+                      watch('typeOfLeaveDetails.leaveName') === LeaveName.FORCED
                     ? true
                     : false
                 }
