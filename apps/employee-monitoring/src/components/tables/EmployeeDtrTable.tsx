@@ -459,12 +459,12 @@ export const EmployeeDtrTable: FunctionComponent<EmployeeDtrTableProps> = ({ emp
                           </button>
 
                           {/* Remarks button */}
-                          {/* <button
+                          <button
                             className="px-1 text-white bg-blue-600 rounded disabled:bg-red-600"
                             onClick={() => openEditRemarksModal(logs)}
                           >
                             <i className="text-lg text-inherit bx bx-comment-edit"></i>
-                          </button> */}
+                          </button>
                         </div>
                       </section>
                     );

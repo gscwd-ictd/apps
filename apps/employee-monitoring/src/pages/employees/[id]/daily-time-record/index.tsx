@@ -20,9 +20,6 @@ import AddRemarksDTRModal from 'apps/employee-monitoring/src/components/modal/em
 import useSWR from 'swr';
 import fetcherEMS from 'apps/employee-monitoring/src/utils/fetcher/FetcherEMS';
 
-// ! TODO
-// - [ ] Pick dtrId, dtrDate, and remarks from rowData in editing remarks
-
 export default function Index({ employeeData }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   // Print modal function
   const [printModalIsOpen, setPrintModalIsOpen] = useState<boolean>(false);
@@ -143,7 +140,7 @@ export default function Index({ employeeData }: InferGetServerSidePropsType<type
 
         {/* Error when updating DTR remarks */}
         {!isEmpty(errorUpdateDtrRemarks) ? (
-          <ToastNotification notifMessage="Error updating DTR remarks" toastType="error" />
+          <ToastNotification notifMessage="Something went wrong with editing DTR remarks" toastType="error" />
         ) : null}
 
         {/* Post/Patch Request Success*/}

@@ -65,8 +65,7 @@ const AddRemarksDTRModal: FunctionComponent<AddModalProps> = ({
     }
   };
 
-  // handle selection of dates
-
+  // handle selection of dates for calendar
   const [selectedDates, setSelectedDates] = useState<string[]>([]);
 
   const handleDateSelect = (dates: string[]) => {
@@ -113,7 +112,7 @@ const AddRemarksDTRModal: FunctionComponent<AddModalProps> = ({
             logo={<LoadingSpinner size="xs" />}
             alertType="info"
             notifMessage="Submitting Request"
-            dismissible={true}
+            dismissible={false}
           />
         ) : null}
         <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col p-4 gap-3" id="SelectDatesForRemarkForm">
