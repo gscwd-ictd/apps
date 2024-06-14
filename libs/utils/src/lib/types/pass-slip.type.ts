@@ -14,7 +14,7 @@ export type PassSlipApplicationForm = {
   timeIn: string | null;
   timeOut: string | null;
   isCancelled: boolean;
-  isMedical?: boolean;
+  isMedical?: boolean | string;
   supervisorId?: string;
 };
 

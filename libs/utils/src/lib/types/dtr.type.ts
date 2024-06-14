@@ -96,3 +96,16 @@ export type DtrCorrectionForm = {
   lunchOut: string;
   remarks: string;
 };
+
+// for adding remarks for selected dates in DTR
+export type DtrRemarksToSelectedDates = {
+  companyId: string;
+  dtrDates: Array<string>;
+  remarks: string;
+};
+
+// for updating dtr remarks
+export type DtrRemarks = {
+  dtrId: string;
+  remarks: string;
+};
