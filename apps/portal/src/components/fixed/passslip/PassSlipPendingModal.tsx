@@ -52,41 +52,51 @@ export const PassSlipPendingModal = ({ modalState, setModalState, closeModalActi
         <Modal.Body>
           <div className="w-full h-full flex flex-col gap-2 ">
             <div className="w-full flex flex-col gap-2 px-4 rounded">
-              <AlertNotification
-                alertType={
-                  passSlip.status === PassSlipStatus.UNUSED || passSlip.status === PassSlipStatus.USED
-                    ? 'info'
-                    : passSlip.status === PassSlipStatus.DISAPPROVED ||
-                      passSlip.status === PassSlipStatus.DISAPPROVED_BY_HRMO ||
-                      passSlip.status === PassSlipStatus.CANCELLED
-                    ? 'error'
-                    : passSlip.status === PassSlipStatus.FOR_SUPERVISOR_APPROVAL ||
-                      passSlip.status === PassSlipStatus.FOR_HRMO_APPROVAL ||
-                      passSlip.status === PassSlipStatus.FOR_DISPUTE
-                    ? 'warning'
-                    : 'info'
-                }
-                notifMessage={`${
-                  passSlip.status === PassSlipStatus.FOR_SUPERVISOR_APPROVAL
-                    ? `For Supervisor Review`
-                    : passSlip.status === PassSlipStatus.FOR_DISPUTE
-                    ? 'For Dispute Review'
-                    : passSlip.status === PassSlipStatus.FOR_HRMO_APPROVAL
-                    ? 'For HRMO Review'
-                    : passSlip.status === PassSlipStatus.DISAPPROVED
-                    ? 'Disapproved'
-                    : passSlip.status === PassSlipStatus.DISAPPROVED_BY_HRMO
-                    ? 'Disapproved by HRMO'
-                    : passSlip.status === PassSlipStatus.UNUSED
-                    ? 'Unused'
-                    : passSlip.status === PassSlipStatus.USED
-                    ? 'Used'
-                    : passSlip.status === PassSlipStatus.CANCELLED
-                    ? 'Cancelled'
-                    : passSlip.status
-                }`}
-                dismissible={false}
-              />
+              <div className="w-full flex flex-col gap-0">
+                <AlertNotification
+                  alertType={
+                    passSlip.status === PassSlipStatus.UNUSED || passSlip.status === PassSlipStatus.USED
+                      ? 'info'
+                      : passSlip.status === PassSlipStatus.DISAPPROVED ||
+                        passSlip.status === PassSlipStatus.DISAPPROVED_BY_HRMO ||
+                        passSlip.status === PassSlipStatus.CANCELLED
+                      ? 'error'
+                      : passSlip.status === PassSlipStatus.FOR_SUPERVISOR_APPROVAL ||
+                        passSlip.status === PassSlipStatus.FOR_HRMO_APPROVAL ||
+                        passSlip.status === PassSlipStatus.FOR_DISPUTE
+                      ? 'warning'
+                      : 'info'
+                  }
+                  notifMessage={`${
+                    passSlip.status === PassSlipStatus.FOR_SUPERVISOR_APPROVAL
+                      ? `For Supervisor Review`
+                      : passSlip.status === PassSlipStatus.FOR_DISPUTE
+                      ? 'For Dispute Review'
+                      : passSlip.status === PassSlipStatus.FOR_HRMO_APPROVAL
+                      ? 'For HRMO Review'
+                      : passSlip.status === PassSlipStatus.DISAPPROVED
+                      ? 'Disapproved'
+                      : passSlip.status === PassSlipStatus.DISAPPROVED_BY_HRMO
+                      ? 'Disapproved by HRMO'
+                      : passSlip.status === PassSlipStatus.UNUSED
+                      ? 'Unused'
+                      : passSlip.status === PassSlipStatus.USED
+                      ? 'Used'
+                      : passSlip.status === PassSlipStatus.CANCELLED
+                      ? 'Cancelled'
+                      : passSlip.status
+                  }`}
+                  dismissible={false}
+                />
+
+                {passSlip.isMedical && passSlip.natureOfBusiness === NatureOfBusiness.PERSONAL_BUSINESS ? (
+                  <AlertNotification
+                    alertType="info"
+                    notifMessage="For Personal Business with Medical Purposes, a medical certificate is required for it to be deducted to your Sick Leave credits. If no valid medical certificate is presented to HRD, it will be deducted to your Vacation Leave credits instead. "
+                    dismissible={false}
+                  />
+                ) : null}
+              </div>
 
               {/* cancell pass slip application */}
               <ConfirmationApplicationModal
