@@ -12,18 +12,22 @@ function UseRenderTrainingNominationStatus(status: TrainingNominationStatus, tex
       variant={
         status === TrainingNominationStatus.NOMINATION_PENDING
           ? 'warning'
-          : status === TrainingNominationStatus.NOMINATION_COMPLETED
+          : status === TrainingNominationStatus.NOMINATION_COMPLETED ||
+            status === TrainingNominationStatus.NOMINATION_SUBMITTED
           ? 'success'
-          : status === TrainingNominationStatus.NOMINATION_INELIGIBLE
+          : status === TrainingNominationStatus.NOMINATION_INELIGIBLE ||
+            status === TrainingNominationStatus.NOMINATION_SKIPPED
           ? 'error'
           : 'default'
       }
       label={
         status === TrainingNominationStatus.NOMINATION_PENDING
           ? 'Pending'
-          : status === TrainingNominationStatus.NOMINATION_COMPLETED
-          ? 'Done'
-          : status === TrainingNominationStatus.NOMINATION_INELIGIBLE
+          : status === TrainingNominationStatus.NOMINATION_COMPLETED ||
+            status === TrainingNominationStatus.NOMINATION_SUBMITTED
+          ? 'Submitted'
+          : status === TrainingNominationStatus.NOMINATION_INELIGIBLE ||
+            status === TrainingNominationStatus.NOMINATION_SKIPPED
           ? 'Skipped'
           : status
       }

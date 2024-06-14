@@ -188,31 +188,43 @@ export const PassSlipApplicationModal = ({
           </h3>
         </Modal.Header>
         <Modal.Body>
-          {/* Notifications */}
-          {loadingResponse ? (
-            <AlertNotification
-              logo={<LoadingSpinner size="xs" />}
-              alertType="info"
-              notifMessage="Submitting Request"
-              dismissible={true}
-            />
-          ) : null}
-
-          {!allowedToApplyForNew || passSlipsForApproval.length >= 1 ? (
-            <AlertNotification
-              alertType="warning"
-              notifMessage="You already have an active Pass Slip request."
-              dismissible={false}
-            />
-          ) : null}
-
-          {dtr?.timeIn == null && dtr?.lunchOut == null && dtr?.lunchIn == null ? (
-            <AlertNotification alertType="warning" notifMessage="No Face Scan Time-In Found." dismissible={false} />
-          ) : null}
-
           <form id="ApplyPassSlipForm" onSubmit={handleSubmit(onSubmit)}>
             <div className="w-full h-full flex flex-col">
               <div className="w-full flex flex-col px-4 rounded">
+                {/* Notifications */}
+                {loadingResponse ? (
+                  <AlertNotification
+                    logo={<LoadingSpinner size="xs" />}
+                    alertType="info"
+                    notifMessage="Submitting Request"
+                    dismissible={true}
+                  />
+                ) : null}
+
+                {!allowedToApplyForNew || passSlipsForApproval.length >= 1 ? (
+                  <AlertNotification
+                    alertType="warning"
+                    notifMessage="You already have an active Pass Slip request."
+                    dismissible={false}
+                  />
+                ) : null}
+
+                {dtr?.timeIn == null && dtr?.lunchOut == null && dtr?.lunchIn == null ? (
+                  <AlertNotification
+                    alertType="warning"
+                    notifMessage="No Face Scan Time-In Found."
+                    dismissible={false}
+                  />
+                ) : null}
+
+                {watch('isMedical') === '1' && watch('natureOfBusiness') === NatureOfBusiness.PERSONAL_BUSINESS ? (
+                  <AlertNotification
+                    alertType="info"
+                    notifMessage="For Personal Business with Medical Purposes, a medical certificate is required for it to be deducted to your Sick Leave credits. If no valid medical certificate is presented to HRD, it will be deducted to your Vacation Leave credits instead. "
+                    dismissible={false}
+                  />
+                ) : null}
+
                 <div className="w-full flex gap-2 justify-start items-center pb-2">
                   <span className="text-slate-500 text-md font-medium">Date:</span>
                   <div className="text-slate-500 text-md">{DateFormatter(dateToday, 'MM-DD-YYYY')}</div>
@@ -373,7 +385,7 @@ export const PassSlipApplicationModal = ({
 
                     <div className="flex flex-col gap-2 md:gap-2">
                       <label className="text-slate-500 text-md font-medium">
-                        Purpose/Desination:
+                        Purpose/Destination:
                         <span className="text-red-600">*</span>
                       </label>
                       <textarea

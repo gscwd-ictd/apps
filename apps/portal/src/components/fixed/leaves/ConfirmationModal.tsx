@@ -76,7 +76,7 @@ export const ConfirmationLeaveCancellationModal = ({
         </Modal.Header>
         <Modal.Body>
           <div className="w-full h-full flex flex-col gap-2 text-lg text-center px-4">
-            {`Are you sure you want to cancel these leave dates? Cancellation of leave dates can only be done once.`}
+            {`Are you sure you want to cancel these leave dates? Cancellation of leave dates can only be done once and cannot be undone.`}
           </div>
         </Modal.Body>
         <Modal.Footer>

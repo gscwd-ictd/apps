@@ -117,6 +117,14 @@ export const PassSlipCompletedModal = ({
                     dismissible={false}
                   />
                 ) : null}
+
+                {passSlip.isMedical && passSlip.natureOfBusiness === NatureOfBusiness.PERSONAL_BUSINESS ? (
+                  <AlertNotification
+                    alertType="info"
+                    notifMessage="For Personal Business with Medical Purposes, a medical certificate is required for it to be deducted to your Sick Leave credits. If no valid medical certificate is presented to HRD, it will be deducted to your Vacation Leave credits instead. "
+                    dismissible={false}
+                  />
+                ) : null}
               </div>
 
               {/* dispute pass slip time in */}
