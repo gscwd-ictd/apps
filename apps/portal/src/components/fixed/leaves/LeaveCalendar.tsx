@@ -141,7 +141,7 @@ export default function Calendar({
           if (
             leaveName === LeaveName.VACATION &&
             dayjs(`${specifiedDate}`).diff(`${today}`, 'day') >= 0 &&
-            dayjs(`${specifiedDate}`).diff(`${today}`, 'day') <= 60 &&
+            dayjs(`${specifiedDate}`).diff(`${today}`, 'day') <= 10 &&
             !isLateFiling
           ) {
             setSelectedDates((selectedDates) => [...selectedDates, specifiedDate]);
@@ -407,7 +407,7 @@ export default function Calendar({
                             'text-slate-300',
                           //disable date selection starting from 10th day from current day for VL/FL/SOLO/SPL
                           leaveName === LeaveName.VACATION &&
-                            dayjs(`${day}`).diff(`${today}`, 'day') > 60 &&
+                            dayjs(`${day}`).diff(`${today}`, 'day') > 10 &&
                             // isLateFiling === false &&
                             'text-slate-300',
                           //disable date selection for past dates from current day for SPL/SICK ONLY
