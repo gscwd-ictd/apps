@@ -49,6 +49,7 @@ export default function Calendar({
   const [selectedDates, setSelectedDates] = useState<string[]>([]);
   const [lastDateOfDuty, setLastDateOfDuty] = useState(today);
   const [errorAllowableSpl, setErrorAllowableSpl] = useState<string>(null);
+  const [futureLeaveCount, setFutureLeaveCount] = useState<number>(0);
   // set state for employee store
   const employeeDetails = useEmployeeStore((state) => state.employeeDetails);
 
@@ -107,6 +108,13 @@ export default function Calendar({
   useEffect(() => {
     if (!isEmpty(swrUnavailableDates)) {
       getUnavailableSuccess(swrIsLoading, swrUnavailableDates);
+
+      //get count of future pending/approved leaves from today
+      const futureLeaves = swrUnavailableDates?.filter(
+        (unavailableDate) =>
+          unavailableDate.type === 'Leave' && unavailableDate.date >= dayjs(today).format('YYYY-MM-DD')
+      ).length;
+      setFutureLeaveCount(futureLeaves);
     }
 
     if (!isEmpty(swrError)) {
@@ -114,7 +122,6 @@ export default function Calendar({
     }
   }, [swrUnavailableDates, swrError]);
 
-  // Initial zustand state update
   useEffect(() => {
     if (!isLateFiling) {
       setSelectedDates([]);
@@ -137,7 +144,19 @@ export default function Calendar({
         //adds date to array
         //if selected date is not found in unavailable dates array
         if (!swrUnavailableDates.some((item) => item.date === specifiedDate)) {
-          //for VL, FL, Solo Parent, within 10 days from today and not late filing
+          //for all leaves with credits with future dates from today and has future approved/pending leaves - allow future dates till infinity
+          if (
+            (leaveName === LeaveName.VACATION ||
+              leaveName === LeaveName.FORCED ||
+              leaveName === LeaveName.SOLO_PARENT ||
+              leaveName === LeaveName.SPECIAL_PRIVILEGE ||
+              leaveName === LeaveName.SICK) &&
+            dayjs(`${specifiedDate}`).diff(`${today}`, 'day') > 10 &&
+            futureLeaveCount > 0
+          ) {
+            setSelectedDates((selectedDates) => [...selectedDates, specifiedDate]);
+          }
+          //for VL within 10 days from today and not late filing
           if (
             leaveName === LeaveName.VACATION &&
             dayjs(`${specifiedDate}`).diff(`${today}`, 'day') >= 0 &&
@@ -146,6 +165,7 @@ export default function Calendar({
           ) {
             setSelectedDates((selectedDates) => [...selectedDates, specifiedDate]);
           }
+          //for FL/SOLO PARENT within 10 days from today and not late filing
           if (
             (leaveName === LeaveName.FORCED || leaveName === LeaveName.SOLO_PARENT) &&
             dayjs(`${specifiedDate}`).diff(`${today}`, 'day') >= 0 &&
@@ -163,6 +183,7 @@ export default function Calendar({
           ) {
             setSelectedDates((selectedDates) => [...selectedDates, specifiedDate]);
           }
+          // SPL/SICK and late filing
           if (
             (leaveName === LeaveName.SPECIAL_PRIVILEGE || leaveName === LeaveName.SICK) &&
             dayjs(`${specifiedDate}`).diff(`${today}`, 'day') <= 10 &&
@@ -397,17 +418,19 @@ export default function Calendar({
                             dayjs(`${day}`).diff(`${today}`, 'day') < 0 &&
                             isLateFiling === false &&
                             'text-slate-300',
-                          //disable date selection starting from 10th day from current day for VL/FL/SOLO/SPL
+                          //disable date selection starting from 10th day from current day for FL/SOLO/SPL
                           (leaveName === LeaveName.FORCED ||
                             leaveName === LeaveName.SPECIAL_PRIVILEGE ||
                             leaveName === LeaveName.SICK ||
                             leaveName === LeaveName.SOLO_PARENT) &&
                             dayjs(`${day}`).diff(`${today}`, 'day') > 10 &&
+                            futureLeaveCount <= 0 &&
                             // isLateFiling === false &&
                             'text-slate-300',
-                          //disable date selection starting from 10th day from current day for VL/FL/SOLO/SPL
+                          //disable date selection starting from 10th day from current day for VL ONLY
                           leaveName === LeaveName.VACATION &&
                             dayjs(`${day}`).diff(`${today}`, 'day') > 10 &&
+                            futureLeaveCount <= 0 &&
                             // isLateFiling === false &&
                             'text-slate-300',
                           //disable date selection for past dates from current day for SPL/SICK ONLY
@@ -429,6 +452,7 @@ export default function Calendar({
                           //disable date selection for more than 10 days from current day for SL
                           leaveName === LeaveName.SICK &&
                             dayjs(`${day}`).diff(`${today}`, 'day') > 10 &&
+                            futureLeaveCount <= 0 &&
                             'text-slate-300',
                           isToday(day) && 'text-red-500',
                           swrUnavailableDates &&
