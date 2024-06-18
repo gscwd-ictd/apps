@@ -147,10 +147,10 @@ export const ApprovalCaptcha: FunctionComponent<CaptchaProps> = ({
     setCaptchaModalIsOpen(false); //close captcha modal first
     setApproveAllCaptchaModalIsOpen(false);
 
-    // setOtpOvertimeModalIsOpen(false); //close OTP modal first
-    // setOtpPassSlipModalIsOpen(false); //close OTP modal first
-    // setOtpLeaveModalIsOpen(false); //close OTP modal first
-    // setOtpDtrCorrectionModalIsOpen(false); //close OTP modal first
+    setOtpOvertimeModalIsOpen(false);
+    setOtpPassSlipModalIsOpen(false);
+    setOtpLeaveModalIsOpen(false);
+    setOtpDtrCorrectionModalIsOpen(false);
 
     setTimeout(() => {
       setDisputedPassSlipModalIsOpen(false);
@@ -164,6 +164,11 @@ export const ApprovalCaptcha: FunctionComponent<CaptchaProps> = ({
 
   //CLOSE FUNCTION FOR CAPTCHA ONLY
   const handleCloseCaptcha = () => {
+    setOtpOvertimeModalIsOpen(false);
+    setOtpPassSlipModalIsOpen(false);
+    setOtpLeaveModalIsOpen(false);
+    setOtpDtrCorrectionModalIsOpen(false);
+
     setCaptchaModalIsOpen(false);
     setApproveAllCaptchaModalIsOpen(false);
   };
@@ -341,134 +346,126 @@ export const ApprovalCaptcha: FunctionComponent<CaptchaProps> = ({
 
   return (
     <>
-      {dataToSubmitOvertimeAccomplishment || dataToSubmitPassSlipDispute || dataToSubmitApproveAllAccomplishment ? (
-        <>
-          <div className="flex flex-col p-8 gap-1 justify-center items-center text-sm w-full">
-            <div className="mb-2 text-center">
-              {/* PASS SLIP APPROVAL MESSAGE */}
-              {captchaName === ManagerCaptchaApproval.PASSSLIP ? (
-                <>
-                  {`To ${
-                    actionPassSlip === PassSlipStatus.APPROVED ? 'approve' : 'disapprove'
-                  } this Pass Slip, please generate and submit the correct Captcha.`}
-                </>
-              ) : null}
+      <div className="flex flex-col p-8 gap-1 justify-center items-center text-sm w-full">
+        <div className="mb-2 text-center">
+          {/* PASS SLIP APPROVAL MESSAGE */}
+          {captchaName === ManagerCaptchaApproval.PASSSLIP ? (
+            <>
+              {`To ${
+                actionPassSlip === PassSlipStatus.APPROVED ? 'approve' : 'disapprove'
+              } this Pass Slip, please generate and submit the correct Captcha.`}
+            </>
+          ) : null}
 
-              {/* OVERTIME APPLICATION APPROVAL MESSAGE */}
-              {captchaName === ManagerCaptchaApproval.OVERTIME ? (
-                <>
-                  {`To ${
-                    actionOvertime === OvertimeStatus.APPROVED ? 'approve' : 'disapprove'
-                  } this Overtime, please generate and submit the correct Captcha.`}
-                </>
-              ) : null}
+          {/* OVERTIME APPLICATION APPROVAL MESSAGE */}
+          {captchaName === ManagerCaptchaApproval.OVERTIME ? (
+            <>
+              {`To ${
+                actionOvertime === OvertimeStatus.APPROVED ? 'approve' : 'disapprove'
+              } this Overtime, please generate and submit the correct Captcha.`}
+            </>
+          ) : null}
 
-              {/* LEAVE APPLICATION APPROVAL MESSAGE */}
-              {captchaName === ManagerCaptchaApproval.LEAVE ? (
-                <>
-                  {`To ${
-                    actionLeave === LeaveStatus.APPROVED ? 'approve' : 'disapprove'
-                  } this Leave, please generate and submit the correct Captcha.`}
-                </>
-              ) : null}
+          {/* LEAVE APPLICATION APPROVAL MESSAGE */}
+          {captchaName === ManagerCaptchaApproval.LEAVE ? (
+            <>
+              {`To ${
+                actionLeave === LeaveStatus.APPROVED ? 'approve' : 'disapprove'
+              } this Leave, please generate and submit the correct Captcha.`}
+            </>
+          ) : null}
 
-              {/* DTR CORRECTION APPLICATION APPROVAL MESSAGE */}
-              {captchaName === ManagerCaptchaApproval.DTR_CORRECTION ? (
-                <>
-                  {`To ${
-                    actionDtrCorrection === DtrCorrectionStatus.APPROVED ? 'approve' : 'disapprove'
-                  } this DTR Correction, please generate and submit the correct Captcha.`}
-                </>
-              ) : null}
+          {/* DTR CORRECTION APPLICATION APPROVAL MESSAGE */}
+          {captchaName === ManagerCaptchaApproval.DTR_CORRECTION ? (
+            <>
+              {`To ${
+                actionDtrCorrection === DtrCorrectionStatus.APPROVED ? 'approve' : 'disapprove'
+              } this DTR Correction, please generate and submit the correct Captcha.`}
+            </>
+          ) : null}
 
-              {/* OT ACCOMPLISHMENT APPLICATION APPROVAL MESSAGE */}
-              {captchaName === ManagerCaptchaApproval.OVERTIME_ACCOMPLISHMENT &&
-              dataToSubmitApproveAllAccomplishment ? (
-                <>
-                  {`To ${
-                    dataToSubmitApproveAllAccomplishment.status == OvertimeAccomplishmentStatus.APPROVED
-                      ? 'approve'
-                      : 'disapprove'
-                  } this Accomplishment Report, please generate and submit the correct Captcha.`}
-                </>
-              ) : null}
+          {/* OT ACCOMPLISHMENT APPLICATION APPROVAL MESSAGE */}
+          {captchaName === ManagerCaptchaApproval.OVERTIME_ACCOMPLISHMENT && dataToSubmitApproveAllAccomplishment ? (
+            <>
+              {`To ${
+                dataToSubmitApproveAllAccomplishment.status == OvertimeAccomplishmentStatus.APPROVED
+                  ? 'approve'
+                  : 'disapprove'
+              } this Accomplishment Report, please generate and submit the correct Captcha.`}
+            </>
+          ) : null}
 
-              {/* ALL OT ACCOMPLISHMENT APPLICATION APPROVAL MESSAGE */}
-              {captchaName === ManagerCaptchaApproval.ALL_OVERTIME_ACCOMPLISHMENT &&
-              dataToSubmitOvertimeAccomplishment ? (
-                <>
-                  {`To ${
-                    dataToSubmitOvertimeAccomplishment.status == OvertimeAccomplishmentStatus.APPROVED
-                      ? 'approve'
-                      : 'disapprove'
-                  } this Accomplishment Report, please generate and submit the correct Captcha.`}
-                </>
-              ) : null}
+          {/* ALL OT ACCOMPLISHMENT APPLICATION APPROVAL MESSAGE */}
+          {captchaName === ManagerCaptchaApproval.ALL_OVERTIME_ACCOMPLISHMENT && dataToSubmitOvertimeAccomplishment ? (
+            <>
+              {`To ${
+                dataToSubmitOvertimeAccomplishment.status == OvertimeAccomplishmentStatus.APPROVED
+                  ? 'approve'
+                  : 'disapprove'
+              } this Accomplishment Report, please generate and submit the correct Captcha.`}
+            </>
+          ) : null}
 
-              {dataToSubmitPassSlipDispute ? (
-                <>
-                  {`To ${
-                    dataToSubmitPassSlipDispute.status == PassSlipStatus.APPROVED ? 'approve' : 'disapprove'
-                  } this Pass Slip Dispute, please generate and submit the correct Captcha.`}
-                </>
-              ) : null}
-            </div>
+          {captchaName === ManagerCaptchaApproval.PASSSLIP_DISPUTE && dataToSubmitPassSlipDispute ? (
+            <>
+              {`To ${
+                dataToSubmitPassSlipDispute.status == PassSlipStatus.APPROVED ? 'approve' : 'disapprove'
+              } this Pass Slip Dispute, please generate and submit the correct Captcha.`}
+            </>
+          ) : null}
+        </div>
 
-            <div className="flex flex-col flex-wrap justify-center items-center gap-2 w-full">
-              <button
-                className={`
+        <div className="flex flex-col flex-wrap justify-center items-center gap-2 w-full">
+          <button
+            className={`
                text-white bg-red-500 h-10 transition-all rounded hover:bg-red-600 active:bg-red-600 outline-red-500 w-56`}
-                onClick={getCaptcha}
-              >
-                <label className="font-bold cursor-pointer">GENERATE CAPTCHA</label>
-              </button>
-              {/* captcha */}
-              <div
-                className={`${
-                  pwdArray ? '' : 'animate-pulse'
-                } w-56 select-none h-10 px-4 py-1 transition-all duration-150 bg-slate-200 text-xl flex justify-center items-center gap-2`}
-              >
-                <div className="w-4 font-medium text-indigo-800 scale-105 -rotate-12">{pwdArray && pwdArray[0]}</div>
-                <div className="w-4 font-bold scale-90 rotate-6 text-sky-800">{pwdArray && pwdArray[1]}</div>
-                <div className="w-4 font-light text-red-800 scale-105 rotate-45">{pwdArray && pwdArray[2]}</div>
-                <div className="w-4 pr-2 font-semibold text-green-800 scale-100 rotate-12">
-                  {pwdArray && pwdArray[3]}
-                </div>
-                <div className="w-4 font-bold text-blue-600 scale-90 -rotate-45">{pwdArray && pwdArray[4]}</div>
-                <div className="w-4 font-medium scale-105 -rotate-6 text-stone-800">{pwdArray && pwdArray[5]}</div>
-              </div>
-              <input
-                type="text"
-                value={password}
-                placeholder="Enter Captcha"
-                className={`${isCaptchaError ? 'border-red-600' : 'border-stone-200'}  w-56 border text-md`}
-                onChange={(e) => setPassword(e.target.value as unknown as string)}
-              />
-
-              <button
-                className={`${
-                  wiggleEffect && 'animate-shake'
-                } text-white w-56 h-10 transition-all rounded hover:bg-indigo-600 active:bg-indigo-600 outline-blue-500 ${
-                  wiggleEffect ? 'bg-rose-600 hover:bg-rose-600' : 'bg-indigo-500'
-                }`}
-                type="submit"
-                onAnimationEnd={() => setWiggleEffect(false)}
-                onClick={(e) => handleFinalSubmit()}
-              >
-                <label className={`cursor-not-allowed pointer-events-none font-bold`}>SUBMIT</label>
-              </button>
-
-              <button
-                className={`
-               mb-2 text-white bg-red-500 h-10 transition-all rounded hover:bg-red-600 active:bg-red-600 outline-red-500 w-56`}
-                onClick={(e) => handleCloseCaptcha()}
-              >
-                <label className="font-bold cursor-pointer">CANCEL</label>
-              </button>
-            </div>
+            onClick={getCaptcha}
+          >
+            <label className="font-bold cursor-pointer">GENERATE CAPTCHA</label>
+          </button>
+          {/* captcha */}
+          <div
+            className={`${
+              pwdArray ? '' : 'animate-pulse'
+            } w-56 select-none h-10 px-4 py-1 transition-all duration-150 bg-slate-200 text-xl flex justify-center items-center gap-2`}
+          >
+            <div className="w-4 font-medium text-indigo-800 scale-105 -rotate-12">{pwdArray && pwdArray[0]}</div>
+            <div className="w-4 font-bold scale-90 rotate-6 text-sky-800">{pwdArray && pwdArray[1]}</div>
+            <div className="w-4 font-light text-red-800 scale-105 rotate-45">{pwdArray && pwdArray[2]}</div>
+            <div className="w-4 pr-2 font-semibold text-green-800 scale-100 rotate-12">{pwdArray && pwdArray[3]}</div>
+            <div className="w-4 font-bold text-blue-600 scale-90 -rotate-45">{pwdArray && pwdArray[4]}</div>
+            <div className="w-4 font-medium scale-105 -rotate-6 text-stone-800">{pwdArray && pwdArray[5]}</div>
           </div>
-        </>
-      ) : null}
+          <input
+            type="text"
+            value={password}
+            placeholder="Enter Captcha"
+            className={`${isCaptchaError ? 'border-red-600' : 'border-stone-200'}  w-56 border text-md`}
+            onChange={(e) => setPassword(e.target.value as unknown as string)}
+          />
+
+          <button
+            className={`${
+              wiggleEffect && 'animate-shake'
+            } text-white w-56 h-10 transition-all rounded hover:bg-indigo-600 active:bg-indigo-600 outline-blue-500 ${
+              wiggleEffect ? 'bg-rose-600 hover:bg-rose-600' : 'bg-indigo-500'
+            }`}
+            type="submit"
+            onAnimationEnd={() => setWiggleEffect(false)}
+            onClick={(e) => handleFinalSubmit()}
+          >
+            <label className={`cursor-not-allowed pointer-events-none font-bold`}>SUBMIT</label>
+          </button>
+
+          <button
+            className={`
+               mb-2 text-white bg-red-500 h-10 transition-all rounded hover:bg-red-600 active:bg-red-600 outline-red-500 w-56`}
+            onClick={(e) => handleCloseCaptcha()}
+          >
+            <label className="font-bold cursor-pointer">CANCEL</label>
+          </button>
+        </div>
+      </div>
     </>
   );
 };

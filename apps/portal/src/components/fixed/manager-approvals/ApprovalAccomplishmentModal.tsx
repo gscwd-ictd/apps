@@ -17,6 +17,7 @@ import { GenerateCaptcha } from '../captcha/CaptchaGenerator';
 import { ApprovalCaptcha } from './ApprovalOtp/ApprovalCaptcha';
 import { DateFormatter } from 'libs/utils/src/lib/functions/DateFormatter';
 import { DateTimeFormatter } from 'libs/utils/src/lib/functions/DateTimeFormatter';
+import { ManagerCaptchaApproval } from 'libs/utils/src/lib/enums/approval.enum';
 
 type ModalProps = {
   modalState: boolean;
@@ -434,7 +435,7 @@ export const ApprovalAccomplishmentModal = ({ modalState, setModalState, closeMo
               employeeId={employeeDetails.employmentDetails.userId}
               dataToSubmitOvertimeAccomplishment={dataToSubmit}
               tokenId={overtimeDetails.id}
-              captchaName={'Accomplishment Captcha'}
+              captchaName={ManagerCaptchaApproval.OVERTIME_ACCOMPLISHMENT}
             />
           </CaptchaModal>
         </Modal.Body>
