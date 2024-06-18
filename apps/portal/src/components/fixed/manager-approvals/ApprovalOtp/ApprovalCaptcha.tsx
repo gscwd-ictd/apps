@@ -4,18 +4,29 @@ import { FunctionComponent, useEffect, useState } from 'react';
 import { passSlipAction } from '../../../../types/approvals.type';
 import { useApprovalStore } from '../../../../store/approvals.store';
 import { patchPortal } from '../../../../utils/helpers/portal-axios-helper';
-import { OvertimeAccomplishmentStatus } from 'libs/utils/src/lib/enums/overtime.enum';
+import { OvertimeAccomplishmentStatus, OvertimeStatus } from 'libs/utils/src/lib/enums/overtime.enum';
 import { PassSlipStatus } from 'libs/utils/src/lib/enums/pass-slip.enum';
 import { GenerateCaptcha } from '../../captcha/CaptchaGenerator';
 import { OvertimeAccomplishmentApprovalPatch } from 'libs/utils/src/lib/types/overtime.type';
+import { LeaveStatus } from 'libs/utils/src/lib/enums/leave.enum';
+import { DtrCorrectionStatus } from 'libs/utils/src/lib/enums/dtr.enum';
+import { ManagerCaptchaApproval, ManagerOtpApproval } from 'libs/utils/src/lib/enums/approval.enum';
 
 interface CaptchaProps {
   employeeId?: string;
   tokenId: string;
-  captchaName: any;
+  captchaName: string;
   dataToSubmitOvertimeAccomplishment?: OvertimeAccomplishmentApprovalPatch;
   dataToSubmitPassSlipDispute?: passSlipAction;
   dataToSubmitApproveAllAccomplishment?: OvertimeAccomplishmentApprovalPatch;
+
+  //FOR PASS SLIP, DTR CORRECTION, LEAVE, OT APPROVALS
+  actionOvertime?: OvertimeStatus; // approve or disapprove for overtime
+  actionLeave?: LeaveStatus; // approve or disapprove for leave
+  actionPassSlip?: PassSlipStatus; // approve or disapprove pass slip
+  actionDtrCorrection?: DtrCorrectionStatus; // approve or disapprove time log correction
+  remarks?: string;
+  supervisorDisapprovalRemarks?: string; //for supervisor disapproval for leave
 }
 
 export const ApprovalCaptcha: FunctionComponent<CaptchaProps> = ({
@@ -25,6 +36,13 @@ export const ApprovalCaptcha: FunctionComponent<CaptchaProps> = ({
   dataToSubmitOvertimeAccomplishment,
   dataToSubmitPassSlipDispute,
   dataToSubmitApproveAllAccomplishment,
+
+  //FOR PASS SLIP, DTR CORRECTION, LEAVE, OT APPROVALS
+  actionOvertime,
+  actionLeave,
+  actionPassSlip,
+  actionDtrCorrection,
+  remarks,
   ...props
 }) => {
   const [wiggleEffect, setWiggleEffect] = useState(false);
@@ -62,6 +80,27 @@ export const ApprovalCaptcha: FunctionComponent<CaptchaProps> = ({
     patchPassSlip,
     patchPassSlipSuccess,
     patchPassSlipFail,
+
+    patchOvertime,
+    patchOvertimeSuccess,
+    patchOvertimeFail,
+    setPendingOvertimeModalIsOpen,
+    setOtpOvertimeModalIsOpen,
+
+    patchLeave,
+    patchLeaveSuccess,
+    patchLeaveFail,
+    setPendingLeaveModalIsOpen,
+    setOtpLeaveModalIsOpen,
+
+    setPendingPassSlipModalIsOpen,
+    setOtpPassSlipModalIsOpen,
+
+    patchDtrCorrection,
+    patchDtrCorrectionSuccess,
+    patchDtrCorrectionFail,
+    setDtrCorrectionModalIsOpen,
+    setOtpDtrCorrectionModalIsOpen,
   } = useApprovalStore((state) => ({
     captchaModalIsOpen: state.captchaModalIsOpen,
     setCaptchaModalIsOpen: state.setCaptchaModalIsOpen, //for overtime accomplishment captcha
@@ -74,6 +113,27 @@ export const ApprovalCaptcha: FunctionComponent<CaptchaProps> = ({
     patchPassSlip: state.patchPassSlip,
     patchPassSlipSuccess: state.patchPassSlipSuccess,
     patchPassSlipFail: state.patchPassSlipFail,
+
+    patchOvertime: state.patchOvertime,
+    patchOvertimeSuccess: state.patchOvertimeSuccess,
+    patchOvertimeFail: state.patchOvertimeFail,
+    setPendingOvertimeModalIsOpen: state.setPendingOvertimeModalIsOpen,
+    setOtpOvertimeModalIsOpen: state.setOtpOvertimeModalIsOpen,
+
+    patchLeave: state.patchLeave,
+    patchLeaveSuccess: state.patchLeaveSuccess,
+    patchLeaveFail: state.patchLeaveFail,
+    setPendingLeaveModalIsOpen: state.setPendingLeaveModalIsOpen,
+    setOtpLeaveModalIsOpen: state.setOtpLeaveModalIsOpen,
+
+    setPendingPassSlipModalIsOpen: state.setPendingPassSlipModalIsOpen,
+    setOtpPassSlipModalIsOpen: state.setOtpPassSlipModalIsOpen,
+
+    patchDtrCorrection: state.patchDtrCorrection,
+    patchDtrCorrectionSuccess: state.patchDtrCorrectionSuccess,
+    patchDtrCorrectionFail: state.patchDtrCorrectionFail,
+    setDtrCorrectionModalIsOpen: state.setDtrCorrectionModalIsOpen,
+    setOtpDtrCorrectionModalIsOpen: state.setOtpDtrCorrectionModalIsOpen,
   }));
 
   useEffect(() => {
@@ -86,9 +146,19 @@ export const ApprovalCaptcha: FunctionComponent<CaptchaProps> = ({
   const handleClose = () => {
     setCaptchaModalIsOpen(false); //close captcha modal first
     setApproveAllCaptchaModalIsOpen(false);
+
+    // setOtpOvertimeModalIsOpen(false); //close OTP modal first
+    // setOtpPassSlipModalIsOpen(false); //close OTP modal first
+    // setOtpLeaveModalIsOpen(false); //close OTP modal first
+    // setOtpDtrCorrectionModalIsOpen(false); //close OTP modal first
+
     setTimeout(() => {
       setDisputedPassSlipModalIsOpen(false);
       setOvertimeAccomplishmentModalIsOpen(false); //then close Accomplishment modal
+      setPendingOvertimeModalIsOpen(false); //then close Pass Slip modal
+      setPendingPassSlipModalIsOpen(false); //then close Pass Slip modal
+      setPendingLeaveModalIsOpen(false); //then close Pass Slip modal
+      setDtrCorrectionModalIsOpen(false);
     }, 200);
   };
 
@@ -104,57 +174,168 @@ export const ApprovalCaptcha: FunctionComponent<CaptchaProps> = ({
       setIsCaptchaError(true);
       setWiggleEffect(true);
     } else {
-      //overtime accomplishment approval
-      patchOvertimeAccomplishment();
-      if (dataToSubmitOvertimeAccomplishment && !dataToSubmitApproveAllAccomplishment) {
-        const { error, result } = await patchPortal(
-          '/v1/overtime/accomplishments/approval',
-          dataToSubmitOvertimeAccomplishment
-        );
-        if (error) {
-          patchOvertimeAccomplishmentFail(result);
-        } else {
-          patchOvertimeAccomplishmentSuccess(result);
-          handleClose(); // close confirmation of decline modal
-        }
-      }
-      //approve all pending accomplishment
-      else if (dataToSubmitApproveAllAccomplishment && !dataToSubmitOvertimeAccomplishment) {
-        const { error, result } = await patchPortal(
-          '/v1/overtime/accomplishments/approval/all',
-          dataToSubmitApproveAllAccomplishment
-        );
-        if (error) {
-          patchOvertimeAccomplishmentFail(result);
-        } else {
-          patchOvertimeAccomplishmentSuccess(result);
-          handleClose(); // close confirmation of decline modal
-        }
-      }
-      //pass slip dispute approval
-      else if (dataToSubmitPassSlipDispute) {
-        let data;
-        if (dataToSubmitPassSlipDispute.status === PassSlipStatus.APPROVED) {
+      let data;
+
+      if (captchaName === ManagerCaptchaApproval.LEAVE) {
+        data = {
+          id: tokenId,
+          status: actionLeave,
+          supervisorDisapprovalRemarks: remarks,
+        };
+        patchLeave();
+      } else if (captchaName === ManagerCaptchaApproval.PASSSLIP) {
+        data = {
+          passSlipId: tokenId,
+          status: actionPassSlip,
+        };
+        patchPassSlip();
+      } else if (captchaName === ManagerCaptchaApproval.OVERTIME) {
+        data = {
+          managerId: employeeId,
+          approvedBy: employeeId,
+          remarks: remarks,
+          status: actionOvertime,
+          overtimeApplicationId: tokenId,
+        };
+        patchOvertime();
+      } else if (captchaName === ManagerCaptchaApproval.DTR_CORRECTION) {
+        data = {
+          id: tokenId,
+          status: actionDtrCorrection,
+        };
+        patchDtrCorrection();
+      } else if (captchaName === ManagerCaptchaApproval.OVERTIME_ACCOMPLISHMENT) {
+        data = dataToSubmitOvertimeAccomplishment;
+        patchOvertimeAccomplishment();
+      } else if (captchaName === ManagerCaptchaApproval.ALL_OVERTIME_ACCOMPLISHMENT) {
+        data = dataToSubmitApproveAllAccomplishment;
+        patchOvertimeAccomplishment();
+      } else if (captchaName === ManagerCaptchaApproval.PASSSLIP_DISPUTE) {
+        if (dataToSubmitPassSlipDispute?.status === PassSlipStatus.APPROVED) {
           //mutate payload for dispute purposes
           data = {
-            passSlipId: dataToSubmitPassSlipDispute.passSlipId,
+            passSlipId: dataToSubmitPassSlipDispute?.passSlipId,
             isDisputeApproved: true,
           };
         } else {
           data = {
-            passSlipId: dataToSubmitPassSlipDispute.passSlipId,
+            passSlipId: dataToSubmitPassSlipDispute?.passSlipId,
             isDisputeApproved: false,
           };
         }
         patchPassSlip();
-        const { error, result } = await patchPortal('/v1/pass-slip', data);
-        if (error) {
+      }
+
+      let captchaPatchUrl;
+      if (captchaName === ManagerCaptchaApproval.LEAVE) {
+        captchaPatchUrl = '/v1/leave/supervisor';
+      } else if (captchaName === ManagerCaptchaApproval.PASSSLIP) {
+        captchaPatchUrl = '/v1/pass-slip';
+      } else if (captchaName === ManagerCaptchaApproval.OVERTIME) {
+        captchaPatchUrl = '/v1/overtime/approval';
+      } else if (captchaName === ManagerCaptchaApproval.DTR_CORRECTION) {
+        captchaPatchUrl = '/v1/dtr-correction';
+      } else if (captchaName === ManagerCaptchaApproval.OVERTIME_ACCOMPLISHMENT) {
+        captchaPatchUrl = '/v1/overtime/accomplishments/approval';
+      } else if (captchaName === ManagerCaptchaApproval.ALL_OVERTIME_ACCOMPLISHMENT) {
+        captchaPatchUrl = '/v1/overtime/accomplishments/approval/all';
+      } else if (captchaName === ManagerCaptchaApproval.PASSSLIP_DISPUTE) {
+        captchaPatchUrl = '/v1/pass-slip';
+      }
+
+      const { error, result } = await patchPortal(captchaPatchUrl, data);
+      if (error) {
+        if (captchaName === ManagerCaptchaApproval.LEAVE) {
+          patchLeaveFail(result);
+        } else if (captchaName === ManagerCaptchaApproval.PASSSLIP) {
           patchPassSlipFail(result);
-        } else {
+        } else if (captchaName === ManagerCaptchaApproval.OVERTIME) {
+          patchOvertimeFail(result);
+        } else if (captchaName === ManagerCaptchaApproval.DTR_CORRECTION) {
+          patchDtrCorrectionFail(result);
+        } else if (captchaName === ManagerCaptchaApproval.OVERTIME_ACCOMPLISHMENT) {
+          patchOvertimeAccomplishmentFail(result);
+        } else if (captchaName === ManagerCaptchaApproval.ALL_OVERTIME_ACCOMPLISHMENT) {
+          patchOvertimeAccomplishmentFail(result);
+        } else if (captchaName === ManagerCaptchaApproval.PASSSLIP_DISPUTE) {
+          patchPassSlipFail(result);
+        }
+      } else {
+        if (captchaName === ManagerCaptchaApproval.LEAVE) {
+          patchLeaveSuccess(result);
+          handleClose();
+        } else if (captchaName === ManagerCaptchaApproval.PASSSLIP) {
           patchPassSlipSuccess(result);
-          handleClose(); // close confirmation of decline modal
+          handleClose();
+        } else if (captchaName === ManagerCaptchaApproval.OVERTIME) {
+          patchOvertimeSuccess(result);
+          handleClose();
+        } else if (captchaName === ManagerCaptchaApproval.DTR_CORRECTION) {
+          patchDtrCorrectionSuccess(result);
+          handleClose();
+        } else if (captchaName === ManagerCaptchaApproval.OVERTIME_ACCOMPLISHMENT) {
+          patchOvertimeAccomplishmentSuccess(result);
+          handleClose();
+        } else if (captchaName === ManagerCaptchaApproval.ALL_OVERTIME_ACCOMPLISHMENT) {
+          patchOvertimeAccomplishmentSuccess(result);
+          handleClose();
+        } else if (captchaName === ManagerCaptchaApproval.PASSSLIP_DISPUTE) {
+          patchPassSlipSuccess(result);
+          handleClose();
         }
       }
+
+      // //overtime accomplishment approval
+      // if (dataToSubmitOvertimeAccomplishment && !dataToSubmitApproveAllAccomplishment) {
+      //   patchOvertimeAccomplishment();
+      //   const { error, result } = await patchPortal(
+      //     '/v1/overtime/accomplishments/approval',
+      //     dataToSubmitOvertimeAccomplishment
+      //   );
+      //   if (error) {
+      //     patchOvertimeAccomplishmentFail(result);
+      //   } else {
+      //     patchOvertimeAccomplishmentSuccess(result);
+      //     handleClose(); // close confirmation of decline modal
+      //   }
+      // }
+      // //approve all pending accomplishment
+      // else if (dataToSubmitApproveAllAccomplishment && !dataToSubmitOvertimeAccomplishment) {
+      //   const { error, result } = await patchPortal(
+      //     '/v1/overtime/accomplishments/approval/all',
+      //     dataToSubmitApproveAllAccomplishment
+      //   );
+      //   if (error) {
+      //     patchOvertimeAccomplishmentFail(result);
+      //   } else {
+      //     patchOvertimeAccomplishmentSuccess(result);
+      //     handleClose(); // close confirmation of decline modal
+      //   }
+      // }
+      // //pass slip dispute approval
+      // else if (dataToSubmitPassSlipDispute) {
+      //   let data;
+      //   if (dataToSubmitPassSlipDispute.status === PassSlipStatus.APPROVED) {
+      //     //mutate payload for dispute purposes
+      //     data = {
+      //       passSlipId: dataToSubmitPassSlipDispute.passSlipId,
+      //       isDisputeApproved: true,
+      //     };
+      //   } else {
+      //     data = {
+      //       passSlipId: dataToSubmitPassSlipDispute.passSlipId,
+      //       isDisputeApproved: false,
+      //     };
+      //   }
+      //   patchPassSlip();
+      //   const { error, result } = await patchPortal('/v1/pass-slip', data);
+      //   if (error) {
+      //     patchPassSlipFail(result);
+      //   } else {
+      //     patchPassSlipSuccess(result);
+      //     handleClose(); // close confirmation of decline modal
+      //   }
+      // }
     }
   }
 
@@ -164,7 +345,57 @@ export const ApprovalCaptcha: FunctionComponent<CaptchaProps> = ({
         <>
           <div className="flex flex-col p-8 gap-1 justify-center items-center text-sm w-full">
             <div className="mb-2 text-center">
-              {dataToSubmitOvertimeAccomplishment ? (
+              {/* PASS SLIP APPROVAL MESSAGE */}
+              {captchaName === ManagerCaptchaApproval.PASSSLIP ? (
+                <>
+                  {`To ${
+                    actionPassSlip === PassSlipStatus.APPROVED ? 'approve' : 'disapprove'
+                  } this Pass Slip, please generate and submit the correct Captcha.`}
+                </>
+              ) : null}
+
+              {/* OVERTIME APPLICATION APPROVAL MESSAGE */}
+              {captchaName === ManagerCaptchaApproval.OVERTIME ? (
+                <>
+                  {`To ${
+                    actionOvertime === OvertimeStatus.APPROVED ? 'approve' : 'disapprove'
+                  } this Overtime, please generate and submit the correct Captcha.`}
+                </>
+              ) : null}
+
+              {/* LEAVE APPLICATION APPROVAL MESSAGE */}
+              {captchaName === ManagerCaptchaApproval.LEAVE ? (
+                <>
+                  {`To ${
+                    actionLeave === LeaveStatus.APPROVED ? 'approve' : 'disapprove'
+                  } this Leave, please generate and submit the correct Captcha.`}
+                </>
+              ) : null}
+
+              {/* DTR CORRECTION APPLICATION APPROVAL MESSAGE */}
+              {captchaName === ManagerCaptchaApproval.DTR_CORRECTION ? (
+                <>
+                  {`To ${
+                    actionDtrCorrection === DtrCorrectionStatus.APPROVED ? 'approve' : 'disapprove'
+                  } this DTR Correction, please generate and submit the correct Captcha.`}
+                </>
+              ) : null}
+
+              {/* OT ACCOMPLISHMENT APPLICATION APPROVAL MESSAGE */}
+              {captchaName === ManagerCaptchaApproval.OVERTIME_ACCOMPLISHMENT &&
+              dataToSubmitApproveAllAccomplishment ? (
+                <>
+                  {`To ${
+                    dataToSubmitApproveAllAccomplishment.status == OvertimeAccomplishmentStatus.APPROVED
+                      ? 'approve'
+                      : 'disapprove'
+                  } this Accomplishment Report, please generate and submit the correct Captcha.`}
+                </>
+              ) : null}
+
+              {/* ALL OT ACCOMPLISHMENT APPLICATION APPROVAL MESSAGE */}
+              {captchaName === ManagerCaptchaApproval.ALL_OVERTIME_ACCOMPLISHMENT &&
+              dataToSubmitOvertimeAccomplishment ? (
                 <>
                   {`To ${
                     dataToSubmitOvertimeAccomplishment.status == OvertimeAccomplishmentStatus.APPROVED

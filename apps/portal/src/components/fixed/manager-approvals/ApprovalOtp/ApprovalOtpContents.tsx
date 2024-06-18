@@ -26,9 +26,7 @@ interface OtpProps {
   tokenId: string; //like pass Slip Id, leave Id etc.
   otpName: ManagerOtpApproval;
   remarks?: string;
-  passSlipId?: string;
   supervisorDisapprovalRemarks?: string; //for supervisor disapproval for leave
-  hrdmDisapprovalRemarks?: string; //for hrdm disapproval for leave
 }
 
 export const ApprovalOtpContents: FunctionComponent<OtpProps> = ({

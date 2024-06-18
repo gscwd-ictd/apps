@@ -32,7 +32,7 @@ export const ApprovalsCompletedPassSlipModal = ({
   };
 
   const { windowWidth } = UseWindowDimensions();
-
+  console.log(passSlip);
   return (
     <>
       <Modal
