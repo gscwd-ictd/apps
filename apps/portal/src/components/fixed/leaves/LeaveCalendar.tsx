@@ -133,7 +133,7 @@ export default function Calendar({
         (dates) => dayjs(`${dates}`).diff(`${today}`, 'day') > 0 && dayjs(`${dates}`).diff(`${today}`, 'day') <= 10
       ).length <= 0
     ) {
-      if (selectedDates.length > 0) {
+      if (selectedDates.length > 0 && !isLateFiling) {
         setSelectedDates([]);
       }
     }
