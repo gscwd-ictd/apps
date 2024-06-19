@@ -17,9 +17,6 @@ import { TextField } from '../components/modular/common/forms/TextField';
 import { getPortalSsid, invalidateSession } from '../utils/helpers/session';
 import { HiEye, HiEyeOff } from 'react-icons/hi';
 import Image from 'next/image';
-import { OtpModal } from '@gscwd-apps/oneui';
-import { LoginOtpContents } from '../components/fixed/login/LoginOtpContents';
-import { useLoginStore } from '../store/login.store';
 
 type LoginFormInput = {
   email: string;
@@ -42,13 +39,6 @@ export default function Login() {
   // set state for remember me checkbox
   const [rememberMe, setRememberMe] = useState(true);
 
-  const { loginOtpModalIsOpen, setLoginOtpModalIsOpen, otpSuccess, setOtpSuccess } = useLoginStore((state) => ({
-    loginOtpModalIsOpen: state.loginOtpModalIsOpen,
-    setLoginOtpModalIsOpen: state.setLoginOtpModalIsOpen,
-    otpSuccess: state.otpSuccess,
-    setOtpSuccess: state.setOtpSuccess,
-  }));
-
   // set state for controlling the displaying of error status
   const [error, setError] = useState({
     status: false,
@@ -59,8 +49,6 @@ export default function Login() {
   // set state for handling backend request loading status
   const [isLoading, setIsLoading] = useState(false);
   const [isShowPassword, seIsShowPassword] = useState(false);
-  const [userMobile, setUserMobile] = useState<string>(null);
-  const [userCredentials, setUserCredentials] = useState<LoginFormInput>({ email: '', password: '' });
 
   // initialize router
   const router = useRouter();
@@ -130,48 +118,6 @@ export default function Login() {
 
     // create credentials object, appending the clientId and clientSecret along with email and password
     const credentials = { email, password };
-    setUserCredentials(credentials);
-
-    //if set to production, login will require OTP
-    if (process.env.NEXT_PUBLIC_PORTAL_REACT_APP_ENVIRONMENT === 'production') {
-      // get user's phone number for otp first
-      const { error, result } = await HttpRequest.post(
-        `${process.env.NEXT_PUBLIC_PORTAL_URL}/users/mobile-verification`,
-        credentials
-      );
-      if (error) {
-        handleLoginError(result);
-        setIsLoading(false);
-      } else {
-        //open OTP modal
-        setUserMobile(result);
-        setOtpSuccess(false);
-        setLoginOtpModalIsOpen(true);
-      }
-    } else {
-      //if otp is disabled, reload page directly with cookie
-      handleReload(credentials);
-    }
-  };
-
-  useEffect(() => {
-    if (!loginOtpModalIsOpen && !otpSuccess) {
-      setIsLoading(false);
-    } else {
-      setIsLoading(true);
-    }
-  }, [loginOtpModalIsOpen, otpSuccess]);
-
-  //run reload function if otpSuccess is true
-  useEffect(() => {
-    if (otpSuccess) {
-      handleReload(userCredentials);
-    }
-  }, [otpSuccess]);
-
-  //reload page with the now saved credentials cookie
-  const handleReload = async ({ email, password }: LoginFormInput) => {
-    const credentials = { email, password };
 
     // call the login end point to post user credentials object
     const { error, result } = await HttpRequest.post(
@@ -180,18 +126,13 @@ export default function Login() {
     );
 
     // check if result returned an error, go to dashboard otherwise
-    if (error) {
-      handleLoginError(result);
-    } else {
-      router.reload();
-    }
+    error ? handleLoginError(result) : router.reload();
   };
+
+  const [heartCount, setHeartCount] = useState(0);
 
   return (
     <>
-      <OtpModal modalState={loginOtpModalIsOpen} setModalState={setLoginOtpModalIsOpen} title={'LOGIN OTP'}>
-        <LoginOtpContents mobile={userMobile} otpName={'LOGIN OTP'} />
-      </OtpModal>
       <div className="absolute top-0 left-0 z-0 flex items-center justify-center w-full h-full overflow-hidden pointer-events-none opacity-10">
         <Image src={'/gwdlogo.png'} priority className="w-full md:w-2/4 " alt={''} width={'500'} height={'500'} />
       </div>

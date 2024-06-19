@@ -123,10 +123,21 @@ export default function Calendar({
   }, [swrUnavailableDates, swrError]);
 
   useEffect(() => {
-    if (!isLateFiling) {
-      setSelectedDates([]);
-    }
+    setSelectedDates([]);
   }, [isLateFiling]);
+
+  useEffect(() => {
+    //check if there are selected dates between today up to the 10th day
+    if (
+      selectedDates.filter(
+        (dates) => dayjs(`${dates}`).diff(`${today}`, 'day') > 0 && dayjs(`${dates}`).diff(`${today}`, 'day') <= 10
+      ).length <= 0
+    ) {
+      if (selectedDates.length > 0) {
+        setSelectedDates([]);
+      }
+    }
+  }, [selectedDates]);
 
   function viewDateActivities(day: Date) {
     if (clickableDate) {
@@ -152,10 +163,16 @@ export default function Calendar({
               leaveName === LeaveName.SPECIAL_PRIVILEGE ||
               leaveName === LeaveName.SICK) &&
             dayjs(`${specifiedDate}`).diff(`${today}`, 'day') > 10 &&
-            futureLeaveCount > 0
+            !isLateFiling &&
+            (futureLeaveCount > 0 ||
+              selectedDates.filter(
+                (dates) =>
+                  dayjs(`${dates}`).diff(`${today}`, 'day') > 0 && dayjs(`${dates}`).diff(`${today}`, 'day') <= 10
+              ).length > 0)
           ) {
             setSelectedDates((selectedDates) => [...selectedDates, specifiedDate]);
           }
+
           //for VL within 10 days from today and not late filing
           if (
             leaveName === LeaveName.VACATION &&
@@ -411,6 +428,7 @@ export default function Calendar({
                         onClick={() => viewDateActivities(day)}
                         className={classNames(
                           isEqual(day, selectedDay) && 'text-gray-900 font-semibold',
+
                           //disable date selection for past dates from current day for VL/FL/SOLO
                           (leaveName === LeaveName.VACATION ||
                             leaveName === LeaveName.FORCED ||
@@ -418,20 +436,37 @@ export default function Calendar({
                             dayjs(`${day}`).diff(`${today}`, 'day') < 0 &&
                             isLateFiling === false &&
                             'text-slate-300',
-                          //disable date selection starting from 10th day from current day for FL/SOLO/SPL
+                          //disable date selection starting from 10th day from current day for Vl/FL/SOLO/SPL if late filing
+                          (leaveName === LeaveName.VACATION ||
+                            leaveName === LeaveName.FORCED ||
+                            leaveName === LeaveName.SPECIAL_PRIVILEGE ||
+                            leaveName === LeaveName.SICK ||
+                            leaveName === LeaveName.SOLO_PARENT) &&
+                            dayjs(`${day}`).diff(`${today}`, 'day') > 10 &&
+                            isLateFiling === true &&
+                            'text-slate-300',
+                          //disable date selection starting from 10th day from current day for FL/SOLO/SPL - added allow all dates if a date with the 10 days is selected
                           (leaveName === LeaveName.FORCED ||
                             leaveName === LeaveName.SPECIAL_PRIVILEGE ||
                             leaveName === LeaveName.SICK ||
                             leaveName === LeaveName.SOLO_PARENT) &&
                             dayjs(`${day}`).diff(`${today}`, 'day') > 10 &&
                             futureLeaveCount <= 0 &&
-                            // isLateFiling === false &&
+                            selectedDates.filter(
+                              (dates) =>
+                                dayjs(`${dates}`).diff(`${today}`, 'day') > 0 &&
+                                dayjs(`${dates}`).diff(`${today}`, 'day') <= 10
+                            ).length <= 0 &&
                             'text-slate-300',
-                          //disable date selection starting from 10th day from current day for VL ONLY
+                          //disable date selection starting from 10th day from current day for VL ONLY - added allow all dates if a date with the 10 days is selected
                           leaveName === LeaveName.VACATION &&
                             dayjs(`${day}`).diff(`${today}`, 'day') > 10 &&
                             futureLeaveCount <= 0 &&
-                            // isLateFiling === false &&
+                            selectedDates.filter(
+                              (dates) =>
+                                dayjs(`${dates}`).diff(`${today}`, 'day') > 0 &&
+                                dayjs(`${dates}`).diff(`${today}`, 'day') <= 10
+                            ).length <= 0 &&
                             'text-slate-300',
                           //disable date selection for past dates from current day for SPL/SICK ONLY
                           (leaveName === LeaveName.SPECIAL_PRIVILEGE || leaveName === LeaveName.SICK) &&
@@ -449,10 +484,15 @@ export default function Calendar({
                           //   dayjs(`${today}`).diff(`${day}`, 'day') <= 1 &&
                           //   dayjs(`${day}`).diff(`${today}`, 'day') <= 10 &&
                           //   'text-slate-300',
-                          //disable date selection for more than 10 days from current day for SL
+                          //disable date selection for more than 10 days from current day for SL - added allow all dates if a date with the 10 days is selected
                           leaveName === LeaveName.SICK &&
                             dayjs(`${day}`).diff(`${today}`, 'day') > 10 &&
                             futureLeaveCount <= 0 &&
+                            selectedDates.filter(
+                              (dates) =>
+                                dayjs(`${dates}`).diff(`${today}`, 'day') > 0 &&
+                                dayjs(`${dates}`).diff(`${today}`, 'day') <= 10
+                            ).length <= 0 &&
                             'text-slate-300',
                           isToday(day) && 'text-red-500',
                           swrUnavailableDates &&
