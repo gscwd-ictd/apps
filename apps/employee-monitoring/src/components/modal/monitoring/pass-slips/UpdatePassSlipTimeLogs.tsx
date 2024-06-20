@@ -1,4 +1,3 @@
-/* eslint-disable @nx/enforce-module-boundaries */
 import { FunctionComponent, useEffect, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -9,28 +8,31 @@ import { patchEmpMonitoring } from 'apps/employee-monitoring/src/utils/helper/em
 
 // store and type
 import { usePassSlipStore } from 'apps/employee-monitoring/src/store/pass-slip.store';
-import { UpdatePassSlipTimeLogs } from 'libs/utils/src/lib/types/pass-slip.type';
+import { PassSlip } from 'libs/utils/src/lib/types/pass-slip.type';
 
 import { AlertNotification, Button, LoadingSpinner, Modal } from '@gscwd-apps/oneui';
 import { LabelInput } from 'apps/employee-monitoring/src/components/inputs/LabelInput';
 import dayjs from 'dayjs';
+import Image from 'next/image';
+import UseConvertDayToTime from 'apps/employee-monitoring/src/utils/functions/ConvertDateToTime';
+
+import { NatureOfBusiness } from 'libs/utils/src/lib/enums/pass-slip.enum';
+import UseRenderNatureOfBusiness from 'apps/employee-monitoring/src/utils/functions/RenderNatureOfBusiness';
 
 // regex for time
-const timeRegex = /^([0-1][0-9]|2[0-3]):[0-5][0-9]$/;
+const timeRegex = new RegExp('^([0-1][0-9]|2[0-3]):[0-5][0-9]$');
 
 type UpdatePassSlipModalProps = {
   modalState: boolean;
   setModalState: React.Dispatch<React.SetStateAction<boolean>>;
   closeModalAction: () => void;
-  formData: UpdatePassSlipTimeLogs;
+  formData: Partial<PassSlip>;
 };
 
 enum PassSlipKeys {
   ID = 'id',
-  EMPLOYEENAME = 'employeeName',
   TIMEOUT = 'timeOut',
   TIMEIN = 'timeIn',
-  DATEOFAPPLICATION = 'dateOfApplication',
 }
 
 const UpdatePassSlipModal: FunctionComponent<UpdatePassSlipModalProps> = ({
@@ -50,33 +52,44 @@ const UpdatePassSlipModal: FunctionComponent<UpdatePassSlipModalProps> = ({
     })
   );
 
-  // yup error handling initialization
   const PassSlipTimeLogsSchema = yup
     .object()
     .shape({
       timeOut: yup
         .string()
         .nullable()
-        .required('Time out is required')
-        .matches(timeRegex, 'Time out must be a valid time')
-        .test('time-out-test', 'Time out must be before time in', function (value) {
-          const timeIn = this.parent.timeIn;
-          if (!timeIn) {
-            return true;
-          }
-          return value < timeIn;
+        .when('$natureOfBusiness', {
+          is: (natureOfBusiness: NatureOfBusiness) =>
+            natureOfBusiness !== NatureOfBusiness.HALF_DAY && natureOfBusiness !== NatureOfBusiness.UNDERTIME,
+          then: yup
+            .string()
+            .required('Time out is required')
+            .matches(timeRegex, 'Time out must be a valid time')
+            .test('time-out-test', 'Time out must be before time in', function (value) {
+              const timeIn = this.parent.timeIn;
+              if (!timeIn) {
+                return true;
+              }
+              return value < timeIn;
+            }),
         }),
       timeIn: yup
         .string()
         .nullable()
-        .required('Time in is required')
-        .matches(timeRegex, 'Time in must be a valid time')
-        .test('time-in-test', 'Time in must be after time out', function (value) {
-          const timeOut = this.parent.timeOut;
-          if (!timeOut) {
-            return true;
-          }
-          return value > timeOut;
+        .when('$natureOfBusiness', {
+          is: (natureOfBusiness: NatureOfBusiness) =>
+            natureOfBusiness !== NatureOfBusiness.HALF_DAY && natureOfBusiness !== NatureOfBusiness.UNDERTIME,
+          then: yup
+            .string()
+            .required('Time in is required')
+            .matches(timeRegex, 'Time in must be a valid time')
+            .test('time-in-test', 'Time in must be after time out', function (value) {
+              const timeOut = this.parent.timeOut;
+              if (!timeOut) {
+                return true;
+              }
+              return value > timeOut;
+            }),
         }),
     })
     .required();
@@ -89,20 +102,21 @@ const UpdatePassSlipModal: FunctionComponent<UpdatePassSlipModalProps> = ({
     setValue,
     reset,
     trigger,
-  } = useForm<UpdatePassSlipTimeLogs>({
+  } = useForm<Partial<PassSlip>>({
     mode: 'onChange',
     resolver: yupResolver(PassSlipTimeLogsSchema),
+    context: { natureOfBusiness: formData.natureOfBusiness },
   });
 
   // form submission
-  const onSubmit: SubmitHandler<UpdatePassSlipTimeLogs> = async (data) => {
+  const onSubmit: SubmitHandler<Partial<PassSlip>> = async (data) => {
     const isValid = await trigger();
 
     if (!isValid) {
       return;
     }
 
-    const payload = {
+    const payload: Partial<PassSlip> = {
       id: formData.id,
       timeOut: data.timeOut,
       timeIn: data.timeIn,
@@ -113,7 +127,7 @@ const UpdatePassSlipModal: FunctionComponent<UpdatePassSlipModalProps> = ({
   };
 
   // function for updating pass slip time logs
-  const handleUpdatePassSlipTimeLogs = async (data: UpdatePassSlipTimeLogs) => {
+  const handleUpdatePassSlipTimeLogs = async (data: Partial<PassSlip>) => {
     const { error, result } = await patchEmpMonitoring(`/pass-slip/hr/time-record/`, data);
     setIsLoading(true);
 
@@ -131,13 +145,13 @@ const UpdatePassSlipModal: FunctionComponent<UpdatePassSlipModalProps> = ({
   // Set default values in the form
   useEffect(() => {
     if (!isEmpty(formData)) {
-      const keys = Object.keys(formData);
+      const keys = Object.keys(formData) as (keyof Partial<PassSlip>)[];
 
       // traverse to each object and setValue
-      keys.forEach((key: PassSlipKeys) => {
+      keys.forEach((key: keyof Partial<PassSlip>) => {
         let value = formData[key];
-        if (key === PassSlipKeys.TIMEIN || key === PassSlipKeys.TIMEOUT) {
-          value = value ? value.slice(0, 5) : null;
+        if (typeof value === 'string' && (key === PassSlipKeys.TIMEIN || key === PassSlipKeys.TIMEOUT)) {
+          value = value.slice(0, 5);
         }
         return setValue(key, value, {
           shouldValidate: false,
@@ -146,6 +160,17 @@ const UpdatePassSlipModal: FunctionComponent<UpdatePassSlipModalProps> = ({
       });
     }
   }, [formData]);
+
+  // If modal is closed, reset input values
+  useEffect(() => {
+    if (!modalState) {
+      reset({
+        id: formData.id,
+        timeOut: formData.timeOut ? formData.timeOut.slice(0, 5) : '',
+        timeIn: formData.timeIn ? formData.timeIn.slice(0, 5) : '',
+      });
+    }
+  }, [modalState, reset]);
 
   return (
     <>
@@ -164,80 +189,75 @@ const UpdatePassSlipModal: FunctionComponent<UpdatePassSlipModalProps> = ({
           </div>
         </Modal.Header>
         <Modal.Body>
-          <div>
-            {/* Notifications */}
-            {isLoading ? (
-              <AlertNotification
-                logo={<LoadingSpinner size="xs" />}
-                alertType="info"
-                notifMessage="Submitting request"
-                dismissible={true}
-              />
-            ) : null}
-            <div className="flex flex-row gap-4 p-3">
-              <div className="flex flex-col w-2/5 gap-4">
+          {formData ? (
+            <div className="flex flex-col gap-3">
+              {/* Notifications */}
+              {isLoading ? (
+                <AlertNotification
+                  logo={<LoadingSpinner size="xs" />}
+                  alertType="info"
+                  notifMessage="Submitting request"
+                  dismissible={true}
+                />
+              ) : null}
+              <div className="flex flex-row gap-5 items-center p-3">
+                <Image src={formData.avatarUrl} className="rounded-full" width={80} height={80} alt={'Employee Icon'} />
                 <div>
-                  <p className="text-sm font-semibold">Employee Name</p>
-                  <p className="text-sm ">{formData.employeeName}</p>
-                </div>
-                <div>
-                  <p className="text-sm font-semibold">Date of Application</p>
-                  <p className="text-sm">{dayjs(formData.dateOfApplication).format('MMMM DD, YYYY')}</p>
-                </div>
-                <div>
-                  <p className="text-sm font-semibold">Time Out</p>
-                  <p className="text-sm">
-                    {formData.timeOut
-                      ? new Date('1970-01-01T' + formData.timeOut + 'Z').toLocaleTimeString([], {
-                          timeZone: 'UTC',
-                          hour12: true,
-                          hour: '2-digit',
-                          minute: '2-digit',
-                        })
-                      : '--:-- --'}
-                  </p>
-                </div>
-                <div>
-                  <p className="text-sm font-semibold">Time In</p>
-                  <p className="text-sm">
-                    {formData.timeIn
-                      ? new Date('1970-01-01T' + formData.timeIn + 'Z').toLocaleTimeString([], {
-                          timeZone: 'UTC',
-                          hour12: true,
-                          hour: '2-digit',
-                          minute: '2-digit',
-                        })
-                      : '--:-- --'}
-                  </p>
+                  <p className="text-xl font-medium">{formData.employeeName}</p>
+                  <div>{UseRenderNatureOfBusiness(formData.natureOfBusiness)}</div>
                 </div>
               </div>
-              <form onSubmit={handleSubmit(onSubmit)} id="updatePassSlipTimeLogs" className="flex flex-col w-3/5">
-                {/* Time out input */}
-                <div className="mb-6">
-                  <LabelInput
-                    type="time"
-                    id={'timeOut'}
-                    label={'Time Out'}
-                    controller={{ ...register('timeOut') }}
-                    isError={errors.timeOut ? true : false}
-                    errorMessage={errors.timeOut?.message}
-                  />
+              <div className="flex flex-row gap-4 p-3">
+                <div className="flex flex-col w-2/5 gap-4">
+                  <div>
+                    <p className="text-sm font-semibold">Date of Application</p>
+                    <p className="text-sm">{dayjs(formData.dateOfApplication).format('MMMM DD, YYYY')}</p>
+                  </div>
+                  <div>
+                    <p className="text-sm font-semibold">Time Out</p>
+                    <p className="text-sm">{formData.timeOut ? UseConvertDayToTime(formData.timeOut) : '--:-- --'}</p>
+                  </div>
+                  {formData.natureOfBusiness !== NatureOfBusiness.HALF_DAY &&
+                  formData.natureOfBusiness !== NatureOfBusiness.UNDERTIME ? (
+                    <div>
+                      <p className="text-sm font-semibold">Time In</p>
+                      <p className="text-sm">{formData.timeIn ? UseConvertDayToTime(formData.timeIn) : '--:-- --'}</p>
+                    </div>
+                  ) : null}
                 </div>
+                <form onSubmit={handleSubmit(onSubmit)} id="updatePassSlipTimeLogs" className="flex flex-col w-3/5">
+                  {/* Time out input */}
+                  <div className="mb-6">
+                    <LabelInput
+                      type="time"
+                      id={'timeOut'}
+                      label={'Time Out'}
+                      controller={{ ...register('timeOut') }}
+                      isError={errors.timeOut ? true : false}
+                      errorMessage={errors.timeOut?.message}
+                    />
+                  </div>
 
-                {/* Time in input */}
-                <div className="mb-6">
-                  <LabelInput
-                    type="time"
-                    id={'timeIn'}
-                    label={'Time In'}
-                    controller={{ ...register('timeIn') }}
-                    isError={errors.timeIn ? true : false}
-                    errorMessage={errors.timeIn?.message}
-                  />
-                </div>
-              </form>
+                  {/* Time in input */}
+                  {formData.natureOfBusiness !== NatureOfBusiness.HALF_DAY &&
+                  formData.natureOfBusiness !== NatureOfBusiness.UNDERTIME ? (
+                    <div className="mb-6">
+                      <LabelInput
+                        type="time"
+                        id={'timeIn'}
+                        label={'Time In'}
+                        controller={{ ...register('timeIn') }}
+                        isError={errors.timeIn ? true : false}
+                        errorMessage={errors.timeIn?.message}
+                      />
+                    </div>
+                  ) : null}
+                </form>
+              </div>
             </div>
-          </div>
+          ) : (
+            <LoadingSpinner size={'sm'} />
+          )}
         </Modal.Body>
         <Modal.Footer>
           {/* Submit button */}

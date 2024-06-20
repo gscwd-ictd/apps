@@ -40,7 +40,7 @@ export type PassSlip = {
   disputeRemarks?: string;
   isDisputeApproved?: boolean | null;
   encodedTimeIn?: string;
-  // isMedical?: boolean;
+  isMedical?: boolean;
   supervisorApprovalDate: string | null;
   hrmoApprovalDate: string | null;
   hrmoDisapprovalRemarks: string | null;
@@ -74,12 +74,4 @@ export type HrmoApprovalPassSlip = {
   passSlipId: string;
   status: string;
   hrmoDisapprovalRemarks?: string;
-};
-
-export type UpdatePassSlipTimeLogs = {
-  id: string;
-  employeeName?: string;
-  dateOfApplication?: string;
-  timeIn: string;
-  timeOut: string;
 };
