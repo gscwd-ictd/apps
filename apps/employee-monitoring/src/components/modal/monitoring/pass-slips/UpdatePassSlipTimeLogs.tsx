@@ -273,7 +273,6 @@ const UpdatePassSlipModal: FunctionComponent<UpdatePassSlipModalProps> = ({
               type="submit"
               form="updatePassSlipTimeLogs"
               className="ml-1 text-gray-400 disabled:cursor-not-allowed"
-              // disabled={isLoading ? true : false}
               disabled={isLoading || patchFormLoading}
               loading={isLoading || patchFormLoading}
             >

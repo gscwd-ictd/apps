@@ -16,7 +16,7 @@ import dayjs from 'dayjs';
 import { PassSlip } from 'libs/utils/src/lib/types/pass-slip.type';
 import { PassSlipStatus } from 'libs/utils/src/lib/enums/pass-slip.enum';
 import { isEmpty } from 'lodash';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import useSWR from 'swr';
 import UpdatePassSlipModal from 'apps/employee-monitoring/src/components/modal/monitoring/pass-slips/UpdatePassSlipTimeLogs';
 
@@ -40,21 +40,12 @@ export default function Index() {
 
     ResponseHrmoApprovalPassSlip,
 
-    getPassSlips,
     getPassSlipsFail,
     getPassSlipsSuccess,
 
     CancelPassSlip,
-    CancelPassSlipFail,
-    CancelPassSlipSuccess,
 
     UpdatePassSlipTimeLogs,
-    UpdatePassSlipTimeLogsFail,
-    UpdatePassSlipTimeLogsSuccess,
-
-    UpdatePassSlipStatus,
-    UpdatePassSlipStatusFail,
-    UpdatePassSlipStatusSuccess,
 
     emptyErrorsAndResponse,
   } = usePassSlipStore((state) => ({
@@ -63,21 +54,12 @@ export default function Index() {
 
     ResponseHrmoApprovalPassSlip: state.response.hrmoApprovalPassSlip,
 
-    getPassSlips: state.getPassSlips,
     getPassSlipsSuccess: state.getPassSlipsSuccess,
     getPassSlipsFail: state.getPassSlipsFail,
 
     CancelPassSlip: state.response.cancelPassSlip,
-    CancelPassSlipFail: state.cancelPassSlipFail,
-    CancelPassSlipSuccess: state.cancelPassSlipSuccess,
 
     UpdatePassSlipTimeLogs: state.response.updatePassSlip,
-    UpdatePassSlipTimeLogsFail: state.updatePassSlipFail,
-    UpdatePassSlipTimeLogsSuccess: state.updatePassSlipSuccess,
-
-    UpdatePassSlipStatus: state.response.updatePassSlip,
-    UpdatePassSlipStatusFail: state.updatePassSlipFail,
-    UpdatePassSlipStatusSuccess: state.updatePassSlipSuccess,
 
     emptyErrorsAndResponse: state.emptyErrorsAndResponse,
   }));
