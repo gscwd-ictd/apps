@@ -7,7 +7,7 @@ type ResponsePassSlip = {
   getPassSlip: PassSlip;
   hrmoApprovalPassSlip: HrmoApprovalPassSlip;
   cancelPassSlip: PassSlip;
-  updatePassSlipTimeLogs: Partial<PassSlip>;
+  updatePassSlip: Partial<PassSlip>;
 };
 
 type LoadingPassSlip = {
@@ -34,9 +34,9 @@ type PassSlipState = {
   cancelPassSlipSuccess: (response: PassSlip) => void;
   cancelPassSlipFail: (error: string) => void;
 
-  updatePassSlipTimeLogs: () => void;
-  updatePassSlipTimeLogsSuccess: (response: Partial<PassSlip>) => void;
-  updatePassSlipTimeLogsFail: (error: string) => void;
+  updatePassSlip: () => void;
+  updatePassSlipSuccess: (response: Partial<PassSlip>) => void;
+  updatePassSlipFail: (error: string) => void;
 
   updateHrmoApprovalPassSlip: () => void;
   updateHrmoApprovalPassSlipSuccess: (response: HrmoApprovalPassSlip) => void;
@@ -52,7 +52,7 @@ export const usePassSlipStore = create<PassSlipState>()(
       getPassSlip: {} as PassSlip,
       hrmoApprovalPassSlip: {} as HrmoApprovalPassSlip,
       cancelPassSlip: {} as PassSlip,
-      updatePassSlipTimeLogs: {} as Partial<PassSlip>,
+      updatePassSlip: {} as Partial<PassSlip>,
     },
     loading: { loadingPassSlip: false, loadingPassSlips: false },
     error: { errorPassSlip: '', errorPassSlips: '' },
@@ -131,26 +131,26 @@ export const usePassSlipStore = create<PassSlipState>()(
         loading: { ...state.loading, loadingPassSlip: false },
       })),
 
-    updatePassSlipTimeLogs: () =>
+    updatePassSlip: () =>
       set((state) => ({
         ...state,
         response: {
           ...state.response,
-          updatePassSlipTimeLogs: {} as Partial<PassSlip>,
+          updatePassSlip: {} as Partial<PassSlip>,
         },
         loading: { ...state.loading, loadingPassSlip: true },
         error: { ...state.error, errorPassSlip: '' },
       })),
-    updatePassSlipTimeLogsSuccess: (response: Partial<PassSlip>) =>
+    updatePassSlipSuccess: (response: Partial<PassSlip>) =>
       set((state) => ({
         ...state,
         response: {
           ...state.response,
-          updatePassSlipTimeLogs: response,
+          updatePassSlip: response,
         },
         loading: { ...state.loading, loadingPassSlip: false },
       })),
-    updatePassSlipTimeLogsFail: (error: string) =>
+    updatePassSlipFail: (error: string) =>
       set((state) => ({
         ...state,
         error: { ...state.error, errorPassSlip: error },
@@ -164,7 +164,7 @@ export const usePassSlipStore = create<PassSlipState>()(
           ...state.response,
           hrmoApprovalPassSlip: {} as HrmoApprovalPassSlip,
           cancelPassSlip: {} as PassSlip,
-          updatePassSlipTimeLogs: {} as Partial<PassSlip>,
+          updatePassSlip: {} as Partial<PassSlip>,
         },
         error: {
           ...state.error,

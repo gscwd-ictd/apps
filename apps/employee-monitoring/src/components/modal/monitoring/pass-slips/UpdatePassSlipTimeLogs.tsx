@@ -10,7 +10,7 @@ import { patchEmpMonitoring } from 'apps/employee-monitoring/src/utils/helper/em
 import { usePassSlipStore } from 'apps/employee-monitoring/src/store/pass-slip.store';
 import { PassSlip } from 'libs/utils/src/lib/types/pass-slip.type';
 
-import { AlertNotification, Button, LoadingSpinner, Modal } from '@gscwd-apps/oneui';
+import { AlertNotification, Button, LoadingSpinner, Modal, ToastNotification } from '@gscwd-apps/oneui';
 import { LabelInput } from 'apps/employee-monitoring/src/components/inputs/LabelInput';
 import dayjs from 'dayjs';
 import Image from 'next/image';
@@ -46,9 +46,9 @@ const UpdatePassSlipModal: FunctionComponent<UpdatePassSlipModalProps> = ({
   // zustand store initialization
   const { UpdatePassSlipTimeLogs, UpdatePassSlipTimeLogsSuccess, UpdatePassSlipTimeLogsFail } = usePassSlipStore(
     (state) => ({
-      UpdatePassSlipTimeLogs: state.updatePassSlipTimeLogs,
-      UpdatePassSlipTimeLogsSuccess: state.updatePassSlipTimeLogsSuccess,
-      UpdatePassSlipTimeLogsFail: state.updatePassSlipTimeLogsFail,
+      UpdatePassSlipTimeLogs: state.updatePassSlip,
+      UpdatePassSlipTimeLogsSuccess: state.updatePassSlipSuccess,
+      UpdatePassSlipTimeLogsFail: state.updatePassSlipFail,
     })
   );
 
@@ -63,6 +63,7 @@ const UpdatePassSlipModal: FunctionComponent<UpdatePassSlipModalProps> = ({
             natureOfBusiness !== NatureOfBusiness.HALF_DAY && natureOfBusiness !== NatureOfBusiness.UNDERTIME,
           then: yup
             .string()
+            .nullable()
             .required('Time out is required')
             .matches(timeRegex, 'Time out must be a valid time')
             .test('time-out-test', 'Time out must be before time in', function (value) {
@@ -81,6 +82,7 @@ const UpdatePassSlipModal: FunctionComponent<UpdatePassSlipModalProps> = ({
             natureOfBusiness !== NatureOfBusiness.HALF_DAY && natureOfBusiness !== NatureOfBusiness.UNDERTIME,
           then: yup
             .string()
+            .nullable()
             .required('Time in is required')
             .matches(timeRegex, 'Time in must be a valid time')
             .test('time-in-test', 'Time in must be after time out', function (value) {
@@ -98,7 +100,7 @@ const UpdatePassSlipModal: FunctionComponent<UpdatePassSlipModalProps> = ({
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isSubmitting: patchFormLoading },
     setValue,
     reset,
     trigger,
@@ -174,6 +176,10 @@ const UpdatePassSlipModal: FunctionComponent<UpdatePassSlipModalProps> = ({
 
   return (
     <>
+      {!isEmpty(UpdatePassSlipTimeLogs) ? (
+        <ToastNotification toastType="success" notifMessage="Time logs updated successfully" />
+      ) : null}
+
       <Modal open={modalState} setOpen={setModalState} steady size="sm">
         <Modal.Header withCloseBtn>
           <div className="flex justify-between w-full">
@@ -192,7 +198,7 @@ const UpdatePassSlipModal: FunctionComponent<UpdatePassSlipModalProps> = ({
           {formData ? (
             <div className="flex flex-col gap-3">
               {/* Notifications */}
-              {isLoading ? (
+              {isLoading || patchFormLoading ? (
                 <AlertNotification
                   logo={<LoadingSpinner size="xs" />}
                   alertType="info"
@@ -267,7 +273,9 @@ const UpdatePassSlipModal: FunctionComponent<UpdatePassSlipModalProps> = ({
               type="submit"
               form="updatePassSlipTimeLogs"
               className="ml-1 text-gray-400 disabled:cursor-not-allowed"
-              disabled={isLoading ? true : false}
+              // disabled={isLoading ? true : false}
+              disabled={isLoading || patchFormLoading}
+              loading={isLoading || patchFormLoading}
             >
               <span className="text-xs font-normal">Submit</span>
             </Button>

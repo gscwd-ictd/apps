@@ -16,7 +16,7 @@ import dayjs from 'dayjs';
 import { PassSlip } from 'libs/utils/src/lib/types/pass-slip.type';
 import { PassSlipStatus } from 'libs/utils/src/lib/enums/pass-slip.enum';
 import { isEmpty } from 'lodash';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import useSWR from 'swr';
 import UpdatePassSlipModal from 'apps/employee-monitoring/src/components/modal/monitoring/pass-slips/UpdatePassSlipTimeLogs';
 
@@ -31,6 +31,7 @@ export default function Index() {
     mutate: mutatePassSlipApplications,
   } = useSWR('/pass-slip', fetcherEMS, {
     shouldRetryOnError: false,
+    revalidateOnFocus: false,
   });
 
   const {
@@ -51,6 +52,10 @@ export default function Index() {
     UpdatePassSlipTimeLogsFail,
     UpdatePassSlipTimeLogsSuccess,
 
+    UpdatePassSlipStatus,
+    UpdatePassSlipStatusFail,
+    UpdatePassSlipStatusSuccess,
+
     emptyErrorsAndResponse,
   } = usePassSlipStore((state) => ({
     passSlips: state.passSlips,
@@ -66,9 +71,13 @@ export default function Index() {
     CancelPassSlipFail: state.cancelPassSlipFail,
     CancelPassSlipSuccess: state.cancelPassSlipSuccess,
 
-    UpdatePassSlipTimeLogs: state.response.updatePassSlipTimeLogs,
-    UpdatePassSlipTimeLogsFail: state.updatePassSlipTimeLogsFail,
-    UpdatePassSlipTimeLogsSuccess: state.updatePassSlipTimeLogsSuccess,
+    UpdatePassSlipTimeLogs: state.response.updatePassSlip,
+    UpdatePassSlipTimeLogsFail: state.updatePassSlipFail,
+    UpdatePassSlipTimeLogsSuccess: state.updatePassSlipSuccess,
+
+    UpdatePassSlipStatus: state.response.updatePassSlip,
+    UpdatePassSlipStatusFail: state.updatePassSlipFail,
+    UpdatePassSlipStatusSuccess: state.updatePassSlipSuccess,
 
     emptyErrorsAndResponse: state.emptyErrorsAndResponse,
   }));
@@ -161,6 +170,15 @@ export default function Index() {
       enableSorting: false,
       cell: (info) => UseRenderNatureOfBusiness(info.getValue()),
     }),
+    columnHelper.accessor('isMedical', {
+      header: 'Medical Purpose',
+      enableColumnFilter: false,
+      enableSorting: true,
+      cell: (info) => {
+        const value = info.getValue();
+        return value === true ? 'Yes' : value === false ? 'No' : 'Not Applicable';
+      },
+    }),
     columnHelper.accessor('obTransportation', {
       header: 'OB Transportation',
       enableSorting: false,
@@ -168,7 +186,7 @@ export default function Index() {
     }),
     columnHelper.accessor('status', {
       header: 'Status',
-      enableSorting: false,
+      enableSorting: true,
       cell: (info) => UseRenderPassSlipStatus(info.getValue()),
       filterFn: 'equals',
     }),
@@ -227,10 +245,6 @@ export default function Index() {
 
         {!isEmpty(CancelPassSlip) ? (
           <ToastNotification toastType="success" notifMessage="Pass slip cancelled successfully" />
-        ) : null}
-
-        {!isEmpty(UpdatePassSlipTimeLogs) ? (
-          <ToastNotification toastType="success" notifMessage="Time logs updated successfully" />
         ) : null}
 
         {/* view modal */}
