@@ -9,7 +9,7 @@ import { useEmployeeStore } from '../../../store/employee.store';
 import { passSlipAction } from 'apps/portal/src/types/approvals.type';
 import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
 import { ApprovalOtpContents } from './ApprovalOtp/ApprovalOtpContents';
-import { ManagerOtpApproval } from 'libs/utils/src/lib/enums/approval.enum';
+import { ManagerCaptchaApproval, ManagerOtpApproval } from 'libs/utils/src/lib/enums/approval.enum';
 import { ConfirmationApprovalModal } from './ApprovalOtp/ConfirmationApprovalModal';
 import { NatureOfBusiness, PassSlipStatus } from 'libs/utils/src/lib/enums/pass-slip.enum';
 import { UseTwelveHourFormat } from 'libs/utils/src/lib/functions/TwelveHourFormatter';
@@ -340,7 +340,22 @@ export const ApprovalsPendingPassSlipModal = ({
               ) : null}
             </div>
           </div>
-          <OtpModal
+
+          <CaptchaModal
+            modalState={otpPassSlipModalIsOpen}
+            setModalState={setOtpPassSlipModalIsOpen}
+            title={'PASS SLIP APPROVAL CAPTCHA'}
+          >
+            {/* contents */}
+            <ApprovalCaptcha
+              employeeId={employeeDetails.user._id}
+              actionPassSlip={watch('status')}
+              tokenId={passSlip.id}
+              captchaName={ManagerCaptchaApproval.PASSSLIP}
+            />
+          </CaptchaModal>
+
+          {/* <OtpModal
             modalState={otpPassSlipModalIsOpen}
             setModalState={setOtpPassSlipModalIsOpen}
             title={'PASS SLIP APPROVAL OTP'}
@@ -352,7 +367,8 @@ export const ApprovalsPendingPassSlipModal = ({
               tokenId={passSlip.id}
               otpName={ManagerOtpApproval.PASSSLIP}
             />
-          </OtpModal>
+          </OtpModal> */}
+
           <ConfirmationApprovalModal
             modalState={declineApplicationModalIsOpen}
             setModalState={setDeclineApplicationModalIsOpen}
@@ -373,7 +389,7 @@ export const ApprovalsPendingPassSlipModal = ({
               employeeId={employeeDetails.user._id}
               dataToSubmitPassSlipDispute={dataToSubmitForCaptcha}
               tokenId={passSlip.id}
-              captchaName={'Dispute Captcha'}
+              captchaName={ManagerCaptchaApproval.PASSSLIP_DISPUTE}
             />
           </CaptchaModal>
         </Modal.Body>

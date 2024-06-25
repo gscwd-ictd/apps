@@ -123,10 +123,61 @@ export default function Calendar({
   }, [swrUnavailableDates, swrError]);
 
   useEffect(() => {
-    if (!isLateFiling) {
-      setSelectedDates([]);
+    if (leaveName === LeaveName.SICK || leaveName === LeaveName.SPECIAL_PRIVILEGE) {
+      //remove past dates up to last date of duty
+      setSelectedDates(selectedDates.filter((dates) => dayjs(`${dates}`).diff(`${lastDateOfDuty}`, 'day') > 0));
+    } else {
+      //remove past dates up to today
+      setSelectedDates(selectedDates.filter((dates) => dayjs(`${dates}`).diff(`${today}`, 'day') >= 0));
     }
   }, [isLateFiling]);
+
+  //reseting of selected dates if a condition is removed (unchecking late filing, unselecting leave dates between today and 10th day)
+  useEffect(() => {
+    //check if there are selected dates between today up to the 10th day and has no future pending/approved leaves
+    if (
+      selectedDates.filter(
+        (dates) => dayjs(`${dates}`).diff(`${today}`, 'day') >= 0 && dayjs(`${dates}`).diff(`${today}`, 'day') <= 10
+      ).length <= 0 &&
+      selectedDates.length > 0 &&
+      (leaveName === LeaveName.VACATION ||
+        leaveName === LeaveName.FORCED ||
+        leaveName === LeaveName.SOLO_PARENT ||
+        leaveName === LeaveName.SPECIAL_PRIVILEGE ||
+        leaveName === LeaveName.SICK) &&
+      futureLeaveCount <= 0
+    ) {
+      //check if there are only past dates selected for VL, FL, SOLO PARENT - legit late filing
+      if (
+        (leaveName === LeaveName.VACATION || leaveName === LeaveName.FORCED || leaveName === LeaveName.SOLO_PARENT) &&
+        isLateFiling &&
+        selectedDates.filter((dates) => dayjs(`${dates}`).diff(`${today}`, 'day') < 0).length > 0 &&
+        selectedDates.filter((dates) => dayjs(`${dates}`).diff(`${today}`, 'day') > 10).length <= 0
+      ) {
+        //do nothing - will not clear the selected dates array
+      }
+      //check if there are only past dates selected for SPL/SICK - legit late filing
+      else if (
+        (leaveName === LeaveName.SICK || leaveName === LeaveName.SPECIAL_PRIVILEGE) &&
+        isLateFiling &&
+        selectedDates.filter((dates) => dayjs(`${dates}`).diff(`${lastDateOfDuty}`, 'day') < 0).length > 0 &&
+        selectedDates.filter((dates) => dayjs(`${dates}`).diff(`${lastDateOfDuty}`, 'day') > 10).length <= 0
+      ) {
+        //do nothing - will not clear the selected dates array
+      }
+      //check if there are future dates selected for VL, FL, SOLO PARENT, SPL, SICK
+      else if (
+        (leaveName === LeaveName.VACATION ||
+          leaveName === LeaveName.FORCED ||
+          leaveName === LeaveName.SOLO_PARENT ||
+          leaveName === LeaveName.SICK ||
+          leaveName === LeaveName.SPECIAL_PRIVILEGE) &&
+        selectedDates.filter((dates) => dayjs(`${dates}`).diff(`${today}`, 'day') > 10).length > 0
+      ) {
+        setSelectedDates(selectedDates.filter((dates) => dayjs(`${dates}`).diff(`${today}`, 'day') <= 10));
+      }
+    }
+  }, [selectedDates]);
 
   function viewDateActivities(day: Date) {
     if (clickableDate) {
@@ -152,10 +203,16 @@ export default function Calendar({
               leaveName === LeaveName.SPECIAL_PRIVILEGE ||
               leaveName === LeaveName.SICK) &&
             dayjs(`${specifiedDate}`).diff(`${today}`, 'day') > 10 &&
-            futureLeaveCount > 0
+            // !isLateFiling &&
+            (futureLeaveCount > 0 ||
+              selectedDates.filter(
+                (dates) =>
+                  dayjs(`${dates}`).diff(`${today}`, 'day') >= 0 && dayjs(`${dates}`).diff(`${today}`, 'day') <= 10
+              ).length > 0)
           ) {
             setSelectedDates((selectedDates) => [...selectedDates, specifiedDate]);
           }
+
           //for VL within 10 days from today and not late filing
           if (
             leaveName === LeaveName.VACATION &&
@@ -411,6 +468,7 @@ export default function Calendar({
                         onClick={() => viewDateActivities(day)}
                         className={classNames(
                           isEqual(day, selectedDay) && 'text-gray-900 font-semibold',
+
                           //disable date selection for past dates from current day for VL/FL/SOLO
                           (leaveName === LeaveName.VACATION ||
                             leaveName === LeaveName.FORCED ||
@@ -418,20 +476,37 @@ export default function Calendar({
                             dayjs(`${day}`).diff(`${today}`, 'day') < 0 &&
                             isLateFiling === false &&
                             'text-slate-300',
-                          //disable date selection starting from 10th day from current day for FL/SOLO/SPL
+                          //disable date selection starting from 10th day from current day for Vl/FL/SOLO/SPL if late filing
+                          // (leaveName === LeaveName.VACATION ||
+                          //   leaveName === LeaveName.FORCED ||
+                          //   leaveName === LeaveName.SPECIAL_PRIVILEGE ||
+                          //   leaveName === LeaveName.SICK ||
+                          //   leaveName === LeaveName.SOLO_PARENT) &&
+                          //   dayjs(`${day}`).diff(`${today}`, 'day') > 10 &&
+                          //   isLateFiling === true &&
+                          //   'text-slate-300',
+                          //disable date selection starting from 10th day from current day for FL/SOLO/SPL - added allow all dates if a date with the 10 days is selected
                           (leaveName === LeaveName.FORCED ||
                             leaveName === LeaveName.SPECIAL_PRIVILEGE ||
                             leaveName === LeaveName.SICK ||
                             leaveName === LeaveName.SOLO_PARENT) &&
                             dayjs(`${day}`).diff(`${today}`, 'day') > 10 &&
                             futureLeaveCount <= 0 &&
-                            // isLateFiling === false &&
+                            selectedDates.filter(
+                              (dates) =>
+                                dayjs(`${dates}`).diff(`${today}`, 'day') >= 0 &&
+                                dayjs(`${dates}`).diff(`${today}`, 'day') <= 10
+                            ).length <= 0 &&
                             'text-slate-300',
-                          //disable date selection starting from 10th day from current day for VL ONLY
+                          //disable date selection starting from 10th day from current day for VL ONLY - added allow all dates if a date with the 10 days is selected
                           leaveName === LeaveName.VACATION &&
                             dayjs(`${day}`).diff(`${today}`, 'day') > 10 &&
                             futureLeaveCount <= 0 &&
-                            // isLateFiling === false &&
+                            selectedDates.filter(
+                              (dates) =>
+                                dayjs(`${dates}`).diff(`${today}`, 'day') >= 0 &&
+                                dayjs(`${dates}`).diff(`${today}`, 'day') <= 10
+                            ).length <= 0 &&
                             'text-slate-300',
                           //disable date selection for past dates from current day for SPL/SICK ONLY
                           (leaveName === LeaveName.SPECIAL_PRIVILEGE || leaveName === LeaveName.SICK) &&
@@ -449,10 +524,15 @@ export default function Calendar({
                           //   dayjs(`${today}`).diff(`${day}`, 'day') <= 1 &&
                           //   dayjs(`${day}`).diff(`${today}`, 'day') <= 10 &&
                           //   'text-slate-300',
-                          //disable date selection for more than 10 days from current day for SL
+                          //disable date selection for more than 10 days from current day for SL - added allow all dates if a date with the 10 days is selected
                           leaveName === LeaveName.SICK &&
                             dayjs(`${day}`).diff(`${today}`, 'day') > 10 &&
                             futureLeaveCount <= 0 &&
+                            selectedDates.filter(
+                              (dates) =>
+                                dayjs(`${dates}`).diff(`${today}`, 'day') >= 0 &&
+                                dayjs(`${dates}`).diff(`${today}`, 'day') <= 10
+                            ).length <= 0 &&
                             'text-slate-300',
                           isToday(day) && 'text-red-500',
                           swrUnavailableDates &&

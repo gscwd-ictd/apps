@@ -137,7 +137,7 @@ export function MySelectList({
 
   return (
     <div className="flex flex-col w-full">
-      <label htmlFor={id} className="block mb-1 text-xs font-medium text-gray-900 dark:text-gray-800">
+      <label htmlFor={id} className="block mb-1 text-xs font-medium text-gray-500 dark:text-gray-500">
         {label}
       </label>
 
@@ -147,9 +147,9 @@ export function MySelectList({
             id={id}
             ref={containerRef}
             tabIndex={0}
-            className="flex block w-full bg-white border border-gray-300/90 rounded min-h-[2.25rem] h-18 justify-between items-center gap-2 p-2 outline-none focus:border focus:border-blue-600 focus:border-2"
+            className="flex w-full bg-white border border-gray-300/90 rounded min-h-[2.25rem] h-18 justify-between items-center gap-2 p-2 outline-none focus:border focus:border-blue-600"
           >
-            <span className="grid grid-cols-3 text-xs text-left text-gray-700">
+            <span className="grid grid-cols-3 text-md text-left text-gray-500">
               {multiple
                 ? value
                     .sort((a, b) => (a.value > b.value ? 1 : -1))
@@ -163,7 +163,7 @@ export function MySelectList({
                           selectOption(v);
                         }}
                       >
-                        <div className="flex w-full items-center gap-1 py-0.5 px-2 text-sm text-white bg-blue-400 border rounded hover:cursor-grab hover:bg-red-500 border-gray-300/90">
+                        <div className="flex w-full items-center gap-1 py-0.5 px-2 text-md text-white bg-blue-400 border rounded hover:cursor-grab hover:bg-red-500 border-gray-300/90">
                           {v.label}
                           <span className="flex text-sm text-white">&times;</span>
                         </div>
@@ -205,14 +205,14 @@ export function MySelectList({
           {withSearchBar ? (
             <input
               type="text"
-              className="border-slate-300 text-slate-500 h-8 text-sm w-full rounded mt-1"
+              className="border-slate-300 text-slate-500 h-8 text-md w-full rounded mt-1"
               placeholder="Search"
               onChange={(e) => handleSearchItem(e.target.value)}
               value={searchedInput}
             />
           ) : null}
 
-          <ul className="border  rounded  max-h-[12em] bg-white z-50 overflow-y-auto w-full">
+          <ul className="border rounded  max-h-[12em] bg-white z-50 overflow-y-auto w-full">
             {listToSearch.map((option, index) => (
               <div key={option.value}>
                 {isSelectedHidden ? (
@@ -223,14 +223,14 @@ export function MySelectList({
                       selectOption(option);
                     }}
                     onMouseEnter={() => setHighlightedIndex(index)}
-                    className={`px-2  text-xs  cursor-pointer select-none   ${
+                    className={`px-2  text-md  cursor-pointer select-none   ${
                       isOptionSelected(option) && index === highlightedIndex
                         ? 'bg-blue-100 hover:text-white text-gray-500  hover:bg-red-500 hover hover:cursor-grab'
                         : !isOptionSelected(option) && index === highlightedIndex
                         ? 'py-1 hover:bg-blue-600 hover:text-white'
                         : isOptionSelected(option) && index !== highlightedIndex
                         ? 'bg-blue-100 text-gray-500'
-                        : 'py-1 text-gray-700'
+                        : 'py-1 text-gray-500'
                     }
           
               `}
@@ -245,14 +245,14 @@ export function MySelectList({
                       selectOption(option);
                     }}
                     onMouseEnter={() => setHighlightedIndex(index)}
-                    className={`px-2 py-1 text-xs  cursor-pointer select-none   ${
+                    className={`px-2 py-1 text-md cursor-pointer select-none text-gray-500  ${
                       isOptionSelected(option) && index === highlightedIndex
                         ? 'bg-blue-100 hover:text-white text-gray-500  hover:bg-red-500 hover hover:cursor-grab '
                         : !isOptionSelected(option) && index === highlightedIndex
                         ? 'hover:bg-blue-600 hover:text-white'
                         : isOptionSelected(option) && index !== highlightedIndex
                         ? 'bg-blue-100 text-gray-500'
-                        : 'text-gray-700'
+                        : 'text-gray-500'
                     }
           
               `}
