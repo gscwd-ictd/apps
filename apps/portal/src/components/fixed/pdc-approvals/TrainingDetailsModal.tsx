@@ -260,7 +260,7 @@ export const TrainingDetailsModal = ({ modalState, setModalState, closeModalActi
                           </th>
                         </tr>
 
-                        {individualTrainingDetails.nominee?.length > 0 ? (
+                        {individualTrainingDetails.nominees?.length > 0 ? (
                           <tr className="border-l border-r">
                             <td className={`px-2 w-12 text-center border-b border-r text-sm`}>No.</td>
                             <td className={`px-2 text-center border-b border-r text-sm`}>Name</td>
@@ -269,24 +269,24 @@ export const TrainingDetailsModal = ({ modalState, setModalState, closeModalActi
                         ) : null}
                       </thead>
                       <tbody className="text-sm text-center ">
-                        {individualTrainingDetails.nominee?.length > 0 ? (
-                          individualTrainingDetails.nominee.map((employees, index) => (
+                        {individualTrainingDetails.nominees?.length > 0 ? (
+                          individualTrainingDetails.nominees.map((employees, index) => (
                             <tr key={index} className="border-l border-r">
                               <td
                                 className={`px-2 py-1 text-start border-r ${
-                                  individualTrainingDetails.nominee.length === index + 1 ? '' : 'border-b'
+                                  individualTrainingDetails.nominees.length === index + 1 ? '' : 'border-b'
                                 }`}
                               >{`${index + 1}.`}</td>
                               <td
                                 className={`px-2 py-1 text-start border-r ${
-                                  individualTrainingDetails.nominee.length === index + 1 ? '' : 'border-b'
+                                  individualTrainingDetails.nominees.length === index + 1 ? '' : 'border-b'
                                 }`}
                               >
                                 {employees.name}
                               </td>
                               <td
                                 className={`px-2 text-start ${
-                                  individualTrainingDetails.nominee.length === index + 1 ? '' : 'border-b'
+                                  individualTrainingDetails.nominees.length === index + 1 ? '' : 'border-b'
                                 }`}
                               >
                                 {employees.supervisor.name}

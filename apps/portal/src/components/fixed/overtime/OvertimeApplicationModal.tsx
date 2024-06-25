@@ -43,6 +43,7 @@ export const OvertimeApplicationModal = ({ modalState, setModalState, closeModal
   const { reset, register, handleSubmit, watch, setValue } = useForm<OvertimeForm>({
     mode: 'onChange',
     defaultValues: {
+      employeeId: employeeDetails.employmentDetails.userId,
       overtimeImmediateSupervisorId: employeeDetails.employmentDetails.overtimeImmediateSupervisorId,
       plannedDate: '',
       estimatedHours: 0,
