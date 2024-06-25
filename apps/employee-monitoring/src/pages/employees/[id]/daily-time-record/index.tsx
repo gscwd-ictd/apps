@@ -1,6 +1,3 @@
-/* eslint-disable @next/next/no-img-element */
-/* eslint-disable @typescript-eslint/no-var-requires */
-/* eslint-disable @nx/enforce-module-boundaries */
 import { Card } from 'apps/employee-monitoring/src/components/cards/Card';
 import { BreadCrumbs } from 'apps/employee-monitoring/src/components/navigations/BreadCrumbs';
 import { useEffect, useState } from 'react';
@@ -12,23 +9,63 @@ import { isEmpty } from 'lodash';
 import CardEmployeeSchedules from 'apps/employee-monitoring/src/components/cards/CardEmployeeSchedules';
 import { PrintButton } from 'apps/employee-monitoring/src/components/buttons/PrintButton';
 import DailyTimeRecordPdfModal from 'apps/employee-monitoring/src/components/modal/employees/DailyTimeRecordPdfModal';
-import { ToastNotification } from '@gscwd-apps/oneui';
+import { Button, ToastNotification } from '@gscwd-apps/oneui';
 import { useScheduleSheetStore } from 'apps/employee-monitoring/src/store/schedule-sheet.store';
 import { EmployeeDtrTable } from 'apps/employee-monitoring/src/components/tables/EmployeeDtrTable';
 import { EmployeeDtrWithScheduleAndSummary } from 'libs/utils/src/lib/types/dtr.type';
 import { Can } from 'apps/employee-monitoring/src/context/casl/Can';
 import { Navigate } from 'apps/employee-monitoring/src/components/router/navigate';
+import AddRemarksDTRModal from 'apps/employee-monitoring/src/components/modal/employees/AddRemarksDTRModal';
+
+import useSWR from 'swr';
+import fetcherEMS from 'apps/employee-monitoring/src/utils/fetcher/FetcherEMS';
 
 export default function Index({ employeeData }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   // Print modal function
   const [printModalIsOpen, setPrintModalIsOpen] = useState<boolean>(false);
 
+  // add modal function
+  const [addModalIsOpen, setAddModalIsOpen] = useState<boolean>(false);
+  const openAddActionModal = () => setAddModalIsOpen(true);
+  const closeAddActionModal = () => setAddModalIsOpen(false);
+
   const toggle = () => setPrintModalIsOpen(!printModalIsOpen);
 
   // use dtr store
-  const { employeeDtr, setEmployeeDtr } = useDtrStore((state) => ({
+  const {
+    employeeDtr,
+    setEmployeeDtr,
+
+    selectedMonth,
+    selectedYear,
+
+    getEmployeeDtr,
+    getEmployeeDtrSuccess,
+    getEmployeeDtrFail,
+
+    emptyErrorsAndResponse,
+
+    dtrRemarksToSelectedDates,
+    errorAddDtrRemarksToSelectedDates,
+    errorUpdateDtrRemarks,
+    dtrRemarks,
+  } = useDtrStore((state) => ({
     employeeDtr: state.employeeDtr,
     setEmployeeDtr: state.setEmployeeDtr,
+
+    selectedMonth: state.selectedMonth,
+    selectedYear: state.selectedYear,
+
+    getEmployeeDtr: state.getEmployeeDtr,
+    getEmployeeDtrSuccess: state.getEmployeeDtrSuccess,
+    getEmployeeDtrFail: state.getEmployeeDtrFail,
+
+    emptyErrorsAndResponse: state.emptyErrorsAndResponse,
+
+    dtrRemarksToSelectedDates: state.dtrRemarksToSelectedDates.postResponse,
+    errorAddDtrRemarksToSelectedDates: state.error.errorAddDtrRemarksToSelectedDates,
+    errorUpdateDtrRemarks: state.error.errorUpdateDtrRemarks,
+    dtrRemarks: state.dtrRemarks.patchResponse,
   }));
 
   // scheduling store
@@ -38,18 +75,48 @@ export default function Index({ employeeData }: InferGetServerSidePropsType<type
     emptyResponseAndErrors: state.emptyResponseAndErrors,
   }));
 
-  // clear errors
-  useEffect(() => {
-    if (!isEmpty(postResponse)) {
-      setTimeout(() => {
-        emptyResponseAndErrors();
-      }, 1500);
-    }
-  }, [postResponse]);
-
   useEffect(() => {
     setEmployeeDtr({} as EmployeeDtrWithScheduleAndSummary);
   }, []);
+
+  const {
+    data: swrEmployeeDtr,
+    isLoading: swrEmployeeDtrLoading,
+    error: swrEmployeeDtrError,
+    mutate: swrMutateEmployeeDtr,
+  } = useSWR(`/daily-time-record/employees/${employeeData.companyId}/${selectedYear}/${selectedMonth}`, fetcherEMS, {
+    shouldRetryOnError: false,
+    revalidateOnFocus: false,
+  });
+
+  useEffect(() => {
+    if (swrEmployeeDtrLoading) {
+      getEmployeeDtr();
+    }
+  }, [swrEmployeeDtrLoading]);
+
+  // Upon success/fail of swr request, zustand state will be updated
+  useEffect(() => {
+    if (!isEmpty(swrEmployeeDtr)) {
+      getEmployeeDtrSuccess(swrEmployeeDtr.data);
+    }
+
+    if (!isEmpty(swrEmployeeDtrError)) {
+      getEmployeeDtrFail(swrEmployeeDtrError.message);
+    }
+  }, [swrEmployeeDtr, swrEmployeeDtrError]);
+
+  // clear errors
+  useEffect(() => {
+    if (!isEmpty(postResponse) || !isEmpty(dtrRemarksToSelectedDates) || !isEmpty(dtrRemarks)) {
+      swrMutateEmployeeDtr();
+      getEmployeeDtr();
+
+      setTimeout(() => {
+        emptyErrorsAndResponse();
+      }, 5000);
+    }
+  }, [postResponse, dtrRemarksToSelectedDates, dtrRemarks]);
 
   return (
     <>
@@ -66,9 +133,27 @@ export default function Index({ employeeData }: InferGetServerSidePropsType<type
           ]}
         />
 
-        {/* Successfully added */}
+        {/* Error when adding DTR remarks */}
+        {!isEmpty(errorAddDtrRemarksToSelectedDates) ? (
+          <ToastNotification notifMessage="Error adding remarks to selected DTR dates" toastType="error" />
+        ) : null}
+
+        {/* Error when updating DTR remarks */}
+        {!isEmpty(errorUpdateDtrRemarks) ? (
+          <ToastNotification notifMessage="Something went wrong with editing DTR remarks" toastType="error" />
+        ) : null}
+
+        {/* Post/Patch Request Success*/}
         {!isEmpty(postResponse) ? (
           <ToastNotification notifMessage="Successfully added a schedule!" toastType="success" />
+        ) : null}
+
+        {!isEmpty(dtrRemarksToSelectedDates) ? (
+          <ToastNotification toastType="success" notifMessage="DTR remarks added successfully" />
+        ) : null}
+
+        {!isEmpty(dtrRemarks) ? (
+          <ToastNotification toastType="success" notifMessage="DTR remarks updated successfully" />
         ) : null}
 
         {/* Modal is available if DTR is pulled */}
@@ -141,7 +226,18 @@ export default function Index({ employeeData }: InferGetServerSidePropsType<type
                 <div className="flex justify-end gap-2">
                   <DtrDateSelect employeeData={employeeData} />
                   <PrintButton onClick={toggle} />
+                  <Button variant={'info'} size={'sm'} loading={false} type="button" onClick={openAddActionModal}>
+                    <i className="bx bxs-plus-square"></i>&nbsp; Add DTR Remarks
+                  </Button>
                 </div>
+
+                {/* ADD REMARKS TO DTR MODAL */}
+                <AddRemarksDTRModal
+                  modalState={addModalIsOpen}
+                  setModalState={setAddModalIsOpen}
+                  closeModalAction={closeAddActionModal}
+                  companyId={employeeData.companyId}
+                />
 
                 {/* EMPLOYEE DTR TABLE */}
                 <EmployeeDtrTable employeeData={employeeData} />

@@ -166,10 +166,6 @@ export const PassSlipApplicationModal = ({
     reset();
   }, [applyPassSlipModalIsOpen]);
 
-  useEffect(() => {
-    console.log(watch('isMedical'));
-  }, [watch('isMedical')]);
-
   const { windowWidth } = UseWindowDimensions();
   return (
     <>

@@ -3,7 +3,12 @@ import { Schedule } from 'libs/utils/src/lib/types/schedule.type';
 import { create } from 'zustand';
 import { EmployeeRowData } from '../utils/types/table-row-types/monitoring/employee.type';
 import { devtools } from 'zustand/middleware';
-import { EmployeeDtrWithScheduleAndSummary, EmployeeDtrWithSummary } from 'libs/utils/src/lib/types/dtr.type';
+import {
+  EmployeeDtrWithScheduleAndSummary,
+  EmployeeDtrWithSummary,
+  DtrRemarksToSelectedDates,
+  DtrRemarks,
+} from 'libs/utils/src/lib/types/dtr.type';
 import { ScheduleShifts } from 'libs/utils/src/lib/enums/schedule.enum';
 
 type LoadingDtrEmployee = {
@@ -11,6 +16,8 @@ type LoadingDtrEmployee = {
   loadingEmployeeWithSchedule: boolean;
   loadingEmployeeDtr: boolean;
   loadingUpdateEmployeeDtr: boolean;
+  loadingAddDtrRemarksToSelectedDates: boolean;
+  loadingUpdateDtrRemarks: boolean;
 };
 
 type ErrorDtrEmployee = {
@@ -18,10 +25,20 @@ type ErrorDtrEmployee = {
   errorEmployeeWithSchedule: string;
   errorEmployeeDtr: string;
   errorUpdateEmployeeDtr: string;
+  errorAddDtrRemarksToSelectedDates: string;
+  errorUpdateDtrRemarks: string;
 };
 
 type ResponseDtrEmployee = {
   postResponse: EmployeeSchedule;
+};
+
+type ResponseDtrRemarksToSelectedDates = {
+  postResponse: DtrRemarksToSelectedDates;
+};
+
+type ResponseDtrRemarks = {
+  patchResponse: DtrRemarks;
 };
 
 export type EmployeeDtr = {
@@ -67,6 +84,10 @@ export type DailyTimeRecordState = {
   error: ErrorDtrEmployee;
   employeeSchedule: ResponseDtrEmployee;
   employeeDtr: EmployeeDtrWithScheduleAndSummary;
+
+  dtrRemarksToSelectedDates: ResponseDtrRemarksToSelectedDates;
+  dtrRemarks: ResponseDtrRemarks;
+
   setEmployeeDtr: (employeeDtr: EmployeeDtrWithScheduleAndSummary) => void;
 
   getEmployeeDtr: () => void;
@@ -89,6 +110,14 @@ export type DailyTimeRecordState = {
   updateEmployeeDtrSuccess: (response: EmployeeDtr) => void;
   updateEmployeeDtrFail: (error: string) => void;
 
+  addDtrRemarksToSelectedDates: () => void;
+  addDtrRemarksToSelectedDatesSuccess: (response: DtrRemarksToSelectedDates) => void;
+  addDtrRemarksToSelectedDatesFail: (error: string) => void;
+
+  updateDtrRemarks: () => void;
+  updateDtrRemarksSuccess: (response: DtrRemarks) => void;
+  updateDtrRemarksFail: (error: string) => void;
+
   emptyErrorsAndResponse: () => void;
 };
 
@@ -101,18 +130,24 @@ export const useDtrStore = create<DailyTimeRecordState>()(
     employeeWithSchedule: {} as EmployeeSchedule,
     selectedEmployee: {} as EmployeeRowData,
     employeeSchedule: { postResponse: {} as EmployeeSchedule },
+    dtrRemarksToSelectedDates: { postResponse: {} as DtrRemarksToSelectedDates },
+    dtrRemarks: { patchResponse: {} as DtrRemarks },
     date: '',
     error: {
       errorEmployeesAsOption: '',
       errorEmployeeWithSchedule: '',
       errorEmployeeDtr: '',
       errorUpdateEmployeeDtr: '',
+      errorAddDtrRemarksToSelectedDates: '',
+      errorUpdateDtrRemarks: '',
     },
     loading: {
       loadingEmployeesAsOption: false,
       loadingEmployeeWithSchedule: false,
       loadingEmployeeDtr: false,
       loadingUpdateEmployeeDtr: false,
+      loadingAddDtrRemarksToSelectedDates: false,
+      loadingUpdateDtrRemarks: false,
     },
     employeeDailyRecord: {} as EmployeeDtr,
     isDateSearched: false,
@@ -151,8 +186,12 @@ export const useDtrStore = create<DailyTimeRecordState>()(
           errorEmployeeWithSchedule: '',
           errorEmployeeDtr: '',
           errorUpdateEmployeeDtr: '',
+          errorAddDtrRemarksToSelectedDates: '',
+          errorUpdateDtrRemarks: '',
         },
         employeeSchedule: { postResponse: {} as EmployeeSchedule },
+        dtrRemarksToSelectedDates: { postResponse: {} as DtrRemarksToSelectedDates },
+        dtrRemarks: { patchResponse: {} as DtrRemarks },
       })),
     setEmployeeWithSchedule: (employeeWithSchedule: EmployeeSchedule) =>
       set((state) => ({ ...state, employeeWithSchedule })),
@@ -296,5 +335,49 @@ export const useDtrStore = create<DailyTimeRecordState>()(
         error: { ...state.error, errorEmployeeWithSchedule: error },
       }));
     },
+
+    addDtrRemarksToSelectedDates: () =>
+      set((state) => ({
+        ...state,
+        loading: { ...state.loading, loadingAddDtrRemarksToSelectedDates: true },
+        dtrRemarksToSelectedDates: { postResponse: {} as DtrRemarksToSelectedDates },
+        error: { ...state.error, errorAddDtrRemarksToSelectedDates: '' },
+      })),
+
+    addDtrRemarksToSelectedDatesSuccess: (response: DtrRemarksToSelectedDates) =>
+      set((state) => ({
+        ...state,
+        loading: { ...state.loading, loadingAddDtrRemarksToSelectedDates: false },
+        dtrRemarksToSelectedDates: { postResponse: response },
+      })),
+
+    addDtrRemarksToSelectedDatesFail: (error: string) =>
+      set((state) => ({
+        ...state,
+        loading: { ...state.loading, loadingAddDtrRemarksToSelectedDates: false },
+        error: { ...state.error, errorAddDtrRemarksToSelectedDates: error },
+      })),
+
+    updateDtrRemarks: () =>
+      set((state) => ({
+        ...state,
+        loading: { ...state.loading, loadingUpdateDtrRemarks: true },
+        dtrRemarks: { patchResponse: {} as DtrRemarks },
+        error: { ...state.error, errorUpdateDtrRemarks: '' },
+      })),
+
+    updateDtrRemarksSuccess: (response: DtrRemarks) =>
+      set((state) => ({
+        ...state,
+        loading: { ...state.loading, loadingUpdateDtrRemarks: false },
+        dtrRemarks: { patchResponse: response },
+      })),
+
+    updateDtrRemarksFail: (error: string) =>
+      set((state) => ({
+        ...state,
+        loading: { ...state.loading, loadingUpdateDtrRemarks: false },
+        error: { ...state.error, errorUpdateDtrRemarks: error },
+      })),
   }))
 );
