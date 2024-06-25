@@ -4,14 +4,14 @@ import { useApprovalStore } from '../../../store/approvals.store';
 import { Modal } from 'libs/oneui/src/components/Modal';
 import { Button } from 'libs/oneui/src/components/Button';
 import { SpinnerDotted } from 'spinners-react';
-import { AlertNotification, OtpModal } from '@gscwd-apps/oneui';
+import { AlertNotification, CaptchaModal, OtpModal } from '@gscwd-apps/oneui';
 import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
 import { SelectOption } from 'libs/utils/src/lib/types/select.type';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { leaveAction } from 'apps/portal/src/types/approvals.type';
 import { LeaveName, LeaveStatus } from 'libs/utils/src/lib/enums/leave.enum';
 import { useEmployeeStore } from 'apps/portal/src/store/employee.store';
-import { ManagerOtpApproval } from 'libs/utils/src/lib/enums/approval.enum';
+import { ManagerCaptchaApproval, ManagerOtpApproval } from 'libs/utils/src/lib/enums/approval.enum';
 import { ApprovalOtpContents } from './ApprovalOtp/ApprovalOtpContents';
 import { ConfirmationApprovalModal } from './ApprovalOtp/ConfirmationApprovalModal';
 import { DateFormatter } from 'libs/utils/src/lib/functions/DateFormatter';
@@ -21,6 +21,7 @@ import { fetchWithToken } from 'apps/portal/src/utils/hoc/fetcher';
 import useSWR from 'swr';
 import { useSupervisorLeaveApprovalLeaveLedgerStore } from 'apps/portal/src/store/supervisor-leave-approvals-leave-ledger.store';
 import { LeaveLedgerEntry } from 'libs/utils/src/lib/types/leave-ledger-entry.type';
+import { ApprovalCaptcha } from './ApprovalOtp/ApprovalCaptcha';
 
 type ApprovalsPendingLeaveModalProps = {
   modalState: boolean;
@@ -45,6 +46,8 @@ export const ApprovalsPendingLeaveModal = ({
     setOtpLeaveModalIsOpen,
     declineApplicationModalIsOpen,
     setDeclineApplicationModalIsOpen,
+    captchaModalIsOpen,
+    setCaptchaModalIsOpen,
   } = useApprovalStore((state) => ({
     leaveIndividualDetail: state.leaveIndividualDetail,
     leaveId: state.leaveId,
@@ -53,6 +56,8 @@ export const ApprovalsPendingLeaveModal = ({
     setOtpLeaveModalIsOpen: state.setOtpLeaveModalIsOpen,
     declineApplicationModalIsOpen: state.declineApplicationModalIsOpen,
     setDeclineApplicationModalIsOpen: state.setDeclineApplicationModalIsOpen,
+    captchaModalIsOpen: state.captchaModalIsOpen,
+    setCaptchaModalIsOpen: state.setCaptchaModalIsOpen,
   }));
 
   const [reason, setReason] = useState<string>('');
@@ -84,6 +89,7 @@ export const ApprovalsPendingLeaveModal = ({
     setValue('id', leaveIndividualDetail.id);
     if (data.status === LeaveStatus.FOR_HRDM_APPROVAL) {
       setOtpLeaveModalIsOpen(true);
+      // setCaptchaModalIsOpen(true);
     } else {
       setDeclineApplicationModalIsOpen(true);
     }
@@ -575,7 +581,22 @@ export const ApprovalsPendingLeaveModal = ({
               </div>
             </div>
           )}
-          <OtpModal
+
+          <CaptchaModal
+            modalState={otpLeaveModalIsOpen}
+            setModalState={setOtpLeaveModalIsOpen}
+            title={'LEAVE APPROVAL CAPTCHA'}
+          >
+            {/* contents */}
+            <ApprovalCaptcha
+              employeeId={employeeDetails.user._id}
+              actionLeave={watch('status')}
+              tokenId={leaveIndividualDetail.id}
+              captchaName={ManagerCaptchaApproval.LEAVE}
+            />
+          </CaptchaModal>
+
+          {/* <OtpModal
             modalState={otpLeaveModalIsOpen}
             setModalState={setOtpLeaveModalIsOpen}
             title={'LEAVE APPROVAL OTP'}
@@ -587,7 +608,7 @@ export const ApprovalsPendingLeaveModal = ({
               tokenId={leaveIndividualDetail.id}
               otpName={ManagerOtpApproval.LEAVE}
             />
-          </OtpModal>
+          </OtpModal> */}
           <ConfirmationApprovalModal
             modalState={declineApplicationModalIsOpen}
             setModalState={setDeclineApplicationModalIsOpen}

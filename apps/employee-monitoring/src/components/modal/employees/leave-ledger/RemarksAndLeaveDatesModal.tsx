@@ -1,7 +1,7 @@
 import { Modal, PageContentContext } from '@gscwd-apps/oneui';
 import UseRenderBadgePill from '../../../../utils/functions/RenderBadgePill';
 import dayjs from 'dayjs';
-import React, { Dispatch, FunctionComponent, SetStateAction, useContext } from 'react';
+import React, { Dispatch, FunctionComponent, SetStateAction, useContext, useEffect, useState } from 'react';
 import { UseCapitalizer } from 'apps/employee-monitoring/src/utils/functions/Capitalizer';
 import { LabelValue } from '../../../labels/LabelValue';
 import { isEmpty } from 'lodash';
@@ -33,6 +33,14 @@ const RemarksAndLeaveDatesModal: FunctionComponent<LeaveDatesAndRemarksModalProp
   const {
     aside: { windowWidth },
   } = useContext(PageContentContext);
+  const [mutatedDatesArray, setMutatedDatesArray] = useState([]);
+
+  useEffect(() => {
+    if (!isEmpty(rowData)) {
+      const array = rowData.leaveDates.toString().split(',');
+      setMutatedDatesArray(array);
+    }
+  }, [rowData]);
 
   return (
     <>
@@ -75,15 +83,16 @@ const RemarksAndLeaveDatesModal: FunctionComponent<LeaveDatesAndRemarksModalProp
               textSize="md"
               value={<p className="text-lg pl-4">{UseCapitalizer(rowData.remarks)}</p>}
             />
-            {!isEmpty(rowData.leaveDates) ? (
+
+            {!isEmpty(mutatedDatesArray) ? (
               <LabelValue
                 label="Leave Date/s"
                 direction="top-to-bottom"
                 textSize="md"
                 value={
-                  <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-2 pl-4 py-1.5">
-                    {rowData.leaveDates &&
-                      rowData.leaveDates.map((date, idx) => {
+                  <div className="grid grid-cols-2 gap-2 pl-4 py-1.5">
+                    {mutatedDatesArray &&
+                      mutatedDatesArray.map((date, idx) => {
                         return (
                           <React.Fragment key={idx}>
                             <span className="w-full">{UseRenderBadgePill(transformDateToString(date))}</span>

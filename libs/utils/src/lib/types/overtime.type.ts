@@ -43,6 +43,7 @@ export type DeleteImmediateSupervisor = {
 
 //for supervisor overtime application
 export type OvertimeForm = {
+  employeeId: string;
   overtimeImmediateSupervisorId: string;
   plannedDate: string;
   estimatedHours: number;

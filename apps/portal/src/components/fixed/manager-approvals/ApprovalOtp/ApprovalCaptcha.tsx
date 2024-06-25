@@ -4,18 +4,29 @@ import { FunctionComponent, useEffect, useState } from 'react';
 import { passSlipAction } from '../../../../types/approvals.type';
 import { useApprovalStore } from '../../../../store/approvals.store';
 import { patchPortal } from '../../../../utils/helpers/portal-axios-helper';
-import { OvertimeAccomplishmentStatus } from 'libs/utils/src/lib/enums/overtime.enum';
+import { OvertimeAccomplishmentStatus, OvertimeStatus } from 'libs/utils/src/lib/enums/overtime.enum';
 import { PassSlipStatus } from 'libs/utils/src/lib/enums/pass-slip.enum';
 import { GenerateCaptcha } from '../../captcha/CaptchaGenerator';
 import { OvertimeAccomplishmentApprovalPatch } from 'libs/utils/src/lib/types/overtime.type';
+import { LeaveStatus } from 'libs/utils/src/lib/enums/leave.enum';
+import { DtrCorrectionStatus } from 'libs/utils/src/lib/enums/dtr.enum';
+import { ManagerCaptchaApproval, ManagerOtpApproval } from 'libs/utils/src/lib/enums/approval.enum';
 
 interface CaptchaProps {
   employeeId?: string;
   tokenId: string;
-  captchaName: any;
+  captchaName: string;
   dataToSubmitOvertimeAccomplishment?: OvertimeAccomplishmentApprovalPatch;
   dataToSubmitPassSlipDispute?: passSlipAction;
   dataToSubmitApproveAllAccomplishment?: OvertimeAccomplishmentApprovalPatch;
+
+  //FOR PASS SLIP, DTR CORRECTION, LEAVE, OT APPROVALS
+  actionOvertime?: OvertimeStatus; // approve or disapprove for overtime
+  actionLeave?: LeaveStatus; // approve or disapprove for leave
+  actionPassSlip?: PassSlipStatus; // approve or disapprove pass slip
+  actionDtrCorrection?: DtrCorrectionStatus; // approve or disapprove time log correction
+  remarks?: string;
+  supervisorDisapprovalRemarks?: string; //for supervisor disapproval for leave
 }
 
 export const ApprovalCaptcha: FunctionComponent<CaptchaProps> = ({
@@ -25,6 +36,13 @@ export const ApprovalCaptcha: FunctionComponent<CaptchaProps> = ({
   dataToSubmitOvertimeAccomplishment,
   dataToSubmitPassSlipDispute,
   dataToSubmitApproveAllAccomplishment,
+
+  //FOR PASS SLIP, DTR CORRECTION, LEAVE, OT APPROVALS
+  actionOvertime,
+  actionLeave,
+  actionPassSlip,
+  actionDtrCorrection,
+  remarks,
   ...props
 }) => {
   const [wiggleEffect, setWiggleEffect] = useState(false);
@@ -62,6 +80,27 @@ export const ApprovalCaptcha: FunctionComponent<CaptchaProps> = ({
     patchPassSlip,
     patchPassSlipSuccess,
     patchPassSlipFail,
+
+    patchOvertime,
+    patchOvertimeSuccess,
+    patchOvertimeFail,
+    setPendingOvertimeModalIsOpen,
+    setOtpOvertimeModalIsOpen,
+
+    patchLeave,
+    patchLeaveSuccess,
+    patchLeaveFail,
+    setPendingLeaveModalIsOpen,
+    setOtpLeaveModalIsOpen,
+
+    setPendingPassSlipModalIsOpen,
+    setOtpPassSlipModalIsOpen,
+
+    patchDtrCorrection,
+    patchDtrCorrectionSuccess,
+    patchDtrCorrectionFail,
+    setDtrCorrectionModalIsOpen,
+    setOtpDtrCorrectionModalIsOpen,
   } = useApprovalStore((state) => ({
     captchaModalIsOpen: state.captchaModalIsOpen,
     setCaptchaModalIsOpen: state.setCaptchaModalIsOpen, //for overtime accomplishment captcha
@@ -74,6 +113,27 @@ export const ApprovalCaptcha: FunctionComponent<CaptchaProps> = ({
     patchPassSlip: state.patchPassSlip,
     patchPassSlipSuccess: state.patchPassSlipSuccess,
     patchPassSlipFail: state.patchPassSlipFail,
+
+    patchOvertime: state.patchOvertime,
+    patchOvertimeSuccess: state.patchOvertimeSuccess,
+    patchOvertimeFail: state.patchOvertimeFail,
+    setPendingOvertimeModalIsOpen: state.setPendingOvertimeModalIsOpen,
+    setOtpOvertimeModalIsOpen: state.setOtpOvertimeModalIsOpen,
+
+    patchLeave: state.patchLeave,
+    patchLeaveSuccess: state.patchLeaveSuccess,
+    patchLeaveFail: state.patchLeaveFail,
+    setPendingLeaveModalIsOpen: state.setPendingLeaveModalIsOpen,
+    setOtpLeaveModalIsOpen: state.setOtpLeaveModalIsOpen,
+
+    setPendingPassSlipModalIsOpen: state.setPendingPassSlipModalIsOpen,
+    setOtpPassSlipModalIsOpen: state.setOtpPassSlipModalIsOpen,
+
+    patchDtrCorrection: state.patchDtrCorrection,
+    patchDtrCorrectionSuccess: state.patchDtrCorrectionSuccess,
+    patchDtrCorrectionFail: state.patchDtrCorrectionFail,
+    setDtrCorrectionModalIsOpen: state.setDtrCorrectionModalIsOpen,
+    setOtpDtrCorrectionModalIsOpen: state.setOtpDtrCorrectionModalIsOpen,
   }));
 
   useEffect(() => {
@@ -86,14 +146,29 @@ export const ApprovalCaptcha: FunctionComponent<CaptchaProps> = ({
   const handleClose = () => {
     setCaptchaModalIsOpen(false); //close captcha modal first
     setApproveAllCaptchaModalIsOpen(false);
+
+    setOtpOvertimeModalIsOpen(false);
+    setOtpPassSlipModalIsOpen(false);
+    setOtpLeaveModalIsOpen(false);
+    setOtpDtrCorrectionModalIsOpen(false);
+
     setTimeout(() => {
       setDisputedPassSlipModalIsOpen(false);
       setOvertimeAccomplishmentModalIsOpen(false); //then close Accomplishment modal
+      setPendingOvertimeModalIsOpen(false); //then close Pass Slip modal
+      setPendingPassSlipModalIsOpen(false); //then close Pass Slip modal
+      setPendingLeaveModalIsOpen(false); //then close Pass Slip modal
+      setDtrCorrectionModalIsOpen(false);
     }, 200);
   };
 
   //CLOSE FUNCTION FOR CAPTCHA ONLY
   const handleCloseCaptcha = () => {
+    setOtpOvertimeModalIsOpen(false);
+    setOtpPassSlipModalIsOpen(false);
+    setOtpLeaveModalIsOpen(false);
+    setOtpDtrCorrectionModalIsOpen(false);
+
     setCaptchaModalIsOpen(false);
     setApproveAllCaptchaModalIsOpen(false);
   };
@@ -104,140 +179,293 @@ export const ApprovalCaptcha: FunctionComponent<CaptchaProps> = ({
       setIsCaptchaError(true);
       setWiggleEffect(true);
     } else {
-      //overtime accomplishment approval
-      patchOvertimeAccomplishment();
-      if (dataToSubmitOvertimeAccomplishment && !dataToSubmitApproveAllAccomplishment) {
-        const { error, result } = await patchPortal(
-          '/v1/overtime/accomplishments/approval',
-          dataToSubmitOvertimeAccomplishment
-        );
-        if (error) {
-          patchOvertimeAccomplishmentFail(result);
-        } else {
-          patchOvertimeAccomplishmentSuccess(result);
-          handleClose(); // close confirmation of decline modal
-        }
-      }
-      //approve all pending accomplishment
-      else if (dataToSubmitApproveAllAccomplishment && !dataToSubmitOvertimeAccomplishment) {
-        const { error, result } = await patchPortal(
-          '/v1/overtime/accomplishments/approval/all',
-          dataToSubmitApproveAllAccomplishment
-        );
-        if (error) {
-          patchOvertimeAccomplishmentFail(result);
-        } else {
-          patchOvertimeAccomplishmentSuccess(result);
-          handleClose(); // close confirmation of decline modal
-        }
-      }
-      //pass slip dispute approval
-      else if (dataToSubmitPassSlipDispute) {
-        let data;
-        if (dataToSubmitPassSlipDispute.status === PassSlipStatus.APPROVED) {
+      let data;
+
+      if (captchaName === ManagerCaptchaApproval.LEAVE) {
+        data = {
+          id: tokenId,
+          status: actionLeave,
+          supervisorDisapprovalRemarks: remarks,
+        };
+        patchLeave();
+      } else if (captchaName === ManagerCaptchaApproval.PASSSLIP) {
+        data = {
+          passSlipId: tokenId,
+          status: actionPassSlip,
+        };
+        patchPassSlip();
+      } else if (captchaName === ManagerCaptchaApproval.OVERTIME) {
+        data = {
+          managerId: employeeId,
+          approvedBy: employeeId,
+          remarks: remarks,
+          status: actionOvertime,
+          overtimeApplicationId: tokenId,
+        };
+        patchOvertime();
+      } else if (captchaName === ManagerCaptchaApproval.DTR_CORRECTION) {
+        data = {
+          id: tokenId,
+          status: actionDtrCorrection,
+        };
+        patchDtrCorrection();
+      } else if (captchaName === ManagerCaptchaApproval.OVERTIME_ACCOMPLISHMENT) {
+        data = dataToSubmitOvertimeAccomplishment;
+        patchOvertimeAccomplishment();
+      } else if (captchaName === ManagerCaptchaApproval.ALL_OVERTIME_ACCOMPLISHMENT) {
+        data = dataToSubmitApproveAllAccomplishment;
+        patchOvertimeAccomplishment();
+      } else if (captchaName === ManagerCaptchaApproval.PASSSLIP_DISPUTE) {
+        if (dataToSubmitPassSlipDispute?.status === PassSlipStatus.APPROVED) {
           //mutate payload for dispute purposes
           data = {
-            passSlipId: dataToSubmitPassSlipDispute.passSlipId,
+            passSlipId: dataToSubmitPassSlipDispute?.passSlipId,
             isDisputeApproved: true,
           };
         } else {
           data = {
-            passSlipId: dataToSubmitPassSlipDispute.passSlipId,
+            passSlipId: dataToSubmitPassSlipDispute?.passSlipId,
             isDisputeApproved: false,
           };
         }
         patchPassSlip();
-        const { error, result } = await patchPortal('/v1/pass-slip', data);
-        if (error) {
+      }
+
+      let captchaPatchUrl;
+      if (captchaName === ManagerCaptchaApproval.LEAVE) {
+        captchaPatchUrl = '/v1/leave/supervisor';
+      } else if (captchaName === ManagerCaptchaApproval.PASSSLIP) {
+        captchaPatchUrl = '/v1/pass-slip';
+      } else if (captchaName === ManagerCaptchaApproval.OVERTIME) {
+        captchaPatchUrl = '/v1/overtime/approval';
+      } else if (captchaName === ManagerCaptchaApproval.DTR_CORRECTION) {
+        captchaPatchUrl = '/v1/dtr-correction';
+      } else if (captchaName === ManagerCaptchaApproval.OVERTIME_ACCOMPLISHMENT) {
+        captchaPatchUrl = '/v1/overtime/accomplishments/approval';
+      } else if (captchaName === ManagerCaptchaApproval.ALL_OVERTIME_ACCOMPLISHMENT) {
+        captchaPatchUrl = '/v1/overtime/accomplishments/approval/all';
+      } else if (captchaName === ManagerCaptchaApproval.PASSSLIP_DISPUTE) {
+        captchaPatchUrl = '/v1/pass-slip';
+      }
+
+      const { error, result } = await patchPortal(captchaPatchUrl, data);
+      if (error) {
+        if (captchaName === ManagerCaptchaApproval.LEAVE) {
+          patchLeaveFail(result);
+        } else if (captchaName === ManagerCaptchaApproval.PASSSLIP) {
           patchPassSlipFail(result);
-        } else {
+        } else if (captchaName === ManagerCaptchaApproval.OVERTIME) {
+          patchOvertimeFail(result);
+        } else if (captchaName === ManagerCaptchaApproval.DTR_CORRECTION) {
+          patchDtrCorrectionFail(result);
+        } else if (captchaName === ManagerCaptchaApproval.OVERTIME_ACCOMPLISHMENT) {
+          patchOvertimeAccomplishmentFail(result);
+        } else if (captchaName === ManagerCaptchaApproval.ALL_OVERTIME_ACCOMPLISHMENT) {
+          patchOvertimeAccomplishmentFail(result);
+        } else if (captchaName === ManagerCaptchaApproval.PASSSLIP_DISPUTE) {
+          patchPassSlipFail(result);
+        }
+      } else {
+        if (captchaName === ManagerCaptchaApproval.LEAVE) {
+          patchLeaveSuccess(result);
+          handleClose();
+        } else if (captchaName === ManagerCaptchaApproval.PASSSLIP) {
           patchPassSlipSuccess(result);
-          handleClose(); // close confirmation of decline modal
+          handleClose();
+        } else if (captchaName === ManagerCaptchaApproval.OVERTIME) {
+          patchOvertimeSuccess(result);
+          handleClose();
+        } else if (captchaName === ManagerCaptchaApproval.DTR_CORRECTION) {
+          patchDtrCorrectionSuccess(result);
+          handleClose();
+        } else if (captchaName === ManagerCaptchaApproval.OVERTIME_ACCOMPLISHMENT) {
+          patchOvertimeAccomplishmentSuccess(result);
+          handleClose();
+        } else if (captchaName === ManagerCaptchaApproval.ALL_OVERTIME_ACCOMPLISHMENT) {
+          patchOvertimeAccomplishmentSuccess(result);
+          handleClose();
+        } else if (captchaName === ManagerCaptchaApproval.PASSSLIP_DISPUTE) {
+          patchPassSlipSuccess(result);
+          handleClose();
         }
       }
+
+      // //overtime accomplishment approval
+      // if (dataToSubmitOvertimeAccomplishment && !dataToSubmitApproveAllAccomplishment) {
+      //   patchOvertimeAccomplishment();
+      //   const { error, result } = await patchPortal(
+      //     '/v1/overtime/accomplishments/approval',
+      //     dataToSubmitOvertimeAccomplishment
+      //   );
+      //   if (error) {
+      //     patchOvertimeAccomplishmentFail(result);
+      //   } else {
+      //     patchOvertimeAccomplishmentSuccess(result);
+      //     handleClose(); // close confirmation of decline modal
+      //   }
+      // }
+      // //approve all pending accomplishment
+      // else if (dataToSubmitApproveAllAccomplishment && !dataToSubmitOvertimeAccomplishment) {
+      //   const { error, result } = await patchPortal(
+      //     '/v1/overtime/accomplishments/approval/all',
+      //     dataToSubmitApproveAllAccomplishment
+      //   );
+      //   if (error) {
+      //     patchOvertimeAccomplishmentFail(result);
+      //   } else {
+      //     patchOvertimeAccomplishmentSuccess(result);
+      //     handleClose(); // close confirmation of decline modal
+      //   }
+      // }
+      // //pass slip dispute approval
+      // else if (dataToSubmitPassSlipDispute) {
+      //   let data;
+      //   if (dataToSubmitPassSlipDispute.status === PassSlipStatus.APPROVED) {
+      //     //mutate payload for dispute purposes
+      //     data = {
+      //       passSlipId: dataToSubmitPassSlipDispute.passSlipId,
+      //       isDisputeApproved: true,
+      //     };
+      //   } else {
+      //     data = {
+      //       passSlipId: dataToSubmitPassSlipDispute.passSlipId,
+      //       isDisputeApproved: false,
+      //     };
+      //   }
+      //   patchPassSlip();
+      //   const { error, result } = await patchPortal('/v1/pass-slip', data);
+      //   if (error) {
+      //     patchPassSlipFail(result);
+      //   } else {
+      //     patchPassSlipSuccess(result);
+      //     handleClose(); // close confirmation of decline modal
+      //   }
+      // }
     }
   }
 
   return (
     <>
-      {dataToSubmitOvertimeAccomplishment || dataToSubmitPassSlipDispute || dataToSubmitApproveAllAccomplishment ? (
-        <>
-          <div className="flex flex-col p-8 gap-1 justify-center items-center text-sm w-full">
-            <div className="mb-2 text-center">
-              {dataToSubmitOvertimeAccomplishment ? (
-                <>
-                  {`To ${
-                    dataToSubmitOvertimeAccomplishment.status == OvertimeAccomplishmentStatus.APPROVED
-                      ? 'approve'
-                      : 'disapprove'
-                  } this Accomplishment Report, please generate and submit the correct Captcha.`}
-                </>
-              ) : null}
+      <div className="flex flex-col p-8 gap-1 justify-center items-center text-sm w-full">
+        <div className="mb-2 text-center">
+          {/* PASS SLIP APPROVAL MESSAGE */}
+          {captchaName === ManagerCaptchaApproval.PASSSLIP ? (
+            <>
+              {`To ${
+                actionPassSlip === PassSlipStatus.APPROVED ? 'approve' : 'disapprove'
+              } this Pass Slip, please generate and submit the correct Captcha.`}
+            </>
+          ) : null}
 
-              {dataToSubmitPassSlipDispute ? (
-                <>
-                  {`To ${
-                    dataToSubmitPassSlipDispute.status == PassSlipStatus.APPROVED ? 'approve' : 'disapprove'
-                  } this Pass Slip Dispute, please generate and submit the correct Captcha.`}
-                </>
-              ) : null}
-            </div>
+          {/* OVERTIME APPLICATION APPROVAL MESSAGE */}
+          {captchaName === ManagerCaptchaApproval.OVERTIME ? (
+            <>
+              {`To ${
+                actionOvertime === OvertimeStatus.APPROVED ? 'approve' : 'disapprove'
+              } this Overtime, please generate and submit the correct Captcha.`}
+            </>
+          ) : null}
 
-            <div className="flex flex-col flex-wrap justify-center items-center gap-2 w-full">
-              <button
-                className={`
+          {/* LEAVE APPLICATION APPROVAL MESSAGE */}
+          {captchaName === ManagerCaptchaApproval.LEAVE ? (
+            <>
+              {`To ${
+                actionLeave === LeaveStatus.APPROVED ? 'approve' : 'disapprove'
+              } this Leave, please generate and submit the correct Captcha.`}
+            </>
+          ) : null}
+
+          {/* DTR CORRECTION APPLICATION APPROVAL MESSAGE */}
+          {captchaName === ManagerCaptchaApproval.DTR_CORRECTION ? (
+            <>
+              {`To ${
+                actionDtrCorrection === DtrCorrectionStatus.APPROVED ? 'approve' : 'disapprove'
+              } this DTR Correction, please generate and submit the correct Captcha.`}
+            </>
+          ) : null}
+
+          {/* OT ACCOMPLISHMENT APPLICATION APPROVAL MESSAGE */}
+          {captchaName === ManagerCaptchaApproval.OVERTIME_ACCOMPLISHMENT && dataToSubmitApproveAllAccomplishment ? (
+            <>
+              {`To ${
+                dataToSubmitApproveAllAccomplishment.status == OvertimeAccomplishmentStatus.APPROVED
+                  ? 'approve'
+                  : 'disapprove'
+              } this Accomplishment Report, please generate and submit the correct Captcha.`}
+            </>
+          ) : null}
+
+          {/* ALL OT ACCOMPLISHMENT APPLICATION APPROVAL MESSAGE */}
+          {captchaName === ManagerCaptchaApproval.ALL_OVERTIME_ACCOMPLISHMENT && dataToSubmitOvertimeAccomplishment ? (
+            <>
+              {`To ${
+                dataToSubmitOvertimeAccomplishment.status == OvertimeAccomplishmentStatus.APPROVED
+                  ? 'approve'
+                  : 'disapprove'
+              } this Accomplishment Report, please generate and submit the correct Captcha.`}
+            </>
+          ) : null}
+
+          {captchaName === ManagerCaptchaApproval.PASSSLIP_DISPUTE && dataToSubmitPassSlipDispute ? (
+            <>
+              {`To ${
+                dataToSubmitPassSlipDispute.status == PassSlipStatus.APPROVED ? 'approve' : 'disapprove'
+              } this Pass Slip Dispute, please generate and submit the correct Captcha.`}
+            </>
+          ) : null}
+        </div>
+
+        <div className="flex flex-col flex-wrap justify-center items-center gap-2 w-full">
+          <button
+            className={`
                text-white bg-red-500 h-10 transition-all rounded hover:bg-red-600 active:bg-red-600 outline-red-500 w-56`}
-                onClick={getCaptcha}
-              >
-                <label className="font-bold cursor-pointer">GENERATE CAPTCHA</label>
-              </button>
-              {/* captcha */}
-              <div
-                className={`${
-                  pwdArray ? '' : 'animate-pulse'
-                } w-56 select-none h-10 px-4 py-1 transition-all duration-150 bg-slate-200 text-xl flex justify-center items-center gap-2`}
-              >
-                <div className="w-4 font-medium text-indigo-800 scale-105 -rotate-12">{pwdArray && pwdArray[0]}</div>
-                <div className="w-4 font-bold scale-90 rotate-6 text-sky-800">{pwdArray && pwdArray[1]}</div>
-                <div className="w-4 font-light text-red-800 scale-105 rotate-45">{pwdArray && pwdArray[2]}</div>
-                <div className="w-4 pr-2 font-semibold text-green-800 scale-100 rotate-12">
-                  {pwdArray && pwdArray[3]}
-                </div>
-                <div className="w-4 font-bold text-blue-600 scale-90 -rotate-45">{pwdArray && pwdArray[4]}</div>
-                <div className="w-4 font-medium scale-105 -rotate-6 text-stone-800">{pwdArray && pwdArray[5]}</div>
-              </div>
-              <input
-                type="text"
-                value={password}
-                placeholder="Enter Captcha"
-                className={`${isCaptchaError ? 'border-red-600' : 'border-stone-200'}  w-56 border text-md`}
-                onChange={(e) => setPassword(e.target.value as unknown as string)}
-              />
-
-              <button
-                className={`${
-                  wiggleEffect && 'animate-shake'
-                } text-white w-56 h-10 transition-all rounded hover:bg-indigo-600 active:bg-indigo-600 outline-blue-500 ${
-                  wiggleEffect ? 'bg-rose-600 hover:bg-rose-600' : 'bg-indigo-500'
-                }`}
-                type="submit"
-                onAnimationEnd={() => setWiggleEffect(false)}
-                onClick={(e) => handleFinalSubmit()}
-              >
-                <label className={`cursor-not-allowed pointer-events-none font-bold`}>SUBMIT</label>
-              </button>
-
-              <button
-                className={`
-               mb-2 text-white bg-red-500 h-10 transition-all rounded hover:bg-red-600 active:bg-red-600 outline-red-500 w-56`}
-                onClick={(e) => handleCloseCaptcha()}
-              >
-                <label className="font-bold cursor-pointer">CANCEL</label>
-              </button>
-            </div>
+            onClick={getCaptcha}
+          >
+            <label className="font-bold cursor-pointer">GENERATE CAPTCHA</label>
+          </button>
+          {/* captcha */}
+          <div
+            className={`${
+              pwdArray ? '' : 'animate-pulse'
+            } w-56 select-none h-10 px-4 py-1 transition-all duration-150 bg-slate-200 text-xl flex justify-center items-center gap-2`}
+          >
+            <div className="w-4 font-medium text-indigo-800 scale-105 -rotate-12">{pwdArray && pwdArray[0]}</div>
+            <div className="w-4 font-bold scale-90 rotate-6 text-sky-800">{pwdArray && pwdArray[1]}</div>
+            <div className="w-4 font-light text-red-800 scale-105 rotate-45">{pwdArray && pwdArray[2]}</div>
+            <div className="w-4 pr-2 font-semibold text-green-800 scale-100 rotate-12">{pwdArray && pwdArray[3]}</div>
+            <div className="w-4 font-bold text-blue-600 scale-90 -rotate-45">{pwdArray && pwdArray[4]}</div>
+            <div className="w-4 font-medium scale-105 -rotate-6 text-stone-800">{pwdArray && pwdArray[5]}</div>
           </div>
-        </>
-      ) : null}
+          <input
+            type="text"
+            value={password}
+            placeholder="Enter Captcha"
+            className={`${isCaptchaError ? 'border-red-600' : 'border-stone-200'}  w-56 border text-md`}
+            onChange={(e) => setPassword(e.target.value as unknown as string)}
+          />
+
+          <button
+            className={`${
+              wiggleEffect && 'animate-shake'
+            } text-white w-56 h-10 transition-all rounded hover:bg-indigo-600 active:bg-indigo-600 outline-blue-500 ${
+              wiggleEffect ? 'bg-rose-600 hover:bg-rose-600' : 'bg-indigo-500'
+            }`}
+            type="submit"
+            onAnimationEnd={() => setWiggleEffect(false)}
+            onClick={(e) => handleFinalSubmit()}
+          >
+            <label className={`cursor-not-allowed pointer-events-none font-bold`}>SUBMIT</label>
+          </button>
+
+          <button
+            className={`
+               mb-2 text-white bg-red-500 h-10 transition-all rounded hover:bg-red-600 active:bg-red-600 outline-red-500 w-56`}
+            onClick={(e) => handleCloseCaptcha()}
+          >
+            <label className="font-bold cursor-pointer">CANCEL</label>
+          </button>
+        </div>
+      </div>
     </>
   );
 };

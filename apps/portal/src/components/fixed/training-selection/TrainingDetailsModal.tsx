@@ -406,7 +406,7 @@ export const TrainingDetailsModal = ({ modalState, setModalState, closeModalActi
                       <tr className="border-l border-r">
                         <th
                           colSpan={3}
-                          className="px-10 py-2 text-sm text-center items-center md:px-6 md:text-md font-medium border-b"
+                          className="px-10 py-2 text-md text-center items-center md:px-6 md:text-md font-medium border-b"
                         >
                           Nominated Employee(s)
                         </th>
@@ -414,22 +414,22 @@ export const TrainingDetailsModal = ({ modalState, setModalState, closeModalActi
 
                       {nominatedEmployeeList?.length > 0 ? (
                         <tr className="border-l border-r">
-                          <td className={`px-2 w-1/2 text-center border-b border-r text-sm`}>Name</td>
-                          <td className={`px-2 w-24 text-center border-b border-r text-sm`}>Status</td>
-                          <td className={`px-2 w-auto text-center border-b text-sm`}>Remarks</td>
+                          <td className={`px-2 w-1/2 text-center border-b border-r text-md`}>Name</td>
+                          <td className={`px-2 w-24 text-center border-b border-r text-md`}>Status</td>
+                          <td className={`px-2 w-auto text-center border-b text-md`}>Remarks</td>
                         </tr>
                       ) : nominatedEmployees?.length > 0 ? (
                         <tr className="border-l border-r">
-                          <td colSpan={1} className={`px-2 text-center border-b border-r text-sm w-12`}>
+                          <td colSpan={1} className={`px-2 text-center border-b border-r text-md w-12`}>
                             No.
                           </td>
-                          <td colSpan={2} className={`px-2 text-center border-b text-sm`}>
+                          <td colSpan={2} className={`px-2 text-center border-b text-md`}>
                             Name
                           </td>
                         </tr>
                       ) : null}
                     </thead>
-                    <tbody className="text-sm text-center ">
+                    <tbody className="text-md text-center ">
                       {nominatedEmployeeList?.length > 0 ? (
                         nominatedEmployeeList.map((employees, index) =>
                           employees.nomineeType === NomineeType.NOMINEE ? (
@@ -481,22 +481,12 @@ export const TrainingDetailsModal = ({ modalState, setModalState, closeModalActi
                   <table className="w-screen md:w-full border border-separate bg-slate-50 border-spacing-0 rounded-md text-slate-500">
                     <thead className="border-0">
                       <tr>
-                        <th className="px-10 py-2 text-sm text-center items-center md:px-6 md:text-md font-medium border-b">
+                        <th className="px-10 py-2 text-md text-center items-center md:px-6 md:text-md font-medium border-b">
                           Auxiliary Employee(s)
                         </th>
                       </tr>
-
-                      {nominatedEmployeeList?.length > 0 ? (
-                        <tr>
-                          <td className={`px-2 w-1/2 text-center border-b border-r text-sm`}>Name</td>
-                        </tr>
-                      ) : auxiliaryEmployees?.length > 0 ? (
-                        <tr className="border-l border-r">
-                          <td className={`px-2 text-center border-b text-sm`}>Name</td>
-                        </tr>
-                      ) : null}
                     </thead>
-                    <tbody className="text-sm text-center ">
+                    <tbody className="text-md text-center ">
                       {nominatedEmployeeList?.length > 0 ? (
                         nominatedEmployeeList.map((employees, index) =>
                           employees.nomineeType === NomineeType.STAND_IN ? (

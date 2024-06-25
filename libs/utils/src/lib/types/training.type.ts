@@ -23,7 +23,7 @@ export type Training = {
   numberOfSlots: number;
   numberOfParticipants?: number; //for pdc secretariat/chairman/gm
   numberOfHours?: number; //for pdc secretariat/chairman/gm
-  nominee?: Array<NominatedEmployees>; //for pdc secretariat/chairman/gm
+  nominees?: Array<NominatedEmployees>; //for pdc secretariat/chairman/gm
   trainingId: string; //for pdc secretariat/chairman //training ID
   courseTitle: string;
   location: string;

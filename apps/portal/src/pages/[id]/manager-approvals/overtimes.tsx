@@ -162,7 +162,7 @@ export default function OvertimeApprovals({ employeeDetails }: InferGetServerSid
               key={idx}
               width={20}
               height={20}
-              className="rounded-full border w-8"
+              className="rounded-full border w-10"
               src={employees.avatarUrl ? employees.avatarUrl : TempPhotoProfile}
               alt={'photo'}
             />
@@ -221,7 +221,7 @@ export default function OvertimeApprovals({ employeeDetails }: InferGetServerSid
       cell: (info) => dayjs(info.getValue()).format('MMMM DD, YYYY'),
     }),
     columnHelper.accessor('immediateSupervisorName', {
-      header: 'Supervisor',
+      header: 'Requested By',
       filterFn: 'fuzzy',
       sortingFn: fuzzySort,
       cell: (info) => info.getValue(),

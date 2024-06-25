@@ -1,5 +1,5 @@
 /* eslint-disable @nx/enforce-module-boundaries */
-import { AlertNotification, Button, LoadingSpinner, Modal, OtpModal } from '@gscwd-apps/oneui';
+import { AlertNotification, Button, CaptchaModal, LoadingSpinner, Modal, OtpModal } from '@gscwd-apps/oneui';
 import { HiX } from 'react-icons/hi';
 import { useEffect } from 'react';
 import { useApprovalStore } from '../../../store/approvals.store';
@@ -9,11 +9,12 @@ import { useEmployeeStore } from '../../../store/employee.store';
 import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
 import { ApprovalOtpContents } from './ApprovalOtp/ApprovalOtpContents';
 import { DtrCorrectionStatus } from 'libs/utils/src/lib/enums/dtr.enum';
-import { ManagerOtpApproval } from 'libs/utils/src/lib/enums/approval.enum';
+import { ManagerCaptchaApproval, ManagerOtpApproval } from 'libs/utils/src/lib/enums/approval.enum';
 import { ConfirmationApprovalModal } from './ApprovalOtp/ConfirmationApprovalModal';
 import { DateFormatter } from 'libs/utils/src/lib/functions/DateFormatter';
 import { UseTwelveHourFormat } from 'libs/utils/src/lib/functions/TwelveHourFormatter';
 import { DtrCorrectionApprovalPatch } from 'libs/utils/src/lib/types/dtr.type';
+import { ApprovalCaptcha } from './ApprovalOtp/ApprovalCaptcha';
 
 type ApprovalsDtrCorrectionModalProps = {
   modalState: boolean;
@@ -312,7 +313,22 @@ export const ApprovalsDtrCorrectionModal = ({
               ) : null}
             </div>
           </div>
-          <OtpModal
+
+          <CaptchaModal
+            modalState={otpDtrCorrectionModalIsOpen}
+            setModalState={setOtpDtrCorrectionModalIsOpen}
+            title={'TIME LOG CORRECTION APPROVAL CAPTCHA'}
+          >
+            {/* contents */}
+            <ApprovalCaptcha
+              employeeId={employeeDetails.user._id}
+              actionDtrCorrection={watch('status')}
+              tokenId={dtrCorrectionDetail.id}
+              captchaName={ManagerCaptchaApproval.DTR_CORRECTION}
+            />
+          </CaptchaModal>
+
+          {/* <OtpModal
             modalState={otpDtrCorrectionModalIsOpen}
             setModalState={setOtpDtrCorrectionModalIsOpen}
             title={'TIME LOG CORRECTION APPROVAL OTP'}
@@ -324,7 +340,7 @@ export const ApprovalsDtrCorrectionModal = ({
               tokenId={dtrCorrectionDetail.id}
               otpName={ManagerOtpApproval.DTRCORRECTION}
             />
-          </OtpModal>
+          </OtpModal> */}
           <ConfirmationApprovalModal
             modalState={declineApplicationModalIsOpen}
             setModalState={setDeclineApplicationModalIsOpen}
