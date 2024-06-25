@@ -138,13 +138,13 @@ export const ConfirmationInboxModal = ({
         <Modal.Body>
           <div className="flex flex-col w-full h-full gap-2 text-lg text-center px-4">
             {confirmationResponse == InboxMessageResponse.PSB_ACCEPT
-              ? 'Are you sure you want accept this assignment?'
+              ? 'Are you sure you want to accept this assignment?'
               : confirmationResponse == InboxMessageResponse.PSB_DECLINE
-              ? 'Are you sure you want decline this assignment?'
+              ? 'Are you sure you want to decline this assignment?'
               : confirmationResponse == InboxMessageResponse.TRAINING_ACCEPT
-              ? 'Are you sure you want accept this training invitiation? '
+              ? 'Are you sure you want to accept this training invitiation? '
               : confirmationResponse == InboxMessageResponse.TRAINING_DECLINE
-              ? 'Are you sure you want decline this training invitiation? Your response will be irreversible.'
+              ? 'Are you sure you want to decline this training invitation? Your response will be irreversible.'
               : 'Do you want to submit?'}
           </div>
         </Modal.Body>
