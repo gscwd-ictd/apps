@@ -4,17 +4,10 @@ import { FunctionComponent, useEffect, useState } from 'react';
 import { Notice } from '../../modular/alerts/Notice';
 import { Button } from '../../modular/forms/buttons/Button';
 import PortalSVG from '../svg/PortalSvg';
-import { useApprovalStore } from '../../../store/approvals.store';
-import { patchPortal } from '../../../utils/helpers/portal-axios-helper';
 import { getCountDown } from '../otp-requests/OtpCountDown';
 import { requestOtpCode } from '../otp-requests/OtpRequest';
 import { confirmOtpCode } from '../otp-requests/OtpConfirm';
-import { OvertimeStatus } from 'libs/utils/src/lib/enums/overtime.enum';
-import { PassSlipStatus } from 'libs/utils/src/lib/enums/pass-slip.enum';
-import { ManagerOtpApproval } from 'libs/utils/src/lib/enums/approval.enum';
-import { LeaveStatus } from 'libs/utils/src/lib/enums/leave.enum';
 import AuthCode from 'react-auth-code-input';
-import { DtrCorrectionStatus } from 'libs/utils/src/lib/enums/dtr.enum';
 import { useLoginStore } from 'apps/portal/src/store/login.store';
 
 interface OtpProps {
@@ -35,7 +28,6 @@ export const LoginOtpContents: FunctionComponent<OtpProps> = ({ mobile, otpName,
   const [minutes, setMinutes] = useState(0);
   const [seconds, setSeconds] = useState(0);
   const [countingDown, setCountingDown] = useState<boolean>(false);
-  const [failedFirstOtp, setFailedFirstOtp] = useState<boolean>(false);
 
   // set state for controlling the displaying of error status
   const [isError, setIsError] = useState({
@@ -44,10 +36,22 @@ export const LoginOtpContents: FunctionComponent<OtpProps> = ({ mobile, otpName,
     animate: false,
   });
 
-  const { loginOtpModalIsOpen, setLoginOtpModalIsOpen, setOtpSuccess } = useLoginStore((state) => ({
+  const {
+    loginOtpModalIsOpen,
+    setLoginOtpModalIsOpen,
+    loginCaptchaModalIsOpen,
+    setLoginCaptchaModalIsOpen,
+    setOtpSuccess,
+    failedFirstOtp,
+    setFailedFirstOtp,
+  } = useLoginStore((state) => ({
     loginOtpModalIsOpen: state.loginOtpModalIsOpen,
     setLoginOtpModalIsOpen: state.setLoginOtpModalIsOpen,
+    loginCaptchaModalIsOpen: state.loginCaptchaModalIsOpen,
+    setLoginCaptchaModalIsOpen: state.setLoginCaptchaModalIsOpen,
     setOtpSuccess: state.setOtpSuccess,
+    failedFirstOtp: state.failedFirstOtp,
+    setFailedFirstOtp: state.setFailedFirstOtp,
   }));
 
   useEffect(() => {
@@ -78,6 +82,14 @@ export const LoginOtpContents: FunctionComponent<OtpProps> = ({ mobile, otpName,
       //nothing to do
     }
   }, [isSendOtpLoading]);
+
+  //OPEN CAPTCHA
+  function handleCaptcha() {
+    setLoginCaptchaModalIsOpen(true); //opens captcha modal
+    setTimeout(() => {
+      setLoginOtpModalIsOpen(false); //then close OTP  modal
+    }, 200);
+  }
 
   //COMPUTATION OF TIME REMAINING FOR OTP - GET FROM COMPONENT
   useEffect(() => {
@@ -127,7 +139,7 @@ export const LoginOtpContents: FunctionComponent<OtpProps> = ({ mobile, otpName,
     localStorage.removeItem(`${otpName}OtpEndTime_${tokenId}`); //delete otp expiration local storage
     localStorage.removeItem(`${otpName}OtpToken_${tokenId}`); //delete otp expiration local storage
     setIsSendOtpLoading(false); //close loading circle animation and countdown
-    setFailedFirstOtp(false); // set to true if first OTP failed and will show "Resend Code" instead
+    // setFailedFirstOtp(false); // set to true if first OTP failed and will show "Resend Code" instead
     setMinutes(5);
     setSeconds(0);
     setOtpFieldError(false); //disable error mode of input field
@@ -192,15 +204,30 @@ export const LoginOtpContents: FunctionComponent<OtpProps> = ({ mobile, otpName,
               </div>
             ) : null}
             {isOtpSending || isSendOtpLoading ? null : (
-              <button
-                disabled={isSubmitLoading == true ? true : false}
-                className={`${
-                  isSubmitLoading == true ? 'cursor-not-allowed' : ''
-                } mb-2 text-white bg-indigo-500 h-10 transition-all rounded hover:bg-indigo-600 active:bg-indigo-600 outline-indigo-500 w-56`}
-                onClick={() => handleSendCode()}
-              >
-                <label className="font-bold cursor-pointer">{`${failedFirstOtp ? 'RESEND CODE' : 'SEND CODE'}`}</label>
-              </button>
+              <>
+                <button
+                  disabled={isSubmitLoading == true ? true : false}
+                  className={`${
+                    isSubmitLoading == true ? 'cursor-not-allowed' : ''
+                  } mb-2 text-white bg-indigo-500 h-10 transition-all rounded hover:bg-indigo-600 active:bg-indigo-600 outline-indigo-500 w-56`}
+                  onClick={() => handleSendCode()}
+                >
+                  <label className="font-bold cursor-pointer">{`${
+                    failedFirstOtp ? 'RESEND CODE' : 'SEND CODE'
+                  }`}</label>
+                </button>
+                {failedFirstOtp ? (
+                  <button
+                    disabled={isSubmitLoading == true ? true : false}
+                    className={`${
+                      isSubmitLoading == true ? 'cursor-not-allowed' : ''
+                    } mb-2 text-white bg-green-500 h-10 transition-all rounded hover:bg-green-600 active:bg-green-600 outline-indigo-green w-56`}
+                    onClick={() => handleCaptcha()}
+                  >
+                    <label className="font-bold cursor-pointer">{`USE CAPTCHA`}</label>
+                  </button>
+                ) : null}
+              </>
             )}
             {isSendOtpLoading ? (
               <div className="flex flex-col justify-center items-center">

@@ -1,5 +1,13 @@
 /* eslint-disable @nx/enforce-module-boundaries */
-import { AlertNotification, Button, LoadingSpinner, Modal, OtpModal, ToastNotification } from '@gscwd-apps/oneui';
+import {
+  AlertNotification,
+  Button,
+  CaptchaModal,
+  LoadingSpinner,
+  Modal,
+  OtpModal,
+  ToastNotification,
+} from '@gscwd-apps/oneui';
 import { HiX } from 'react-icons/hi';
 import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
 import { PdcApprovalAction, TrainingStatus } from 'libs/utils/src/lib/enums/training.enum';
@@ -13,6 +21,7 @@ import { useEmployeeStore } from 'apps/portal/src/store/employee.store';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { SelectOption } from 'libs/utils/src/lib/types/select.type';
 import { UserRole } from 'libs/utils/src/lib/enums/user-roles.enum';
+import { ApprovalCaptcha } from './PdcApprovalOtp/ApprovalCaptcha';
 
 type ModalProps = {
   modalState: boolean;
@@ -37,6 +46,8 @@ export const TrainingDetailsModal = ({ modalState, setModalState, closeModalActi
     confirmTrainingModalIsOpen,
     setConfirmTrainingModalIsOpen,
     setOtpPdcModalIsOpen,
+    setCaptchaPdcModalIsOpen,
+    captchaPdcModalIsOpen,
   } = usePdcApprovalsStore((state) => ({
     individualTrainingDetails: state.individualTrainingDetails,
     loadingResponse: state.loading.loadingResponse,
@@ -44,6 +55,8 @@ export const TrainingDetailsModal = ({ modalState, setModalState, closeModalActi
     confirmTrainingModalIsOpen: state.confirmTrainingModalIsOpen,
     setConfirmTrainingModalIsOpen: state.setConfirmTrainingModalIsOpen,
     setOtpPdcModalIsOpen: state.setOtpPdcModalIsOpen,
+    setCaptchaPdcModalIsOpen: state.setCaptchaPdcModalIsOpen,
+    captchaPdcModalIsOpen: state.captchaPdcModalIsOpen,
   }));
 
   const employeeDetail = useEmployeeStore((state) => state.employeeDetails);
@@ -369,8 +382,38 @@ export const TrainingDetailsModal = ({ modalState, setModalState, closeModalActi
               ) : null}
             </div>
           </div>
-          <OtpModal modalState={otpPdcModalIsOpen} setModalState={setOtpPdcModalIsOpen} title={'TRAINING APPROVAL OTP'}>
+
+          <CaptchaModal
+            modalState={captchaPdcModalIsOpen}
+            setModalState={setCaptchaPdcModalIsOpen}
+            title={'TRAINING APPROVAL CAPTCHA'}
+          >
             {/* contents */}
+            <ApprovalCaptcha
+              employeeId={employeeDetail.user._id}
+              action={PdcApprovalAction.APPROVE}
+              tokenId={individualTrainingDetails.trainingId}
+              captchaName={`${
+                employeeDetail.employmentDetails.isPdcSecretariat
+                  ? 'pdcSecretariatApproval'
+                  : employeeDetail.employmentDetails.isPdcChairman &&
+                    !isEqual(employeeDetail.employmentDetails.userRole, UserRole.GENERAL_MANAGER) &&
+                    !isEqual(employeeDetail.employmentDetails.userRole, UserRole.OIC_GENERAL_MANAGER)
+                  ? 'pdcChairmanApproval'
+                  : !employeeDetail.employmentDetails.isPdcChairman &&
+                    (isEqual(employeeDetail.employmentDetails.userRole, UserRole.GENERAL_MANAGER) ||
+                      isEqual(employeeDetail.employmentDetails.userRole, UserRole.OIC_GENERAL_MANAGER))
+                  ? 'pdcGeneralManagerApproval'
+                  : employeeDetail.employmentDetails.isPdcChairman &&
+                    (isEqual(employeeDetail.employmentDetails.userRole, UserRole.GENERAL_MANAGER) ||
+                      isEqual(employeeDetail.employmentDetails.userRole, UserRole.OIC_GENERAL_MANAGER))
+                  ? 'pdcGmAndChairmanApproval'
+                  : 'N/A'
+              }`}
+            />
+          </CaptchaModal>
+
+          {/* <OtpModal modalState={otpPdcModalIsOpen} setModalState={setOtpPdcModalIsOpen} title={'TRAINING APPROVAL OTP'}>
             <ApprovalOtpContentsPdc
               mobile={employeeDetail.profile.mobileNumber}
               employeeId={employeeDetail.user._id}
@@ -394,7 +437,7 @@ export const TrainingDetailsModal = ({ modalState, setModalState, closeModalActi
                   : 'N/A'
               }`}
             />
-          </OtpModal>
+          </OtpModal> */}
           <ConfirmationPdcModal
             modalState={confirmTrainingModalIsOpen}
             setModalState={setConfirmTrainingModalIsOpen}

@@ -32,6 +32,9 @@ export type PdcApprovalsState = {
   otpPdcModalIsOpen: boolean;
   setOtpPdcModalIsOpen: (otpPdcModalIsOpen: boolean) => void;
 
+  captchaPdcModalIsOpen: boolean;
+  setCaptchaPdcModalIsOpen: (captchaPdcModalIsOpen: boolean) => void;
+
   setIndividualTrainingDetails: (individualTrainingDetails: Training) => void;
   getTrainingSelectionList: (loading: boolean) => void;
   getTrainingSelectionListSuccess: (loading: boolean, response) => void;
@@ -65,6 +68,7 @@ export const usePdcApprovalsStore = create<PdcApprovalsState>()(
     trainingModalIsOpen: false,
     confirmTrainingModalIsOpen: false,
     otpPdcModalIsOpen: false,
+    captchaPdcModalIsOpen: false,
 
     setIndividualTrainingDetails: (individualTrainingDetails: Training) => {
       set((state) => ({ ...state, individualTrainingDetails }));
@@ -80,6 +84,10 @@ export const usePdcApprovalsStore = create<PdcApprovalsState>()(
 
     setOtpPdcModalIsOpen: (otpPdcModalIsOpen: boolean) => {
       set((state) => ({ ...state, otpPdcModalIsOpen }));
+    },
+
+    setCaptchaPdcModalIsOpen: (captchaPdcModalIsOpen: boolean) => {
+      set((state) => ({ ...state, captchaPdcModalIsOpen }));
     },
 
     getTrainingSelectionList: (loading: boolean) => {
