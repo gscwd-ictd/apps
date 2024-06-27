@@ -416,7 +416,7 @@ export const LeavePendingModal = ({ modalState, setModalState, closeModalAction 
                         Your current{' '}
                         {leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.VACATION ||
                         leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.FORCED
-                          ? 'VL+FL'
+                          ? 'VL'
                           : leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.SICK
                           ? 'SL'
                           : leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.SPECIAL_PRIVILEGE
@@ -435,9 +435,9 @@ export const LeavePendingModal = ({ modalState, setModalState, closeModalAction 
                             <td className="border border-slate-400 text-center">
                               {leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.VACATION ||
                               leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.FORCED
-                                ? (parseFloat(`${vacationLeaveBalance}`) + parseFloat(`${forcedLeaveBalance}`)).toFixed(
-                                    3
-                                  )
+                                ? parseFloat(`${vacationLeaveBalance}`)
+                                    // + parseFloat(`${forcedLeaveBalance}`)
+                                    .toFixed(3)
                                 : leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.SICK
                                 ? sickLeaveBalance
                                 : leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName ===
@@ -452,8 +452,9 @@ export const LeavePendingModal = ({ modalState, setModalState, closeModalAction 
                               {leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.VACATION ||
                               leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.FORCED
                                 ? (
-                                    parseFloat(`${vacationLeaveBalance}`) +
-                                    parseFloat(`${forcedLeaveBalance}`) -
+                                    parseFloat(`${vacationLeaveBalance}`) -
+                                    //  +
+                                    // parseFloat(`${forcedLeaveBalance}`)
                                     leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveDates?.length
                                   ).toFixed(3)
                                 : leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.SICK

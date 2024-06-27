@@ -422,7 +422,7 @@ export const ApprovalsCompletedLeaveModal = ({
                           Employee's{' '}
                           {leaveIndividualDetail?.leaveName === LeaveName.VACATION ||
                           leaveIndividualDetail?.leaveName === LeaveName.FORCED
-                            ? 'VL+FL'
+                            ? 'VL'
                             : leaveIndividualDetail?.leaveName === LeaveName.SICK
                             ? 'SL'
                             : leaveIndividualDetail?.leaveName === LeaveName.SPECIAL_PRIVILEGE
@@ -443,10 +443,12 @@ export const ApprovalsCompletedLeaveModal = ({
                                 leaveIndividualDetail?.leaveName === LeaveName.FORCED
                                   ? (
                                       parseFloat(`${selectedLeaveLedger[0]?.vacationLeaveBalance}`) +
-                                      parseFloat(`${selectedLeaveLedger[0]?.vacationLeave}`) * -1 +
-                                      (parseFloat(`${selectedLeaveLedger[0]?.forcedLeaveBalance}`) +
-                                        parseFloat(`${selectedLeaveLedger[0]?.forcedLeave}`) * -1)
-                                    ).toFixed(3)
+                                      parseFloat(`${selectedLeaveLedger[0]?.vacationLeave}`) * -1
+                                    )
+                                      // +
+                                      // (parseFloat(`${selectedLeaveLedger[0]?.forcedLeaveBalance}`) +
+                                      //   parseFloat(`${selectedLeaveLedger[0]?.forcedLeave}`) * -1)
+                                      .toFixed(3)
                                   : leaveIndividualDetail?.leaveName === LeaveName.SICK
                                   ? (
                                       parseFloat(`${selectedLeaveLedger[0]?.sickLeaveBalance}`) +
@@ -465,13 +467,11 @@ export const ApprovalsCompletedLeaveModal = ({
                               <td className="border border-slate-400 text-center bg-green-100">
                                 {leaveIndividualDetail?.leaveName === LeaveName.VACATION ||
                                 leaveIndividualDetail?.leaveName === LeaveName.FORCED
-                                  ? (
-                                      parseFloat(`${selectedLeaveLedger[0]?.vacationLeaveBalance}`) +
-                                      parseFloat(`${selectedLeaveLedger[0]?.forcedLeaveBalance}`)
-                                    ).toFixed(3)
-                                  : // : leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.FORCED
-                                  // ? selectedLeaveLedger[0]?.forcedLeaveBalance
-                                  leaveIndividualDetail?.leaveName === LeaveName.SICK
+                                  ? parseFloat(`${selectedLeaveLedger[0]?.vacationLeaveBalance}`)
+                                      // +
+                                      // parseFloat(`${selectedLeaveLedger[0]?.forcedLeaveBalance}`)
+                                      .toFixed(3)
+                                  : leaveIndividualDetail?.leaveName === LeaveName.SICK
                                   ? selectedLeaveLedger[0]?.sickLeaveBalance
                                   : leaveIndividualDetail?.leaveName === LeaveName.SPECIAL_PRIVILEGE
                                   ? selectedLeaveLedger[0]?.specialPrivilegeLeaveBalance

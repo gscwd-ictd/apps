@@ -447,7 +447,7 @@ export const FinalApprovalsPendingLeaveModal = ({
                           Employee's{' '}
                           {leaveIndividualDetail?.leaveName === LeaveName.VACATION ||
                           leaveIndividualDetail?.leaveName === LeaveName.FORCED
-                            ? 'VL+FL'
+                            ? 'VL'
                             : leaveIndividualDetail?.leaveName === LeaveName.SICK
                             ? 'SL'
                             : leaveIndividualDetail?.leaveName === LeaveName.SPECIAL_PRIVILEGE
@@ -466,9 +466,9 @@ export const FinalApprovalsPendingLeaveModal = ({
                               <td className="border border-slate-400 text-center">
                                 {leaveIndividualDetail?.leaveName === LeaveName.VACATION ||
                                 leaveIndividualDetail?.leaveName === LeaveName.FORCED
-                                  ? (
-                                      parseFloat(`${vacationLeaveBalance}`) + parseFloat(`${forcedLeaveBalance}`)
-                                    ).toFixed(3)
+                                  ? parseFloat(`${vacationLeaveBalance}`)
+                                      // + parseFloat(`${forcedLeaveBalance}`)
+                                      .toFixed(3)
                                   : leaveIndividualDetail?.leaveName === LeaveName.SICK
                                   ? sickLeaveBalance
                                   : leaveIndividualDetail?.leaveName === LeaveName.SPECIAL_PRIVILEGE
@@ -482,8 +482,9 @@ export const FinalApprovalsPendingLeaveModal = ({
                                 {leaveIndividualDetail?.leaveName === LeaveName.VACATION ||
                                 leaveIndividualDetail?.leaveName === LeaveName.FORCED
                                   ? (
-                                      parseFloat(`${vacationLeaveBalance}`) +
-                                      parseFloat(`${forcedLeaveBalance}`) -
+                                      parseFloat(`${vacationLeaveBalance}`) -
+                                      // +
+                                      // parseFloat(`${forcedLeaveBalance}`)
                                       leaveIndividualDetail?.leaveDates?.length
                                     ).toFixed(3)
                                   : leaveIndividualDetail?.leaveName === LeaveName.SICK
