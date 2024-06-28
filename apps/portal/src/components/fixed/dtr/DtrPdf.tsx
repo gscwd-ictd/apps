@@ -836,7 +836,7 @@ export const DtrPdf: FunctionComponent<DtrPdfProps> = ({ employeeData, employeeD
                       >
                         <Image
                           style={{
-                            width: 30,
+                            width: 50,
                             position: 'absolute',
                             paddingBottom: 20,
                             textAlign: 'center',
