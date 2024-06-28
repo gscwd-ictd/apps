@@ -6,11 +6,11 @@ export enum ManagerOtpApproval {
   DTRCORRECTION = 'approvalDtrCorrection',
 }
 
-export enum ManagerCaptchaApproval {
+export enum ManagerConfirmationApproval {
   PASSSLIP = 'Pass Slip Approval',
   LEAVE = 'Leave Approval',
   OVERTIME = 'Overtime Approval',
-  DTR_CORRECTION = 'DTR Correction Approval',
+  DTRCORRECTION = 'DTR Correction Approval',
   OVERTIME_ACCOMPLISHMENT = 'Overtime Accomplishment Approval',
   ALL_OVERTIME_ACCOMPLISHMENT = 'All Overtime Accomplishment Approval',
   PASSSLIP_DISPUTE = 'Pass Slip Dispute Approval',

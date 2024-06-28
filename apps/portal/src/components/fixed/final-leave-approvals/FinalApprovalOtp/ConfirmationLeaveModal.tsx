@@ -40,11 +40,18 @@ export const ConfirmationLeaveModal = ({
   }));
 
   const handleSubmit = () => {
+    let finalRemarks;
+    if (action == LeaveStatus.APPROVED) {
+      finalRemarks = null;
+    } else {
+      finalRemarks = remarks;
+    }
+
     if (tokenId) {
       const data = {
         id: tokenId,
         status: action,
-        hrdmDisapprovalRemarks: remarks,
+        hrdmDisapprovalRemarks: finalRemarks,
       };
       patchLeave();
       handlePatchResult(data);
@@ -75,13 +82,7 @@ export const ConfirmationLeaveModal = ({
         <Modal.Header>
           <h3 className="font-semibold text-xl text-gray-700">
             <div className="px-5 flex justify-between">
-              <span>
-                {LeaveStatus.DISAPPROVED_BY_SUPERVISOR
-                  ? 'Disapprove Leave Application'
-                  : LeaveStatus.CANCELLED
-                  ? 'Disapprove Leave Application'
-                  : 'Leave Application'}
-              </span>
+              <span>{'Leave Application'}</span>
             </div>
           </h3>
         </Modal.Header>
@@ -95,13 +96,19 @@ export const ConfirmationLeaveModal = ({
             />
           ) : null}
           <div className="w-full h-full flex flex-col gap-2 text-lg text-left px-4">
-            {`Are you sure you want to ${
-              action === LeaveStatus.DISAPPROVED_BY_HRDM
-                ? 'disapprove'
-                : action === LeaveStatus.CANCELLED
-                ? 'cancel or void'
-                : ''
-            } this application?`}
+            <label>
+              Are you sure you want to{' '}
+              {action === LeaveStatus.APPROVED ? (
+                'approve'
+              ) : action === LeaveStatus.DISAPPROVED_BY_HRDM ? (
+                <label className="text-red-600">disapprove</label>
+              ) : action === LeaveStatus.CANCELLED ? (
+                <label className="text-red-600">cancel</label>
+              ) : (
+                'N/A'
+              )}{' '}
+              this Leave Application?
+            </label>
           </div>
         </Modal.Body>
         <Modal.Footer>

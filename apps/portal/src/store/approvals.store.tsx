@@ -82,8 +82,8 @@ export type ApprovalState = {
   getPendingApprovalsCountSuccess: (loading: boolean, response) => void;
   getPendingApprovalsCountFail: (loading: boolean, error: string) => void;
 
-  declineApplicationModalIsOpen: boolean;
-  setDeclineApplicationModalIsOpen: (declineApplicationModalIsOpen: boolean) => void;
+  confirmApplicationModalIsOpen: boolean;
+  setConfirmApplicationModalIsOpen: (confirmApplicationModalIsOpen: boolean) => void;
 
   pendingLeaveModalIsOpen: boolean;
   setPendingLeaveModalIsOpen: (pendingLeaveModalIsOpen: boolean) => void;
@@ -151,8 +151,11 @@ export type ApprovalState = {
   captchaModalIsOpen: boolean;
   setCaptchaModalIsOpen: (captchaModalIsOpen: boolean) => void;
 
-  approveAllCaptchaModalIsOpen: boolean;
-  setApproveAllCaptchaModalIsOpen: (captchaModalIsOpen: boolean) => void;
+  disputeConfirmModalIsOpen: boolean;
+  setDisputeConfirmModalIsOpen: (disputeConfirmModalIsOpen: boolean) => void;
+
+  approveAllAccomplishmentModalIsOpen: boolean;
+  setApproveAllAccomplishmentModalIsOpen: (approveAllAccomplishmentModalIsOpen: boolean) => void;
 
   // PASS SLIPS
   passSlipId: string;
@@ -314,7 +317,7 @@ export const useApprovalStore = create<ApprovalState>()(
     otpLeaveModalIsOpen: false,
     otpOvertimeModalIsOpen: false,
 
-    declineApplicationModalIsOpen: false,
+    confirmApplicationModalIsOpen: false,
 
     pendingLeaveModalIsOpen: false,
     approvedLeaveModalIsOpen: false,
@@ -337,7 +340,8 @@ export const useApprovalStore = create<ApprovalState>()(
     dtrCorrectionModalIsOpen: false,
 
     captchaModalIsOpen: false,
-    approveAllCaptchaModalIsOpen: false,
+    disputeConfirmModalIsOpen: false,
+    approveAllAccomplishmentModalIsOpen: false,
 
     dtrCorrectionDetail: {} as DtrCorrection,
     accomplishmentDetails: {} as OvertimeAccomplishment,
@@ -400,16 +404,20 @@ export const useApprovalStore = create<ApprovalState>()(
       set((state) => ({ ...state, tab }));
     },
 
+    setDisputeConfirmModalIsOpen: (disputeConfirmModalIsOpen: boolean) => {
+      set((state) => ({ ...state, disputeConfirmModalIsOpen }));
+    },
+
     setCaptchaModalIsOpen: (captchaModalIsOpen: boolean) => {
       set((state) => ({ ...state, captchaModalIsOpen }));
     },
 
-    setApproveAllCaptchaModalIsOpen: (approveAllCaptchaModalIsOpen: boolean) => {
-      set((state) => ({ ...state, approveAllCaptchaModalIsOpen }));
+    setApproveAllAccomplishmentModalIsOpen: (approveAllAccomplishmentModalIsOpen: boolean) => {
+      set((state) => ({ ...state, approveAllAccomplishmentModalIsOpen }));
     },
 
-    setDeclineApplicationModalIsOpen: (declineApplicationModalIsOpen: boolean) => {
-      set((state) => ({ ...state, declineApplicationModalIsOpen }));
+    setConfirmApplicationModalIsOpen: (confirmApplicationModalIsOpen: boolean) => {
+      set((state) => ({ ...state, confirmApplicationModalIsOpen }));
     },
 
     setOtpDtrCorrectionModalIsOpen: (otpDtrCorrectionModalIsOpen: boolean) => {

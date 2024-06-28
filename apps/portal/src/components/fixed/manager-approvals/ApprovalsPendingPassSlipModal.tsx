@@ -9,7 +9,7 @@ import { useEmployeeStore } from '../../../store/employee.store';
 import { passSlipAction } from 'apps/portal/src/types/approvals.type';
 import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
 import { ApprovalOtpContents } from './ApprovalOtp/ApprovalOtpContents';
-import { ManagerCaptchaApproval, ManagerOtpApproval } from 'libs/utils/src/lib/enums/approval.enum';
+import { ManagerConfirmationApproval, ManagerOtpApproval } from 'libs/utils/src/lib/enums/approval.enum';
 import { ConfirmationApprovalModal } from './ApprovalOtp/ConfirmationApprovalModal';
 import { NatureOfBusiness, PassSlipStatus } from 'libs/utils/src/lib/enums/pass-slip.enum';
 import { UseTwelveHourFormat } from 'libs/utils/src/lib/functions/TwelveHourFormatter';
@@ -36,20 +36,20 @@ export const ApprovalsPendingPassSlipModal = ({
     passSlip,
     otpPassSlipModalIsOpen,
     setOtpPassSlipModalIsOpen,
-    declineApplicationModalIsOpen,
-    setDeclineApplicationModalIsOpen,
+    confirmApplicationModalIsOpen,
+    setConfirmApplicationModalIsOpen,
     loadingResponse,
-    captchaModalIsOpen,
-    setCaptchaModalIsOpen,
+    disputeConfirmModalIsOpen,
+    setDisputeConfirmModalIsOpen,
   } = useApprovalStore((state) => ({
     passSlip: state.passSlipIndividualDetail,
     otpPassSlipModalIsOpen: state.otpPassSlipModalIsOpen,
     setOtpPassSlipModalIsOpen: state.setOtpPassSlipModalIsOpen,
-    declineApplicationModalIsOpen: state.declineApplicationModalIsOpen,
-    setDeclineApplicationModalIsOpen: state.setDeclineApplicationModalIsOpen,
+    confirmApplicationModalIsOpen: state.confirmApplicationModalIsOpen,
+    setConfirmApplicationModalIsOpen: state.setConfirmApplicationModalIsOpen,
     loadingResponse: state.loading.loadingPassSlipResponse,
-    captchaModalIsOpen: state.captchaModalIsOpen,
-    setCaptchaModalIsOpen: state.setCaptchaModalIsOpen,
+    disputeConfirmModalIsOpen: state.disputeConfirmModalIsOpen,
+    setDisputeConfirmModalIsOpen: state.setDisputeConfirmModalIsOpen,
   }));
 
   const [dataToSubmitForCaptcha, setDataToSubmitForCaptcha] = useState<passSlipAction>();
@@ -77,12 +77,12 @@ export const ApprovalsPendingPassSlipModal = ({
   const onSubmit: SubmitHandler<passSlipAction> = (data: passSlipAction) => {
     setValue('passSlipId', passSlip.id);
     if (data.status === 'approved' && passSlip.status === PassSlipStatus.FOR_SUPERVISOR_APPROVAL) {
-      setOtpPassSlipModalIsOpen(true);
+      setConfirmApplicationModalIsOpen(true);
     } else if (data.status === 'disapproved' && passSlip.status === PassSlipStatus.FOR_SUPERVISOR_APPROVAL) {
-      setDeclineApplicationModalIsOpen(true);
+      setConfirmApplicationModalIsOpen(true);
     } else if (passSlip.status === PassSlipStatus.FOR_DISPUTE) {
       setDataToSubmitForCaptcha(data);
-      setCaptchaModalIsOpen(true);
+      setDisputeConfirmModalIsOpen(true);
     }
   };
 
@@ -90,9 +90,9 @@ export const ApprovalsPendingPassSlipModal = ({
   const employeeDetails = useEmployeeStore((state) => state.employeeDetails);
 
   // cancel action for Decline Application Modal
-  const closeDeclineModal = async () => {
-    setDeclineApplicationModalIsOpen(false);
-    setCaptchaModalIsOpen(false);
+  const closeConfirmModal = async () => {
+    setConfirmApplicationModalIsOpen(false);
+    setDisputeConfirmModalIsOpen(false);
   };
 
   const { windowWidth } = UseWindowDimensions();
@@ -341,19 +341,18 @@ export const ApprovalsPendingPassSlipModal = ({
             </div>
           </div>
 
-          <CaptchaModal
+          {/* <CaptchaModal
             modalState={otpPassSlipModalIsOpen}
             setModalState={setOtpPassSlipModalIsOpen}
             title={'PASS SLIP APPROVAL CAPTCHA'}
           >
-            {/* contents */}
             <ApprovalCaptcha
               employeeId={employeeDetails.user._id}
               actionPassSlip={watch('status')}
               tokenId={passSlip.id}
-              captchaName={ManagerCaptchaApproval.PASSSLIP}
+              captchaName={ManagerConfirmationApproval.PASSSLIP}
             />
-          </CaptchaModal>
+          </CaptchaModal> */}
 
           {/* <OtpModal
             modalState={otpPassSlipModalIsOpen}
@@ -370,28 +369,37 @@ export const ApprovalsPendingPassSlipModal = ({
           </OtpModal> */}
 
           <ConfirmationApprovalModal
-            modalState={declineApplicationModalIsOpen}
-            setModalState={setDeclineApplicationModalIsOpen}
-            closeModalAction={closeDeclineModal}
+            modalState={confirmApplicationModalIsOpen}
+            setModalState={setConfirmApplicationModalIsOpen}
+            closeModalAction={closeConfirmModal}
             actionPassSlip={watch('status')}
             tokenId={passSlip.id}
-            confirmName={ManagerOtpApproval.PASSSLIP}
+            confirmName={ManagerConfirmationApproval.PASSSLIP}
             employeeId={employeeDetails.user._id}
           />
 
-          <CaptchaModal
-            modalState={captchaModalIsOpen}
-            setModalState={setCaptchaModalIsOpen}
+          <ConfirmationApprovalModal
+            modalState={disputeConfirmModalIsOpen}
+            setModalState={setDisputeConfirmModalIsOpen}
+            closeModalAction={closeConfirmModal}
+            tokenId={passSlip.id}
+            dataToSubmitPassSlipDispute={dataToSubmitForCaptcha}
+            confirmName={ManagerConfirmationApproval.PASSSLIP_DISPUTE}
+            employeeId={employeeDetails.user._id}
+          />
+
+          {/* <CaptchaModal
+            modalState={disputeConfirmModalIsOpen}
+            setModalState={setDisputeConfirmModalIsOpen}
             title={'PASS SLIP DISPUTE CAPTCHA'}
           >
-            {/* contents */}
             <ApprovalCaptcha
               employeeId={employeeDetails.user._id}
               dataToSubmitPassSlipDispute={dataToSubmitForCaptcha}
               tokenId={passSlip.id}
-              captchaName={ManagerCaptchaApproval.PASSSLIP_DISPUTE}
+              captchaName={ManagerConfirmationApproval.PASSSLIP_DISPUTE}
             />
-          </CaptchaModal>
+          </CaptchaModal> */}
         </Modal.Body>
         <Modal.Footer>
           <div className="flex justify-end gap-2 px-4">
