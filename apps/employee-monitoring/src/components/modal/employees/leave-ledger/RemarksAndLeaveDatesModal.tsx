@@ -36,9 +36,11 @@ const RemarksAndLeaveDatesModal: FunctionComponent<LeaveDatesAndRemarksModalProp
   const [mutatedDatesArray, setMutatedDatesArray] = useState([]);
 
   useEffect(() => {
-    if (!isEmpty(rowData)) {
+    if (!isEmpty(rowData.leaveDates) || rowData.leaveDates !== null) {
       const array = rowData.leaveDates.toString().split(',');
       setMutatedDatesArray(array);
+    } else {
+      setMutatedDatesArray([]);
     }
   }, [rowData]);
 
@@ -102,7 +104,11 @@ const RemarksAndLeaveDatesModal: FunctionComponent<LeaveDatesAndRemarksModalProp
                   </div>
                 }
               />
-            ) : null}
+            ) : (
+              <React.Fragment>
+                <span className="w-full"></span>
+              </React.Fragment>
+            )}
           </div>
         </Modal.Body>
 
