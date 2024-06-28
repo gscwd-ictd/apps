@@ -1,8 +1,7 @@
+/* eslint-disable @typescript-eslint/no-unused-expressions */
 /* eslint-disable @typescript-eslint/ban-types */
 import { Dialog, Transition } from '@headlessui/react';
-import { Fragment, FunctionComponent, ReactNode, useState } from 'react';
-import { Button } from '../Button';
-import { TextField } from '@gscwd-apps/oneui';
+import { Fragment, FunctionComponent, ReactNode } from 'react';
 
 export type OtpProps = {
   className?: string;
@@ -24,7 +23,6 @@ export const OtpModal: FunctionComponent<OtpModalProps> = (props) => {
     <Transition appear show={modalState}>
       <Dialog
         as="div"
-        // eslint-disable-next-line @typescript-eslint/no-empty-function
         onClose={() => {
           onClose;
         }}

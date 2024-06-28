@@ -3,6 +3,7 @@ import { create } from 'zustand';
 import { devtools } from 'zustand/middleware';
 import {
   PdcChairmanApproval,
+  PdcGeneralManagerApproval,
   PdcSecretariatApproval,
   Training,
 } from '../../../../libs/utils/src/lib/types/training.type';
@@ -31,6 +32,9 @@ export type PdcApprovalsState = {
 
   otpPdcModalIsOpen: boolean;
   setOtpPdcModalIsOpen: (otpPdcModalIsOpen: boolean) => void;
+
+  captchaPdcModalIsOpen: boolean;
+  setCaptchaPdcModalIsOpen: (captchaPdcModalIsOpen: boolean) => void;
 
   setIndividualTrainingDetails: (individualTrainingDetails: Training) => void;
   getTrainingSelectionList: (loading: boolean) => void;
@@ -65,6 +69,7 @@ export const usePdcApprovalsStore = create<PdcApprovalsState>()(
     trainingModalIsOpen: false,
     confirmTrainingModalIsOpen: false,
     otpPdcModalIsOpen: false,
+    captchaPdcModalIsOpen: false,
 
     setIndividualTrainingDetails: (individualTrainingDetails: Training) => {
       set((state) => ({ ...state, individualTrainingDetails }));
@@ -80,6 +85,10 @@ export const usePdcApprovalsStore = create<PdcApprovalsState>()(
 
     setOtpPdcModalIsOpen: (otpPdcModalIsOpen: boolean) => {
       set((state) => ({ ...state, otpPdcModalIsOpen }));
+    },
+
+    setCaptchaPdcModalIsOpen: (captchaPdcModalIsOpen: boolean) => {
+      set((state) => ({ ...state, captchaPdcModalIsOpen }));
     },
 
     getTrainingSelectionList: (loading: boolean) => {
@@ -137,7 +146,9 @@ export const usePdcApprovalsStore = create<PdcApprovalsState>()(
         },
       }));
     },
-    patchTrainingSelectionSuccess: (response: PdcChairmanApproval | PdcSecretariatApproval) => {
+    patchTrainingSelectionSuccess: (
+      response: PdcChairmanApproval | PdcSecretariatApproval | PdcGeneralManagerApproval
+    ) => {
       set((state) => ({
         ...state,
         response: {

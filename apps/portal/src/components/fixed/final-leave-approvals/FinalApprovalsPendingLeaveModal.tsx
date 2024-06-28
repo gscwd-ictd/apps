@@ -43,8 +43,8 @@ export const FinalApprovalsPendingLeaveModal = ({
     setPendingLeaveModalIsOpen,
     otpLeaveModalIsOpen,
     setOtpLeaveModalIsOpen,
-    declineApplicationModalIsOpen,
-    setDeclineApplicationModalIsOpen,
+    confirmApplicationModalIsOpen,
+    setConfirmApplicationModalIsOpen,
     captchaLeaveModalIsOpen,
     setCaptchaLeaveModalIsOpen,
   } = useFinalLeaveApprovalStore((state) => ({
@@ -54,14 +54,13 @@ export const FinalApprovalsPendingLeaveModal = ({
     setPendingLeaveModalIsOpen: state.setPendingLeaveModalIsOpen,
     otpLeaveModalIsOpen: state.otpLeaveModalIsOpen,
     setOtpLeaveModalIsOpen: state.setOtpLeaveModalIsOpen,
-    declineApplicationModalIsOpen: state.declineApplicationModalIsOpen,
-    setDeclineApplicationModalIsOpen: state.setDeclineApplicationModalIsOpen,
+    confirmApplicationModalIsOpen: state.confirmApplicationModalIsOpen,
+    setConfirmApplicationModalIsOpen: state.setConfirmApplicationModalIsOpen,
     captchaLeaveModalIsOpen: state.captchaLeaveModalIsOpen,
     setCaptchaLeaveModalIsOpen: state.setCaptchaLeaveModalIsOpen,
   }));
 
   const [reason, setReason] = useState<string>('');
-  const [action, setAction] = useState<string>('');
   const [moreLeaveDates, setMoreLeaveDates] = useState<boolean>(false);
 
   // React hook form
@@ -88,15 +87,15 @@ export const FinalApprovalsPendingLeaveModal = ({
   const onSubmit: SubmitHandler<leaveAction> = (data: leaveAction) => {
     setValue('id', leaveIndividualDetail.id);
     if (data.status === LeaveStatus.APPROVED) {
-      setCaptchaLeaveModalIsOpen(true);
+      setConfirmApplicationModalIsOpen(true);
     } else {
-      setDeclineApplicationModalIsOpen(true);
+      setConfirmApplicationModalIsOpen(true);
     }
   };
 
   // cancel action for Decline Application Modal
-  const closeDeclineModal = async () => {
-    setDeclineApplicationModalIsOpen(false);
+  const closeConfirmModal = async () => {
+    setConfirmApplicationModalIsOpen(false);
   };
 
   // set state for employee store
@@ -107,7 +106,6 @@ export const FinalApprovalsPendingLeaveModal = ({
 
   const customClose = () => {
     setReason('');
-    setAction('approve');
     setPendingLeaveModalIsOpen(false);
   };
 
@@ -447,7 +445,7 @@ export const FinalApprovalsPendingLeaveModal = ({
                           Employee's{' '}
                           {leaveIndividualDetail?.leaveName === LeaveName.VACATION ||
                           leaveIndividualDetail?.leaveName === LeaveName.FORCED
-                            ? 'VL+FL'
+                            ? 'VL'
                             : leaveIndividualDetail?.leaveName === LeaveName.SICK
                             ? 'SL'
                             : leaveIndividualDetail?.leaveName === LeaveName.SPECIAL_PRIVILEGE
@@ -466,9 +464,9 @@ export const FinalApprovalsPendingLeaveModal = ({
                               <td className="border border-slate-400 text-center">
                                 {leaveIndividualDetail?.leaveName === LeaveName.VACATION ||
                                 leaveIndividualDetail?.leaveName === LeaveName.FORCED
-                                  ? (
-                                      parseFloat(`${vacationLeaveBalance}`) + parseFloat(`${forcedLeaveBalance}`)
-                                    ).toFixed(3)
+                                  ? parseFloat(`${vacationLeaveBalance}`)
+                                      // + parseFloat(`${forcedLeaveBalance}`)
+                                      .toFixed(3)
                                   : leaveIndividualDetail?.leaveName === LeaveName.SICK
                                   ? sickLeaveBalance
                                   : leaveIndividualDetail?.leaveName === LeaveName.SPECIAL_PRIVILEGE
@@ -482,8 +480,9 @@ export const FinalApprovalsPendingLeaveModal = ({
                                 {leaveIndividualDetail?.leaveName === LeaveName.VACATION ||
                                 leaveIndividualDetail?.leaveName === LeaveName.FORCED
                                   ? (
-                                      parseFloat(`${vacationLeaveBalance}`) +
-                                      parseFloat(`${forcedLeaveBalance}`) -
+                                      parseFloat(`${vacationLeaveBalance}`) -
+                                      // +
+                                      // parseFloat(`${forcedLeaveBalance}`)
                                       leaveIndividualDetail?.leaveDates?.length
                                     ).toFixed(3)
                                   : leaveIndividualDetail?.leaveName === LeaveName.SICK
@@ -539,19 +538,18 @@ export const FinalApprovalsPendingLeaveModal = ({
             </div>
           )}
 
-          <CaptchaModal
+          {/* <CaptchaModal
             modalState={captchaLeaveModalIsOpen}
             setModalState={setCaptchaLeaveModalIsOpen}
             title={'FINAL LEAVE APPROVAL CAPTCHA'}
           >
-            {/* contents */}
             <ApprovalCaptcha
               employeeId={employeeDetail.user._id}
               action={watch('status')}
               tokenId={leaveIndividualDetail.id}
               captchaName={'Final Leave Approval'}
             />
-          </CaptchaModal>
+          </CaptchaModal> */}
 
           {/* <OtpModal
             modalState={otpLeaveModalIsOpen}
@@ -568,9 +566,9 @@ export const FinalApprovalsPendingLeaveModal = ({
           </OtpModal> */}
 
           <ConfirmationLeaveModal
-            modalState={declineApplicationModalIsOpen}
-            setModalState={setDeclineApplicationModalIsOpen}
-            closeModalAction={closeDeclineModal}
+            modalState={confirmApplicationModalIsOpen}
+            setModalState={setConfirmApplicationModalIsOpen}
+            closeModalAction={closeConfirmModal}
             action={watch('status')}
             tokenId={leaveIndividualDetail.id}
             remarks={reason}

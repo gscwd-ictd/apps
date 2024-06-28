@@ -11,7 +11,7 @@ import { SubmitHandler, useForm } from 'react-hook-form';
 import { leaveAction } from 'apps/portal/src/types/approvals.type';
 import { LeaveName, LeaveStatus } from 'libs/utils/src/lib/enums/leave.enum';
 import { useEmployeeStore } from 'apps/portal/src/store/employee.store';
-import { ManagerCaptchaApproval, ManagerOtpApproval } from 'libs/utils/src/lib/enums/approval.enum';
+import { ManagerConfirmationApproval, ManagerOtpApproval } from 'libs/utils/src/lib/enums/approval.enum';
 import { ApprovalOtpContents } from './ApprovalOtp/ApprovalOtpContents';
 import { ConfirmationApprovalModal } from './ApprovalOtp/ConfirmationApprovalModal';
 import { DateFormatter } from 'libs/utils/src/lib/functions/DateFormatter';
@@ -44,8 +44,8 @@ export const ApprovalsPendingLeaveModal = ({
     setPendingLeaveModalIsOpen,
     otpLeaveModalIsOpen,
     setOtpLeaveModalIsOpen,
-    declineApplicationModalIsOpen,
-    setDeclineApplicationModalIsOpen,
+    confirmApplicationModalIsOpen,
+    setConfirmApplicationModalIsOpen,
     captchaModalIsOpen,
     setCaptchaModalIsOpen,
   } = useApprovalStore((state) => ({
@@ -54,8 +54,8 @@ export const ApprovalsPendingLeaveModal = ({
     setPendingLeaveModalIsOpen: state.setPendingLeaveModalIsOpen,
     otpLeaveModalIsOpen: state.otpLeaveModalIsOpen,
     setOtpLeaveModalIsOpen: state.setOtpLeaveModalIsOpen,
-    declineApplicationModalIsOpen: state.declineApplicationModalIsOpen,
-    setDeclineApplicationModalIsOpen: state.setDeclineApplicationModalIsOpen,
+    confirmApplicationModalIsOpen: state.confirmApplicationModalIsOpen,
+    setConfirmApplicationModalIsOpen: state.setConfirmApplicationModalIsOpen,
     captchaModalIsOpen: state.captchaModalIsOpen,
     setCaptchaModalIsOpen: state.setCaptchaModalIsOpen,
   }));
@@ -88,16 +88,15 @@ export const ApprovalsPendingLeaveModal = ({
   const onSubmit: SubmitHandler<leaveAction> = (data: leaveAction) => {
     setValue('id', leaveIndividualDetail.id);
     if (data.status === LeaveStatus.FOR_HRDM_APPROVAL) {
-      setOtpLeaveModalIsOpen(true);
-      // setCaptchaModalIsOpen(true);
+      setConfirmApplicationModalIsOpen(true);
     } else {
-      setDeclineApplicationModalIsOpen(true);
+      setConfirmApplicationModalIsOpen(true);
     }
   };
 
   // cancel action for Decline Application Modal
-  const closeDeclineModal = async () => {
-    setDeclineApplicationModalIsOpen(false);
+  const closeConfirmModal = async () => {
+    setConfirmApplicationModalIsOpen(false);
   };
 
   // set state for employee store
@@ -487,7 +486,7 @@ export const ApprovalsPendingLeaveModal = ({
                           Employee's{' '}
                           {leaveIndividualDetail?.leaveName === LeaveName.VACATION ||
                           leaveIndividualDetail?.leaveName === LeaveName.FORCED
-                            ? 'VL+FL'
+                            ? 'VL'
                             : leaveIndividualDetail?.leaveName === LeaveName.SICK
                             ? 'SL'
                             : leaveIndividualDetail?.leaveName === LeaveName.SPECIAL_PRIVILEGE
@@ -506,9 +505,9 @@ export const ApprovalsPendingLeaveModal = ({
                               <td className="border border-slate-400 text-center">
                                 {leaveIndividualDetail?.leaveName === LeaveName.VACATION ||
                                 leaveIndividualDetail?.leaveName === LeaveName.FORCED
-                                  ? (
-                                      parseFloat(`${vacationLeaveBalance}`) + parseFloat(`${forcedLeaveBalance}`)
-                                    ).toFixed(3)
+                                  ? parseFloat(`${vacationLeaveBalance}`)
+                                      // + parseFloat(`${forcedLeaveBalance}`)
+                                      .toFixed(3)
                                   : leaveIndividualDetail?.leaveName === LeaveName.SICK
                                   ? sickLeaveBalance
                                   : leaveIndividualDetail?.leaveName === LeaveName.SPECIAL_PRIVILEGE
@@ -522,8 +521,9 @@ export const ApprovalsPendingLeaveModal = ({
                                 {leaveIndividualDetail?.leaveName === LeaveName.VACATION ||
                                 leaveIndividualDetail?.leaveName === LeaveName.FORCED
                                   ? (
-                                      parseFloat(`${vacationLeaveBalance}`) +
-                                      parseFloat(`${forcedLeaveBalance}`) -
+                                      parseFloat(`${vacationLeaveBalance}`) -
+                                      // +
+                                      // parseFloat(`${forcedLeaveBalance}`)
                                       leaveIndividualDetail?.leaveDates?.length
                                     ).toFixed(3)
                                   : leaveIndividualDetail?.leaveName === LeaveName.SICK
@@ -582,19 +582,18 @@ export const ApprovalsPendingLeaveModal = ({
             </div>
           )}
 
-          <CaptchaModal
+          {/* <CaptchaModal
             modalState={otpLeaveModalIsOpen}
             setModalState={setOtpLeaveModalIsOpen}
             title={'LEAVE APPROVAL CAPTCHA'}
           >
-            {/* contents */}
             <ApprovalCaptcha
               employeeId={employeeDetails.user._id}
               actionLeave={watch('status')}
               tokenId={leaveIndividualDetail.id}
-              captchaName={ManagerCaptchaApproval.LEAVE}
+              captchaName={ManagerConfirmationApproval.LEAVE}
             />
-          </CaptchaModal>
+          </CaptchaModal> */}
 
           {/* <OtpModal
             modalState={otpLeaveModalIsOpen}
@@ -610,13 +609,13 @@ export const ApprovalsPendingLeaveModal = ({
             />
           </OtpModal> */}
           <ConfirmationApprovalModal
-            modalState={declineApplicationModalIsOpen}
-            setModalState={setDeclineApplicationModalIsOpen}
-            closeModalAction={closeDeclineModal}
+            modalState={confirmApplicationModalIsOpen}
+            setModalState={setConfirmApplicationModalIsOpen}
+            closeModalAction={closeConfirmModal}
             actionLeave={watch('status')}
             tokenId={leaveIndividualDetail.id}
             remarks={reason}
-            confirmName={ManagerOtpApproval.LEAVE}
+            confirmName={ManagerConfirmationApproval.LEAVE}
             employeeId={employeeDetails.user._id}
           />
         </Modal.Body>

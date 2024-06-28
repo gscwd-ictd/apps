@@ -17,9 +17,10 @@ import { TextField } from '../components/modular/common/forms/TextField';
 import { getPortalSsid, invalidateSession } from '../utils/helpers/session';
 import { HiEye, HiEyeOff } from 'react-icons/hi';
 import Image from 'next/image';
-import { OtpModal } from '@gscwd-apps/oneui';
+import { CaptchaModal, OtpModal } from '@gscwd-apps/oneui';
 import { LoginOtpContents } from '../components/fixed/login/LoginOtpContents';
 import { useLoginStore } from '../store/login.store';
+import { LoginCaptcha } from '../components/fixed/login/LoginCaptcha';
 
 type LoginFormInput = {
   email: string;
@@ -42,11 +43,24 @@ export default function Login() {
   // set state for remember me checkbox
   const [rememberMe, setRememberMe] = useState(true);
 
-  const { loginOtpModalIsOpen, setLoginOtpModalIsOpen, otpSuccess, setOtpSuccess } = useLoginStore((state) => ({
+  const {
+    loginOtpModalIsOpen,
+    setLoginOtpModalIsOpen,
+    loginCaptchaModalIsOpen,
+    setLoginCaptchaModalIsOpen,
+    otpSuccess,
+    setOtpSuccess,
+    captchaSuccess,
+    setCaptchaSuccess,
+  } = useLoginStore((state) => ({
     loginOtpModalIsOpen: state.loginOtpModalIsOpen,
     setLoginOtpModalIsOpen: state.setLoginOtpModalIsOpen,
+    loginCaptchaModalIsOpen: state.loginCaptchaModalIsOpen,
+    setLoginCaptchaModalIsOpen: state.setLoginCaptchaModalIsOpen,
     otpSuccess: state.otpSuccess,
     setOtpSuccess: state.setOtpSuccess,
+    captchaSuccess: state.captchaSuccess,
+    setCaptchaSuccess: state.setCaptchaSuccess,
   }));
 
   // set state for controlling the displaying of error status
@@ -146,6 +160,7 @@ export default function Login() {
         //open OTP modal
         setUserMobile(result);
         setOtpSuccess(false);
+        setCaptchaSuccess(false);
         setLoginOtpModalIsOpen(true);
       }
     } else {
@@ -155,19 +170,19 @@ export default function Login() {
   };
 
   useEffect(() => {
-    if (!loginOtpModalIsOpen && !otpSuccess) {
+    if (!loginOtpModalIsOpen && !otpSuccess && !loginCaptchaModalIsOpen && !captchaSuccess) {
       setIsLoading(false);
     } else {
       setIsLoading(true);
     }
-  }, [loginOtpModalIsOpen, otpSuccess]);
+  }, [loginOtpModalIsOpen, otpSuccess, loginCaptchaModalIsOpen, captchaSuccess]);
 
   //run reload function if otpSuccess is true
   useEffect(() => {
-    if (otpSuccess) {
+    if (otpSuccess || captchaSuccess) {
       handleReload(userCredentials);
     }
-  }, [otpSuccess]);
+  }, [otpSuccess, captchaSuccess]);
 
   //reload page with the now saved credentials cookie
   const handleReload = async ({ email, password }: LoginFormInput) => {
@@ -192,6 +207,14 @@ export default function Login() {
       <OtpModal modalState={loginOtpModalIsOpen} setModalState={setLoginOtpModalIsOpen} title={'LOGIN OTP'}>
         <LoginOtpContents mobile={userMobile} otpName={'LOGIN OTP'} />
       </OtpModal>
+      <CaptchaModal
+        modalState={loginCaptchaModalIsOpen}
+        setModalState={setLoginCaptchaModalIsOpen}
+        title={'LOGIN CAPTCHA'}
+      >
+        {/* contents */}
+        <LoginCaptcha tokenId={userMobile} captchaName={'Login Captcha'} />
+      </CaptchaModal>
       <div className="absolute top-0 left-0 z-0 flex items-center justify-center w-full h-full overflow-hidden pointer-events-none opacity-10">
         <Image src={'/gwdlogo.png'} priority className="w-full md:w-2/4 " alt={''} width={'500'} height={'500'} />
       </div>

@@ -11,7 +11,7 @@ import { EmployeeOvertimeDetail, OvertimeAccomplishmentApprovalPatch } from 'lib
 import { SelectOption } from 'libs/utils/src/lib/types/select.type';
 import { overtimeAction } from 'apps/portal/src/types/approvals.type';
 import { useEffect, useState } from 'react';
-import { ManagerCaptchaApproval, ManagerOtpApproval } from 'libs/utils/src/lib/enums/approval.enum';
+import { ManagerConfirmationApproval, ManagerOtpApproval } from 'libs/utils/src/lib/enums/approval.enum';
 import { ApprovalOtpContents } from './ApprovalOtp/ApprovalOtpContents';
 import { ConfirmationApprovalModal } from './ApprovalOtp/ConfirmationApprovalModal';
 import { DateFormatter } from 'libs/utils/src/lib/functions/DateFormatter';
@@ -44,8 +44,8 @@ export const OvertimeModal = ({ modalState, setModalState, closeModalAction }: M
     overtimeDetails,
     otpOvertimeModalIsOpen,
     setOtpOvertimeModalIsOpen,
-    declineApplicationModalIsOpen,
-    setDeclineApplicationModalIsOpen,
+    confirmApplicationModalIsOpen,
+    setConfirmApplicationModalIsOpen,
     overtimeAccomplishmentModalIsOpen,
     setOvertimeAccomplishmentModalIsOpen,
     overtimeAccomplishmentEmployeeId,
@@ -59,8 +59,8 @@ export const OvertimeModal = ({ modalState, setModalState, closeModalAction }: M
     getOvertimeDetailsFail,
     emptyResponseAndError,
     patchResponseAccomplishment,
-    approveAllCaptchaModalIsOpen,
-    setApproveAllCaptchaModalIsOpen,
+    approveAllAccomplishmentModalIsOpen,
+    setApproveAllAccomplishmentModalIsOpen,
     captchaModalIsOpen,
     setCaptchaModalIsOpen,
   } = useApprovalStore((state) => ({
@@ -70,8 +70,8 @@ export const OvertimeModal = ({ modalState, setModalState, closeModalAction }: M
     pendingOvertimeModalIsOpen: state.pendingOvertimeModalIsOpen,
     otpOvertimeModalIsOpen: state.otpOvertimeModalIsOpen,
     setOtpOvertimeModalIsOpen: state.setOtpOvertimeModalIsOpen,
-    declineApplicationModalIsOpen: state.declineApplicationModalIsOpen,
-    setDeclineApplicationModalIsOpen: state.setDeclineApplicationModalIsOpen,
+    confirmApplicationModalIsOpen: state.confirmApplicationModalIsOpen,
+    setConfirmApplicationModalIsOpen: state.setConfirmApplicationModalIsOpen,
     overtimeAccomplishmentModalIsOpen: state.overtimeAccomplishmentModalIsOpen,
     setOvertimeAccomplishmentModalIsOpen: state.setOvertimeAccomplishmentModalIsOpen,
     overtimeAccomplishmentEmployeeId: state.overtimeAccomplishmentEmployeeId,
@@ -85,8 +85,8 @@ export const OvertimeModal = ({ modalState, setModalState, closeModalAction }: M
     getOvertimeDetailsFail: state.getOvertimeDetailsFail,
     emptyResponseAndError: state.emptyResponseAndError,
     patchResponseAccomplishment: state.response.patchResponseAccomplishment,
-    approveAllCaptchaModalIsOpen: state.approveAllCaptchaModalIsOpen,
-    setApproveAllCaptchaModalIsOpen: state.setApproveAllCaptchaModalIsOpen,
+    approveAllAccomplishmentModalIsOpen: state.approveAllAccomplishmentModalIsOpen,
+    setApproveAllAccomplishmentModalIsOpen: state.setApproveAllAccomplishmentModalIsOpen,
     captchaModalIsOpen: state.captchaModalIsOpen,
     setCaptchaModalIsOpen: state.setCaptchaModalIsOpen,
   }));
@@ -198,9 +198,10 @@ export const OvertimeModal = ({ modalState, setModalState, closeModalAction }: M
     },
   });
 
-  // cancel action for Decline Application Modal
-  const closeDeclineModal = async () => {
-    setDeclineApplicationModalIsOpen(false);
+  // close Confirm Application Modal
+  const closeConfirmModal = async () => {
+    setConfirmApplicationModalIsOpen(false);
+    setApproveAllAccomplishmentModalIsOpen(false);
   };
 
   const closeAccomplishmentModal = async () => {
@@ -216,10 +217,9 @@ export const OvertimeModal = ({ modalState, setModalState, closeModalAction }: M
 
   const onSubmit: SubmitHandler<overtimeAction> = (data: overtimeAction) => {
     if (data.status === OvertimeStatus.APPROVED) {
-      setOtpOvertimeModalIsOpen(true);
-      // setCaptchaModalIsOpen(true);
+      setConfirmApplicationModalIsOpen(true);
     } else {
-      setDeclineApplicationModalIsOpen(true);
+      setConfirmApplicationModalIsOpen(true);
     }
   };
 
@@ -562,19 +562,18 @@ export const OvertimeModal = ({ modalState, setModalState, closeModalAction }: M
             </div>
           )}
 
-          <CaptchaModal
+          {/* <CaptchaModal
             modalState={otpOvertimeModalIsOpen}
             setModalState={setOtpOvertimeModalIsOpen}
             title={'OVERTIME APPROVAL CAPTCHA'}
           >
-            {/* contents */}
             <ApprovalCaptcha
               employeeId={employeeDetails.employmentDetails.userId}
               actionOvertime={watch('status')}
               tokenId={overtimeDetails.id}
-              captchaName={ManagerCaptchaApproval.OVERTIME}
+              captchaName={ManagerConfirmationApproval.OVERTIME}
             />
-          </CaptchaModal>
+          </CaptchaModal> */}
 
           {/* <OtpModal
             modalState={otpOvertimeModalIsOpen}
@@ -592,33 +591,43 @@ export const OvertimeModal = ({ modalState, setModalState, closeModalAction }: M
           </OtpModal> */}
 
           <ConfirmationApprovalModal
-            modalState={declineApplicationModalIsOpen}
-            setModalState={setDeclineApplicationModalIsOpen}
-            closeModalAction={closeDeclineModal}
+            modalState={confirmApplicationModalIsOpen}
+            setModalState={setConfirmApplicationModalIsOpen}
+            closeModalAction={closeConfirmModal}
             actionOvertime={watch('status')}
             tokenId={overtimeDetails.id}
             remarks={reason}
-            confirmName={ManagerOtpApproval.OVERTIME}
+            confirmName={ManagerConfirmationApproval.OVERTIME}
             employeeId={employeeDetails.user._id}
           />
+
+          <ConfirmationApprovalModal
+            modalState={approveAllAccomplishmentModalIsOpen}
+            setModalState={setApproveAllAccomplishmentModalIsOpen}
+            closeModalAction={closeConfirmModal}
+            dataToSubmitApproveAllAccomplishment={approveAllAccomplishmentData}
+            tokenId={overtimeDetails.id}
+            confirmName={ManagerConfirmationApproval.ALL_OVERTIME_ACCOMPLISHMENT}
+            employeeId={employeeDetails.user._id}
+          />
+
           <ApprovalAccomplishmentModal
             modalState={overtimeAccomplishmentModalIsOpen}
             setModalState={setOvertimeAccomplishmentModalIsOpen}
             closeModalAction={closeAccomplishmentModal}
           />
 
-          <CaptchaModal
-            modalState={approveAllCaptchaModalIsOpen}
-            setModalState={setApproveAllCaptchaModalIsOpen}
+          {/* <CaptchaModal
+            modalState={approveAllAccomplishmentModalIsOpen}
+            setModalState={setApproveAllAccomplishmentModalIsOpen}
             title={'APPROVE ALL ACCOMPLISHMENT CAPTCHA'}
           >
-            {/* contents */}
             <ApprovalCaptcha
               dataToSubmitApproveAllAccomplishment={approveAllAccomplishmentData}
               tokenId={overtimeDetails.id}
-              captchaName={ManagerCaptchaApproval.ALL_OVERTIME_ACCOMPLISHMENT}
+              captchaName={ManagerConfirmationApproval.ALL_OVERTIME_ACCOMPLISHMENT}
             />
-          </CaptchaModal>
+          </CaptchaModal> */}
         </Modal.Body>
         <Modal.Footer>
           <div className="flex justify-end gap-2 px-4">
@@ -633,7 +642,7 @@ export const OvertimeModal = ({ modalState, setModalState, closeModalAction }: M
                     variant={'primary'}
                     size={'md'}
                     loading={false}
-                    onClick={(e) => setApproveAllCaptchaModalIsOpen(true)}
+                    onClick={(e) => setApproveAllAccomplishmentModalIsOpen(true)}
                     type="submit"
                     disabled={
                       pendingAccomplishmentEmployees.length > 0 && actualHours > 0 && actualHours ? false : true

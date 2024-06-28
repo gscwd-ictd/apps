@@ -17,7 +17,8 @@ import { GenerateCaptcha } from '../captcha/CaptchaGenerator';
 import { ApprovalCaptcha } from './ApprovalOtp/ApprovalCaptcha';
 import { DateFormatter } from 'libs/utils/src/lib/functions/DateFormatter';
 import { DateTimeFormatter } from 'libs/utils/src/lib/functions/DateTimeFormatter';
-import { ManagerCaptchaApproval } from 'libs/utils/src/lib/enums/approval.enum';
+import { ManagerConfirmationApproval } from 'libs/utils/src/lib/enums/approval.enum';
+import { ConfirmationApprovalModal } from './ApprovalOtp/ConfirmationApprovalModal';
 
 type ModalProps = {
   modalState: boolean;
@@ -40,8 +41,8 @@ export const ApprovalAccomplishmentModal = ({ modalState, setModalState, closeMo
     overtimeDetails,
     loadingAccomplishmentResponse,
     patchResponseAccomplishment,
-    captchaModalIsOpen,
-    setCaptchaModalIsOpen,
+    confirmApplicationModalIsOpen,
+    setConfirmApplicationModalIsOpen,
     getAccomplishmentDetails,
     getAccomplishmentDetailsSuccess,
     getAccomplishmentDetailsFail,
@@ -55,8 +56,8 @@ export const ApprovalAccomplishmentModal = ({ modalState, setModalState, closeMo
     overtimeDetails: state.overtimeDetails,
     loadingAccomplishmentResponse: state.loading.loadingAccomplishmentResponse,
     patchResponseAccomplishment: state.response.patchResponseAccomplishment,
-    captchaModalIsOpen: state.captchaModalIsOpen,
-    setCaptchaModalIsOpen: state.setCaptchaModalIsOpen,
+    confirmApplicationModalIsOpen: state.confirmApplicationModalIsOpen,
+    setConfirmApplicationModalIsOpen: state.setConfirmApplicationModalIsOpen,
     getAccomplishmentDetails: state.getAccomplishmentDetails,
     getAccomplishmentDetailsSuccess: state.getAccomplishmentDetailsSuccess,
     getAccomplishmentDetailsFail: state.getAccomplishmentDetailsFail,
@@ -102,7 +103,7 @@ export const ApprovalAccomplishmentModal = ({ modalState, setModalState, closeMo
     setValue('employeeId', overtimeAccomplishmentEmployeeId);
     setValue('overtimeApplicationId', overtimeAccomplishmentApplicationId);
     setValue('approvedBy', employeeDetails.employmentDetails.userId);
-  }, [watch('status'), captchaModalIsOpen]);
+  }, [watch('status'), confirmApplicationModalIsOpen]);
 
   useEffect(() => {
     reset();
@@ -150,13 +151,18 @@ export const ApprovalAccomplishmentModal = ({ modalState, setModalState, closeMo
     }
   }, [patchResponseAccomplishment]);
 
+  // close Confirm Application Modal
+  const closeConfirmModal = async () => {
+    setConfirmApplicationModalIsOpen(false);
+  };
+
   const [dataToSubmit, setDataToSubmit] = useState<OvertimeAccomplishmentApprovalPatch>();
 
   const onSubmit: SubmitHandler<OvertimeAccomplishmentApprovalPatch> = async (
     data: OvertimeAccomplishmentApprovalPatch
   ) => {
     setDataToSubmit(data);
-    setCaptchaModalIsOpen(true);
+    setConfirmApplicationModalIsOpen(true);
   };
 
   return (
@@ -425,19 +431,29 @@ export const ApprovalAccomplishmentModal = ({ modalState, setModalState, closeMo
               </div>
             </div>
           )}
-          <CaptchaModal
-            modalState={captchaModalIsOpen}
-            setModalState={setCaptchaModalIsOpen}
+
+          <ConfirmationApprovalModal
+            modalState={confirmApplicationModalIsOpen}
+            setModalState={setConfirmApplicationModalIsOpen}
+            closeModalAction={closeConfirmModal}
+            dataToSubmitOvertimeAccomplishment={dataToSubmit}
+            tokenId={overtimeDetails.id}
+            confirmName={ManagerConfirmationApproval.OVERTIME_ACCOMPLISHMENT}
+            employeeId={employeeDetails.user._id}
+          />
+
+          {/* <CaptchaModal
+            modalState={confirmApplicationModalIsOpen}
+            setModalState={setConfirmApplicationModalIsOpen}
             title={'OVERTIME ACCOMPLISHMENT CAPTCHA'}
           >
-            {/* contents */}
             <ApprovalCaptcha
               employeeId={employeeDetails.employmentDetails.userId}
               dataToSubmitOvertimeAccomplishment={dataToSubmit}
               tokenId={overtimeDetails.id}
-              captchaName={ManagerCaptchaApproval.OVERTIME_ACCOMPLISHMENT}
+              captchaName={ManagerConfirmationApproval.OVERTIME_ACCOMPLISHMENT}
             />
-          </CaptchaModal>
+          </CaptchaModal> */}
         </Modal.Body>
         <Modal.Footer>
           <div className="flex justify-end gap-2 w-full px-4">

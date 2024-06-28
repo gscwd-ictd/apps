@@ -9,7 +9,7 @@ import { useEmployeeStore } from '../../../store/employee.store';
 import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
 import { ApprovalOtpContents } from './ApprovalOtp/ApprovalOtpContents';
 import { DtrCorrectionStatus } from 'libs/utils/src/lib/enums/dtr.enum';
-import { ManagerCaptchaApproval, ManagerOtpApproval } from 'libs/utils/src/lib/enums/approval.enum';
+import { ManagerConfirmationApproval, ManagerOtpApproval } from 'libs/utils/src/lib/enums/approval.enum';
 import { ConfirmationApprovalModal } from './ApprovalOtp/ConfirmationApprovalModal';
 import { DateFormatter } from 'libs/utils/src/lib/functions/DateFormatter';
 import { UseTwelveHourFormat } from 'libs/utils/src/lib/functions/TwelveHourFormatter';
@@ -32,23 +32,16 @@ export const ApprovalsDtrCorrectionModal = ({
   setModalState,
   closeModalAction,
 }: ApprovalsDtrCorrectionModalProps) => {
-  const {
-    dtrCorrectionDetail,
-    otpDtrCorrectionModalIsOpen,
-    setOtpDtrCorrectionModalIsOpen,
-    declineApplicationModalIsOpen,
-    setDeclineApplicationModalIsOpen,
-    loadingResponse,
-    setCaptchaModalIsOpen,
-  } = useApprovalStore((state) => ({
-    dtrCorrectionDetail: state.dtrCorrectionDetail,
-    otpDtrCorrectionModalIsOpen: state.otpDtrCorrectionModalIsOpen,
-    setOtpDtrCorrectionModalIsOpen: state.setOtpDtrCorrectionModalIsOpen,
-    declineApplicationModalIsOpen: state.declineApplicationModalIsOpen,
-    setDeclineApplicationModalIsOpen: state.setDeclineApplicationModalIsOpen,
-    loadingResponse: state.loading.loadingPassSlipResponse,
-    setCaptchaModalIsOpen: state.setCaptchaModalIsOpen,
-  }));
+  const { dtrCorrectionDetail, confirmApplicationModalIsOpen, setConfirmApplicationModalIsOpen, loadingResponse } =
+    useApprovalStore((state) => ({
+      dtrCorrectionDetail: state.dtrCorrectionDetail,
+      otpDtrCorrectionModalIsOpen: state.otpDtrCorrectionModalIsOpen,
+      setOtpDtrCorrectionModalIsOpen: state.setOtpDtrCorrectionModalIsOpen,
+      confirmApplicationModalIsOpen: state.confirmApplicationModalIsOpen,
+      setConfirmApplicationModalIsOpen: state.setConfirmApplicationModalIsOpen,
+      loadingResponse: state.loading.loadingPassSlipResponse,
+      setCaptchaModalIsOpen: state.setCaptchaModalIsOpen,
+    }));
 
   // React hook form
   const { reset, register, handleSubmit, watch, setValue } = useForm<DtrCorrectionApprovalPatch>({
@@ -73,9 +66,9 @@ export const ApprovalsDtrCorrectionModal = ({
   const onSubmit: SubmitHandler<DtrCorrectionApprovalPatch> = (data: DtrCorrectionApprovalPatch) => {
     setValue('id', dtrCorrectionDetail.id);
     if (data.status === DtrCorrectionStatus.APPROVED) {
-      setOtpDtrCorrectionModalIsOpen(true);
+      setConfirmApplicationModalIsOpen(true);
     } else if (data.status === DtrCorrectionStatus.DISAPPROVED) {
-      setDeclineApplicationModalIsOpen(true);
+      setConfirmApplicationModalIsOpen(true);
     }
   };
 
@@ -83,9 +76,8 @@ export const ApprovalsDtrCorrectionModal = ({
   const employeeDetails = useEmployeeStore((state) => state.employeeDetails);
 
   // cancel action for Decline Application Modal
-  const closeDeclineModal = async () => {
-    setDeclineApplicationModalIsOpen(false);
-    setCaptchaModalIsOpen(false);
+  const closeConfirmModal = async () => {
+    setConfirmApplicationModalIsOpen(false);
   };
 
   const { windowWidth } = UseWindowDimensions();
@@ -314,19 +306,18 @@ export const ApprovalsDtrCorrectionModal = ({
             </div>
           </div>
 
-          <CaptchaModal
+          {/* <CaptchaModal
             modalState={otpDtrCorrectionModalIsOpen}
             setModalState={setOtpDtrCorrectionModalIsOpen}
             title={'TIME LOG CORRECTION APPROVAL CAPTCHA'}
           >
-            {/* contents */}
             <ApprovalCaptcha
               employeeId={employeeDetails.user._id}
               actionDtrCorrection={watch('status')}
               tokenId={dtrCorrectionDetail.id}
-              captchaName={ManagerCaptchaApproval.DTR_CORRECTION}
+              captchaName={ManagerConfirmationApproval.DTRCORRECTION}
             />
-          </CaptchaModal>
+          </CaptchaModal> */}
 
           {/* <OtpModal
             modalState={otpDtrCorrectionModalIsOpen}
@@ -341,13 +332,14 @@ export const ApprovalsDtrCorrectionModal = ({
               otpName={ManagerOtpApproval.DTRCORRECTION}
             />
           </OtpModal> */}
+
           <ConfirmationApprovalModal
-            modalState={declineApplicationModalIsOpen}
-            setModalState={setDeclineApplicationModalIsOpen}
-            closeModalAction={closeDeclineModal}
+            modalState={confirmApplicationModalIsOpen}
+            setModalState={setConfirmApplicationModalIsOpen}
+            closeModalAction={closeConfirmModal}
             actionDtrCorrection={watch('status')}
             tokenId={dtrCorrectionDetail.id}
-            confirmName={ManagerOtpApproval.DTRCORRECTION}
+            confirmName={ManagerConfirmationApproval.DTRCORRECTION}
             employeeId={employeeDetails.user._id}
           />
         </Modal.Body>

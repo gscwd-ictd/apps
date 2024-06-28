@@ -6,7 +6,7 @@ import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
 import { NatureOfBusiness, PassSlipStatus } from 'libs/utils/src/lib/enums/pass-slip.enum';
 import { UseTwelveHourFormat } from 'libs/utils/src/lib/functions/TwelveHourFormatter';
 import { ConfirmationApprovalModal } from './ApprovalOtp/ConfirmationApprovalModal';
-import { ManagerOtpApproval } from 'libs/utils/src/lib/enums/approval.enum';
+import { ManagerConfirmationApproval } from 'libs/utils/src/lib/enums/approval.enum';
 import { DateTimeFormatter } from 'libs/utils/src/lib/functions/DateTimeFormatter';
 
 type PassSlipCompletedModalProps = {
@@ -20,15 +20,15 @@ export const ApprovalsCompletedPassSlipModal = ({
   setModalState,
   closeModalAction,
 }: PassSlipCompletedModalProps) => {
-  const { passSlip, declineApplicationModalIsOpen, setDeclineApplicationModalIsOpen } = useApprovalStore((state) => ({
+  const { passSlip, confirmApplicationModalIsOpen, setConfirmApplicationModalIsOpen } = useApprovalStore((state) => ({
     passSlip: state.passSlipIndividualDetail,
-    setDeclineApplicationModalIsOpen: state.setDeclineApplicationModalIsOpen,
-    declineApplicationModalIsOpen: state.declineApplicationModalIsOpen,
+    setConfirmApplicationModalIsOpen: state.setConfirmApplicationModalIsOpen,
+    confirmApplicationModalIsOpen: state.confirmApplicationModalIsOpen,
   }));
 
   // cancel action for Decline Application Modal
   const closeDeclineModal = async () => {
-    setDeclineApplicationModalIsOpen(false);
+    setConfirmApplicationModalIsOpen(false);
   };
 
   const { windowWidth } = UseWindowDimensions();
@@ -115,12 +115,12 @@ export const ApprovalsCompletedPassSlipModal = ({
               </div>
 
               <ConfirmationApprovalModal
-                modalState={declineApplicationModalIsOpen}
-                setModalState={setDeclineApplicationModalIsOpen}
+                modalState={confirmApplicationModalIsOpen}
+                setModalState={setConfirmApplicationModalIsOpen}
                 closeModalAction={closeDeclineModal}
                 actionPassSlip={PassSlipStatus.CANCELLED}
                 tokenId={passSlip.id}
-                confirmName={ManagerOtpApproval.PASSSLIP}
+                confirmName={ManagerConfirmationApproval.PASSSLIP}
               />
 
               <div className="flex flex-wrap justify-between">
@@ -274,7 +274,7 @@ export const ApprovalsCompletedPassSlipModal = ({
                       variant={'warning'}
                       size={'md'}
                       loading={false}
-                      onClick={(e) => setDeclineApplicationModalIsOpen(true)}
+                      onClick={(e) => setConfirmApplicationModalIsOpen(true)}
                       type="submit"
                     >
                       Cancel Pass Slip
