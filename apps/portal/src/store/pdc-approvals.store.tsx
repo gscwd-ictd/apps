@@ -3,6 +3,7 @@ import { create } from 'zustand';
 import { devtools } from 'zustand/middleware';
 import {
   PdcChairmanApproval,
+  PdcGeneralManagerApproval,
   PdcSecretariatApproval,
   Training,
 } from '../../../../libs/utils/src/lib/types/training.type';
@@ -145,7 +146,9 @@ export const usePdcApprovalsStore = create<PdcApprovalsState>()(
         },
       }));
     },
-    patchTrainingSelectionSuccess: (response: PdcChairmanApproval | PdcSecretariatApproval) => {
+    patchTrainingSelectionSuccess: (
+      response: PdcChairmanApproval | PdcSecretariatApproval | PdcGeneralManagerApproval
+    ) => {
       set((state) => ({
         ...state,
         response: {

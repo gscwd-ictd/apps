@@ -305,6 +305,7 @@ export const LoginOtpContents: FunctionComponent<OtpProps> = ({ mobile, otpName,
             <div className="text-center text-sm pb-2">OTP Verified Successfully!</div>
 
             <Button
+              autoFocus
               btnLabel="CLOSE"
               variant="primary"
               className={`${isSubmitLoading == true ? 'cursor-not-allowed' : 'w-full'} `}

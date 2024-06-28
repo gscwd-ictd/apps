@@ -23,6 +23,7 @@ import { useAppSelectionStore } from '../../../store/selection.store';
 import { useAppEndStore } from '../../../store/endorsement.store';
 import { useInboxStore } from '../../../store/inbox.store';
 import { NomineeStatus } from 'libs/utils/src/lib/enums/training.enum';
+import { usePdcApprovalsStore } from 'apps/portal/src/store/pdc-approvals.store';
 
 export type EmployeeLocalStorage = {
   employeeId: string;
@@ -38,21 +39,14 @@ type NavDetails = {
 export const SideNav = ({ employeeDetails }: NavDetails) => {
   const router = useRouter();
   const { windowWidth } = UseWindowDimensions(); //get screen width and height
-  const {
-    tab,
-    errorPendingApprovalsCount,
-    pendingApprovalsCount,
-    getPendingApprovalsCount,
-    getPendingApprovalsCountSuccess,
-    getPendingApprovalsCountFail,
-  } = useApprovalStore((state) => ({
-    tab: state.tab,
-    errorPendingApprovalsCount: state.error.errorPendingApprovalsCount,
-    pendingApprovalsCount: state.pendingApprovalsCount,
-    getPendingApprovalsCount: state.getPendingApprovalsCount,
-    getPendingApprovalsCountSuccess: state.getPendingApprovalsCountSuccess,
-    getPendingApprovalsCountFail: state.getPendingApprovalsCountFail,
-  }));
+
+  const { getPendingApprovalsCount, getPendingApprovalsCountSuccess, getPendingApprovalsCountFail } = useApprovalStore(
+    (state) => ({
+      getPendingApprovalsCount: state.getPendingApprovalsCount,
+      getPendingApprovalsCountSuccess: state.getPendingApprovalsCountSuccess,
+      getPendingApprovalsCountFail: state.getPendingApprovalsCountFail,
+    })
+  );
 
   const { employeeSalaryGrade, setEmployeeSalaryGrade } = useEmployeeStore((state) => ({
     employeeSalaryGrade: state.employeeSalaryGrade,
@@ -72,6 +66,11 @@ export const SideNav = ({ employeeDetails }: NavDetails) => {
     patchResponseOvertime: state.response.patchResponseOvertime,
     patchResponseLeave: state.response.patchResponseLeave,
     patchResponseDtrCorrection: state.response.patchResponseDtrCorrection,
+  }));
+
+  //PDC Approval
+  const { patchResponsePdc } = usePdcApprovalsStore((state) => ({
+    patchResponsePdc: state.response.patchResponseApply,
   }));
 
   //Final Leave Approval
@@ -156,6 +155,7 @@ export const SideNav = ({ employeeDetails }: NavDetails) => {
     patchResponseApplicantSelection,
     updateResponseAppEnd,
     patchResponseAppSelection,
+    patchResponsePdc,
   ]);
 
   //FOR INBOX NOTIF

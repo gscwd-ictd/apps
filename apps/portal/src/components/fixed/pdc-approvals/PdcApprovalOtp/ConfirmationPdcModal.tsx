@@ -60,6 +60,8 @@ export const ConfirmationPdcModal = ({
     let data;
     if (
       employeeDetail.employmentDetails.isPdcChairman &&
+      !isEqual(employeeDetail.employmentDetails.userRole, UserRole.GENERAL_MANAGER) &&
+      !isEqual(employeeDetail.employmentDetails.userRole, UserRole.OIC_GENERAL_MANAGER) &&
       individualTrainingDetails.status === TrainingStatus.PDC_CHAIRMAN_APPROVAL
     ) {
       //for chairman
@@ -78,6 +80,7 @@ export const ConfirmationPdcModal = ({
     } else if (
       (isEqual(employeeDetail.employmentDetails.userRole, UserRole.GENERAL_MANAGER) ||
         isEqual(employeeDetail.employmentDetails.userRole, UserRole.OIC_GENERAL_MANAGER)) &&
+      !employeeDetail.employmentDetails.isPdcChairman &&
       individualTrainingDetails.status === TrainingStatus.GM_APPROVAL
     ) {
       data = {
@@ -149,7 +152,7 @@ export const ConfirmationPdcModal = ({
       patchTrainingSelectionFail(result);
     } else {
       patchTrainingSelectionSuccess(result);
-      closeModalAction(); // close confirmation of decline modal
+      closeModalAction(); // close confirmation modal
       setTimeout(() => {
         setTrainingModalIsOpen(false); // close training details modal
       }, 200);
@@ -185,6 +188,7 @@ export const ConfirmationPdcModal = ({
       patchTrainingSelectionFail(result);
     } else {
       patchTrainingSelectionSuccess(result);
+      closeModalAction(); // close confirmation modal
       setTimeout(() => {
         setTrainingModalIsOpen(false); // close training details modal
       }, 200);
