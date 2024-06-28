@@ -945,12 +945,12 @@ export const LeavePdf = ({ employeeDetails, leaveDetails, selectedLeaveLedger }:
                         <View style={{ width: '100%' }}>
                           <Image
                             style={{
-                              width: '20%',
+                              width: 50,
                               position: 'absolute',
                               justifyContent: 'center',
                               alignItems: 'center',
                               left: '40%',
-                              paddingTop: 5,
+                              marginTop: -5,
                             }}
                             src={leaveDetails.leaveApplicationBasicInfo?.hrmoSignature ?? '/'}
                           />
@@ -1023,12 +1023,12 @@ export const LeavePdf = ({ employeeDetails, leaveDetails, selectedLeaveLedger }:
                       <View style={{ width: '100%' }}>
                         <Image
                           style={{
-                            width: '25%',
+                            width: 50,
                             position: 'absolute',
                             justifyContent: 'center',
                             alignItems: 'center',
                             left: '40%',
-                            paddingTop: 0,
+                            marginTop: -10,
                           }}
                           src={leaveDetails.leaveApplicationBasicInfo?.supervisorSignature ?? '/'}
                         />
@@ -1173,12 +1173,12 @@ export const LeavePdf = ({ employeeDetails, leaveDetails, selectedLeaveLedger }:
                     <View style={{ width: '100%' }}>
                       <Image
                         style={{
-                          width: '12%',
+                          width: 50,
                           position: 'absolute',
                           justifyContent: 'center',
                           alignItems: 'center',
                           left: '45%',
-                          paddingTop: 0,
+                          marginTop: -15,
                         }}
                         src={leaveDetails.leaveApplicationBasicInfo?.hrdmSignature ?? '/'}
                       />
