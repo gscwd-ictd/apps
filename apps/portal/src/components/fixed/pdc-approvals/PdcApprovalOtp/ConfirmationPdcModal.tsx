@@ -19,7 +19,6 @@ type ConfirmationModalProps = {
   setModalState: React.Dispatch<React.SetStateAction<boolean>>;
   closeModalAction: () => void;
   action: PdcApprovalAction; // disapprove or cancel
-  tokenId: string; //like pass Slip Id, leave Id etc.
   remarks: string; //reason for disapproval, cancellation
 };
 
@@ -28,7 +27,6 @@ export const ConfirmationPdcModal = ({
   setModalState,
   closeModalAction,
   action,
-  tokenId,
   remarks,
 }: ConfirmationModalProps) => {
   const {
@@ -52,67 +50,70 @@ export const ConfirmationPdcModal = ({
   const employeeDetail = useEmployeeStore((state) => state.employeeDetails);
 
   const handleSubmit = () => {
-    if (tokenId) {
-      let data;
-      if (
-        employeeDetail.employmentDetails.isPdcChairman &&
-        individualTrainingDetails.status === TrainingStatus.PDC_CHAIRMAN_APPROVAL
-      ) {
-        //for chairman
-        data = {
-          pdcChairman: employeeDetail.employmentDetails.userId,
-          trainingDetails: individualTrainingDetails.trainingId,
-          remarks: remarks,
-        };
-      } else if (employeeDetail.employmentDetails.isPdcSecretariat) {
-        //for secretary
-        data = {
-          pdcSecretariat: employeeDetail.employmentDetails.userId,
-          trainingDetails: individualTrainingDetails.trainingId,
-          remarks: remarks,
-        };
-      } else if (
-        (isEqual(employeeDetail.employmentDetails.userRole, UserRole.GENERAL_MANAGER) ||
-          isEqual(employeeDetail.employmentDetails.userRole, UserRole.OIC_GENERAL_MANAGER)) &&
-        individualTrainingDetails.status === TrainingStatus.GM_APPROVAL
-      ) {
-        data = {
-          //for GM
-          generalManager: employeeDetail.employmentDetails.userId,
-          trainingDetails: individualTrainingDetails.trainingId,
-          remarks: remarks,
-        };
-      } else if (
-        employeeDetail.employmentDetails.isPdcChairman &&
-        (isEqual(employeeDetail.employmentDetails.userRole, UserRole.GENERAL_MANAGER) ||
-          isEqual(employeeDetail.employmentDetails.userRole, UserRole.OIC_GENERAL_MANAGER)) &&
-        individualTrainingDetails.status === TrainingStatus.PDC_CHAIRMAN_APPROVAL
-      ) {
-        //for chairman and GM at the same time but approving as chairman
-        data = {
-          pdcChairman: employeeDetail.employmentDetails.userId,
-          trainingDetails: individualTrainingDetails.trainingId,
-          remarks: remarks,
-        };
-      } else if (
-        employeeDetail.employmentDetails.isPdcChairman &&
-        (isEqual(employeeDetail.employmentDetails.userRole, UserRole.GENERAL_MANAGER) ||
-          isEqual(employeeDetail.employmentDetails.userRole, UserRole.OIC_GENERAL_MANAGER)) &&
-        individualTrainingDetails.status === TrainingStatus.GM_APPROVAL
-      ) {
-        //for chairman and GM at the same time but approving as GM
-        data = {
-          generalManager: employeeDetail.employmentDetails.userId,
-          trainingDetails: individualTrainingDetails.trainingId,
-          remarks: remarks,
-        };
-      }
-
-      patchTrainingSelection();
-      handlePatchResult(data);
+    let finalRemarks;
+    if (action == PdcApprovalAction.APPROVE) {
+      finalRemarks = null;
     } else {
-      //nothing to do
+      finalRemarks = remarks;
     }
+
+    let data;
+    if (
+      employeeDetail.employmentDetails.isPdcChairman &&
+      individualTrainingDetails.status === TrainingStatus.PDC_CHAIRMAN_APPROVAL
+    ) {
+      //for chairman
+      data = {
+        pdcChairman: employeeDetail.employmentDetails.userId,
+        trainingDetails: individualTrainingDetails.trainingId,
+        remarks: finalRemarks,
+      };
+    } else if (employeeDetail.employmentDetails.isPdcSecretariat) {
+      //for secretary
+      data = {
+        pdcSecretariat: employeeDetail.employmentDetails.userId,
+        trainingDetails: individualTrainingDetails.trainingId,
+        remarks: finalRemarks,
+      };
+    } else if (
+      (isEqual(employeeDetail.employmentDetails.userRole, UserRole.GENERAL_MANAGER) ||
+        isEqual(employeeDetail.employmentDetails.userRole, UserRole.OIC_GENERAL_MANAGER)) &&
+      individualTrainingDetails.status === TrainingStatus.GM_APPROVAL
+    ) {
+      data = {
+        //for GM
+        generalManager: employeeDetail.employmentDetails.userId,
+        trainingDetails: individualTrainingDetails.trainingId,
+        remarks: finalRemarks,
+      };
+    } else if (
+      employeeDetail.employmentDetails.isPdcChairman &&
+      (isEqual(employeeDetail.employmentDetails.userRole, UserRole.GENERAL_MANAGER) ||
+        isEqual(employeeDetail.employmentDetails.userRole, UserRole.OIC_GENERAL_MANAGER)) &&
+      individualTrainingDetails.status === TrainingStatus.PDC_CHAIRMAN_APPROVAL
+    ) {
+      //for chairman and GM at the same time but approving as chairman
+      data = {
+        pdcChairman: employeeDetail.employmentDetails.userId,
+        trainingDetails: individualTrainingDetails.trainingId,
+        remarks: finalRemarks,
+      };
+    } else if (
+      employeeDetail.employmentDetails.isPdcChairman &&
+      (isEqual(employeeDetail.employmentDetails.userRole, UserRole.GENERAL_MANAGER) ||
+        isEqual(employeeDetail.employmentDetails.userRole, UserRole.OIC_GENERAL_MANAGER)) &&
+      individualTrainingDetails.status === TrainingStatus.GM_APPROVAL
+    ) {
+      //for chairman and GM at the same time but approving as GM
+      data = {
+        generalManager: employeeDetail.employmentDetails.userId,
+        trainingDetails: individualTrainingDetails.trainingId,
+        remarks: finalRemarks,
+      };
+    }
+
+    patchTrainingSelection();
+    handlePatchResult(data);
   };
 
   const handlePatchResult = async (data: PdcSecretariatApproval | PdcChairmanApproval | PdcGeneralManagerApproval) => {

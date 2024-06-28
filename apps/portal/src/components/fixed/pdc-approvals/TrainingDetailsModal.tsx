@@ -442,8 +442,7 @@ export const TrainingDetailsModal = ({ modalState, setModalState, closeModalActi
             modalState={confirmTrainingModalIsOpen}
             setModalState={setConfirmTrainingModalIsOpen}
             closeModalAction={closeConfirmationModal}
-            action={PdcApprovalAction.DISAPPROVE}
-            tokenId={individualTrainingDetails.trainingId}
+            action={watch('action')}
             remarks={reason}
           />
         </Modal.Body>

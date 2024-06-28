@@ -47,8 +47,8 @@ export type ApprovalState = {
 
   leaveApplications: Array<SupervisorLeaveDetails>; // new approval page using data tables
 
-  declineApplicationModalIsOpen: boolean;
-  setDeclineApplicationModalIsOpen: (declineApplicationModalIsOpen: boolean) => void;
+  confirmApplicationModalIsOpen: boolean;
+  setConfirmApplicationModalIsOpen: (confirmApplicationModalIsOpen: boolean) => void;
 
   pendingLeaveModalIsOpen: boolean;
   setPendingLeaveModalIsOpen: (pendingLeaveModalIsOpen: boolean) => void;
@@ -128,7 +128,7 @@ export const useFinalLeaveApprovalStore = create<ApprovalState>()(
     otpLeaveModalIsOpen: false,
     captchaLeaveModalIsOpen: false,
 
-    declineApplicationModalIsOpen: false,
+    confirmApplicationModalIsOpen: false,
     pendingLeaveModalIsOpen: false,
     approvedLeaveModalIsOpen: false,
     disapprovedLeaveModalIsOpen: false,
@@ -156,8 +156,8 @@ export const useFinalLeaveApprovalStore = create<ApprovalState>()(
       set((state) => ({ ...state, tab }));
     },
 
-    setDeclineApplicationModalIsOpen: (declineApplicationModalIsOpen: boolean) => {
-      set((state) => ({ ...state, declineApplicationModalIsOpen }));
+    setConfirmApplicationModalIsOpen: (confirmApplicationModalIsOpen: boolean) => {
+      set((state) => ({ ...state, confirmApplicationModalIsOpen }));
     },
 
     setOtpLeaveModalIsOpen: (otpLeaveModalIsOpen: boolean) => {
