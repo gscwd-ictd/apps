@@ -282,7 +282,7 @@ export default function Login() {
               </section>
 
               <section className={`${errors.password ? 'mt-5' : 'mt-3'} flex items-end justify-between`}>
-                <Checkbox label="Remember me" isChecked={rememberMe} setIsChecked={setRememberMe} />
+                {/* <Checkbox label="Remember me" isChecked={rememberMe} setIsChecked={setRememberMe} /> */}
                 {/* <a href="#" className="text-sm text-indigo-700">
                   Forgot password?
                 </a> */}

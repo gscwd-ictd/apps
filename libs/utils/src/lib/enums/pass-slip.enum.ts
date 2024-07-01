@@ -22,4 +22,7 @@ export enum PassSlipStatus {
   FOR_HRMO_APPROVAL = 'for hrmo approval',
   FOR_SUPERVISOR_APPROVAL = 'for supervisor approval',
   FOR_DISPUTE = 'for dispute',
+  AWAITING_MEDICAL_CERTIFICATE = 'awaiting medical certificate',
+  APPROVED_WITH_MEDICAL_CERTIFICATE = 'approved with medical certificate',
+  APPROVED_WITHOUT_MEDICAL_CERTIFICATE = 'approved without medical certificate',
 }
