@@ -64,6 +64,8 @@ export const AllPassSlipListTab = ({ passslips, tab }: AllPassSlipListTabProps) 
                       ? 'ONGOING'
                       : item.status === PassSlipStatus.APPROVED
                       ? 'APPROVED'
+                      : item.status === PassSlipStatus.AWAITING_MEDICAL_CERTIFICATE
+                      ? 'AWAITING MEDICAL CERTIFICATE'
                       : item.status === PassSlipStatus.DISAPPROVED
                       ? 'DISAPPROVED'
                       : item.status === PassSlipStatus.CANCELLED
