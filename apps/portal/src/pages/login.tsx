@@ -1,3 +1,4 @@
+/* eslint-disable @nx/enforce-module-boundaries */
 import { useEffect, useState } from 'react';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { SubmitHandler, useForm } from 'react-hook-form';
@@ -21,6 +22,7 @@ import { CaptchaModal, OtpModal } from '@gscwd-apps/oneui';
 import { LoginOtpContents } from '../components/fixed/login/LoginOtpContents';
 import { useLoginStore } from '../store/login.store';
 import { LoginCaptcha } from '../components/fixed/login/LoginCaptcha';
+import { LoginInfo } from '../../../../libs/utils/src/lib/types/login.type';
 
 type LoginFormInput = {
   email: string;
@@ -52,6 +54,8 @@ export default function Login() {
     setOtpSuccess,
     captchaSuccess,
     setCaptchaSuccess,
+    failedFirstOtp,
+    setFailedFirstOtp,
   } = useLoginStore((state) => ({
     loginOtpModalIsOpen: state.loginOtpModalIsOpen,
     setLoginOtpModalIsOpen: state.setLoginOtpModalIsOpen,
@@ -61,6 +65,8 @@ export default function Login() {
     setOtpSuccess: state.setOtpSuccess,
     captchaSuccess: state.captchaSuccess,
     setCaptchaSuccess: state.setCaptchaSuccess,
+    failedFirstOtp: state.failedFirstOtp,
+    setFailedFirstOtp: state.setFailedFirstOtp,
   }));
 
   // set state for controlling the displaying of error status
@@ -73,7 +79,10 @@ export default function Login() {
   // set state for handling backend request loading status
   const [isLoading, setIsLoading] = useState(false);
   const [isShowPassword, seIsShowPassword] = useState(false);
-  const [userMobile, setUserMobile] = useState<string>(null);
+  const [loginInfo, setLoginInfo] = useState<LoginInfo>({
+    mobileNumber: '0',
+    shouldOtpOnLogin: false,
+  });
   const [userCredentials, setUserCredentials] = useState<LoginFormInput>({ email: '', password: '' });
 
   // initialize router
@@ -85,6 +94,7 @@ export default function Login() {
     handleSubmit,
     setFocus,
     getValues,
+    watch,
     formState: { errors },
   } = useForm<LoginFormInput>({ resolver: yupResolver(validationSchema) });
 
@@ -158,16 +168,24 @@ export default function Login() {
         setIsLoading(false);
       } else {
         //open OTP modal
-        setUserMobile(result);
-        setOtpSuccess(false);
-        setCaptchaSuccess(false);
-        setLoginOtpModalIsOpen(true);
+        setLoginInfo(result);
+        if (result.shouldOtpOnLogin) {
+          setOtpSuccess(false);
+          setCaptchaSuccess(false);
+          setLoginOtpModalIsOpen(true);
+        } else {
+          handleReload(credentials);
+        }
       }
     } else {
       //if otp is disabled, reload page directly with cookie
       handleReload(credentials);
     }
   };
+
+  useEffect(() => {
+    setFailedFirstOtp(false);
+  }, [watch('email')]);
 
   useEffect(() => {
     if (!loginOtpModalIsOpen && !otpSuccess && !loginCaptchaModalIsOpen && !captchaSuccess) {
@@ -205,7 +223,7 @@ export default function Login() {
   return (
     <>
       <OtpModal modalState={loginOtpModalIsOpen} setModalState={setLoginOtpModalIsOpen} title={'LOGIN OTP'}>
-        <LoginOtpContents mobile={userMobile} otpName={'LOGIN OTP'} />
+        <LoginOtpContents mobile={loginInfo.mobileNumber} otpName={'LOGIN OTP'} />
       </OtpModal>
       <CaptchaModal
         modalState={loginCaptchaModalIsOpen}
@@ -213,7 +231,7 @@ export default function Login() {
         title={'LOGIN CAPTCHA'}
       >
         {/* contents */}
-        <LoginCaptcha tokenId={userMobile} captchaName={'Login Captcha'} />
+        <LoginCaptcha tokenId={loginInfo.mobileNumber} captchaName={'Login Captcha'} />
       </CaptchaModal>
       <div className="absolute top-0 left-0 z-0 flex items-center justify-center w-full h-full overflow-hidden pointer-events-none opacity-10">
         <Image src={'/gwdlogo.png'} priority className="w-full md:w-2/4 " alt={''} width={'500'} height={'500'} />
