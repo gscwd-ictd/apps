@@ -27,6 +27,11 @@ const approvalAction: Array<SelectOption> = [
   { label: 'Disapprove', value: 'disapproved' },
 ];
 
+const medicalApprovalAction: Array<SelectOption> = [
+  { label: 'Approve', value: 'awaiting medical certificate' },
+  { label: 'Disapprove', value: 'disapproved' },
+];
+
 export const ApprovalsPendingPassSlipModal = ({
   modalState,
   setModalState,
@@ -76,7 +81,10 @@ export const ApprovalsPendingPassSlipModal = ({
 
   const onSubmit: SubmitHandler<passSlipAction> = (data: passSlipAction) => {
     setValue('passSlipId', passSlip.id);
-    if (data.status === 'approved' && passSlip.status === PassSlipStatus.FOR_SUPERVISOR_APPROVAL) {
+    if (
+      (data.status === 'approved' || data.status === 'awaiting medical certificate') &&
+      passSlip.status === PassSlipStatus.FOR_SUPERVISOR_APPROVAL
+    ) {
       setConfirmApplicationModalIsOpen(true);
     } else if (data.status === 'disapproved' && passSlip.status === PassSlipStatus.FOR_SUPERVISOR_APPROVAL) {
       setConfirmApplicationModalIsOpen(true);
@@ -136,7 +144,9 @@ export const ApprovalsPendingPassSlipModal = ({
                   alertType={
                     passSlip.status === PassSlipStatus.APPROVED ||
                     passSlip.status === PassSlipStatus.UNUSED ||
-                    passSlip.status === PassSlipStatus.USED
+                    passSlip.status === PassSlipStatus.USED ||
+                    passSlip.status === PassSlipStatus.APPROVED_WITHOUT_MEDICAL_CERTIFICATE ||
+                    passSlip.status === PassSlipStatus.APPROVED_WITH_MEDICAL_CERTIFICATE
                       ? 'success'
                       : passSlip.status === PassSlipStatus.DISAPPROVED ||
                         passSlip.status === PassSlipStatus.DISAPPROVED_BY_HRMO ||
@@ -144,7 +154,8 @@ export const ApprovalsPendingPassSlipModal = ({
                       ? 'error'
                       : passSlip.status === PassSlipStatus.FOR_SUPERVISOR_APPROVAL ||
                         passSlip.status === PassSlipStatus.FOR_HRMO_APPROVAL ||
-                        passSlip.status === PassSlipStatus.FOR_DISPUTE
+                        passSlip.status === PassSlipStatus.FOR_DISPUTE ||
+                        passSlip.status === PassSlipStatus.AWAITING_MEDICAL_CERTIFICATE
                       ? 'warning'
                       : 'info'
                   }
@@ -157,6 +168,12 @@ export const ApprovalsPendingPassSlipModal = ({
                       ? 'For HRMO Review'
                       : passSlip.status === PassSlipStatus.APPROVED
                       ? 'Approved'
+                      : passSlip.status === PassSlipStatus.AWAITING_MEDICAL_CERTIFICATE
+                      ? `Awaiting Medical Certificate`
+                      : passSlip.status === PassSlipStatus.APPROVED_WITHOUT_MEDICAL_CERTIFICATE
+                      ? `Approved without Medical Certificate`
+                      : passSlip.status === PassSlipStatus.APPROVED_WITH_MEDICAL_CERTIFICATE
+                      ? `Approved with Medical Certificate`
                       : passSlip.status === PassSlipStatus.DISAPPROVED
                       ? 'Disapproved'
                       : passSlip.status === PassSlipStatus.DISAPPROVED_BY_HRMO
@@ -265,7 +282,10 @@ export const ApprovalsPendingPassSlipModal = ({
 
                 <div className="flex flex-col justify-start items-start w-full sm:w-1/2 px-0.5 pb-3  ">
                   <label className="text-slate-500 text-md whitespace-nowrap pb-0.5 ">
-                    {passSlip.status === PassSlipStatus.APPROVED
+                    {passSlip.status === PassSlipStatus.APPROVED ||
+                    passSlip.status === PassSlipStatus.AWAITING_MEDICAL_CERTIFICATE ||
+                    passSlip.status === PassSlipStatus.APPROVED_WITHOUT_MEDICAL_CERTIFICATE ||
+                    passSlip.status === PassSlipStatus.APPROVED_WITH_MEDICAL_CERTIFICATE
                       ? `Date Approved:`
                       : passSlip.status === PassSlipStatus.DISAPPROVED
                       ? 'Date Disapproved:'
@@ -279,7 +299,10 @@ export const ApprovalsPendingPassSlipModal = ({
 
                   <div className="w-auto ml-5">
                     <label className=" text-md font-medium">
-                      {passSlip.status === PassSlipStatus.APPROVED
+                      {passSlip.status === PassSlipStatus.APPROVED ||
+                      passSlip.status === PassSlipStatus.AWAITING_MEDICAL_CERTIFICATE ||
+                      passSlip.status === PassSlipStatus.APPROVED_WITHOUT_MEDICAL_CERTIFICATE ||
+                      passSlip.status === PassSlipStatus.APPROVED_WITH_MEDICAL_CERTIFICATE
                         ? DateTimeFormatter(passSlip.supervisorApprovalDate)
                         : passSlip.status === PassSlipStatus.DISAPPROVED
                         ? DateTimeFormatter(passSlip.supervisorApprovalDate)
@@ -315,7 +338,10 @@ export const ApprovalsPendingPassSlipModal = ({
                 ) : null}
               </div>
 
-              {passSlip.status != PassSlipStatus.APPROVED ? (
+              {passSlip.status != PassSlipStatus.APPROVED &&
+              passSlip.status != PassSlipStatus.AWAITING_MEDICAL_CERTIFICATE &&
+              passSlip.status != PassSlipStatus.APPROVED_WITHOUT_MEDICAL_CERTIFICATE &&
+              passSlip.status != PassSlipStatus.APPROVED_WITH_MEDICAL_CERTIFICATE ? (
                 <form id="PassSlipAction" onSubmit={handleSubmit(onSubmit)}>
                   <div className="w-full flex flex-col md:flex-row gap-1 md:gap-2 justify-end items-start md:items-center">
                     <span className="text-slate-500 text-md">Action:</span>
@@ -329,11 +355,17 @@ export const ApprovalsPendingPassSlipModal = ({
                       <option value="" disabled>
                         Select Action
                       </option>
-                      {approvalAction.map((item: SelectOption, idx: number) => (
-                        <option value={item.value} key={idx}>
-                          {item.label}
-                        </option>
-                      ))}
+                      {passSlip.natureOfBusiness == NatureOfBusiness.PERSONAL_BUSINESS && passSlip.isMedical
+                        ? medicalApprovalAction.map((item: SelectOption, idx: number) => (
+                            <option value={item.value} key={idx}>
+                              {item.label}
+                            </option>
+                          ))
+                        : approvalAction.map((item: SelectOption, idx: number) => (
+                            <option value={item.value} key={idx}>
+                              {item.label}
+                            </option>
+                          ))}
                     </select>
                   </div>
                 </form>
@@ -404,7 +436,10 @@ export const ApprovalsPendingPassSlipModal = ({
         <Modal.Footer>
           <div className="flex justify-end gap-2 px-4">
             <div className="w-full flex justify-end">
-              {passSlip.status != PassSlipStatus.APPROVED ? (
+              {passSlip.status != PassSlipStatus.APPROVED &&
+              passSlip.status != PassSlipStatus.AWAITING_MEDICAL_CERTIFICATE &&
+              passSlip.status != PassSlipStatus.APPROVED_WITHOUT_MEDICAL_CERTIFICATE &&
+              passSlip.status != PassSlipStatus.APPROVED_WITH_MEDICAL_CERTIFICATE ? (
                 <Button variant={'primary'} size={'md'} loading={false} form="PassSlipAction" type="submit">
                   Submit
                 </Button>

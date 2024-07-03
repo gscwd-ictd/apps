@@ -70,39 +70,46 @@ export const CancelLeaveModal = ({ modalState, setModalState, closeModalAction }
       //loop through each leave date
       for (let i = 0; i < leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveDates.length; i++) {
         //add leave date without any checker if there's a time log or not
-        leaveDates.push({
-          label: leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveDates[i],
-          value: leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveDates[i],
-        });
+        // leaveDates.push({
+        //   label: leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveDates[i],
+        //   value: leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveDates[i],
+        // });
 
-        // const dtrTrest = async () => {
-        //   const timeLogs: EmployeeDtrWithSchedule = await getDailyDtr(
-        //     leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveDates[i]
-        //   );
+        //leave date checker if there's timelogs or not
+        const dtrTrest = async () => {
+          const timeLogs: EmployeeDtrWithSchedule = await getDailyDtr(
+            leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveDates[i]
+          );
 
-        //   //check if there's a time in or time out
-        //   if ((timeLogs.dtr.timeIn || timeLogs.dtr.timeOut) && timeLogs.leaveDateStatus === LeaveDateStatus.APPROVED) {
-        //     //add leave date to selection array
-        //     leaveDates.push({
-        //       label: leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveDates[i],
-        //       value: leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveDates[i],
-        //     });
-        //   } else if (timeLogs.holidayType === HolidayTypes.REGULAR) {
-        //     //do not add leave date to selectable dates for cancellation
-        //   }
-        //   //check if date is future
-        //   else if (
-        //     DateFormatter(leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveDates[i], 'MM-DD-YYYY') >=
-        //     dayjs(dayjs().toDate().toDateString()).format('MM-DD-YYYY')
-        //   ) {
-        //     //add leave date to selection array
-        //     leaveDates.push({
-        //       label: leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveDates[i],
-        //       value: leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveDates[i],
-        //     });
-        //   }
-        // };
-        // dtrTrest();
+          //check if there's a time in or time out
+          if (
+            timeLogs &&
+            (timeLogs.dtr.timeIn || timeLogs.dtr.timeOut) &&
+            timeLogs.leaveDateStatus === LeaveDateStatus.APPROVED
+          ) {
+            //add leave date to selection array
+            leaveDates.push({
+              label: leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveDates[i],
+              value: leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveDates[i],
+            });
+          } else if (timeLogs && timeLogs.holidayType === HolidayTypes.REGULAR) {
+            //do not add leave date to selectable dates for cancellation
+          }
+          //check if date is future
+          else if (
+            DateFormatter(leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveDates[i], 'MM-DD-YYYY') >=
+            dayjs(dayjs().toDate().toDateString()).format('MM-DD-YYYY')
+          ) {
+            //add leave date to selection array
+            leaveDates.push({
+              label: leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveDates[i],
+              value: leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveDates[i],
+            });
+          } else {
+            //
+          }
+        };
+        dtrTrest();
       }
     }
     setLeaveDates(leaveDates);

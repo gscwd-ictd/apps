@@ -178,6 +178,11 @@ export default function PassSlipApprovals({ employeeDetails }: InferGetServerSid
       if (!disputedPassSlipModalIsOpen) {
         setDisputedPassSlipModalIsOpen(true);
       }
+    } else if (rowData.status == PassSlipStatus.AWAITING_MEDICAL_CERTIFICATE) {
+      // AWAITING MEDICAL CERT - CONSIDERED APPROVED
+      if (!approvedPassSlipModalIsOpen) {
+        setApprovedPassSlipModalIsOpen(true);
+      }
     } else {
       if (!approvedPassSlipModalIsOpen) {
         setApprovedPassSlipModalIsOpen(true);

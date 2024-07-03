@@ -41,6 +41,7 @@ export const LoginOtpContents: FunctionComponent<OtpProps> = ({ mobile, otpName,
     setLoginOtpModalIsOpen,
     loginCaptchaModalIsOpen,
     setLoginCaptchaModalIsOpen,
+    setLoginOptionsModalIsOpen,
     setOtpSuccess,
     failedFirstOtp,
     setFailedFirstOtp,
@@ -49,6 +50,7 @@ export const LoginOtpContents: FunctionComponent<OtpProps> = ({ mobile, otpName,
     setLoginOtpModalIsOpen: state.setLoginOtpModalIsOpen,
     loginCaptchaModalIsOpen: state.loginCaptchaModalIsOpen,
     setLoginCaptchaModalIsOpen: state.setLoginCaptchaModalIsOpen,
+    setLoginOptionsModalIsOpen: state.setLoginOptionsModalIsOpen,
     setOtpSuccess: state.setOtpSuccess,
     failedFirstOtp: state.failedFirstOtp,
     setFailedFirstOtp: state.setFailedFirstOtp,
@@ -84,12 +86,12 @@ export const LoginOtpContents: FunctionComponent<OtpProps> = ({ mobile, otpName,
   }, [isSendOtpLoading]);
 
   //OPEN CAPTCHA
-  function handleCaptcha() {
-    setLoginCaptchaModalIsOpen(true); //opens captcha modal
-    setTimeout(() => {
-      setLoginOtpModalIsOpen(false); //then close OTP  modal
-    }, 200);
-  }
+  // function handleCaptcha() {
+  //   setLoginCaptchaModalIsOpen(true); //opens captcha modal
+  //   setTimeout(() => {
+  //     setLoginOtpModalIsOpen(false); //then close OTP  modal
+  //   }, 200);
+  // }
 
   //COMPUTATION OF TIME REMAINING FOR OTP - GET FROM COMPONENT
   useEffect(() => {
@@ -147,6 +149,7 @@ export const LoginOtpContents: FunctionComponent<OtpProps> = ({ mobile, otpName,
     setOtpCode(''); //clears input field
     if (isSubmitLoading == false) {
       setLoginOtpModalIsOpen(false);
+      setLoginOptionsModalIsOpen(true);
     }
   };
 
@@ -155,6 +158,8 @@ export const LoginOtpContents: FunctionComponent<OtpProps> = ({ mobile, otpName,
     e.preventDefault();
     setLoginOtpModalIsOpen(false);
     setTimeout(() => {
+      setLoginCaptchaModalIsOpen(false);
+      setLoginOptionsModalIsOpen(false);
       setOtpSuccess(true);
     }, 100);
   };
@@ -216,17 +221,19 @@ export const LoginOtpContents: FunctionComponent<OtpProps> = ({ mobile, otpName,
                     failedFirstOtp ? 'RESEND CODE' : 'SEND CODE'
                   }`}</label>
                 </button>
+                {/* 
                 {failedFirstOtp ? (
-                  <button
-                    disabled={isSubmitLoading == true ? true : false}
-                    className={`${
-                      isSubmitLoading == true ? 'cursor-not-allowed' : ''
-                    } mb-2 text-white bg-green-500 h-10 transition-all rounded hover:bg-green-600 active:bg-green-600 outline-indigo-green w-56`}
-                    onClick={() => handleCaptcha()}
-                  >
-                    <label className="font-bold cursor-pointer">{`USE CAPTCHA`}</label>
-                  </button>
+                <button
+                  disabled={isSubmitLoading == true ? true : false}
+                  className={`${
+                    isSubmitLoading == true ? 'cursor-not-allowed' : ''
+                  } mb-2 text-white bg-green-500 h-10 transition-all rounded hover:bg-green-600 active:bg-green-600 outline-indigo-green w-56`}
+                  onClick={() => handleCaptcha()}
+                >
+                  <label className="font-bold cursor-pointer">{`USE CAPTCHA`}</label>
+                </button>
                 ) : null}
+                 */}
               </>
             )}
             {isSendOtpLoading ? (
@@ -293,7 +300,7 @@ export const LoginOtpContents: FunctionComponent<OtpProps> = ({ mobile, otpName,
               }  mb-2 text-white bg-red-500 h-10 transition-all rounded hover:bg-red-600 active:bg-red-600 outline-red-500 w-56`}
               onClick={(e) => handleCancel(e)}
             >
-              <label className="font-bold cursor-pointer">CANCEL OTP</label>
+              <label className="font-bold cursor-pointer">CANCEL</label>
             </button>
           </div>
         </>

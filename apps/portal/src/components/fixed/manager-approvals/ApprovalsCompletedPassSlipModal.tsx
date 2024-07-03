@@ -60,7 +60,9 @@ export const ApprovalsCompletedPassSlipModal = ({
                   alertType={
                     passSlip.status === PassSlipStatus.APPROVED ||
                     passSlip.status === PassSlipStatus.UNUSED ||
-                    passSlip.status === PassSlipStatus.USED
+                    passSlip.status === PassSlipStatus.USED ||
+                    passSlip.status === PassSlipStatus.APPROVED_WITHOUT_MEDICAL_CERTIFICATE ||
+                    passSlip.status === PassSlipStatus.APPROVED_WITH_MEDICAL_CERTIFICATE
                       ? 'success'
                       : passSlip.status === PassSlipStatus.DISAPPROVED ||
                         passSlip.status === PassSlipStatus.DISAPPROVED_BY_HRMO ||
@@ -68,7 +70,8 @@ export const ApprovalsCompletedPassSlipModal = ({
                       ? 'error'
                       : passSlip.status === PassSlipStatus.FOR_SUPERVISOR_APPROVAL ||
                         passSlip.status === PassSlipStatus.FOR_HRMO_APPROVAL ||
-                        passSlip.status === PassSlipStatus.FOR_DISPUTE
+                        passSlip.status === PassSlipStatus.FOR_DISPUTE ||
+                        passSlip.status === PassSlipStatus.AWAITING_MEDICAL_CERTIFICATE
                       ? 'warning'
                       : 'info'
                   }
@@ -81,14 +84,13 @@ export const ApprovalsCompletedPassSlipModal = ({
                       ? 'For HRMO Review'
                       : passSlip.status === PassSlipStatus.APPROVED
                       ? `Approved`
-                      : // ${
-                      //   GetDateDifference(
-                      //     `${dayjs(passSlip.dateOfApplication).format('YYYY-MM-DD')} 00:00:00`,
-                      //     `${dayjs().format('YYYY-MM-DD HH:mm:ss')} `
-                      //   ).days
-                      // } days ago
-
-                      passSlip.status === PassSlipStatus.DISAPPROVED
+                      : passSlip.status === PassSlipStatus.AWAITING_MEDICAL_CERTIFICATE
+                      ? `Awaiting Medical Certificate`
+                      : passSlip.status === PassSlipStatus.APPROVED_WITHOUT_MEDICAL_CERTIFICATE
+                      ? `Approved without Medical Certificate`
+                      : passSlip.status === PassSlipStatus.APPROVED_WITH_MEDICAL_CERTIFICATE
+                      ? `Approved with Medical Certificate`
+                      : passSlip.status === PassSlipStatus.DISAPPROVED
                       ? 'Disapproved'
                       : passSlip.status === PassSlipStatus.DISAPPROVED_BY_HRMO
                       ? 'Disapproved by HRMO'
@@ -203,7 +205,10 @@ export const ApprovalsCompletedPassSlipModal = ({
 
                 <div className="flex flex-col justify-start items-start w-full sm:w-1/2 px-0.5 pb-3  ">
                   <label className="text-slate-500 text-md whitespace-nowrap pb-0.5 ">
-                    {passSlip.status === PassSlipStatus.APPROVED
+                    {passSlip.status === PassSlipStatus.APPROVED ||
+                    passSlip.status === PassSlipStatus.AWAITING_MEDICAL_CERTIFICATE ||
+                    passSlip.status === PassSlipStatus.APPROVED_WITHOUT_MEDICAL_CERTIFICATE ||
+                    passSlip.status === PassSlipStatus.APPROVED_WITH_MEDICAL_CERTIFICATE
                       ? `Date Approved:`
                       : passSlip.status === PassSlipStatus.DISAPPROVED
                       ? 'Date Disapproved:'
@@ -217,7 +222,10 @@ export const ApprovalsCompletedPassSlipModal = ({
 
                   <div className="w-auto ml-5">
                     <label className=" text-md font-medium">
-                      {passSlip.status === PassSlipStatus.APPROVED
+                      {passSlip.status === PassSlipStatus.APPROVED ||
+                      passSlip.status === PassSlipStatus.AWAITING_MEDICAL_CERTIFICATE ||
+                      passSlip.status === PassSlipStatus.APPROVED_WITHOUT_MEDICAL_CERTIFICATE ||
+                      passSlip.status === PassSlipStatus.APPROVED_WITH_MEDICAL_CERTIFICATE
                         ? DateTimeFormatter(passSlip.supervisorApprovalDate)
                         : passSlip.status === PassSlipStatus.DISAPPROVED
                         ? DateTimeFormatter(passSlip.supervisorApprovalDate)
@@ -258,7 +266,10 @@ export const ApprovalsCompletedPassSlipModal = ({
         <Modal.Footer>
           <div className="flex justify-end gap-2 px-4">
             <div className="w-full justify-end flex gap-2">
-              {passSlip.status === PassSlipStatus.APPROVED ? (
+              {passSlip.status === PassSlipStatus.APPROVED ||
+              passSlip.status === PassSlipStatus.AWAITING_MEDICAL_CERTIFICATE ||
+              passSlip.status === PassSlipStatus.APPROVED_WITHOUT_MEDICAL_CERTIFICATE ||
+              passSlip.status === PassSlipStatus.APPROVED_WITH_MEDICAL_CERTIFICATE ? (
                 passSlip.natureOfBusiness !== NatureOfBusiness.HALF_DAY &&
                 passSlip.natureOfBusiness !== NatureOfBusiness.UNDERTIME &&
                 // &&

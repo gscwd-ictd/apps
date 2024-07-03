@@ -4,6 +4,9 @@ import { create } from 'zustand';
 import { devtools } from 'zustand/middleware';
 
 export type LoginState = {
+  loginOptionsModalIsOpen: boolean;
+  setLoginOptionsModalIsOpen: (loginOptionsModalIsOpen: boolean) => void;
+
   loginOtpModalIsOpen: boolean;
   setLoginOtpModalIsOpen: (loginOtpModalIsOpen: boolean) => void;
 
@@ -22,6 +25,11 @@ export type LoginState = {
 
 export const useLoginStore = create<LoginState>()(
   devtools((set) => ({
+    loginOptionsModalIsOpen: false,
+    setLoginOptionsModalIsOpen: (loginOptionsModalIsOpen: boolean) => {
+      set((state) => ({ ...state, loginOptionsModalIsOpen }));
+    },
+
     loginOtpModalIsOpen: false,
     setLoginOtpModalIsOpen: (loginOtpModalIsOpen: boolean) => {
       set((state) => ({ ...state, loginOtpModalIsOpen }));

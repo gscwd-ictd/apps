@@ -304,6 +304,8 @@ export const ConfirmationApprovalModal = ({
                 Are you sure you want to{' '}
                 {actionPassSlip === PassSlipStatus.APPROVED ? (
                   'approve'
+                ) : actionPassSlip === PassSlipStatus.AWAITING_MEDICAL_CERTIFICATE ? (
+                  'approve (with Awaiting Medical Certificate Status)'
                 ) : actionPassSlip === PassSlipStatus.DISAPPROVED ? (
                   <label className="text-red-600">disapprove</label>
                 ) : actionPassSlip === PassSlipStatus.CANCELLED ? (
