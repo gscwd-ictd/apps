@@ -23,9 +23,10 @@ dayjs.extend(duration);
 
 type EmployeeDtrTableProps = {
   employeeData: EmployeeWithDetails;
+  companyId: string;
 };
 
-export const EmployeeDtrTable: FunctionComponent<EmployeeDtrTableProps> = ({ employeeData }) => {
+export const EmployeeDtrTable: FunctionComponent<EmployeeDtrTableProps> = ({ employeeData, companyId }) => {
   // Edit modal function
   const [currentRowData, setCurrentRowData] = useState<EmployeeDtrWithSchedule>({} as EmployeeDtrWithSchedule);
 
@@ -171,6 +172,7 @@ export const EmployeeDtrTable: FunctionComponent<EmployeeDtrTableProps> = ({ emp
         setModalState={setEditModalIsOpen}
         closeModalAction={closeEditActionModal}
         rowData={currentRowData}
+        companyId={companyId}
       />
 
       <EditRemarksModal

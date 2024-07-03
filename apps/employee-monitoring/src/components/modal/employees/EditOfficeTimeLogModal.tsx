@@ -16,7 +16,8 @@ type EditDailySchedModalProps = {
   modalState: boolean;
   setModalState: Dispatch<SetStateAction<boolean>>;
   closeModalAction: () => void;
-  rowData: EmployeeDtrWithSchedule; // TBD
+  rowData: EmployeeDtrWithSchedule;
+  companyId: string;
 };
 
 enum KEYS {
@@ -33,6 +34,7 @@ const EditOfficeTimeLogModal: FunctionComponent<EditDailySchedModalProps> = ({
   setModalState,
   closeModalAction,
   rowData,
+  companyId,
 }) => {
   const {
     setValue,
@@ -124,7 +126,7 @@ const EditOfficeTimeLogModal: FunctionComponent<EditDailySchedModalProps> = ({
       shift: rowData.schedule.shift,
     });
 
-    setValue('companyId', rowData.companyId);
+    setValue('companyId', companyId);
     setValue('dtrDate', rowData.day);
     setValue('timeIn', removeSeconds(rowData.dtr.timeIn));
     setValue('timeOut', removeSeconds(rowData.dtr.timeOut));

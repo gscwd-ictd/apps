@@ -240,7 +240,7 @@ export default function Index({ employeeData }: InferGetServerSidePropsType<type
                 />
 
                 {/* EMPLOYEE DTR TABLE */}
-                <EmployeeDtrTable employeeData={employeeData} />
+                <EmployeeDtrTable employeeData={employeeData} companyId={employeeData.companyId} />
               </Can>
             </Card>
 

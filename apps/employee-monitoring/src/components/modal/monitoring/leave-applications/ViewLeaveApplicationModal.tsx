@@ -571,6 +571,42 @@ const ViewLeaveApplicationModal: FunctionComponent<ViewLeaveApplicationModalProp
                                   {rowData.status === LeaveStatus.FOR_HRMO_CREDIT_CERTIFICATION ||
                                   rowData.status === LeaveStatus.FOR_SUPERVISOR_APPROVAL ||
                                   rowData.status === LeaveStatus.FOR_HRDM_APPROVAL
+                                    ? parseFloat(
+                                        `${leaveLedger[leaveLedger.length - 1]?.vacationLeaveBalance}`
+                                      ).toFixed(3)
+                                    : (
+                                        parseFloat(`${selectedLeaveLedger[0]?.vacationLeaveBalance}`) +
+                                        parseFloat(`${selectedLeaveLedger[0]?.vacationLeave}`) * -1
+                                      ).toFixed(3)}
+                                </td>
+
+                                <td className="border border-slate-400 text-center">
+                                  {rowData.leaveDates?.length.toFixed(3)}
+                                </td>
+
+                                <td className="border border-slate-400 text-center bg-green-100">
+                                  {rowData.status === LeaveStatus.FOR_HRMO_CREDIT_CERTIFICATION ||
+                                  rowData.status === LeaveStatus.FOR_SUPERVISOR_APPROVAL ||
+                                  rowData.status === LeaveStatus.FOR_HRDM_APPROVAL
+                                    ? (
+                                        parseFloat(`${leaveLedger[leaveLedger.length - 1]?.vacationLeaveBalance}`) +
+                                        parseFloat(`${leaveLedger[leaveLedger.length - 1]?.forcedLeaveBalance}`) -
+                                        parseFloat(`${rowData.leaveDates?.length}`)
+                                      ).toFixed(3)
+                                    : (
+                                        parseFloat(`${selectedLeaveLedger[0]?.vacationLeaveBalance}`) -
+                                        parseFloat(`${rowData.leaveDates?.length}`)
+                                      ).toFixed(3)}
+                                </td>
+                              </tr>
+                            ) : null}
+
+                            {/* {rowData.leaveName === LeaveName.VACATION || rowData.leaveName === LeaveName.FORCED ? (
+                              <tr className="border border-slate-400">
+                                <td className="border border-slate-400 text-center">
+                                  {rowData.status === LeaveStatus.FOR_HRMO_CREDIT_CERTIFICATION ||
+                                  rowData.status === LeaveStatus.FOR_SUPERVISOR_APPROVAL ||
+                                  rowData.status === LeaveStatus.FOR_HRDM_APPROVAL
                                     ? (
                                         parseFloat(`${leaveLedger[leaveLedger.length - 1]?.vacationLeaveBalance}`) +
                                         parseFloat(`${leaveLedger[leaveLedger.length - 1]?.forcedLeaveBalance}`)
@@ -600,7 +636,7 @@ const ViewLeaveApplicationModal: FunctionComponent<ViewLeaveApplicationModalProp
                                       ).toFixed(3)}
                                 </td>
                               </tr>
-                            ) : null}
+                            ) : null} */}
 
                             {/* SICK */}
                             {rowData.leaveName === LeaveName.SICK ? (
