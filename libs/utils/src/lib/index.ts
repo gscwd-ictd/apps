@@ -13,6 +13,7 @@ export * from './enums/text-size.enum';
 export * from './enums/announcements.enum';
 export * from './types/employee.type';
 export * from './types/event.type';
+export * from './types/login.type';
 export * from './types/leave-application.type';
 export * from './types/leave-benefits.type';
 export * from './types/pass-slip.type';
