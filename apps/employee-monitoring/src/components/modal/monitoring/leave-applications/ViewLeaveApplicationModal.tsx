@@ -589,8 +589,7 @@ const ViewLeaveApplicationModal: FunctionComponent<ViewLeaveApplicationModalProp
                                   rowData.status === LeaveStatus.FOR_SUPERVISOR_APPROVAL ||
                                   rowData.status === LeaveStatus.FOR_HRDM_APPROVAL
                                     ? (
-                                        parseFloat(`${leaveLedger[leaveLedger.length - 1]?.vacationLeaveBalance}`) +
-                                        parseFloat(`${leaveLedger[leaveLedger.length - 1]?.forcedLeaveBalance}`) -
+                                        parseFloat(`${leaveLedger[leaveLedger.length - 1]?.vacationLeaveBalance}`) -
                                         parseFloat(`${rowData.leaveDates?.length}`)
                                       ).toFixed(3)
                                     : (
