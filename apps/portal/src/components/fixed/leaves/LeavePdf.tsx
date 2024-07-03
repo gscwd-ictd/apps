@@ -887,10 +887,12 @@ export const LeavePdf = ({ employeeDetails, leaveDetails, selectedLeaveLedger }:
                               <Text>
                                 {(
                                   parseFloat(`${selectedLeaveLedger[0]?.vacationLeaveBalance}`) +
-                                  parseFloat(`${selectedLeaveLedger[0]?.vacationLeave}`) * -1 +
-                                  (parseFloat(`${selectedLeaveLedger[0]?.forcedLeaveBalance}`) +
-                                    parseFloat(`${selectedLeaveLedger[0]?.forcedLeave}`) * -1)
-                                ).toFixed(3)}
+                                  parseFloat(`${selectedLeaveLedger[0]?.vacationLeave}`) * -1
+                                )
+                                  // +
+                                  // (parseFloat(`${selectedLeaveLedger[0]?.forcedLeaveBalance}`) +
+                                  //   parseFloat(`${selectedLeaveLedger[0]?.forcedLeave}`) * -1)
+                                  .toFixed(3)}
                               </Text>
                             </View>
                             <View style={styles.containerTableRow2}>
@@ -929,10 +931,10 @@ export const LeavePdf = ({ employeeDetails, leaveDetails, selectedLeaveLedger }:
                             </View>
                             <View style={styles.containerTableRow}>
                               <Text>
-                                {(
-                                  parseFloat(`${selectedLeaveLedger[0]?.vacationLeaveBalance}`) +
-                                  parseFloat(`${selectedLeaveLedger[0]?.forcedLeaveBalance}`)
-                                ).toFixed(3)}
+                                {parseFloat(`${selectedLeaveLedger[0]?.vacationLeaveBalance}`)
+                                  // +
+                                  // parseFloat(`${selectedLeaveLedger[0]?.forcedLeaveBalance}`)
+                                  .toFixed(3)}
                               </Text>
                             </View>
                             <View style={styles.containerTableRow2}>
