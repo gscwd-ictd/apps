@@ -754,7 +754,21 @@ export const DtrPdf: FunctionComponent<DtrPdfProps> = ({ employeeData, employeeD
 
                     {/* DATE/S HALF DAY */}
                     <View style={[styles.tableData, styles.w12]}>
-                      <Text style={[styles.tableDataText]}>-</Text>
+                      <Text style={[styles.tableDataText]}>
+                        {employeeDtr?.summary?.halfDayDates && employeeDtr?.summary?.halfDayDates.length > 0
+                          ? employeeDtr?.summary?.halfDayDates.map((day, index) => {
+                              return (
+                                <Text key={index}>
+                                  {index === employeeDtr?.summary?.halfDayDates.length - 1 ? (
+                                    <Text>{day}</Text>
+                                  ) : (
+                                    <Text>{day}, </Text>
+                                  )}
+                                </Text>
+                              );
+                            })
+                          : '-'}
+                      </Text>
                     </View>
 
                     {/* NO ATTENDANCE */}

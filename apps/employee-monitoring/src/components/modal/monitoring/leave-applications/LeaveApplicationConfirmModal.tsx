@@ -13,9 +13,12 @@ type LeaveApplicationConfirmModalProps = {
   action: 'approve' | 'disapprove';
 };
 
-const LeaveApplicationConfirmModal: FunctionComponent<
-  LeaveApplicationConfirmModalProps
-> = ({ modalState, closeModalAction, setModalState, action }) => {
+const LeaveApplicationConfirmModal: FunctionComponent<LeaveApplicationConfirmModalProps> = ({
+  modalState,
+  closeModalAction,
+  setModalState,
+  action,
+}) => {
   const { setLeaveConfirmAction } = useLeaveApplicationStore((state) => ({
     setLeaveConfirmAction: state.setLeaveConfirmAction,
   }));
@@ -36,14 +39,10 @@ const LeaveApplicationConfirmModal: FunctionComponent<
     <>
       <Modal open={modalState} setOpen={setModalState} size="xs" steady>
         <Modal.Header>
-          <div className="px-5 text-2xl font-medium text-gray-700">
-            Confirmation
-          </div>
+          <div className="px-5 text-2xl font-medium text-gray-700">Confirmation</div>
         </Modal.Header>
         <Modal.Body>
-          <div className="px-5 text-gray-800">
-            Do you want to {action} this leave application?
-          </div>
+          <div className="px-5 text-gray-800">Do you want to {action} this leave application?</div>
         </Modal.Body>
         <Modal.Footer>
           <div className="flex justify-end w-full gap-2">
