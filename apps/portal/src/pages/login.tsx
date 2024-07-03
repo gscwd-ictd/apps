@@ -23,6 +23,7 @@ import { LoginOtpContents } from '../components/fixed/login/LoginOtpContents';
 import { useLoginStore } from '../store/login.store';
 import { LoginCaptcha } from '../components/fixed/login/LoginCaptcha';
 import { LoginInfo } from '../../../../libs/utils/src/lib/types/login.type';
+import { LoginOptions } from '../components/fixed/login/LoginOptions';
 
 type LoginFormInput = {
   email: string;
@@ -50,6 +51,8 @@ export default function Login() {
     setLoginOtpModalIsOpen,
     loginCaptchaModalIsOpen,
     setLoginCaptchaModalIsOpen,
+    loginOptionsModalIsOpen,
+    setLoginOptionsModalIsOpen,
     otpSuccess,
     setOtpSuccess,
     captchaSuccess,
@@ -61,6 +64,8 @@ export default function Login() {
     setLoginOtpModalIsOpen: state.setLoginOtpModalIsOpen,
     loginCaptchaModalIsOpen: state.loginCaptchaModalIsOpen,
     setLoginCaptchaModalIsOpen: state.setLoginCaptchaModalIsOpen,
+    loginOptionsModalIsOpen: state.loginOptionsModalIsOpen,
+    setLoginOptionsModalIsOpen: state.setLoginOptionsModalIsOpen,
     otpSuccess: state.otpSuccess,
     setOtpSuccess: state.setOtpSuccess,
     captchaSuccess: state.captchaSuccess,
@@ -169,13 +174,13 @@ export default function Login() {
       } else {
         //open OTP modal
         setLoginInfo(result);
-        if (result.shouldOtpOnLogin) {
-          setOtpSuccess(false);
-          setCaptchaSuccess(false);
-          setLoginOtpModalIsOpen(true);
-        } else {
-          handleReload(credentials);
-        }
+        // if (result.shouldOtpOnLogin) {
+        setOtpSuccess(false);
+        setCaptchaSuccess(false);
+        setLoginOptionsModalIsOpen(true);
+        // } else {
+        //   handleReload(credentials);
+        // }
       }
     } else {
       //if otp is disabled, reload page directly with cookie
@@ -188,12 +193,18 @@ export default function Login() {
   }, [watch('email')]);
 
   useEffect(() => {
-    if (!loginOtpModalIsOpen && !otpSuccess && !loginCaptchaModalIsOpen && !captchaSuccess) {
+    if (
+      !loginOtpModalIsOpen &&
+      !otpSuccess &&
+      !loginCaptchaModalIsOpen &&
+      !captchaSuccess &&
+      !loginOptionsModalIsOpen
+    ) {
       setIsLoading(false);
     } else {
       setIsLoading(true);
     }
-  }, [loginOtpModalIsOpen, otpSuccess, loginCaptchaModalIsOpen, captchaSuccess]);
+  }, [loginOtpModalIsOpen, otpSuccess, loginCaptchaModalIsOpen, captchaSuccess, loginOptionsModalIsOpen]);
 
   //run reload function if otpSuccess is true
   useEffect(() => {
@@ -222,6 +233,9 @@ export default function Login() {
 
   return (
     <>
+      <OtpModal modalState={loginOptionsModalIsOpen} setModalState={setLoginOptionsModalIsOpen} title={'LOGIN OPTIONS'}>
+        <LoginOptions />
+      </OtpModal>
       <OtpModal modalState={loginOtpModalIsOpen} setModalState={setLoginOtpModalIsOpen} title={'LOGIN OTP'}>
         <LoginOtpContents mobile={loginInfo.mobileNumber} otpName={'LOGIN OTP'} />
       </OtpModal>

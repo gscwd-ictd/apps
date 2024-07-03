@@ -33,18 +33,30 @@ export const LoginCaptcha: FunctionComponent<CaptchaProps> = ({ tokenId, captcha
     }
   };
 
-  const { setLoginOtpModalIsOpen, loginCaptchaModalIsOpen, setLoginCaptchaModalIsOpen, setCaptchaSuccess } =
-    useLoginStore((state) => ({
-      setLoginOtpModalIsOpen: state.setLoginOtpModalIsOpen,
-      loginCaptchaModalIsOpen: state.loginCaptchaModalIsOpen,
-      setLoginCaptchaModalIsOpen: state.setLoginCaptchaModalIsOpen,
-      setCaptchaSuccess: state.setCaptchaSuccess,
-    }));
+  const {
+    setLoginOtpModalIsOpen,
+    loginCaptchaModalIsOpen,
+    setLoginCaptchaModalIsOpen,
+    setLoginOptionsModalIsOpen,
+    setCaptchaSuccess,
+  } = useLoginStore((state) => ({
+    setLoginOtpModalIsOpen: state.setLoginOtpModalIsOpen,
+    loginCaptchaModalIsOpen: state.loginCaptchaModalIsOpen,
+    setLoginCaptchaModalIsOpen: state.setLoginCaptchaModalIsOpen,
+    setLoginOptionsModalIsOpen: state.setLoginOptionsModalIsOpen,
+    setCaptchaSuccess: state.setCaptchaSuccess,
+  }));
 
   useEffect(() => {
-    setIsCaptchaError(false);
-    setPassword('');
-    setPwdArray([]);
+    if (loginCaptchaModalIsOpen) {
+      setTimeout(() => {
+        getCaptcha();
+      }, 200);
+    } else {
+      setIsCaptchaError(false);
+      setPassword('');
+      setPwdArray([]);
+    }
   }, [loginCaptchaModalIsOpen]);
 
   //CLOSE FUNCTION FOR COMPLETED CAPTCHA
@@ -52,15 +64,16 @@ export const LoginCaptcha: FunctionComponent<CaptchaProps> = ({ tokenId, captcha
     setLoginCaptchaModalIsOpen(false); //close captcha modal first
     setTimeout(() => {
       setLoginOtpModalIsOpen(false); //then close OTP  modal
+      setLoginOptionsModalIsOpen(false);
       setCaptchaSuccess(true);
     }, 100);
   };
 
-  //CANCEL CAPTCHA FUNCTION FOR COMPLETED CAPTCHA
+  //CANCEL CAPTCHA
   const handleCancelCaptcha = () => {
     setLoginCaptchaModalIsOpen(false); //close captcha modal first
     setTimeout(() => {
-      setLoginOtpModalIsOpen(true); //then open OTP  modal back
+      setLoginOptionsModalIsOpen(true); //then open OTP  modal back
     }, 100);
   };
 
@@ -104,6 +117,7 @@ export const LoginCaptcha: FunctionComponent<CaptchaProps> = ({ tokenId, captcha
           </div>
 
           <input
+            autoFocus
             type="text"
             value={password}
             placeholder="Enter Captcha"

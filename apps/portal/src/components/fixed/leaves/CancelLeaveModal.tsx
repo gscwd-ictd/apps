@@ -75,20 +75,24 @@ export const CancelLeaveModal = ({ modalState, setModalState, closeModalAction }
         //   value: leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveDates[i],
         // });
 
-        //leave date checker
+        //leave date checker if there's timelogs or not
         const dtrTrest = async () => {
           const timeLogs: EmployeeDtrWithSchedule = await getDailyDtr(
             leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveDates[i]
           );
 
           //check if there's a time in or time out
-          if ((timeLogs.dtr.timeIn || timeLogs.dtr.timeOut) && timeLogs.leaveDateStatus === LeaveDateStatus.APPROVED) {
+          if (
+            timeLogs &&
+            (timeLogs.dtr.timeIn || timeLogs.dtr.timeOut) &&
+            timeLogs.leaveDateStatus === LeaveDateStatus.APPROVED
+          ) {
             //add leave date to selection array
             leaveDates.push({
               label: leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveDates[i],
               value: leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveDates[i],
             });
-          } else if (timeLogs.holidayType === HolidayTypes.REGULAR) {
+          } else if (timeLogs && timeLogs.holidayType === HolidayTypes.REGULAR) {
             //do not add leave date to selectable dates for cancellation
           }
           //check if date is future
@@ -101,6 +105,8 @@ export const CancelLeaveModal = ({ modalState, setModalState, closeModalAction }
               label: leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveDates[i],
               value: leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveDates[i],
             });
+          } else {
+            //
           }
         };
         dtrTrest();
