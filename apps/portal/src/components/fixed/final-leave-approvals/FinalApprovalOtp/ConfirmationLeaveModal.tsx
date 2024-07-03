@@ -1,6 +1,6 @@
 /* eslint-disable @nx/enforce-module-boundaries */
 import { leaveAction, passSlipAction } from '../../../../types/approvals.type';
-import { patchPortal } from '../../../../utils/helpers/portal-axios-helper';
+import { patchPortal, patchPortalUrl } from '../../../../utils/helpers/portal-axios-helper';
 import { AlertNotification, Button, LoadingSpinner, Modal } from '@gscwd-apps/oneui';
 import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
 import { LeaveStatus } from 'libs/utils/src/lib/enums/leave.enum';
@@ -61,7 +61,7 @@ export const ConfirmationLeaveModal = ({
   };
 
   const handlePatchResult = async (data: leaveAction) => {
-    const { error, result } = await patchPortal('/v1/leave/hrdm', data);
+    const { error, result } = await patchPortalUrl('/leave-application', data);
     if (error) {
       patchLeaveFail(result);
     } else {
