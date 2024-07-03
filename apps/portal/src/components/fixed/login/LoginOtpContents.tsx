@@ -300,7 +300,7 @@ export const LoginOtpContents: FunctionComponent<OtpProps> = ({ mobile, otpName,
               }  mb-2 text-white bg-red-500 h-10 transition-all rounded hover:bg-red-600 active:bg-red-600 outline-red-500 w-56`}
               onClick={(e) => handleCancel(e)}
             >
-              <label className="font-bold cursor-pointer">CANCEL OTP</label>
+              <label className="font-bold cursor-pointer">CANCEL</label>
             </button>
           </div>
         </>
