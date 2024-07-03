@@ -15,6 +15,7 @@ type ViewLeavePdfModalProps = {
   setModalState: React.Dispatch<React.SetStateAction<boolean>>;
   closeModalAction: () => void;
 };
+
 const ViewLeavePdfModal: FunctionComponent<ViewLeavePdfModalProps> = ({
   rowData,
   modalState,

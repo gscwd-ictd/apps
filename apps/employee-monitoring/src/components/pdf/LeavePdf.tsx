@@ -913,12 +913,20 @@ export const LeavePdf = ({ leaveDetails, selectedLeaveLedger }: LeavePdfProps): 
                               <Text>Total Earned</Text>
                             </View>
                             <View style={styles.containerTableRow}>
+                              {/* <Text>
+                                {(
+                                  parseFloat(`${selectedLeaveLedger[0]?.vacationLeaveBalance}`) +
+                                  parseFloat(`${selectedLeaveLedger[0]?.vacationLeave}`) * -1
+                                )
+                                  +
+                                  parseFloat(`${selectedLeaveLedger[0]?.forcedLeaveBalance}`) +
+                                  parseFloat(`${selectedLeaveLedger[0]?.forcedLeave}`) * -1
+                                  .toFixed(3)}
+                              </Text> */}
                               <Text>
                                 {(
                                   parseFloat(`${selectedLeaveLedger[0]?.vacationLeaveBalance}`) +
-                                  parseFloat(`${selectedLeaveLedger[0]?.vacationLeave}`) * -1 +
-                                  parseFloat(`${selectedLeaveLedger[0]?.forcedLeaveBalance}`) +
-                                  parseFloat(`${selectedLeaveLedger[0]?.forcedLeave}`) * -1
+                                  parseFloat(`${selectedLeaveLedger[0]?.vacationLeave}`) * -1
                                 ).toFixed(3)}
                               </Text>
                             </View>
@@ -961,10 +969,16 @@ export const LeavePdf = ({ leaveDetails, selectedLeaveLedger }: LeavePdfProps): 
                               <Text>Balance</Text>
                             </View>
                             <View style={styles.containerTableRow}>
+                              {/* <Text>
+                                {parseFloat(`${selectedLeaveLedger[0]?.vacationLeaveBalance}`)
+                                  +
+                                  parseFloat(`${selectedLeaveLedger[0]?.forcedLeaveBalance}`)
+                                  .toFixed(3)}
+                              </Text> */}
                               <Text>
                                 {(
-                                  parseFloat(`${selectedLeaveLedger[0]?.vacationLeaveBalance}`) +
-                                  parseFloat(`${selectedLeaveLedger[0]?.forcedLeaveBalance}`)
+                                  parseFloat(`${selectedLeaveLedger[0]?.vacationLeaveBalance}`) -
+                                  parseFloat(`${leaveDetails?.leaveApplicationBasicInfo?.leaveDates?.length}`)
                                 ).toFixed(3)}
                               </Text>
                             </View>
