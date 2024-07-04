@@ -27,7 +27,7 @@ function UseRenderPassSlipStatus(status: PassSlipStatus, textSize?: string) {
           : status === PassSlipStatus.APPROVED_WITH_MEDICAL_CERTIFICATE
           ? 'success'
           : status === PassSlipStatus.APPROVED_WITHOUT_MEDICAL_CERTIFICATE
-          ? 'default'
+          ? 'success'
           : status === PassSlipStatus.CANCELLED
           ? 'default'
           : status === PassSlipStatus.USED
