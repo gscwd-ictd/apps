@@ -31,6 +31,7 @@ export default function Index() {
     mutate: mutatePassSlipApplications,
   } = useSWR('/pass-slip', fetcherEMS, {
     shouldRetryOnError: false,
+    revalidateOnFocus: false,
   });
 
   const {
@@ -39,17 +40,12 @@ export default function Index() {
 
     ResponseHrmoApprovalPassSlip,
 
-    getPassSlips,
     getPassSlipsFail,
     getPassSlipsSuccess,
 
     CancelPassSlip,
-    CancelPassSlipFail,
-    CancelPassSlipSuccess,
 
     UpdatePassSlipTimeLogs,
-    UpdatePassSlipTimeLogsFail,
-    UpdatePassSlipTimeLogsSuccess,
 
     emptyErrorsAndResponse,
   } = usePassSlipStore((state) => ({
@@ -58,17 +54,12 @@ export default function Index() {
 
     ResponseHrmoApprovalPassSlip: state.response.hrmoApprovalPassSlip,
 
-    getPassSlips: state.getPassSlips,
     getPassSlipsSuccess: state.getPassSlipsSuccess,
     getPassSlipsFail: state.getPassSlipsFail,
 
     CancelPassSlip: state.response.cancelPassSlip,
-    CancelPassSlipFail: state.cancelPassSlipFail,
-    CancelPassSlipSuccess: state.cancelPassSlipSuccess,
 
-    UpdatePassSlipTimeLogs: state.response.updatePassSlipTimeLogs,
-    UpdatePassSlipTimeLogsFail: state.updatePassSlipTimeLogsFail,
-    UpdatePassSlipTimeLogsSuccess: state.updatePassSlipTimeLogsSuccess,
+    UpdatePassSlipTimeLogs: state.response.updatePassSlip,
 
     emptyErrorsAndResponse: state.emptyErrorsAndResponse,
   }));
@@ -108,7 +99,10 @@ export default function Index() {
         >
           <i className="bx bx-show"></i>
         </button>
-        {rowData.status === PassSlipStatus.APPROVED ? (
+        {rowData.status === PassSlipStatus.APPROVED ||
+        rowData.status === PassSlipStatus.AWAITING_MEDICAL_CERTIFICATE ||
+        rowData.status === PassSlipStatus.APPROVED_WITHOUT_MEDICAL_CERTIFICATE ||
+        rowData.status === PassSlipStatus.APPROVED_WITH_MEDICAL_CERTIFICATE ? (
           <button
             type="button"
             className="text-white bg-gray-400 hover:bg-gray-500  focus:outline-none focus:ring-gray-300 font-medium rounded-lg text-sm p-2.5 text-center inline-flex items-center mr-2 "
@@ -161,6 +155,15 @@ export default function Index() {
       enableSorting: false,
       cell: (info) => UseRenderNatureOfBusiness(info.getValue()),
     }),
+    columnHelper.accessor('isMedical', {
+      header: 'Medical Purpose',
+      enableColumnFilter: false,
+      enableSorting: true,
+      cell: (info) => {
+        const value = info.getValue();
+        return value === true ? 'Yes' : value === false ? 'No' : 'Not Applicable';
+      },
+    }),
     columnHelper.accessor('obTransportation', {
       header: 'OB Transportation',
       enableSorting: false,
@@ -168,7 +171,7 @@ export default function Index() {
     }),
     columnHelper.accessor('status', {
       header: 'Status',
-      enableSorting: false,
+      enableSorting: true,
       cell: (info) => UseRenderPassSlipStatus(info.getValue()),
       filterFn: 'equals',
     }),
@@ -227,10 +230,6 @@ export default function Index() {
 
         {!isEmpty(CancelPassSlip) ? (
           <ToastNotification toastType="success" notifMessage="Pass slip cancelled successfully" />
-        ) : null}
-
-        {!isEmpty(UpdatePassSlipTimeLogs) ? (
-          <ToastNotification toastType="success" notifMessage="Time logs updated successfully" />
         ) : null}
 
         {/* view modal */}
