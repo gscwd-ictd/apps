@@ -31,6 +31,7 @@ export default function Index() {
     mutate: mutatePassSlipApplications,
   } = useSWR('/pass-slip', fetcherEMS, {
     shouldRetryOnError: false,
+    revalidateOnFocus: false,
   });
 
   const {
@@ -39,17 +40,12 @@ export default function Index() {
 
     ResponseHrmoApprovalPassSlip,
 
-    getPassSlips,
     getPassSlipsFail,
     getPassSlipsSuccess,
 
     CancelPassSlip,
-    CancelPassSlipFail,
-    CancelPassSlipSuccess,
 
     UpdatePassSlipTimeLogs,
-    UpdatePassSlipTimeLogsFail,
-    UpdatePassSlipTimeLogsSuccess,
 
     emptyErrorsAndResponse,
   } = usePassSlipStore((state) => ({
@@ -58,17 +54,12 @@ export default function Index() {
 
     ResponseHrmoApprovalPassSlip: state.response.hrmoApprovalPassSlip,
 
-    getPassSlips: state.getPassSlips,
     getPassSlipsSuccess: state.getPassSlipsSuccess,
     getPassSlipsFail: state.getPassSlipsFail,
 
     CancelPassSlip: state.response.cancelPassSlip,
-    CancelPassSlipFail: state.cancelPassSlipFail,
-    CancelPassSlipSuccess: state.cancelPassSlipSuccess,
 
-    UpdatePassSlipTimeLogs: state.response.updatePassSlipTimeLogs,
-    UpdatePassSlipTimeLogsFail: state.updatePassSlipTimeLogsFail,
-    UpdatePassSlipTimeLogsSuccess: state.updatePassSlipTimeLogsSuccess,
+    UpdatePassSlipTimeLogs: state.response.updatePassSlip,
 
     emptyErrorsAndResponse: state.emptyErrorsAndResponse,
   }));
@@ -161,6 +152,15 @@ export default function Index() {
       enableSorting: false,
       cell: (info) => UseRenderNatureOfBusiness(info.getValue()),
     }),
+    columnHelper.accessor('isMedical', {
+      header: 'Medical Purpose',
+      enableColumnFilter: false,
+      enableSorting: true,
+      cell: (info) => {
+        const value = info.getValue();
+        return value === true ? 'Yes' : value === false ? 'No' : 'Not Applicable';
+      },
+    }),
     columnHelper.accessor('obTransportation', {
       header: 'OB Transportation',
       enableSorting: false,
@@ -168,7 +168,7 @@ export default function Index() {
     }),
     columnHelper.accessor('status', {
       header: 'Status',
-      enableSorting: false,
+      enableSorting: true,
       cell: (info) => UseRenderPassSlipStatus(info.getValue()),
       filterFn: 'equals',
     }),
@@ -227,10 +227,6 @@ export default function Index() {
 
         {!isEmpty(CancelPassSlip) ? (
           <ToastNotification toastType="success" notifMessage="Pass slip cancelled successfully" />
-        ) : null}
-
-        {!isEmpty(UpdatePassSlipTimeLogs) ? (
-          <ToastNotification toastType="success" notifMessage="Time logs updated successfully" />
         ) : null}
 
         {/* view modal */}
