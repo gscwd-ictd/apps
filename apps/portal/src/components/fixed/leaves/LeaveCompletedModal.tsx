@@ -665,7 +665,10 @@ export const LeaveCompletedModal = ({ modalState, setModalState, closeModalActio
                               <td className="border border-slate-400 text-center bg-green-100">
                                 {leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.VACATION ||
                                 leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.FORCED
-                                  ? parseFloat(`${selectedLeaveLedger[0]?.vacationLeaveBalance}`)
+                                  ? (
+                                      parseFloat(`${selectedLeaveLedger[0]?.vacationLeaveBalance}`) -
+                                      leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveDates?.length
+                                    )
                                       // +
                                       // parseFloat(`${selectedLeaveLedger[0]?.forcedLeaveBalance}`)
                                       .toFixed(3)

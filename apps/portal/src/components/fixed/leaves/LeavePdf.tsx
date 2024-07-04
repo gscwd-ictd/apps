@@ -931,10 +931,13 @@ export const LeavePdf = ({ employeeDetails, leaveDetails, selectedLeaveLedger }:
                             </View>
                             <View style={styles.containerTableRow}>
                               <Text>
-                                {parseFloat(`${selectedLeaveLedger[0]?.vacationLeaveBalance}`)
-                                  // +
-                                  // parseFloat(`${selectedLeaveLedger[0]?.forcedLeaveBalance}`)
-                                  .toFixed(3)}
+                                {leaveDetails.leaveApplicationBasicInfo.leaveName === LeaveName.VACATION ||
+                                leaveDetails.leaveApplicationBasicInfo.leaveName === LeaveName.FORCED
+                                  ? (
+                                      parseFloat(`${selectedLeaveLedger[0]?.vacationLeaveBalance}`) -
+                                      leaveDetails?.leaveApplicationBasicInfo?.leaveDates?.length
+                                    ).toFixed(3)
+                                  : parseFloat(`${selectedLeaveLedger[0]?.vacationLeaveBalance}`)}
                               </Text>
                             </View>
                             <View style={styles.containerTableRow2}>
