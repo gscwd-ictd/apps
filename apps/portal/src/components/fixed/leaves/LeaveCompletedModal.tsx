@@ -96,6 +96,7 @@ export const LeaveCompletedModal = ({ modalState, setModalState, closeModalActio
     setLeaveDetailsPdfModalIsOpen(false);
   };
 
+  console.log(selectedLeaveLedger);
   return (
     <>
       <Modal
@@ -663,8 +664,9 @@ export const LeaveCompletedModal = ({ modalState, setModalState, closeModalActio
                                 {leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveDates?.length.toFixed(3)}
                               </td>
                               <td className="border border-slate-400 text-center bg-green-100">
-                                {leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.VACATION ||
-                                leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.FORCED
+                                {leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.VACATION
+                                  ? parseFloat(`${selectedLeaveLedger[0]?.vacationLeaveBalance}`).toFixed(3)
+                                  : leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.FORCED
                                   ? (
                                       parseFloat(`${selectedLeaveLedger[0]?.vacationLeaveBalance}`) -
                                       leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveDates?.length
