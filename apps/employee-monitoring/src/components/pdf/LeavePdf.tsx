@@ -969,17 +969,13 @@ export const LeavePdf = ({ leaveDetails, selectedLeaveLedger }: LeavePdfProps): 
                               <Text>Balance</Text>
                             </View>
                             <View style={styles.containerTableRow}>
-                              {/* <Text>
-                                {parseFloat(`${selectedLeaveLedger[0]?.vacationLeaveBalance}`)
-                                  +
-                                  parseFloat(`${selectedLeaveLedger[0]?.forcedLeaveBalance}`)
-                                  .toFixed(3)}
-                              </Text> */}
                               <Text>
-                                {(
-                                  parseFloat(`${selectedLeaveLedger[0]?.vacationLeaveBalance}`) -
-                                  parseFloat(`${leaveDetails?.leaveApplicationBasicInfo?.leaveDates?.length}`)
-                                ).toFixed(3)}
+                                {leaveDetails.leaveApplicationBasicInfo?.leaveName === LeaveName.FORCED
+                                  ? (
+                                      parseFloat(`${selectedLeaveLedger[0]?.vacationLeaveBalance}`) -
+                                      parseFloat(`${leaveDetails?.leaveApplicationBasicInfo?.leaveDates?.length}`)
+                                    ).toFixed(3)
+                                  : parseFloat(`${selectedLeaveLedger[0]?.vacationLeaveBalance}`).toFixed(3)}
                               </Text>
                             </View>
                             <View style={styles.containerTableRow2}>
