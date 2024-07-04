@@ -95,8 +95,6 @@ export const LeaveCompletedModal = ({ modalState, setModalState, closeModalActio
   const closeLeaveDetailsPdfModal = async () => {
     setLeaveDetailsPdfModalIsOpen(false);
   };
-
-  console.log(selectedLeaveLedger);
   return (
     <>
       <Modal
