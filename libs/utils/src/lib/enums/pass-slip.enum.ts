@@ -25,7 +25,4 @@ export enum PassSlipStatus {
   APPROVED_WITH_MEDICAL_CERTIFICATE = 'approved with medical certificate',
   APPROVED_WITHOUT_MEDICAL_CERTIFICATE = 'approved without medical certificate',
   FOR_DISPUTE = 'for dispute',
-  AWAITING_MEDICAL_CERTIFICATE = 'awaiting medical certificate',
-  APPROVED_WITH_MEDICAL_CERTIFICATE = 'approved with medical certificate',
-  APPROVED_WITHOUT_MEDICAL_CERTIFICATE = 'approved without medical certificate',
 }

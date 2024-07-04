@@ -326,9 +326,8 @@ const ViewPassSlipModal: FunctionComponent<ViewPassSlipModalProps> = ({
                   </div>
                 )}
 
-                {rowData.isMedical === true &&
-                rowData.status === PassSlipStatus.AWAITING_MEDICAL_CERTIFICATE &&
-                rowData.timeOut !== null ? (
+                {rowData.isMedical === true && rowData.status === PassSlipStatus.AWAITING_MEDICAL_CERTIFICATE ? (
+                  //  && rowData.timeOut !== null
                   <div className="px-5">
                     <form
                       onSubmit={handleSubmitPassSlipMedicalPurpose(onSubmitForMedicalPurpose)}
@@ -418,9 +417,8 @@ const ViewPassSlipModal: FunctionComponent<ViewPassSlipModalProps> = ({
               </button>
             )}
 
-            {rowData.isMedical === true &&
-            rowData.status === PassSlipStatus.AWAITING_MEDICAL_CERTIFICATE &&
-            rowData.timeOut !== null ? (
+            {rowData.isMedical === true && rowData.status === PassSlipStatus.AWAITING_MEDICAL_CERTIFICATE ? (
+              // && rowData.timeOut !== null
               <button
                 className="px-3 w-[5rem] py-2 text-sm text-white bg-blue-400 hover:bg-blue-500 rounded transition-all"
                 type="submit"
