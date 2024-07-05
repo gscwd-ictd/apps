@@ -99,10 +99,19 @@ export default function Index() {
         >
           <i className="bx bx-show"></i>
         </button>
-        {rowData.status === PassSlipStatus.APPROVED ||
+        {/* {rowData.status === PassSlipStatus.APPROVED ||
         rowData.status === PassSlipStatus.AWAITING_MEDICAL_CERTIFICATE ||
         rowData.status === PassSlipStatus.APPROVED_WITHOUT_MEDICAL_CERTIFICATE ||
         rowData.status === PassSlipStatus.APPROVED_WITH_MEDICAL_CERTIFICATE ? (
+          <button
+            type="button"
+            className="text-white bg-gray-400 hover:bg-gray-500  focus:outline-none focus:ring-gray-300 font-medium rounded-lg text-sm p-2.5 text-center inline-flex items-center mr-2 "
+            onClick={() => openUpdateModal(rowData)}
+          >
+            <i className="bx bxs-edit"></i>
+          </button>
+        ) : null} */}
+        {rowData.status === PassSlipStatus.UNUSED ? (
           <button
             type="button"
             className="text-white bg-gray-400 hover:bg-gray-500  focus:outline-none focus:ring-gray-300 font-medium rounded-lg text-sm p-2.5 text-center inline-flex items-center mr-2 "

@@ -325,6 +325,11 @@ export const EmployeeDtrTable: FunctionComponent<EmployeeDtrTableProps> = ({ emp
                                 <button
                                   className="px-1 text-white bg-blue-600 rounded disabled:bg-red-600"
                                   onClick={() => openEditRemarksModal(logs)}
+                                  disabled={
+                                    dayjs().isAfter(dayjs(logs.day)) || dayjs().isSame(dayjs(logs.day), 'day')
+                                      ? false
+                                      : true
+                                  }
                                 >
                                   <i className="text-lg text-inherit bx bx-comment-edit"></i>
                                 </button>
@@ -464,6 +469,9 @@ export const EmployeeDtrTable: FunctionComponent<EmployeeDtrTableProps> = ({ emp
                           <button
                             className="px-1 text-white bg-blue-600 rounded disabled:bg-red-600"
                             onClick={() => openEditRemarksModal(logs)}
+                            disabled={
+                              dayjs().isAfter(dayjs(logs.day)) || dayjs().isSame(dayjs(logs.day), 'day') ? false : true
+                            }
                           >
                             <i className="text-lg text-inherit bx bx-comment-edit"></i>
                           </button>

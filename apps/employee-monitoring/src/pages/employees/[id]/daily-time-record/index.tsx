@@ -140,7 +140,7 @@ export default function Index({ employeeData }: InferGetServerSidePropsType<type
 
         {/* Error when updating DTR remarks */}
         {!isEmpty(errorUpdateDtrRemarks) ? (
-          <ToastNotification notifMessage="Something went wrong with editing DTR remarks" toastType="error" />
+          <ToastNotification notifMessage={errorUpdateDtrRemarks} toastType="error" />
         ) : null}
 
         {/* Post/Patch Request Success*/}
@@ -153,7 +153,7 @@ export default function Index({ employeeData }: InferGetServerSidePropsType<type
         ) : null}
 
         {!isEmpty(dtrRemarks) ? (
-          <ToastNotification toastType="success" notifMessage="DTR remarks updated successfully" />
+          <ToastNotification toastType="success" notifMessage={'DTR remarks updated successfully'} />
         ) : null}
 
         {/* Modal is available if DTR is pulled */}

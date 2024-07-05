@@ -7,12 +7,13 @@ import { patchEmpMonitoring } from 'apps/employee-monitoring/src/utils/helper/em
 import dayjs from 'dayjs';
 import { EmployeeDtrWithSchedule, DtrRemarks } from 'libs/utils/src/lib/types/dtr.type';
 import { isEmpty } from 'lodash';
-import { Dispatch, FunctionComponent, SetStateAction, useEffect } from 'react';
+import { Dispatch, FunctionComponent, SetStateAction, useEffect, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 
 import * as yup from 'yup';
 
 import { LabelValue } from '../../labels/LabelValue';
+import ConfirmRemoveRemarksModal from './ConfirmRemoveRemarksModal';
 
 type EditRemarksModalProps = {
   modalState: boolean;
@@ -61,16 +62,45 @@ const EditRemarksModal: FunctionComponent<EditRemarksModalProps> = ({
     handlePatchResult(data);
   };
 
+  // state for current form data
+  const [currentFormData, setCurrentFormData] = useState<DtrRemarks>({} as DtrRemarks);
+
+  // form submission for removing remarks
+  const onSubmitForApproval: SubmitHandler<DtrRemarks> = (data: DtrRemarks) => {
+    data.dtrId = rowData.dtr.id;
+    data.remarks = null;
+    openRemoveRemarksConfirmModal(data);
+  };
+
+  // view remove remarks confirm modal
+  const [removeRemarksConfirmModalIsOpen, setRemoveRemarksConfirmModalIsOpen] = useState<boolean>(false);
+  const openRemoveRemarksConfirmModal = (formData: DtrRemarks) => {
+    setRemoveRemarksConfirmModalIsOpen(true);
+    setCurrentFormData(formData);
+  };
+  const closeRemoveRemarksConfirmModal = () => {
+    setRemoveRemarksConfirmModalIsOpen(false);
+    reset({
+      remarks: rowData.dtr?.remarks,
+    });
+    closeModalAction();
+  };
+
   const handlePatchResult = async (data: DtrRemarks) => {
     data.dtrId = rowData.dtr.id;
-    const { error, result } = await patchEmpMonitoring('/daily-time-record/remarks', data);
 
-    if (error) {
-      updateDtrRemarksFail(result);
+    if (!data.dtrId) {
+      updateDtrRemarksFail('Employee DTR is not found');
+      return;
     } else {
-      updateDtrRemarksSuccess(result);
-      reset();
-      closeModalAction();
+      const { error, result } = await patchEmpMonitoring('/daily-time-record/remarks', data);
+      if (error) {
+        updateDtrRemarksFail(result);
+      } else {
+        updateDtrRemarksSuccess(result);
+        reset();
+        closeModalAction();
+      }
     }
   };
 
@@ -88,71 +118,98 @@ const EditRemarksModal: FunctionComponent<EditRemarksModalProps> = ({
   }, [modalState, reset]);
 
   return (
-    <Modal open={modalState} setOpen={setModalState} steady size="sm">
-      <Modal.Header withCloseBtn>
-        <div className="flex justify-between w-full">
-          <span className="text-xl font-medium">Edit Remarks To DTR</span>
-          <button
-            type="button"
-            className="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-md text-xl p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white"
-            onClick={closeModalAction}
-          >
-            <i className="bx bx-x"></i>
-            <span className="sr-only">Close modal</span>
-          </button>
-        </div>
-      </Modal.Header>
-      <Modal.Body>
-        {loadingUpdateDtrRemarks ? (
-          <AlertNotification
-            logo={<LoadingSpinner size="xs" />}
-            alertType="info"
-            notifMessage="Submitting Request"
-            dismissible={false}
-          />
-        ) : null}
-        <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col p-4 gap-3" id="UpdateRemarkForm">
-          <div className="flex flex-col gap-4 w-full">
-            {/* Dtr date */}
-            <LabelValue
-              label="Date"
-              value={dayjs(rowData.day).format('MMMM DD, YYYY')}
-              direction="top-to-bottom"
-              textSize="md"
-            />
-
-            {/* Remarks */}
-            <LabelInput
-              type="textarea"
-              id={'remarks'}
-              label={'Remarks'}
-              placeholder="Add Remarks"
-              rows={5}
-              textSize="md"
-              controller={{ ...register('remarks') }}
-              isError={errors.remarks ? true : false}
-              errorMessage={errors.remarks?.message}
-            />
-          </div>
-        </form>
-      </Modal.Body>
-      <Modal.Footer>
-        <div className="flex justify-end gap-2">
-          <div className="max-w-auto">
-            <Button
-              variant={'primary'}
-              size={'md'}
-              form="UpdateRemarkForm"
-              type="submit"
-              className="disabled:cursor-not-allowed"
-              disabled={patchFormLoading}
+    <>
+      <Modal open={modalState} setOpen={setModalState} steady size="sm">
+        <Modal.Header withCloseBtn>
+          <div className="flex justify-between w-full">
+            <span className="text-xl font-medium">Edit Remarks To DTR</span>
+            <button
+              type="button"
+              className="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-md text-xl p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white"
+              onClick={closeModalAction}
             >
-              Submit
-            </Button>
+              <i className="bx bx-x"></i>
+              <span className="sr-only">Close modal</span>
+            </button>
           </div>
-        </div>
-      </Modal.Footer>
-    </Modal>
+        </Modal.Header>
+        <Modal.Body>
+          {loadingUpdateDtrRemarks ? (
+            <AlertNotification
+              logo={<LoadingSpinner size="xs" />}
+              alertType="info"
+              notifMessage="Submitting Request"
+              dismissible={false}
+            />
+          ) : null}
+          <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col p-4 gap-3" id="UpdateRemarkForm">
+            <div className="flex flex-col gap-4 w-full">
+              {/* Dtr date */}
+              <LabelValue
+                label="Date"
+                value={dayjs(rowData.day).format('MMMM DD, YYYY')}
+                direction="top-to-bottom"
+                textSize="md"
+              />
+
+              {/* Remarks */}
+              <LabelInput
+                type="textarea"
+                id={'remarks'}
+                label={'Remarks'}
+                placeholder="Add Remarks"
+                rows={5}
+                textSize="md"
+                controller={{ ...register('remarks') }}
+                isError={errors.remarks ? true : false}
+                errorMessage={errors.remarks?.message}
+              />
+            </div>
+          </form>
+          <form
+            onSubmit={handleSubmit(onSubmitForApproval)}
+            className="flex flex-col p-4 gap-3"
+            id="RemoveRemarksForm"
+          ></form>
+        </Modal.Body>
+        <Modal.Footer>
+          <div className="flex justify-end gap-2">
+            {rowData.dtr?.remarks ? (
+              <Button
+                variant={'danger'}
+                size={'md'}
+                form="RemoveRemarksForm"
+                type="submit"
+                className="disabled:cursor-not-allowed"
+              >
+                {/* <i className="bx bxs-trash"></i> */}
+                Remove Remarks
+              </Button>
+            ) : null}
+            <div className="max-w-auto">
+              <Button
+                variant={'primary'}
+                size={'md'}
+                form="UpdateRemarkForm"
+                type="submit"
+                className="disabled:cursor-not-allowed"
+                disabled={patchFormLoading}
+              >
+                Submit
+              </Button>
+            </div>
+          </div>
+        </Modal.Footer>
+      </Modal>
+
+      <ConfirmRemoveRemarksModal
+        modalState={removeRemarksConfirmModalIsOpen}
+        setModalState={setRemoveRemarksConfirmModalIsOpen}
+        closeModalAction={closeRemoveRemarksConfirmModal}
+        formData={currentFormData}
+        rowData={rowData}
+      />
+    </>
   );
 };
 
