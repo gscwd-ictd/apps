@@ -22,6 +22,12 @@ function UseRenderPassSlipStatus(status: PassSlipStatus, textSize?: string) {
           ? 'warning'
           : status === PassSlipStatus.FOR_DISPUTE
           ? 'warning'
+          : status === PassSlipStatus.AWAITING_MEDICAL_CERTIFICATE
+          ? 'warning'
+          : status === PassSlipStatus.APPROVED_WITH_MEDICAL_CERTIFICATE
+          ? 'success'
+          : status === PassSlipStatus.APPROVED_WITHOUT_MEDICAL_CERTIFICATE
+          ? 'success'
           : status === PassSlipStatus.CANCELLED
           ? 'default'
           : status === PassSlipStatus.USED
@@ -45,6 +51,12 @@ function UseRenderPassSlipStatus(status: PassSlipStatus, textSize?: string) {
           ? 'For Supervisor Approval'
           : status === PassSlipStatus.FOR_DISPUTE
           ? 'For Dispute'
+          : status === PassSlipStatus.AWAITING_MEDICAL_CERTIFICATE
+          ? 'Awaiting Medical Certificate'
+          : status === PassSlipStatus.APPROVED_WITH_MEDICAL_CERTIFICATE
+          ? 'Approved with Medical Cert.'
+          : status === PassSlipStatus.APPROVED_WITHOUT_MEDICAL_CERTIFICATE
+          ? 'Approved w/o Medical Cert.'
           : status === PassSlipStatus.CANCELLED
           ? 'Cancelled'
           : status === PassSlipStatus.USED

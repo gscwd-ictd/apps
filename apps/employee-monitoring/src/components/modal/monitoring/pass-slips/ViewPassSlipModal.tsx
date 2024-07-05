@@ -1,5 +1,5 @@
 /* eslint-disable @nx/enforce-module-boundaries */
-import { AlertNotification, Button, Modal, ToastNotification } from '@gscwd-apps/oneui';
+import { AlertNotification, Button, LoadingSpinner, Modal, ToastNotification } from '@gscwd-apps/oneui';
 import dayjs from 'dayjs';
 import { NatureOfBusiness, PassSlipStatus } from 'libs/utils/src/lib/enums/pass-slip.enum';
 import { HrmoApprovalPassSlip, PassSlip } from 'libs/utils/src/lib/types/pass-slip.type';
@@ -18,10 +18,16 @@ import PassSlipConfirmModal from './PassSlipConfirmModal';
 import { isEmpty } from 'lodash';
 import UseConvertDayToTime from 'apps/employee-monitoring/src/utils/functions/ConvertDateToTime';
 import { DateTimeFormatter } from 'libs/utils/src/lib/functions/DateTimeFormatter';
+import { patchEmpMonitoring } from 'apps/employee-monitoring/src/utils/helper/employee-monitoring-axios-helper';
 
 const actionTaken: Array<SelectOption> = [
   { label: 'Approve', value: 'for supervisor approval' },
   { label: 'Disapprove', value: 'disapproved by hrmo' },
+];
+
+const awaitingMedicalCertificate: Array<SelectOption> = [
+  { label: 'Approved with Medical Certificate', value: 'approved with medical certificate' },
+  { label: 'Approved without Medical Certificate', value: 'approved without medical certificate' },
 ];
 
 type ViewPassSlipModalProps = {
@@ -32,12 +38,16 @@ type ViewPassSlipModalProps = {
 };
 
 // yup error handling initialization
-const yupSchema = yup.object({
+const passSlipApprovalSchema = yup.object({
   status: yup.string().required('Please select a action for this pass slip'),
   hrmoDisapprovalRemarks: yup.string().when('status', {
     is: 'disapproved by hrmo',
     then: yup.string().required('Please add disapproval remarks'),
   }),
+});
+
+const passSlipMedicalPurposeSchema = yup.object({
+  status: yup.string().required('Please select approval for this pass slip'),
 });
 
 const ViewPassSlipModal: FunctionComponent<ViewPassSlipModalProps> = ({
@@ -46,42 +56,65 @@ const ViewPassSlipModal: FunctionComponent<ViewPassSlipModalProps> = ({
   closeModalAction,
   setModalState,
 }) => {
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+
   // state for current form data
   const [currentFormData, setCurrentFormData] = useState<HrmoApprovalPassSlip>({} as HrmoApprovalPassSlip);
 
   // Zustand store initialization
   const {
     ResponseHrmoApprovalPassSlip,
+    ResponseUpdatePassSlipMedicalPurpose,
+
+    UpdatePassSlipMedicalPurpose,
+    UpdatePassSlipMedicalPurposeSuccess,
+    UpdatePassSlipMedicalPurposeFail,
 
     EmptyErrorsAndResponse,
   } = usePassSlipStore((state) => ({
     ResponseHrmoApprovalPassSlip: state.response.hrmoApprovalPassSlip,
+    ResponseUpdatePassSlipMedicalPurpose: state.response.updatePassSlip,
+
+    UpdatePassSlipMedicalPurpose: state.updatePassSlip,
+    UpdatePassSlipMedicalPurposeSuccess: state.updatePassSlipSuccess,
+    UpdatePassSlipMedicalPurposeFail: state.updatePassSlipFail,
 
     EmptyErrorsAndResponse: state.emptyErrorsAndResponse,
   }));
 
-  // React hook form initialization
+  // React hook form for pass slip approval
   const {
-    reset,
-    register,
-    setValue,
-    handleSubmit,
-    getValues,
-    watch,
-    formState: { errors, isSubmitting: patchFormLoading },
+    reset: resetFormPassSlipApproval,
+    register: registerFormPassSlipApproval,
+    setValue: setValuePassSlipApproval,
+    handleSubmit: handleSubmitPassSlipApproval,
+    watch: watchPassSlipApproval,
+    formState: { errors: errorsPassSlipApproval, isSubmitting: patchPassSlipApprovalFormLoading },
   } = useForm<HrmoApprovalPassSlip>({
     mode: 'onChange',
     defaultValues: {
       passSlipId: '',
       status: '',
     },
-    resolver: yupResolver(yupSchema),
+    resolver: yupResolver(passSlipApprovalSchema),
   });
 
-  // form submission
-  const onSubmit: SubmitHandler<HrmoApprovalPassSlip> = (data: HrmoApprovalPassSlip) => {
-    EmptyErrorsAndResponse();
+  // React hook form for medical purpose
+  const {
+    reset: resetPassSlipMedicalPurpose,
+    register: registerPassSlipMedicalPurpose,
+    setValue: setValuePassSlipMedicalPurpose,
+    handleSubmit: handleSubmitPassSlipMedicalPurpose,
+    trigger: triggerPassSlipMedicalPurpose,
+    formState: { errors: errorsPassSlipMedicalPurpose, isSubmitting: patchPassSlipMedicalPurposeFormLoading },
+  } = useForm<Partial<HrmoApprovalPassSlip>>({
+    mode: 'onSubmit',
+    resolver: yupResolver(passSlipMedicalPurposeSchema),
+  });
 
+  // form submission for pass slip approval
+  const onSubmitForApproval: SubmitHandler<HrmoApprovalPassSlip> = (data: HrmoApprovalPassSlip) => {
+    EmptyErrorsAndResponse();
     openPassSlipConfirmModal(data);
   };
 
@@ -93,12 +126,49 @@ const ViewPassSlipModal: FunctionComponent<ViewPassSlipModalProps> = ({
   };
   const closePassSlipConfirmModal = () => setPassSlipConfirmModalIsOpen(false);
 
-  // set passSlipId in the form default values
+  // form submission for pass slip (PB) with medical certificate
+  const onSubmitForMedicalPurpose: SubmitHandler<Partial<HrmoApprovalPassSlip>> = async (
+    data: Partial<HrmoApprovalPassSlip>
+  ) => {
+    const isValid = await triggerPassSlipMedicalPurpose();
+
+    if (!isValid) {
+      return;
+    }
+
+    const payload: Partial<HrmoApprovalPassSlip> = {
+      passSlipId: rowData.id,
+      status: data.status,
+    };
+
+    UpdatePassSlipMedicalPurpose();
+    handleUpdatePassSlipMedicalPurpose(payload);
+  };
+
+  const handleUpdatePassSlipMedicalPurpose = async (data: Partial<HrmoApprovalPassSlip>) => {
+    const { error, result } = await patchEmpMonitoring(`/pass-slip/`, data);
+    setIsLoading(true);
+
+    if (!error) {
+      UpdatePassSlipMedicalPurposeSuccess(result);
+      setIsLoading(false);
+      resetPassSlipMedicalPurpose();
+      closeModalAction();
+    } else if (error) {
+      UpdatePassSlipMedicalPurposeFail(result);
+      setIsLoading(false);
+    }
+  };
+
   useEffect(() => {
     if (!modalState) {
-      reset();
+      resetFormPassSlipApproval();
+      resetPassSlipMedicalPurpose();
     } else {
-      setValue('passSlipId', rowData.id);
+      setValuePassSlipApproval('passSlipId', rowData.id);
+      setValuePassSlipApproval('status', rowData.status);
+      setValuePassSlipMedicalPurpose('passSlipId', rowData.id);
+      setValuePassSlipMedicalPurpose('status', rowData.status);
     }
   }, [modalState]);
 
@@ -107,6 +177,10 @@ const ViewPassSlipModal: FunctionComponent<ViewPassSlipModalProps> = ({
       {/* Notification */}
       {!isEmpty(ResponseHrmoApprovalPassSlip) ? (
         <ToastNotification toastType="success" notifMessage="Pass slip approval is successful" />
+      ) : null}
+
+      {!isEmpty(ResponseUpdatePassSlipMedicalPurpose) ? (
+        <ToastNotification toastType="success" notifMessage="Pass slip approval for medical purpose is successful" />
       ) : null}
 
       <Modal open={modalState} setOpen={setModalState} size="md">
@@ -125,6 +199,14 @@ const ViewPassSlipModal: FunctionComponent<ViewPassSlipModalProps> = ({
         </Modal.Header>
 
         <Modal.Body>
+          {isLoading || patchPassSlipMedicalPurposeFormLoading ? (
+            <AlertNotification
+              logo={<LoadingSpinner size="xs" />}
+              alertType="info"
+              notifMessage="Submitting request"
+              dismissible={true}
+            />
+          ) : null}
           <div className="w-full min-h-[14rem]">
             <div className="flex flex-col w-full gap-4 px-2">
               <div className="flex flex-col gap-4 py-2 ">
@@ -244,22 +326,26 @@ const ViewPassSlipModal: FunctionComponent<ViewPassSlipModalProps> = ({
                   </div>
                 )}
 
-                {rowData.status === PassSlipStatus.FOR_HRMO_APPROVAL ? (
-                  <>
-                    <hr />
-                    <form onSubmit={handleSubmit(onSubmit)} id="updatePassSlipForm">
+                {rowData.isMedical === true && rowData.status === PassSlipStatus.AWAITING_MEDICAL_CERTIFICATE ? (
+                  //  && rowData.timeOut !== null
+                  <div className="px-5">
+                    <form
+                      onSubmit={handleSubmitPassSlipMedicalPurpose(onSubmitForMedicalPurpose)}
+                      id="approvePassSlipMedicalPurpose"
+                    >
                       <div className="w-full pb-3">
                         <SelectListRF
                           id="status"
                           textSize="md"
-                          selectList={actionTaken}
-                          controller={{ ...register('status') }}
-                          errorMessage={errors.status?.message}
-                          label="Action"
+                          selectList={awaitingMedicalCertificate}
+                          controller={{ ...registerPassSlipMedicalPurpose('status') }}
+                          errorMessage={errorsPassSlipMedicalPurpose.status?.message}
+                          isError={errorsPassSlipMedicalPurpose.status ? true : false}
+                          label="Approval for Medical Status"
                         />
                       </div>
 
-                      {watch('status') === 'disapproved by hrmo' && (
+                      {/* {watch('status') === 'disapproved by hrmo' && (
                         <div className="mb-6">
                           <LabelInput
                             id={'hrmoDisapprovalRemarks'}
@@ -267,6 +353,37 @@ const ViewPassSlipModal: FunctionComponent<ViewPassSlipModalProps> = ({
                             controller={{ ...register('hrmoDisapprovalRemarks') }}
                             isError={errors.hrmoDisapprovalRemarks ? true : false}
                             errorMessage={errors.hrmoDisapprovalRemarks?.message}
+                            textSize="md"
+                          />
+                        </div>
+                      )} */}
+                    </form>
+                  </div>
+                ) : null}
+
+                {rowData.status === PassSlipStatus.FOR_HRMO_APPROVAL ? (
+                  <>
+                    <hr />
+                    <form onSubmit={handleSubmitPassSlipApproval(onSubmitForApproval)} id="updatePassSlipForm">
+                      <div className="w-full pb-3">
+                        <SelectListRF
+                          id="status"
+                          textSize="md"
+                          selectList={actionTaken}
+                          controller={{ ...registerFormPassSlipApproval('status') }}
+                          errorMessage={errorsPassSlipApproval.status?.message}
+                          label="Action"
+                        />
+                      </div>
+
+                      {watchPassSlipApproval('status') === 'disapproved by hrmo' && (
+                        <div className="mb-6">
+                          <LabelInput
+                            id={'hrmoDisapprovalRemarks'}
+                            label={'Remarks'}
+                            controller={{ ...registerFormPassSlipApproval('hrmoDisapprovalRemarks') }}
+                            isError={errorsPassSlipApproval.hrmoDisapprovalRemarks ? true : false}
+                            errorMessage={errorsPassSlipApproval.hrmoDisapprovalRemarks?.message}
                             textSize="md"
                           />
                         </div>
@@ -282,23 +399,35 @@ const ViewPassSlipModal: FunctionComponent<ViewPassSlipModalProps> = ({
         <Modal.Footer>
           <div className="flex justify-end w-full gap-2">
             <button
-              className="px-3 w-[5rem] py-2 text-sm text-gray-700 bg-gray-50 border rounded"
+              className="px-3 w-[5rem] py-2 text-sm text-gray-700 bg-gray-50 border rounded hover:bg-gray-200 transition-all"
               onClick={closeModalAction}
               type="button"
             >
               Close
             </button>
 
-            {rowData.status === PassSlipStatus.FOR_HRMO_APPROVAL && watch('status') !== '' && (
+            {rowData.status === PassSlipStatus.FOR_HRMO_APPROVAL && watchPassSlipApproval('status') !== '' && (
               <button
                 className="px-3 w-[5rem] py-2 text-sm text-white bg-blue-400 hover:bg-blue-500 rounded"
                 type="submit"
                 form="updatePassSlipForm"
-                disabled={patchFormLoading ? true : false}
+                disabled={patchPassSlipApprovalFormLoading ? true : false}
               >
                 Submit
               </button>
             )}
+
+            {rowData.isMedical === true && rowData.status === PassSlipStatus.AWAITING_MEDICAL_CERTIFICATE ? (
+              // && rowData.timeOut !== null
+              <button
+                className="px-3 w-[5rem] py-2 text-sm text-white bg-blue-400 hover:bg-blue-500 rounded transition-all"
+                type="submit"
+                form="approvePassSlipMedicalPurpose"
+                disabled={patchPassSlipMedicalPurposeFormLoading ? true : false}
+              >
+                Approve
+              </button>
+            ) : null}
           </div>
         </Modal.Footer>
       </Modal>
