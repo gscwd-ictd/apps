@@ -799,10 +799,10 @@ export const LeavePdf = ({ employeeDetails, leaveDetails, selectedLeaveLedger }:
                       >
                         <Image
                           style={{
-                            width: '15%',
+                            width: '25%',
                             position: 'absolute',
                             marginLeft: 0,
-                            paddingBottom: 5,
+                            paddingBottom: -5,
                           }}
                           src={leaveDetails?.leaveApplicationBasicInfo?.employeeSignature ?? '/'}
                         />
