@@ -22,6 +22,7 @@ import LeaveApplicationConfirmModal from './LeaveApplicationConfirmModal';
 import { patchEmpMonitoring } from 'apps/employee-monitoring/src/utils/helper/employee-monitoring-axios-helper';
 import { useLeaveLedgerStore } from 'apps/employee-monitoring/src/store/leave-ledger.store';
 import { DateTimeFormatter } from 'libs/utils/src/lib/functions/DateTimeFormatter';
+import { DateFormatter } from 'libs/utils/src/lib/functions/DateFormatter';
 import { TextSize } from 'libs/utils/src/lib/enums/text-size.enum';
 
 type ViewLeaveApplicationModalProps = {
@@ -52,6 +53,8 @@ const ViewLeaveApplicationModal: FunctionComponent<ViewLeaveApplicationModalProp
   closeModalAction,
   setModalState,
 }) => {
+  const [moreLeaveDates, setMoreLeaveDates] = useState<boolean>(false); //expand leave dates list
+
   // use context
   const {
     aside: { windowWidth },
@@ -238,6 +241,12 @@ const ViewLeaveApplicationModal: FunctionComponent<ViewLeaveApplicationModalProp
     }
   }, [leaveConfirmAction, confirmModalIsOpen]);
 
+  useEffect(() => {
+    if (!modalState) {
+      setMoreLeaveDates(false);
+    }
+  }, [modalState]);
+
   return (
     <>
       <LeaveApplicationConfirmModal
@@ -335,6 +344,46 @@ const ViewLeaveApplicationModal: FunctionComponent<ViewLeaveApplicationModalProp
 
                   <div className="grid grid-cols-2 grid-rows-1 px-3 sm:gap-2 md:gap:2 lg:gap-0">
                     <LabelValue
+                      label="Applied Leave Dates"
+                      direction="top-to-bottom"
+                      textSize="md"
+                      value={
+                        rowData.leaveName === LeaveName.MATERNITY ||
+                        rowData.leaveName === LeaveName.STUDY ||
+                        rowData.leaveName === LeaveName.REHABILITATION ||
+                        rowData.leaveName === LeaveName.SPECIAL_LEAVE_BENEFITS_FOR_WOMEN ||
+                        rowData.leaveName === LeaveName.ADOPTION ? (
+                          // show first and last date (array) only if SBL (maternity, study, rehab...)
+                          `${DateFormatter(rowData.leaveDates[0], 'MM-DD-YYYY')} - ${DateFormatter(
+                            rowData.leaveDates[rowData.leaveDates?.length - 1],
+                            'MM-DD-YYYY'
+                          )}`
+                        ) : (
+                          // show all dates if not SBL (maternity, study, rehab...)
+                          <>
+                            <ul>
+                              {rowData.leaveDates?.map((dates: string, index: number) => {
+                                if (moreLeaveDates) {
+                                  return <li key={index}>{DateFormatter(dates, 'MM-DD-YYYY')}</li>;
+                                } else {
+                                  if (index <= 1) return <li key={index}>{DateFormatter(dates, 'MM-DD-YYYY')}</li>;
+                                }
+                              })}
+                            </ul>
+                            {rowData.leaveDates?.length > 2 ? (
+                              <label
+                                className="cursor-pointer text-sm text-indigo-500 hover:text-indigo-600"
+                                onClick={(e) => setMoreLeaveDates(!moreLeaveDates)}
+                              >
+                                {moreLeaveDates ? 'Less...' : 'More...'}
+                              </label>
+                            ) : null}
+                          </>
+                        )
+                      }
+                    />
+
+                    <LabelValue
                       label="Applied Number of Days"
                       direction="top-to-bottom"
                       textSize="md"
@@ -342,31 +391,6 @@ const ViewLeaveApplicationModal: FunctionComponent<ViewLeaveApplicationModalProp
                         leaveApplicationDetails.leaveApplicationBasicInfo?.debitValue
                           ? parseInt(leaveApplicationDetails.leaveApplicationBasicInfo?.debitValue)
                           : 0
-                      }
-                    />
-
-                    <LabelValue
-                      label="Applied Leave Dates"
-                      direction="top-to-bottom"
-                      textSize="md"
-                      value={
-                        rowData.leaveDates && rowData.leaveDates.length >= 2 ? (
-                          <div className="flex items-center gap-2 text-sm font-semibold">
-                            {UseRenderBadgePill(firstAndLastDate(rowData.leaveDates).start, 'text-md')}
-                            <div>to</div>
-                            {UseRenderBadgePill(firstAndLastDate(rowData.leaveDates).end, 'text-md')}
-                          </div>
-                        ) : rowData.leaveDates && rowData.leaveDates.length === 1 ? (
-                          rowData.leaveDates.map((date, idx) => {
-                            return (
-                              <div className="flex items-center gap-2 text-sm font-semibold" key={idx}>
-                                {UseRenderBadgePill(date, 'text-md')}
-                              </div>
-                            );
-                          })
-                        ) : (
-                          'N/A'
-                        )
                       }
                     />
                   </div>
@@ -564,8 +588,8 @@ const ViewLeaveApplicationModal: FunctionComponent<ViewLeaveApplicationModalProp
                               <td className="border border-slate-400 text-center bg-green-100">Balance</td>
                             </tr>
 
-                            {/* VACATION & FORCED */}
-                            {rowData.leaveName === LeaveName.VACATION || rowData.leaveName === LeaveName.FORCED ? (
+                            {/* FORCED */}
+                            {rowData.leaveName === LeaveName.FORCED ? (
                               <tr className="border border-slate-400">
                                 <td className="border border-slate-400 text-center">
                                   {rowData.status === LeaveStatus.FOR_HRMO_CREDIT_CERTIFICATION ||
@@ -599,6 +623,52 @@ const ViewLeaveApplicationModal: FunctionComponent<ViewLeaveApplicationModalProp
                                 </td>
                               </tr>
                             ) : null}
+
+                            {/* VACATION  */}
+                            {rowData.leaveName === LeaveName.VACATION ? (
+                              <tr className="border border-slate-400">
+                                <td className="border border-slate-400 text-center">
+                                  {rowData.status === LeaveStatus.FOR_HRMO_CREDIT_CERTIFICATION ||
+                                  rowData.status === LeaveStatus.FOR_SUPERVISOR_APPROVAL ||
+                                  rowData.status === LeaveStatus.FOR_HRDM_APPROVAL
+                                    ? parseFloat(
+                                        `${leaveLedger[leaveLedger.length - 1]?.vacationLeaveBalance}`
+                                      ).toFixed(3)
+                                    : (
+                                        parseFloat(`${selectedLeaveLedger[0]?.vacationLeaveBalance}`) +
+                                        parseFloat(`${selectedLeaveLedger[0]?.vacationLeave}`) * -1
+                                      ).toFixed(3)}
+                                </td>
+
+                                <td className="border border-slate-400 text-center">
+                                  {rowData.leaveDates?.length.toFixed(3)}
+                                </td>
+
+                                <td className="border border-slate-400 text-center bg-green-100">
+                                  {rowData.status === LeaveStatus.FOR_HRMO_CREDIT_CERTIFICATION ||
+                                  rowData.status === LeaveStatus.FOR_SUPERVISOR_APPROVAL ||
+                                  rowData.status === LeaveStatus.FOR_HRDM_APPROVAL
+                                    ? (
+                                        parseFloat(`${leaveLedger[leaveLedger.length - 1]?.vacationLeaveBalance}`) -
+                                        parseFloat(`${rowData.leaveDates?.length}`)
+                                      ).toFixed(3)
+                                    : parseFloat(`${selectedLeaveLedger[0]?.vacationLeaveBalance}`).toFixed(3)}
+                                </td>
+                              </tr>
+                            ) : null}
+
+                            {/* {rowData.leaveName === LeaveName.VACATION
+                              ? parseFloat(`${selectedLeaveLedger[0]?.vacationLeaveBalance}`).toFixed(3)
+                              : rowData.leaveName === LeaveName.FORCED
+                              ? (
+                                  parseFloat(`${selectedLeaveLedger[0]?.vacationLeaveBalance}`) -
+                                  rowData.leaveDates?.length
+                                ).toFixed(3)
+                              : rowData.leaveName === LeaveName.SICK
+                              ? selectedLeaveLedger[0]?.sickLeaveBalance
+                              : rowData.leaveName === LeaveName.SPECIAL_PRIVILEGE
+                              ? selectedLeaveLedger[0]?.specialPrivilegeLeaveBalance
+                              : 'N/A'} */}
 
                             {/* {rowData.leaveName === LeaveName.VACATION || rowData.leaveName === LeaveName.FORCED ? (
                               <tr className="border border-slate-400">
