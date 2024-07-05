@@ -95,7 +95,6 @@ export const LeaveCompletedModal = ({ modalState, setModalState, closeModalActio
   const closeLeaveDetailsPdfModal = async () => {
     setLeaveDetailsPdfModalIsOpen(false);
   };
-
   return (
     <>
       <Modal
@@ -663,9 +662,13 @@ export const LeaveCompletedModal = ({ modalState, setModalState, closeModalActio
                                 {leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveDates?.length.toFixed(3)}
                               </td>
                               <td className="border border-slate-400 text-center bg-green-100">
-                                {leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.VACATION ||
-                                leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.FORCED
-                                  ? parseFloat(`${selectedLeaveLedger[0]?.vacationLeaveBalance}`)
+                                {leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.VACATION
+                                  ? parseFloat(`${selectedLeaveLedger[0]?.vacationLeaveBalance}`).toFixed(3)
+                                  : leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.FORCED
+                                  ? (
+                                      parseFloat(`${selectedLeaveLedger[0]?.vacationLeaveBalance}`) -
+                                      leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveDates?.length
+                                    )
                                       // +
                                       // parseFloat(`${selectedLeaveLedger[0]?.forcedLeaveBalance}`)
                                       .toFixed(3)

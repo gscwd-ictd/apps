@@ -6,6 +6,7 @@ import { patchPortal, putPortal } from 'apps/portal/src/utils/helpers/portal-axi
 import { useInboxStore } from 'apps/portal/src/store/inbox.store';
 import { InboxMessageResponse, InboxMessageType } from 'libs/utils/src/lib/enums/inbox.enum';
 import { useEmployeeStore } from 'apps/portal/src/store/employee.store';
+import { useEffect, useState } from 'react';
 
 type ConfirmationApplicationModalProps = {
   modalState: boolean;
@@ -124,6 +125,20 @@ export const ConfirmationInboxModal = ({
   };
 
   const { windowWidth } = UseWindowDimensions();
+  const [isBottom, setIsBottom] = useState<boolean>(false);
+
+  useEffect(() => {
+    const handleScroll = (e) => {
+      const bottom = e.target.scrollHeight - e.target.scrollTop === e.target.clientHeight;
+      if (bottom) {
+        setIsBottom(true);
+      } else {
+        setIsBottom(false);
+      }
+    };
+    window.addEventListener('scroll', handleScroll, true); //moved it out the function's body
+    return window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   return (
     <>
@@ -136,22 +151,44 @@ export const ConfirmationInboxModal = ({
           </h3>
         </Modal.Header>
         <Modal.Body>
-          <div className="flex flex-col w-full h-full gap-2 text-lg text-center px-4">
-            {confirmationResponse == InboxMessageResponse.PSB_ACCEPT
-              ? 'Are you sure you want to accept this assignment?'
-              : confirmationResponse == InboxMessageResponse.PSB_DECLINE
-              ? 'Are you sure you want to decline this assignment?'
-              : confirmationResponse == InboxMessageResponse.TRAINING_ACCEPT
-              ? 'Are you sure you want to accept this training invitiation? '
-              : confirmationResponse == InboxMessageResponse.TRAINING_DECLINE
-              ? 'Are you sure you want to decline this training invitation? Your response will be irreversible.'
-              : 'Do you want to submit?'}
+          <div className="flex flex-col w-full h-full gap-2 text-lg text-center px-4 ">
+            <div>
+              {confirmationResponse == InboxMessageResponse.PSB_ACCEPT
+                ? 'Are you sure you want to accept this assignment?'
+                : confirmationResponse == InboxMessageResponse.PSB_DECLINE
+                ? 'Are you sure you want to decline this assignment?'
+                : confirmationResponse == InboxMessageResponse.TRAINING_ACCEPT
+                ? 'By accepting this training, you agree with the Training Policy indicated below. Kindly scroll to the bottom to accept this Training invitation.'
+                : confirmationResponse == InboxMessageResponse.TRAINING_DECLINE
+                ? 'Are you sure you want to decline this training invitation? Your response will be irreversible.'
+                : 'Do you want to submit?'}
+            </div>
+            {confirmationResponse == InboxMessageResponse.TRAINING_ACCEPT ? (
+              <div className="flex flex-col items-center w-full h-56 px-4 pt-4 text-sm text-justify">
+                <label className="font-bold">Sample Training Policy</label>
+                Scope This policy applies to all permanent, full-time or part-time employees of the company. All
+                eligible employees are covered by this policy without discriminating against rank or protected
+                characteristics. Employees with temporary/short-term contracts may attend training at their manager’s
+                discretion. This policy doesn’t cover supplementary employees like contractors or consultants. Policy
+                elements Imparting training policy is a joint effort. Employees, managers and HR should all collaborate
+                to build a continuous professional development (CPD) culture. Employees are responsible for seeking new
+                learning opportunities. Managers are responsible to coach their teams and identify employee development
+                needs. The HR Department is responsible for conducting workshops, seminars and refresher courses to keep
+                the workforce informed and updated with the latest learnings.
+              </div>
+            ) : null}
           </div>
         </Modal.Body>
         <Modal.Footer>
           <div className="flex justify-end gap-2 px-4">
             <div className="min-w-[6rem] max-w-auto flex gap-4">
-              <Button variant={'primary'} size={'lg'} loading={false} onClick={(e) => handleResponse()}>
+              <Button
+                disabled={!isBottom && confirmationResponse == InboxMessageResponse.TRAINING_ACCEPT ? true : false}
+                variant={'primary'}
+                size={'lg'}
+                loading={false}
+                onClick={(e) => handleResponse()}
+              >
                 Yes
               </Button>
               <Button variant={'danger'} size={'lg'} loading={false} onClick={closeModalAction}>

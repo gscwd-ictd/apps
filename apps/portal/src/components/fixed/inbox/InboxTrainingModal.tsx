@@ -231,8 +231,8 @@ export const InboxTrainingModal = ({ modalState, setModalState, closeModalAction
         <Modal.Footer>
           <div className="flex justify-end gap-2 px-4">
             <div className="w-full justify-end flex gap-2">
-              {trainingMessage?.nomineeStatus === NomineeStatus.ACCEPTED ||
-              trainingMessage?.nomineeStatus === NomineeStatus.DECLINED ? (
+              {trainingMessage?.nomineeStatus == NomineeStatus.ACCEPTED ||
+              trainingMessage?.nomineeStatus == NomineeStatus.DECLINED ? (
                 <Button variant={'default'} size={'md'} loading={false} onClick={(e) => closeModalAction()}>
                   Close
                 </Button>

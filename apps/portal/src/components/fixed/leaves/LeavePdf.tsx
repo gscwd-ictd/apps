@@ -799,10 +799,10 @@ export const LeavePdf = ({ employeeDetails, leaveDetails, selectedLeaveLedger }:
                       >
                         <Image
                           style={{
-                            width: 30,
+                            width: '25%',
                             position: 'absolute',
                             marginLeft: 0,
-                            paddingBottom: 15,
+                            paddingBottom: -5,
                           }}
                           src={leaveDetails?.leaveApplicationBasicInfo?.employeeSignature ?? '/'}
                         />
@@ -931,10 +931,14 @@ export const LeavePdf = ({ employeeDetails, leaveDetails, selectedLeaveLedger }:
                             </View>
                             <View style={styles.containerTableRow}>
                               <Text>
-                                {parseFloat(`${selectedLeaveLedger[0]?.vacationLeaveBalance}`)
-                                  // +
-                                  // parseFloat(`${selectedLeaveLedger[0]?.forcedLeaveBalance}`)
-                                  .toFixed(3)}
+                                {leaveDetails.leaveApplicationBasicInfo.leaveName === LeaveName.VACATION
+                                  ? parseFloat(`${selectedLeaveLedger[0]?.vacationLeaveBalance}`).toFixed(3)
+                                  : leaveDetails.leaveApplicationBasicInfo.leaveName === LeaveName.FORCED
+                                  ? (
+                                      parseFloat(`${selectedLeaveLedger[0]?.vacationLeaveBalance}`) -
+                                      leaveDetails?.leaveApplicationBasicInfo?.leaveDates?.length
+                                    ).toFixed(3)
+                                  : parseFloat(`${selectedLeaveLedger[0]?.vacationLeaveBalance}`)}
                               </Text>
                             </View>
                             <View style={styles.containerTableRow2}>
@@ -944,15 +948,12 @@ export const LeavePdf = ({ employeeDetails, leaveDetails, selectedLeaveLedger }:
                         </View>
 
                         {/* HRMO SIGNATURE */}
-                        <View style={{ width: '100%' }}>
+                        <View style={{ width: '100%', justifyContent: 'center', alignItems: 'center' }}>
                           <Image
                             style={{
-                              width: 50,
+                              width: '18%',
                               position: 'absolute',
-                              justifyContent: 'center',
-                              alignItems: 'center',
-                              left: '40%',
-                              marginTop: -5,
+                              paddingBottom: 7,
                             }}
                             src={leaveDetails.leaveApplicationBasicInfo?.hrmoSignature ?? '/'}
                           />
@@ -1022,15 +1023,12 @@ export const LeavePdf = ({ employeeDetails, leaveDetails, selectedLeaveLedger }:
                         <Text style={{ padding: 5 }}>____________________________________________</Text>
                       </View>
                       {/* SUPERVISOR SIGNATURE */}
-                      <View style={{ width: '100%' }}>
+                      <View style={{ width: '100%', justifyContent: 'center', alignItems: 'center' }}>
                         <Image
                           style={{
-                            width: 50,
+                            width: '18%',
                             position: 'absolute',
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                            left: '40%',
-                            marginTop: -10,
+                            paddingBottom: 18,
                           }}
                           src={leaveDetails.leaveApplicationBasicInfo?.supervisorSignature ?? '/'}
                         />
@@ -1172,15 +1170,12 @@ export const LeavePdf = ({ employeeDetails, leaveDetails, selectedLeaveLedger }:
                       paddingBottom: 20,
                     }}
                   >
-                    <View style={{ width: '100%' }}>
+                    <View style={{ width: '100%', justifyContent: 'center', alignItems: 'center' }}>
                       <Image
                         style={{
-                          width: 50,
+                          width: '12%',
                           position: 'absolute',
-                          justifyContent: 'center',
-                          alignItems: 'center',
-                          left: '45%',
-                          marginTop: -15,
+                          paddingBottom: 20,
                         }}
                         src={leaveDetails.leaveApplicationBasicInfo?.hrdmSignature ?? '/'}
                       />
