@@ -136,6 +136,25 @@ const styles = StyleSheet.create({
   w5: { width: '5%' },
 });
 
+export const chunkSubstr = (str: string, size: number) => {
+  const numChunks = Math.ceil(str.length / size);
+  const chunks = new Array(numChunks);
+
+  for (let i = 0, o = 0; i < numChunks; ++i, o += size) {
+    chunks[i] = str.substr(o, size);
+  }
+
+  return chunks;
+};
+
+export const remarksHyphenationCallback = (word: string) => {
+  if (word.length > 16) {
+    return chunkSubstr(word, 14);
+  } else {
+    return [word];
+  }
+};
+
 export const LeaveLedgerPdf: FunctionComponent<LeaveLedgerPdfProps> = ({ employeeData, leaveLedger }) => {
   const [isClient, setIsClient] = useState<boolean>(false);
 
@@ -401,7 +420,10 @@ export const LeaveLedgerPdf: FunctionComponent<LeaveLedgerPdfProps> = ({ employe
                               <Text style={[styles.tableDataText]}>{entry.specialLeaveBenefitBalance}</Text>
                             </View>
                             <View style={[styles.tableData, styles.w25, { borderRight: 'none' }]}>
-                              <Text style={[styles.tableDataText]}>
+                              <Text
+                                style={[styles.tableDataText, styles.verticalCenter]}
+                                hyphenationCallback={remarksHyphenationCallback}
+                              >
                                 {entry.remarks} {leaveDatesToString(entry.leaveDates)}
                               </Text>
                             </View>

@@ -830,7 +830,7 @@ export const LeavePdf = ({ leaveDetails, selectedLeaveLedger }: LeavePdfProps): 
                           }}
                           src={leaveDetails.leaveApplicationBasicInfo?.employeeSignature || '/'}
                         />
-                        <Text style={{ paddingLeft: 6, paddingTop: 22 }}>
+                        <Text style={{ paddingLeft: 6, paddingTop: 25 }}>
                           _________________________________________________
                         </Text>
                       </View>
@@ -996,7 +996,7 @@ export const LeavePdf = ({ leaveDetails, selectedLeaveLedger }: LeavePdfProps): 
                             }}
                             src={leaveDetails.leaveApplicationBasicInfo?.hrmoSignature || '/'}
                           />
-                          <Text style={{ textAlign: 'center', paddingTop: 22 }}>
+                          <Text style={{ textAlign: 'center', paddingTop: 25 }}>
                             {leaveDetails.leaveApplicationBasicInfo?.hrmoApprovedByName}
                           </Text>
                           <Text style={{ paddingLeft: 6, paddingTop: -8 }}>
@@ -1070,11 +1070,10 @@ export const LeavePdf = ({ leaveDetails, selectedLeaveLedger }: LeavePdfProps): 
                             justifyContent: 'center',
                             alignItems: 'center',
                             left: '40%',
-                            paddingTop: 0,
                           }}
                           src={leaveDetails.leaveApplicationBasicInfo?.supervisorSignature || '/'}
                         />
-                        <Text style={{ textAlign: 'center', paddingTop: 22 }}>
+                        <Text style={{ textAlign: 'center', paddingTop: 30 }}>
                           {leaveDetails.leaveApplicationBasicInfo?.supervisorName}
                         </Text>
                         <Text style={{ paddingLeft: 6, paddingTop: -8 }}>
