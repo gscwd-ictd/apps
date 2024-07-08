@@ -472,9 +472,13 @@ export const ApprovalsCompletedLeaveModal = ({
                                 {leaveIndividualDetail?.leaveDates?.length.toFixed(3)}
                               </td>
                               <td className="border border-slate-400 text-center bg-green-100">
-                                {leaveIndividualDetail?.leaveName === LeaveName.VACATION ||
-                                leaveIndividualDetail?.leaveName === LeaveName.FORCED
-                                  ? parseFloat(`${selectedLeaveLedger[0]?.vacationLeaveBalance}`)
+                                {leaveIndividualDetail?.leaveName === LeaveName.VACATION
+                                  ? parseFloat(`${selectedLeaveLedger[0]?.vacationLeaveBalance}`).toFixed(3)
+                                  : leaveIndividualDetail?.leaveName === LeaveName.FORCED
+                                  ? (
+                                      parseFloat(`${selectedLeaveLedger[0]?.vacationLeaveBalance}`) -
+                                      leaveIndividualDetail?.leaveDates?.length
+                                    )
                                       // +
                                       // parseFloat(`${selectedLeaveLedger[0]?.forcedLeaveBalance}`)
                                       .toFixed(3)

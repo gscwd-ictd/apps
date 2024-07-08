@@ -136,6 +136,25 @@ const styles = StyleSheet.create({
   w5: { width: '5%' },
 });
 
+export const chunkSubstr = (str: string, size: number) => {
+  const numChunks = Math.ceil(str.length / size);
+  const chunks = new Array(numChunks);
+
+  for (let i = 0, o = 0; i < numChunks; ++i, o += size) {
+    chunks[i] = str.substr(o, size);
+  }
+
+  return chunks;
+};
+
+export const remarksHyphenationCallback = (word: string) => {
+  if (word.length > 16) {
+    return chunkSubstr(word, 14);
+  } else {
+    return [word];
+  }
+};
+
 export const LeaveLedgerPdf: FunctionComponent<LeaveLedgerPdfProps> = ({ employeeData, leaveLedger }) => {
   const [isClient, setIsClient] = useState<boolean>(false);
 
@@ -342,66 +361,106 @@ export const LeaveLedgerPdf: FunctionComponent<LeaveLedgerPdfProps> = ({ employe
                             key={index}
                             wrap={false}
                           >
+                            {/* PERIOD */}
                             <View style={[styles.tableData, styles.w8]}>
-                              <Text style={[styles.tableDataText]}>{dayjs(entry.period).format('MM/DD/YYYY')}</Text>
+                              <Text style={[styles.tableDataText, styles.verticalCenter]}>
+                                {dayjs(entry.period).format('MM/DD/YYYY')}
+                              </Text>
                             </View>
+
+                            {/* PARTICULARS */}
                             <View style={[styles.tableData, styles.w17, { textAlign: 'left' }]}>
-                              <Text style={[styles.tableDataText]}>{entry.particulars}</Text>
+                              <Text style={[styles.tableDataText, styles.verticalCenter]}>{entry.particulars}</Text>
                             </View>
+
+                            {/* FL */}
                             <View style={[styles.tableData, styles.w5]}>
-                              <Text style={[styles.tableDataText]}>
+                              <Text style={[styles.tableDataText, styles.verticalCenter]}>
                                 {!isEmpty(entry.forcedLeave) && parseFloat(entry.forcedLeave.toString()) !== 0
                                   ? entry.forcedLeave
                                   : ''}
                               </Text>
                             </View>
+
+                            {/* FL BALANCE */}
                             <View style={[styles.tableData, styles.w5]}>
-                              <Text style={[styles.tableDataText]}>{entry.forcedLeaveBalance}</Text>
+                              <Text style={[styles.tableDataText, styles.verticalCenter]}>
+                                {entry.forcedLeaveBalance}
+                              </Text>
                             </View>
+
+                            {/* VL */}
                             <View style={[styles.tableData, styles.w5]}>
-                              <Text style={[styles.tableDataText]}>
+                              <Text style={[styles.tableDataText, styles.verticalCenter]}>
                                 {!isEmpty(entry.vacationLeave) && parseFloat(entry.vacationLeave.toString()) !== 0
                                   ? entry.vacationLeave
                                   : ''}
                               </Text>
                             </View>
+
+                            {/* VL BALANCE */}
                             <View style={[styles.tableData, styles.w5]}>
-                              <Text style={[styles.tableDataText]}>{entry.vacationLeaveBalance}</Text>
+                              <Text style={[styles.tableDataText, styles.verticalCenter]}>
+                                {entry.vacationLeaveBalance}
+                              </Text>
                             </View>
+
+                            {/* SL */}
                             <View style={[styles.tableData, styles.w5]}>
-                              <Text style={[styles.tableDataText]}>
+                              <Text style={[styles.tableDataText, styles.verticalCenter]}>
                                 {!isEmpty(entry.sickLeave) && parseFloat(entry.sickLeave.toString()) !== 0
                                   ? entry.sickLeave
                                   : null}
                               </Text>
                             </View>
+
+                            {/* SL BALANCE */}
                             <View style={[styles.tableData, styles.w5]}>
-                              <Text style={[styles.tableDataText]}>{entry.sickLeaveBalance}</Text>
+                              <Text style={[styles.tableDataText, styles.verticalCenter]}>
+                                {entry.sickLeaveBalance}
+                              </Text>
                             </View>
+
+                            {/* SPL */}
                             <View style={[styles.tableData, styles.w5]}>
-                              <Text style={[styles.tableDataText]}>
+                              <Text style={[styles.tableDataText, styles.verticalCenter]}>
                                 {!isEmpty(entry.specialPrivilegeLeave) &&
                                 parseFloat(entry.specialPrivilegeLeave.toString()) !== 0
                                   ? entry.specialPrivilegeLeave
                                   : null}
                               </Text>
                             </View>
+
+                            {/* SPL BALANCE */}
                             <View style={[styles.tableData, styles.w5]}>
-                              <Text style={[styles.tableDataText]}>{entry.specialPrivilegeLeaveBalance}</Text>
+                              <Text style={[styles.tableDataText, styles.verticalCenter]}>
+                                {entry.specialPrivilegeLeaveBalance}
+                              </Text>
                             </View>
+
+                            {/* SLB */}
                             <View style={[styles.tableData, styles.w5]}>
-                              <Text style={[styles.tableDataText]}>
+                              <Text style={[styles.tableDataText, styles.verticalCenter]}>
                                 {!isEmpty(entry.specialLeaveBenefit) &&
                                 parseFloat(entry.specialLeaveBenefit.toString()) !== 0
                                   ? entry.specialLeaveBenefit
                                   : null}
                               </Text>
                             </View>
+
+                            {/* SBL BALANCE */}
                             <View style={[styles.tableData, styles.w5]}>
-                              <Text style={[styles.tableDataText]}>{entry.specialLeaveBenefitBalance}</Text>
+                              <Text style={[styles.tableDataText, styles.verticalCenter]}>
+                                {entry.specialLeaveBenefitBalance}
+                              </Text>
                             </View>
+
+                            {/* REMARKS */}
                             <View style={[styles.tableData, styles.w25, { borderRight: 'none' }]}>
-                              <Text style={[styles.tableDataText]}>
+                              <Text
+                                style={[styles.tableDataText, styles.verticalCenter]}
+                                hyphenationCallback={remarksHyphenationCallback}
+                              >
                                 {entry.remarks} {leaveDatesToString(entry.leaveDates)}
                               </Text>
                             </View>
