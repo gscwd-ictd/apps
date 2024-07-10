@@ -20,25 +20,14 @@ export const ConfirmationUpdateTimeLogModal = ({
   dataToSubmit,
   title,
 }: ConfirmationUpdateTimeLogModalProps) => {
-  const {
-    employeeDailyRecord,
-    updateEmployeeDtr,
-    updateEmployeeDtrFail,
-    updateEmployeeDtrSuccess,
-    confirmUpdateModalIsOpen,
-    setConfirmUpdateModalIsOpen,
-    setDtrModalIsOpen,
-    emptyResponseAndError,
-  } = useDtrStore((state) => ({
-    employeeDailyRecord: state.response.employeeDailyRecord,
-    updateEmployeeDtr: state.updateEmployeeDtr,
-    updateEmployeeDtrSuccess: state.updateEmployeeDtrSuccess,
-    updateEmployeeDtrFail: state.updateEmployeeDtrFail,
-    confirmUpdateModalIsOpen: state.confirmUpdateModalIsOpen,
-    setConfirmUpdateModalIsOpen: state.setConfirmUpdateModalIsOpen,
-    setDtrModalIsOpen: state.setDtrModalIsOpen,
-    emptyResponseAndError: state.emptyResponseAndError,
-  }));
+  const { updateEmployeeDtr, updateEmployeeDtrFail, updateEmployeeDtrSuccess, setDtrModalIsOpen } = useDtrStore(
+    (state) => ({
+      updateEmployeeDtr: state.updateEmployeeDtr,
+      updateEmployeeDtrSuccess: state.updateEmployeeDtrSuccess,
+      updateEmployeeDtrFail: state.updateEmployeeDtrFail,
+      setDtrModalIsOpen: state.setDtrModalIsOpen,
+    })
+  );
 
   const handleSubmit = () => {
     updateEmployeeDtr();

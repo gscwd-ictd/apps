@@ -30,6 +30,7 @@ export const DtrDateSelect = ({ employeeDetails }: DtrDateSelectProps) => {
   const getEmployeeDtrSuccess = useDtrStore((state) => state.getEmployeeDtrSuccess);
   const getEmployeeDtrFail = useDtrStore((state) => state.getEmployeeDtrFail);
   const emptyResponseAndError = useDtrStore((state) => state.emptyResponseAndError);
+  const setDtrPdfModalIsOpen = useDtrStore((state) => state.setDtrPdfModalIsOpen);
 
   const monthNow = format(new Date(), 'M');
   const yearNow = format(new Date(), 'yyyy');
@@ -124,6 +125,9 @@ export const DtrDateSelect = ({ employeeDetails }: DtrDateSelectProps) => {
         <div className="flex justify-center">
           <HiOutlineSearch className="w-6 h-6 md:w-5 md:h-5" />
         </div>
+      </Button>
+      <Button variant={'primary'} size={'md'} loading={false} type="button" onClick={() => setDtrPdfModalIsOpen(true)}>
+        View PDF
       </Button>
     </form>
   );
