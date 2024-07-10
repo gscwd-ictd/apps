@@ -171,7 +171,7 @@ export const PrfOtpContents: FunctionComponent<OtpProps> = ({
   //   }
   // }, [otpComplete]);
 
-  // SUBMIT OTP CODE AND COMPLETE PASS SLIP APPROVAL/DISAPPROVAL IF CORRECT
+  // SUBMIT OTP CODE AND COMPLETE PRF APPROVAL/DISAPPROVAL IF CORRECT
   async function handleFinalSubmit(e: any) {
     e.preventDefault();
     setIsSubmitLoading(true);

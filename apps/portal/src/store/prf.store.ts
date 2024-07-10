@@ -154,6 +154,9 @@ export type PrfState = {
   prfOtpModalIsOpen: boolean;
   setPrfOtpModalIsOpen: (prfOtpModalIsOpen: boolean) => void;
 
+  prfConfirmModalIsOpen: boolean;
+  setPrfConfirmModalIsOpen: (prfConfirmModalIsOpen: boolean) => void;
+
   selectedPosition: Position;
   setSelectedPosition: (selectedPosition: Position) => void;
 
@@ -212,6 +215,8 @@ export const usePrfStore = create<PrfState>()(
 
     prfOtpModalIsOpen: false,
 
+    prfConfirmModalIsOpen: false,
+
     error: { status: false, message: '' },
 
     isModalOpen: false,
@@ -266,6 +271,10 @@ export const usePrfStore = create<PrfState>()(
 
     setPrfOtpModalIsOpen: (prfOtpModalIsOpen: boolean) => {
       set((state) => ({ ...state, prfOtpModalIsOpen }));
+    },
+
+    setPrfConfirmModalIsOpen: (prfConfirmModalIsOpen: boolean) => {
+      set((state) => ({ ...state, prfConfirmModalIsOpen }));
     },
 
     setIsLoading: (isLoading: boolean) => {

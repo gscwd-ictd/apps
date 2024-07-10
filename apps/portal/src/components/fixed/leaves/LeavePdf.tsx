@@ -507,7 +507,8 @@ export const LeavePdf = ({ employeeDetails, leaveDetails, selectedLeaveLedger }:
                       <View style={styles.leaveLabelContainer2}>
                         <Text style={styles.checkbox}>
                           {(leaveDetails.leaveApplicationBasicInfo.leaveName === LeaveName.VACATION ||
-                            leaveDetails.leaveApplicationBasicInfo.leaveName === LeaveName.FORCED) &&
+                            leaveDetails.leaveApplicationBasicInfo.leaveName === LeaveName.FORCED ||
+                            leaveDetails.leaveApplicationBasicInfo.leaveName === LeaveName.SPECIAL_PRIVILEGE) &&
                           leaveDetails.leaveApplicationDetails.inPhilippinesOrAbroad &&
                           leaveDetails.leaveApplicationDetails.inPhilippinesOrAbroad === 'Within the Philippines'
                             ? 'X'
@@ -525,7 +526,8 @@ export const LeavePdf = ({ employeeDetails, leaveDetails, selectedLeaveLedger }:
                           }}
                         >
                           {(leaveDetails.leaveApplicationBasicInfo.leaveName === LeaveName.VACATION ||
-                            leaveDetails.leaveApplicationBasicInfo.leaveName === LeaveName.FORCED) &&
+                            leaveDetails.leaveApplicationBasicInfo.leaveName === LeaveName.FORCED ||
+                            leaveDetails.leaveApplicationBasicInfo.leaveName === LeaveName.SPECIAL_PRIVILEGE) &&
                           leaveDetails.leaveApplicationDetails.location &&
                           leaveDetails.leaveApplicationDetails.inPhilippinesOrAbroad &&
                           leaveDetails.leaveApplicationDetails.inPhilippinesOrAbroad === 'Within the Philippines'
@@ -545,7 +547,8 @@ export const LeavePdf = ({ employeeDetails, leaveDetails, selectedLeaveLedger }:
                       <View style={styles.leaveLabelContainer2}>
                         <Text style={styles.checkbox}>
                           {(leaveDetails.leaveApplicationBasicInfo.leaveName === LeaveName.VACATION ||
-                            leaveDetails.leaveApplicationBasicInfo.leaveName === LeaveName.FORCED) &&
+                            leaveDetails.leaveApplicationBasicInfo.leaveName === LeaveName.FORCED ||
+                            leaveDetails.leaveApplicationBasicInfo.leaveName === LeaveName.SPECIAL_PRIVILEGE) &&
                           leaveDetails.leaveApplicationDetails.inPhilippinesOrAbroad &&
                           leaveDetails.leaveApplicationDetails.inPhilippinesOrAbroad === 'Abroad'
                             ? 'X'
@@ -563,7 +566,8 @@ export const LeavePdf = ({ employeeDetails, leaveDetails, selectedLeaveLedger }:
                           }}
                         >
                           {(leaveDetails.leaveApplicationBasicInfo.leaveName === LeaveName.VACATION ||
-                            leaveDetails.leaveApplicationBasicInfo.leaveName === LeaveName.FORCED) &&
+                            leaveDetails.leaveApplicationBasicInfo.leaveName === LeaveName.FORCED ||
+                            leaveDetails.leaveApplicationBasicInfo.leaveName === LeaveName.SPECIAL_PRIVILEGE) &&
                           leaveDetails.leaveApplicationDetails.location &&
                           leaveDetails.leaveApplicationDetails.inPhilippinesOrAbroad &&
                           leaveDetails.leaveApplicationDetails.inPhilippinesOrAbroad === 'Abroad'

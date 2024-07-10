@@ -73,6 +73,11 @@ export const DtrTable = ({ employeeDetails }: DtrTableProps) => {
         </div>
       ) : !dtrIsLoading && employeeDtr?.dtrDays?.length > 0 ? (
         <>
+          {/* <div className="flex justify-end w-full pt-4">
+            <Button variant={'primary'} size={'md'} loading={false} onClick={() => setDtrPdfModalIsOpen(true)}>
+              View PDF
+            </Button>
+          </div> */}
           <div className="flex overflow-x-hidden w-full md:w-full flex-col">
             <div className="overflow-x-auto w-full md:w-full">
               <table className="w-screen md:w-full border-0 border-separate bg-slate-50 border-spacing-0">
@@ -417,11 +422,6 @@ export const DtrTable = ({ employeeDetails }: DtrTableProps) => {
                 </tr>
               </tbody>
             </table>
-          </div>
-          <div className="flex justify-end w-full pt-4">
-            <Button variant={'primary'} size={'md'} loading={false} onClick={() => setDtrPdfModalIsOpen(true)}>
-              View PDF
-            </Button>
           </div>
         </>
       ) : (
