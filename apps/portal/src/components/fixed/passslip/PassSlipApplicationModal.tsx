@@ -157,6 +157,7 @@ export const PassSlipApplicationModal = ({
   });
 
   useEffect(() => {
+    setValue('isMedical', null);
     if (
       watch('natureOfBusiness') === NatureOfBusiness.HALF_DAY ||
       watch('natureOfBusiness') === NatureOfBusiness.UNDERTIME
