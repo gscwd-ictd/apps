@@ -64,6 +64,7 @@ export default function Approvals({
                 {/* show pass slip link if user is SG16+, an Officer of the Day, or not Rank and File */}
                 {finalSalaryGrade >= 16 ||
                 employeeDetails.employmentDetails.officerOfTheDay.length > 0 ||
+                employeeDetails.employmentDetails.userId === 'af7bbec8-b26e-11ed-a79b-000c29f95a80' ||
                 employeeDetails.employmentDetails.userRole !== UserRole.RANK_AND_FILE ||
                 employeeDetails.employmentDetails.userRole !== UserRole.JOB_ORDER ? (
                   <TabHeader
@@ -147,7 +148,8 @@ export const getServerSideProps: GetServerSideProps = withCookieSession(async (c
     (employeeDetails.employmentDetails.userRole === UserRole.RANK_AND_FILE ||
       employeeDetails.employmentDetails.userRole === UserRole.JOB_ORDER) &&
     employeeDetails.employmentDetails.officerOfTheDay.length <= 0 &&
-    finalSalaryGrade < 16
+    finalSalaryGrade < 16 &&
+    employeeDetails.employmentDetails.userId !== 'af7bbec8-b26e-11ed-a79b-000c29f95a80'
   ) {
     // if true, the employee is not allowed to access this page
     return {

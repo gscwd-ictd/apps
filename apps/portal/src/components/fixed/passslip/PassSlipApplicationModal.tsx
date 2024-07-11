@@ -1,5 +1,5 @@
 /* eslint-disable @nx/enforce-module-boundaries */
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { AlertNotification, Button, LoadingSpinner, Modal } from '@gscwd-apps/oneui';
 import { useEmployeeStore } from '../../../../src/store/employee.store';
 import { usePassSlipStore } from '../../../../src/store/passslip.store';
@@ -16,6 +16,8 @@ import { useTimeLogStore } from 'apps/portal/src/store/timelogs.store';
 import useSWR from 'swr';
 import { isEmpty } from 'lodash';
 import { fetchWithToken } from 'apps/portal/src/utils/hoc/fetcher';
+import { useLeaveLedgerStore } from 'apps/portal/src/store/leave-ledger.store';
+import { LeaveLedgerEntry } from 'libs/utils/src/lib/types/leave-ledger-entry.type';
 
 type PassSlipApplicationModalProps = {
   modalState: boolean;
@@ -86,6 +88,58 @@ export const PassSlipApplicationModal = ({
     getSupervisorsFail: state.getSupervisorsFail,
     supervisors: state.supervisors,
   }));
+
+  const { errorLedger, getLeaveLedger, getLeaveLedgerSuccess, getLeaveLedgerFail } = useLeaveLedgerStore((state) => ({
+    errorLedger: state.error.errorLeaveLedger,
+    getLeaveLedger: state.getLeaveLedger,
+    getLeaveLedgerSuccess: state.getLeaveLedgerSuccess,
+    getLeaveLedgerFail: state.getLeaveLedgerFail,
+  }));
+
+  const [forcedLeaveBalance, setForcedLeaveBalance] = useState<number>(0);
+  const [vacationLeaveBalance, setVacationLeaveBalance] = useState<number>(0);
+  const [sickLeaveBalance, setSickLeaveBalance] = useState<number>(0);
+  const [specialPrivilegeLeaveBalance, setSpecialPrivilegeLeaveBalance] = useState<number>(0);
+
+  // get the latest balance by last index value
+  const getLatestBalance = (leaveLedger: Array<LeaveLedgerEntry>) => {
+    const lastIndexValue = leaveLedger[leaveLedger.length - 1];
+    setForcedLeaveBalance(lastIndexValue.forcedLeaveBalance);
+    setVacationLeaveBalance(lastIndexValue.vacationLeaveBalance ?? 0);
+    setSickLeaveBalance(lastIndexValue.sickLeaveBalance ?? 0);
+    setSpecialPrivilegeLeaveBalance(lastIndexValue.specialPrivilegeLeaveBalance ?? 0);
+  };
+
+  //fetch employee leave ledger to check leave balances
+  const leaveLedgerUrl = `${process.env.NEXT_PUBLIC_EMPLOYEE_MONITORING_URL}/v1/leave/ledger/${employeeDetails.user._id}/${employeeDetails.profile.companyId}`;
+
+  const {
+    data: swrLeaveLedger,
+    isLoading: swrLeaveLedgerLoading,
+    error: swrLeaveLedgerError,
+  } = useSWR(employeeDetails.user._id && employeeDetails.profile.companyId ? leaveLedgerUrl : null, fetchWithToken, {
+    shouldRetryOnError: true,
+    revalidateOnFocus: false,
+  });
+
+  // Initial zustand state update
+  useEffect(() => {
+    if (swrLeaveLedgerLoading) {
+      getLeaveLedger(swrLeaveLedgerLoading);
+    }
+  }, [swrLeaveLedgerLoading]);
+
+  // Upon success/fail of swr request, zustand state will be updated
+  useEffect(() => {
+    if (!isEmpty(swrLeaveLedger)) {
+      getLeaveLedgerSuccess(swrLeaveLedgerLoading, swrLeaveLedger);
+      getLatestBalance(swrLeaveLedger);
+    }
+
+    if (!isEmpty(swrLeaveLedgerError)) {
+      getLeaveLedgerFail(swrLeaveLedgerLoading, swrLeaveLedgerError.message);
+    }
+  }, [swrLeaveLedger, swrLeaveLedgerError]);
 
   // React hook form
   const { reset, register, handleSubmit, watch, setValue } = useForm<PassSlipApplicationForm>({
@@ -220,7 +274,27 @@ export const PassSlipApplicationModal = ({
                 {watch('isMedical') === '1' && watch('natureOfBusiness') === NatureOfBusiness.PERSONAL_BUSINESS ? (
                   <AlertNotification
                     alertType="info"
-                    notifMessage="For Personal Business with Medical Purposes, a medical certificate is required for it to be deducted to your Sick Leave credits. If no valid medical certificate is presented to HRD, it will be deducted to your Vacation Leave credits instead. "
+                    notifMessage="For Personal Business with Medical Purposes, a medical certificate is required for it to be deducted to your Sick Leave balance. If no valid medical certificate is presented to HRD, it will be deducted to your Vacation Leave balance instead or directly to your pay if your Vacation Leave balance is 0 or less."
+                    dismissible={false}
+                  />
+                ) : null}
+
+                {vacationLeaveBalance <= 0 &&
+                watch('natureOfBusiness') === NatureOfBusiness.PERSONAL_BUSINESS &&
+                watch('isMedical') === '0' ? (
+                  <AlertNotification
+                    alertType="warning"
+                    notifMessage="This Pass Slip will be deducted directly to your pay as you currently have 0 or less Vacation Leave balance."
+                    dismissible={false}
+                  />
+                ) : null}
+
+                {sickLeaveBalance <= 0 &&
+                watch('natureOfBusiness') === NatureOfBusiness.PERSONAL_BUSINESS &&
+                watch('isMedical') === '1' ? (
+                  <AlertNotification
+                    alertType="warning"
+                    notifMessage="This Pass Slip will be deducted directly to your pay as you currently have 0 or less Sick Leave balance."
                     dismissible={false}
                   />
                 ) : null}

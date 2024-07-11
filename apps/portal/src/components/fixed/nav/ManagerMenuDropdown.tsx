@@ -15,6 +15,7 @@ type MenuDropdownProps = {
   userRole: string;
   salaryGrade: number;
   officerOfTheDay: Array<OfficerOfTheDay>;
+  employeeId: string;
 };
 
 export const ManagerMenuDropdown = ({
@@ -24,6 +25,7 @@ export const ManagerMenuDropdown = ({
   userRole = null,
   salaryGrade = 0,
   officerOfTheDay = [],
+  employeeId,
 }: MenuDropdownProps): JSX.Element => {
   const { pendingApprovalsCount, errorPendingApprovalsCount } = useApprovalStore((state) => ({
     pendingApprovalsCount: state.pendingApprovalsCount,
@@ -78,9 +80,9 @@ export const ManagerMenuDropdown = ({
                   pendingApprovalsCount.pendingOvertimesCount > 0 ||
                   pendingApprovalsCount.pendingDtrCorrectionsApprovals > 0) ? (
                 <span className="absolute w-3 h-3 -mt-5 ml-9 bg-red-600 rounded-full select-none" />
-              ) : //if SG16 and is Rank and File -- Pass Slip Approvals page notifs only
+              ) : //if SG16 or maam Em is logged in and is Rank and File -- Pass Slip Approvals page notifs only
               (isEqual(userRole, UserRole.RANK_AND_FILE) || isEqual(userRole, UserRole.JOB_ORDER)) &&
-                salaryGrade >= 16 &&
+                (salaryGrade >= 16 || employeeId === 'af7bbec8-b26e-11ed-a79b-000c29f95a80') &&
                 isEmpty(errorPendingApprovalsCount) &&
                 pendingApprovalsCount.pendingPassSlipsCount > 0 ? (
                 <span className="absolute w-3 h-3 -mt-5 ml-9 bg-red-600 rounded-full select-none" />
@@ -132,7 +134,8 @@ export const ManagerMenuDropdown = ({
                   isEqual(userRole, UserRole.OIC_DIVISION_MANAGER) ||
                   // Officer of the Day OR SG16+
                   officerOfTheDay?.length > 0 ||
-                  salaryGrade >= 16 ? (
+                  salaryGrade >= 16 ||
+                  employeeId === 'af7bbec8-b26e-11ed-a79b-000c29f95a80' ? (
                     <Menu.Item>
                       {({ active }) => (
                         <button
@@ -169,9 +172,9 @@ export const ManagerMenuDropdown = ({
                               pendingApprovalsCount.pendingOvertimesCount > 0 ||
                               pendingApprovalsCount.pendingDtrCorrectionsApprovals > 0) ? (
                               <span className="absolute w-3 h-3 right-4 z-30 bg-red-600 rounded-full select-none" />
-                            ) : //if SG 16 and is Rank and File -- Pass Slip Approvals page notifs only
+                            ) : //if SG 16 or maam Em is logged in and is Rank and File -- Pass Slip Approvals page notifs only
                             (isEqual(userRole, UserRole.RANK_AND_FILE) || isEqual(userRole, UserRole.JOB_ORDER)) &&
-                              salaryGrade >= 16 &&
+                              (salaryGrade >= 16 || employeeId === 'af7bbec8-b26e-11ed-a79b-000c29f95a80') &&
                               isEmpty(errorPendingApprovalsCount) &&
                               pendingApprovalsCount.pendingPassSlipsCount > 0 ? (
                               <span className="absolute w-3 h-3 right-4 z-30 bg-red-600 rounded-full select-none" />
