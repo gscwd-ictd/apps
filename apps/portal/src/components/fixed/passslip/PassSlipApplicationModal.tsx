@@ -280,8 +280,10 @@ export const PassSlipApplicationModal = ({
                 ) : null}
 
                 {vacationLeaveBalance <= 0 &&
-                watch('natureOfBusiness') === NatureOfBusiness.PERSONAL_BUSINESS &&
-                watch('isMedical') === '0' ? (
+                (watch('natureOfBusiness') === NatureOfBusiness.PERSONAL_BUSINESS ||
+                  watch('natureOfBusiness') === NatureOfBusiness.HALF_DAY ||
+                  watch('natureOfBusiness') === NatureOfBusiness.UNDERTIME) &&
+                (watch('isMedical') === '0' || watch('isMedical') === null) ? (
                   <AlertNotification
                     alertType="warning"
                     notifMessage="This Pass Slip will be deducted directly to your pay as you currently have 0 or less Vacation Leave balance."
