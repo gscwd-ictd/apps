@@ -71,12 +71,12 @@ export const VacancyJobInformation = (props: { data: JobOpeningDetails }): JSX.E
           <label className="pl-2 font-bold">Competencies: </label>
         </div>
 
-        {props.data.competencies.functional.length > 0 && (
+        {props.data.competencies.functional?.length > 0 && (
           <>
             <div>
               <label className="pl-2 font-bold">Functional/Cross Cutting Competency: </label>
             </div>
-            {props.data.competencies.functional.map((competency: JobCompetencies, Idx: number) => {
+            {props.data.competencies.functional?.map((competency: JobCompetencies, Idx: number) => {
               return (
                 <div className="px-4 py-2 my-2 text-justify bg-white border rounded-xl" key={Idx}>
                   <div>
@@ -101,9 +101,9 @@ export const VacancyJobInformation = (props: { data: JobOpeningDetails }): JSX.E
           </>
         )}
 
-        {props.data.competencies.crossCutting.length > 0 && (
+        {props.data.competencies.crossCutting?.length > 0 && (
           <>
-            {props.data.competencies.crossCutting.map((competency: JobCompetencies, Idx: number) => {
+            {props.data.competencies.crossCutting?.map((competency: JobCompetencies, Idx: number) => {
               return (
                 <div className="px-4 py-2 my-2 text-justify bg-white border rounded-xl" key={Idx}>
                   <div>
@@ -129,13 +129,13 @@ export const VacancyJobInformation = (props: { data: JobOpeningDetails }): JSX.E
         )}
       </div>
 
-      {props.data.competencies.managerial.length > 0 && (
+      {props.data.competencies.managerial?.length > 0 && (
         <>
           <div className="p-2 m-2 text-gray-800 bg-slate-100 rounded-xl">
             <div className="pt-4 pb-4 pr-2">
               <label className="pl-2 font-bold">Managerial Competency: </label>
             </div>
-            {props.data.competencies.managerial.map((competency: JobCompetencies, Idx: number) => {
+            {props.data.competencies.managerial?.map((competency: JobCompetencies, Idx: number) => {
               return (
                 <div className="px-4 py-2 my-2 text-justify bg-white border rounded-xl" key={Idx}>
                   <div>

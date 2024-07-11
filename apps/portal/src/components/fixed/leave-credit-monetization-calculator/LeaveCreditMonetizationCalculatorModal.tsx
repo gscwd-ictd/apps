@@ -37,9 +37,7 @@ export const LeaveCreditMonetizationCalculatorModal = ({
     leaveCalculatorModalIsOpen: state.leaveCalculatorModalIsOpen,
   }));
 
-  const [leaveCredits, setLeaveCredits] = useState<number>(
-    Number(vacationLeave) + Number(forcedLeave) + Number(sickLeave)
-  );
+  const [leaveCredits, setLeaveCredits] = useState<number>(Number(vacationLeave) + Number(sickLeave));
   const [leaveCreditsToCompute, setLeaveCreditsToCompute] = useState<number>(null);
   const [estimatedAmount, setEstimatedAmount] = useState<number>(estimatedMaxAmount);
   const [salaryGrade, setSalaryGrade] = useState<number>(0);
@@ -60,15 +58,15 @@ export const LeaveCreditMonetizationCalculatorModal = ({
   };
 
   const resetComputation = () => {
-    setLeaveCredits(Number(vacationLeave) + Number(forcedLeave) + Number(sickLeave));
-    setLeaveCreditsToCompute(Number(vacationLeave) + Number(forcedLeave) + Number(sickLeave));
+    setLeaveCredits(Number(vacationLeave) + Number(sickLeave));
+    setLeaveCreditsToCompute(Number(vacationLeave) + Number(sickLeave));
     setSalaryGrade(sgAmount);
     setEstimatedAmount(salaryGrade * leaveCredits * monetizationConstant);
   };
 
   useEffect(() => {
-    setLeaveCredits(Number(vacationLeave) + Number(forcedLeave) + Number(sickLeave));
-    setLeaveCreditsToCompute(Number(vacationLeave) + Number(forcedLeave) + Number(sickLeave));
+    setLeaveCredits(Number(vacationLeave) + Number(sickLeave));
+    setLeaveCreditsToCompute(Number(vacationLeave) + Number(sickLeave));
     setSalaryGrade(sgAmount);
   }, [leaveCalculatorModalIsOpen]);
 
@@ -93,7 +91,7 @@ export const LeaveCreditMonetizationCalculatorModal = ({
           </h3>
         </Modal.Header>
         <Modal.Body>
-          {!vacationLeave && !forcedLeave && !sickLeave && !sgAmount && !sgIncrement ? (
+          {!vacationLeave && !sickLeave && !sgAmount && !sgIncrement ? (
             <>
               <div className="w-full h-[90%]  static flex flex-col justify-items-center items-center place-items-center">
                 <SpinnerDotted
@@ -144,14 +142,14 @@ export const LeaveCreditMonetizationCalculatorModal = ({
                   </div>
                   <div className="flex flex-row justify-between items-center w-full">
                     <div className="flex flex-col md:flex-row justify-between items-start md:items-center w-full">
-                      <label className="text-slate-500 text-md font-medium">Vacation & Forced Leave Credits:</label>
+                      <label className="text-slate-500 text-md font-medium">Vacation Leave Credits:</label>
 
                       <div className="w-full md:w-44">
                         <input
                           type="number"
                           className="border-slate-100 text-slate-500 h-12 text-md w-full rounded"
                           placeholder="VL and Forced Leave Credits"
-                          value={(Number(vacationLeave) + Number(forcedLeave)).toFixed(3)}
+                          value={Number(vacationLeave).toFixed(3)}
                           disabled
                         />
                       </div>
@@ -183,7 +181,7 @@ export const LeaveCreditMonetizationCalculatorModal = ({
                           type="number"
                           className="border-slate-100 text-slate-500 h-12 text-md w-full rounded"
                           placeholder="Total Leave Credit"
-                          value={(Number(vacationLeave) + Number(forcedLeave) + Number(sickLeave)).toFixed(3)}
+                          value={(Number(vacationLeave) + Number(sickLeave)).toFixed(3)}
                           disabled
                         />
                       </div>

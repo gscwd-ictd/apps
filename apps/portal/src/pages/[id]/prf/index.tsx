@@ -290,12 +290,12 @@ export default function Prf({ user, employee }: PrfPageProps) {
       if (activeItem == 0 && swrPendingPrfDetailsList.length <= 1) {
         setTimeout(() => {
           router.reload();
-        }, 2000);
+        }, 1000);
       }
       if (activeItem == 1 && swrForApprovalPrfDetailsList.length <= 1) {
         setTimeout(() => {
           router.reload();
-        }, 2000);
+        }, 1000);
       }
     }
   }, [patchResponse]);

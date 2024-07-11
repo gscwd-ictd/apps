@@ -17,6 +17,7 @@ import { PrfOtpContents } from '../prfOtp/PrfOtpContents';
 import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
 import { DateFormatter } from 'libs/utils/src/lib/functions/DateFormatter';
 import { PrfPositionCard } from './PrfPositionCard';
+import { ConfirmationApprovalModal } from '../prfConfirm/ConfirmationApprovalModal';
 
 type ModalProps = {
   modalState: boolean;
@@ -31,36 +32,28 @@ export const ForApprovalPrfModal = ({ modalState, setModalState, closeModalActio
     getPrfDetailsForApproval,
     getPrfDetailsForApprovalSuccess,
     getPrfDetailsForApprovalFail,
-    selectedPosition,
-    prfOtpModalIsOpen,
-    patchResponse,
     patchError,
     patchPrf,
     patchPrfSuccess,
     patchPrfFail,
-    setPrfOtpModalIsOpen,
     setForApprovalPrfModalIsOpen,
-    setSelectedPosition,
-    setViewPositionModalIsOpen,
     emptyResponseAndError,
+    setPrfConfirmModalIsOpen,
+    prfConfirmModalIsOpen,
   } = usePrfStore((state) => ({
     selectedPrfId: state.selectedPrfId,
-    selectedPosition: state.selectedPosition,
     forApprovalPrfModalIsOpen: state.forApprovalPrfModalIsOpen,
     getPrfDetailsForApproval: state.getPrfDetailsForApproval,
     getPrfDetailsForApprovalSuccess: state.getPrfDetailsForApprovalSuccess,
     getPrfDetailsForApprovalFail: state.getPrfDetailsForApprovalFail,
-    setViewPositionModalIsOpen: state.setViewPositionModalIsOpen,
-    setSelectedPosition: state.setSelectedPosition,
-    patchResponse: state.response.patchResponse,
     patchError: state.errors.errorResponse,
-    prfOtpModalIsOpen: state.prfOtpModalIsOpen,
     patchPrf: state.patchPrf,
     patchPrfSuccess: state.patchPrfSuccess,
     patchPrfFail: state.patchPrfFail,
-    setPrfOtpModalIsOpen: state.setPrfOtpModalIsOpen,
     setForApprovalPrfModalIsOpen: state.setForApprovalPrfModalIsOpen,
     emptyResponseAndError: state.emptyResponseAndError,
+    setPrfConfirmModalIsOpen: state.setPrfConfirmModalIsOpen,
+    prfConfirmModalIsOpen: state.prfConfirmModalIsOpen,
   }));
 
   const employeeDetail = useEmployeeStore((state) => state.employeeDetails);
@@ -99,8 +92,8 @@ export const ForApprovalPrfModal = ({ modalState, setModalState, closeModalActio
   const [isDeclineModalOpen, setIsDeclineModalOpen] = useState<boolean>(false);
   const [remarks, setRemarks] = useState<string>('');
 
-  const handleOtpModal = () => {
-    setPrfOtpModalIsOpen(true);
+  const handleConfirmModal = () => {
+    setPrfConfirmModalIsOpen(true);
   };
 
   useEffect(() => {
@@ -136,6 +129,10 @@ export const ForApprovalPrfModal = ({ modalState, setModalState, closeModalActio
       }, 3000);
     }
   }, [patchError]);
+
+  const closeConfirmModal = async () => {
+    setPrfConfirmModalIsOpen(false);
+  };
 
   const { windowWidth } = UseWindowDimensions();
   return (
@@ -177,12 +174,11 @@ export const ForApprovalPrfModal = ({ modalState, setModalState, closeModalActio
                   <>
                     <PageTitle title={prfDetailsForApproval.prfNo} />
 
-                    <OtpModal
+                    {/* <OtpModal
                       modalState={prfOtpModalIsOpen}
                       setModalState={setPrfOtpModalIsOpen}
                       title={'APPROVE PRF OTP'}
                     >
-                      {/* contents */}
                       <PrfOtpContents
                         mobile={employeeDetail.profile.mobileNumber}
                         employeeId={employeeDetail.employmentDetails.userId}
@@ -191,7 +187,17 @@ export const ForApprovalPrfModal = ({ modalState, setModalState, closeModalActio
                         otpName={'prf'}
                         remarks={''}
                       />
-                    </OtpModal>
+                    </OtpModal> */}
+
+                    <ConfirmationApprovalModal
+                      modalState={prfConfirmModalIsOpen}
+                      setModalState={setPrfConfirmModalIsOpen}
+                      closeModalAction={closeConfirmModal}
+                      action={PrfStatus.APPROVED}
+                      tokenId={selectedPrfId}
+                      remarks={''}
+                      employeeId={employeeDetail.employmentDetails.userId}
+                    />
 
                     <Modal
                       size={`${windowWidth > 1024 ? 'sm' : 'xl'}`}
@@ -292,7 +298,7 @@ export const ForApprovalPrfModal = ({ modalState, setModalState, closeModalActio
                                 <Button
                                   variant="primary"
                                   onClick={() => {
-                                    handleOtpModal();
+                                    handleConfirmModal();
                                   }}
                                 >
                                   Approve Request{' '}

@@ -308,7 +308,7 @@ export default function Dashboard({ userDetails }: InferGetServerSidePropsType<t
 
   //add all leave credits
   useEffect(() => {
-    setLeaveCredits(Number(vacationLeaveBalance) + Number(forcedLeaveBalance) + Number(sickLeaveBalance));
+    setLeaveCredits(Number(vacationLeaveBalance) + Number(sickLeaveBalance));
   }, [vacationLeaveBalance, forcedLeaveBalance, sickLeaveBalance]);
 
   //compute max leave credits
