@@ -248,7 +248,8 @@ export const ProfileMenuDropdown = ({
                       isEqual(employeeDetails.employmentDetails.userRole, UserRole.OIC_DIVISION_MANAGER) ||
                       // Officer of the Day OR SG16+
                       employeeDetails.employmentDetails.officerOfTheDay.length > 0 ||
-                      employeeSalaryGrade >= 16 ? (
+                      employeeSalaryGrade >= 16 ||
+                      employeeDetails.employmentDetails.userId === 'af7bbec8-b26e-11ed-a79b-000c29f95a80' ? (
                         <>
                           <Menu.Item>
                             {({ active }) => (
