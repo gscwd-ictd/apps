@@ -54,7 +54,10 @@ export type TrainingNominationData = {
 };
 
 export type NominatedEmployees = {
+  assignment: string;
+  companyId: string;
   employeeId: string;
+  isReplacedBy?: boolean;
   name: string;
   nomineeType: NomineeType;
   status: NomineeStatus; //pending,accepted,declined
@@ -63,6 +66,7 @@ export type NominatedEmployees = {
 };
 
 export type NomineeSupervisor = {
+  distributionId: string;
   name: string;
   supervisorId: string;
 };

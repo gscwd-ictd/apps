@@ -1,8 +1,9 @@
 /* eslint-disable @nx/enforce-module-boundaries */
 /* eslint-disable react-hooks/exhaustive-deps */
-import { FunctionComponent, useEffect, useState } from 'react';
+import { FunctionComponent, useCallback, useEffect, useRef, useState } from 'react';
 import { GenerateCaptcha } from '../captcha/CaptchaGenerator';
 import { useLoginStore } from 'apps/portal/src/store/login.store';
+import React from 'react';
 
 interface CaptchaProps {
   tokenId: string;
@@ -78,7 +79,8 @@ export const LoginCaptcha: FunctionComponent<CaptchaProps> = ({ tokenId, captcha
   };
 
   // SUBMIT
-  async function handleFinalSubmit() {
+  async function handleFinalSubmit(e) {
+    e.preventDefault();
     if (password != captchaPassword || password == '' || captchaPassword == '') {
       setIsCaptchaError(true);
       setWiggleEffect(true);
@@ -87,8 +89,17 @@ export const LoginCaptcha: FunctionComponent<CaptchaProps> = ({ tokenId, captcha
     }
   }
 
+  const emailInput = useRef(null);
+
+  useEffect(() => {
+    if (!emailInput.current.focus) {
+      emailInput.current.focus();
+      console.log('focus');
+    }
+  }, []);
+
   return (
-    <>
+    <form>
       <div className="flex flex-col p-8 gap-1 justify-center items-center text-sm w-full">
         <div className="mb-2 text-center">
           {`To continue logging in, please generate and submit the correct Captcha.`}
@@ -96,6 +107,7 @@ export const LoginCaptcha: FunctionComponent<CaptchaProps> = ({ tokenId, captcha
 
         <div className="flex flex-col flex-wrap justify-center items-center gap-2 w-full">
           <button
+            type="button"
             className={`
                text-white bg-red-500 h-10 transition-all rounded hover:bg-red-600 active:bg-red-600 outline-red-500 w-56`}
             onClick={getCaptcha}
@@ -117,7 +129,7 @@ export const LoginCaptcha: FunctionComponent<CaptchaProps> = ({ tokenId, captcha
           </div>
 
           <input
-            autoFocus
+            ref={emailInput}
             type="text"
             value={password}
             placeholder="Enter Captcha"
@@ -129,16 +141,17 @@ export const LoginCaptcha: FunctionComponent<CaptchaProps> = ({ tokenId, captcha
             className={`${
               wiggleEffect && 'animate-shake'
             } text-white w-56 h-10 transition-all rounded hover:bg-indigo-600 active:bg-indigo-600 outline-blue-500 ${
-              wiggleEffect ? 'bg-rose-600 hover:bg-rose-600' : 'bg-indigo-500'
+              wiggleEffect ? 'bg-rose-600 hover:bg-rose-600 outline-rose-500' : 'bg-indigo-500'
             }`}
             type="submit"
             onAnimationEnd={() => setWiggleEffect(false)}
-            onClick={(e) => handleFinalSubmit()}
+            onClick={(e) => handleFinalSubmit(e)}
           >
             <label className={`cursor-not-allowed pointer-events-none font-bold`}>SUBMIT</label>
           </button>
 
           <button
+            type="button"
             className={`
                mb-2 text-white bg-red-500 h-10 transition-all rounded hover:bg-red-600 active:bg-red-600 outline-red-500 w-56`}
             onClick={(e) => handleCancelCaptcha()}
@@ -147,6 +160,6 @@ export const LoginCaptcha: FunctionComponent<CaptchaProps> = ({ tokenId, captcha
           </button>
         </div>
       </div>
-    </>
+    </form>
   );
 };

@@ -164,17 +164,82 @@ export const ConfirmationInboxModal = ({
                 : 'Do you want to submit?'}
             </div>
             {confirmationResponse == InboxMessageResponse.TRAINING_ACCEPT ? (
-              <div className="flex flex-col items-center w-full h-56 px-4 pt-4 text-sm text-justify">
-                <label className="font-bold">Sample Training Policy</label>
-                Scope This policy applies to all permanent, full-time or part-time employees of the company. All
-                eligible employees are covered by this policy without discriminating against rank or protected
-                characteristics. Employees with temporary/short-term contracts may attend training at their manager’s
-                discretion. This policy doesn’t cover supplementary employees like contractors or consultants. Policy
-                elements Imparting training policy is a joint effort. Employees, managers and HR should all collaborate
-                to build a continuous professional development (CPD) culture. Employees are responsible for seeking new
-                learning opportunities. Managers are responsible to coach their teams and identify employee development
-                needs. The HR Department is responsible for conducting workshops, seminars and refresher courses to keep
-                the workforce informed and updated with the latest learnings.
+              <div className="flex flex-col items-center w-full h-56 px-4 pt-4 text-md text-justify">
+                <label className="font-bold">Training Policy</label>
+
+                <label className="font-bold pt-4">Failure to Render the Service Obligation</label>
+                <div className="flex flex-col justify-start items-start gap-2">
+                  <div className="flex flex-row justify-start items-start gap-1">
+                    <label>1.</label>
+                    <div className="flex flex-col">
+                      <label>
+                        Should the employee fail to render in full the service obligation referred to in this pilicy on
+                        account of voluntary resignation, optional retirement, separation from the service through their
+                        fault, or other causes within their control, they shall refund based on the following forumla:
+                      </label>
+                      <label className="text-center">R = TCR - (TCR/SOR X SOS)</label>
+                      <label>Where:</label>
+                      <label>R = Refund</label>
+                      <label>SOR = Service Obligation Required</label>
+                      <label>SOS = Service Obligation Served</label>
+                      <label>TCR = Total Compensation Received (Total Training Cost)</label>
+                    </div>
+                  </div>
+
+                  <div className="flex flex-row justify-start items-start gap-1">
+                    <label>2.</label>
+                    <div className="flex flex-col">
+                      <label>
+                        Should they be unable to effect payment, the amount shall be taken from any pecuniary benefits,
+                        retirement gratuities, or terminal leave benefits that may accrue to them in the course of their
+                        employement.
+                      </label>
+                    </div>
+                  </div>
+
+                  <div className="flex flex-row justify-start items-start gap-1">
+                    <label>3.</label>
+                    <div className="flex flex-col">
+                      <label>
+                        Specific screening criteria for training and scholarship grants (local and foreign) shall apply.
+                      </label>
+                    </div>
+                  </div>
+                </div>
+
+                <label className="font-bold pt-4 text-center">
+                  Failure to Complete the Required Training Hours (In-House Trainings)
+                </label>
+                <div className="flex flex-col justify-start items-start gap-2">
+                  <div className="flex flex-row justify-start items-start gap-1">
+                    <label>1.</label>
+                    <div className="flex flex-col">
+                      <label>
+                        Should the employee fail to complete the required training hours during seminars, workshops, and
+                        other in-house training shall refund the amount that has been spent and allotted for each
+                        participant on the entire period. Said amount shall be based on the Liquidation Report submitted
+                        by the Training Division to the Finance Department.
+                      </label>
+                    </div>
+                  </div>
+
+                  <div className="flex flex-row justify-start items-start gap-1">
+                    <label>2.</label>
+                    <div className="flex flex-col">
+                      <label>Refund shall be made through a one-time salary deduction.</label>
+                    </div>
+                  </div>
+
+                  <div className="flex flex-row justify-start items-start gap-1">
+                    <label>3.</label>
+                    <div className="flex flex-col">
+                      <label>
+                        Exemption to this policy shall be hospitalization or death of the employee. Reasons other than
+                        those described above shall be made in writing and forwarded to the PDC for review.
+                      </label>
+                    </div>
+                  </div>
+                </div>
               </div>
             ) : null}
           </div>

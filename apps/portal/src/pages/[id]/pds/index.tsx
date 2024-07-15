@@ -77,7 +77,11 @@ export const getServerSideProps: GetServerSideProps = withCookieSession(async (c
   const employeeDetails = getUserDetails();
 
   // check if user role is rank_and_file or job order = kick out
-  if (employeeDetails.employmentDetails.userRole === UserRole.JOB_ORDER) {
+  if (
+    employeeDetails.employmentDetails.userRole === UserRole.JOB_ORDER ||
+    employeeDetails.employmentDetails.userRole === UserRole.COS ||
+    employeeDetails.employmentDetails.userRole === UserRole.COS_JO
+  ) {
     // if true, the employee is not allowed to access this page
     return {
       redirect: {

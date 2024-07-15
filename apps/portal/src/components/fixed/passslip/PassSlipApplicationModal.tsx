@@ -18,6 +18,7 @@ import { isEmpty } from 'lodash';
 import { fetchWithToken } from 'apps/portal/src/utils/hoc/fetcher';
 import { useLeaveLedgerStore } from 'apps/portal/src/store/leave-ledger.store';
 import { LeaveLedgerEntry } from 'libs/utils/src/lib/types/leave-ledger-entry.type';
+import { UserRole } from 'libs/utils/src/lib/enums/user-roles.enum';
 
 type PassSlipApplicationModalProps = {
   modalState: boolean;
@@ -272,7 +273,9 @@ export const PassSlipApplicationModal = ({
                   />
                 ) : null}
 
-                {watch('isMedical') === '1' && watch('natureOfBusiness') === NatureOfBusiness.PERSONAL_BUSINESS ? (
+                {employeeDetails.employmentDetails.userRole != UserRole.JOB_ORDER &&
+                watch('isMedical') === '1' &&
+                watch('natureOfBusiness') === NatureOfBusiness.PERSONAL_BUSINESS ? (
                   <AlertNotification
                     alertType="info"
                     notifMessage="For Personal Business with Medical Purposes, a medical certificate is required for it to be deducted to your Sick Leave balance. If no valid medical certificate is presented to HRD, it will be deducted to your Vacation Leave balance instead or directly to your pay if your Vacation Leave balance is 0 or less."
@@ -280,7 +283,8 @@ export const PassSlipApplicationModal = ({
                   />
                 ) : null}
 
-                {vacationLeaveBalance <= 0 &&
+                {employeeDetails.employmentDetails.userRole != UserRole.JOB_ORDER &&
+                vacationLeaveBalance <= 0 &&
                 (watch('natureOfBusiness') === NatureOfBusiness.PERSONAL_BUSINESS ||
                   watch('natureOfBusiness') === NatureOfBusiness.HALF_DAY ||
                   watch('natureOfBusiness') === NatureOfBusiness.UNDERTIME) &&
@@ -292,7 +296,8 @@ export const PassSlipApplicationModal = ({
                   />
                 ) : null}
 
-                {sickLeaveBalance <= 0 &&
+                {employeeDetails.employmentDetails.userRole != UserRole.JOB_ORDER &&
+                sickLeaveBalance <= 0 &&
                 watch('natureOfBusiness') === NatureOfBusiness.PERSONAL_BUSINESS &&
                 watch('isMedical') === '1' ? (
                   <AlertNotification
