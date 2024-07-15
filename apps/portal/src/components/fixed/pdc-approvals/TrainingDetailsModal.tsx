@@ -92,7 +92,6 @@ export const TrainingDetailsModal = ({ modalState, setModalState, closeModalActi
 
   const { windowWidth } = UseWindowDimensions();
 
-  console.log(individualTrainingDetails);
   return (
     <>
       <Modal size={windowWidth > 1024 ? 'md' : 'full'} open={modalState} setOpen={setModalState}>

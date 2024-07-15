@@ -94,7 +94,6 @@ export const LoginCaptcha: FunctionComponent<CaptchaProps> = ({ tokenId, captcha
   useEffect(() => {
     if (!emailInput.current.focus) {
       emailInput.current.focus();
-      console.log('focus');
     }
   }, []);
 
