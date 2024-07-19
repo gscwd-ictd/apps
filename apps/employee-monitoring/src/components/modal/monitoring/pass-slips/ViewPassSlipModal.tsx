@@ -160,6 +160,7 @@ const ViewPassSlipModal: FunctionComponent<ViewPassSlipModalProps> = ({
     }
   };
 
+  // if modal is closed reset values
   useEffect(() => {
     if (!modalState) {
       resetFormPassSlipApproval();
@@ -171,6 +172,15 @@ const ViewPassSlipModal: FunctionComponent<ViewPassSlipModalProps> = ({
       setValuePassSlipMedicalPurpose('status', rowData.status);
     }
   }, [modalState]);
+
+  // if success approval, close modal
+  useEffect(() => {
+    if (!isEmpty(ResponseHrmoApprovalPassSlip)) {
+      closeModalAction();
+      resetFormPassSlipApproval();
+      resetPassSlipMedicalPurpose();
+    }
+  }, [ResponseHrmoApprovalPassSlip]);
 
   return (
     <>

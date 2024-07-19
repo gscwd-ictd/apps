@@ -267,6 +267,7 @@ export const ProfileMenuDropdown = ({
                                 (pendingApprovalsCount.pendingPassSlipsCount > 0 ||
                                   pendingApprovalsCount.pendingLeavesCount > 0 ||
                                   pendingApprovalsCount.pendingOvertimesCount > 0 ||
+                                  pendingApprovalsCount.pendingOvertimeAccomplishmentsApprovalCount > 0 ||
                                   pendingApprovalsCount.pendingDtrCorrectionsApprovals > 0) ? (
                                   <span className="absolute w-3 h-3 right-5 z-40 bg-red-600 rounded-full select-none" />
                                 ) : null}
