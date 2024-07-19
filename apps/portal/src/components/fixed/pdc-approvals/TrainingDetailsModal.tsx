@@ -358,7 +358,7 @@ export const TrainingDetailsModal = ({ modalState, setModalState, closeModalActi
                 isEqual(employeeDetail.employmentDetails.userRole, UserRole.OIC_GENERAL_MANAGER)) &&
                 individualTrainingDetails.status === TrainingStatus.GM_APPROVAL) ? (
                 <form id="PdcAction" onSubmit={handleSubmit(onSubmit)}>
-                  <div className="w-full flex flex-col md:flex-row gap-1 md:gap-2 justify-start items-start md:items-center pt-1 md:pt-2">
+                  <div className="w-full flex flex-col md:flex-row gap-1 md:gap-2 justify-end items-start md:items-center pt-1 md:pt-2">
                     <span className="text-slate-500 text-md font-medium">Action:</span>
 
                     <select

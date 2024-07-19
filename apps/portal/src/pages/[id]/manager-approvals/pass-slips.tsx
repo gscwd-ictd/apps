@@ -339,7 +339,7 @@ export const getServerSideProps: GetServerSideProps = withCookieSession(async (c
       employeeDetails.employmentDetails.userRole === UserRole.COS_JO) &&
     employeeDetails.employmentDetails.officerOfTheDay.length <= 0 &&
     finalSalaryGrade < 16 &&
-    employeeDetails.employmentDetails.userId !== 'af7bbec8-b26e-11ed-a79b-000c29f95a80'
+    employeeDetails.employmentDetails.userId !== 'af7bbec8-b26e-11ed-a79b-000c29f95a80' //charlene pe
   ) {
     // if true, the employee is not allowed to access this page
     return {

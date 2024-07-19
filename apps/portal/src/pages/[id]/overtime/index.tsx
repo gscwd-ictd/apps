@@ -344,15 +344,8 @@ export default function Overtime({ employeeDetails }: InferGetServerSidePropsTyp
 export const getServerSideProps: GetServerSideProps = withCookieSession(async (context: GetServerSidePropsContext) => {
   const employeeDetails = getUserDetails();
 
-  // check if user role is rank_and_file or job order = kick out
-  if (
-    employeeDetails.employmentDetails.overtimeImmediateSupervisorId == null
-    // &&
-    // (isEqual(employeeDetails.employmentDetails.userRole, UserRole.RANK_AND_FILE) ||
-    //   isEqual(employeeDetails.employmentDetails.userRole, UserRole.JOB_ORDER) ||
-    //   isEqual(employeeDetails.employmentDetails.userRole, UserRole.COS) ||
-    //   isEqual(employeeDetails.employmentDetails.userRole, UserRole.COS_JO))
-  ) {
+  // check if user role is not ot supervisor = kick out
+  if (employeeDetails.employmentDetails.overtimeImmediateSupervisorId == null) {
     // if true, the employee is not allowed to access this page
     return {
       redirect: {

@@ -490,21 +490,25 @@ export const ProfileMenuDropdown = ({
                         )}
                       </Menu.Item>
 
-                      <Menu.Item>
-                        {({ active }) => (
-                          <button
-                            className={`${
-                              active ? 'bg-slate-100' : 'text-gray-900'
-                            } group flex w-full items-center gap-3 rounded-md px-3 py-2 text-sm`}
-                            onClick={() => router.push(`/${router.query.id}/vacancies`)}
-                          >
-                            <HiOutlineNewspaper className="h-5 w-5 text-slate-600" />
-                            <div className="flex w-full items-end justify-between">
-                              <span className="text-sm tracking-tight text-slate-500">Vacancies</span>
-                            </div>
-                          </button>
-                        )}
-                      </Menu.Item>
+                      {!isEqual(employeeDetails.employmentDetails.userRole, UserRole.JOB_ORDER) &&
+                      !isEqual(employeeDetails.employmentDetails.userRole, UserRole.COS) &&
+                      !isEqual(employeeDetails.employmentDetails.userRole, UserRole.COS_JO) ? (
+                        <Menu.Item>
+                          {({ active }) => (
+                            <button
+                              className={`${
+                                active ? 'bg-slate-100' : 'text-gray-900'
+                              } group flex w-full items-center gap-3 rounded-md px-3 py-2 text-sm`}
+                              onClick={() => router.push(`/${router.query.id}/vacancies`)}
+                            >
+                              <HiOutlineNewspaper className="h-5 w-5 text-slate-600" />
+                              <div className="flex w-full items-end justify-between">
+                                <span className="text-sm tracking-tight text-slate-500">Vacancies</span>
+                              </div>
+                            </button>
+                          )}
+                        </Menu.Item>
+                      ) : null}
                     </div>
                   ) : null}
 

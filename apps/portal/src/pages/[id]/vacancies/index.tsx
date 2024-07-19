@@ -391,7 +391,11 @@ export const getServerSideProps: GetServerSideProps = withCookieSession(async ()
   const userDetails = getUserDetails(); //get employee details from ssid token - using _id only
 
   // check if user role is rank_and_file
-  if (userDetails.employmentDetails.userRole === Roles.JOB_ORDER) {
+  if (
+    userDetails.employmentDetails.userRole === Roles.JOB_ORDER ||
+    userDetails.employmentDetails.userRole === UserRole.COS ||
+    userDetails.employmentDetails.userRole === UserRole.COS_JO
+  ) {
     // if true, the employee is not allowed to access this page
     return {
       redirect: {
