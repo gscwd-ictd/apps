@@ -261,6 +261,7 @@ export const useApprovalStore = create<ApprovalState>()(
       prfsForApprovalCount: 0,
       pendingApplicantEndorsementsCount: 0,
       pendingAppointingAuthoritySelection: 0,
+      pendingOvertimeAccomplishmentsApprovalCount: 0,
     } as PendingApprovalsCount,
 
     response: {

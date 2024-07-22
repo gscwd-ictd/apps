@@ -20,10 +20,10 @@ import AppSelectionModal from '../../../components/fixed/selection/AppSelectionM
 import fetcherHRIS from 'apps/portal/src/utils/helpers/fetchers/FetcherHRIS';
 import { NavButtonDetails } from 'apps/portal/src/types/nav.type';
 import { UseNameInitials } from 'apps/portal/src/utils/hooks/useNameInitials';
-import { Roles } from 'apps/portal/src/utils/constants/user-roles';
 import { AppSelAlertConfirmation } from 'apps/portal/src/components/fixed/selection/alert/AppSelAlertConfirmation';
 import { AppSelAlertInfo } from 'apps/portal/src/components/fixed/selection/alert/AppSelAlertInfo';
 import { useRouter } from 'next/router';
+import { UserRole } from 'libs/utils/src/lib/enums/user-roles.enum';
 
 export default function AppPosAppointment({ employeeDetails }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const {
@@ -263,8 +263,8 @@ export const getServerSideProps: GetServerSideProps = withCookieSession(async (c
   const employeeDetails = getUserDetails();
   // check if user role is rank_and_file
   if (
-    employeeDetails.employmentDetails.userRole !== Roles.GENERAL_MANAGER &&
-    employeeDetails.employmentDetails.userRole !== Roles.OIC_GENERAL_MANAGER
+    employeeDetails.employmentDetails.userRole !== UserRole.GENERAL_MANAGER &&
+    employeeDetails.employmentDetails.userRole !== UserRole.OIC_GENERAL_MANAGER
   ) {
     // if true, the employee is not allowed to access this page
     return {

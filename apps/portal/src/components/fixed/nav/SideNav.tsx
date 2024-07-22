@@ -362,7 +362,9 @@ export const SideNav = ({ employeeDetails }: NavDetails) => {
               {Boolean(employeeDetails.employmentDetails.isHRMPSB) === true ||
               employeeDetails.employmentDetails.overtimeImmediateSupervisorId != null ||
               (!isEqual(employeeDetails.employmentDetails.userRole, UserRole.RANK_AND_FILE) &&
-                !isEqual(employeeDetails.employmentDetails.userRole, UserRole.JOB_ORDER)) ? (
+                !isEqual(employeeDetails.employmentDetails.userRole, UserRole.JOB_ORDER) &&
+                !isEqual(employeeDetails.employmentDetails.userRole, UserRole.COS) &&
+                !isEqual(employeeDetails.employmentDetails.userRole, UserRole.COS_JO)) ? (
                 <li className="ml-10 lg:ml-0">
                   <CommitteeMenuDropdown right />
                 </li>
@@ -379,7 +381,9 @@ export const SideNav = ({ employeeDetails }: NavDetails) => {
               </div>
 
               {/* VACANCIES */}
-              {!isEqual(employeeDetails.employmentDetails.userRole, UserRole.JOB_ORDER) ? (
+              {!isEqual(employeeDetails.employmentDetails.userRole, UserRole.JOB_ORDER) &&
+              !isEqual(employeeDetails.employmentDetails.userRole, UserRole.COS) &&
+              !isEqual(employeeDetails.employmentDetails.userRole, UserRole.COS_JO) ? (
                 <div>
                   <SideNavLink
                     icon={<HiOutlineNewspaper className="w-6 h-6 text-indigo-500" />}

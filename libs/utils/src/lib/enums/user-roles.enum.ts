@@ -1,4 +1,6 @@
 export enum UserRole {
+  COS = 'cos',
+  COS_JO = 'cos_jo',
   JOB_ORDER = 'job_order',
   RANK_AND_FILE = 'rank_and_file',
   DIVISION_MANAGER = 'division_manager',

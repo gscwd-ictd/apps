@@ -288,6 +288,7 @@ export default function Login() {
                   placeholder="Email Address"
                   isError={errors.email && errors.email.message ? true : false}
                   errorMessage={errors.email?.message}
+                  disabled={loginOtpModalIsOpen || loginCaptchaModalIsOpen || loginOptionsModalIsOpen ? true : false}
                 />
 
                 <div className="relative">
@@ -298,6 +299,7 @@ export default function Login() {
                     placeholder="Password"
                     isError={errors.password && errors.password.message ? true : false}
                     errorMessage={errors.password?.message}
+                    disabled={loginOtpModalIsOpen || loginCaptchaModalIsOpen || loginOptionsModalIsOpen ? true : false}
                   />
                   {isShowPassword ? (
                     <HiEyeOff
@@ -329,6 +331,7 @@ export default function Login() {
                   shadow
                   strong
                   fluid
+                  isDisabled={loginOtpModalIsOpen || loginCaptchaModalIsOpen || loginOptionsModalIsOpen ? true : false}
                 />
               </section>
             </form>

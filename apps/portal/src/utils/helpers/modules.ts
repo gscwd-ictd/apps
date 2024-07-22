@@ -14,56 +14,28 @@ export const setModules = async (userDetails: EmployeeDetails, schedule: Schedul
     //do nothing
   } else {
     if (isEqual(userDetails.employmentDetails.userRole, UserRole.RANK_AND_FILE)) {
-      if (schedule.scheduleBase == ScheduleBases.PUMPING_STATION || schedule.scheduleBase == ScheduleBases.FIELD) {
-        allowed = Modules.filter(
-          (card) =>
-            card.destination === 'pds' ||
-            card.destination === 'dtr' ||
-            card.destination === 'pass-slip' ||
-            card.destination === 'leaves' ||
-            card.destination === 'email' ||
-            card.destination === 'overtime-accomplishment'
-        );
-      } else {
-        allowed = Modules.filter(
-          (card) =>
-            card.destination === 'pds' ||
-            card.destination === 'dtr' ||
-            card.destination === 'pass-slip' ||
-            card.destination === 'leaves' ||
-            card.destination === 'email' ||
-            card.destination === 'overtime-accomplishment'
-        );
-      }
+      allowed = Modules.filter(
+        (card) =>
+          card.destination === 'pds' ||
+          card.destination === 'dtr' ||
+          card.destination === 'pass-slip' ||
+          card.destination === 'leaves' ||
+          card.destination === 'email' ||
+          card.destination === 'overtime-accomplishment'
+      );
     } else if (isEqual(userDetails.employmentDetails.userRole, UserRole.JOB_ORDER)) {
-      if (isEmpty(schedule)) {
-        allowed = Modules.filter(
-          (card) =>
-            card.destination === 'dtr' ||
-            card.destination === 'pass-slip' ||
-            card.destination === 'email' ||
-            card.destination === 'overtime-accomplishment'
-        );
-      } else if (
-        (schedule && schedule.scheduleBase == ScheduleBases.PUMPING_STATION) ||
-        schedule.scheduleBase == ScheduleBases.FIELD
-      ) {
-        allowed = Modules.filter(
-          (card) =>
-            card.destination === 'dtr' ||
-            card.destination === 'pass-slip' ||
-            card.destination === 'email' ||
-            card.destination === 'overtime-accomplishment'
-        );
-      } else {
-        allowed = Modules.filter(
-          (card) =>
-            card.destination === 'dtr' ||
-            card.destination === 'pass-slip' ||
-            card.destination === 'email' ||
-            card.destination === 'overtime-accomplishment'
-        );
-      }
+      allowed = Modules.filter(
+        (card) =>
+          card.destination === 'dtr' ||
+          card.destination === 'pass-slip' ||
+          card.destination === 'email' ||
+          card.destination === 'overtime-accomplishment'
+      );
+    } else if (
+      isEqual(userDetails.employmentDetails.userRole, UserRole.COS_JO) ||
+      isEqual(userDetails.employmentDetails.userRole, UserRole.COS)
+    ) {
+      allowed = Modules.filter((card) => card.destination === 'dtr' || card.destination === 'pass-slip');
     } else {
       // all managers
       allowed = Modules.filter(
