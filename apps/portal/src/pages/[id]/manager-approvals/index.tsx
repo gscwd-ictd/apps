@@ -104,8 +104,12 @@ export default function Approvals({
                       icon={<HiClipboard size={26} />}
                       subtitle="Show all Overtime requests"
                       notificationCount={
-                        pendingApprovalsCount.pendingOvertimesCount != 0
-                          ? pendingApprovalsCount.pendingOvertimesCount
+                        pendingApprovalsCount.pendingOvertimesCount != 0 ||
+                        pendingApprovalsCount.pendingOvertimeAccomplishmentsApprovalCount != 0
+                          ? Number(
+                              pendingApprovalsCount.pendingOvertimesCount +
+                                pendingApprovalsCount.pendingOvertimeAccomplishmentsApprovalCount
+                            )
                           : 0
                       }
                       className="bg-indigo-500"
@@ -146,10 +150,12 @@ export const getServerSideProps: GetServerSideProps = withCookieSession(async (c
   // check if user role is rank_and_file or job order, or not Officer of the Day or not SG16 and up = kick out
   if (
     (employeeDetails.employmentDetails.userRole === UserRole.RANK_AND_FILE ||
-      employeeDetails.employmentDetails.userRole === UserRole.JOB_ORDER) &&
+      employeeDetails.employmentDetails.userRole === UserRole.JOB_ORDER ||
+      employeeDetails.employmentDetails.userRole === UserRole.COS ||
+      employeeDetails.employmentDetails.userRole === UserRole.COS_JO) &&
     employeeDetails.employmentDetails.officerOfTheDay.length <= 0 &&
     finalSalaryGrade < 16 &&
-    employeeDetails.employmentDetails.userId !== 'af7bbec8-b26e-11ed-a79b-000c29f95a80'
+    employeeDetails.employmentDetails.userId !== 'af7bbec8-b26e-11ed-a79b-000c29f95a80' //charlene pe
   ) {
     // if true, the employee is not allowed to access this page
     return {

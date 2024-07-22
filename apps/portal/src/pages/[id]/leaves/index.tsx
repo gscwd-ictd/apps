@@ -26,6 +26,7 @@ import { UseNameInitials } from 'apps/portal/src/utils/hooks/useNameInitials';
 import { useLeaveLedgerStore } from 'apps/portal/src/store/leave-ledger.store';
 import { useRouter } from 'next/router';
 import LeaveLedgerModal from 'apps/portal/src/components/fixed/leaves/LeaveLedgerModal';
+import { UserRole } from 'libs/utils/src/lib/enums/user-roles.enum';
 
 export default function Leaves({ employeeDetails }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const {
@@ -320,6 +321,20 @@ export default function Leaves({ employeeDetails }: InferGetServerSidePropsType<
 
 export const getServerSideProps: GetServerSideProps = withCookieSession(async (context: GetServerSidePropsContext) => {
   const employeeDetails = getUserDetails();
-
-  return { props: { employeeDetails } };
+  // check if user role is rank_and_file
+  if (
+    employeeDetails.employmentDetails.userRole === UserRole.JOB_ORDER ||
+    employeeDetails.employmentDetails.userRole === UserRole.COS ||
+    employeeDetails.employmentDetails.userRole === UserRole.COS_JO
+  ) {
+    // if true, the employee is not allowed to access this page
+    return {
+      redirect: {
+        permanent: false,
+        destination: `/${employeeDetails.user._id}`,
+      },
+    };
+  } else {
+    return { props: { employeeDetails } };
+  }
 });

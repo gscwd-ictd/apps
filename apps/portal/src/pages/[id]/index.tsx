@@ -35,6 +35,7 @@ import dayjs from 'dayjs';
 import { usePassSlipStore } from '../../store/passslip.store';
 import { employeeCeliaDananDummy } from '../../types/employee.type';
 import { useAnnouncementsStore } from '../../store/announcements.store';
+import { UserRole } from 'libs/utils/src/lib/enums/user-roles.enum';
 
 export type NavDetails = {
   fullName: string;
@@ -457,61 +458,67 @@ export default function Dashboard({ userDetails }: InferGetServerSidePropsType<t
                       svgBgColor={'bg-indigo-100'}
                     />
                   </div>
-                  <div className="order-4 col-span-2 md:col-span-2 md:order-5 lg:col-span-2 lg:order-6">
-                    <div className="grid grid-cols-2 gap-4">
-                      <StatsCard
-                        name={'Force Leave'}
-                        count={forcedLeaveBalance}
-                        isLoading={swrLeaveLedgerLoading}
-                        width={'w-full'}
-                        height={windowHeight > 820 ? 'h-32' : 'h-28'}
-                        svg={<HiCalendar className="w-7 h-7 text-rose-500" />}
-                        svgBgColor={'bg-rose-100'}
-                      />
-                      <StatsCard
-                        name={'Special Privilege Leave'}
-                        count={specialPrivilegeLeaveBalance}
-                        isLoading={swrLeaveLedgerLoading}
-                        width={'w-full'}
-                        height={windowHeight > 820 ? 'h-32' : 'h-28'}
-                        svg={<HiCalendar className="w-7 h-7 text-orange-500" />}
-                        svgBgColor={'bg-orange-100'}
-                      />
-                      <StatsCard
-                        name={'Vacation Leave'}
-                        count={vacationLeaveBalance}
-                        isLoading={swrLeaveLedgerLoading}
-                        width={'w-full'}
-                        height={windowHeight > 820 ? 'h-32' : 'h-28'}
-                        svg={<HiCalendar className="w-7 h-7 text-lime-500" />}
-                        svgBgColor={'bg-lime-100'}
-                      />
-                      <StatsCard
-                        name={'Sick Leave'}
-                        count={sickLeaveBalance}
-                        isLoading={swrLeaveLedgerLoading}
-                        width={'w-full'}
-                        height={windowHeight > 820 ? 'h-32' : 'h-28'}
-                        svg={<HiCalendar className="w-7 h-7 text-pink-500" />}
-                        svgBgColor={'bg-pink-100'}
-                      />
-                    </div>
-                  </div>
+                  {employee.employmentDetails.userRole != UserRole.COS &&
+                  employee.employmentDetails.userRole != UserRole.COS_JO &&
+                  employee.employmentDetails.userRole != UserRole.JOB_ORDER ? (
+                    <>
+                      <div className="order-4 col-span-2 md:col-span-2 md:order-5 lg:col-span-2 lg:order-6">
+                        <div className="grid grid-cols-2 gap-4">
+                          <StatsCard
+                            name={'Force Leave'}
+                            count={forcedLeaveBalance}
+                            isLoading={swrLeaveLedgerLoading}
+                            width={'w-full'}
+                            height={windowHeight > 820 ? 'h-32' : 'h-28'}
+                            svg={<HiCalendar className="w-7 h-7 text-rose-500" />}
+                            svgBgColor={'bg-rose-100'}
+                          />
+                          <StatsCard
+                            name={'Special Privilege Leave'}
+                            count={specialPrivilegeLeaveBalance}
+                            isLoading={swrLeaveLedgerLoading}
+                            width={'w-full'}
+                            height={windowHeight > 820 ? 'h-32' : 'h-28'}
+                            svg={<HiCalendar className="w-7 h-7 text-orange-500" />}
+                            svgBgColor={'bg-orange-100'}
+                          />
+                          <StatsCard
+                            name={'Vacation Leave'}
+                            count={vacationLeaveBalance}
+                            isLoading={swrLeaveLedgerLoading}
+                            width={'w-full'}
+                            height={windowHeight > 820 ? 'h-32' : 'h-28'}
+                            svg={<HiCalendar className="w-7 h-7 text-lime-500" />}
+                            svgBgColor={'bg-lime-100'}
+                          />
+                          <StatsCard
+                            name={'Sick Leave'}
+                            count={sickLeaveBalance}
+                            isLoading={swrLeaveLedgerLoading}
+                            width={'w-full'}
+                            height={windowHeight > 820 ? 'h-32' : 'h-28'}
+                            svg={<HiCalendar className="w-7 h-7 text-pink-500" />}
+                            svgBgColor={'bg-pink-100'}
+                          />
+                        </div>
+                      </div>
 
-                  <div className="order-4 col-span-2 md:col-span-2 md:order-5 lg:col-span-2 lg:order-6">
-                    <div className="w-full" onClick={openLeaveCalculator}>
-                      <StatsCard
-                        name={'Max Leave Credit Monetization'}
-                        count={estimatedAmount}
-                        isLoading={swrLeaveLedgerLoading}
-                        width={'w-auto'}
-                        height={windowHeight > 820 ? 'h-32' : 'h-32'}
-                        svg={<HiCash className="w-7 h-7 text-green-500" />}
-                        svgBgColor={'bg-green-100'}
-                        canHover={true}
-                      />
-                    </div>
-                  </div>
+                      <div className="order-4 col-span-2 md:col-span-2 md:order-5 lg:col-span-2 lg:order-6">
+                        <div className="w-full" onClick={openLeaveCalculator}>
+                          <StatsCard
+                            name={'Max Leave Credit Monetization'}
+                            count={estimatedAmount}
+                            isLoading={swrLeaveLedgerLoading}
+                            width={'w-auto'}
+                            height={windowHeight > 820 ? 'h-32' : 'h-32'}
+                            svg={<HiCash className="w-7 h-7 text-green-500" />}
+                            svgBgColor={'bg-green-100'}
+                            canHover={true}
+                          />
+                        </div>
+                      </div>
+                    </>
+                  ) : null}
 
                   <div className="order-6 md:order-5 lg:order-7 col-span-2 row-span-2">
                     <div className="w-full h-full gap-2 p-4 pb-10 mb-2 bg-white rounded-md shadow">

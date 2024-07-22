@@ -45,7 +45,7 @@ export const LoginOptions: FunctionComponent = () => {
           </button>
 
           <button
-            className={` mb-2 text-white bg-green-500 h-10 transition-all rounded hover:bg-green-600 active:bg-green-600 outline-indigo-green w-56`}
+            className={` mb-2 text-white bg-green-500 h-10 transition-all rounded hover:bg-green-600 active:bg-green-600 outline-green-500     w-56`}
             onClick={() => handleCaptcha()}
           >
             <label className="font-bold cursor-pointer">{`USE CAPTCHA`}</label>

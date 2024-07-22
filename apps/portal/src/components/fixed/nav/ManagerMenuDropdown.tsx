@@ -66,6 +66,7 @@ export const ManagerMenuDropdown = ({
               (pendingApprovalsCount.pendingPassSlipsCount > 0 ||
                 pendingApprovalsCount.pendingLeavesCount > 0 ||
                 pendingApprovalsCount.pendingOvertimesCount > 0 ||
+                pendingApprovalsCount.pendingOvertimeAccomplishmentsApprovalCount > 0 ||
                 pendingApprovalsCount.pendingDtrCorrectionsApprovals > 0 ||
                 pendingApprovalsCount.pendingTrainingNominationCount > 0 ||
                 pendingApprovalsCount.prfsForApprovalCount > 0 ||
@@ -78,7 +79,8 @@ export const ManagerMenuDropdown = ({
                 (pendingApprovalsCount.pendingPassSlipsCount > 0 ||
                   pendingApprovalsCount.pendingLeavesCount > 0 ||
                   pendingApprovalsCount.pendingOvertimesCount > 0 ||
-                  pendingApprovalsCount.pendingDtrCorrectionsApprovals > 0) ? (
+                  pendingApprovalsCount.pendingDtrCorrectionsApprovals > 0 ||
+                  pendingApprovalsCount.pendingOvertimeAccomplishmentsApprovalCount > 0) ? (
                 <span className="absolute w-3 h-3 -mt-5 ml-9 bg-red-600 rounded-full select-none" />
               ) : //if SG16 or maam Em is logged in and is Rank and File -- Pass Slip Approvals page notifs only
               (isEqual(userRole, UserRole.RANK_AND_FILE) || isEqual(userRole, UserRole.JOB_ORDER)) &&
@@ -170,6 +172,7 @@ export const ManagerMenuDropdown = ({
                             (pendingApprovalsCount.pendingPassSlipsCount > 0 ||
                               pendingApprovalsCount.pendingLeavesCount > 0 ||
                               pendingApprovalsCount.pendingOvertimesCount > 0 ||
+                              pendingApprovalsCount.pendingOvertimeAccomplishmentsApprovalCount > 0 ||
                               pendingApprovalsCount.pendingDtrCorrectionsApprovals > 0) ? (
                               <span className="absolute w-3 h-3 right-4 z-30 bg-red-600 rounded-full select-none" />
                             ) : //if SG 16 or maam Em is logged in and is Rank and File -- Pass Slip Approvals page notifs only

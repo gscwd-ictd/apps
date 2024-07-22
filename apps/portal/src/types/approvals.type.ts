@@ -35,4 +35,5 @@ export type PendingApprovalsCount = {
   prfsForApprovalCount: number | null;
   pendingApplicantEndorsementsCount: number | null;
   pendingAppointingAuthoritySelection: number | null;
+  pendingOvertimeAccomplishmentsApprovalCount: number | null;
 };

@@ -21,6 +21,7 @@ import OvertimeAccomplishmentModal from 'apps/portal/src/components/fixed/overti
 import { useRouter } from 'next/router';
 import { useTimeLogStore } from 'apps/portal/src/store/timelogs.store';
 import { format } from 'date-fns';
+import { UserRole } from 'libs/utils/src/lib/enums/user-roles.enum';
 
 export default function OvertimeAccomplishment({
   employeeDetails,
@@ -232,6 +233,19 @@ export default function OvertimeAccomplishment({
 
 export const getServerSideProps: GetServerSideProps = withCookieSession(async (context: GetServerSidePropsContext) => {
   const employeeDetails = getUserDetails();
-
-  return { props: { employeeDetails } };
+  // check if user role is COS/COS_JO
+  if (
+    employeeDetails.employmentDetails.userRole === UserRole.COS ||
+    employeeDetails.employmentDetails.userRole === UserRole.COS_JO
+  ) {
+    // if true, the employee is not allowed to access this page
+    return {
+      redirect: {
+        permanent: false,
+        destination: `/${employeeDetails.user._id}`,
+      },
+    };
+  } else {
+    return { props: { employeeDetails } };
+  }
 });

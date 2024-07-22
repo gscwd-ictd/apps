@@ -8,7 +8,6 @@ import {
   employeeTurijaDummy,
 } from '../../../types/employee.type';
 import { User } from '../../../types/user.type';
-import { Roles } from '../../../utils/constants/user-roles';
 import { usePrfStore } from '../../../store/prf.store';
 import { useUserStore } from '../../../store/user.store';
 import { createPrf, savePrf } from '../../../utils/helpers/prf.requests';
@@ -40,6 +39,7 @@ import { fetchWithToken } from 'apps/portal/src/utils/hoc/fetcher';
 import { useRouter } from 'next/router';
 import { CancelledPrfList } from 'apps/portal/src/components/fixed/prf/prf-index/CancelledPrfList';
 import CancelledPrfModal from 'apps/portal/src/components/fixed/prf/prf-modal/CancelledPrfModal';
+import { UserRole } from 'libs/utils/src/lib/enums/user-roles.enum';
 
 type PrfPageProps = {
   user: User;
@@ -512,8 +512,10 @@ export const getServerSideProps: GetServerSideProps = withCookieSession(async ()
 
   // check if user role is rank_and_file
   if (
-    employee.employmentDetails.userRole === Roles.RANK_AND_FILE ||
-    employee.employmentDetails.userRole === Roles.JOB_ORDER
+    employee.employmentDetails.userRole === UserRole.RANK_AND_FILE ||
+    employee.employmentDetails.userRole === UserRole.JOB_ORDER ||
+    employee.employmentDetails.userRole === UserRole.COS ||
+    employee.employmentDetails.userRole === UserRole.COS_JO
   ) {
     // if true, the employee is not allowed to access this page
     return {

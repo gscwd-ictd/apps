@@ -127,8 +127,6 @@ export const ApprovalsPendingPassSlipModal = ({
         </Modal.Header>
         <Modal.Body>
           <div className="w-full h-full flex flex-col gap-2">
-            {/* OTP Modal */}
-
             <div className="w-full flex flex-col gap-2 px-4 rounded">
               <div className="w-full flex flex-col gap-0">
                 {loadingResponse ? (
@@ -188,6 +186,10 @@ export const ApprovalsPendingPassSlipModal = ({
                   }`}
                   dismissible={false}
                 />
+
+                {passSlip.deductible ? (
+                  <AlertNotification alertType={`warning`} notifMessage={`Deductible to Pay`} dismissible={false} />
+                ) : null}
 
                 {passSlip.disputeRemarks && passSlip.isDisputeApproved ? (
                   <AlertNotification

@@ -6,6 +6,8 @@ import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
 import { ConfirmationApplicationModal } from './ConfirmationModal';
 import { NatureOfBusiness, PassSlipStatus } from 'libs/utils/src/lib/enums/pass-slip.enum';
 import { DateTimeFormatter } from 'libs/utils/src/lib/functions/DateTimeFormatter';
+import { useEmployeeStore } from 'apps/portal/src/store/employee.store';
+import { UserRole } from 'libs/utils/src/lib/enums/user-roles.enum';
 
 type PassSlipPendingModalProps = {
   modalState: boolean;
@@ -18,6 +20,10 @@ export const PassSlipPendingModal = ({ modalState, setModalState, closeModalActi
     passSlip: state.passSlip,
     cancelApplicationModalIsOpen: state.cancelApplicationModalIsOpen,
     setCancelApplicationModalIsOpen: state.setCancelApplicationModalIsOpen,
+  }));
+
+  const { employeeDetails } = useEmployeeStore((state) => ({
+    employeeDetails: state.employeeDetails,
   }));
 
   // for cancel pass slip button
@@ -89,10 +95,16 @@ export const PassSlipPendingModal = ({ modalState, setModalState, closeModalActi
                   dismissible={false}
                 />
 
-                {passSlip.isMedical && passSlip.natureOfBusiness === NatureOfBusiness.PERSONAL_BUSINESS ? (
+                {employeeDetails.employmentDetails.userRole != UserRole.JOB_ORDER && passSlip.deductible ? (
+                  <AlertNotification alertType={`warning`} notifMessage={`Deductible to Pay`} dismissible={false} />
+                ) : null}
+
+                {employeeDetails.employmentDetails.userRole != UserRole.JOB_ORDER &&
+                passSlip.isMedical &&
+                passSlip.natureOfBusiness === NatureOfBusiness.PERSONAL_BUSINESS ? (
                   <AlertNotification
                     alertType="info"
-                    notifMessage="For Personal Business with Medical Purposes, a medical certificate is required for it to be deducted to your Sick Leave credits. If no valid medical certificate is presented to HRD, it will be deducted to your Vacation Leave credits instead. "
+                    notifMessage="For Personal Business with Medical Purposes, a medical certificate is required for it to be deducted to your Sick Leave balance. If no valid medical certificate is presented to HRD, it will be deducted to your Vacation Leave balance instead."
                     dismissible={false}
                   />
                 ) : null}

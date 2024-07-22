@@ -105,6 +105,10 @@ export const ApprovalsCompletedPassSlipModal = ({
                   dismissible={false}
                 />
 
+                {passSlip.deductible ? (
+                  <AlertNotification alertType={`warning`} notifMessage={`Deductible to Pay`} dismissible={false} />
+                ) : null}
+
                 {passSlip.disputeRemarks && passSlip.isDisputeApproved != null ? (
                   <AlertNotification
                     alertType={`${passSlip.isDisputeApproved ? 'success' : 'error'}`}
