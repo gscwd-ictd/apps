@@ -161,7 +161,7 @@ const AddWorkSuspensionModal: FunctionComponent<AddModalProps> = ({ modalState, 
               {/* Suspension Hours */}
               <LabelInput
                 id={'suspensionHours'}
-                type={'number'}
+                type={'decimal'}
                 label={'Suspension Hours'}
                 controller={{ ...register('suspensionHours') }}
                 isError={errors.suspensionHours ? true : false}
