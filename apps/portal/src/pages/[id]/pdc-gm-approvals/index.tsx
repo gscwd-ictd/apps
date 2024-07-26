@@ -220,7 +220,6 @@ export default function PdcGeneralManagerApprovals({
               </div>
             ) : (
               <ContentBody>
-                test
                 <div className="pb-10">
                   <DataTablePortal
                     onRowClick={(row) => renderRowActions(row.original as Training)}
