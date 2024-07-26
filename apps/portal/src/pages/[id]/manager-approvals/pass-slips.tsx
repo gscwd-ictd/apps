@@ -10,7 +10,7 @@ import { GetServerSideProps, GetServerSidePropsContext, InferGetServerSidePropsT
 import { getUserDetails, withCookieSession } from '../../../utils/helpers/session';
 import { useEmployeeStore } from '../../../store/employee.store';
 import { SpinnerDotted } from 'spinners-react';
-import { ToastNotification, fuzzySort, useDataTable } from '@gscwd-apps/oneui';
+import { ToastNotification, fuzzySort } from '@gscwd-apps/oneui';
 import React from 'react';
 import { useApprovalStore } from '../../../store/approvals.store';
 import useSWR from 'swr';
@@ -19,7 +19,7 @@ import { isEmpty } from 'lodash';
 import { UserRole } from 'apps/portal/src/utils/enums/userRoles';
 import dayjs from 'dayjs';
 import { createColumnHelper } from '@tanstack/react-table';
-import { DataTablePortal } from 'libs/oneui/src/components/Tables/DataTablePortal';
+import { DataTablePortal, useDataTable } from 'libs/oneui/src/components/Tables/DataTablePortal';
 import { PassSlip } from 'libs/utils/src/lib/types/pass-slip.type';
 import { PassSlipStatus } from 'libs/utils/src/lib/enums/pass-slip.enum';
 import ApprovalsPendingPassSlipModal from 'apps/portal/src/components/fixed/manager-approvals/ApprovalsPendingPassSlipModal';
@@ -28,6 +28,7 @@ import { useRouter } from 'next/router';
 import UseRenderPassSlipStatus from 'apps/portal/src/utils/functions/RenderPassSlipStatus';
 import { TextSize } from 'libs/utils/src/lib/enums/text-size.enum';
 import { SalaryGradeConverter } from 'libs/utils/src/lib/functions/SalaryGradeConverter';
+import { ApprovalType } from 'libs/utils/src/lib/enums/approval-type.enum';
 
 export default function PassSlipApprovals({ employeeDetails }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const {
@@ -223,11 +224,14 @@ export default function PassSlipApprovals({ employeeDetails }: InferGetServerSid
   ];
 
   // React Table initialization
-  const { table } = useDataTable({
-    columns: columns,
-    data: passSlipApplications,
-    columnVisibility: { id: false, employeeId: false },
-  });
+  const { table } = useDataTable(
+    {
+      columns: columns,
+      data: passSlipApplications,
+      columnVisibility: { id: false, employeeId: false },
+    },
+    ApprovalType.PASSSLIP
+  );
 
   return (
     <>

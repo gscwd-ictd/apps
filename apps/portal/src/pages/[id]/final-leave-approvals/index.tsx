@@ -23,9 +23,10 @@ import dayjs from 'dayjs';
 import { createColumnHelper } from '@tanstack/react-table';
 import { LeaveStatus } from 'libs/utils/src/lib/enums/leave.enum';
 import { useRouter } from 'next/router';
-import { ToastNotification, fuzzySort, useDataTable } from '@gscwd-apps/oneui';
-import { DataTablePortal } from 'libs/oneui/src/components/Tables/DataTablePortal';
+import { ToastNotification, fuzzySort } from '@gscwd-apps/oneui';
+import { DataTablePortal, useDataTable } from 'libs/oneui/src/components/Tables/DataTablePortal';
 import UseRenderLeaveStatus from 'apps/portal/src/utils/functions/RenderLeaveStatus';
+import { ApprovalType } from 'libs/utils/src/lib/enums/approval-type.enum';
 
 export default function FinalLeaveApprovals({
   employeeDetails,
@@ -224,11 +225,14 @@ export default function FinalLeaveApprovals({
   ];
 
   // React Table initialization
-  const { table } = useDataTable({
-    columns: columns,
-    data: leaveApplications,
-    columnVisibility: { id: false, employeeId: false },
-  });
+  const { table } = useDataTable(
+    {
+      columns: columns,
+      data: leaveApplications,
+      columnVisibility: { id: false, employeeId: false },
+    },
+    ApprovalType.FINAL_LEAVE
+  );
 
   return (
     <>

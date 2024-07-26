@@ -1,3 +1,4 @@
+/* eslint-disable @nx/enforce-module-boundaries */
 import {
   SortingState,
   RowSelectionState,
@@ -17,11 +18,14 @@ import {
 } from '@tanstack/react-table';
 import { useState, useMemo } from 'react';
 import { DataTableOptions } from '../types/data-table-options';
-import {
-  RankingInfo,
-  rankItem,
-  compareItems,
-} from '@tanstack/match-sorter-utils';
+import { RankingInfo, rankItem, compareItems } from '@tanstack/match-sorter-utils';
+import { ApprovalType } from '../../../../../../../libs/utils/src/lib/enums/approval-type.enum';
+import { PassSlipStatus } from '../../../../../../../libs/utils/src/lib/enums/pass-slip.enum';
+import { LeaveStatus } from '../../../../../../../libs/utils/src/lib/enums/leave.enum';
+import { OvertimeStatus } from '../../../../../../../libs/utils/src/lib/enums/overtime.enum';
+import { DtrCorrectionStatus } from '../../../../../../../libs/utils/src/lib/enums/dtr.enum';
+import { TrainingStatus } from '../../../../../../../libs/utils/src/lib/enums/training.enum';
+import { TrainingNominationStatus } from '../../../../../../../libs/utils/src/lib/enums/training.enum';
 
 declare module '@tanstack/table-core' {
   interface FilterFns {
@@ -51,18 +55,17 @@ export const fuzzySort: SortingFn<unknown> = (rowA, rowB, columnId) => {
 
   // Only sort by rank if the column has ranking information
   if (rowA.columnFiltersMeta[columnId]) {
-    dir = compareItems(
-      rowA.columnFiltersMeta[columnId]?.itemRank,
-      rowB.columnFiltersMeta[columnId]?.itemRank
-    );
+    dir = compareItems(rowA.columnFiltersMeta[columnId]?.itemRank, rowB.columnFiltersMeta[columnId]?.itemRank);
   }
 
   // Provide an alphanumeric fallback for when the item ranks are equal
   return dir === 0 ? sortingFns.alphanumeric(rowA, rowB, columnId) : dir;
 };
 
-export const useDataTable = <T>(options: DataTableOptions<T>) => {
+export const useDataTable = <T>(options: DataTableOptions<T>, type: ApprovalType) => {
   const { columns, data, enableRowSelection, columnVisibility } = options;
+
+  const Approvaltype = type;
 
   const [sorting, setSorting] = useState<SortingState>([]);
 
@@ -86,6 +89,31 @@ export const useDataTable = <T>(options: DataTableOptions<T>) => {
       pagination: {
         pageSize: 10,
       },
+      columnFilters: [
+        {
+          id: Approvaltype != ApprovalType.TRAINING_NOMINATION ? 'status' : 'nominationStatus',
+          value:
+            Approvaltype === ApprovalType.PASSSLIP
+              ? PassSlipStatus.FOR_SUPERVISOR_APPROVAL
+              : Approvaltype === ApprovalType.LEAVE
+              ? LeaveStatus.FOR_SUPERVISOR_APPROVAL
+              : Approvaltype === ApprovalType.FINAL_LEAVE
+              ? LeaveStatus.FOR_HRDM_APPROVAL
+              : // : Approvaltype === ApprovalType.OVERTIME
+              // ? OvertimeStatus.PENDING
+              Approvaltype === ApprovalType.DTRCORRECTION
+              ? DtrCorrectionStatus.PENDING
+              : Approvaltype === ApprovalType.PDC_SECRETARIAT
+              ? TrainingStatus.PDC_SECRETARIAT_APPROVAL
+              : Approvaltype === ApprovalType.PDC_CHAIRMAN
+              ? TrainingStatus.PDC_CHAIRMAN_APPROVAL
+              : Approvaltype === ApprovalType.PDC_GM
+              ? TrainingStatus.GM_APPROVAL
+              : Approvaltype === ApprovalType.TRAINING_NOMINATION
+              ? TrainingNominationStatus.NOMINATION_PENDING
+              : '',
+        },
+      ],
     },
     state: {
       sorting,
