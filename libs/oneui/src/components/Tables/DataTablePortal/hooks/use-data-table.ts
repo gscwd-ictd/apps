@@ -91,7 +91,7 @@ export const useDataTable = <T>(options: DataTableOptions<T>, type: ApprovalType
       },
       columnFilters: [
         {
-          id: Approvaltype != ApprovalType.TRAINING_NOMINATION ? 'status' : 'nominationStatus',
+          id: Approvaltype !== ApprovalType.TRAINING_NOMINATION ? 'status' : 'nominationStatus',
           value:
             Approvaltype === ApprovalType.PASSSLIP
               ? PassSlipStatus.FOR_SUPERVISOR_APPROVAL
