@@ -10,8 +10,8 @@ import { GetServerSideProps, GetServerSidePropsContext, InferGetServerSidePropsT
 import { getUserDetails, withCookieSession } from '../../../utils/helpers/session';
 import { useEmployeeStore } from '../../../store/employee.store';
 import { SpinnerDotted } from 'spinners-react';
-import { ToastNotification, fuzzySort, useDataTable } from '@gscwd-apps/oneui';
-import { DataTablePortal } from 'libs/oneui/src/components/Tables/DataTablePortal';
+import { ToastNotification, fuzzySort } from '@gscwd-apps/oneui';
+import { DataTablePortal, useDataTable } from 'libs/oneui/src/components/Tables/DataTablePortal';
 import React from 'react';
 import { useApprovalStore } from '../../../store/approvals.store';
 import useSWR from 'swr';
@@ -30,6 +30,7 @@ import TempPhotoProfile from '../.../../../../../public/profile.jpg';
 import Image from 'next/image';
 import RenderOvertimePendingAccomplishmentStatus from 'apps/portal/src/utils/functions/RenderOvertimePendingAccomplishmentStatus';
 import { SalaryGradeConverter } from 'libs/utils/src/lib/functions/SalaryGradeConverter';
+import { ApprovalType } from 'libs/utils/src/lib/enums/approval-type.enum';
 
 export default function OvertimeApprovals({ employeeDetails }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const {
@@ -243,11 +244,14 @@ export default function OvertimeApprovals({ employeeDetails }: InferGetServerSid
   ];
 
   // React Table initialization
-  const { table } = useDataTable({
-    columns: columns,
-    data: overtimeApplications,
-    columnVisibility: { id: false, employeeId: false },
-  });
+  const { table } = useDataTable(
+    {
+      columns: columns,
+      data: overtimeApplications,
+      columnVisibility: { id: false, employeeId: false },
+    },
+    ApprovalType.OVERTIME
+  );
 
   return (
     <>

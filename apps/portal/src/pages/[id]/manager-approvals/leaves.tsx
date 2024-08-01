@@ -10,8 +10,8 @@ import { GetServerSideProps, GetServerSidePropsContext, InferGetServerSidePropsT
 import { getUserDetails, withCookieSession } from '../../../utils/helpers/session';
 import { useEmployeeStore } from '../../../store/employee.store';
 import { SpinnerDotted } from 'spinners-react';
-import { ToastNotification, fuzzySort, useDataTable } from '@gscwd-apps/oneui';
-import { DataTablePortal } from 'libs/oneui/src/components/Tables/DataTablePortal';
+import { ToastNotification, fuzzySort } from '@gscwd-apps/oneui';
+import { DataTablePortal, useDataTable } from 'libs/oneui/src/components/Tables/DataTablePortal';
 import React from 'react';
 import { useApprovalStore } from '../../../store/approvals.store';
 import useSWR from 'swr';
@@ -28,6 +28,7 @@ import ApprovalsCompletedLeaveModal from 'apps/portal/src/components/fixed/manag
 import UseRenderLeaveStatus from 'apps/portal/src/utils/functions/RenderLeaveStatus';
 import { TextSize } from 'libs/utils/src/lib/enums/text-size.enum';
 import { SalaryGradeConverter } from 'libs/utils/src/lib/functions/SalaryGradeConverter';
+import { ApprovalType } from 'libs/utils/src/lib/enums/approval-type.enum';
 
 export default function LeaveApprovals({ employeeDetails }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const {
@@ -236,11 +237,14 @@ export default function LeaveApprovals({ employeeDetails }: InferGetServerSidePr
   ];
 
   // React Table initialization
-  const { table } = useDataTable({
-    columns: columns,
-    data: leaveApplications,
-    columnVisibility: { id: false, employeeId: false },
-  });
+  const { table } = useDataTable(
+    {
+      columns: columns,
+      data: leaveApplications,
+      columnVisibility: { id: false, employeeId: false },
+    },
+    ApprovalType.LEAVE
+  );
 
   return (
     <>

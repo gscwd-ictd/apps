@@ -17,10 +17,10 @@ import { getUserDetails, withCookieSession } from '../../../utils/helpers/sessio
 import { fetchWithToken } from 'apps/portal/src/utils/hoc/fetcher';
 import { isEmpty, isEqual } from 'lodash';
 import { useTrainingSelectionStore } from 'apps/portal/src/store/training-selection.store';
-import { ToastNotification, useDataTable } from '@gscwd-apps/oneui';
+import { ToastNotification } from '@gscwd-apps/oneui';
 import TrainingDetailsModal from 'apps/portal/src/components/fixed/training-selection/TrainingDetailsModal';
 import { useRouter } from 'next/router';
-import { DataTablePortal } from 'libs/oneui/src/components/Tables/DataTablePortal';
+import { DataTablePortal, useDataTable } from 'libs/oneui/src/components/Tables/DataTablePortal';
 import { Training } from 'libs/utils/src/lib/types/training.type';
 import { createColumnHelper } from '@tanstack/react-table';
 import dayjs from 'dayjs';
@@ -28,6 +28,8 @@ import UseRenderTrainingStatus from 'apps/portal/src/utils/functions/RenderTrain
 import { TextSize } from 'libs/utils/src/lib/enums/text-size.enum';
 import { UserRole } from 'apps/portal/src/utils/enums/userRoles';
 import UseRenderTrainingNominationStatus from 'apps/portal/src/utils/functions/RenderTrainingNominationStatus';
+import { TrainingNominationStatus } from 'libs/utils/src/lib/enums/training.enum';
+import { ApprovalType } from 'libs/utils/src/lib/enums/approval-type.enum';
 
 export default function TrainingSelection({ employeeDetails }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const { setEmployeeDetails } = useEmployeeStore((state) => ({
@@ -181,11 +183,14 @@ export default function TrainingSelection({ employeeDetails }: InferGetServerSid
   ];
 
   // React Table initialization
-  const { table } = useDataTable({
-    columns: columns,
-    data: trainingList,
-    columnVisibility: { id: false, employeeId: false },
-  });
+  const { table } = useDataTable(
+    {
+      columns: columns,
+      data: trainingList,
+      columnVisibility: { id: false, employeeId: false },
+    },
+    ApprovalType.TRAINING_NOMINATION
+  );
 
   useEffect(() => {
     if (!isEmpty(postResponseApply) || !isEmpty(errorTrainingList) || !isEmpty(errorResponse)) {
