@@ -1,4 +1,4 @@
-import { FunctionComponent, ReactElement } from 'react';
+import { FunctionComponent, ReactElement, useEffect } from 'react';
 import { flexRender } from '@tanstack/react-table';
 import { DataTablePortalProps, DataTableProps } from './types/data-table-props';
 import { SortableColumn } from './SortableColumn';
@@ -19,6 +19,10 @@ export const DataTablePortal = <T extends unknown>({
   const resetFilterInputs = () => {
     model.resetColumnFilters();
   };
+
+  useEffect(() => {
+    resetFilterInputs();
+  }, []);
 
   return (
     <>

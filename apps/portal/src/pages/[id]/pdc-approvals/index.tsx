@@ -17,15 +17,16 @@ import { getUserDetails, withCookieSession } from '../../../utils/helpers/sessio
 import { fetchWithToken } from 'apps/portal/src/utils/hoc/fetcher';
 import { isEmpty } from 'lodash';
 import { usePdcApprovalsStore } from 'apps/portal/src/store/pdc-approvals.store';
-import { ToastNotification, fuzzySort, useDataTable } from '@gscwd-apps/oneui';
+import { ToastNotification, fuzzySort } from '@gscwd-apps/oneui';
 import { useRouter } from 'next/router';
-import { DataTablePortal } from 'libs/oneui/src/components/Tables/DataTablePortal';
+import { DataTablePortal, useDataTable } from 'libs/oneui/src/components/Tables/DataTablePortal';
 import { Training } from 'libs/utils/src/lib/types/training.type';
 import { createColumnHelper } from '@tanstack/react-table';
 import dayjs from 'dayjs';
 import UseRenderTrainingStatus from 'apps/portal/src/utils/functions/RenderTrainingStatus';
 import { TextSize } from 'libs/utils/src/lib/enums/text-size.enum';
 import TrainingDetailsModal from 'apps/portal/src/components/fixed/pdc-approvals/TrainingDetailsModal';
+import { ApprovalType } from 'libs/utils/src/lib/enums/approval-type.enum';
 
 export default function PdcApprovals({ userDetails }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const { employeeDetails, setEmployeeDetails } = useEmployeeStore((state) => ({
@@ -149,11 +150,18 @@ export default function PdcApprovals({ userDetails }: InferGetServerSidePropsTyp
   ];
 
   // React Table initialization
-  const { table } = useDataTable({
-    columns: columns,
-    data: trainingList,
-    columnVisibility: { id: false, employeeId: false },
-  });
+  const { table } = useDataTable(
+    {
+      columns: columns,
+      data: trainingList,
+      columnVisibility: { id: false, employeeId: false },
+    },
+    userDetails?.employmentDetails?.isPdcSecretariat
+      ? ApprovalType.PDC_SECRETARIAT
+      : userDetails?.employmentDetails?.isPdcChairman
+      ? ApprovalType.PDC_CHAIRMAN
+      : ApprovalType.NA
+  );
 
   useEffect(() => {
     if (!isEmpty(patchResponseApply) || !isEmpty(errorTrainingList) || !isEmpty(errorResponse)) {
