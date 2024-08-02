@@ -388,8 +388,8 @@ const ViewLeaveApplicationModal: FunctionComponent<ViewLeaveApplicationModalProp
                       direction="top-to-bottom"
                       textSize="md"
                       value={
-                        leaveApplicationDetails.leaveApplicationBasicInfo?.debitValue
-                          ? parseInt(leaveApplicationDetails.leaveApplicationBasicInfo?.debitValue)
+                        !isEmpty(leaveApplicationDetails.leaveApplicationBasicInfo?.leaveDates)
+                          ? leaveApplicationDetails.leaveApplicationBasicInfo?.leaveDates.length
                           : 0
                       }
                     />
