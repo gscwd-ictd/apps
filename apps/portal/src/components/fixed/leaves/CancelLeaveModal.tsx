@@ -80,14 +80,14 @@ export const CancelLeaveModal = ({ modalState, setModalState, closeModalAction }
           const timeLogs: EmployeeDtrWithSchedule = await getDailyDtr(
             leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveDates[i]
           );
-
-          //check if there's a time in or time out
+          //check if there's a time in or time out or if its a rest day = allow cancellation
           if (
-            timeLogs &&
-            (timeLogs.dtr.timeIn || timeLogs.dtr.timeOut) &&
-            timeLogs.leaveDateStatus === LeaveDateStatus.APPROVED
+            (timeLogs &&
+              timeLogs.leaveDateStatus === LeaveDateStatus.APPROVED &&
+              (timeLogs.dtr.timeIn || timeLogs.dtr.timeOut)) ||
+            (timeLogs && timeLogs.leaveDateStatus === LeaveDateStatus.APPROVED && timeLogs.isRestDay)
           ) {
-            //add leave date to selection array
+            //add leave date to allowable date cancellation array
             leaveDates.push({
               label: leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveDates[i],
               value: leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveDates[i],
@@ -106,7 +106,7 @@ export const CancelLeaveModal = ({ modalState, setModalState, closeModalAction }
               value: leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveDates[i],
             });
           } else {
-            //
+            //do nothing
           }
         };
         dtrTrest();
