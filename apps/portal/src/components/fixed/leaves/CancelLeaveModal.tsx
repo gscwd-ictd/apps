@@ -84,7 +84,8 @@ export const CancelLeaveModal = ({ modalState, setModalState, closeModalAction }
           if (
             (timeLogs &&
               timeLogs.leaveDateStatus === LeaveDateStatus.APPROVED &&
-              (timeLogs.dtr.timeIn || timeLogs.dtr.timeOut)) ||
+              timeLogs.dtr.timeIn &&
+              timeLogs.dtr.timeOut) ||
             (timeLogs && timeLogs.leaveDateStatus === LeaveDateStatus.APPROVED && timeLogs.isRestDay)
           ) {
             //add leave date to allowable date cancellation array
@@ -264,7 +265,9 @@ export const CancelLeaveModal = ({ modalState, setModalState, closeModalAction }
                   ) : (
                     <AlertNotification
                       alertType="error"
-                      notifMessage={'There were no leave dates where you have rendered work found.'}
+                      notifMessage={
+                        'No leave dates where you have rendered work found. You can only cancel leave dates that were rest days or days with face scan time in and time out.'
+                      }
                       dismissible={false}
                     />
                   )}
