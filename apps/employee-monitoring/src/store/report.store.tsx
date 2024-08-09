@@ -13,6 +13,7 @@ import {
   ReportOnSummaryLeaveWithoutPay,
   ReportOnEmpSickLeaveCredits,
   ReportOnEmpRehabLeaveCredits,
+  ReportOnPassSlipDeductibleToPay,
 } from '../utils/types/report.type';
 
 export type ReportsState = {
@@ -89,6 +90,12 @@ export type ReportsState = {
 
   errorReportOnEmpRehabLeaveDoc: string;
   setErrorReportOnEmpRehabLeaveDoc: (errorReportOnEmpRehabLeaveDoc: string) => void;
+
+  reportOnPassSlipDeductibleToPayDoc: ReportOnPassSlipDeductibleToPay;
+  setReportOnPassSlipDeductibleToPayDoc: (reportOnPassSlipDeductibleToPayDoc: ReportOnPassSlipDeductibleToPay) => void;
+
+  errorReportOnPassSlipDeductibleToPayDoc: string;
+  setErrorReportOnPassSlipDeductibleToPayDoc: (errorReportOnPassSlipDeductibleToPayDoc: string) => void;
 
   emptyResponse: () => void;
 };
@@ -185,6 +192,14 @@ export const useReportsStore = create<ReportsState>()(
     errorReportOnEmpRehabLeaveDoc: '',
     setErrorReportOnEmpRehabLeaveDoc: (errorReportOnEmpRehabLeaveDoc) => set({ errorReportOnEmpRehabLeaveDoc }),
 
+    reportOnPassSlipDeductibleToPayDoc: {} as ReportOnPassSlipDeductibleToPay,
+    setReportOnPassSlipDeductibleToPayDoc: (reportOnPassSlipDeductibleToPayDoc) =>
+      set({ reportOnPassSlipDeductibleToPayDoc }),
+
+    errorReportOnPassSlipDeductibleToPayDoc: '',
+    setErrorReportOnPassSlipDeductibleToPayDoc: (errorReportOnPassSlipDeductibleToPayDoc) =>
+      set({ errorReportOnPassSlipDeductibleToPayDoc }),
+
     emptyResponse: () =>
       set({
         errorReportOnAttendanceDoc: '',
@@ -196,6 +211,7 @@ export const useReportsStore = create<ReportsState>()(
         errorReportOnEmpLeaveCreditsBalanceDoc: '',
         errorReportOnEmpLeaveCreditsBalanceWMoneyDoc: '',
         errorReportOnSummaryLeaveWithoutPayDoc: '',
+        errorReportOnPassSlipDeductibleToPayDoc: '',
       }),
   }))
 );

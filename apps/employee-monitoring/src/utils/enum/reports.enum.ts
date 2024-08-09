@@ -54,4 +54,9 @@ export const Reports = [
     label: 'Report on Summary of Rehabilitation Leave',
     value: 'report on summary of rehabilitation leave',
   },
+  // 11
+  {
+    label: 'Report on Pass Slip Deductible to Pay',
+    value: 'report on pass slip deductible to pay',
+  },
 ];

@@ -172,3 +172,23 @@ export type ReportOnEmpRehabLeaveCredits = {
   report: Array<EmployeeRoRl>;
   signatory: ReportSignatories;
 };
+
+// Report on Pass Slip Deductible to Pay
+export type EmployeeReportOnPassSlipDeductibleToPay = {
+  dateOfApplication: string;
+  employeeId: string;
+  fullName: string;
+  numberOfHours: number;
+  remarks: string;
+  salaryDeductionComputation: string;
+  timeInTimeOut: string;
+}
+
+export type ReportOnPassSlipDeductibleToPay = {
+  report: {
+    casual: Array<EmployeeReportOnPassSlipDeductibleToPay>;
+    jo: Array<EmployeeReportOnPassSlipDeductibleToPay>;
+    permanent: Array<EmployeeReportOnPassSlipDeductibleToPay>;
+  }
+  signatory: ReportSignatories;
+};

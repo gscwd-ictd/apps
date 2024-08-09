@@ -7,15 +7,12 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import { Card } from '../../components/cards/Card';
 import { BreadCrumbs } from '../../components/navigations/BreadCrumbs';
-import { Button, ToastNotification } from '@gscwd-apps/oneui';
+import { Button } from '@gscwd-apps/oneui';
 import { SelectListRF } from '../../components/inputs/SelectListRF';
 import { LabelInput } from '../../components/inputs/LabelInput';
 import ConvertFullMonthNameToDigit from '../../utils/functions/ConvertFullMonthNameToDigit';
 import ConvertToYearMonth from '../../utils/functions/ConvertToYearMonth';
 import { useEffect } from 'react';
-import fetcherHRMS from 'apps/employee-monitoring/src/utils/fetcher/FetcherHRMS';
-import useSWR from 'swr';
-import { useEmployeeStore } from 'apps/employee-monitoring/src/store/employee.store';
 import { isEmpty } from 'lodash';
 
 // yup error handling initialization
@@ -131,6 +128,11 @@ const yupSchema = yup.object().shape({
         // Report on Summary of Leave Without Pay
         else if (report === Reports[8].value) {
           return true;
+        }
+
+        // Report on Pass Slip Deductible to Pay
+        else if (report === Reports[11].value) {
+          return true;
         } else return false;
       },
       then: yup.date().required('Month year is required').nullable(),
@@ -140,22 +142,6 @@ const yupSchema = yup.object().shape({
 });
 
 export default function Index() {
-  // fetch data for list of employees
-  const {
-    data: employees,
-    error: employeesError,
-    isLoading: employeesLoading,
-  } = useSWR('/employees/options', fetcherHRMS, {
-    shouldRetryOnError: false,
-    revalidateOnFocus: false,
-  });
-
-  // zustand initialization for employees
-  const { EmployeeOptions, SetEmployeeOptions } = useEmployeeStore((state) => ({
-    EmployeeOptions: state.employeeOptions,
-    SetEmployeeOptions: state.setEmployeeOptions,
-  }));
-
   // React hook form
   const {
     reset,
@@ -197,7 +183,8 @@ export default function Index() {
       data.reportName === Reports[5].value ||
       data.reportName === Reports[6].value ||
       data.reportName === Reports[7].value ||
-      data.reportName === Reports[8].value
+      data.reportName === Reports[8].value ||
+      data.reportName === Reports[11].value
     ) {
       window.open(url + paramMonthYear, '_blank', 'noopener,noreferrer');
       reset();
@@ -235,6 +222,12 @@ export default function Index() {
       unregister('dateFrom');
       unregister('dateTo');
       unregister('employeeId');
+    } else if (watchReportName === Reports[11].value) {
+      register('monthYear');
+      register('employeeId');
+
+      unregister('dateFrom');
+      unregister('dateTo');
     } else if (
       watchReportName === Reports[4].value ||
       watchReportName === Reports[9].value ||
@@ -254,13 +247,6 @@ export default function Index() {
     }
   }, [register, unregister, watchReportName]);
 
-  // upon success of swr request, zustand state will be updated
-  useEffect(() => {
-    if (!isEmpty(employees)) {
-      SetEmployeeOptions(employees.data);
-    }
-  }, [employees]);
-
   return (
     <>
       <Can I="access" this="Reports">
@@ -278,9 +264,6 @@ export default function Index() {
 
           <div className="sm:px-2 md:px-2 lg:px-5">
             <Card>
-              {/* Notifications */}
-              {!isEmpty(employeesError) ? <ToastNotification toastType="error" notifMessage={employeesError} /> : null}
-
               <form onSubmit={handleSubmit(onSubmit)} id="submitReportForm">
                 <div className="grid gap-2">
                   {/* Report select input */}
@@ -300,10 +283,11 @@ export default function Index() {
                   {watchReportName === Reports[5].value ||
                   watchReportName === Reports[6].value ||
                   watchReportName === Reports[7].value ||
-                  watchReportName === Reports[8].value ? (
+                  watchReportName === Reports[8].value ||
+                  watchReportName === Reports[11].value ? (
                     <div>
                       <div className="grid grid-cols-2 gap-2">
-                        {/* Date From input */}
+                        {/* Month year input */}
                         <div className="mb-6">
                           <LabelInput
                             id="monthYear"
@@ -312,6 +296,7 @@ export default function Index() {
                             controller={{ ...register('monthYear') }}
                             isError={errors.monthYear ? true : false}
                             errorMessage={errors.monthYear?.message}
+                            placeholder="YYYY-MM"
                           />
                         </div>
                       </div>
@@ -342,22 +327,6 @@ export default function Index() {
                             controller={{ ...register('dateTo') }}
                             isError={errors.dateTo ? true : false}
                             errorMessage={errors.dateTo?.message}
-                          />
-                        </div>
-
-                        {/* employee */}
-                        <div>
-                          <SelectListRF
-                            id="employeeId"
-                            selectList={EmployeeOptions}
-                            controller={{
-                              ...register('employeeId'),
-                            }}
-                            label="Employee"
-                            isError={errors.employeeId ? true : false}
-                            errorMessage={errors.employeeId?.message}
-                            disabled={employeesLoading}
-                            isLoading={employeesLoading}
                           />
                         </div>
                       </div>
