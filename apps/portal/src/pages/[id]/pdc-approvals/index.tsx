@@ -191,7 +191,7 @@ export default function PdcApprovals({ userDetails }: InferGetServerSidePropsTyp
 
       <EmployeeProvider employeeData={employee}>
         <Head>
-          <title>Personnel Development Comittee Approvals</title>
+          <title>Personnel Development Committee Approvals</title>
         </Head>
 
         <SideNav employeeDetails={userDetails} />
