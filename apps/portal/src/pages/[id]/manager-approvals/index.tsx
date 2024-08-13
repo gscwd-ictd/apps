@@ -88,7 +88,6 @@ export default function Approvals({
                     icon={<HiDocumentText size={26} />}
                     subtitle="Show all Pass Slips requests"
                     notificationCount={
-                      pendingApprovalsCount.pendingPassSlipsCount >= 0 &&
                       pendingApprovalsCount.pendingPassSlipsCount != null
                         ? pendingApprovalsCount.pendingPassSlipsCount
                         : 0
@@ -109,10 +108,7 @@ export default function Approvals({
                       icon={<HiCalendar size={26} />}
                       subtitle="Show all Leave requests"
                       notificationCount={
-                        pendingApprovalsCount.pendingLeavesCount >= 0 &&
-                        pendingApprovalsCount.pendingLeavesCount != null
-                          ? pendingApprovalsCount.pendingLeavesCount
-                          : 0
+                        pendingApprovalsCount.pendingLeavesCount != null ? pendingApprovalsCount.pendingLeavesCount : 0
                       }
                       className="bg-indigo-500"
                       onClick={() => router.push(`/${router.query.id}/manager-approvals/leaves`)}
@@ -143,7 +139,6 @@ export default function Approvals({
                       icon={<HiClock size={26} />}
                       subtitle="Show all Time Log Correction requests"
                       notificationCount={
-                        pendingApprovalsCount.pendingDtrCorrectionsApprovals >= 0 &&
                         pendingApprovalsCount.pendingDtrCorrectionsApprovals != null
                           ? pendingApprovalsCount.pendingDtrCorrectionsApprovals
                           : 0
