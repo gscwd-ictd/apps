@@ -28,7 +28,6 @@ export type PendingApprovalsCount = {
   pendingTrainingNominationCount?: number | null;
   pendingDtrCorrectionsApprovals: number | null;
   forHrdmApprovalLeaves: number | null;
-  pendingOvertimeApprovals: number | null;
   pendingPdcSecretariatApprovalCount?: number | null;
   pendingPdcChairmanApprovalCount?: number | null;
   pendingGmApprovalCount?: number | null;

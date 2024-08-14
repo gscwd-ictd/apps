@@ -254,7 +254,6 @@ export const useApprovalStore = create<ApprovalState>()(
       pendingTrainingNominationCount: 0,
       pendingDtrCorrectionsApprovals: 0,
       forHrdmApprovalLeaves: 0,
-      pendingOvertimeApprovals: 0,
       pendingPdcSecretariatApprovalCount: 0,
       pendingPdcChairmanApprovalCount: null,
       pendingGmApprovalCount: null,

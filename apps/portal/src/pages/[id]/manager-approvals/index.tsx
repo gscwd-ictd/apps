@@ -1,5 +1,5 @@
 import Head from 'next/head';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import SideNav from '../../../components/fixed/nav/SideNav';
 import { ContentBody } from '../../../components/modular/custom/containers/ContentBody';
 import { ContentHeader } from '../../../components/modular/custom/containers/ContentHeader';
@@ -21,26 +21,40 @@ export default function Approvals({
   employeeDetails,
   finalSalaryGrade,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
-  const {
-    pendingApprovalsCount,
-    getPendingApprovalsCount,
-    getPendingApprovalsCountSuccess,
-    getPendingApprovalsCountFail,
-  } = useApprovalStore((state) => ({
+  const { pendingApprovalsCount } = useApprovalStore((state) => ({
     pendingApprovalsCount: state.pendingApprovalsCount,
-    getPendingApprovalsCount: state.getPendingApprovalsCount,
-    getPendingApprovalsCountSuccess: state.getPendingApprovalsCountSuccess,
-    getPendingApprovalsCountFail: state.getPendingApprovalsCountFail,
   }));
   const router = useRouter();
 
   // set state for employee store
   const setEmployeeDetails = useEmployeeStore((state) => state.setEmployeeDetails);
+  const [finalOvertimeApprovals, setFinalOvertimeApprovals] = useState<number>(0);
 
   // set the employee details on page load
   useEffect(() => {
     setEmployeeDetails(employeeDetails);
   }, [employeeDetails, setEmployeeDetails]);
+
+  //checking NULL for only pending OT and pending OT accomplishment counts
+  // const checkNull = () => {
+  //   let tempOvertimeCount;
+  //   let tempOvertimeAccomplishmentCount;
+  //   if (pendingApprovalsCount.pendingOvertimesCount == null) {
+  //     tempOvertimeCount = 0;
+  //   } else {
+  //     tempOvertimeCount = pendingApprovalsCount.pendingOvertimesCount;
+  //   }
+  //   if (pendingApprovalsCount.pendingOvertimeAccomplishmentsApprovalCount == null) {
+  //     tempOvertimeAccomplishmentCount = 0;
+  //   } else {
+  //     tempOvertimeAccomplishmentCount = pendingApprovalsCount.pendingOvertimeAccomplishmentsApprovalCount;
+  //   }
+  //   setFinalOvertimeApprovals(tempOvertimeCount + tempOvertimeAccomplishmentCount);
+  // };
+
+  // useEffect(() => {
+  //   checkNull();
+  // }, [pendingApprovalsCount]);
 
   return (
     <>
@@ -74,7 +88,9 @@ export default function Approvals({
                     icon={<HiDocumentText size={26} />}
                     subtitle="Show all Pass Slips requests"
                     notificationCount={
-                      pendingApprovalsCount.pendingPassSlipsCount != 0 ? pendingApprovalsCount.pendingPassSlipsCount : 0
+                      pendingApprovalsCount.pendingPassSlipsCount != null
+                        ? pendingApprovalsCount.pendingPassSlipsCount
+                        : 0
                     }
                     className="bg-indigo-500"
                     onClick={() => router.push(`/${router.query.id}/manager-approvals/pass-slips`)}
@@ -92,7 +108,7 @@ export default function Approvals({
                       icon={<HiCalendar size={26} />}
                       subtitle="Show all Leave requests"
                       notificationCount={
-                        pendingApprovalsCount.pendingLeavesCount != 0 ? pendingApprovalsCount.pendingLeavesCount : 0
+                        pendingApprovalsCount.pendingLeavesCount != null ? pendingApprovalsCount.pendingLeavesCount : 0
                       }
                       className="bg-indigo-500"
                       onClick={() => router.push(`/${router.query.id}/manager-approvals/leaves`)}
@@ -103,14 +119,14 @@ export default function Approvals({
                       title="Overtime Requests"
                       icon={<HiClipboard size={26} />}
                       subtitle="Show all Overtime requests"
+                      // notificationCount={finalOvertimeApprovals ?? 0}
                       notificationCount={
-                        pendingApprovalsCount.pendingOvertimesCount != 0 ||
-                        pendingApprovalsCount.pendingOvertimeAccomplishmentsApprovalCount != 0
-                          ? Number(
-                              pendingApprovalsCount.pendingOvertimesCount +
-                                pendingApprovalsCount.pendingOvertimeAccomplishmentsApprovalCount
-                            )
-                          : 0
+                        (pendingApprovalsCount.pendingOvertimesCount != null
+                          ? pendingApprovalsCount.pendingOvertimesCount
+                          : 0) +
+                        (pendingApprovalsCount.pendingOvertimeAccomplishmentsApprovalCount != null
+                          ? pendingApprovalsCount.pendingOvertimeAccomplishmentsApprovalCount
+                          : 0)
                       }
                       className="bg-indigo-500"
                       onClick={() => router.push(`/${router.query.id}/manager-approvals/overtimes`)}
@@ -123,7 +139,7 @@ export default function Approvals({
                       icon={<HiClock size={26} />}
                       subtitle="Show all Time Log Correction requests"
                       notificationCount={
-                        pendingApprovalsCount.pendingDtrCorrectionsApprovals != 0
+                        pendingApprovalsCount.pendingDtrCorrectionsApprovals != null
                           ? pendingApprovalsCount.pendingDtrCorrectionsApprovals
                           : 0
                       }
