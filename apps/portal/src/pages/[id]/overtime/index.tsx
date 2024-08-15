@@ -154,14 +154,20 @@ export default function Overtime({ employeeDetails }: InferGetServerSidePropsTyp
     }
   }, [swrEmployeeList, swrEmployeeListError]);
 
-  const overtimeListUrl = `${process.env.NEXT_PUBLIC_EMPLOYEE_MONITORING_URL}/v1/overtime/${employeeDetails.employmentDetails.overtimeImmediateSupervisorId}`;
+  const overtimeListUrl_overtimeSupervisor = `${process.env.NEXT_PUBLIC_EMPLOYEE_MONITORING_URL}/v1/overtime/${employeeDetails.employmentDetails.overtimeImmediateSupervisorId}`;
+  const overtimeListUrl_manager = `${process.env.NEXT_PUBLIC_EMPLOYEE_MONITORING_URL}/v1/overtime/${employeeDetails.employmentDetails.userId}/list`;
 
   const {
     data: swrOvertimeList,
     isLoading: swrOvertimeListIsLoading,
     error: swrOvertimeListError,
     mutate: mutateOvertimeList,
-  } = useSWR(employeeDetails.employmentDetails.overtimeImmediateSupervisorId ? overtimeListUrl : null, fetchWithToken);
+  } = useSWR(
+    employeeDetails.employmentDetails.overtimeImmediateSupervisorId
+      ? overtimeListUrl_overtimeSupervisor
+      : overtimeListUrl_manager,
+    fetchWithToken
+  );
 
   // Initial zustand state update
   useEffect(() => {

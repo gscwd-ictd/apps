@@ -351,7 +351,7 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
     setLeaveBalanceInput(0);
     setLessSl(0);
     setLessVlFL(0);
-    setSickLeaveInput(0);
+    // setSickLeaveInput(0);
     setSelectedLeaveMonetizationType(null);
     setLateFiling(false);
   }, [watch('typeOfLeaveDetails.leaveName')]);
@@ -525,7 +525,7 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
   const [leaveCreditMultiplier, setLeaveCreditMultiplier] = useState<number>(0.0481927);
   const [maxMonetizationAmount, setMaxMonetizationAmount] = useState<number>(0);
   const [leaveBalanceInput, setLeaveBalanceInput] = useState<number>(0);
-  const [sickLeaveInput, setSickLeaveInput] = useState<number>(0);
+  // const [sickLeaveInput, setSickLeaveInput] = useState<number>(0);
   const [estimatedAmount, setEstimatedAmount] = useState<number>(0);
 
   // Set state for leave credits in table below of modal
@@ -557,6 +557,11 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
         //if VL/FL is exhausted with 5 credits left minimum, switch deduction to SL
         setLessSl(credits - (totalVlFlBalance - 5));
       }
+      //VL is already less than 5, go directly to SL deduction
+    } else {
+      setLessVlFL(0);
+      //if VL/FL is exhausted with 5 or less credits left, switch deduction to SL
+      setLessSl(credits);
     }
   };
 
@@ -1051,6 +1056,7 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
                                 <div className="w-full">
                                   <input
                                     type="number"
+                                    step={'.001'}
                                     min={1}
                                     max={
                                       selectedLeaveMonetizationType === LeaveMonetizationType.BY_PERCENTAGE_OF_CREDITS
@@ -1445,7 +1451,9 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
                                   : ''
                               } border border-slate-200 p-1 text-center text-sm`}
                             >
-                              {(Number(finalVacationAndForcedLeaveBalance) + Number(finalSickLeaveBalance)).toFixed(3)}
+                              {(
+                                Number(finalVacationAndForcedLeaveBalance > 0 ?? 0) + Number(finalSickLeaveBalance)
+                              ).toFixed(3)}
                             </td>
                           </tr>
                         ) : null}
@@ -1516,7 +1524,8 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
                       watch('typeOfLeaveDetails.leaveName') === LeaveName.PATERNITY
                     ? true
                     : //VLFL balance is 5 or less, and SL balance is less than 10
-                    finalVacationAndForcedLeaveBalance <= 5 &&
+                    vacationLeaveBalance > 0 &&
+                      finalVacationAndForcedLeaveBalance <= 5 &&
                       leaveBalanceInput > 0 &&
                       finalSickLeaveBalance < 10 &&
                       watch('typeOfLeaveDetails.leaveName') === LeaveName.MONETIZATION
@@ -1531,10 +1540,11 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
                       estimatedAmount > Number(maxMonetizationAmount) / 2
                     ? true
                     : //one field has input and is less than 10
-                    (finalVacationAndForcedLeaveBalance < 5 &&
+                    (vacationLeaveBalance > 0 &&
+                        finalVacationAndForcedLeaveBalance < 5 &&
                         leaveBalanceInput > 0 &&
                         finalSickLeaveBalance >= 10 &&
-                        sickLeaveInput <= 0 &&
+                        // sickLeaveInput <= 0 &&
                         watch('typeOfLeaveDetails.leaveName') === LeaveName.MONETIZATION) ||
                       (finalVacationAndForcedLeaveBalance >= 5 &&
                         leaveBalanceInput <= 0 &&
