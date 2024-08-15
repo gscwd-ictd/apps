@@ -1,4 +1,4 @@
-import { LeaveCancellationStatus, LeaveDateStatus, LeaveStatus } from '../enums/leave.enum';
+import { LeaveCancellationStatus, LeaveDateStatus, LeaveStatus, MonetizationType } from '../enums/leave.enum';
 import { LeaveBenefitOptions, LeaveType } from './leave-benefits.type';
 
 // Date range picker in leave application form
@@ -49,6 +49,8 @@ export type LeaveApplicationForm = {
   totalNumberOfDays: number; //number of days of leave
 
   isLateFiling: boolean;
+
+  leaveMonetization?: LeaveMonetizationDetail;
 };
 
 // Employee full leave details
@@ -128,6 +130,18 @@ export type EmployeeLeave = {
   leaveDates: Array<string>;
   status: LeaveStatus; //! changed this to enum
   referenceNo: string | null;
+  forMonetization: boolean;
+  monetizationType?: MonetizationType;
+  convertedVl?: number;
+  convertedSl?: number;
+  monetizedAmount?: number;
+};
+
+export type LeaveMonetizationDetail = {
+  convertedSl: number;
+  convertedVl: number;
+  monetizationType: MonetizationType;
+  monetizedAmount: number;
 };
 
 // List of leaves per employee

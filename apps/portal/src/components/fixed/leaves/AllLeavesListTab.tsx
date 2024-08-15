@@ -57,31 +57,39 @@ export const AllLeavesListTab = ({ leaves, tab }: AllLeaveListTabProps) => {
                     Date Applied: {DateFormatter(leave.dateOfFiling, 'MMMM DD, YYYY')}
                   </p>
 
-                  <p className="text-sm text-gray-500">No. of Days: {leave.leaveDates.length}</p>
-                  <p className="text-sm text-gray-500">
-                    Dates:{' '}
-                    {leave.leaveName === LeaveName.MATERNITY ||
-                    leave.leaveName === LeaveName.STUDY ||
-                    leave.leaveName === LeaveName.REHABILITATION ||
-                    leave.leaveName === LeaveName.SPECIAL_LEAVE_BENEFITS_FOR_WOMEN ||
-                    leave.leaveName === LeaveName.ADOPTION ? (
-                      `${DateFormatter(leave.leaveDates[0], 'MM-DD-YYYY')} - ${DateFormatter(
-                        leave.leaveDates[leave.leaveDates.length - 1],
-                        'MM-DD-YYYY'
-                      )}`
-                    ) : (
-                      <>
-                        {leave.leaveDates.map((dates: string, index: number) => {
-                          return (
-                            <label key={index} className="pr-1">
-                              {DateFormatter(dates, 'MM-DD-YYYY')}
-                              {index == leave.leaveDates.length - 1 ? '' : ','}
-                            </label>
-                          );
-                        })}
-                      </>
-                    )}
-                  </p>
+                  {!leave.forMonetization ? (
+                    <>
+                      <p className="text-sm text-gray-500">No. of Days: {leave.leaveDates.length}</p>
+                      <p className="text-sm text-gray-500">
+                        Dates:{' '}
+                        {leave.leaveName === LeaveName.MATERNITY ||
+                        leave.leaveName === LeaveName.STUDY ||
+                        leave.leaveName === LeaveName.REHABILITATION ||
+                        leave.leaveName === LeaveName.SPECIAL_LEAVE_BENEFITS_FOR_WOMEN ||
+                        leave.leaveName === LeaveName.ADOPTION ? (
+                          `${DateFormatter(leave.leaveDates[0], 'MM-DD-YYYY')} - ${DateFormatter(
+                            leave.leaveDates[leave.leaveDates.length - 1],
+                            'MM-DD-YYYY'
+                          )}`
+                        ) : (
+                          <>
+                            {leave.leaveDates.map((dates: string, index: number) => {
+                              return (
+                                <label key={index} className="pr-1">
+                                  {DateFormatter(dates, 'MM-DD-YYYY')}
+                                  {index == leave.leaveDates.length - 1 ? '' : ','}
+                                </label>
+                              );
+                            })}
+                          </>
+                        )}
+                      </p>
+                    </>
+                  ) : null}
+
+                  {leave.forMonetization ? (
+                    <p className="text-sm text-gray-500">Amount: P {Number(leave.monetizedAmount).toLocaleString()}</p>
+                  ) : null}
 
                   <p className="text-sm text-indigo-500">Status: {leave.status.toUpperCase()}</p>
                 </div>

@@ -247,274 +247,291 @@ export const LeaveCompletedModal = ({ modalState, setModalState, closeModalActio
                       </div>
                     </div>
 
-                    <div className="flex flex-col justify-start items-start w-full sm:w-1/2 px-0.5 pb-3  ">
-                      <label className="text-slate-500 text-md whitespace-nowrap pb-0.5 ">Number of Days:</label>
+                    {leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName !== LeaveName.MONETIZATION ? (
+                      //IF NOT MONETIZATION
+                      <>
+                        <div className="flex flex-col justify-start items-start w-full sm:w-1/2 px-0.5 pb-3  ">
+                          <label className="text-slate-500 text-md whitespace-nowrap pb-0.5 ">Number of Days:</label>
 
-                      <div className="w-auto ml-5">
-                        <label className=" text-md font-medium">
-                          {leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveDates?.length}
-                        </label>
-                      </div>
-                    </div>
+                          <div className="w-auto ml-5">
+                            <label className=" text-md font-medium">
+                              {leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveDates?.length}
+                            </label>
+                          </div>
+                        </div>
 
-                    <div className="flex flex-col justify-start items-start w-full sm:w-1/2 px-0.5 pb-3  ">
-                      <label className="text-slate-500 text-md whitespace-nowrap pb-0.5">Leave Dates:</label>
+                        <div className="flex flex-col justify-start items-start w-full sm:w-1/2 px-0.5 pb-3  ">
+                          <label className="text-slate-500 text-md whitespace-nowrap pb-0.5">Leave Dates:</label>
 
-                      <div className="w-auto ml-5">
-                        <label className="text-md font-medium ">
-                          {leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.MATERNITY ||
-                          leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.STUDY ||
-                          leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.REHABILITATION ||
-                          leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName ===
-                            LeaveName.SPECIAL_LEAVE_BENEFITS_FOR_WOMEN ||
-                          leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.ADOPTION ? (
-                            // show first and last date (array) only if SBL (maternity, study, rehab...)
-                            `${DateFormatter(
-                              leaveIndividualDetail.leaveApplicationBasicInfo?.leaveDates[0],
-                              'MM-DD-YYYY'
-                            )} - ${DateFormatter(
-                              leaveIndividualDetail.leaveApplicationBasicInfo?.leaveDates[
-                                leaveIndividualDetail.leaveApplicationBasicInfo?.leaveDates?.length - 1
-                              ],
-                              'MM-DD-YYYY'
-                            )}`
-                          ) : (
-                            // show all dates if not SBL (maternity, study, rehab...)
-                            <>
-                              <ul>
-                                {leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveDates?.map(
-                                  (dates: string, index: number) => {
-                                    if (moreLeaveDates) {
-                                      return <li key={index}>{DateFormatter(dates, 'MM-DD-YYYY')}</li>;
-                                    } else {
-                                      if (index <= 2) return <li key={index}>{DateFormatter(dates, 'MM-DD-YYYY')}</li>;
-                                    }
-                                  }
+                          <div className="w-auto ml-5">
+                            <label className="text-md font-medium ">
+                              {leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.MATERNITY ||
+                              leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.STUDY ||
+                              leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName ===
+                                LeaveName.REHABILITATION ||
+                              leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName ===
+                                LeaveName.SPECIAL_LEAVE_BENEFITS_FOR_WOMEN ||
+                              leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.ADOPTION ? (
+                                // show first and last date (array) only if SBL (maternity, study, rehab...)
+                                `${DateFormatter(
+                                  leaveIndividualDetail.leaveApplicationBasicInfo?.leaveDates[0],
+                                  'MM-DD-YYYY'
+                                )} - ${DateFormatter(
+                                  leaveIndividualDetail.leaveApplicationBasicInfo?.leaveDates[
+                                    leaveIndividualDetail.leaveApplicationBasicInfo?.leaveDates?.length - 1
+                                  ],
+                                  'MM-DD-YYYY'
+                                )}`
+                              ) : (
+                                // show all dates if not SBL (maternity, study, rehab...)
+                                <>
+                                  <ul>
+                                    {leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveDates?.map(
+                                      (dates: string, index: number) => {
+                                        if (moreLeaveDates) {
+                                          return <li key={index}>{DateFormatter(dates, 'MM-DD-YYYY')}</li>;
+                                        } else {
+                                          if (index <= 2)
+                                            return <li key={index}>{DateFormatter(dates, 'MM-DD-YYYY')}</li>;
+                                        }
+                                      }
+                                    )}
+                                  </ul>
+                                  {leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveDates?.length > 3 ? (
+                                    <label
+                                      className="cursor-pointer text-sm text-indigo-500 hover:text-indigo-600"
+                                      onClick={(e) => setMoreLeaveDates(!moreLeaveDates)}
+                                    >
+                                      {moreLeaveDates ? 'Less...' : 'More...'}
+                                    </label>
+                                  ) : null}
+                                </>
+                              )}
+                            </label>
+                          </div>
+                        </div>
+                        {leaveIndividualDetail?.leaveApplicationBasicInfo?.cancelledLeaveDates.length > 0 ? (
+                          <div className="flex flex-col justify-start items-start w-full sm:w-1/2 px-0.5 pb-3  ">
+                            <label className="text-slate-500 text-md whitespace-nowrap pb-0.5 ">
+                              Cancelled Leave Dates:
+                            </label>
+
+                            <div className="w-auto ml-5">
+                              <label className="text-md font-medium ">
+                                {leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.MATERNITY ||
+                                leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.STUDY ||
+                                leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName ===
+                                  LeaveName.REHABILITATION ||
+                                leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName ===
+                                  LeaveName.SPECIAL_LEAVE_BENEFITS_FOR_WOMEN ||
+                                leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.ADOPTION ? (
+                                  // show first and last date (array) only if SBL (maternity, study, rehab...)
+                                  `${DateFormatter(
+                                    leaveIndividualDetail.leaveApplicationBasicInfo?.cancelledLeaveDates[0],
+                                    'MM-DD-YYYY'
+                                  )} - ${DateFormatter(
+                                    leaveIndividualDetail.leaveApplicationBasicInfo?.cancelledLeaveDates[
+                                      leaveIndividualDetail.leaveApplicationBasicInfo?.cancelledLeaveDates?.length - 1
+                                    ],
+                                    'MM-DD-YYYY'
+                                  )}`
+                                ) : (
+                                  // show all dates if not SBL (maternity, study, rehab...)
+                                  <>
+                                    <ul>
+                                      {leaveIndividualDetail?.leaveApplicationBasicInfo?.cancelledLeaveDates?.map(
+                                        (dates: string, index: number) => {
+                                          if (moreLeaveDates) {
+                                            return <li key={index}>{DateFormatter(dates, 'MM-DD-YYYY')}</li>;
+                                          } else {
+                                            if (index <= 2)
+                                              return <li key={index}>{DateFormatter(dates, 'MM-DD-YYYY')}</li>;
+                                          }
+                                        }
+                                      )}
+                                    </ul>
+                                    {leaveIndividualDetail?.leaveApplicationBasicInfo?.cancelledLeaveDates?.length >
+                                    3 ? (
+                                      <label
+                                        className="cursor-pointer text-sm text-indigo-500 hover:text-indigo-600"
+                                        onClick={(e) => setMoreCancelledLeaveDates(!moreCancelledLeaveDates)}
+                                      >
+                                        {moreCancelledLeaveDates ? 'Less...' : 'More...'}
+                                      </label>
+                                    ) : null}
+                                  </>
                                 )}
-                              </ul>
-                              {leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveDates?.length > 3 ? (
-                                <label
-                                  className="cursor-pointer text-sm text-indigo-500 hover:text-indigo-600"
-                                  onClick={(e) => setMoreLeaveDates(!moreLeaveDates)}
-                                >
-                                  {moreLeaveDates ? 'Less...' : 'More...'}
-                                </label>
-                              ) : null}
-                            </>
-                          )}
-                        </label>
-                      </div>
-                    </div>
-
-                    {leaveIndividualDetail?.leaveApplicationBasicInfo?.cancelledLeaveDates.length > 0 ? (
-                      <div className="flex flex-col justify-start items-start w-full sm:w-1/2 px-0.5 pb-3  ">
-                        <label className="text-slate-500 text-md whitespace-nowrap pb-0.5 ">
-                          Cancelled Leave Dates:
-                        </label>
-
-                        <div className="w-auto ml-5">
-                          <label className="text-md font-medium ">
-                            {leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.MATERNITY ||
-                            leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.STUDY ||
-                            leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.REHABILITATION ||
-                            leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName ===
-                              LeaveName.SPECIAL_LEAVE_BENEFITS_FOR_WOMEN ||
-                            leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.ADOPTION ? (
-                              // show first and last date (array) only if SBL (maternity, study, rehab...)
-                              `${DateFormatter(
-                                leaveIndividualDetail.leaveApplicationBasicInfo?.cancelledLeaveDates[0],
-                                'MM-DD-YYYY'
-                              )} - ${DateFormatter(
-                                leaveIndividualDetail.leaveApplicationBasicInfo?.cancelledLeaveDates[
-                                  leaveIndividualDetail.leaveApplicationBasicInfo?.cancelledLeaveDates?.length - 1
-                                ],
-                                'MM-DD-YYYY'
-                              )}`
-                            ) : (
-                              // show all dates if not SBL (maternity, study, rehab...)
-                              <>
-                                <ul>
-                                  {leaveIndividualDetail?.leaveApplicationBasicInfo?.cancelledLeaveDates?.map(
-                                    (dates: string, index: number) => {
-                                      if (moreLeaveDates) {
-                                        return <li key={index}>{DateFormatter(dates, 'MM-DD-YYYY')}</li>;
-                                      } else {
-                                        if (index <= 2)
-                                          return <li key={index}>{DateFormatter(dates, 'MM-DD-YYYY')}</li>;
-                                      }
-                                    }
-                                  )}
-                                </ul>
-                                {leaveIndividualDetail?.leaveApplicationBasicInfo?.cancelledLeaveDates?.length > 3 ? (
-                                  <label
-                                    className="cursor-pointer text-sm text-indigo-500 hover:text-indigo-600"
-                                    onClick={(e) => setMoreCancelledLeaveDates(!moreCancelledLeaveDates)}
-                                  >
-                                    {moreCancelledLeaveDates ? 'Less...' : 'More...'}
-                                  </label>
-                                ) : null}
-                              </>
-                            )}
-                          </label>
-                        </div>
-                      </div>
-                    ) : null}
-
-                    {leaveIndividualDetail?.leaveApplicationBasicInfo?.forCancellationLeaveDates.length > 0 ? (
-                      <div className="flex flex-col justify-start items-start w-full sm:w-1/2 px-0.5 pb-3  ">
-                        <label className="text-slate-500 text-md whitespace-nowrap pb-0.5 ">Cancellation Dates:</label>
-
-                        <div className="w-auto ml-5">
-                          <label className="text-md font-medium ">
-                            {leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.MATERNITY ||
-                            leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.STUDY ||
-                            leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.REHABILITATION ||
-                            leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName ===
-                              LeaveName.SPECIAL_LEAVE_BENEFITS_FOR_WOMEN ||
-                            leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.ADOPTION ? (
-                              // show first and last date (array) only if SBL (maternity, study, rehab...)
-                              `${DateFormatter(
-                                leaveIndividualDetail.leaveApplicationBasicInfo?.forCancellationLeaveDates[0],
-                                'MM-DD-YYYY'
-                              )} - ${DateFormatter(
-                                leaveIndividualDetail.leaveApplicationBasicInfo?.forCancellationLeaveDates[
-                                  leaveIndividualDetail.leaveApplicationBasicInfo?.forCancellationLeaveDates?.length - 1
-                                ],
-                                'MM-DD-YYYY'
-                              )}`
-                            ) : (
-                              // show all dates if not SBL (maternity, study, rehab...)
-                              <>
-                                <ul>
-                                  {leaveIndividualDetail?.leaveApplicationBasicInfo?.forCancellationLeaveDates?.map(
-                                    (dates: string, index: number) => {
-                                      if (moreLeaveDates) {
-                                        return <li key={index}>{DateFormatter(dates, 'MM-DD-YYYY')}</li>;
-                                      } else {
-                                        if (index <= 2)
-                                          return <li key={index}>{DateFormatter(dates, 'MM-DD-YYYY')}</li>;
-                                      }
-                                    }
-                                  )}
-                                </ul>
-                                {leaveIndividualDetail?.leaveApplicationBasicInfo?.forCancellationLeaveDates?.length >
-                                3 ? (
-                                  <label
-                                    className="cursor-pointer text-sm text-indigo-500 hover:text-indigo-600"
-                                    onClick={(e) => setMoreCancelledLeaveDates(!moreCancelledLeaveDates)}
-                                  >
-                                    {moreCancelledLeaveDates ? 'Less...' : 'More...'}
-                                  </label>
-                                ) : null}
-                              </>
-                            )}
-                          </label>
-                        </div>
-                      </div>
-                    ) : null}
-
-                    {leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.VACATION ||
-                    leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.FORCED ||
-                    leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.SPECIAL_PRIVILEGE ||
-                    leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.SICK ||
-                    leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.STUDY ||
-                    leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.OTHERS ? (
-                      <div className="flex flex-col justify-start items-start w-full sm:w-1/2 px-0.5 pb-3">
-                        <label className="text-slate-500 text-md whitespace-nowrap pb-0.5 ">
-                          {leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.VACATION ||
-                          leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.FORCED ||
-                          leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.SPECIAL_PRIVILEGE
-                            ? 'Location:'
-                            : leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.SICK
-                            ? 'Hospitalization:'
-                            : leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.STUDY
-                            ? 'Study:'
-                            : leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.OTHERS
-                            ? 'Other Purpose: '
-                            : null}
-                        </label>
-
-                        <div className="w-auto ml-5">
-                          {leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.VACATION ||
-                          leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.FORCED ||
-                          leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName ===
-                            LeaveName.SPECIAL_PRIVILEGE ? (
-                            <div className="text-md font-medium">
-                              {leaveIndividualDetail?.leaveApplicationDetails?.inPhilippinesOrAbroad}
+                              </label>
                             </div>
-                          ) : null}
+                          </div>
+                        ) : null}
+                        {leaveIndividualDetail?.leaveApplicationBasicInfo?.forCancellationLeaveDates.length > 0 ? (
+                          <div className="flex flex-col justify-start items-start w-full sm:w-1/2 px-0.5 pb-3  ">
+                            <label className="text-slate-500 text-md whitespace-nowrap pb-0.5 ">
+                              Cancellation Dates:
+                            </label>
 
-                          {leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.SICK ? (
-                            <>
-                              <div className="text-md font-medium">
-                                {leaveIndividualDetail?.leaveApplicationDetails?.hospital}
-                              </div>
-                            </>
-                          ) : null}
+                            <div className="w-auto ml-5">
+                              <label className="text-md font-medium ">
+                                {leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.MATERNITY ||
+                                leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.STUDY ||
+                                leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName ===
+                                  LeaveName.REHABILITATION ||
+                                leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName ===
+                                  LeaveName.SPECIAL_LEAVE_BENEFITS_FOR_WOMEN ||
+                                leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.ADOPTION ? (
+                                  // show first and last date (array) only if SBL (maternity, study, rehab...)
+                                  `${DateFormatter(
+                                    leaveIndividualDetail.leaveApplicationBasicInfo?.forCancellationLeaveDates[0],
+                                    'MM-DD-YYYY'
+                                  )} - ${DateFormatter(
+                                    leaveIndividualDetail.leaveApplicationBasicInfo?.forCancellationLeaveDates[
+                                      leaveIndividualDetail.leaveApplicationBasicInfo?.forCancellationLeaveDates
+                                        ?.length - 1
+                                    ],
+                                    'MM-DD-YYYY'
+                                  )}`
+                                ) : (
+                                  // show all dates if not SBL (maternity, study, rehab...)
+                                  <>
+                                    <ul>
+                                      {leaveIndividualDetail?.leaveApplicationBasicInfo?.forCancellationLeaveDates?.map(
+                                        (dates: string, index: number) => {
+                                          if (moreLeaveDates) {
+                                            return <li key={index}>{DateFormatter(dates, 'MM-DD-YYYY')}</li>;
+                                          } else {
+                                            if (index <= 2)
+                                              return <li key={index}>{DateFormatter(dates, 'MM-DD-YYYY')}</li>;
+                                          }
+                                        }
+                                      )}
+                                    </ul>
+                                    {leaveIndividualDetail?.leaveApplicationBasicInfo?.forCancellationLeaveDates
+                                      ?.length > 3 ? (
+                                      <label
+                                        className="cursor-pointer text-sm text-indigo-500 hover:text-indigo-600"
+                                        onClick={(e) => setMoreCancelledLeaveDates(!moreCancelledLeaveDates)}
+                                      >
+                                        {moreCancelledLeaveDates ? 'Less...' : 'More...'}
+                                      </label>
+                                    ) : null}
+                                  </>
+                                )}
+                              </label>
+                            </div>
+                          </div>
+                        ) : null}
+                        {leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.VACATION ||
+                        leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.FORCED ||
+                        leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.SPECIAL_PRIVILEGE ||
+                        leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.SICK ||
+                        leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName ===
+                          LeaveName.SPECIAL_LEAVE_BENEFITS_FOR_WOMEN ||
+                        (leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.STUDY &&
+                          leaveIndividualDetail?.leaveApplicationDetails?.studyLeaveOther) ? (
+                          <div
+                            className={`flex flex-col sm:flex-col justify-start items-start w-full ${
+                              leaveIndividualDetail?.leaveApplicationBasicInfo?.status === LeaveStatus.APPROVED
+                                ? ''
+                                : ''
+                            } px-0.5 pb-3`}
+                          >
+                            <label className="text-slate-500 text-md whitespace-nowrap pb-0.5 ">
+                              Specific Details:
+                            </label>
+                            <div className="w-auto ml-5 mr-5">
+                              <label className=" text-md font-medium">
+                                {leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.VACATION ||
+                                leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.FORCED ||
+                                leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName ===
+                                  LeaveName.SPECIAL_PRIVILEGE
+                                  ? leaveIndividualDetail?.leaveApplicationDetails?.location
+                                  : leaveIndividualDetail.leaveApplicationBasicInfo?.leaveName === LeaveName.SICK
+                                  ? leaveIndividualDetail?.leaveApplicationDetails?.illness
+                                  : leaveIndividualDetail.leaveApplicationBasicInfo?.leaveName ===
+                                    LeaveName.SPECIAL_LEAVE_BENEFITS_FOR_WOMEN
+                                  ? leaveIndividualDetail?.leaveApplicationDetails?.splWomen
+                                  : leaveIndividualDetail.leaveApplicationBasicInfo?.leaveName === LeaveName.STUDY &&
+                                    leaveIndividualDetail?.leaveApplicationDetails?.studyLeaveOther
+                                  ? leaveIndividualDetail?.leaveApplicationDetails?.studyLeaveOther
+                                  : ''}
+                              </label>
+                            </div>
+                          </div>
+                        ) : null}
+                        {leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.VACATION ||
+                        leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.FORCED ||
+                        leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.SPECIAL_PRIVILEGE ||
+                        leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.SICK ||
+                        leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.STUDY ||
+                        leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.OTHERS ? (
+                          <div className="flex flex-col justify-start items-start w-full sm:w-1/2 px-0.5 pb-3">
+                            <label className="text-slate-500 text-md whitespace-nowrap pb-0.5 ">
+                              {leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.VACATION ||
+                              leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.FORCED ||
+                              leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName ===
+                                LeaveName.SPECIAL_PRIVILEGE
+                                ? 'Location:'
+                                : leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.SICK
+                                ? 'Hospitalization:'
+                                : leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.STUDY
+                                ? 'Study:'
+                                : leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.OTHERS
+                                ? 'Other Purpose: '
+                                : null}
+                            </label>
 
-                          {leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.STUDY ? (
-                            <>
-                              <div className="text-md font-medium">
-                                {leaveIndividualDetail?.leaveApplicationDetails?.forBarBoardReview === '1'
-                                  ? 'For BAR/Board Examination Review '
-                                  : leaveIndividualDetail.leaveApplicationDetails?.forMastersCompletion === '1'
-                                  ? `Completion of Master's Degree `
-                                  : 'Other'}
-                              </div>
-                            </>
-                          ) : null}
-                        </div>
-                      </div>
-                    ) : null}
+                            <div className="w-auto ml-5">
+                              {leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.VACATION ||
+                              leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.FORCED ||
+                              leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName ===
+                                LeaveName.SPECIAL_PRIVILEGE ? (
+                                <div className="text-md font-medium">
+                                  {leaveIndividualDetail?.leaveApplicationDetails?.inPhilippinesOrAbroad}
+                                </div>
+                              ) : null}
 
-                    {leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.VACATION ||
-                    leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.FORCED ||
-                    leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.SPECIAL_PRIVILEGE ||
-                    leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.SICK ||
-                    leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName ===
-                      LeaveName.SPECIAL_LEAVE_BENEFITS_FOR_WOMEN ||
-                    (leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.STUDY &&
-                      leaveIndividualDetail?.leaveApplicationDetails?.studyLeaveOther) ? (
-                      <div
-                        className={`flex flex-col sm:flex-col justify-start items-start w-full ${
-                          leaveIndividualDetail?.leaveApplicationBasicInfo?.status === LeaveStatus.APPROVED ? '' : ''
-                        } px-0.5 pb-3`}
-                      >
-                        <label className="text-slate-500 text-md whitespace-nowrap pb-0.5 ">Specific Details:</label>
-                        <div className="w-auto ml-5 mr-5">
-                          <label className=" text-md font-medium">
-                            {leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.VACATION ||
-                            leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.FORCED ||
-                            leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.SPECIAL_PRIVILEGE
-                              ? leaveIndividualDetail?.leaveApplicationDetails?.location
-                              : leaveIndividualDetail.leaveApplicationBasicInfo?.leaveName === LeaveName.SICK
-                              ? leaveIndividualDetail?.leaveApplicationDetails?.illness
-                              : leaveIndividualDetail.leaveApplicationBasicInfo?.leaveName ===
-                                LeaveName.SPECIAL_LEAVE_BENEFITS_FOR_WOMEN
-                              ? leaveIndividualDetail?.leaveApplicationDetails?.splWomen
-                              : leaveIndividualDetail.leaveApplicationBasicInfo?.leaveName === LeaveName.STUDY &&
-                                leaveIndividualDetail?.leaveApplicationDetails?.studyLeaveOther
-                              ? leaveIndividualDetail?.leaveApplicationDetails?.studyLeaveOther
-                              : ''}
-                          </label>
-                        </div>
-                      </div>
-                    ) : null}
+                              {leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.SICK ? (
+                                <>
+                                  <div className="text-md font-medium">
+                                    {leaveIndividualDetail?.leaveApplicationDetails?.hospital}
+                                  </div>
+                                </>
+                              ) : null}
 
-                    {leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveDateCancellationRemarks &&
-                    leaveIndividualDetail?.leaveApplicationBasicInfo?.status === LeaveStatus.APPROVED ? (
-                      <div className={`flex flex-col sm:flex-col justify-start items-start w-full px-0.5 pb-3`}>
-                        <label className="text-slate-500 text-md whitespace-nowrap pb-0.5 ">
-                          Leave Date Cancellation Remarks:
-                        </label>
-                        <div className="w-auto ml-5 mr-5">
-                          <label className=" text-md font-medium">
-                            {leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveDateCancellationRemarks ?? 'None'}
-                          </label>
-                        </div>
-                      </div>
-                    ) : null}
+                              {leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.STUDY ? (
+                                <>
+                                  <div className="text-md font-medium">
+                                    {leaveIndividualDetail?.leaveApplicationDetails?.forBarBoardReview === '1'
+                                      ? 'For BAR/Board Examination Review '
+                                      : leaveIndividualDetail.leaveApplicationDetails?.forMastersCompletion === '1'
+                                      ? `Completion of Master's Degree `
+                                      : 'Other'}
+                                  </div>
+                                </>
+                              ) : null}
+                            </div>
+                          </div>
+                        ) : null}
+                        {leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveDateCancellationRemarks &&
+                        leaveIndividualDetail?.leaveApplicationBasicInfo?.status === LeaveStatus.APPROVED ? (
+                          <div className={`flex flex-col sm:flex-col justify-start items-start w-full px-0.5 pb-3`}>
+                            <label className="text-slate-500 text-md whitespace-nowrap pb-0.5 ">
+                              Leave Date Cancellation Remarks:
+                            </label>
+                            <div className="w-auto ml-5 mr-5">
+                              <label className=" text-md font-medium">
+                                {leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveDateCancellationRemarks ??
+                                  'None'}
+                              </label>
+                            </div>
+                          </div>
+                        ) : null}
+                      </>
+                    ) : //IF MONETIZATION
+                    null}
 
+                    {/* COMMON DETAILS */}
                     <div className="flex flex-col sm:flex-col justify-start items-start w-full sm:w-1/2 px-0.5 pb-3 ">
                       <label className="text-slate-500 text-md whitespace-nowrap pb-0.5 ">Supervisor:</label>
 
