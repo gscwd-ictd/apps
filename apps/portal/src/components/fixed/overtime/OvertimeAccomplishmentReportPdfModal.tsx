@@ -153,7 +153,7 @@ export const OvertimeAccomplishmentReportPdfModal = ({ modalState, setModalState
                       <Text
                         style={{
                           position: 'absolute',
-                          marginLeft: 368,
+                          marginLeft: 355,
                           marginTop: 20,
                           width: 200,
                         }}

@@ -60,6 +60,7 @@ export const OvertimeApplicationModal = ({ modalState, setModalState, closeModal
       }
     }
     setValue('employees', employeeIdList);
+    setValue('employeeId', employeeDetails.employmentDetails.userId);
     setValue('overtimeImmediateSupervisorId', employeeDetails.employmentDetails.overtimeImmediateSupervisorId);
   }, [selectedEmployees]);
 
