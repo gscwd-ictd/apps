@@ -79,6 +79,7 @@ export const OvertimeAuthorizationModal = ({ modalState, setModalState, closeMod
 
   const employeeDetails = useEmployeeStore((state) => state.employeeDetails);
 
+  //get OT authorization details for pdf
   const overtimeAuthorizationReportUrl = `${process.env.NEXT_PUBLIC_EMPLOYEE_MONITORING_URL}/v1/overtime/reports/${overtimeDetails.id}/${employeeDetails.user._id}`;
 
   const {
@@ -182,7 +183,7 @@ export const OvertimeAuthorizationModal = ({ modalState, setModalState, closeMod
                         style={{
                           position: 'absolute',
                           marginTop: 10,
-                          marginLeft: 515,
+                          marginLeft: 505,
                           width: 90,
                         }}
                       >
@@ -214,7 +215,7 @@ export const OvertimeAuthorizationModal = ({ modalState, setModalState, closeMod
                         style={{
                           position: 'absolute',
                           marginTop: 0,
-                          marginLeft: 550,
+                          marginLeft: 530,
                           width: 90,
                         }}
                       >
