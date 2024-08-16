@@ -119,6 +119,13 @@ export type EmployeeLeaveDetails = {
     forMastersCompletion?: string | null;
     forBarBoardReview?: string | null;
     studyLeaveOther?: string | null;
+
+    //for leave monetization
+    id?: string;
+    monetizationType?: MonetizationType;
+    convertedVl?: number;
+    convertedSl?: number;
+    monetizedAmount?: string;
   };
 };
 
@@ -205,6 +212,10 @@ export type SupervisorLeaveDetails = {
   cancelReason: string;
   isLateFiling: boolean;
   referenceNo: string | null;
+  monetizationType: MonetizationType;
+  convertedVl: number;
+  convertedSl: number;
+  monetizedAmount: string;
   employee: {
     employeeId: string;
     employeeName: string;

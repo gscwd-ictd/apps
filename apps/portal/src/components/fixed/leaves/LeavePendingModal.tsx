@@ -8,7 +8,7 @@ import { SpinnerDotted } from 'spinners-react';
 import { useEmployeeStore } from '../../../store/employee.store';
 import axios from 'axios';
 import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
-import { LeaveName, LeaveStatus } from 'libs/utils/src/lib/enums/leave.enum';
+import { LeaveName, LeaveStatus, MonetizationType } from 'libs/utils/src/lib/enums/leave.enum';
 import { useLeaveLedgerStore } from 'apps/portal/src/store/leave-ledger.store';
 import CancelLeaveModal from './CancelLeaveModal';
 import { DateFormatter } from 'libs/utils/src/lib/functions/DateFormatter';
@@ -337,8 +337,43 @@ export const LeavePendingModal = ({ modalState, setModalState, closeModalAction 
                           </div>
                         ) : null}
                       </>
-                    ) : //IF FOR MONETIZATION
-                    null}
+                    ) : (
+                      //IF FOR MONETIZATION
+                      <>
+                        <div className="flex flex-col justify-start items-start w-full sm:w-1/2 px-0.5 pb-3  ">
+                          <label className="text-slate-500 text-md whitespace-nowrap pb-0.5 ">Type:</label>
+
+                          <div className="w-auto ml-5">
+                            <label className=" text-md font-medium">
+                              {leaveIndividualDetail?.leaveApplicationDetails?.monetizationType ==
+                              MonetizationType.MAX20
+                                ? 'Max 20 Credits'
+                                : 'Max 50% of Credits'}
+                            </label>
+                          </div>
+                        </div>
+                        <div className="flex flex-col justify-start items-start w-full sm:w-1/2 px-0.5 pb-3  ">
+                          <label className="text-slate-500 text-md whitespace-nowrap pb-0.5 ">Converted Credits:</label>
+
+                          <div className="w-auto ml-5">
+                            <label className=" text-md font-medium">
+                              VL: {leaveIndividualDetail?.leaveApplicationDetails?.convertedVl} / SL:{' '}
+                              {leaveIndividualDetail?.leaveApplicationDetails?.convertedSl}
+                            </label>
+                          </div>
+                        </div>
+                        <div className="flex flex-col justify-start items-start w-full sm:w-1/2 px-0.5 pb-3  ">
+                          <label className="text-slate-500 text-md whitespace-nowrap pb-0.5 ">Amount:</label>
+
+                          <div className="w-auto ml-5">
+                            <label className=" text-md font-medium">
+                              P{' '}
+                              {Number(leaveIndividualDetail?.leaveApplicationDetails?.monetizedAmount).toLocaleString()}
+                            </label>
+                          </div>
+                        </div>
+                      </>
+                    )}
 
                     {leaveIndividualDetail?.leaveApplicationBasicInfo?.status === LeaveStatus.DISAPPROVED_BY_HRDM ||
                     leaveIndividualDetail?.leaveApplicationBasicInfo?.status ===

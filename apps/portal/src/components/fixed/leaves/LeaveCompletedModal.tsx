@@ -8,7 +8,7 @@ import { SpinnerDotted } from 'spinners-react';
 import { useEmployeeStore } from '../../../../src/store/employee.store';
 import axios from 'axios';
 import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
-import { LeaveDateStatus, LeaveName, LeaveStatus } from 'libs/utils/src/lib/enums/leave.enum';
+import { LeaveDateStatus, LeaveName, LeaveStatus, MonetizationType } from 'libs/utils/src/lib/enums/leave.enum';
 import CancelLeaveModal from './CancelLeaveModal';
 import { useLeaveLedgerStore } from 'apps/portal/src/store/leave-ledger.store';
 import { DateFormatter } from 'libs/utils/src/lib/functions/DateFormatter';
@@ -528,8 +528,43 @@ export const LeaveCompletedModal = ({ modalState, setModalState, closeModalActio
                           </div>
                         ) : null}
                       </>
-                    ) : //IF MONETIZATION
-                    null}
+                    ) : (
+                      //IF MONETIZATION
+                      <>
+                        <div className="flex flex-col justify-start items-start w-full sm:w-1/2 px-0.5 pb-3  ">
+                          <label className="text-slate-500 text-md whitespace-nowrap pb-0.5 ">Type:</label>
+
+                          <div className="w-auto ml-5">
+                            <label className=" text-md font-medium">
+                              {leaveIndividualDetail?.leaveApplicationDetails?.monetizationType ==
+                              MonetizationType.MAX20
+                                ? 'Max 20 Credits'
+                                : 'Max 50% of Credits'}
+                            </label>
+                          </div>
+                        </div>
+                        <div className="flex flex-col justify-start items-start w-full sm:w-1/2 px-0.5 pb-3  ">
+                          <label className="text-slate-500 text-md whitespace-nowrap pb-0.5 ">Converted Credits:</label>
+
+                          <div className="w-auto ml-5">
+                            <label className=" text-md font-medium">
+                              VL: {leaveIndividualDetail?.leaveApplicationDetails?.convertedVl} / SL:{' '}
+                              {leaveIndividualDetail?.leaveApplicationDetails?.convertedSl}
+                            </label>
+                          </div>
+                        </div>
+                        <div className="flex flex-col justify-start items-start w-full sm:w-1/2 px-0.5 pb-3  ">
+                          <label className="text-slate-500 text-md whitespace-nowrap pb-0.5 ">Amount:</label>
+
+                          <div className="w-auto ml-5">
+                            <label className=" text-md font-medium">
+                              P{' '}
+                              {Number(leaveIndividualDetail?.leaveApplicationDetails?.monetizedAmount).toLocaleString()}
+                            </label>
+                          </div>
+                        </div>
+                      </>
+                    )}
 
                     {/* COMMON DETAILS */}
                     <div className="flex flex-col sm:flex-col justify-start items-start w-full sm:w-1/2 px-0.5 pb-3 ">
@@ -749,15 +784,27 @@ export const LeaveCompletedModal = ({ modalState, setModalState, closeModalActio
                   </Button>
                 ) : null}
 
-                <Button
-                  variant={'warning'}
-                  size={'md'}
-                  loading={false}
-                  onClick={(e) => setCancelLeaveModalIsOpen(true)}
-                  type="submit"
-                >
-                  Cancel Leave
-                </Button>
+                {leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName != LeaveName.MONETIZATION ? (
+                  <Button
+                    variant={'warning'}
+                    size={'md'}
+                    loading={false}
+                    onClick={(e) => setCancelLeaveModalIsOpen(true)}
+                    type="submit"
+                  >
+                    Cancel Leave
+                  </Button>
+                ) : (
+                  <Button
+                    variant={'default'}
+                    size={'md'}
+                    loading={false}
+                    onClick={(e) => closeModalAction()}
+                    type="submit"
+                  >
+                    Close
+                  </Button>
+                )}
               </>
             ) : null}
           </div>

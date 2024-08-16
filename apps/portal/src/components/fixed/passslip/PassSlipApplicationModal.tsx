@@ -265,15 +265,17 @@ export const PassSlipApplicationModal = ({
                   />
                 ) : null}
 
-                {dtr?.timeIn == null && dtr?.lunchOut == null && dtr?.lunchIn == null ? (
+                {/* {dtr?.timeIn == null && dtr?.lunchOut == null && dtr?.lunchIn == null ? (
                   <AlertNotification
                     alertType="warning"
                     notifMessage="No Face Scan Time-In Found."
                     dismissible={false}
                   />
-                ) : null}
+                ) : null} */}
 
                 {employeeDetails.employmentDetails.userRole != UserRole.JOB_ORDER &&
+                employeeDetails.employmentDetails.userRole != UserRole.COS &&
+                employeeDetails.employmentDetails.userRole != UserRole.COS_JO &&
                 watch('isMedical') === '1' &&
                 watch('natureOfBusiness') === NatureOfBusiness.PERSONAL_BUSINESS ? (
                   <AlertNotification
@@ -284,6 +286,8 @@ export const PassSlipApplicationModal = ({
                 ) : null}
 
                 {employeeDetails.employmentDetails.userRole != UserRole.JOB_ORDER &&
+                employeeDetails.employmentDetails.userRole != UserRole.COS &&
+                employeeDetails.employmentDetails.userRole != UserRole.COS_JO &&
                 vacationLeaveBalance <= 0 &&
                 (watch('natureOfBusiness') === NatureOfBusiness.PERSONAL_BUSINESS ||
                   watch('natureOfBusiness') === NatureOfBusiness.HALF_DAY ||
@@ -297,6 +301,8 @@ export const PassSlipApplicationModal = ({
                 ) : null}
 
                 {employeeDetails.employmentDetails.userRole != UserRole.JOB_ORDER &&
+                employeeDetails.employmentDetails.userRole != UserRole.COS &&
+                employeeDetails.employmentDetails.userRole != UserRole.COS_JO &&
                 sickLeaveBalance <= 0 &&
                 watch('natureOfBusiness') === NatureOfBusiness.PERSONAL_BUSINESS &&
                 watch('isMedical') === '1' ? (
@@ -500,10 +506,10 @@ export const PassSlipApplicationModal = ({
                 form="ApplyPassSlipForm"
                 type="submit"
                 disabled={
-                  !allowedToApplyForNew ||
-                  passSlipsForApproval.length >= 1 ||
-                  (dtr?.timeIn == null && dtr?.lunchOut == null && dtr?.lunchIn == null)
-                    ? true
+                  !allowedToApplyForNew || passSlipsForApproval.length >= 1
+                    ? // ||
+                      // (dtr?.timeIn == null && dtr?.lunchOut == null && dtr?.lunchIn == null)
+                      true
                     : false
                 }
               >

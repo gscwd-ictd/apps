@@ -88,7 +88,14 @@ export const AllLeavesListTab = ({ leaves, tab }: AllLeaveListTabProps) => {
                   ) : null}
 
                   {leave.forMonetization ? (
-                    <p className="text-sm text-gray-500">Amount: P {Number(leave.monetizedAmount).toLocaleString()}</p>
+                    <>
+                      <p className="text-sm text-gray-500">
+                        Amount: P {Number(leave.monetizedAmount).toLocaleString()}
+                      </p>
+                      <p className="text-sm text-gray-500">
+                        Converted Credits: VL: {leave.convertedVl} / SL: {leave.convertedSl}{' '}
+                      </p>
+                    </>
                   ) : null}
 
                   <p className="text-sm text-indigo-500">Status: {leave.status.toUpperCase()}</p>
