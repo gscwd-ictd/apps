@@ -6,7 +6,6 @@ import { Modules } from '../constants/card';
 import { UserRole } from '../enums/userRoles';
 import { Schedule } from 'libs/utils/src/lib/types/schedule.type';
 import { EmployeeRestDay } from 'libs/utils/src/lib/types/dtr.type';
-import { ScheduleBases } from 'libs/utils/src/lib/enums/schedule.enum';
 
 export const setModules = async (userDetails: EmployeeDetails, schedule: Schedule & EmployeeRestDay) => {
   let allowed: Array<Card> = [];
@@ -23,7 +22,10 @@ export const setModules = async (userDetails: EmployeeDetails, schedule: Schedul
           card.destination === 'email' ||
           card.destination === 'overtime-accomplishment'
       );
-    } else if (isEqual(userDetails.employmentDetails.userRole, UserRole.JOB_ORDER)) {
+    } else if (
+      isEqual(userDetails.employmentDetails.userRole, UserRole.JOB_ORDER) ||
+      isEqual(userDetails.employmentDetails.userRole, UserRole.COS_JO)
+    ) {
       allowed = Modules.filter(
         (card) =>
           card.destination === 'dtr' ||
@@ -31,11 +33,11 @@ export const setModules = async (userDetails: EmployeeDetails, schedule: Schedul
           card.destination === 'email' ||
           card.destination === 'overtime-accomplishment'
       );
-    } else if (
-      isEqual(userDetails.employmentDetails.userRole, UserRole.COS_JO) ||
-      isEqual(userDetails.employmentDetails.userRole, UserRole.COS)
-    ) {
-      allowed = Modules.filter((card) => card.destination === 'dtr' || card.destination === 'pass-slip');
+    } else if (isEqual(userDetails.employmentDetails.userRole, UserRole.COS)) {
+      allowed = Modules.filter(
+        (card) =>
+          card.destination === 'dtr' || card.destination === 'email' || card.destination === 'overtime-accomplishment'
+      );
     } else {
       // all managers
       allowed = Modules.filter(

@@ -144,7 +144,7 @@ export const PassSlipCompletedModal = ({
                   />
                 ) : null}
 
-                {employeeDetails.employmentDetails.userRole != UserRole.JOB_ORDER && passSlip.deductible ? (
+                {employeeDetails.employmentDetails.userRole != UserRole.JOB_ORDER && passSlip.isDeductibleToPay ? (
                   <AlertNotification alertType={`warning`} notifMessage={`Deductible to Pay`} dismissible={false} />
                 ) : null}
 

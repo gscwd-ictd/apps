@@ -274,6 +274,8 @@ export const PassSlipApplicationModal = ({
                 ) : null}
 
                 {employeeDetails.employmentDetails.userRole != UserRole.JOB_ORDER &&
+                employeeDetails.employmentDetails.userRole != UserRole.COS_JO &&
+                employeeDetails.employmentDetails.userRole != UserRole.COS &&
                 watch('isMedical') === '1' &&
                 watch('natureOfBusiness') === NatureOfBusiness.PERSONAL_BUSINESS ? (
                   <AlertNotification
@@ -284,6 +286,8 @@ export const PassSlipApplicationModal = ({
                 ) : null}
 
                 {employeeDetails.employmentDetails.userRole != UserRole.JOB_ORDER &&
+                employeeDetails.employmentDetails.userRole != UserRole.COS_JO &&
+                employeeDetails.employmentDetails.userRole != UserRole.COS &&
                 vacationLeaveBalance <= 0 &&
                 (watch('natureOfBusiness') === NatureOfBusiness.PERSONAL_BUSINESS ||
                   watch('natureOfBusiness') === NatureOfBusiness.HALF_DAY ||
@@ -297,6 +301,8 @@ export const PassSlipApplicationModal = ({
                 ) : null}
 
                 {employeeDetails.employmentDetails.userRole != UserRole.JOB_ORDER &&
+                employeeDetails.employmentDetails.userRole != UserRole.COS_JO &&
+                employeeDetails.employmentDetails.userRole != UserRole.COS &&
                 sickLeaveBalance <= 0 &&
                 watch('natureOfBusiness') === NatureOfBusiness.PERSONAL_BUSINESS &&
                 watch('isMedical') === '1' ? (

@@ -261,7 +261,7 @@ export default function AppPosAppointment({ employeeDetails }: InferGetServerSid
 
 export const getServerSideProps: GetServerSideProps = withCookieSession(async (context: GetServerSidePropsContext) => {
   const employeeDetails = getUserDetails();
-  // check if user role is rank_and_file
+  // check if user role is not GM
   if (
     employeeDetails.employmentDetails.userRole !== UserRole.GENERAL_MANAGER &&
     employeeDetails.employmentDetails.userRole !== UserRole.OIC_GENERAL_MANAGER

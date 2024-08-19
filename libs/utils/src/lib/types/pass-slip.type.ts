@@ -44,7 +44,7 @@ export type PassSlip = {
   supervisorApprovalDate: string | null;
   hrmoApprovalDate: string | null;
   hrmoDisapprovalRemarks: string | null;
-  deductible?: boolean; //if deductible to pay
+  isDeductibleToPay?: boolean; //if deductible to pay
 } & PassSlipApplicationForm;
 
 // Individual pass slip id
