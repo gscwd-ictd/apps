@@ -105,7 +105,7 @@ export const ApprovalsCompletedPassSlipModal = ({
                   dismissible={false}
                 />
 
-                {passSlip.deductible ? (
+                {passSlip.isDeductibleToPay ? (
                   <AlertNotification alertType={`warning`} notifMessage={`Deductible to Pay`} dismissible={false} />
                 ) : null}
 

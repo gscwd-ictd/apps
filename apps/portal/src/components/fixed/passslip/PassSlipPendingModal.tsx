@@ -95,10 +95,11 @@ export const PassSlipPendingModal = ({ modalState, setModalState, closeModalActi
                   dismissible={false}
                 />
 
+
                 {employeeDetails.employmentDetails.userRole != UserRole.JOB_ORDER &&
                 employeeDetails.employmentDetails.userRole != UserRole.COS &&
                 employeeDetails.employmentDetails.userRole != UserRole.COS_JO &&
-                passSlip.deductible ? (
+                passSlip.isDeductibleToPay ? (
                   <AlertNotification alertType={`warning`} notifMessage={`Deductible to Pay`} dismissible={false} />
                 ) : null}
 

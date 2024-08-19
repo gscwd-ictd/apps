@@ -510,7 +510,7 @@ export default function Prf({ user, employee }: PrfPageProps) {
 export const getServerSideProps: GetServerSideProps = withCookieSession(async () => {
   const employee = getUserDetails();
 
-  // check if user role is rank_and_file
+  // check if user role is rank_and_file or lower
   if (
     employee.employmentDetails.userRole === UserRole.RANK_AND_FILE ||
     employee.employmentDetails.userRole === UserRole.JOB_ORDER ||
