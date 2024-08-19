@@ -14,7 +14,7 @@ import Calendar from './LeaveCalendar';
 import { LeaveBenefitOptions } from '../../../../../../libs/utils/src/lib/types/leave-benefits.type';
 import { LeaveApplicationForm } from '../../../../../../libs/utils/src/lib/types/leave-application.type';
 import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
-import { LeaveMonetizationType, LeaveName } from 'libs/utils/src/lib/enums/leave.enum';
+import { LeaveName, MonetizationType } from 'libs/utils/src/lib/enums/leave.enum';
 import { useLeaveLedgerStore } from 'apps/portal/src/store/leave-ledger.store';
 import { LeaveLedgerEntry } from 'libs/utils/src/lib/types/leave-ledger-entry.type';
 
@@ -25,8 +25,8 @@ type LeaveApplicationModalProps = {
 };
 
 const leaveMonetizationType: Array<SelectOption> = [
-  { label: 'Max 20 Total Leave Balance', value: 'byNumber' },
-  { label: 'Max 50% Total Leave Balance', value: 'byPercentage' },
+  { label: 'Max 20 Total Leave Balance', value: MonetizationType.MAX20 },
+  { label: 'Max 50% Total Leave Balance', value: MonetizationType.MAX50PERCENT },
 ];
 
 type Item = {
@@ -160,7 +160,7 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
   // set state for employee store
   const employeeDetails = useEmployeeStore((state) => state.employeeDetails);
 
-  const [selectedLeaveMonetizationType, setSelectedLeaveMonetizationType] = useState<LeaveMonetizationType>();
+  const [selectedLeaveMonetizationType, setSelectedLeaveMonetizationType] = useState<MonetizationType>();
   const [leaveReminder, setLeaveReminder] = useState<string>(
     'The number of leave days you can apply is the rounded off value of your current Leave Balance. For leave of absence for thirty (30) calendar days or more and terminal leave, application shall be accompanied by a clearance from money, property, and work-related accountabilities (pursuant to CSC Memorandum Circular No. 2, s. 1985). '
   );
@@ -479,7 +479,15 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
     } else if (data.typeOfLeaveDetails.leaveName === LeaveName.MONETIZATION) {
       dataToSend = {
         leaveBenefitsId: data.typeOfLeaveDetails.id,
+        forMonetization: true,
         employeeId: data.employeeId,
+        leaveApplicationDates: null,
+        leaveMonetization: {
+          convertedSl: lessSl,
+          convertedVl: lessVlFl,
+          monetizationType: selectedLeaveMonetizationType,
+          monetizedAmount: estimatedAmount,
+        },
       };
     } else {
       dataToSend = {
@@ -502,7 +510,8 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
           watch('typeOfLeaveDetails.leaveName') === LeaveName.STUDY ||
           watch('typeOfLeaveDetails.leaveName') === LeaveName.REHABILITATION ||
           watch('typeOfLeaveDetails.leaveName') === LeaveName.SPECIAL_LEAVE_BENEFITS_FOR_WOMEN ||
-          watch('typeOfLeaveDetails.leaveName') === LeaveName.ADOPTION))
+          watch('typeOfLeaveDetails.leaveName') === LeaveName.ADOPTION)) ||
+      (watch('typeOfLeaveDetails.leaveName') === LeaveName.MONETIZATION && estimatedAmount > 0)
     ) {
       handlePostResult(dataToSend);
       postLeave();
@@ -785,7 +794,7 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
 
                   {/* Monetization Notif for more than 50% amount */}
                   {estimatedAmount > Number(maxMonetizationAmount) / 2 &&
-                  selectedLeaveMonetizationType === LeaveMonetizationType.BY_PERCENTAGE_OF_CREDITS &&
+                  selectedLeaveMonetizationType === MonetizationType.MAX50PERCENT &&
                   watch('typeOfLeaveDetails.leaveName') === LeaveName.MONETIZATION ? (
                     <AlertNotification
                       alertType="warning"
@@ -797,7 +806,7 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
 
                   {/* Monetization Notif for more than 20 leave credits entered */}
                   {leaveBalanceInput > 20 &&
-                  selectedLeaveMonetizationType === LeaveMonetizationType.BY_NUMBER_OF_CREDITS &&
+                  selectedLeaveMonetizationType === MonetizationType.MAX20 &&
                   watch('typeOfLeaveDetails.leaveName') === LeaveName.MONETIZATION ? (
                     <AlertNotification
                       alertType="warning"
@@ -1059,7 +1068,7 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
                                     step={'.001'}
                                     min={1}
                                     max={
-                                      selectedLeaveMonetizationType === LeaveMonetizationType.BY_PERCENTAGE_OF_CREDITS
+                                      selectedLeaveMonetizationType === MonetizationType.MAX50PERCENT
                                         ? `${(Number(vacationLeaveBalance) + Number(sickLeaveBalance)) / 2}`
                                         : '20'
                                     }
@@ -1531,11 +1540,11 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
                       watch('typeOfLeaveDetails.leaveName') === LeaveName.MONETIZATION
                     ? true
                     : //monetization type is max 20 leave credits and exceeded the 20 credits
-                    selectedLeaveMonetizationType === LeaveMonetizationType.BY_NUMBER_OF_CREDITS &&
+                    selectedLeaveMonetizationType === MonetizationType.MAX20 &&
                       leaveBalanceInput > 20 &&
                       watch('typeOfLeaveDetails.leaveName') === LeaveName.MONETIZATION
                     ? true
-                    : selectedLeaveMonetizationType === LeaveMonetizationType.BY_PERCENTAGE_OF_CREDITS &&
+                    : selectedLeaveMonetizationType === MonetizationType.MAX50PERCENT &&
                       watch('typeOfLeaveDetails.leaveName') === LeaveName.MONETIZATION &&
                       estimatedAmount > Number(maxMonetizationAmount) / 2
                     ? true
