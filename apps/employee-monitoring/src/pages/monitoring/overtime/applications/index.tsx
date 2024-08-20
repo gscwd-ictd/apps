@@ -9,24 +9,37 @@ import { EmployeeOvertimeDetails } from 'libs/utils/src/lib/types/employee.type'
 import { Overtime } from 'libs/utils/src/lib/types/overtime.type';
 import { useOvertimeStore } from 'apps/employee-monitoring/src/store/overtime.store';
 
-import { DataTable, LoadingSpinner, ToastNotification, useDataTable } from '@gscwd-apps/oneui';
+import { Button, DataTable, LoadingSpinner, ToastNotification, useDataTable } from '@gscwd-apps/oneui';
 import { createColumnHelper } from '@tanstack/react-table';
 import { Card } from 'apps/employee-monitoring/src/components/cards/Card';
 import { BreadCrumbs } from 'apps/employee-monitoring/src/components/navigations/BreadCrumbs';
 import ViewOvertimeModal from 'apps/employee-monitoring/src/components/modal/monitoring/overtime/ViewOvertimeModal';
 import { ScheduleBases } from 'libs/utils/src/lib/enums/schedule.enum';
 import { OvertimeStatus } from 'libs/utils/src/lib/enums/overtime.enum';
+import dayjs from 'dayjs';
+import { LabelInput } from 'apps/employee-monitoring/src/components/inputs/LabelInput';
+import { HiOutlineSearch } from 'react-icons/hi';
+import { useForm, SubmitHandler } from 'react-hook-form';
+import * as yup from 'yup';
+import { yupResolver } from '@hookform/resolvers/yup';
+import ConvertToYearMonth from 'apps/employee-monitoring/src/utils/functions/ConvertToYearMonth';
+import axios from 'axios';
+
+type Filter = {
+  monthYear: string;
+};
 
 const Index = () => {
   // Current row data in the table that has been clicked
   const [currentRowData, setCurrentRowData] = useState<Overtime>({} as Overtime);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   // fetch data for overtime applications
   const {
     data: overtimeApplications,
     error: overtimeApplicationsError,
     isLoading: overtimeApplicationsLoading,
-  } = useSWR('/overtime', fetcherEMS, {
+  } = useSWR(`/overtime/monthly/${dayjs().year() + '-' + (dayjs().month() + 1)}`, fetcherEMS, {
     shouldRetryOnError: true,
     revalidateOnFocus: false,
   });
@@ -45,6 +58,39 @@ const Index = () => {
     ErrorOvertimeApplications: state.errorOvertimeApplications,
     SetErrorOvertimeApplications: state.setErrorOvertimeApplications,
   }));
+
+  const yupSchema = yup.object().shape({
+    monthYear: yup.date().max(new Date(), 'Must not be greater than current date').nullable(),
+  });
+
+  // React hook form
+  const { register, handleSubmit } = useForm<Filter>({
+    mode: 'onChange',
+    defaultValues: {
+      monthYear: ConvertToYearMonth(dayjs().toString()),
+    },
+    resolver: yupResolver(yupSchema),
+  });
+
+  const onSubmit: SubmitHandler<Filter> = async (formData: Filter) => {
+    try {
+      setIsLoading(true);
+      const { data } = await axios.get(
+        `${process.env.NEXT_PUBLIC_EMPLOYEE_MONITORING_BE_DOMAIN}/overtime/monthly/${ConvertToYearMonth(
+          formData.monthYear
+        )}`
+      );
+
+      // if success, push to update the state
+      if (!isEmpty(data)) {
+        setIsLoading(false);
+        SetOvertimeApplications(data);
+      }
+    } catch (error) {
+      setIsLoading(false);
+      SetErrorOvertimeApplications(error.message);
+    }
+  };
 
   // View modal function
   const [viewModalIsOpen, setViewModalIsOpen] = useState<boolean>(false);
@@ -165,10 +211,25 @@ const Index = () => {
         <Can I="access" this="Overtime_applications">
           <div className="mx-5">
             <Card>
-              {overtimeApplicationsLoading ? (
+              {overtimeApplicationsLoading || isLoading ? (
                 <LoadingSpinner size="lg" />
               ) : (
-                <div className="flex flex-row flex-wrap">
+                <div className="flex flex-row flex-wrap justify-between">
+                  <form onSubmit={handleSubmit(onSubmit)} id="searchMonthYear" className="order-2">
+                    <div className="mb-6 flex ">
+                      <LabelInput id="monthYear" type="month" controller={{ ...register('monthYear') }} />
+
+                      <Button
+                        variant="info"
+                        type="submit"
+                        form="searchMonthYear"
+                        className="mx-1 text-gray-400 disabled:cursor-not-allowed"
+                      >
+                        <HiOutlineSearch className="w-4 h-4" />
+                      </Button>
+                    </div>
+                  </form>
+
                   <DataTable model={table} showGlobalFilter={true} showColumnFilter={true} paginate={true} />
                 </div>
               )}

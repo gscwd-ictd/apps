@@ -10,7 +10,7 @@ export const GlobalFilter = ({ model }: { model: Table<any> }) => {
         type="search"
         value={filterValue ?? ''}
         onChange={(value) => model.setGlobalFilter(String(value))}
-        className="px-4 py-2 text-xs font-medium text-gray-500 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus-visible:outline-none w-80"
+        className="text-xs font-medium text-gray-500 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus-visible:outline-none w-80 p-2.5"
         placeholder="Search all columns..."
       />
     </div>
