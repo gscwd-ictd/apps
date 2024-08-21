@@ -29,6 +29,7 @@ import { UseNameInitials } from 'apps/portal/src/utils/hooks/useNameInitials';
 import { useRouter } from 'next/router';
 import { useTimeLogStore } from 'apps/portal/src/store/timelogs.store';
 import { format } from 'date-fns';
+import { UserRole } from 'apps/portal/src/utils/enums/userRoles';
 
 export default function PassSlip({ employeeDetails }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const {
@@ -311,5 +312,16 @@ export default function PassSlip({ employeeDetails }: InferGetServerSidePropsTyp
 export const getServerSideProps: GetServerSideProps = withCookieSession(async (context: GetServerSidePropsContext) => {
   const employeeDetails = getUserDetails();
 
-  return { props: { employeeDetails } };
+  // check if user role is COS = no pass slip
+  if (employeeDetails.employmentDetails.userRole === UserRole.COS) {
+    // if true, the employee is not allowed to access this page
+    return {
+      redirect: {
+        permanent: false,
+        destination: `/${employeeDetails.user._id}`,
+      },
+    };
+  } else {
+    return { props: { employeeDetails } };
+  }
 });

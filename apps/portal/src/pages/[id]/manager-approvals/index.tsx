@@ -80,7 +80,9 @@ export default function Approvals({
                 employeeDetails.employmentDetails.officerOfTheDay.length > 0 ||
                 employeeDetails.employmentDetails.userId === 'af7bbec8-b26e-11ed-a79b-000c29f95a80' ||
                 employeeDetails.employmentDetails.userRole !== UserRole.RANK_AND_FILE ||
-                employeeDetails.employmentDetails.userRole !== UserRole.JOB_ORDER ? (
+                employeeDetails.employmentDetails.userRole !== UserRole.JOB_ORDER ||
+                employeeDetails.employmentDetails.userRole !== UserRole.COS ||
+                employeeDetails.employmentDetails.userRole !== UserRole.COS_JO ? (
                   <TabHeader
                     tab={0}
                     tabIndex={1}
@@ -98,8 +100,10 @@ export default function Approvals({
                 ) : null}
 
                 {/* show other links if user is not Rank and File */}
-                {employeeDetails.employmentDetails.userRole !== UserRole.RANK_AND_FILE &&
-                employeeDetails.employmentDetails.userRole !== UserRole.JOB_ORDER ? (
+                {(employeeDetails.employmentDetails.userRole !== UserRole.RANK_AND_FILE &&
+                  employeeDetails.employmentDetails.userRole !== UserRole.JOB_ORDER) ||
+                employeeDetails.employmentDetails.userRole !== UserRole.COS ||
+                employeeDetails.employmentDetails.userRole !== UserRole.COS_JO ? (
                   <>
                     <TabHeader
                       tab={0}
