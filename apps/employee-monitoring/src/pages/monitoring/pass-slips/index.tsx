@@ -1,5 +1,5 @@
 /* eslint-disable @nx/enforce-module-boundaries */
-import { DataTable, LoadingSpinner, ToastNotification, useDataTable } from '@gscwd-apps/oneui';
+import { Button, DataTable, LoadingSpinner, ToastNotification, useDataTable } from '@gscwd-apps/oneui';
 import { createColumnHelper } from '@tanstack/react-table';
 import { Card } from 'apps/employee-monitoring/src/components/cards/Card';
 import ViewPassSlipModal from 'apps/employee-monitoring/src/components/modal/monitoring/pass-slips/ViewPassSlipModal';
@@ -19,9 +19,21 @@ import { isEmpty } from 'lodash';
 import { useEffect, useState } from 'react';
 import useSWR from 'swr';
 import UpdatePassSlipModal from 'apps/employee-monitoring/src/components/modal/monitoring/pass-slips/UpdatePassSlipTimeLogs';
+import * as yup from 'yup';
+import { SubmitHandler, useForm } from 'react-hook-form';
+import ConvertToYearMonth from 'apps/employee-monitoring/src/utils/functions/ConvertToYearMonth';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { LabelInput } from 'apps/employee-monitoring/src/components/inputs/LabelInput';
+import { HiOutlineSearch } from 'react-icons/hi';
+import axios from 'axios';
+
+type Filter = {
+  monthYear: string;
+};
 
 export default function Index() {
   const [currentRowData, setCurrentRowData] = useState<PassSlip>({} as PassSlip);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   // use swr pass slips
   const {
@@ -29,40 +41,71 @@ export default function Index() {
     isLoading: swrIsLoading,
     error: swrError,
     mutate: mutatePassSlipApplications,
-  } = useSWR('/pass-slip', fetcherEMS, {
+  } = useSWR(`/pass-slip/`, fetcherEMS, {
+    // } = useSWR(`/pass-slip/monthly/${dayjs().year() + '-' + (dayjs().month() + 1)}`, fetcherEMS, {
     shouldRetryOnError: false,
     revalidateOnFocus: false,
   });
 
   const {
-    passSlips,
-    errorPassSlips,
+    PassSlips,
+    GetPassSlipsFail,
+    GetPassSlipsSuccess,
 
+    ErrorPassSlips,
     ResponseHrmoApprovalPassSlip,
-
-    getPassSlipsFail,
-    getPassSlipsSuccess,
-
     CancelPassSlip,
-
     UpdatePassSlipTimeLogs,
 
-    emptyErrorsAndResponse,
+    EmptyErrorsAndResponse,
   } = usePassSlipStore((state) => ({
-    passSlips: state.passSlips,
-    errorPassSlips: state.error.errorPassSlips,
+    PassSlips: state.passSlips,
+    ErrorPassSlips: state.error.errorPassSlips,
 
     ResponseHrmoApprovalPassSlip: state.response.hrmoApprovalPassSlip,
 
-    getPassSlipsSuccess: state.getPassSlipsSuccess,
-    getPassSlipsFail: state.getPassSlipsFail,
+    GetPassSlipsSuccess: state.getPassSlipsSuccess,
+    GetPassSlipsFail: state.getPassSlipsFail,
 
     CancelPassSlip: state.response.cancelPassSlip,
 
     UpdatePassSlipTimeLogs: state.response.updatePassSlip,
 
-    emptyErrorsAndResponse: state.emptyErrorsAndResponse,
+    EmptyErrorsAndResponse: state.emptyErrorsAndResponse,
   }));
+
+  const yupSchema = yup.object().shape({
+    monthYear: yup.date().max(new Date(), 'Must not be greater than current date').nullable(),
+  });
+
+  // React hook form
+  const { register, handleSubmit } = useForm<Filter>({
+    mode: 'onChange',
+    defaultValues: {
+      monthYear: ConvertToYearMonth(dayjs().toString()),
+    },
+    resolver: yupResolver(yupSchema),
+  });
+
+  const onSubmit: SubmitHandler<Filter> = async (formData: Filter) => {
+    try {
+      setIsLoading(true);
+      const { data } = await axios.get(
+        `${process.env.NEXT_PUBLIC_EMPLOYEE_MONITORING_BE_DOMAIN}/pass-slip/monthly/${ConvertToYearMonth(
+          formData.monthYear
+        )}`
+      );
+
+      // if success, push to update the state
+      if (!isEmpty(data)) {
+        setIsLoading(false);
+        GetPassSlipsSuccess(data);
+      }
+    } catch (error) {
+      setIsLoading(false);
+      GetPassSlipsFail(error.message);
+    }
+  };
 
   // view modal function
   const [viewModalIsOpen, setViewModalIsOpen] = useState<boolean>(false);
@@ -185,23 +228,23 @@ export default function Index() {
   // React Table initialization
   const { table } = useDataTable({
     columns: columns,
-    data: passSlips,
+    data: PassSlips,
     columnVisibility: { id: false, obTransportation: false },
   });
 
   // Reset responses on load of page
   useEffect(() => {
-    emptyErrorsAndResponse();
+    EmptyErrorsAndResponse();
   }, []);
 
   // Upon success/fail of swr request, zustand state will be updated
   useEffect(() => {
     if (!isEmpty(swrPassSlips)) {
-      getPassSlipsSuccess(swrPassSlips.data);
+      GetPassSlipsSuccess(swrPassSlips.data);
     }
 
     if (!isEmpty(swrError)) {
-      getPassSlipsFail(swrError.message);
+      GetPassSlipsFail(swrError.message);
     }
   }, [swrPassSlips, swrError]);
 
@@ -226,7 +269,7 @@ export default function Index() {
         />
 
         {/* Fetch pass slips error */}
-        {!isEmpty(errorPassSlips) ? <ToastNotification toastType="error" notifMessage={errorPassSlips} /> : null}
+        {!isEmpty(ErrorPassSlips) ? <ToastNotification toastType="error" notifMessage={ErrorPassSlips} /> : null}
 
         {!isEmpty(CancelPassSlip) ? (
           <ToastNotification toastType="success" notifMessage="Pass slip cancelled successfully" />
@@ -258,10 +301,25 @@ export default function Index() {
         <Can I="access" this="Pass_slips">
           <div className="sm:px-2 md:px-2 lg:px-5">
             <Card>
-              {swrIsLoading ? (
+              {swrIsLoading || isLoading ? (
                 <LoadingSpinner size="lg" />
               ) : (
-                <div className="flex flex-row flex-wrap ">
+                <div className="flex flex-row flex-wrap justify-between">
+                  <form onSubmit={handleSubmit(onSubmit)} id="searchMonthYear" className="order-2">
+                    <div className="mb-6 flex ">
+                      <LabelInput id="monthYear" type="month" controller={{ ...register('monthYear') }} />
+
+                      <Button
+                        variant="info"
+                        type="submit"
+                        form="searchMonthYear"
+                        className="mx-1 text-gray-400 disabled:cursor-not-allowed"
+                      >
+                        <HiOutlineSearch className="w-4 h-4" />
+                      </Button>
+                    </div>
+                  </form>
+
                   <DataTable model={table} showGlobalFilter={true} showColumnFilter={true} paginate={true} />
                 </div>
               )}

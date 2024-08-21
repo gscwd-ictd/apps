@@ -8,7 +8,7 @@ import { useLeaveApplicationStore } from 'apps/employee-monitoring/src/store/lea
 import { EmployeeLeaveDetails, MonitoringLeave } from 'libs/utils/src/lib/types/leave-application.type';
 
 import { createColumnHelper } from '@tanstack/react-table';
-import { DataTable, useDataTable, fuzzySort, LoadingSpinner, ToastNotification } from '@gscwd-apps/oneui';
+import { DataTable, useDataTable, fuzzySort, LoadingSpinner, ToastNotification, Button } from '@gscwd-apps/oneui';
 import { Card } from 'apps/employee-monitoring/src/components/cards/Card';
 import { BreadCrumbs } from 'apps/employee-monitoring/src/components/navigations/BreadCrumbs';
 import ViewLeaveApplicationModal from 'apps/employee-monitoring/src/components/modal/monitoring/leave-applications/ViewLeaveApplicationModal';
@@ -17,10 +17,22 @@ import UseRenderLeaveStatus from 'apps/employee-monitoring/src/utils/functions/R
 import UseRenderLeaveType from 'apps/employee-monitoring/src/utils/functions/RenderLeaveType';
 import { LeaveStatus } from 'libs/utils/src/lib/enums/leave.enum';
 import ViewLeavePdfModal from 'apps/employee-monitoring/src/components/modal/monitoring/leave-applications/ViewLeavePdfModal';
+import { LabelInput } from 'apps/employee-monitoring/src/components/inputs/LabelInput';
+import { HiOutlineSearch } from 'react-icons/hi';
+import * as yup from 'yup';
+import { SubmitHandler, useForm } from 'react-hook-form';
+import ConvertToYearMonth from 'apps/employee-monitoring/src/utils/functions/ConvertToYearMonth';
+import { yupResolver } from '@hookform/resolvers/yup';
+import axios from 'axios';
+
+type Filter = {
+  monthYear: string;
+};
 
 const Index = () => {
   // Current row data in the table that has been clicked
   const [currentRowData, setCurrentRowData] = useState<MonitoringLeave>({} as MonitoringLeave);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   // fetch data for list of leave applications
   const {
@@ -28,7 +40,11 @@ const Index = () => {
     error: swrError,
     isLoading: swrIsLoading,
     mutate: mutateLeaveApplications,
-  } = useSWR('/leave/hrmo', fetcherEMS);
+  } = useSWR('/leave/hrmo', fetcherEMS, {
+    // } = useSWR(`/leave/hrmo/monthly/${dayjs().year() + '-' + (dayjs().month() + 1)}`, fetcherEMS, {
+    shouldRetryOnError: false,
+    revalidateOnFocus: false,
+  });
 
   // Zustand initialization
   const {
@@ -58,6 +74,39 @@ const Index = () => {
     EmptyResponseAndErrors: state.emptyResponseAndErrors,
     setLeaveConfirmAction: state.setLeaveConfirmAction,
   }));
+
+  const yupSchema = yup.object().shape({
+    monthYear: yup.date().max(new Date(), 'Must not be greater than current date').nullable(),
+  });
+
+  // React hook form
+  const { register, handleSubmit } = useForm<Filter>({
+    mode: 'onChange',
+    defaultValues: {
+      monthYear: ConvertToYearMonth(dayjs().toString()),
+    },
+    resolver: yupResolver(yupSchema),
+  });
+
+  const onSubmit: SubmitHandler<Filter> = async (formData: Filter) => {
+    try {
+      setIsLoading(true);
+      const { data } = await axios.get(
+        `${process.env.NEXT_PUBLIC_EMPLOYEE_MONITORING_BE_DOMAIN}/leave/hrmo/monthly/${ConvertToYearMonth(
+          formData.monthYear
+        )}`
+      );
+
+      // if success, push to update the state
+      if (!isEmpty(data)) {
+        setIsLoading(false);
+        GetLeaveApplicationsSuccess(data);
+      }
+    } catch (error) {
+      setIsLoading(false);
+      GetLeaveApplicationsFail(error.message);
+    }
+  };
 
   // View modal function
   const [viewModalIsOpen, setViewModalIsOpen] = useState<boolean>(false);
@@ -257,10 +306,25 @@ const Index = () => {
 
       <div className="sm:px-2 md:px-2 lg:px-5">
         <Card>
-          {IsLoading ? (
+          {IsLoading || isLoading ? (
             <LoadingSpinner size="lg" />
           ) : (
-            <div className="flex flex-row flex-wrap">
+            <div className="flex flex-row flex-wrap justify-between">
+              <form onSubmit={handleSubmit(onSubmit)} id="searchMonthYear" className="order-2">
+                <div className="mb-6 flex ">
+                  <LabelInput id="monthYear" type="month" controller={{ ...register('monthYear') }} />
+
+                  <Button
+                    variant="info"
+                    type="submit"
+                    form="searchMonthYear"
+                    className="mx-1 text-gray-400 disabled:cursor-not-allowed"
+                  >
+                    <HiOutlineSearch className="w-4 h-4" />
+                  </Button>
+                </div>
+              </form>
+
               <DataTable model={table} showGlobalFilter={true} showColumnFilter={true} paginate={true} />
             </div>
           )}
