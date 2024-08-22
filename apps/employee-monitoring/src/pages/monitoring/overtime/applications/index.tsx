@@ -4,32 +4,29 @@ import useSWR from 'swr';
 import { isEmpty } from 'lodash';
 import fetcherEMS from 'apps/employee-monitoring/src/utils/fetcher/FetcherEMS';
 import UseRenderOvertimeStatus from 'apps/employee-monitoring/src/utils/functions/RenderOvertimeStatus';
-
 import { EmployeeOvertimeDetails } from 'libs/utils/src/lib/types/employee.type';
 import { Overtime } from 'libs/utils/src/lib/types/overtime.type';
 import { useOvertimeStore } from 'apps/employee-monitoring/src/store/overtime.store';
+import dayjs from 'dayjs';
+import { useForm } from 'react-hook-form';
+import * as yup from 'yup';
+import { yupResolver } from '@hookform/resolvers/yup';
+import ConvertToYearMonth from 'apps/employee-monitoring/src/utils/functions/ConvertToYearMonth';
 
-import { DataTable, LoadingSpinner, ToastNotification, useDataTable } from '@gscwd-apps/oneui';
-import { createColumnHelper } from '@tanstack/react-table';
+import { LabelInput } from 'apps/employee-monitoring/src/components/inputs/LabelInput';
 import { Card } from 'apps/employee-monitoring/src/components/cards/Card';
 import { BreadCrumbs } from 'apps/employee-monitoring/src/components/navigations/BreadCrumbs';
 import ViewOvertimeModal from 'apps/employee-monitoring/src/components/modal/monitoring/overtime/ViewOvertimeModal';
-import { ScheduleBases } from 'libs/utils/src/lib/enums/schedule.enum';
-import { OvertimeStatus } from 'libs/utils/src/lib/enums/overtime.enum';
+import { DataTable, LoadingSpinner, ToastNotification, useDataTable } from '@gscwd-apps/oneui';
+import { createColumnHelper } from '@tanstack/react-table';
+
+type Filter = {
+  monthYear: string;
+};
 
 const Index = () => {
   // Current row data in the table that has been clicked
   const [currentRowData, setCurrentRowData] = useState<Overtime>({} as Overtime);
-
-  // fetch data for overtime applications
-  const {
-    data: overtimeApplications,
-    error: overtimeApplicationsError,
-    isLoading: overtimeApplicationsLoading,
-  } = useSWR('/overtime', fetcherEMS, {
-    shouldRetryOnError: true,
-    revalidateOnFocus: false,
-  });
 
   // Zustand initialization
   const {
@@ -45,6 +42,30 @@ const Index = () => {
     ErrorOvertimeApplications: state.errorOvertimeApplications,
     SetErrorOvertimeApplications: state.setErrorOvertimeApplications,
   }));
+
+  const yupSchema = yup.object().shape({
+    monthYear: yup.date().max(new Date(), 'Must not be greater than current date').nullable(),
+  });
+
+  // React hook form
+  const { register, watch } = useForm<Filter>({
+    mode: 'onChange',
+    defaultValues: {
+      monthYear: ConvertToYearMonth(dayjs().toString()),
+    },
+    resolver: yupResolver(yupSchema),
+  });
+  const watchMonthYear = watch('monthYear');
+
+  // fetch data for overtime applications
+  const {
+    data: overtimeApplications,
+    error: overtimeApplicationsError,
+    isLoading: overtimeApplicationsLoading,
+  } = useSWR(`/overtime/monthly/${watchMonthYear}`, fetcherEMS, {
+    shouldRetryOnError: true,
+    revalidateOnFocus: false,
+  });
 
   // View modal function
   const [viewModalIsOpen, setViewModalIsOpen] = useState<boolean>(false);
@@ -168,7 +189,16 @@ const Index = () => {
               {overtimeApplicationsLoading ? (
                 <LoadingSpinner size="lg" />
               ) : (
-                <div className="flex flex-row flex-wrap">
+                <div className="flex flex-row flex-wrap justify-between">
+                  <form className="order-2">
+                    <LabelInput
+                      id="monthYear"
+                      type="month"
+                      controller={{ ...register('monthYear') }}
+                      className="mb-6"
+                    />
+                  </form>
+
                   <DataTable model={table} showGlobalFilter={true} showColumnFilter={true} paginate={true} />
                 </div>
               )}

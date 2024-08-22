@@ -183,7 +183,7 @@ export const DataTable: FunctionComponent<DataTableProps> = ({
                 }}
                 className="text-xs font-medium text-gray-500 border border-gray-300 rounded-md"
               >
-                {[10, 20, 30, 40, 50].map((pageSize) => (
+                {[15, 20, 30, 40, 50].map((pageSize) => (
                   <option key={pageSize} value={pageSize}>
                     Show {pageSize}
                   </option>
@@ -193,7 +193,6 @@ export const DataTable: FunctionComponent<DataTableProps> = ({
           </div>
         </div>
       ) : null}
-      {/* </div> */}
     </>
   );
 };

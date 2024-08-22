@@ -19,9 +19,59 @@ import { isEmpty } from 'lodash';
 import { useEffect, useState } from 'react';
 import useSWR from 'swr';
 import UpdatePassSlipModal from 'apps/employee-monitoring/src/components/modal/monitoring/pass-slips/UpdatePassSlipTimeLogs';
+import * as yup from 'yup';
+import { useForm } from 'react-hook-form';
+import ConvertToYearMonth from 'apps/employee-monitoring/src/utils/functions/ConvertToYearMonth';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { LabelInput } from 'apps/employee-monitoring/src/components/inputs/LabelInput';
+
+type Filter = {
+  monthYear: string;
+};
 
 export default function Index() {
   const [currentRowData, setCurrentRowData] = useState<PassSlip>({} as PassSlip);
+
+  const {
+    PassSlips,
+    GetPassSlipsFail,
+    GetPassSlipsSuccess,
+
+    ErrorPassSlips,
+    ResponseHrmoApprovalPassSlip,
+    CancelPassSlip,
+    UpdatePassSlipTimeLogs,
+
+    EmptyErrorsAndResponse,
+  } = usePassSlipStore((state) => ({
+    PassSlips: state.passSlips,
+    ErrorPassSlips: state.error.errorPassSlips,
+
+    ResponseHrmoApprovalPassSlip: state.response.hrmoApprovalPassSlip,
+
+    GetPassSlipsSuccess: state.getPassSlipsSuccess,
+    GetPassSlipsFail: state.getPassSlipsFail,
+
+    CancelPassSlip: state.response.cancelPassSlip,
+
+    UpdatePassSlipTimeLogs: state.response.updatePassSlip,
+
+    EmptyErrorsAndResponse: state.emptyErrorsAndResponse,
+  }));
+
+  const yupSchema = yup.object().shape({
+    monthYear: yup.date().max(new Date(), 'Must not be greater than current date').nullable(),
+  });
+
+  // React hook form
+  const { register, watch } = useForm<Filter>({
+    mode: 'onChange',
+    defaultValues: {
+      monthYear: ConvertToYearMonth(dayjs().toString()),
+    },
+    resolver: yupResolver(yupSchema),
+  });
+  const watchMonthYear = watch('monthYear');
 
   // use swr pass slips
   const {
@@ -29,40 +79,10 @@ export default function Index() {
     isLoading: swrIsLoading,
     error: swrError,
     mutate: mutatePassSlipApplications,
-  } = useSWR('/pass-slip', fetcherEMS, {
-    shouldRetryOnError: false,
+  } = useSWR(`/pass-slip/ems/${watchMonthYear}`, fetcherEMS, {
+    shouldRetryOnError: true,
     revalidateOnFocus: false,
   });
-
-  const {
-    passSlips,
-    errorPassSlips,
-
-    ResponseHrmoApprovalPassSlip,
-
-    getPassSlipsFail,
-    getPassSlipsSuccess,
-
-    CancelPassSlip,
-
-    UpdatePassSlipTimeLogs,
-
-    emptyErrorsAndResponse,
-  } = usePassSlipStore((state) => ({
-    passSlips: state.passSlips,
-    errorPassSlips: state.error.errorPassSlips,
-
-    ResponseHrmoApprovalPassSlip: state.response.hrmoApprovalPassSlip,
-
-    getPassSlipsSuccess: state.getPassSlipsSuccess,
-    getPassSlipsFail: state.getPassSlipsFail,
-
-    CancelPassSlip: state.response.cancelPassSlip,
-
-    UpdatePassSlipTimeLogs: state.response.updatePassSlip,
-
-    emptyErrorsAndResponse: state.emptyErrorsAndResponse,
-  }));
 
   // view modal function
   const [viewModalIsOpen, setViewModalIsOpen] = useState<boolean>(false);
@@ -185,23 +205,23 @@ export default function Index() {
   // React Table initialization
   const { table } = useDataTable({
     columns: columns,
-    data: passSlips,
+    data: PassSlips,
     columnVisibility: { id: false, obTransportation: false },
   });
 
   // Reset responses on load of page
   useEffect(() => {
-    emptyErrorsAndResponse();
+    EmptyErrorsAndResponse();
   }, []);
 
   // Upon success/fail of swr request, zustand state will be updated
   useEffect(() => {
     if (!isEmpty(swrPassSlips)) {
-      getPassSlipsSuccess(swrPassSlips.data);
+      GetPassSlipsSuccess(swrPassSlips.data);
     }
 
     if (!isEmpty(swrError)) {
-      getPassSlipsFail(swrError.message);
+      GetPassSlipsFail(swrError.message);
     }
   }, [swrPassSlips, swrError]);
 
@@ -226,7 +246,7 @@ export default function Index() {
         />
 
         {/* Fetch pass slips error */}
-        {!isEmpty(errorPassSlips) ? <ToastNotification toastType="error" notifMessage={errorPassSlips} /> : null}
+        {!isEmpty(ErrorPassSlips) ? <ToastNotification toastType="error" notifMessage={ErrorPassSlips} /> : null}
 
         {!isEmpty(CancelPassSlip) ? (
           <ToastNotification toastType="success" notifMessage="Pass slip cancelled successfully" />
@@ -261,7 +281,13 @@ export default function Index() {
               {swrIsLoading ? (
                 <LoadingSpinner size="lg" />
               ) : (
-                <div className="flex flex-row flex-wrap ">
+                <div className="flex flex-row flex-wrap justify-between">
+                  <form className="order-2">
+                    <div className="mb-6 flex ">
+                      <LabelInput id="monthYear" type="month" controller={{ ...register('monthYear') }} />
+                    </div>
+                  </form>
+
                   <DataTable model={table} showGlobalFilter={true} showColumnFilter={true} paginate={true} />
                 </div>
               )}
