@@ -1,5 +1,5 @@
 /* eslint-disable @nx/enforce-module-boundaries */
-import { Button, DataTable, LoadingSpinner, ToastNotification, useDataTable } from '@gscwd-apps/oneui';
+import { DataTable, LoadingSpinner, ToastNotification, useDataTable } from '@gscwd-apps/oneui';
 import { createColumnHelper } from '@tanstack/react-table';
 import { Card } from 'apps/employee-monitoring/src/components/cards/Card';
 import ViewPassSlipModal from 'apps/employee-monitoring/src/components/modal/monitoring/pass-slips/ViewPassSlipModal';
@@ -20,12 +20,10 @@ import { useEffect, useState } from 'react';
 import useSWR from 'swr';
 import UpdatePassSlipModal from 'apps/employee-monitoring/src/components/modal/monitoring/pass-slips/UpdatePassSlipTimeLogs';
 import * as yup from 'yup';
-import { SubmitHandler, useForm } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import ConvertToYearMonth from 'apps/employee-monitoring/src/utils/functions/ConvertToYearMonth';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { LabelInput } from 'apps/employee-monitoring/src/components/inputs/LabelInput';
-import { HiOutlineSearch } from 'react-icons/hi';
-import axios from 'axios';
 
 type Filter = {
   monthYear: string;
@@ -33,19 +31,6 @@ type Filter = {
 
 export default function Index() {
   const [currentRowData, setCurrentRowData] = useState<PassSlip>({} as PassSlip);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-
-  // use swr pass slips
-  const {
-    data: swrPassSlips,
-    isLoading: swrIsLoading,
-    error: swrError,
-    mutate: mutatePassSlipApplications,
-  } = useSWR(`/pass-slip/`, fetcherEMS, {
-    // } = useSWR(`/pass-slip/monthly/${dayjs().year() + '-' + (dayjs().month() + 1)}`, fetcherEMS, {
-    shouldRetryOnError: false,
-    revalidateOnFocus: false,
-  });
 
   const {
     PassSlips,
@@ -79,33 +64,25 @@ export default function Index() {
   });
 
   // React hook form
-  const { register, handleSubmit } = useForm<Filter>({
+  const { register, watch } = useForm<Filter>({
     mode: 'onChange',
     defaultValues: {
       monthYear: ConvertToYearMonth(dayjs().toString()),
     },
     resolver: yupResolver(yupSchema),
   });
+  const watchMonthYear = watch('monthYear');
 
-  const onSubmit: SubmitHandler<Filter> = async (formData: Filter) => {
-    try {
-      setIsLoading(true);
-      const { data } = await axios.get(
-        `${process.env.NEXT_PUBLIC_EMPLOYEE_MONITORING_BE_DOMAIN}/pass-slip/monthly/${ConvertToYearMonth(
-          formData.monthYear
-        )}`
-      );
-
-      // if success, push to update the state
-      if (!isEmpty(data)) {
-        setIsLoading(false);
-        GetPassSlipsSuccess(data);
-      }
-    } catch (error) {
-      setIsLoading(false);
-      GetPassSlipsFail(error.message);
-    }
-  };
+  // use swr pass slips
+  const {
+    data: swrPassSlips,
+    isLoading: swrIsLoading,
+    error: swrError,
+    mutate: mutatePassSlipApplications,
+  } = useSWR(`/pass-slip/ems/${watchMonthYear}`, fetcherEMS, {
+    shouldRetryOnError: true,
+    revalidateOnFocus: false,
+  });
 
   // view modal function
   const [viewModalIsOpen, setViewModalIsOpen] = useState<boolean>(false);
@@ -301,22 +278,13 @@ export default function Index() {
         <Can I="access" this="Pass_slips">
           <div className="sm:px-2 md:px-2 lg:px-5">
             <Card>
-              {swrIsLoading || isLoading ? (
+              {swrIsLoading ? (
                 <LoadingSpinner size="lg" />
               ) : (
                 <div className="flex flex-row flex-wrap justify-between">
-                  <form onSubmit={handleSubmit(onSubmit)} id="searchMonthYear" className="order-2">
+                  <form className="order-2">
                     <div className="mb-6 flex ">
                       <LabelInput id="monthYear" type="month" controller={{ ...register('monthYear') }} />
-
-                      <Button
-                        variant="info"
-                        type="submit"
-                        form="searchMonthYear"
-                        className="mx-1 text-gray-400 disabled:cursor-not-allowed"
-                      >
-                        <HiOutlineSearch className="w-4 h-4" />
-                      </Button>
                     </div>
                   </form>
 

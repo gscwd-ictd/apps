@@ -2,57 +2,31 @@ import { useEffect, useState } from 'react';
 import { Can } from 'apps/employee-monitoring/src/context/casl/Can';
 import useSWR from 'swr';
 import { isEmpty } from 'lodash';
-
+import * as yup from 'yup';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { useForm } from 'react-hook-form';
+import ConvertToYearMonth from 'apps/employee-monitoring/src/utils/functions/ConvertToYearMonth';
 import fetcherEMS from 'apps/employee-monitoring/src/utils/fetcher/FetcherEMS';
+import dayjs from 'dayjs';
 
 // store and type
 import { OfficerOfTheDay } from 'apps/employee-monitoring/src/utils/types/officer-of-the-day.type';
 import { useOfficerOfTheDayStore } from 'apps/employee-monitoring/src/store/officer-of-the-day.store';
 
+// ui components
+import AddOfficerOfTheDayModal from 'apps/employee-monitoring/src/components/modal/settings/officer-of-the-day/AddOfficerOfTheDayModal';
+import DeleteOfficerOfTheDayModal from 'apps/employee-monitoring/src/components/modal/settings/officer-of-the-day/DeleteOfficerOfTheDayModal';
 import { DataTable, LoadingSpinner, ToastNotification, useDataTable } from '@gscwd-apps/oneui';
 import { Card } from 'apps/employee-monitoring/src/components/cards/Card';
 import { BreadCrumbs } from 'apps/employee-monitoring/src/components/navigations/BreadCrumbs';
 import { createColumnHelper } from '@tanstack/react-table';
-import dayjs from 'dayjs';
+import { LabelInput } from 'apps/employee-monitoring/src/components/inputs/LabelInput';
 
-// modals
-import AddOfficerOfTheDayModal from 'apps/employee-monitoring/src/components/modal/settings/officer-of-the-day/AddOfficerOfTheDayModal';
-import DeleteOfficerOfTheDayModal from 'apps/employee-monitoring/src/components/modal/settings/officer-of-the-day/DeleteOfficerOfTheDayModal';
+type Filter = {
+  monthYear: string;
+};
 
 const Index = () => {
-  // Add modal function
-  const [addModalIsOpen, setAddModalIsOpen] = useState<boolean>(false);
-  const openAddActionModal = () => setAddModalIsOpen(true);
-  const closeAddActionModal = () => setAddModalIsOpen(false);
-
-  // Delete modal function
-  const [deleteModalIsOpen, setDeleteModalIsOpen] = useState<boolean>(false);
-
-  // open delete action
-  const openDeleteActionModal = (rowData: OfficerOfTheDay) => {
-    setDeleteModalIsOpen(true);
-    setCurrentRowData(rowData);
-  };
-
-  // close delete action
-  const closeDeleteActionModal = () => setDeleteModalIsOpen(false);
-
-  const [currentRowData, setCurrentRowData] = useState<OfficerOfTheDay>({} as OfficerOfTheDay);
-
-  // transform date
-  const transformDate = (date: string | Date | null) => {
-    if (date === null) return '-';
-    else return dayjs(date).format('MMMM DD, YYYY');
-  };
-
-  // fetch data for list of user
-  const {
-    data: officersOfTheDay,
-    error: officersOfTheDayError,
-    isLoading: officersOfTheDayLoading,
-    mutate: mutateOfficersOfTheDay,
-  } = useSWR('/officer-of-the-day', fetcherEMS);
-
   // Zustand initialization
   const {
     OfficersOfTheDay,
@@ -89,6 +63,56 @@ const Index = () => {
 
     EmptyResponse: state.emptyResponse,
   }));
+
+  const yupSchema = yup.object().shape({
+    monthYear: yup.date().max(new Date(), 'Must not be greater than current date').nullable(),
+  });
+
+  // React hook form
+  const { register, watch } = useForm<Filter>({
+    mode: 'onChange',
+    defaultValues: {
+      monthYear: ConvertToYearMonth(dayjs().toString()),
+    },
+    resolver: yupResolver(yupSchema),
+  });
+  const watchMonthYear = watch('monthYear');
+
+  // fetch data for list of user
+  const {
+    data: officersOfTheDay,
+    error: officersOfTheDayError,
+    isLoading: officersOfTheDayLoading,
+    mutate: mutateOfficersOfTheDay,
+  } = useSWR(`/officer-of-the-day/${watchMonthYear}`, fetcherEMS, {
+    shouldRetryOnError: true,
+    revalidateOnFocus: false,
+  });
+
+  // Add modal function
+  const [addModalIsOpen, setAddModalIsOpen] = useState<boolean>(false);
+  const openAddActionModal = () => setAddModalIsOpen(true);
+  const closeAddActionModal = () => setAddModalIsOpen(false);
+
+  // Delete modal function
+  const [deleteModalIsOpen, setDeleteModalIsOpen] = useState<boolean>(false);
+
+  // open delete action
+  const openDeleteActionModal = (rowData: OfficerOfTheDay) => {
+    setDeleteModalIsOpen(true);
+    setCurrentRowData(rowData);
+  };
+
+  // close delete action
+  const closeDeleteActionModal = () => setDeleteModalIsOpen(false);
+
+  const [currentRowData, setCurrentRowData] = useState<OfficerOfTheDay>({} as OfficerOfTheDay);
+
+  // transform date
+  const transformDate = (date: string | Date | null) => {
+    if (date === null) return '-';
+    else return dayjs(date).format('MMMM DD, YYYY');
+  };
 
   // Render row actions in the table component
   const renderRowActions = (rowData: OfficerOfTheDay) => {
@@ -212,8 +236,17 @@ const Index = () => {
               {officersOfTheDayLoading ? (
                 <LoadingSpinner size="lg" />
               ) : (
-                <div className="flex flex-row flex-wrap">
+                <div className="flex flex-row flex-wrap justify-between">
                   <div className="flex justify-end order-2 w-1/2 table-actions-wrapper">
+                    <form>
+                      <LabelInput
+                        id="monthYear"
+                        type="month"
+                        controller={{ ...register('monthYear') }}
+                        className="mr-2"
+                      />
+                    </form>
+
                     <button
                       type="button"
                       className="text-white bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-blue-300 font-medium rounded-md text-xs p-2.5 text-center inline-flex items-center mr-2 dark:bg-blue-400 dark:hover:bg-blue-500 dark:focus:ring-blue-600"

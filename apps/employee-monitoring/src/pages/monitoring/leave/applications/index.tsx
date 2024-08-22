@@ -32,19 +32,6 @@ type Filter = {
 const Index = () => {
   // Current row data in the table that has been clicked
   const [currentRowData, setCurrentRowData] = useState<MonitoringLeave>({} as MonitoringLeave);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-
-  // fetch data for list of leave applications
-  const {
-    data: swrLeaveApplication,
-    error: swrError,
-    isLoading: swrIsLoading,
-    mutate: mutateLeaveApplications,
-  } = useSWR('/leave/hrmo', fetcherEMS, {
-    // } = useSWR(`/leave/hrmo/monthly/${dayjs().year() + '-' + (dayjs().month() + 1)}`, fetcherEMS, {
-    shouldRetryOnError: false,
-    revalidateOnFocus: false,
-  });
 
   // Zustand initialization
   const {
@@ -80,33 +67,25 @@ const Index = () => {
   });
 
   // React hook form
-  const { register, handleSubmit } = useForm<Filter>({
+  const { register, watch } = useForm<Filter>({
     mode: 'onChange',
     defaultValues: {
       monthYear: ConvertToYearMonth(dayjs().toString()),
     },
     resolver: yupResolver(yupSchema),
   });
+  const watchMonthYear = watch('monthYear');
 
-  const onSubmit: SubmitHandler<Filter> = async (formData: Filter) => {
-    try {
-      setIsLoading(true);
-      const { data } = await axios.get(
-        `${process.env.NEXT_PUBLIC_EMPLOYEE_MONITORING_BE_DOMAIN}/leave/hrmo/monthly/${ConvertToYearMonth(
-          formData.monthYear
-        )}`
-      );
-
-      // if success, push to update the state
-      if (!isEmpty(data)) {
-        setIsLoading(false);
-        GetLeaveApplicationsSuccess(data);
-      }
-    } catch (error) {
-      setIsLoading(false);
-      GetLeaveApplicationsFail(error.message);
-    }
-  };
+  // fetch data for list of leave applications
+  const {
+    data: swrLeaveApplication,
+    error: swrError,
+    isLoading: swrIsLoading,
+    mutate: mutateLeaveApplications,
+  } = useSWR(`/leave/hrmo/${watchMonthYear}`, fetcherEMS, {
+    shouldRetryOnError: true,
+    revalidateOnFocus: false,
+  });
 
   // View modal function
   const [viewModalIsOpen, setViewModalIsOpen] = useState<boolean>(false);
@@ -218,7 +197,7 @@ const Index = () => {
     columnHelper.accessor('isLateFiling', {
       header: 'Is Late Filling',
       filterFn: 'fuzzy',
-      cell: (info) => (info.getValue() ? 'True' : 'False'),
+      cell: (info) => info.getValue(),
     }),
     columnHelper.display({
       id: 'actions',
@@ -306,23 +285,12 @@ const Index = () => {
 
       <div className="sm:px-2 md:px-2 lg:px-5">
         <Card>
-          {IsLoading || isLoading ? (
+          {IsLoading ? (
             <LoadingSpinner size="lg" />
           ) : (
             <div className="flex flex-row flex-wrap justify-between">
-              <form onSubmit={handleSubmit(onSubmit)} id="searchMonthYear" className="order-2">
-                <div className="mb-6 flex ">
-                  <LabelInput id="monthYear" type="month" controller={{ ...register('monthYear') }} />
-
-                  <Button
-                    variant="info"
-                    type="submit"
-                    form="searchMonthYear"
-                    className="mx-1 text-gray-400 disabled:cursor-not-allowed"
-                  >
-                    <HiOutlineSearch className="w-4 h-4" />
-                  </Button>
-                </div>
+              <form className="order-2">
+                <LabelInput id="monthYear" type="month" controller={{ ...register('monthYear') }} />
               </form>
 
               <DataTable model={table} showGlobalFilter={true} showColumnFilter={true} paginate={true} />
