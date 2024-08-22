@@ -77,7 +77,7 @@ export const useDataTable = <T>(options: DataTableOptions<T>) => {
     },
     initialState: {
       pagination: {
-        pageSize: 10,
+        pageSize: 15,
       },
     },
     state: {

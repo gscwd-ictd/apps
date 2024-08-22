@@ -9,28 +9,27 @@ import { useTravelOrderStore } from 'apps/employee-monitoring/src/store/travel-o
 import { TravelOrder } from 'libs/utils/src/lib/types/travel-order.type';
 
 import { createColumnHelper } from '@tanstack/react-table';
-import { DataTable, useDataTable, LoadingSpinner, ToastNotification } from '@gscwd-apps/oneui';
+import { DataTable, useDataTable, LoadingSpinner, ToastNotification, Button } from '@gscwd-apps/oneui';
 import { Card } from '../../../components/cards/Card';
 import { BreadCrumbs } from '../../../components/navigations/BreadCrumbs';
 import AddTravelOrderModal from 'apps/employee-monitoring/src/components/modal/monitoring/travel-orders/AddTravelOrderModal';
 import DeleteTravelOrderModal from 'apps/employee-monitoring/src/components/modal/monitoring/travel-orders/DeleteTravelOrderModal';
 import EditTravelOrderModal from 'apps/employee-monitoring/src/components/modal/monitoring/travel-orders/EditTravelOrderModal';
 import ConvertFullMonthNameToDigit from 'apps/employee-monitoring/src/utils/functions/ConvertFullMonthNameToDigit';
+import dayjs from 'dayjs';
+import * as yup from 'yup';
+import { useForm } from 'react-hook-form';
+import ConvertToYearMonth from 'apps/employee-monitoring/src/utils/functions/ConvertToYearMonth';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { LabelInput } from 'apps/employee-monitoring/src/components/inputs/LabelInput';
+
+type Filter = {
+  monthYear: string;
+};
 
 const Index = () => {
   // Current row data in the table that has been clicked
   const [currentRowData, setCurrentRowData] = useState<TravelOrder>({} as TravelOrder);
-
-  // fetch data for list of travel orders
-  const {
-    data: travelOrders,
-    error: travelOrdersError,
-    isLoading: travelOrdersLoading,
-    mutate: mutateTravelOrders,
-  } = useSWR('/travel-order', fetcherEMS, {
-    shouldRetryOnError: false,
-    revalidateOnFocus: false,
-  });
 
   // Zustand initialization
   const {
@@ -61,6 +60,31 @@ const Index = () => {
     EmptyResponse: state.emptyResponse,
   }));
 
+  const yupSchema = yup.object().shape({
+    monthYear: yup.date().max(new Date(), 'Must not be greater than current date').nullable(),
+  });
+
+  // React hook form
+  const { register, watch } = useForm<Filter>({
+    mode: 'onChange',
+    defaultValues: {
+      monthYear: ConvertToYearMonth(dayjs().toString()),
+    },
+    resolver: yupResolver(yupSchema),
+  });
+  const watchMonthYear = watch('monthYear');
+
+  // fetch data for list of travel orders
+  const {
+    data: travelOrders,
+    error: travelOrdersError,
+    isLoading: travelOrdersLoading,
+    mutate: mutateTravelOrders,
+  } = useSWR(`/travel-order/${watchMonthYear}`, fetcherEMS, {
+    shouldRetryOnError: true,
+    revalidateOnFocus: false,
+  });
+
   // Add modal function
   const [addModalIsOpen, setAddModalIsOpen] = useState<boolean>(false);
   const openAddActionModal = () => setAddModalIsOpen(true);
@@ -85,7 +109,7 @@ const Index = () => {
   // Render row actions in the table component
   const renderRowActions = (rowData: TravelOrder) => {
     return (
-      <div className="text-center">
+      <div className="text-center flex">
         <button
           type="button"
           className="text-white bg-blue-400 hover:bg-blue-500 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm p-2.5 text-center inline-flex items-center mr-2 "
@@ -198,8 +222,12 @@ const Index = () => {
           {travelOrdersLoading ? (
             <LoadingSpinner size="lg" />
           ) : (
-            <div className="flex flex-row flex-wrap">
+            <div className="flex flex-row flex-wrap justify-between">
               <div className="flex justify-end order-2 w-1/2 table-actions-wrapper">
+                <form>
+                  <LabelInput id="monthYear" type="month" controller={{ ...register('monthYear') }} className="mr-2" />
+                </form>
+
                 <button
                   type="button"
                   className="text-white bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-blue-300 font-medium rounded-md text-xs p-2.5 text-center inline-flex items-center mr-2 dark:bg-blue-400 dark:hover:bg-blue-500 dark:focus:ring-blue-600"

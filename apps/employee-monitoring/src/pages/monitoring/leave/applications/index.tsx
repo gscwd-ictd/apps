@@ -8,7 +8,7 @@ import { useLeaveApplicationStore } from 'apps/employee-monitoring/src/store/lea
 import { EmployeeLeaveDetails, MonitoringLeave } from 'libs/utils/src/lib/types/leave-application.type';
 
 import { createColumnHelper } from '@tanstack/react-table';
-import { DataTable, useDataTable, fuzzySort, LoadingSpinner, ToastNotification } from '@gscwd-apps/oneui';
+import { DataTable, useDataTable, fuzzySort, LoadingSpinner, ToastNotification, Button } from '@gscwd-apps/oneui';
 import { Card } from 'apps/employee-monitoring/src/components/cards/Card';
 import { BreadCrumbs } from 'apps/employee-monitoring/src/components/navigations/BreadCrumbs';
 import ViewLeaveApplicationModal from 'apps/employee-monitoring/src/components/modal/monitoring/leave-applications/ViewLeaveApplicationModal';
@@ -17,18 +17,21 @@ import UseRenderLeaveStatus from 'apps/employee-monitoring/src/utils/functions/R
 import UseRenderLeaveType from 'apps/employee-monitoring/src/utils/functions/RenderLeaveType';
 import { LeaveStatus } from 'libs/utils/src/lib/enums/leave.enum';
 import ViewLeavePdfModal from 'apps/employee-monitoring/src/components/modal/monitoring/leave-applications/ViewLeavePdfModal';
+import { LabelInput } from 'apps/employee-monitoring/src/components/inputs/LabelInput';
+import { HiOutlineSearch } from 'react-icons/hi';
+import * as yup from 'yup';
+import { SubmitHandler, useForm } from 'react-hook-form';
+import ConvertToYearMonth from 'apps/employee-monitoring/src/utils/functions/ConvertToYearMonth';
+import { yupResolver } from '@hookform/resolvers/yup';
+import axios from 'axios';
+
+type Filter = {
+  monthYear: string;
+};
 
 const Index = () => {
   // Current row data in the table that has been clicked
   const [currentRowData, setCurrentRowData] = useState<MonitoringLeave>({} as MonitoringLeave);
-
-  // fetch data for list of leave applications
-  const {
-    data: swrLeaveApplication,
-    error: swrError,
-    isLoading: swrIsLoading,
-    mutate: mutateLeaveApplications,
-  } = useSWR('/leave/hrmo', fetcherEMS);
 
   // Zustand initialization
   const {
@@ -58,6 +61,31 @@ const Index = () => {
     EmptyResponseAndErrors: state.emptyResponseAndErrors,
     setLeaveConfirmAction: state.setLeaveConfirmAction,
   }));
+
+  const yupSchema = yup.object().shape({
+    monthYear: yup.date().max(new Date(), 'Must not be greater than current date').nullable(),
+  });
+
+  // React hook form
+  const { register, watch } = useForm<Filter>({
+    mode: 'onChange',
+    defaultValues: {
+      monthYear: ConvertToYearMonth(dayjs().toString()),
+    },
+    resolver: yupResolver(yupSchema),
+  });
+  const watchMonthYear = watch('monthYear');
+
+  // fetch data for list of leave applications
+  const {
+    data: swrLeaveApplication,
+    error: swrError,
+    isLoading: swrIsLoading,
+    mutate: mutateLeaveApplications,
+  } = useSWR(`/leave/hrmo/${watchMonthYear}`, fetcherEMS, {
+    shouldRetryOnError: true,
+    revalidateOnFocus: false,
+  });
 
   // View modal function
   const [viewModalIsOpen, setViewModalIsOpen] = useState<boolean>(false);
@@ -169,7 +197,7 @@ const Index = () => {
     columnHelper.accessor('isLateFiling', {
       header: 'Is Late Filling',
       filterFn: 'fuzzy',
-      cell: (info) => (info.getValue() ? 'True' : 'False'),
+      cell: (info) => info.getValue(),
     }),
     columnHelper.display({
       id: 'actions',
@@ -260,7 +288,11 @@ const Index = () => {
           {IsLoading ? (
             <LoadingSpinner size="lg" />
           ) : (
-            <div className="flex flex-row flex-wrap">
+            <div className="flex flex-row flex-wrap justify-between">
+              <form className="order-2">
+                <LabelInput id="monthYear" type="month" controller={{ ...register('monthYear') }} />
+              </form>
+
               <DataTable model={table} showGlobalFilter={true} showColumnFilter={true} paginate={true} />
             </div>
           )}

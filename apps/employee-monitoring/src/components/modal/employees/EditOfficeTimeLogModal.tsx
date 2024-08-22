@@ -53,9 +53,6 @@ const EditOfficeTimeLogModal: FunctionComponent<EditDailySchedModalProps> = ({
 
   const [confirmAlertIsOpen, setConfirmAlertIsOpen] = useState<boolean>(false);
 
-  // default values
-  // const [defaultDtrValues, setDefaultDtrValues] = useState<EmployeeDtr>({} as EmployeeDtr);
-
   const closeModal = () => {
     reset();
     closeModalAction();

@@ -175,34 +175,43 @@ export const ReportOnAttendancePdf: FunctionComponent<ReportOnAttendancePdfProps
                             <View style={[styles.tableData, styles.w3]}>
                               <Text style={[styles.tableDataText]}>{index + 1}</Text>
                             </View>
+
                             <View style={[styles.tableData, styles.w25, { alignItems: 'flex-start' }]}>
                               <Text style={[styles.tableDataText, { textAlign: 'left' }]}>
                                 {attendanceData.name || '-'}
                               </Text>
                             </View>
+
                             <View style={[styles.tableData, styles.w7]}>
                               <Text style={[styles.tableDataText]}>{attendanceData.numberOfTimesLate || ''}</Text>
                             </View>
+
                             <View style={[styles.tableData, styles.w7]}>
                               <Text style={[styles.tableDataText]}>{attendanceData.numberOfTimesUndertime || ''}</Text>
                             </View>
+
                             <View style={[styles.tableData, styles.w7]}>
                               <Text style={[styles.tableDataText]}>
                                 {attendanceData.totalMinutesLateUndertime || ''}
                               </Text>
                             </View>
+
                             <View style={[styles.tableData, styles.w10]}>
                               <Text style={[styles.tableDataText]}>{attendanceData.conversion || ''}</Text>
                             </View>
+
                             <View style={[styles.tableData, styles.w7]}>
                               <Text style={[styles.tableDataText]}>{attendanceData.numberOfTimesHalfDay || ''}</Text>
                             </View>
+
                             <View style={[styles.tableData, styles.w13]}>
                               <Text style={[styles.tableDataText]}>{attendanceData.daysHalfDay || ''}</Text>
                             </View>
+
                             <View style={[styles.tableData, styles.w14]}>
                               <Text style={[styles.tableDataText]}>{attendanceData.datesLate || ''}</Text>
                             </View>
+
                             <View style={[styles.tableData, styles.w7, { borderRight: 'none' }]}>
                               <Text style={[styles.tableDataText]}>{attendanceData.noOfAttendance || ''}</Text>
                             </View>
