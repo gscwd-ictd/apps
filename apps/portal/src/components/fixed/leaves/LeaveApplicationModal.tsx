@@ -343,6 +343,14 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
     ) {
       //if filing for monetization but have pending VL,FL,SL
       setHasPendingLeave(true);
+    } else if (
+      pendingleavesList?.some((leave) => leave.leaveName === LeaveName.MONETIZATION) &&
+      (watch('typeOfLeaveDetails.leaveName') === LeaveName.FORCED ||
+        watch('typeOfLeaveDetails.leaveName') === LeaveName.VACATION ||
+        watch('typeOfLeaveDetails.leaveName') === LeaveName.SICK)
+    ) {
+      //if filing for monetization but have pending VL,FL,SL
+      setHasPendingLeave(true);
     } else {
       setHasPendingLeave(false);
     }
@@ -641,6 +649,11 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
                               leave.leaveName === LeaveName.SICK
                           )
                             ? 'Unable to apply for Monetization due to pending Vacation, Forced, or Sick Leave application.'
+                            : pendingleavesList?.some((leave) => leave.leaveName === LeaveName.MONETIZATION) &&
+                              (watch('typeOfLeaveDetails.leaveName') === LeaveName.FORCED ||
+                                watch('typeOfLeaveDetails.leaveName') === LeaveName.VACATION ||
+                                watch('typeOfLeaveDetails.leaveName') === LeaveName.SICK)
+                            ? 'Unable to apply for Leave due to pending Leave Monetization application.'
                             : 'You have a pending leave application of the same type.'
                         }
                         `}
@@ -1532,14 +1545,14 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
                     : employeeDetails.profile.sex === 'Female' &&
                       watch('typeOfLeaveDetails.leaveName') === LeaveName.PATERNITY
                     ? true
-                    : //VLFL balance is 5 or less, and SL balance is less than 10
-                    vacationLeaveBalance > 0 &&
-                      finalVacationAndForcedLeaveBalance <= 5 &&
-                      leaveBalanceInput > 0 &&
-                      finalSickLeaveBalance < 10 &&
-                      watch('typeOfLeaveDetails.leaveName') === LeaveName.MONETIZATION
-                    ? true
-                    : //monetization type is max 20 leave credits and exceeded the 20 credits
+                    : // : //VLFL balance is 5 or less, and SL balance is less than 10
+                    // leaveBalanceInput > 0 &&
+                    //   vacationLeaveBalance > 0 &&
+                    //   finalVacationAndForcedLeaveBalance <= 5 &&
+                    //   finalSickLeaveBalance < 10 &&
+                    //   watch('typeOfLeaveDetails.leaveName') === LeaveName.MONETIZATION
+                    // ? true
+                    //monetization type is max 20 leave credits and exceeded the 20 credits
                     selectedLeaveMonetizationType === MonetizationType.MAX20 &&
                       leaveBalanceInput > 20 &&
                       watch('typeOfLeaveDetails.leaveName') === LeaveName.MONETIZATION
@@ -1548,25 +1561,17 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
                       watch('typeOfLeaveDetails.leaveName') === LeaveName.MONETIZATION &&
                       estimatedAmount > Number(maxMonetizationAmount) / 2
                     ? true
-                    : //one field has input and is less than 10
-                    (vacationLeaveBalance > 0 &&
-                        finalVacationAndForcedLeaveBalance < 5 &&
-                        leaveBalanceInput > 0 &&
-                        finalSickLeaveBalance >= 10 &&
-                        // sickLeaveInput <= 0 &&
-                        watch('typeOfLeaveDetails.leaveName') === LeaveName.MONETIZATION) ||
-                      (finalVacationAndForcedLeaveBalance >= 5 &&
-                        leaveBalanceInput <= 0 &&
-                        finalSickLeaveBalance < 10 &&
-                        watch('typeOfLeaveDetails.leaveName') === LeaveName.MONETIZATION)
-                    ? true
-                    : //both fields have input and VL is less than 5 while SL is less than 10 - disabled
-                    finalVacationAndForcedLeaveBalance < 5 &&
-                      leaveBalanceInput > 0 &&
+                    : leaveBalanceInput > 0 &&
                       finalSickLeaveBalance < 10 &&
                       watch('typeOfLeaveDetails.leaveName') === LeaveName.MONETIZATION
                     ? true
-                    : //both fields have no input
+                    : // : //both fields have input and VL is less than 5 while SL is less than 10 - disabled
+                    // finalVacationAndForcedLeaveBalance < 5 &&
+                    //   leaveBalanceInput > 0 &&
+                    //   finalSickLeaveBalance < 10 &&
+                    //   watch('typeOfLeaveDetails.leaveName') === LeaveName.MONETIZATION
+                    // ? true
+                    //leave balance to convert input is blank
                     leaveBalanceInput <= 0 && watch('typeOfLeaveDetails.leaveName') === LeaveName.MONETIZATION
                     ? true
                     : Number(leaveDates.length > Math.round(vacationLeaveBalance) - pendingVacationLeaveDateCount) &&

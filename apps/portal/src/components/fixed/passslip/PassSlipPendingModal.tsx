@@ -38,7 +38,6 @@ export const PassSlipPendingModal = ({ modalState, setModalState, closeModalActi
   };
 
   const { windowWidth } = UseWindowDimensions();
-  console.log(passSlip);
   return (
     <>
       <Modal size={windowWidth > 1024 ? 'sm' : 'full'} open={modalState} setOpen={setModalState}>
@@ -94,7 +93,6 @@ export const PassSlipPendingModal = ({ modalState, setModalState, closeModalActi
                   }`}
                   dismissible={false}
                 />
-
 
                 {employeeDetails.employmentDetails.userRole != UserRole.JOB_ORDER &&
                 employeeDetails.employmentDetails.userRole != UserRole.COS &&

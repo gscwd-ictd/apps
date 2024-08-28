@@ -13,4 +13,5 @@ export enum ApprovalType {
   PDC_GM = 'PDC Gm Approval',
   TRAINING_NOMINATION = 'Training Nomination',
   NA = '',
+  NOMINEE_STATUS = 'Nominee Status',
 }

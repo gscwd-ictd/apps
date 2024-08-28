@@ -44,8 +44,9 @@ export const OvertimeAccomplishmentModal = ({ modalState, setModalState, closeMo
     setOvertimeAccomplishmentPatchDetails: state.setOvertimeAccomplishmentPatchDetails,
   }));
 
-  const { schedule, isHoliday, isRestday, getTimeLogs, getTimeLogsSuccess, getTimeLogsFail } = useTimeLogStore(
+  const { schedule, dtr, isHoliday, isRestday, getTimeLogs, getTimeLogsSuccess, getTimeLogsFail } = useTimeLogStore(
     (state) => ({
+      dtr: state.dtr,
       schedule: state.schedule,
       isHoliday: state.isHoliday,
       isRestday: state.isRestDay,
@@ -281,9 +282,13 @@ export const OvertimeAccomplishmentModal = ({ modalState, setModalState, closeMo
                         />
                       ) : null}
 
-                      {/* Scheduled OT but IVMS is incomplete/empty - for Office, Field, Pumping*/}
+                      {/* Scheduled OT but IVMS/DTR is incomplete/empty - for Office, Field, Pumping*/}
                       {overtimeAccomplishmentDetails.plannedDate > overtimeAccomplishmentDetails.dateOfOTApproval &&
-                      overtimeAccomplishmentDetails.entriesForTheDay.length <= 0 ? (
+                      overtimeAccomplishmentDetails.entriesForTheDay.length <= 0 &&
+                      !dtr.timeIn &&
+                      !dtr.timeOut &&
+                      !dtr.lunchIn &&
+                      !dtr.lunchOut ? (
                         <AlertNotification
                           alertType="error"
                           notifMessage={
@@ -441,6 +446,13 @@ export const OvertimeAccomplishmentModal = ({ modalState, setModalState, closeMo
                                   </div>
                                 );
                               })
+                          ) : dtr.timeIn || dtr.timeOut || dtr.lunchOut || dtr.lunchIn ? (
+                            <>
+                              {dtr.timeIn ? <label className="text-md font-medium ">{dtr.timeIn}</label> : null}
+                              {dtr.lunchOut ? <label className="text-md font-medium ">{dtr.lunchOut}</label> : null}
+                              {dtr.lunchIn ? <label className="text-md font-medium ">{dtr.lunchIn}</label> : null}
+                              {dtr.timeOut ? <label className="text-md font-medium ">{dtr.timeOut}</label> : null}
+                            </>
                           ) : (
                             <label className="text-md font-medium ">None Found</label>
                           )}
@@ -705,7 +717,11 @@ export const OvertimeAccomplishmentModal = ({ modalState, setModalState, closeMo
                     isNaN(finalEncodedHours) ||
                     //if scheduled/future OT but no time logs in array
                     (overtimeAccomplishmentDetails.plannedDate > overtimeAccomplishmentDetails.dateOfOTApproval &&
-                      overtimeAccomplishmentDetails.entriesForTheDay.length <= 0)
+                      overtimeAccomplishmentDetails.entriesForTheDay.length <= 0 &&
+                      !dtr.timeIn &&
+                      !dtr.timeOut &&
+                      !dtr.lunchIn &&
+                      !dtr.lunchOut)
                       ? true
                       : false
                   }
