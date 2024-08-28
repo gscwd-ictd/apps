@@ -486,7 +486,6 @@ export const TrainingDetailsModal = ({ modalState, setModalState, closeModalActi
 
               {swrNominatedEmployee && swrNominatedEmployee?.length > 0 ? (
                 <DataTablePortal
-                  // onRowClick={(row) => renderRowActions(row.original as Array<NominatedEmployees>)}
                   textSize={'text-md'}
                   model={submittedNominations}
                   showGlobalFilter={false}
@@ -496,7 +495,6 @@ export const TrainingDetailsModal = ({ modalState, setModalState, closeModalActi
               ) : (
                 <>
                   <DataTablePortal
-                    // onRowClick={(row) => renderRowActions(row.original as Array<NominatedEmployees>)}
                     textSize={'text-md'}
                     model={unsubmittedNominations}
                     showGlobalFilter={false}
@@ -504,7 +502,6 @@ export const TrainingDetailsModal = ({ modalState, setModalState, closeModalActi
                     paginate={true}
                   />
                   <DataTablePortal
-                    // onRowClick={(row) => renderRowActions(row.original as Array<NominatedEmployees>)}
                     textSize={'text-md'}
                     model={unsubmittedAuxiliary}
                     showGlobalFilter={false}
@@ -513,128 +510,6 @@ export const TrainingDetailsModal = ({ modalState, setModalState, closeModalActi
                   />
                 </>
               )}
-
-              {/* <div className="flex flex-col md:gap-2 justify-between items-start md:items-start">
-                <div className="w-full overflow-x-auto">
-                  <table className="w-screen md:w-full border border-separate bg-slate-50 border-spacing-0 rounded-md text-slate-500">
-                    <thead className="border-0 ">
-                      <tr className="border-l border-r">
-                        <th
-                          colSpan={3}
-                          className="px-10 py-2 text-md text-center items-center md:px-6 md:text-md font-medium border-b"
-                        >
-                          Nominated Employee(s)
-                        </th>
-                      </tr>
-
-                      {nominatedEmployeeList?.length > 0 ? (
-                        <tr className="border-l border-r">
-                          <td className={`px-2 w-1/2 text-center border-b border-r text-md`}>Name</td>
-                          <td className={`px-2 w-24 text-center border-b border-r text-md`}>Status</td>
-                          <td className={`px-2 w-auto text-center border-b text-md`}>Remarks</td>
-                        </tr>
-                      ) : nominatedEmployees?.length > 0 ? (
-                        <tr className="border-l border-r">
-                          <td colSpan={1} className={`px-2 text-center border-b border-r text-md w-12`}>
-                            No.
-                          </td>
-                          <td colSpan={2} className={`px-2 text-center border-b text-md`}>
-                            Name
-                          </td>
-                        </tr>
-                      ) : null}
-                    </thead>
-                    <tbody className="text-md text-center ">
-                      {nominatedEmployeeList?.length > 0 ? (
-                        nominatedEmployeeList.map((employees, index) =>
-                          employees.nomineeType === NomineeType.NOMINEE ? (
-                            <tr key={index} className="border-l border-r">
-                              <td className={`px-2 py-1 text-start border-r border-b rounded-bl-md`}>
-                                {employees.name}
-                              </td>
-                              <td className={`px-2 py-1 text-center border-r border-b`}>
-                                {UseRenderTrainingNomineeStatus(employees.status)}
-                              </td>
-                              <td className={`px-2 py-1 text-start border-b rounded-br-md`}>{employees.remarks}</td>
-                            </tr>
-                          ) : null
-                        )
-                      ) : nominatedEmployees?.length > 0 ? (
-                        nominatedEmployees.map((employees, index) => {
-                          return (
-                            <tr key={index} className="border-l border-r">
-                              <td
-                                colSpan={1}
-                                className={`px-2 text-start border-r ${
-                                  nominatedEmployees.length === index + 1 ? '' : 'border-b'
-                                }`}
-                              >
-                                {`${index + 1}.`}
-                              </td>
-                              <td
-                                colSpan={2}
-                                className={`px-2 text-start ${
-                                  nominatedEmployees.length === index + 1 ? '' : 'border-b'
-                                }`}
-                              >
-                                {employees.label}
-                              </td>
-                            </tr>
-                          );
-                        })
-                      ) : (
-                        <tr className="border-0">
-                          <td colSpan={3}>NO EMPLOYEE NOMINATED</td>
-                        </tr>
-                      )}
-                    </tbody>
-                  </table>
-                </div>
-              </div> */}
-              {/* <div className="flex flex-col md:gap-2 justify-between items-start md:items-start pt-2">
-                <div className="w-full overflow-x-auto">
-                  <table className="w-screen md:w-full border border-separate bg-slate-50 border-spacing-0 rounded-md text-slate-500">
-                    <thead className="border-0">
-                      <tr>
-                        <th className="px-10 py-2 text-md text-center items-center md:px-6 md:text-md font-medium border-b">
-                          Auxiliary Employee(s)
-                        </th>
-                      </tr>
-                    </thead>
-                    <tbody className="text-md text-center ">
-                      {nominatedEmployeeList?.length > 0 ? (
-                        nominatedEmployeeList.map((employees, index) =>
-                          employees.nomineeType === NomineeType.STAND_IN ? (
-                            <tr key={index}>
-                              <td className={`px-2 py-1 text-start border-b border-r rounded-bl-md`}>
-                                {employees.name}
-                              </td>
-                            </tr>
-                          ) : null
-                        )
-                      ) : auxiliaryEmployees?.length > 0 ? (
-                        auxiliaryEmployees.map((employees, index) => {
-                          return (
-                            <tr key={index} className="border-l border-r">
-                              <td
-                                className={`px-2 text-start ${
-                                  auxiliaryEmployees.length === index + 1 ? '' : 'border-b'
-                                }`}
-                              >
-                                {employees.label}
-                              </td>
-                            </tr>
-                          );
-                        })
-                      ) : (
-                        <tr className="border-0">
-                          <td>NO EMPLOYEE NOMINATED</td>
-                        </tr>
-                      )}
-                    </tbody>
-                  </table>
-                </div>
-              </div> */}
             </div>
           </div>
         </Modal.Body>
