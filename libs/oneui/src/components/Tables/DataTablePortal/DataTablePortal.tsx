@@ -30,9 +30,9 @@ export const DataTablePortal = <T extends unknown>({
         {showGlobalFilter ? <GlobalFilterPortal model={model} /> : null}
       </div>
 
-      <div className="order-2 w-full py-5 column-filter-box-wrapper">
+      <div className="order-2 w-full  column-filter-box-wrapper">
         {showColumnFilter ? (
-          <>
+          <div className="py-5">
             <p className={`pb-1 text-md`}>Filters:</p>
             {model?.getHeaderGroups().map((headerGroup) => (
               <div key={headerGroup.id} className="flex flex-wrap items-center">
@@ -60,7 +60,7 @@ export const DataTablePortal = <T extends unknown>({
                 </div>
               </div>
             ))}
-          </>
+          </div>
         ) : null}
       </div>
 
@@ -158,7 +158,7 @@ export const DataTablePortal = <T extends unknown>({
               <div>
                 <nav className="inline-flex -space-x-px rounded-md shadow-sm isolate" aria-label="Pagination">
                   <button
-                    className="relative inline-flex items-center px-2 py-2 text-md font-medium text-gray-500 bg-white border border-gray-300 rounded-l-md hover:bg-gray-50 "
+                    className="cursor-pointer relative inline-flex items-center px-2 py-2 text-md font-medium text-gray-500 bg-white border border-gray-300 rounded-l-md hover:bg-gray-50 "
                     onClick={() => model.previousPage()}
                     disabled={!model.getCanPreviousPage()}
                   >
@@ -166,7 +166,7 @@ export const DataTablePortal = <T extends unknown>({
                     {'Previous'}
                   </button>
                   <button
-                    className="relative inline-flex items-center px-2 py-2 text-md font-medium text-gray-500 bg-white border border-gray-300 rounded-r-md hover:bg-gray-50 "
+                    className="cursor-pointer relative inline-flex items-center px-2 py-2 text-md font-medium text-gray-500 bg-white border border-gray-300 rounded-r-md hover:bg-gray-50 "
                     onClick={() => model.nextPage()}
                     disabled={!model.getCanNextPage()}
                   >
@@ -179,10 +179,10 @@ export const DataTablePortal = <T extends unknown>({
 
             {/* Page number */}
             <div className="hidden text-md text-gray-700 sm:flex">
-              <span className="pr-1">Page</span>
-              <strong>
+              <div className="pr-1">Page</div>
+              <div className="whitespace-nowrap">
                 {model.getState().pagination.pageIndex + 1} of {model.getPageCount()}
-              </strong>
+              </div>
             </div>
 
             {/* Paginate size */}
