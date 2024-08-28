@@ -91,7 +91,12 @@ export const useDataTable = <T>(options: DataTableOptions<T>, type: ApprovalType
       },
       columnFilters: [
         {
-          id: Approvaltype !== ApprovalType.TRAINING_NOMINATION ? 'status' : 'nominationStatus',
+          id:
+            Approvaltype !== ApprovalType.TRAINING_NOMINATION && Approvaltype !== ApprovalType.NA
+              ? 'status'
+              : Approvaltype === ApprovalType.TRAINING_NOMINATION
+              ? 'nominationStatus'
+              : 'label',
           value:
             Approvaltype === ApprovalType.PASSSLIP
               ? PassSlipStatus.FOR_SUPERVISOR_APPROVAL
@@ -111,6 +116,8 @@ export const useDataTable = <T>(options: DataTableOptions<T>, type: ApprovalType
               ? TrainingStatus.GM_APPROVAL
               : Approvaltype === ApprovalType.TRAINING_NOMINATION
               ? TrainingNominationStatus.NOMINATION_PENDING
+              : Approvaltype === ApprovalType.NOMINEE_STATUS
+              ? ''
               : '',
         },
       ],

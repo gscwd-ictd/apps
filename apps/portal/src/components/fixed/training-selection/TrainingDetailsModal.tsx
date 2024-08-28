@@ -14,6 +14,13 @@ import { ConfirmationNominationModal } from './ConfirmationModal';
 import UseRenderTrainingNomineeStatus from 'apps/portal/src/utils/functions/RenderTrainingNomineeStatus';
 import SkipNominationModal from './SkipNominationModal';
 import { useEmployeeStore } from 'apps/portal/src/store/employee.store';
+import { DataTablePortal, useDataTable } from 'libs/oneui/src/components/Tables/DataTablePortal';
+import { NominatedEmployees } from 'libs/utils/src/lib/types/training.type';
+import { createColumnHelper } from '@tanstack/react-table';
+import { TextSize } from 'libs/utils/src/lib/enums/text-size.enum';
+import { ApprovalType } from 'libs/utils/src/lib/enums/approval-type.enum';
+import UseRenderTrainingNomineeType from 'apps/portal/src/utils/functions/RenderTrainingNomineeType';
+import { SelectOption } from 'libs/utils/src/lib/types/select.type';
 
 type ModalProps = {
   modalState: boolean;
@@ -162,6 +169,83 @@ export const TrainingDetailsModal = ({ modalState, setModalState, closeModalActi
   };
 
   const { windowWidth } = UseWindowDimensions();
+
+  // Define table columns
+  const columnHelper = createColumnHelper<NominatedEmployees>();
+  const columns = [
+    columnHelper.accessor('name', {
+      header: 'Name',
+      cell: (info) => info.getValue(),
+      enableColumnFilter: false,
+    }),
+    columnHelper.accessor('status', {
+      header: 'Status',
+      // enableColumnFilter: false,
+      cell: (info) => UseRenderTrainingNomineeStatus(info.getValue(), TextSize.TEXT_SM),
+    }),
+    columnHelper.accessor('nomineeType', {
+      header: 'Type',
+      // enableColumnFilter: false,
+      cell: (info) => UseRenderTrainingNomineeType(info.getValue(), TextSize.TEXT_SM),
+    }),
+    columnHelper.accessor('remarks', {
+      header: 'Remarks',
+      enableColumnFilter: false,
+      cell: (info) => info.getValue(),
+    }),
+  ];
+
+  const columnHelperNomination = createColumnHelper<SelectOption>();
+  // for nominated employees columns
+  const columnsNomination = [
+    columnHelperNomination.accessor('label', {
+      header: 'Name',
+      cell: (info) => info.getValue(),
+    }),
+    columnHelperNomination.accessor('value', {
+      header: 'Type',
+      cell: (info) => UseRenderTrainingNomineeType(NomineeType.NOMINEE, TextSize.TEXT_SM),
+    }),
+  ];
+
+  // for auxiliary/stand in columns
+  const columnsAuxiliary = [
+    columnHelperNomination.accessor('label', {
+      header: 'Name',
+      cell: (info) => info.getValue(),
+    }),
+    columnHelperNomination.accessor('value', {
+      header: 'Type',
+      cell: (info) => UseRenderTrainingNomineeType(NomineeType.STAND_IN, TextSize.TEXT_SM),
+    }),
+  ];
+
+  // React Table initialization
+  // list of submitted nominated employees
+  const { table: submittedNominations } = useDataTable(
+    {
+      columns: columns,
+      data: swrNominatedEmployee,
+    },
+    ApprovalType.NOMINEE_STATUS
+  );
+
+  //array of unsbubmitted nominations
+  const { table: unsubmittedNominations } = useDataTable(
+    {
+      columns: columnsNomination,
+      data: nominatedEmployees,
+    },
+    ApprovalType.NA
+  );
+  const { table: unsubmittedAuxiliary } = useDataTable(
+    {
+      columns: columnsAuxiliary,
+      data: auxiliaryEmployees,
+    },
+    ApprovalType.NA
+  );
+
   return (
     <>
       {/* failed to load previously nominated employee list */}
@@ -399,7 +483,38 @@ export const TrainingDetailsModal = ({ modalState, setModalState, closeModalActi
                   ) : null}
                 </div>
               </div>
-              <div className="flex flex-col md:gap-2 justify-between items-start md:items-start">
+
+              {swrNominatedEmployee && swrNominatedEmployee?.length > 0 ? (
+                <DataTablePortal
+                  // onRowClick={(row) => renderRowActions(row.original as Array<NominatedEmployees>)}
+                  textSize={'text-md'}
+                  model={submittedNominations}
+                  showGlobalFilter={false}
+                  showColumnFilter={false}
+                  paginate={true}
+                />
+              ) : (
+                <>
+                  <DataTablePortal
+                    // onRowClick={(row) => renderRowActions(row.original as Array<NominatedEmployees>)}
+                    textSize={'text-md'}
+                    model={unsubmittedNominations}
+                    showGlobalFilter={false}
+                    showColumnFilter={false}
+                    paginate={true}
+                  />
+                  <DataTablePortal
+                    // onRowClick={(row) => renderRowActions(row.original as Array<NominatedEmployees>)}
+                    textSize={'text-md'}
+                    model={unsubmittedAuxiliary}
+                    showGlobalFilter={false}
+                    showColumnFilter={false}
+                    paginate={false}
+                  />
+                </>
+              )}
+
+              {/* <div className="flex flex-col md:gap-2 justify-between items-start md:items-start">
                 <div className="w-full overflow-x-auto">
                   <table className="w-screen md:w-full border border-separate bg-slate-50 border-spacing-0 rounded-md text-slate-500">
                     <thead className="border-0 ">
@@ -475,8 +590,8 @@ export const TrainingDetailsModal = ({ modalState, setModalState, closeModalActi
                     </tbody>
                   </table>
                 </div>
-              </div>
-              <div className="flex flex-col md:gap-2 justify-between items-start md:items-start pt-2">
+              </div> */}
+              {/* <div className="flex flex-col md:gap-2 justify-between items-start md:items-start pt-2">
                 <div className="w-full overflow-x-auto">
                   <table className="w-screen md:w-full border border-separate bg-slate-50 border-spacing-0 rounded-md text-slate-500">
                     <thead className="border-0">
@@ -519,7 +634,7 @@ export const TrainingDetailsModal = ({ modalState, setModalState, closeModalActi
                     </tbody>
                   </table>
                 </div>
-              </div>
+              </div> */}
             </div>
           </div>
         </Modal.Body>
