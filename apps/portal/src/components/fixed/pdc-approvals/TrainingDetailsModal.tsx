@@ -403,31 +403,6 @@ export const TrainingDetailsModal = ({ modalState, setModalState, closeModalActi
             />
           </CaptchaModal>
 
-          {/* <OtpModal modalState={otpPdcModalIsOpen} setModalState={setOtpPdcModalIsOpen} title={'TRAINING APPROVAL OTP'}>
-            <ApprovalOtpContentsPdc
-              mobile={employeeDetail.profile.mobileNumber}
-              employeeId={employeeDetail.user._id}
-              action={PdcApprovalAction.APPROVE}
-              tokenId={individualTrainingDetails.trainingId}
-              otpName={`${
-                employeeDetail.employmentDetails.isPdcSecretariat
-                  ? 'pdcSecretariatApproval'
-                  : employeeDetail.employmentDetails.isPdcChairman &&
-                    !isEqual(employeeDetail.employmentDetails.userRole, UserRole.GENERAL_MANAGER) &&
-                    !isEqual(employeeDetail.employmentDetails.userRole, UserRole.OIC_GENERAL_MANAGER)
-                  ? 'pdcChairmanApproval'
-                  : !employeeDetail.employmentDetails.isPdcChairman &&
-                    (isEqual(employeeDetail.employmentDetails.userRole, UserRole.GENERAL_MANAGER) ||
-                      isEqual(employeeDetail.employmentDetails.userRole, UserRole.OIC_GENERAL_MANAGER))
-                  ? 'pdcGeneralManagerApproval'
-                  : employeeDetail.employmentDetails.isPdcChairman &&
-                    (isEqual(employeeDetail.employmentDetails.userRole, UserRole.GENERAL_MANAGER) ||
-                      isEqual(employeeDetail.employmentDetails.userRole, UserRole.OIC_GENERAL_MANAGER))
-                  ? 'pdcGmAndChairmanApproval'
-                  : 'N/A'
-              }`}
-            />
-          </OtpModal> */}
           <ConfirmationPdcModal
             modalState={confirmTrainingModalIsOpen}
             setModalState={setConfirmTrainingModalIsOpen}
