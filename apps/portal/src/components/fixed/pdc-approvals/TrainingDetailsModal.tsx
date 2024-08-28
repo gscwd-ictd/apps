@@ -22,6 +22,13 @@ import { SubmitHandler, useForm } from 'react-hook-form';
 import { SelectOption } from 'libs/utils/src/lib/types/select.type';
 import { UserRole } from 'libs/utils/src/lib/enums/user-roles.enum';
 import { ApprovalCaptcha } from './PdcApprovalOtp/ApprovalCaptcha';
+import { createColumnHelper } from '@tanstack/react-table';
+import { NominatedEmployees } from 'libs/utils/src/lib/types/training.type';
+import UseRenderTrainingNomineeStatus from 'apps/portal/src/utils/functions/RenderTrainingNomineeStatus';
+import UseRenderTrainingNomineeType from 'apps/portal/src/utils/functions/RenderTrainingNomineeType';
+import { TextSize } from 'libs/utils/src/lib/enums/text-size.enum';
+import { DataTablePortal, useDataTable } from 'libs/oneui/src/components/Tables/DataTablePortal';
+import { ApprovalType } from 'libs/utils/src/lib/enums/approval-type.enum';
 
 type ModalProps = {
   modalState: boolean;
@@ -91,6 +98,36 @@ export const TrainingDetailsModal = ({ modalState, setModalState, closeModalActi
   };
 
   const { windowWidth } = UseWindowDimensions();
+
+  // Define table columns
+  const columnHelper = createColumnHelper<NominatedEmployees>();
+  const columns = [
+    columnHelper.accessor('name', {
+      header: 'Name',
+      cell: (info) => info.getValue(),
+      enableColumnFilter: false,
+    }),
+    columnHelper.accessor('status', {
+      header: 'Status',
+      // enableColumnFilter: false,
+      cell: (info) => UseRenderTrainingNomineeStatus(info.getValue(), TextSize.TEXT_SM),
+    }),
+    columnHelper.accessor('remarks', {
+      header: 'Remarks',
+      enableColumnFilter: false,
+      cell: (info) => info.getValue(),
+    }),
+  ];
+
+  // React Table initialization
+  // list of submitted nominated employees
+  const { table: submittedNominations } = useDataTable(
+    {
+      columns: columns,
+      data: individualTrainingDetails.nominees,
+    },
+    ApprovalType.NOMINEE_STATUS
+  );
 
   return (
     <>
@@ -261,69 +298,13 @@ export const TrainingDetailsModal = ({ modalState, setModalState, closeModalActi
               individualTrainingDetails.status != TrainingStatus.ON_GOING_NOMINATION &&
               individualTrainingDetails.status != TrainingStatus.NOMINATION_DONE &&
               individualTrainingDetails.status != TrainingStatus.PENDING ? (
-                <div className="flex flex-col md:gap-2 justify-between items-start md:items-start">
-                  <div className="w-full overflow-x-auto">
-                    <table className="w-screen md:w-full border border-separate bg-slate-50 border-spacing-0 rounded-md text-slate-500">
-                      <thead className="border-0 ">
-                        <tr className="border-l border-r">
-                          <th
-                            colSpan={4}
-                            className="px-10 py-2 text-sm text-center items-center md:px-6 md:text-md font-medium border-b"
-                          >
-                            Nominated Employee(s)
-                          </th>
-                        </tr>
-
-                        {individualTrainingDetails.nominees?.length > 0 ? (
-                          <tr className="border-l border-r">
-                            <td className={`px-2 w-12 text-center border-b border-r text-sm`}>No.</td>
-                            <td className={`px-2 text-center border-b border-r text-sm`}>Name</td>
-                            <td className={`px-2 text-center border-b border-r text-sm`}>Designation</td>
-                            <td className={`px-2 text-center border-b text-sm`}>Remarks</td>
-                          </tr>
-                        ) : null}
-                      </thead>
-                      <tbody className="text-sm text-center ">
-                        {individualTrainingDetails.nominees?.length > 0 ? (
-                          individualTrainingDetails.nominees.map((employees, index) => (
-                            <tr key={index} className="border-l border-r">
-                              <td
-                                className={`px-2 py-1 text-start border-r ${
-                                  individualTrainingDetails.nominees.length === index + 1 ? '' : 'border-b'
-                                }`}
-                              >{`${index + 1}.`}</td>
-                              <td
-                                className={`px-2 py-1 text-start border-r ${
-                                  individualTrainingDetails.nominees.length === index + 1 ? '' : 'border-b'
-                                }`}
-                              >
-                                {employees.name}
-                              </td>
-                              <td
-                                className={`px-2 py-1 text-start border-r ${
-                                  individualTrainingDetails.nominees.length === index + 1 ? '' : 'border-b'
-                                }`}
-                              >
-                                {employees.assignment}
-                              </td>
-                              <td
-                                className={`px-2 text-start ${
-                                  individualTrainingDetails.nominees.length === index + 1 ? '' : 'border-b'
-                                }`}
-                              >
-                                {employees.remarks}
-                              </td>
-                            </tr>
-                          ))
-                        ) : (
-                          <tr className="border-0">
-                            <td colSpan={3}>NO EMPLOYEE NOMINATED</td>
-                          </tr>
-                        )}
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
+                <DataTablePortal
+                  textSize={'text-md'}
+                  model={submittedNominations}
+                  showGlobalFilter={false}
+                  showColumnFilter={false}
+                  paginate={true}
+                />
               ) : null}
 
               {individualTrainingDetails.status === TrainingStatus.GM_DECLINED ||
@@ -422,31 +403,6 @@ export const TrainingDetailsModal = ({ modalState, setModalState, closeModalActi
             />
           </CaptchaModal>
 
-          {/* <OtpModal modalState={otpPdcModalIsOpen} setModalState={setOtpPdcModalIsOpen} title={'TRAINING APPROVAL OTP'}>
-            <ApprovalOtpContentsPdc
-              mobile={employeeDetail.profile.mobileNumber}
-              employeeId={employeeDetail.user._id}
-              action={PdcApprovalAction.APPROVE}
-              tokenId={individualTrainingDetails.trainingId}
-              otpName={`${
-                employeeDetail.employmentDetails.isPdcSecretariat
-                  ? 'pdcSecretariatApproval'
-                  : employeeDetail.employmentDetails.isPdcChairman &&
-                    !isEqual(employeeDetail.employmentDetails.userRole, UserRole.GENERAL_MANAGER) &&
-                    !isEqual(employeeDetail.employmentDetails.userRole, UserRole.OIC_GENERAL_MANAGER)
-                  ? 'pdcChairmanApproval'
-                  : !employeeDetail.employmentDetails.isPdcChairman &&
-                    (isEqual(employeeDetail.employmentDetails.userRole, UserRole.GENERAL_MANAGER) ||
-                      isEqual(employeeDetail.employmentDetails.userRole, UserRole.OIC_GENERAL_MANAGER))
-                  ? 'pdcGeneralManagerApproval'
-                  : employeeDetail.employmentDetails.isPdcChairman &&
-                    (isEqual(employeeDetail.employmentDetails.userRole, UserRole.GENERAL_MANAGER) ||
-                      isEqual(employeeDetail.employmentDetails.userRole, UserRole.OIC_GENERAL_MANAGER))
-                  ? 'pdcGmAndChairmanApproval'
-                  : 'N/A'
-              }`}
-            />
-          </OtpModal> */}
           <ConfirmationPdcModal
             modalState={confirmTrainingModalIsOpen}
             setModalState={setConfirmTrainingModalIsOpen}

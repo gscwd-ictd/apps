@@ -390,8 +390,6 @@ export const DtrPdf: FunctionComponent<DtrPdfProps> = ({ employeeData, employeeD
                           // time in color
                           if (log.isRestDay === true) {
                             timeInColor = gray;
-                          } else if (log.isHoliday === true) {
-                            timeInColor = red;
                           } else {
                             compareIfLate(log.day, log.dtr.timeIn, log.schedule.timeIn) === true
                               ? (timeInColor = yellow)
@@ -418,8 +416,6 @@ export const DtrPdf: FunctionComponent<DtrPdfProps> = ({ employeeData, employeeD
                           // time out color
                           if (log.isRestDay === true) {
                             timeOutColor = gray;
-                          } else if (log.isHoliday === true) {
-                            timeInColor = red;
                           } else {
                             compareIfEarly(log.day, log.dtr.timeOut, log.schedule.timeOut) === true
                               ? (timeOutColor = yellow)
