@@ -45,6 +45,7 @@ export const TrainingNominationModal = ({
   const [combinedNominatedEmployees, setCombinedNominatedEmployees] = useState<Array<SelectOption>>([]); // pool of selected and auxiliary employees
   const [isDuplicatedNominee, setIsDuplicatedNominee] = useState<boolean>(false);
   const [initialLoad, setInitialLoad] = useState<boolean>(true);
+  const [selectedAll, setSelectedAll] = useState<boolean>(false);
 
   useEffect(() => {
     if (trainingNominationModalIsOpen) {
@@ -79,6 +80,24 @@ export const TrainingNominationModal = ({
     }, 200);
   };
 
+  const handleSelectAll = () => {
+    setSelectedEmployees(employeeList);
+    setSelectedAuxiliaryEmployees([]);
+    setSelectedAll(true);
+  };
+
+  const handleClearAll = () => {
+    setSelectedEmployees([]);
+    setSelectedAuxiliaryEmployees([]);
+    setSelectedAll(false);
+  };
+
+  useEffect(() => {
+    if (selectedEmployees.length <= 0) {
+      setSelectedAll(false);
+    }
+  }, [selectedEmployees]);
+
   useEffect(() => {
     if (!initialLoad && trainingNominationModalIsOpen) {
       const uniqueNames = Array.from(new Set([...selectedEmployees, ...selectedAuxiliaryEmployees]));
@@ -88,23 +107,6 @@ export const TrainingNominationModal = ({
 
   useEffect(() => {
     if (!initialLoad && trainingNominationModalIsOpen) {
-      //remove employee from pool
-      // for (let a = 0; a < combinedNominatedEmployees.length; a++) {
-      //   if (employeePool.some((e) => e.value === combinedNominatedEmployees[a].value)) {
-      //     setEmployeePool(employeePool.filter((e) => e.value !== combinedNominatedEmployees[a].value));
-      //   }
-      // }
-      // // add back employee
-      // for (let i = 0; i < employeeList.length; i++) {
-      //   if (!employeePool.includes(employeeList[i]) && !combinedNominatedEmployees.includes(employeeList[i])) {
-      //     const uniqueNames = Array.from(new Set([...employeePool, employeeList[i]]));
-      //     setEmployeePool(
-      //       uniqueNames.sort(function (a, b) {
-      //         return a.label.localeCompare(b.label);
-      //       })
-      //     );
-      //   }
-      // }
       setEmployeePool(employeeList.filter((item) => !combinedNominatedEmployees.includes(item)));
     }
   }, [combinedNominatedEmployees]);
@@ -200,7 +202,7 @@ export const TrainingNominationModal = ({
 
                 <MySelectList
                   isSelectedHidden={true}
-                  // withSearchBar={true}
+                  withSearchBar={true}
                   id="employees"
                   label=""
                   multiple
@@ -217,7 +219,7 @@ export const TrainingNominationModal = ({
 
                 <MySelectList
                   isSelectedHidden={true}
-                  // withSearchBar={true}
+                  withSearchBar={true}
                   id="employees"
                   label=""
                   multiple
@@ -231,24 +233,32 @@ export const TrainingNominationModal = ({
         </Modal.Body>
         <Modal.Footer>
           <div className="flex justify-end gap-2 px-4">
-            <div className="min-w-[6rem] max-w-auto">
-              <Button
-                onClick={handleSubmit}
-                variant={'primary'}
-                size={'md'}
-                loading={false}
-                form="SubmitNomination"
-                type="submit"
-                disabled={
-                  selectedAuxiliaryEmployees.length > 2 ||
-                  selectedEmployees.length > individualTrainingDetails.numberOfSlots
-                    ? true
-                    : false
-                }
-              >
-                Submit
+            {selectedAll ? (
+              <Button onClick={handleClearAll} variant={'warning'} size={'md'} loading={false} type="button">
+                Clear All
               </Button>
-            </div>
+            ) : (
+              <Button onClick={handleSelectAll} variant={'primary'} size={'md'} loading={false} type="button">
+                Select All
+              </Button>
+            )}
+
+            <Button
+              onClick={handleSubmit}
+              variant={'primary'}
+              size={'md'}
+              loading={false}
+              form="SubmitNomination"
+              type="submit"
+              disabled={
+                selectedAuxiliaryEmployees.length > 2 ||
+                selectedEmployees.length > individualTrainingDetails.numberOfSlots
+                  ? true
+                  : false
+              }
+            >
+              Submit
+            </Button>
           </div>
         </Modal.Footer>
       </Modal>
