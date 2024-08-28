@@ -20,6 +20,7 @@ import { useDtrStore } from 'apps/portal/src/store/dtr.store';
 import { fetchWithToken } from 'apps/portal/src/utils/hoc/fetcher';
 import { isEmpty } from 'lodash';
 import useSWR from 'swr';
+import { UseTwelveHourFormat } from 'libs/utils/src/lib/functions/TwelveHourFormatter';
 
 type ModalProps = {
   modalState: boolean;
@@ -424,7 +425,7 @@ export const OvertimeAccomplishmentModal = ({ modalState, setModalState, closeMo
 
                       {/* Day 1 IVMS Entries */}
                       <div className="flex flex-col justify-start items-start w-full sm:w-1/2 px-0.5 pb-3 ">
-                        <label className="text-slate-500 text-md whitespace-nowrap pb-0.5">IVMS Entries:</label>
+                        <label className="text-slate-500 text-md whitespace-nowrap pb-0.5">IVMS/DTR Entries:</label>
                         <div className="w-auto ml-5">
                           {overtimeAccomplishmentDetails.entriesForTheDay &&
                           overtimeAccomplishmentDetails.entriesForTheDay.length > 0 &&
@@ -447,12 +448,28 @@ export const OvertimeAccomplishmentModal = ({ modalState, setModalState, closeMo
                                 );
                               })
                           ) : dtr.timeIn || dtr.timeOut || dtr.lunchOut || dtr.lunchIn ? (
-                            <>
-                              {dtr.timeIn ? <label className="text-md font-medium ">{dtr.timeIn}</label> : null}
-                              {dtr.lunchOut ? <label className="text-md font-medium ">{dtr.lunchOut}</label> : null}
-                              {dtr.lunchIn ? <label className="text-md font-medium ">{dtr.lunchIn}</label> : null}
-                              {dtr.timeOut ? <label className="text-md font-medium ">{dtr.timeOut}</label> : null}
-                            </>
+                            <div className="flex flex-col ">
+                              {dtr.timeIn ? (
+                                <label className="text-md font-medium ">
+                                  {DateFormatter(dtr.dtrDate, 'MM-DD-YYYY')} {UseTwelveHourFormat(dtr.timeIn)}
+                                </label>
+                              ) : null}
+                              {dtr.lunchOut ? (
+                                <label className="text-md font-medium ">
+                                  {DateFormatter(dtr.dtrDate, 'MM-DD-YYYY')} {UseTwelveHourFormat(dtr.lunchOut)}
+                                </label>
+                              ) : null}
+                              {dtr.lunchIn ? (
+                                <label className="text-md font-medium ">
+                                  {DateFormatter(dtr.dtrDate, 'MM-DD-YYYY')} {UseTwelveHourFormat(dtr.lunchIn)}
+                                </label>
+                              ) : null}
+                              {dtr.timeOut ? (
+                                <label className="text-md font-medium ">
+                                  {DateFormatter(dtr.dtrDate, 'MM-DD-YYYY')} {UseTwelveHourFormat(dtr.timeOut)}
+                                </label>
+                              ) : null}
+                            </div>
                           ) : (
                             <label className="text-md font-medium ">None Found</label>
                           )}
