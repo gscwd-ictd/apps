@@ -182,7 +182,7 @@ export type MonitoringLeave = EmployeeLeave & {
     supervisorId: string;
     supervisorName: string;
   };
-  isLateFiling: boolean;
+  isLateFiling: string;
 };
 
 export type SupervisorLeaveDetails = {
