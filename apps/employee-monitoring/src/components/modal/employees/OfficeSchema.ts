@@ -45,9 +45,12 @@ export const OfficeSchema = yup.object().shape({
   companyId: yup.string(),
   dtrDate: yup.string(),
   withLunch: yup.boolean(),
-
-  //  time in
   timeIn: yup.string(),
+  lunchOut: yup.string().notRequired().nullable(),
+  lunchIn: yup.string().notRequired().nullable(),
+  timeOut: yup.string(),
+
+  // TIME IN
   // timeIn: yup.string().when('withLunch', {
   //   is: true,
   //   then: yup
@@ -111,73 +114,74 @@ export const OfficeSchema = yup.object().shape({
   // }),
 
   // !isEmpty(watch('lunchIn')) ? true : false,
-  // lunch out
-  lunchOut: yup.string().when('withLunch', {
-    is: true,
-    then: yup
-      .string()
-      .required()
-      .nullable()
-      .label('Lunch out')
-      .test('lunch-out-test', (value, validationContext) => {
-        const {
-          createError,
-          parent: { timeIn, dtrDate, lunchIn, timeOut },
-        } = validationContext;
 
-        // if time in and value is not empty
-        if (!isEmpty(timeIn) && isEmpty(lunchIn) && isEmpty(timeOut) && !isEmpty(value)) {
-          // parse
-          if (parseDateIfAfter(dtrDate, value, timeIn) === false)
-            return createError({
-              message: 'Lunch out must be greater than time in!',
-            });
-          else return true;
-        }
+  // LUNCH OUT
+  // lunchOut: yup.string().when('withLunch', {
+  //   is: true,
+  //   then: yup
+  //     .string()
+  //     .required()
+  //     .nullable()
+  //     .label('Lunch out')
+  //     .test('lunch-out-test', (value, validationContext) => {
+  //       const {
+  //         createError,
+  //         parent: { timeIn, dtrDate, lunchIn, timeOut },
+  //       } = validationContext;
 
-        // if time in, lunchin value is not empty
-        else if (!isEmpty(timeIn) && !isEmpty(lunchIn) && !isEmpty(value)) {
-          // parse between
-          if (parseDateIfBetween(dtrDate, value, timeIn, lunchIn) === false) {
-            return createError({
-              message: 'Lunch out must be in between time in and lunch in!',
-            });
-          } else return true;
-        }
+  //       // if time in and value is not empty
+  //       if (!isEmpty(timeIn) && isEmpty(lunchIn) && isEmpty(timeOut) && !isEmpty(value)) {
+  //         // parse
+  //         if (parseDateIfAfter(dtrDate, value, timeIn) === false)
+  //           return createError({
+  //             message: 'Lunch out must be greater than time in!',
+  //           });
+  //         else return true;
+  //       }
 
-        // if time in, lunchin value is not empty
-        else if (!isEmpty(timeIn) && isEmpty(lunchIn) && !isEmpty(timeOut) && !isEmpty(value)) {
-          // parse between
-          if (parseDateIfBetween(dtrDate, value, timeIn, timeOut) === false) {
-            return createError({
-              message: 'Lunch out must be in between time in and time out!',
-            });
-          } else return true;
-        }
+  //       // if time in, lunchin value is not empty
+  //       else if (!isEmpty(timeIn) && !isEmpty(lunchIn) && !isEmpty(value)) {
+  //         // parse between
+  //         if (parseDateIfBetween(dtrDate, value, timeIn, lunchIn) === false) {
+  //           return createError({
+  //             message: 'Lunch out must be in between time in and lunch in!',
+  //           });
+  //         } else return true;
+  //       }
 
-        // if time in, lunch in, time out is empty and value is not empty
-        else if (isEmpty(timeIn) && isEmpty(lunchIn) && isEmpty(timeOut) && !isEmpty(value)) {
-          // if valid return error
-          if (dayjs(dtrDate + ' ' + value).isValid() === false) {
-            return false;
-          } else return true;
-        }
-        // if time in is empty and lunch in has a value
-        else if (isEmpty(timeIn) && !isEmpty(lunchIn) && !isEmpty(value)) {
-          if (parseDateIfBefore(dtrDate, value, lunchIn) === false) {
-            return createError({
-              message: 'Lunch out must be lesser than lunch in!',
-            });
-          } else return true;
-        }
+  //       // if time in, lunchin value is not empty
+  //       else if (!isEmpty(timeIn) && isEmpty(lunchIn) && !isEmpty(timeOut) && !isEmpty(value)) {
+  //         // parse between
+  //         if (parseDateIfBetween(dtrDate, value, timeIn, timeOut) === false) {
+  //           return createError({
+  //             message: 'Lunch out must be in between time in and time out!',
+  //           });
+  //         } else return true;
+  //       }
 
-        // else
-        else if (isEmpty(value)) return true;
-      }),
-    otherwise: yup.string().notRequired().nullable(),
-  }),
+  //       // if time in, lunch in, time out is empty and value is not empty
+  //       else if (isEmpty(timeIn) && isEmpty(lunchIn) && isEmpty(timeOut) && !isEmpty(value)) {
+  //         // if valid return error
+  //         if (dayjs(dtrDate + ' ' + value).isValid() === false) {
+  //           return false;
+  //         } else return true;
+  //       }
+  //       // if time in is empty and lunch in has a value
+  //       else if (isEmpty(timeIn) && !isEmpty(lunchIn) && !isEmpty(value)) {
+  //         if (parseDateIfBefore(dtrDate, value, lunchIn) === false) {
+  //           return createError({
+  //             message: 'Lunch out must be lesser than lunch in!',
+  //           });
+  //         } else return true;
+  //       }
 
-  // lunch in
+  //       // else
+  //       else if (isEmpty(value)) return true;
+  //     }),
+  //   otherwise: yup.string().notRequired().nullable(),
+  // }),
+
+  // LUNCH IN
   // lunchIn: yup
   //   .string()
   //   .when('withLunch', {
@@ -245,66 +249,65 @@ export const OfficeSchema = yup.object().shape({
   //     otherwise: yup.string().notRequired().nullable(),
   //   }),
 
-  // lunch in
-  lunchIn: yup.string().when('withLunch', {
-    is: true,
-    then: yup
-      .string()
-      .required()
-      .nullable()
-      .label('Lunch in')
-      .test('test-lunch-in', (value, validationContext) => {
-        const {
-          createError,
-          parent: { dtrDate, timeIn, lunchOut, timeOut },
-        } = validationContext;
+  // LUNCH IN V2
+  // lunchIn: yup.string().when('withLunch', {
+  //   is: true,
+  //   then: yup
+  //     .string()
+  //     .required()
+  //     .nullable()
+  //     .label('Lunch in')
+  //     .test('test-lunch-in', (value, validationContext) => {
+  //       const {
+  //         createError,
+  //         parent: { dtrDate, timeIn, lunchOut, timeOut },
+  //       } = validationContext;
 
-        // if timeout and everything is empty and value is not empty
-        if (!isEmpty(timeOut) && isEmpty(lunchOut) && isEmpty(timeIn) && !isEmpty(value)) {
-          // parse
-          if (parseDateIfBefore(dtrDate, value, timeOut) === false)
-            return createError({
-              message: 'Lunch in must be lesser than time out!',
-            });
-          else return true;
-        }
+  //       // if timeout and everything is empty and value is not empty
+  //       if (!isEmpty(timeOut) && isEmpty(lunchOut) && isEmpty(timeIn) && !isEmpty(value)) {
+  //         // parse
+  //         if (parseDateIfBefore(dtrDate, value, timeOut) === false)
+  //           return createError({
+  //             message: 'Lunch in must be lesser than time out!',
+  //           });
+  //         else return true;
+  //       }
 
-        // if time out, lunch out, and value is not empty
-        else if (!isEmpty(timeOut) && !isEmpty(lunchOut) && !isEmpty(value)) {
-          // parse between
-          if (parseDateIfBetween(dtrDate, value, lunchOut, timeOut) === false) {
-            return createError({
-              message: 'Lunch in must be in between lunch out and time out!',
-            });
-          } else return true;
-        }
+  //       // if time out, lunch out, and value is not empty
+  //       else if (!isEmpty(timeOut) && !isEmpty(lunchOut) && !isEmpty(value)) {
+  //         // parse between
+  //         if (parseDateIfBetween(dtrDate, value, lunchOut, timeOut) === false) {
+  //           return createError({
+  //             message: 'Lunch in must be in between lunch out and time out!',
+  //           });
+  //         } else return true;
+  //       }
 
-        // if time time out, time in, and value is not empty
-        else if (!isEmpty(timeOut) && isEmpty(lunchOut) && !isEmpty(timeIn) && !isEmpty(value)) {
-          // parse between
-          if (parseDateIfBetween(dtrDate, value, timeIn, timeOut) === false) {
-            return createError({
-              message: 'Lunch out must be in between time in and time out!',
-            });
-          } else return true;
-        }
+  //       // if time time out, time in, and value is not empty
+  //       else if (!isEmpty(timeOut) && isEmpty(lunchOut) && !isEmpty(timeIn) && !isEmpty(value)) {
+  //         // parse between
+  //         if (parseDateIfBetween(dtrDate, value, timeIn, timeOut) === false) {
+  //           return createError({
+  //             message: 'Lunch out must be in between time in and time out!',
+  //           });
+  //         } else return true;
+  //       }
 
-        // if time in, lunch in, time out is empty and value is not empty
-        else if (isEmpty(timeIn) && isEmpty(lunchOut) && isEmpty(timeOut) && !isEmpty(value)) {
-          // if valid return error
-          if (dayjs(dtrDate + ' ' + value).isValid() === false) {
-            return false;
-          } else return true;
-        }
+  //       // if time in, lunch in, time out is empty and value is not empty
+  //       else if (isEmpty(timeIn) && isEmpty(lunchOut) && isEmpty(timeOut) && !isEmpty(value)) {
+  //         // if valid return error
+  //         if (dayjs(dtrDate + ' ' + value).isValid() === false) {
+  //           return false;
+  //         } else return true;
+  //       }
 
-        // else
-        else if (isEmpty(value)) return true;
-      }),
-    otherwise: yup.string().notRequired().nullable(),
-  }),
+  //       // else
+  //       else if (isEmpty(value)) return true;
+  //     }),
+  //   otherwise: yup.string().notRequired().nullable(),
+  // }),
 
-  // time out
-  timeOut: yup.string(),
+  // TIME OUT
   // timeOut: yup.string().when('withLunch', {
   //   is: true,
   //   then: yup
