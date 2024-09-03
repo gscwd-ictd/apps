@@ -412,10 +412,16 @@ export default function Calendar({
 
           <label className="text-center text-slate-500 text-sm border-slate-300 w-full">
             = {leaveDateFrom && leaveDateTo ? dayjs(`${leaveDateTo}`).diff(`${leaveDateFrom}`, 'day') + 1 : 0} Calendar
-            Day(s) - {holidayCount} Holiday(s) - {overlappingLeaveCount} Overlapping Leave(s) ={' '}
+            Day(s)
+            {/* - {holidayCount} Holiday(s)  */}
+            {/* removed on 9/3/2024 as per maam Tin request */} - {overlappingLeaveCount} Overlapping Leave(s) ={' '}
             <label className="font-bold">
               {leaveDateFrom && leaveDateTo
-                ? dayjs(`${leaveDateTo}`).diff(`${leaveDateFrom}`, 'day') + 1 - holidayCount - overlappingLeaveCount
+                ? dayjs(`${leaveDateTo}`).diff(`${leaveDateFrom}`, 'day') +
+                  1 -
+                  // - holidayCount
+                  // removed on 9/3/2024 as per maam Tin request
+                  overlappingLeaveCount
                 : 0}{' '}
               Leave Day(s)
             </label>
