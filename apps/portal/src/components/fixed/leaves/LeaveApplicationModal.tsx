@@ -181,6 +181,8 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
 
   const [lateFiling, setLateFiling] = useState<boolean>(false);
 
+  const [allowedLeaveBenefits, setAllowedLeaveBenefits] = useState<Array<LeaveBenefitOptions>>([]);
+
   //STORE VALUES OF PENDING LEAVE DATES COUNTS
   const [pendingVacationLeaveDateCount, setPendingVacationLeaveDateCount] = useState<number>(0);
   const [pendingForcedLeaveDateCount, setPendingForcedLeaveDateCount] = useState<number>(0);
@@ -402,6 +404,21 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
       setLeaveObject('');
     }
   }, [applyLeaveModalIsOpen]);
+
+  useEffect(() => {
+    if (swrLeaveTypes && employeeDetails.profile.sex === 'Male') {
+      setAllowedLeaveBenefits(
+        swrLeaveTypes?.filter(
+          (leave) =>
+            leave.leaveName != LeaveName.MATERNITY &&
+            leave.leaveName != LeaveName.VAWC &&
+            leave.leaveName != LeaveName.SPECIAL_LEAVE_BENEFITS_FOR_WOMEN
+        )
+      );
+    } else {
+      setAllowedLeaveBenefits(swrLeaveTypes?.filter((leave) => leave.leaveName != LeaveName.PATERNITY));
+    }
+  }, [swrLeaveTypes]);
 
   const onSubmit: SubmitHandler<LeaveApplicationForm> = (data: LeaveApplicationForm) => {
     let dataToSend;
@@ -864,10 +881,11 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
                       <option value="" disabled>
                         Select Type Of Leave:
                       </option>
+
                       {
                         // typeOfLeave
-                        swrLeaveTypes
-                          ? swrLeaveTypes.map((item: LeaveBenefitOptions, idx: number) => (
+                        allowedLeaveBenefits.length > 0
+                          ? allowedLeaveBenefits.map((item: LeaveBenefitOptions, idx: number) => (
                               <option value={`{"id":"${item.id}", "leaveName":"${item.leaveName}"}`} key={idx}>
                                 {item.leaveName}
                               </option>
