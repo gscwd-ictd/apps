@@ -4,6 +4,8 @@ import { LabelInput } from 'apps/employee-monitoring/src/components/inputs/Label
 import { LabelValue } from 'apps/employee-monitoring/src/components/labels/LabelValue';
 import { EmployeeDtr, useDtrStore } from 'apps/employee-monitoring/src/store/dtr.store';
 import { patchEmpMonitoring } from 'apps/employee-monitoring/src/utils/helper/employee-monitoring-axios-helper';
+import useSWR from 'swr';
+import fetcherEMS from 'apps/employee-monitoring/src/utils/fetcher/FetcherEMS';
 
 import dayjs from 'dayjs';
 import { EmployeeDtrWithSchedule } from 'libs/utils/src/lib/types/dtr.type';
@@ -36,6 +38,16 @@ const EditOfficeTimeLogModal: FunctionComponent<EditDailySchedModalProps> = ({
   rowData,
   companyId,
 }) => {
+  // fetch time logs for the day
+  const { data: swrTimeLogs, error: swrTimeLogsError } = useSWR(
+    modalState ? `/daily-time-record/employees/entries/logs/${rowData.companyId}/${rowData.day}` : null,
+    fetcherEMS,
+    {
+      shouldRetryOnError: false,
+      revalidateOnFocus: false,
+    }
+  );
+
   const {
     setValue,
     register,
@@ -133,6 +145,13 @@ const EditOfficeTimeLogModal: FunctionComponent<EditDailySchedModalProps> = ({
     setValue('shift', rowData.schedule.shift);
   };
 
+  const format12Hour = (time: string) => {
+    if (!isEmpty(time)) {
+      return dayjs(time, 'hh:mm:ss').format('h:mm A');
+    }
+    return '--';
+  };
+
   useEffect(() => {
     if (modalState) setDefaultValues(rowData);
   }, [modalState]);
@@ -186,13 +205,70 @@ const EditOfficeTimeLogModal: FunctionComponent<EditDailySchedModalProps> = ({
         <Modal.Body>
           <form onSubmit={handleSubmit(onSubmit)} id="editOfficeDtrModal">
             <div className="flex flex-col w-full gap-5 px-5 mt-5">
-              <div className="">
+              <div className="grid sm:grid-rows-2 sm:grid-cols-1 md:grid-rows-2 md:grid-cols-1 lg:grid-rows-1 lg:grid-cols-2 sm:gap-2 md:gap:2 lg:gap-0">
                 <LabelValue
                   label="Date"
                   value={dayjs(rowData.day).format('MMMM DD, YYYY')}
                   direction="top-to-bottom"
                   textSize="md"
                 />
+
+                <LabelValue
+                  label="Shift"
+                  value={rowData.schedule?.shift.charAt(0).toUpperCase() + rowData.schedule?.shift.slice(1)}
+                  direction="top-to-bottom"
+                  textSize="md"
+                />
+              </div>
+
+              <hr />
+
+              <div className="grid sm:grid-rows-2 sm:grid-cols-1 md:grid-rows-2 md:grid-cols-1 lg:grid-rows-1 lg:grid-cols-2 sm:gap-2 md:gap:2 lg:gap-0">
+                <LabelValue
+                  label="Time In"
+                  value={format12Hour(rowData.schedule?.timeIn)}
+                  direction="top-to-bottom"
+                  textSize="md"
+                />
+
+                <LabelValue
+                  label="Lunch Out"
+                  value={format12Hour(rowData.schedule?.lunchOut)}
+                  direction="top-to-bottom"
+                  textSize="md"
+                />
+
+                <LabelValue
+                  label="Lunch In"
+                  value={format12Hour(rowData.schedule?.lunchIn)}
+                  direction="top-to-bottom"
+                  textSize="md"
+                />
+
+                <LabelValue
+                  label="Time Out"
+                  value={format12Hour(rowData.schedule?.timeOut)}
+                  direction="top-to-bottom"
+                  textSize="md"
+                />
+              </div>
+
+              <hr />
+
+              <div className="grid  grid-cols-1 gap-0">
+                <label className="font-normal text-gray-500">IVMS Entries (Current and Next Day): </label>
+
+                {swrTimeLogs?.data && swrTimeLogs?.data?.length > 0 ? (
+                  swrTimeLogs?.data?.map((logs: string, idx: number) => {
+                    return (
+                      <div key={idx} className="pl-3">
+                        <label className="text-sm font-medium">{logs}</label>
+                      </div>
+                    );
+                  })
+                ) : (
+                  <label className="text-md font-medium pl-3">None</label>
+                )}
               </div>
 
               <hr />
@@ -225,9 +301,10 @@ const EditOfficeTimeLogModal: FunctionComponent<EditDailySchedModalProps> = ({
               <div className="">
                 <LabelInput
                   id="lunchOut"
-                  type="time"
-                  label={'Lunch Out'}
+                  label="Lunch Out"
+                  step="any"
                   isDirty={dirtyFields.lunchOut}
+                  type="time"
                   controller={{
                     ...register('lunchOut', {
                       onChange: (e) => {
@@ -247,17 +324,17 @@ const EditOfficeTimeLogModal: FunctionComponent<EditDailySchedModalProps> = ({
                       ? 'bg-red-200'
                       : 'bg-inherit'
                   }
-                  disabled={getValues('withLunch') === true ? false : true}
+                  // disabled={getValues('withLunch') === true ? false : true}
                 />
               </div>
 
               <div className="">
                 <LabelInput
                   id="lunchIn"
-                  type="time"
-                  label={'Lunch In'}
+                  label="Lunch In"
                   step="any"
                   isDirty={dirtyFields.lunchIn}
+                  type="time"
                   controller={{
                     ...register('lunchIn', {
                       onChange: (e) => {
@@ -277,7 +354,7 @@ const EditOfficeTimeLogModal: FunctionComponent<EditDailySchedModalProps> = ({
                       ? 'bg-red-200'
                       : 'bg-inherit'
                   }
-                  disabled={getValues('withLunch') === true ? false : true}
+                  // disabled={getValues('withLunch') === true ? false : true}
                 />
               </div>
 
@@ -285,9 +362,9 @@ const EditOfficeTimeLogModal: FunctionComponent<EditDailySchedModalProps> = ({
                 <LabelInput
                   id="timeOut"
                   label="Time out"
-                  type="time"
-                  isDirty={dirtyFields.timeOut}
                   step="any"
+                  isDirty={dirtyFields.timeOut}
+                  type="time"
                   controller={{
                     ...register('timeOut', {
                       onChange: (e) => {
