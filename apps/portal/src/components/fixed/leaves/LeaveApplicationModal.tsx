@@ -884,7 +884,7 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
 
                       {
                         // typeOfLeave
-                        allowedLeaveBenefits.length > 0
+                        allowedLeaveBenefits?.length > 0
                           ? allowedLeaveBenefits.map((item: LeaveBenefitOptions, idx: number) => (
                               <option value={`{"id":"${item.id}", "leaveName":"${item.leaveName}"}`} key={idx}>
                                 {item.leaveName}
