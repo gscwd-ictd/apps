@@ -93,10 +93,6 @@ const styles = StyleSheet.create({
     fontSize: 8,
     fontFamily: 'Helvetica-Bold',
   },
-  signatoryContainer: {
-    fontSize: 8.5,
-    fontFamily: 'Helvetica',
-  },
   rowContainer: {
     flexDirection: 'row',
     alignItems: 'stretch',

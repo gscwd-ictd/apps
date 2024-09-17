@@ -304,7 +304,7 @@ const ViewLeaveApplicationModal: FunctionComponent<ViewLeaveApplicationModalProp
                           <div className="flex flex-wrap justify-center">
                             <div className="w-[6rem]">
                               <Image
-                                src={leaveApplicationDetails.employeeDetails?.photoUrl}
+                                src={`${process.env.NEXT_PUBLIC_EMPLOYEE_AVATAR_URL}${leaveApplicationDetails.employeeDetails?.photoUrl}`}
                                 width={100}
                                 height={100}
                                 alt="employee-photo"

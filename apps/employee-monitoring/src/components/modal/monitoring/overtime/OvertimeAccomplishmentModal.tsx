@@ -108,7 +108,7 @@ const ViewEmployeeOvertimeAccomplishmentModal: FunctionComponent<OvertimeAccompl
                         <div className="flex flex-wrap justify-center">
                           <div className="w-[6rem]">
                             <Image
-                              src={rowData.employee?.avatarUrl}
+                              src={`${process.env.NEXT_PUBLIC_EMPLOYEE_AVATAR_URL}${rowData.employee?.avatarUrl}`}
                               width={100}
                               height={100}
                               alt="employee-photo"
