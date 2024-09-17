@@ -1,13 +1,5 @@
 /* eslint-disable jsx-a11y/alt-text */
-import {
-  Page,
-  Text,
-  Document,
-  StyleSheet,
-  PDFViewer,
-  View,
-  Image,
-} from '@react-pdf/renderer';
+import { Page, Text, Document, StyleSheet, PDFViewer, View, Image } from '@react-pdf/renderer';
 // eslint-disable-next-line @nx/enforce-module-boundaries
 import { PassSlipPdf } from '../../../../../../libs/utils/src/lib/types/pass-slip.type';
 import React, { useEffect, useState } from 'react';
@@ -94,10 +86,7 @@ type PassSlipPdfProps = {
   passSlipDetails: PassSlipPdf;
 };
 
-export const PassSlipPdfView = ({
-  employeeDetails,
-  passSlipDetails,
-}: PassSlipPdfProps): JSX.Element => {
+export const PassSlipPdfView = ({ employeeDetails, passSlipDetails }: PassSlipPdfProps): JSX.Element => {
   const [isClient, setIsClient] = useState<boolean>(false);
 
   useEffect(() => {
@@ -124,9 +113,7 @@ export const PassSlipPdfView = ({
                     <Text>Email Address: gscwaterdistrict@yahoo.com</Text>
                   </View>
                 </View>
-                <Text style={styles.passSlipLabel}>
-                  PASS SLIP AUTHORIZATION
-                </Text>
+                <Text style={styles.passSlipLabel}>PASS SLIP AUTHORIZATION</Text>
                 <View
                   style={{
                     display: 'flex',
@@ -144,9 +131,7 @@ export const PassSlipPdfView = ({
                       marginTop: 10,
                     }}
                   >
-                    {dayjs(passSlipDetails.dateOfApplication).format(
-                      'MM-DD-YYYY'
-                    )}
+                    {dayjs(passSlipDetails.dateOfApplication).format('MM-DD-YYYY')}
                   </Text>
                   <Text>DEPARTMENT: _________________</Text>
                   <Text
@@ -159,9 +144,7 @@ export const PassSlipPdfView = ({
                     {passSlipDetails.assignment}
                   </Text>
                 </View>
-                <Text style={{ fontSize: 9, paddingLeft: 10 }}>
-                  NATURE OF BUSINESS:
-                </Text>
+                <Text style={{ fontSize: 9, paddingLeft: 10 }}>NATURE OF BUSINESS:</Text>
                 <Text style={{ fontSize: 9, paddingLeft: 10, marginTop: -10 }}>
                   _____________________________________________________
                 </Text>
@@ -183,26 +166,19 @@ export const PassSlipPdfView = ({
                       }}
                     >
                       <Text style={styles.checkbox}>
-                        {passSlipDetails.natureOfBusiness ===
-                        'Personal Business'
-                          ? 'X'
-                          : null}
+                        {passSlipDetails.natureOfBusiness === 'Personal Business' ? 'X' : null}
                       </Text>
                       <Text>Personal Business</Text>
                     </View>
                     <View style={styles.checkboxLabelFlex}>
                       <Text style={styles.checkbox}>
-                        {passSlipDetails.natureOfBusiness === 'Half Day'
-                          ? 'X'
-                          : null}
+                        {passSlipDetails.natureOfBusiness === 'Half Day' ? 'X' : null}
                       </Text>
                       <Text>Half Day</Text>
                     </View>
                     <View style={styles.checkboxLabelFlex}>
                       <Text style={styles.checkbox}>
-                        {passSlipDetails.natureOfBusiness === 'Undertime'
-                          ? 'X'
-                          : null}
+                        {passSlipDetails.natureOfBusiness === 'Undertime' ? 'X' : null}
                       </Text>
                       <Text>Undertime</Text>
                     </View>
@@ -228,10 +204,7 @@ export const PassSlipPdfView = ({
                       }}
                     >
                       <Text style={styles.checkbox}>
-                        {passSlipDetails.natureOfBusiness ===
-                        'Official Business'
-                          ? 'X'
-                          : null}
+                        {passSlipDetails.natureOfBusiness === 'Official Business' ? 'X' : null}
                       </Text>
                       <Text>Official Business</Text>
                     </View>
@@ -245,26 +218,19 @@ export const PassSlipPdfView = ({
                     <View style={styles.checkboxFlex}>
                       <View style={styles.checkboxLabelFlex}>
                         <Text style={styles.checkbox}>
-                          {passSlipDetails.obTransportation === 'Office Vehicle'
-                            ? 'X'
-                            : null}
+                          {passSlipDetails.obTransportation === 'Office Vehicle' ? 'X' : null}
                         </Text>
                         <Text>Office Vehicle</Text>
                       </View>
                       <View style={styles.checkboxLabelFlex}>
                         <Text style={styles.checkbox}>
-                          {passSlipDetails.obTransportation ===
-                          'Private/Personal Vehicle'
-                            ? 'X'
-                            : null}
+                          {passSlipDetails.obTransportation === 'Private/Personal Vehicle' ? 'X' : null}
                         </Text>
                         <Text>Private/Personal Vehicle</Text>
                       </View>
                       <View style={styles.checkboxLabelFlex}>
                         <Text style={styles.checkbox}>
-                          {passSlipDetails.obTransportation === 'Public Vehicle'
-                            ? 'X'
-                            : null}
+                          {passSlipDetails.obTransportation === 'Public Vehicle' ? 'X' : null}
                         </Text>
                         <Text>Public Vehicle</Text>
                       </View>
@@ -295,15 +261,9 @@ export const PassSlipPdfView = ({
                   <Text>PURPOSE/DESTINATION:</Text>
                   <View style={styles.flexColumnJustifyBetween}>
                     <Text>_______________________________</Text>
-                    <Text style={{ marginTop: -2 }}>
-                      _______________________________
-                    </Text>
-                    <Text style={{ marginTop: -2 }}>
-                      _______________________________
-                    </Text>
-                    <Text style={{ marginTop: -2 }}>
-                      _______________________________
-                    </Text>
+                    <Text style={{ marginTop: -2 }}>_______________________________</Text>
+                    <Text style={{ marginTop: -2 }}>_______________________________</Text>
+                    <Text style={{ marginTop: -2 }}>_______________________________</Text>
 
                     <Text style={{ position: 'absolute' }}>
                       {/* I will buy a brand new state of the art 2024 model Nissan
@@ -334,11 +294,9 @@ export const PassSlipPdfView = ({
                         marginLeft: 90,
                         width: 50,
                       }}
-                      src={passSlipDetails.employee.signature}
+                      src={process.env.NEXT_PUBLIC_IMAGE_SERVER_URL + passSlipDetails?.employee?.signature}
                     ></Image>
-                    <Text style={{ marginTop: 10 }}>
-                      _____________________________
-                    </Text>
+                    <Text style={{ marginTop: 10 }}>_____________________________</Text>
                     <Text>Signature Over Printed Name</Text>
                     <Text style={{ marginTop: 8 }}>Approved by:</Text>
                     <Text
@@ -358,17 +316,13 @@ export const PassSlipPdfView = ({
                         marginLeft: 90,
                         width: 60,
                       }}
-                      src={`${passSlipDetails.supervisor.signature}`}
+                      src={`${process.env.NEXT_PUBLIC_IMAGE_SERVER_URL + passSlipDetails?.supervisor?.signature}`}
                     ></Image>
 
-                    <Text style={{ marginTop: 7 }}>
-                      _____________________________
-                    </Text>
+                    <Text style={{ marginTop: 7 }}>_____________________________</Text>
                     <Text>Department Manager / Supervisor</Text>
                   </View>
-                  <View style={styles.flexColumnJustifyBetween}>
-                    {/* <Text>X</Text> */}
-                  </View>
+                  <View style={styles.flexColumnJustifyBetween}>{/* <Text>X</Text> */}</View>
                 </View>
               </View>
             </Page>

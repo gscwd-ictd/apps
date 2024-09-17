@@ -54,7 +54,7 @@ export const EmployeesUnderOvertimeTable: FunctionComponent<EmployeesUnderOverti
                     <td className="items-center p-2 break-words border-b text-center">
                       {employee.avatarUrl ? (
                         <Image
-                          src={employee.avatarUrl}
+                          src={`${process.env.NEXT_PUBLIC_IMAGE_SERVER_URL}${employee.avatarUrl}`}
                           width={80}
                           height={80}
                           alt={`Picture of employee ${employee.fullName}`}

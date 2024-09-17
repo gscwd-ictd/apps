@@ -1,3 +1,4 @@
+/* eslint-disable @nx/enforce-module-boundaries */
 /* eslint-disable react-hooks/exhaustive-deps */
 import { PageContentContext } from '@gscwd-apps/oneui';
 import { useContext, useEffect, useState } from 'react';
@@ -107,7 +108,7 @@ export const TopNavigation = () => {
                   ) : (
                     <div className="w-[2rem]">
                       <Image
-                        src={userProfile?.photoUrl}
+                        src={`${process.env.NEXT_PUBLIC_IMAGE_SERVER_URL}${userProfile?.photoUrl}`}
                         width={100}
                         height={100}
                         alt="employee-photo"

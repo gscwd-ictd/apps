@@ -22,7 +22,7 @@ export const ProfileCard: React.FC<Props> = ({ fullName, position, division, pho
     >
       <img
         className="rounded-full border border-stone-100 shadow w-2/4"
-        src={photoUrl ? photoUrl : photoUrl_temp}
+        src={photoUrl ? process.env.NEXT_PUBLIC_IMAGE_SERVER_URL + photoUrl : photoUrl_temp}
         alt={'photo'}
       ></img>
       <label className="text-xl font-medium text-gray-800 pt-2">{fullName}</label>

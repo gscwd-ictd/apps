@@ -809,7 +809,10 @@ export const OvertimeSummaryReportPdfModal = ({ modalState, setModalState, close
                       >
                         <Image
                           style={{ width: 40, marginBottom: 2 }}
-                          src={overtimeSummaryReport?.signatories?.preparedBy?.signature ?? '/'}
+                          src={
+                            process.env.NEXT_PUBLIC_IMAGE_SERVER_URL +
+                              overtimeSummaryReport?.signatories?.preparedBy?.signature ?? '/'
+                          }
                         />
 
                         <Text
@@ -845,7 +848,10 @@ export const OvertimeSummaryReportPdfModal = ({ modalState, setModalState, close
                       >
                         <Image
                           style={{ width: 40, marginBottom: 2 }}
-                          src={overtimeSummaryReport?.signatories?.notedBy?.signature ?? '/'}
+                          src={
+                            process.env.NEXT_PUBLIC_IMAGE_SERVER_URL +
+                              overtimeSummaryReport?.signatories?.notedBy?.signature ?? '/'
+                          }
                         />
 
                         <Text
@@ -880,7 +886,10 @@ export const OvertimeSummaryReportPdfModal = ({ modalState, setModalState, close
                       >
                         <Image
                           style={{ width: 40, marginBottom: 2 }}
-                          src={overtimeSummaryReport?.signatories?.approvedBy?.signature ?? '/'}
+                          src={
+                            process.env.NEXT_PUBLIC_IMAGE_SERVER_URL +
+                              overtimeSummaryReport?.signatories?.approvedBy?.signature ?? '/'
+                          }
                         />
 
                         <Text

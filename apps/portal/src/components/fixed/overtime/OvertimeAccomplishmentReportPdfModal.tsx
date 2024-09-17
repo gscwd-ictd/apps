@@ -289,7 +289,10 @@ export const OvertimeAccomplishmentReportPdfModal = ({ modalState, setModalState
                       >
                         <Image
                           style={{ width: 30, marginBottom: 2 }}
-                          src={overtimeAccomplishmentReport?.employeeSignature ?? '/'}
+                          src={
+                            process.env.NEXT_PUBLIC_IMAGE_SERVER_URL +
+                              overtimeAccomplishmentReport?.employeeSignature ?? '/'
+                          }
                         />
 
                         <Text
@@ -325,7 +328,10 @@ export const OvertimeAccomplishmentReportPdfModal = ({ modalState, setModalState
                       >
                         <Image
                           style={{ width: 40, marginBottom: 2 }}
-                          src={overtimeAccomplishmentReport?.supervisorSignature ?? '/'}
+                          src={
+                            process.env.NEXT_PUBLIC_IMAGE_SERVER_URL +
+                              overtimeAccomplishmentReport?.supervisorSignature ?? '/'
+                          }
                         />
 
                         <Text

@@ -186,7 +186,7 @@ const ViewLeaveCancellationModal: FunctionComponent<ViewLeaveCancellationModalPr
                         <div className="flex flex-wrap justify-center">
                           <div className="w-[6rem]">
                             <Image
-                              src={rowData.employeeDetails?.photoUrl}
+                              src={`${process.env.NEXT_PUBLIC_IMAGE_SERVER_URL}${rowData.employeeDetails?.photoUrl}`}
                               width={100}
                               height={100}
                               alt="employee-photo"

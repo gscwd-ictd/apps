@@ -1,22 +1,8 @@
 /* eslint-disable @next/next/no-img-element */
-import {
-  AlertNotification,
-  LoadingSpinner,
-  Modal,
-  ToastNotification,
-} from '@gscwd-apps/oneui';
+import { AlertNotification, LoadingSpinner, Modal, ToastNotification } from '@gscwd-apps/oneui';
 import { LabelInput } from 'apps/employee-monitoring/src/components/inputs/LabelInput';
-import {
-  EmployeeWithSchedule,
-  useScheduleSheetStore,
-} from 'apps/employee-monitoring/src/store/schedule-sheet.store';
-import {
-  Dispatch,
-  FunctionComponent,
-  SetStateAction,
-  useEffect,
-  useState,
-} from 'react';
+import { EmployeeWithSchedule, useScheduleSheetStore } from 'apps/employee-monitoring/src/store/schedule-sheet.store';
+import { Dispatch, FunctionComponent, SetStateAction, useEffect, useState } from 'react';
 import useSWR from 'swr';
 import fetcherEMS from 'apps/employee-monitoring/src/utils/fetcher/FetcherEMS';
 import { isEmpty } from 'lodash';
@@ -68,12 +54,9 @@ const AddEmpSchedModal: FunctionComponent<AddEmpSchedModalProps> = ({
     else return dayjs('01-01-0000' + ' ' + date).format('hh:mm A');
   };
 
-  const [selectScheduleModalIsOpen, setSelectScheduleModalIsopen] =
-    useState<boolean>(false);
+  const [selectScheduleModalIsOpen, setSelectScheduleModalIsopen] = useState<boolean>(false);
 
-  const [selectedRestDays, setSelectedRestDays] = useState<Array<SelectOption>>(
-    []
-  );
+  const [selectedRestDays, setSelectedRestDays] = useState<Array<SelectOption>>([]);
 
   // open select schedule modal
   const openSelectScheduleModal = () => setSelectScheduleModalIsopen(true);
@@ -122,14 +105,10 @@ const AddEmpSchedModal: FunctionComponent<AddEmpSchedModalProps> = ({
     data: swrSchedule,
     isLoading: swrScheduleIsLoading,
     error: swrScheduleError,
-  } = useSWR(
-    !isEmpty(selectedScheduleId) ? `/schedules/${selectedScheduleId}` : null,
-    fetcherEMS,
-    {
-      shouldRetryOnError: false,
-      revalidateOnFocus: false,
-    }
-  );
+  } = useSWR(!isEmpty(selectedScheduleId) ? `/schedules/${selectedScheduleId}` : null, fetcherEMS, {
+    shouldRetryOnError: false,
+    revalidateOnFocus: false,
+  });
 
   // on submit
   const onSubmit = async (data: EmployeeWithSchedule) => {
@@ -159,10 +138,7 @@ const AddEmpSchedModal: FunctionComponent<AddEmpSchedModalProps> = ({
 
   // function for posting the schedule sheet
   const handlePostScheduling = async (data: Partial<EmployeeWithSchedule>) => {
-    const { error, result } = await postEmpMonitoring(
-      `/employee-schedule/`,
-      data
-    );
+    const { error, result } = await postEmpMonitoring(`/employee-schedule/`, data);
 
     if (!error) {
       // post scheduling sheet success
@@ -187,8 +163,7 @@ const AddEmpSchedModal: FunctionComponent<AddEmpSchedModalProps> = ({
     if (!isEmpty(swrSchedule)) getScheduleByIdSuccess(swrSchedule.data);
 
     // fail
-    if (!isEmpty(swrScheduleError))
-      getScheduleByIdFail(swrScheduleError.message);
+    if (!isEmpty(swrScheduleError)) getScheduleByIdFail(swrScheduleError.message);
   }, [swrSchedule, swrScheduleError]);
 
   useEffect(() => {
@@ -257,7 +232,7 @@ const AddEmpSchedModal: FunctionComponent<AddEmpSchedModalProps> = ({
                       <div className="flex flex-wrap justify-center">
                         <div className="w-[6rem]">
                           <img
-                            src={employeeData.photoUrl}
+                            src={`${process.env.NEXT_PUBLIC_IMAGE_SERVER_URL}${employeeData.photoUrl}`}
                             alt="user-circle"
                             width={100}
                             height={100}
@@ -270,21 +245,15 @@ const AddEmpSchedModal: FunctionComponent<AddEmpSchedModalProps> = ({
                     )}
 
                     <div className="flex flex-col">
-                      <div className="text-2xl font-semibold text-gray-600">
-                        {employeeData.fullName}
-                      </div>
-                      <div className="text-xl text-gray-500">
-                        {employeeData.assignment.positionTitle}
-                      </div>
+                      <div className="text-2xl font-semibold text-gray-600">{employeeData.fullName}</div>
+                      <div className="text-xl text-gray-500">{employeeData.assignment.positionTitle}</div>
                     </div>
                   </div>
                 </div>
 
                 {/* Effectivity */}
                 <div className="flex flex-col justify-center w-full pb-6">
-                  <p className="flex items-center justify-start w-full font-light text-gray-400">
-                    Effectivity Date
-                  </p>
+                  <p className="flex items-center justify-start w-full font-light text-gray-400">Effectivity Date</p>
                   <hr className="h-1 mt-2 mb-4 bg-gray-200 border-0 rounded" />
                   <div className="grid gap-2 sm:grid-cols-1 md:grid-cols-1 lg:grid-cols-2">
                     <LabelInput
@@ -313,9 +282,7 @@ const AddEmpSchedModal: FunctionComponent<AddEmpSchedModalProps> = ({
                 </div>
 
                 <div className="flex flex-col justify-between w-full h-full pb-2">
-                  <p className="flex items-center justify-start w-full font-light text-gray-400">
-                    Schedule
-                  </p>
+                  <p className="flex items-center justify-start w-full font-light text-gray-400">Schedule</p>
                   <hr className="h-1 mt-2 mb-4 bg-gray-200 border-0 rounded" />
                   <div className="flex flex-col w-full gap-2">
                     {swrScheduleIsLoading ? (
@@ -338,11 +305,7 @@ const AddEmpSchedModal: FunctionComponent<AddEmpSchedModalProps> = ({
                               controller={{
                                 ...register('timeIn'),
                               }}
-                              value={
-                                schedule.timeIn
-                                  ? formatTime(schedule.timeIn)
-                                  : '-- : --'
-                              }
+                              value={schedule.timeIn ? formatTime(schedule.timeIn) : '-- : --'}
                               isError={errors.scheduleId ? true : false}
                               errorMessage={errors.scheduleId?.message}
                               disabled
@@ -353,11 +316,7 @@ const AddEmpSchedModal: FunctionComponent<AddEmpSchedModalProps> = ({
                             <LabelInput
                               id="scheduleTimeOut"
                               label="Time out"
-                              value={
-                                schedule.timeOut
-                                  ? formatTime(schedule.timeOut)
-                                  : '-- : --'
-                              }
+                              value={schedule.timeOut ? formatTime(schedule.timeOut) : '-- : --'}
                               isError={errors.scheduleId ? true : false}
                               errorMessage={errors.scheduleId?.message}
                               disabled
@@ -370,11 +329,7 @@ const AddEmpSchedModal: FunctionComponent<AddEmpSchedModalProps> = ({
                             <LabelInput
                               id="scheduleLunchIn"
                               label="Lunch in"
-                              value={
-                                schedule.lunchIn
-                                  ? formatTime(schedule.lunchIn)
-                                  : '-- : --'
-                              }
+                              value={schedule.lunchIn ? formatTime(schedule.lunchIn) : '-- : --'}
                               isError={errors.scheduleId ? true : false}
                               errorMessage={errors.scheduleId?.message}
                               disabled
@@ -385,11 +340,7 @@ const AddEmpSchedModal: FunctionComponent<AddEmpSchedModalProps> = ({
                             <LabelInput
                               id="scheduleLunchOut"
                               label="Lunch out"
-                              value={
-                                schedule.lunchOut
-                                  ? formatTime(schedule.lunchOut)
-                                  : '-- : --'
-                              }
+                              value={schedule.lunchOut ? formatTime(schedule.lunchOut) : '-- : --'}
                               isError={errors.scheduleId ? true : false}
                               errorMessage={errors.scheduleId?.message}
                               disabled
@@ -434,9 +385,7 @@ const AddEmpSchedModal: FunctionComponent<AddEmpSchedModalProps> = ({
 
             <button
               className={`px-3 py-2 text-white ${
-                isEmpty(getValues('scheduleId'))
-                  ? 'bg-gray-500 hover:bg-gray-400'
-                  : 'bg-blue-500 hover:bg-blue-400'
+                isEmpty(getValues('scheduleId')) ? 'bg-gray-500 hover:bg-gray-400' : 'bg-blue-500 hover:bg-blue-400'
               } rounded text-sm disabled:cursor-not-allowed `}
               type="submit"
               form="addEmpSchedForm"

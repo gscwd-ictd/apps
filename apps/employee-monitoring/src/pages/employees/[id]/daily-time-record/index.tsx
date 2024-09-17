@@ -173,7 +173,7 @@ export default function Index({ employeeData }: InferGetServerSidePropsType<type
                     <div className="flex flex-wrap justify-center">
                       <div className="w-[6rem]">
                         <img
-                          src={employeeData.photoUrl}
+                          src={`${process.env.NEXT_PUBLIC_IMAGE_SERVER_URL}${employeeData.photoUrl}`}
                           alt="user-circle"
                           className="h-auto max-w-full align-middle border-none rounded-full shadow"
                         />
