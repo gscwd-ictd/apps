@@ -6,7 +6,7 @@ function UseRenderAvatarInTable(avatarUrl: string, name: string) {
   if (!isEmpty(avatarUrl)) {
     return (
       <Image
-        src={avatarUrl}
+        src={`${process.env.NEXT_PUBLIC_EMPLOYEE_AVATAR_URL}${avatarUrl}`}
         width={48}
         height={48}
         alt={`Picture of employee ${name}`}
