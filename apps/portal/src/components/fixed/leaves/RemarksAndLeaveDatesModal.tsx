@@ -68,13 +68,16 @@ const RemarksAndLeaveDatesModal: FunctionComponent<LeaveDatesAndRemarksModalProp
           <div className="text-2xl font-medium text-gray-700">{UseCapitalizer(rowData.remarks)}</div>
           <div className="grid sm:grid-cols-4 md:grid-cols-3 lg:grid-cols-2 gap-2 pb-1.5">
             {rowData.leaveDates &&
-              rowData.leaveDates.map((date, idx) => {
-                return (
-                  <React.Fragment key={idx}>
-                    <span className="w-full">{UseRenderBadgePill(transformDateToString(date))}</span>
-                  </React.Fragment>
-                );
-              })}
+              rowData.leaveDates
+                .toString()
+                .split(',')
+                .map((date, idx) => {
+                  return (
+                    <React.Fragment key={idx}>
+                      <span className="w-full">{UseRenderBadgePill(transformDateToString(date))}</span>
+                    </React.Fragment>
+                  );
+                })}
           </div>
         </div>
       </Modal.Body>
