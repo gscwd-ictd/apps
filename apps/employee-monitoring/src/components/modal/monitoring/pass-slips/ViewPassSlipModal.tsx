@@ -225,7 +225,7 @@ const ViewPassSlipModal: FunctionComponent<ViewPassSlipModalProps> = ({
                     <div className="flex flex-wrap justify-center">
                       <div className="w-[6rem]">
                         <Image
-                          src={rowData.avatarUrl}
+                          src={`${process.env.NEXT_PUBLIC_EMPLOYEE_AVATAR_URL}${rowData.avatarUrl}`}
                           width={100}
                           height={100}
                           alt="employee-photo"
