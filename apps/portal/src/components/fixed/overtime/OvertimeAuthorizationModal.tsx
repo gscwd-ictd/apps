@@ -420,7 +420,7 @@ export const OvertimeAuthorizationModal = ({ modalState, setModalState, closeMod
                         <Image
                           style={{ width: 50, marginBottom: 2 }}
                           src={
-                            process.env.NEXT_PUBLIC_EMPLOYEE_AVATAR_URL +
+                            process.env.NEXT_PUBLIC_IMAGE_SERVER_URL +
                               overtimeAuthorizationReport?.signatories?.employeeSignature ?? '/'
                           }
                         />
@@ -489,7 +489,7 @@ export const OvertimeAuthorizationModal = ({ modalState, setModalState, closeMod
                         <Image
                           style={{ width: 50, marginBottom: 2 }}
                           src={
-                            process.env.NEXT_PUBLIC_EMPLOYEE_AVATAR_URL +
+                            process.env.NEXT_PUBLIC_IMAGE_SERVER_URL +
                               overtimeAuthorizationReport?.signatories?.supervisorSignature ?? '/'
                           }
                         />

@@ -108,7 +108,7 @@ export const TopNavigation = () => {
                   ) : (
                     <div className="w-[2rem]">
                       <Image
-                        src={`${process.env.NEXT_PUBLIC_EMPLOYEE_AVATAR_URL}${userProfile?.photoUrl}`}
+                        src={`${process.env.NEXT_PUBLIC_IMAGE_SERVER_URL}${userProfile?.photoUrl}`}
                         width={100}
                         height={100}
                         alt="employee-photo"

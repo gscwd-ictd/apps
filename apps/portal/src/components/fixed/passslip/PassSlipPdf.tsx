@@ -294,7 +294,7 @@ export const PassSlipPdfView = ({ employeeDetails, passSlipDetails }: PassSlipPd
                         marginLeft: 90,
                         width: 50,
                       }}
-                      src={process.env.NEXT_PUBLIC_EMPLOYEE_AVATAR_URL + passSlipDetails?.employee?.signature}
+                      src={process.env.NEXT_PUBLIC_IMAGE_SERVER_URL + passSlipDetails?.employee?.signature}
                     ></Image>
                     <Text style={{ marginTop: 10 }}>_____________________________</Text>
                     <Text>Signature Over Printed Name</Text>
@@ -316,7 +316,7 @@ export const PassSlipPdfView = ({ employeeDetails, passSlipDetails }: PassSlipPd
                         marginLeft: 90,
                         width: 60,
                       }}
-                      src={`${process.env.NEXT_PUBLIC_EMPLOYEE_AVATAR_URL + passSlipDetails?.supervisor?.signature}`}
+                      src={`${process.env.NEXT_PUBLIC_IMAGE_SERVER_URL + passSlipDetails?.supervisor?.signature}`}
                     ></Image>
 
                     <Text style={{ marginTop: 7 }}>_____________________________</Text>

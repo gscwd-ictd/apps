@@ -809,7 +809,7 @@ export const LeavePdf = ({ employeeDetails, leaveDetails, selectedLeaveLedger }:
                             paddingBottom: -5,
                           }}
                           src={
-                            process.env.NEXT_PUBLIC_EMPLOYEE_AVATAR_URL +
+                            process.env.NEXT_PUBLIC_IMAGE_SERVER_URL +
                               leaveDetails?.leaveApplicationBasicInfo?.employeeSignature ?? '/'
                           }
                         />
@@ -963,7 +963,7 @@ export const LeavePdf = ({ employeeDetails, leaveDetails, selectedLeaveLedger }:
                               paddingBottom: 7,
                             }}
                             src={
-                              process.env.NEXT_PUBLIC_EMPLOYEE_AVATAR_URL +
+                              process.env.NEXT_PUBLIC_IMAGE_SERVER_URL +
                                 leaveDetails.leaveApplicationBasicInfo?.hrmoSignature ?? '/'
                             }
                           />
@@ -1041,7 +1041,7 @@ export const LeavePdf = ({ employeeDetails, leaveDetails, selectedLeaveLedger }:
                             paddingBottom: 18,
                           }}
                           src={
-                            process.env.NEXT_PUBLIC_EMPLOYEE_AVATAR_URL +
+                            process.env.NEXT_PUBLIC_IMAGE_SERVER_URL +
                               leaveDetails.leaveApplicationBasicInfo?.supervisorSignature ?? '/'
                           }
                         />
@@ -1191,7 +1191,7 @@ export const LeavePdf = ({ employeeDetails, leaveDetails, selectedLeaveLedger }:
                           paddingBottom: 20,
                         }}
                         src={
-                          process.env.NEXT_PUBLIC_EMPLOYEE_AVATAR_URL +
+                          process.env.NEXT_PUBLIC_IMAGE_SERVER_URL +
                             leaveDetails.leaveApplicationBasicInfo?.hrdmSignature ?? '/'
                         }
                       />

@@ -810,7 +810,7 @@ export const OvertimeSummaryReportPdfModal = ({ modalState, setModalState, close
                         <Image
                           style={{ width: 40, marginBottom: 2 }}
                           src={
-                            process.env.NEXT_PUBLIC_EMPLOYEE_AVATAR_URL +
+                            process.env.NEXT_PUBLIC_IMAGE_SERVER_URL +
                               overtimeSummaryReport?.signatories?.preparedBy?.signature ?? '/'
                           }
                         />
@@ -849,7 +849,7 @@ export const OvertimeSummaryReportPdfModal = ({ modalState, setModalState, close
                         <Image
                           style={{ width: 40, marginBottom: 2 }}
                           src={
-                            process.env.NEXT_PUBLIC_EMPLOYEE_AVATAR_URL +
+                            process.env.NEXT_PUBLIC_IMAGE_SERVER_URL +
                               overtimeSummaryReport?.signatories?.notedBy?.signature ?? '/'
                           }
                         />
@@ -887,7 +887,7 @@ export const OvertimeSummaryReportPdfModal = ({ modalState, setModalState, close
                         <Image
                           style={{ width: 40, marginBottom: 2 }}
                           src={
-                            process.env.NEXT_PUBLIC_EMPLOYEE_AVATAR_URL +
+                            process.env.NEXT_PUBLIC_IMAGE_SERVER_URL +
                               overtimeSummaryReport?.signatories?.approvedBy?.signature ?? '/'
                           }
                         />

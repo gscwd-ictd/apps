@@ -165,9 +165,7 @@ export default function OvertimeApprovals({ employeeDetails }: InferGetServerSid
               height={20}
               className="rounded-full border w-10"
               src={
-                employees.avatarUrl
-                  ? process.env.NEXT_PUBLIC_EMPLOYEE_AVATAR_URL + employees?.avatarUrl
-                  : TempPhotoProfile
+                employees.avatarUrl ? process.env.NEXT_PUBLIC_IMAGE_SERVER_URL + employees?.avatarUrl : TempPhotoProfile
               }
               alt={'photo'}
             />
@@ -183,7 +181,7 @@ export default function OvertimeApprovals({ employeeDetails }: InferGetServerSid
             className="rounded-full border w-8"
             src={
               employee[0]?.avatarUrl
-                ? process.env.NEXT_PUBLIC_EMPLOYEE_AVATAR_URL + employee[0]?.avatarUrl
+                ? process.env.NEXT_PUBLIC_IMAGE_SERVER_URL + employee[0]?.avatarUrl
                 : TempPhotoProfile
             }
             alt={'photo'}

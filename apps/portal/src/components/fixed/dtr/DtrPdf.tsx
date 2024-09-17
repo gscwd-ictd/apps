@@ -838,7 +838,7 @@ export const DtrPdf: FunctionComponent<DtrPdfProps> = ({ employeeData, employeeD
                             textAlign: 'center',
                           }}
                           src={
-                            process.env.NEXT_PUBLIC_EMPLOYEE_AVATAR_URL + employeeData.employmentDetails.signatureUrl ??
+                            process.env.NEXT_PUBLIC_IMAGE_SERVER_URL + employeeData.employmentDetails.signatureUrl ??
                             '/'
                           }
                         />
