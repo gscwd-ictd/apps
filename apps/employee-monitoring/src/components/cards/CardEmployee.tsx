@@ -40,7 +40,7 @@ export const CardEmployee = () => {
         ) : (
           <div className="mx-5 bg-white rounded-full xs:h-16 sm:w-6 sm:h-10 md:w-12 md:h-12 lg:w-16 lg:h-16 xs:-mt-8 sm:-mt-8 md:-mt-8 lg:-mt-8 fill-slate-700/90">
             <Image
-              src={`${process.env.NEXT_PUBLIC_EMPLOYEE_AVATAR_URL}${userProfile?.photoUrl}`}
+              src={`${process.env.NEXT_PUBLIC_IMAGE_SERVER_URL}${userProfile?.photoUrl}`}
               width={100}
               height={100}
               alt="employee-photo"

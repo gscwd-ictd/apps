@@ -232,7 +232,7 @@ const AddEmpSchedModal: FunctionComponent<AddEmpSchedModalProps> = ({
                       <div className="flex flex-wrap justify-center">
                         <div className="w-[6rem]">
                           <img
-                            src={`${process.env.NEXT_PUBLIC_EMPLOYEE_AVATAR_URL}${employeeData.photoUrl}`}
+                            src={`${process.env.NEXT_PUBLIC_IMAGE_SERVER_URL}${employeeData.photoUrl}`}
                             alt="user-circle"
                             width={100}
                             height={100}
