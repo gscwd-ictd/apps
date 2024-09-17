@@ -828,7 +828,10 @@ export const LeavePdf = ({ leaveDetails, selectedLeaveLedger }: LeavePdfProps): 
                             alignItems: 'center',
                             left: '35%',
                           }}
-                          src={leaveDetails.leaveApplicationBasicInfo?.employeeSignature || '/'}
+                          src={
+                            `${process.env.NEXT_PUBLIC_IMAGE_SERVER_URL}${leaveDetails.leaveApplicationBasicInfo?.employeeSignature}` ||
+                            '/'
+                          }
                         />
                         <Text style={{ paddingLeft: 6, paddingTop: 25 }}>
                           _________________________________________________
@@ -994,7 +997,10 @@ export const LeavePdf = ({ leaveDetails, selectedLeaveLedger }: LeavePdfProps): 
                               left: '40%',
                               paddingTop: 5,
                             }}
-                            src={leaveDetails.leaveApplicationBasicInfo?.hrmoSignature || '/'}
+                            src={
+                              `${process.env.NEXT_PUBLIC_IMAGE_SERVER_URL}${leaveDetails.leaveApplicationBasicInfo?.hrmoSignature}` ||
+                              '/'
+                            }
                           />
                           <Text style={{ textAlign: 'center', paddingTop: 25 }}>
                             {leaveDetails.leaveApplicationBasicInfo?.hrmoApprovedByName}
@@ -1071,7 +1077,10 @@ export const LeavePdf = ({ leaveDetails, selectedLeaveLedger }: LeavePdfProps): 
                             alignItems: 'center',
                             left: '40%',
                           }}
-                          src={leaveDetails.leaveApplicationBasicInfo?.supervisorSignature || '/'}
+                          src={
+                            `${process.env.NEXT_PUBLIC_IMAGE_SERVER_URL}${leaveDetails.leaveApplicationBasicInfo?.supervisorSignature}` ||
+                            '/'
+                          }
                         />
                         <Text style={{ textAlign: 'center', paddingTop: 30 }}>
                           {leaveDetails.leaveApplicationBasicInfo?.supervisorName}
@@ -1184,7 +1193,10 @@ export const LeavePdf = ({ leaveDetails, selectedLeaveLedger }: LeavePdfProps): 
                           left: '45%',
                           paddingTop: 0,
                         }}
-                        src={leaveDetails.leaveApplicationBasicInfo?.hrdmSignature || '/'}
+                        src={
+                          `${process.env.NEXT_PUBLIC_IMAGE_SERVER_URL}${leaveDetails.leaveApplicationBasicInfo?.hrdmSignature}` ||
+                          '/'
+                        }
                       />
                       <Text style={{ textAlign: 'center', paddingTop: 22, fontSize: 9 }}>
                         {leaveDetails.leaveApplicationBasicInfo?.hrdmApprovedByName}
