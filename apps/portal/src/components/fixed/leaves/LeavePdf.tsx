@@ -808,7 +808,10 @@ export const LeavePdf = ({ employeeDetails, leaveDetails, selectedLeaveLedger }:
                             marginLeft: 0,
                             paddingBottom: -5,
                           }}
-                          src={leaveDetails?.leaveApplicationBasicInfo?.employeeSignature ?? '/'}
+                          src={
+                            process.env.NEXT_PUBLIC_EMPLOYEE_AVATAR_URL +
+                              leaveDetails?.leaveApplicationBasicInfo?.employeeSignature ?? '/'
+                          }
                         />
                         <Text style={{ paddingTop: 6, paddingLeft: 6 }}>
                           _________________________________________________
@@ -959,7 +962,10 @@ export const LeavePdf = ({ employeeDetails, leaveDetails, selectedLeaveLedger }:
                               position: 'absolute',
                               paddingBottom: 7,
                             }}
-                            src={leaveDetails.leaveApplicationBasicInfo?.hrmoSignature ?? '/'}
+                            src={
+                              process.env.NEXT_PUBLIC_EMPLOYEE_AVATAR_URL +
+                                leaveDetails.leaveApplicationBasicInfo?.hrmoSignature ?? '/'
+                            }
                           />
                           <Text style={{ textAlign: 'center', paddingTop: 22 }}>
                             {leaveDetails.leaveApplicationBasicInfo?.hrmoApprovedByName ?? ''}
@@ -1034,7 +1040,10 @@ export const LeavePdf = ({ employeeDetails, leaveDetails, selectedLeaveLedger }:
                             position: 'absolute',
                             paddingBottom: 18,
                           }}
-                          src={leaveDetails.leaveApplicationBasicInfo?.supervisorSignature ?? '/'}
+                          src={
+                            process.env.NEXT_PUBLIC_EMPLOYEE_AVATAR_URL +
+                              leaveDetails.leaveApplicationBasicInfo?.supervisorSignature ?? '/'
+                          }
                         />
                         <Text style={{ textAlign: 'center', paddingTop: 22 }}>
                           {leaveDetails.leaveApplicationBasicInfo?.supervisorName ?? ''}
@@ -1181,7 +1190,10 @@ export const LeavePdf = ({ employeeDetails, leaveDetails, selectedLeaveLedger }:
                           position: 'absolute',
                           paddingBottom: 20,
                         }}
-                        src={leaveDetails.leaveApplicationBasicInfo?.hrdmSignature ?? '/'}
+                        src={
+                          process.env.NEXT_PUBLIC_EMPLOYEE_AVATAR_URL +
+                            leaveDetails.leaveApplicationBasicInfo?.hrdmSignature ?? '/'
+                        }
                       />
                       <Text style={{ textAlign: 'center', paddingTop: 22, fontSize: 9 }}>
                         {leaveDetails.leaveApplicationBasicInfo?.hrdmApprovedByName ?? ''}
