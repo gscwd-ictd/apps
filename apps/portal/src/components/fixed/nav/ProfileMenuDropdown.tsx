@@ -30,7 +30,6 @@ import { ToastNotification } from '@gscwd-apps/oneui';
 import { useApprovalStore } from 'apps/portal/src/store/approvals.store';
 import { useEmployeeStore } from 'apps/portal/src/store/employee.store';
 import { SalaryGradeConverter } from 'libs/utils/src/lib/functions/SalaryGradeConverter';
-import { cookies } from 'next/dist/client/components/headers';
 
 type MenuDropdownProps = {
   right?: boolean;
