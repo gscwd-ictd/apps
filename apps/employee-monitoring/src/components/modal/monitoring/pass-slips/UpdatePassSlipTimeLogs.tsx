@@ -207,7 +207,13 @@ const UpdatePassSlipModal: FunctionComponent<UpdatePassSlipModalProps> = ({
                 />
               ) : null}
               <div className="flex flex-row gap-5 items-center p-3">
-                <Image src={formData.avatarUrl} className="rounded-full" width={80} height={80} alt={'Employee Icon'} />
+                <Image
+                  src={`${process.env.NEXT_PUBLIC_IMAGE_SERVER_URL}${formData.avatarUrl}`}
+                  className="rounded-full"
+                  width={80}
+                  height={80}
+                  alt={'Employee Icon'}
+                />
                 <div>
                   <p className="text-xl font-medium">{formData.employeeName}</p>
                   <div>{UseRenderNatureOfBusiness(formData.natureOfBusiness)}</div>

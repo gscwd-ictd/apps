@@ -227,8 +227,10 @@ export const LeaveLedgerTable: FunctionComponent<LeaveLedgerTableProps> = ({ emp
         <table className="w-full border table-fixed bg-slate-50">
           <thead className="sticky top-0 bg-slate-50">
             <tr className="text-xs divide-x divide-y border-y">
-              <th className="px-2 py-2 font-semibold text-center text-gray-900 uppercase">Period</th>
-              <th className="px-2 py-2 font-semibold text-center text-gray-900 uppercase break-words">Particulars</th>
+              <th className="px-2 py-2 font-semibold text-center text-gray-900 uppercase break-words">Period</th>
+              <th className="px-2 py-2 font-semibold text-center text-gray-900 uppercase break-words w-12 md:w-auto">
+                Particulars
+              </th>
               <th className="px-2 py-2 font-semibold text-center text-gray-900 uppercase">FL</th>
               <th className="px-2 py-2 font-semibold text-center text-gray-900 uppercase">FL Bal.</th>
               <th className="px-2 py-2 font-semibold text-center text-gray-900 uppercase">VL</th>
@@ -239,7 +241,7 @@ export const LeaveLedgerTable: FunctionComponent<LeaveLedgerTableProps> = ({ emp
               <th className="px-2 py-2 font-semibold text-center text-gray-900 uppercase">SLB Bal.</th>
               <th className="px-2 py-2 font-semibold text-center text-gray-900 uppercase">SPL</th>
               <th className="px-2 py-2 font-semibold text-center text-gray-900 uppercase">SPL Bal.</th>
-              <th className="px-2 py-2 font-semibold text-center text-gray-900 uppercase">View More</th>
+              <th className="px-2 py-2 font-semibold text-center text-gray-900 uppercase break-words">View More</th>
             </tr>
           </thead>
           <tbody className="text-sm max-h-[28rem]">

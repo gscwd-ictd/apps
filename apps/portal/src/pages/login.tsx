@@ -357,24 +357,31 @@ export const getServerSideProps: GetServerSideProps = async (context: GetServerS
 
     // used if else instead of trycatch
     if (portalSsid.length > 0) {
-      const userDetails = await axios.get(`${process.env.NEXT_PUBLIC_PORTAL_URL}/users`, {
-        withCredentials: true,
+      let user;
+      try {
+        const userDetails = await axios.get(`${process.env.NEXT_PUBLIC_PORTAL_URL}/users`, {
+          withCredentials: true,
 
-        // pass the generated ssid
+          // pass the generated ssid
 
-        headers: { Cookie: portalSsid },
-        // headers: { Cookie: `${context.req.headers.cookie}` },
-      });
+          headers: { Cookie: portalSsid, 'Accept-Encoding': 'gzip,deflate,compress' },
+          // headers: { Cookie: `${context.req.headers.cookie}` },
+        });
+        user = userDetails.data;
 
-      const { user } = userDetails.data;
-
-      // redirect to the dashboard page
-      return {
-        redirect: {
-          destination: `/${user._id}`,
-          permanent: false,
-        },
-      };
+        // redirect to the dashboard page
+        return {
+          redirect: {
+            destination: `/${user.user._id}`,
+            permanent: false,
+          },
+        };
+      } catch (error) {
+        // console.log('no cookie');
+        return {
+          props: {},
+        };
+      }
     } else {
       // invalidate session if it generated ssid
 
@@ -386,8 +393,9 @@ export const getServerSideProps: GetServerSideProps = async (context: GetServerS
         props: {},
       };
     }
-  } else
+  } else {
     return {
       props: {},
     };
+  }
 };
