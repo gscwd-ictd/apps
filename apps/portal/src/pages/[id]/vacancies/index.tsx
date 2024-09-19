@@ -190,197 +190,193 @@ export default function Vacancies({
         <ToastNotification toastType="success" notifMessage={`Job Application Submitted`} />
       ) : null}
 
-      {data ? (
-        <div>
-          <Head>
-            <title>Job Vacancies</title>
-          </Head>
+      <div>
+        <Head>
+          <title>Job Vacancies</title>
+        </Head>
 
-          <Modal
-            size={`${windowWidth > 768 ? 'xl' : 'full'}`}
-            open={modal.isOpen}
-            setOpen={() => setModal({ ...modal })}
-            steady
-          >
-            <Modal.Header>
-              <div className="flex items-start justify-between px-2">
-                <div className="flex flex-col">
-                  <label className="text-xl font-semibold text-gray-700 md:text-2xl">
-                    {messageContent?.positionTitle}
-                  </label>
-                  <p className="text-md">{messageContent?.placeOfAssignment}</p>
-                </div>
-
-                <button
-                  className="h-8 px-1 text-xl rounded-full outline-slate-100 outline-8 hover:bg-slate-100"
-                  onClick={modalCancel}
-                >
-                  <HiX />
-                </button>
+        <Modal
+          size={`${windowWidth > 768 ? 'xl' : 'full'}`}
+          open={modal.isOpen}
+          setOpen={() => setModal({ ...modal })}
+          steady
+        >
+          <Modal.Header>
+            <div className="flex items-start justify-between px-2">
+              <div className="flex flex-col">
+                <label className="text-xl font-semibold text-gray-700 md:text-2xl">
+                  {messageContent?.positionTitle}
+                </label>
+                <p className="text-md">{messageContent?.placeOfAssignment}</p>
               </div>
-            </Modal.Header>
 
-            <Modal.Body>
-              {hasApplied ? (
-                <div className="px-2">
-                  <AlertNotification
-                    alertType="info"
-                    notifMessage="You have already applied for this position."
-                    dismissible={false}
-                  />
-                </div>
-              ) : null}
-
-              <VacancyModalController page={modal.page} dataJobOpening={jobDetails} workExperience={workExperience} />
-
-              <CaptchaModal
-                modalState={captchaModalIsOpen}
-                setModalState={setCaptchaModalIsOpen}
-                title={'JOB APPLICATION CAPTCHA'}
+              <button
+                className="h-8 px-1 text-xl rounded-full outline-slate-100 outline-8 hover:bg-slate-100"
+                onClick={modalCancel}
               >
-                {/* contents */}
-                <JobApplicationCaptcha
-                  vppId={messageContent?.vppId}
-                  employeeId={employeeId}
-                  withRelevantExperience={withRelevantExperience}
-                  workExperienceArray={workExperienceArray}
-                />
-              </CaptchaModal>
-            </Modal.Body>
+                <HiX />
+              </button>
+            </div>
+          </Modal.Header>
 
-            <Modal.Footer className={`${modal.page === 2 ? 'h-36' : 'h-auto'} md:h-auto`}>
-              <div className="flex flex-col justify-center w-full h-full px-4">
-                {modal.page === 1 ? (
-                  <div className="flex flex-col items-end w-full">
-                    {hasApplied ? (
-                      <Button variant="default" className={`h-10`} onClick={(e) => modalCancel()}>
-                        Close
-                      </Button>
-                    ) : (
-                      <Button className={`h-10`} onClick={(e) => changeModalPage(2)}>
-                        Next
-                      </Button>
-                    )}
-                  </div>
-                ) : modal.page === 2 ? (
-                  <div className="flex items-center justify-between w-full h-10">
+          <Modal.Body>
+            {hasApplied ? (
+              <div className="px-2">
+                <AlertNotification
+                  alertType="info"
+                  notifMessage="You have already applied for this position."
+                  dismissible={false}
+                />
+              </div>
+            ) : null}
+
+            <VacancyModalController page={modal.page} dataJobOpening={jobDetails} workExperience={workExperience} />
+
+            <CaptchaModal
+              modalState={captchaModalIsOpen}
+              setModalState={setCaptchaModalIsOpen}
+              title={'JOB APPLICATION CAPTCHA'}
+            >
+              {/* contents */}
+              <JobApplicationCaptcha
+                vppId={messageContent?.vppId}
+                employeeId={employeeId}
+                withRelevantExperience={withRelevantExperience}
+                workExperienceArray={workExperienceArray}
+              />
+            </CaptchaModal>
+          </Modal.Body>
+
+          <Modal.Footer className={`${modal.page === 2 ? 'h-36' : 'h-auto'} md:h-auto`}>
+            <div className="flex flex-col justify-center w-full h-full px-4">
+              {modal.page === 1 ? (
+                <div className="flex flex-col items-end w-full">
+                  {hasApplied ? (
+                    <Button variant="default" className={`h-10`} onClick={(e) => modalCancel()}>
+                      Close
+                    </Button>
+                  ) : (
+                    <Button className={`h-10`} onClick={(e) => changeModalPage(2)}>
+                      Next
+                    </Button>
+                  )}
+                </div>
+              ) : modal.page === 2 ? (
+                <div className="flex items-center justify-between w-full h-10">
+                  <div
+                    className={`${
+                      hasApplied ? 'hidden' : 'w-full h-10 flex flex-row gap-3 justify-between items-center'
+                    }`}
+                  >
+                    <Button onClick={(e) => changeModalPage(1)}>Back</Button>
+
                     <div
                       className={`${
-                        hasApplied ? 'hidden' : 'w-full h-10 flex flex-row gap-3 justify-between items-center'
+                        hasApplied ? 'hidden' : 'hidden lg:flex justify-start items-center text-xs text-red-600'
                       }`}
                     >
-                      <Button onClick={(e) => changeModalPage(1)}>Back</Button>
-
-                      <div
-                        className={`${
-                          hasApplied ? 'hidden' : 'hidden lg:flex justify-start items-center text-xs text-red-600'
-                        }`}
-                      >
-                        Warning: Going back or closing the window will reset your entries.
-                      </div>
-
-                      <Button onClick={modalAction}>Apply</Button>
+                      Warning: Going back or closing the window will reset your entries.
                     </div>
+
+                    <Button onClick={modalAction}>Apply</Button>
                   </div>
-                ) : null}
-              </div>
-            </Modal.Footer>
-          </Modal>
-
-          <SideNav employeeDetails={employeeDetails} />
-
-          <MainContainer>
-            <div className={`w-full pl-4 pr-4 lg:pl-32 lg:pr-32`}>
-              <ContentHeader
-                title="Job Vacancies"
-                subtitle="View open positions"
-                backUrl={`/${router.query.id}`}
-              ></ContentHeader>
-
-              {!data ? (
-                <div className="w-full h-96 static flex flex-col justify-items-center items-center place-items-center">
-                  <SpinnerDotted
-                    speed={70}
-                    thickness={70}
-                    className="flex w-full h-full transition-all "
-                    color="slateblue"
-                    size={100}
-                  />
                 </div>
-              ) : (
-                <ContentBody>
-                  <div className={`w-full flex lg:flex-row flex-col`}>
-                    <div className={`lg:w-[58rem] w-full`}>
-                      {employeeDetails.employmentDetails.userRole !== UserRole.JOB_ORDER ? (
-                        data && data.length > 0 ? (
-                          data.map((vacancies: VacancyDetails, messageIdx: number) => {
-                            return (
-                              <div key={messageIdx}>
-                                <MessageCard
-                                  icon={<HiNewspaper className="w-6 h-6 text-green-800" />}
-                                  color={`green`}
-                                  title={vacancies.positionTitle}
-                                  description={vacancies.occupationName}
-                                  linkType={'router'}
-                                  onClick={() => handleMessage(vacancies)}
-                                />
-                              </div>
-                            );
-                          })
-                        ) : (
-                          <div className="flex justify-center pt-20 px-5">
-                            <h1 className="text-4xl text-gray-300">No vacancies found</h1>
-                          </div>
-                        )
+              ) : null}
+            </div>
+          </Modal.Footer>
+        </Modal>
+
+        <SideNav employeeDetails={employeeDetails} />
+
+        <MainContainer>
+          <div className={`w-full pl-4 pr-4 lg:pl-32 lg:pr-32`}>
+            <ContentHeader
+              title="Job Vacancies"
+              subtitle="View open positions"
+              backUrl={`/${router.query.id}`}
+            ></ContentHeader>
+
+            {!data ? (
+              <div className="w-full h-96 static flex flex-col justify-items-center items-center place-items-center">
+                <SpinnerDotted
+                  speed={70}
+                  thickness={70}
+                  className="flex w-full h-full transition-all "
+                  color="slateblue"
+                  size={100}
+                />
+              </div>
+            ) : (
+              <ContentBody>
+                <div className={`w-full flex lg:flex-row flex-col`}>
+                  <div className={`lg:w-[58rem] w-full`}>
+                    {employeeDetails.employmentDetails.userRole !== UserRole.JOB_ORDER ? (
+                      data && data.length > 0 ? (
+                        data.map((vacancies: VacancyDetails, messageIdx: number) => {
+                          return (
+                            <div key={messageIdx}>
+                              <MessageCard
+                                icon={<HiNewspaper className="w-6 h-6 text-green-800" />}
+                                color={`green`}
+                                title={vacancies.positionTitle}
+                                description={vacancies.occupationName}
+                                linkType={'router'}
+                                onClick={() => handleMessage(vacancies)}
+                              />
+                            </div>
+                          );
+                        })
                       ) : (
                         <div className="flex justify-center pt-20 px-5">
-                          <h1 className="text-4xl text-gray-300">No data found</h1>
+                          <h1 className="text-4xl text-gray-300">No vacancies found</h1>
                         </div>
-                      )}
-                    </div>
-                    <div className="w-full">
-                      {isEmpty(jobDetails?.error) && jobDetails && messageContent ? (
-                        <div className="flex flex-col items-center w-full text-gray-700 h-1/2 md:h-full md:ml-4 md:mr-4 ">
-                          <div
-                            className={`${
-                              isMessageOpen ? 'w-full md:ml-10 md:mr-10 px-4 flex flex-col bg-white' : 'hidden'
-                            }`}
-                          >
-                            {/* <label className="pb-2">{mailMessage}</label> */}
-                            <JobDetailsPanel data={jobDetails} details={messageContent} />
+                      )
+                    ) : (
+                      <div className="flex justify-center pt-20 px-5">
+                        <h1 className="text-4xl text-gray-300">No data found</h1>
+                      </div>
+                    )}
+                  </div>
+                  <div className="w-full">
+                    {isEmpty(jobDetails?.error) && jobDetails && messageContent ? (
+                      <div className="flex flex-col items-center w-full text-gray-700 h-1/2 md:h-full md:ml-4 md:mr-4 ">
+                        <div
+                          className={`${
+                            isMessageOpen ? 'w-full md:ml-10 md:mr-10 px-4 flex flex-col bg-white' : 'hidden'
+                          }`}
+                        >
+                          {/* <label className="pb-2">{mailMessage}</label> */}
+                          <JobDetailsPanel data={jobDetails} details={messageContent} />
 
-                            <label className="pt-2 pb-2">Click Details button for more information.</label>
-                            <div className="flex flex-row justify-end gap-4 pb-10">
-                              <div
-                                className={`${
-                                  messageContent?.postingDeadline ? '' : 'flex flex-row gap-4 items-center justify-end'
-                                }`}
+                          <label className="pt-2 pb-2">Click Details button for more information.</label>
+                          <div className="flex flex-row justify-end gap-4 pb-10">
+                            <div
+                              className={`${
+                                messageContent?.postingDeadline ? '' : 'flex flex-row gap-4 items-center justify-end'
+                              }`}
+                            >
+                              <button
+                                className={`w-24 h-10 rounded bg-indigo-500 text-white hover:bg-indigo-600`}
+                                onClick={openModal}
                               >
-                                <button
-                                  className={`w-24 h-10 rounded bg-indigo-500 text-white hover:bg-indigo-600`}
-                                  onClick={openModal}
-                                >
-                                  Details
-                                </button>
-                              </div>
+                                Details
+                              </button>
                             </div>
                           </div>
                         </div>
-                      ) : (
-                        <div className="flex justify-center pt-20 px-5">
-                          <h1 className="text-4xl text-gray-300">No posting selected</h1>
-                        </div>
-                      )}
-                    </div>
+                      </div>
+                    ) : (
+                      <div className="flex justify-center pt-20 px-5">
+                        <h1 className="text-4xl text-gray-300">No posting selected</h1>
+                      </div>
+                    )}
                   </div>
-                </ContentBody>
-              )}
-            </div>
-          </MainContainer>
-        </div>
-      ) : (
-        'No Data'
-      )}
+                </div>
+              </ContentBody>
+            )}
+          </div>
+        </MainContainer>
+      </div>
     </>
   );
 }

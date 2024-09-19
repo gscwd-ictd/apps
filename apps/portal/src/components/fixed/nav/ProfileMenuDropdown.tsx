@@ -30,6 +30,7 @@ import { ToastNotification } from '@gscwd-apps/oneui';
 import { useApprovalStore } from 'apps/portal/src/store/approvals.store';
 import { useEmployeeStore } from 'apps/portal/src/store/employee.store';
 import { SalaryGradeConverter } from 'libs/utils/src/lib/functions/SalaryGradeConverter';
+import { cookies } from 'next/dist/client/components/headers';
 
 type MenuDropdownProps = {
   right?: boolean;
@@ -51,9 +52,13 @@ export const ProfileMenuDropdown = ({
   const handleLogout = async () => {
     // perform http request to invalidate session from the server
     // const signout = await postData(`${process.env.NEXT_PUBLIC_PORTAL_URL}/users/web/signout`, null);
-    await axios.post(`${process.env.NEXT_PUBLIC_PORTAL_URL}/users/web/signout`, null, { withCredentials: true });
-    localStorage.clear();
-    // deleteCookie
+    try {
+      await axios.post(`${process.env.NEXT_PUBLIC_PORTAL_URL}/users/web/signout`, null, { withCredentials: true });
+      localStorage.clear();
+      // deleteCookie
+    } catch (error) {
+      console.log(error);
+    }
 
     // remove employee object from local storage
     localStorage.removeItem('employee');
