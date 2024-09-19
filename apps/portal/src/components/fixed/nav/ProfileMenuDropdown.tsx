@@ -51,9 +51,11 @@ export const ProfileMenuDropdown = ({
   const handleLogout = async () => {
     // perform http request to invalidate session from the server
     // const signout = await postData(`${process.env.NEXT_PUBLIC_PORTAL_URL}/users/web/signout`, null);
-    await axios.post(`${process.env.NEXT_PUBLIC_PORTAL_URL}/users/web/signout`, null, { withCredentials: true });
-    localStorage.clear();
-    // deleteCookie
+    try {
+      await axios.post(`${process.env.NEXT_PUBLIC_PORTAL_URL}/users/web/signout`, null, { withCredentials: true });
+      localStorage.clear();
+      // deleteCookie
+    } catch (error) {}
 
     // remove employee object from local storage
     localStorage.removeItem('employee');

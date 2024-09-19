@@ -283,6 +283,12 @@ export default function Leaves({ employeeDetails }: InferGetServerSidePropsType<
                   </div>
                 </Button>
 
+                <Button onClick={openLeaveLedgerModal} className="block lg:hidden" size={`lg`}>
+                  <div className="flex items-center w-full gap-2">
+                    <HiDocument />
+                  </div>
+                </Button>
+
                 <Button onClick={openApplyLeaveModal} className="block lg:hidden" size={`lg`}>
                   <div className="flex items-center w-full gap-2">
                     <HiDocumentAdd />
