@@ -55,9 +55,7 @@ export const ProfileMenuDropdown = ({
       await axios.post(`${process.env.NEXT_PUBLIC_PORTAL_URL}/users/web/signout`, null, { withCredentials: true });
       localStorage.clear();
       // deleteCookie
-    } catch (error) {
-      console.log(error);
-    }
+    } catch (error) {}
 
     // remove employee object from local storage
     localStorage.removeItem('employee');
