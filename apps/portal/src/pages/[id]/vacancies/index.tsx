@@ -310,7 +310,9 @@ export default function Vacancies({
               <ContentBody>
                 <div className={`w-full flex lg:flex-row flex-col`}>
                   <div className={`lg:w-[58rem] w-full`}>
-                    {employeeDetails.employmentDetails.userRole !== UserRole.JOB_ORDER ? (
+                    {employeeDetails.employmentDetails.userRole !== UserRole.JOB_ORDER &&
+                    employeeDetails.employmentDetails.userRole !== UserRole.COS &&
+                    employeeDetails.employmentDetails.userRole !== UserRole.COS_JO ? (
                       data && data.length > 0 ? (
                         data.map((vacancies: VacancyDetails, messageIdx: number) => {
                           return (
