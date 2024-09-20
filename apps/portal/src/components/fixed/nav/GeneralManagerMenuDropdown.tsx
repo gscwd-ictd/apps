@@ -72,7 +72,9 @@ export const GeneralManagerMenuDropdown = ({
                       className={`${
                         active ? 'bg-slate-100' : 'text-gray-900'
                       } group flex w-80 items-center gap-2 px-3 py-3 text-sm`}
-                      onClick={() => router.push(`/${router.query.id}/appointing-authority-selection`)}
+                      onClick={() =>
+                        router.push(`/${router.query.id}/appointing-authority-selection`, undefined, { shallow: true })
+                      }
                     >
                       <div className="flex gap-2">
                         <HiClipboardCheck className="w-6 h-6 text-green-600" />
@@ -94,7 +96,7 @@ export const GeneralManagerMenuDropdown = ({
                       className={`${
                         active ? 'bg-slate-100' : 'text-gray-900'
                       } group flex w-80 items-center gap-2 px-3 py-3 text-sm`}
-                      onClick={() => router.push(`/${router.query.id}/pdc-gm-approvals`)}
+                      onClick={() => router.push(`/${router.query.id}/pdc-gm-approvals`, undefined, { shallow: true })}
                     >
                       <div className="flex gap-2">
                         <HiAcademicCap className="w-6 h-6 text-red-600" />

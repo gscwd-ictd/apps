@@ -103,7 +103,7 @@ export const CommitteeMenuDropdown = ({
                         className={`${
                           active ? 'bg-slate-100' : 'text-gray-900'
                         } group flex w-80 items-center gap-2 px-3 py-3 text-sm`}
-                        onClick={() => router.push(`/${router.query.id}/overtime`)}
+                        onClick={() => router.push(`/${router.query.id}/overtime`, undefined, { shallow: true })}
                       >
                         <div>
                           <HiClock className="w-6 h-6 text-green-600" />
@@ -123,7 +123,7 @@ export const CommitteeMenuDropdown = ({
                         className={`${
                           active ? 'bg-slate-100' : 'text-gray-900'
                         } group flex w-80 items-center gap-2 px-3 py-3 text-sm`}
-                        onClick={() => router.push(`/${router.query.id}/pdc-approvals`)}
+                        onClick={() => router.push(`/${router.query.id}/pdc-approvals`, undefined, { shallow: true })}
                       >
                         <div>
                           <HiAcademicCap className="w-6 h-6 text-rose-600" />
