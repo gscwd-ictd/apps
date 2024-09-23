@@ -35,7 +35,7 @@ export function withCookieSession(serverSideProps: GetServerSideProps) {
       if (portalSsid.length > 0) {
         const { data } = await axios.get(`${process.env.NEXT_PUBLIC_PORTAL_URL}/users`, {
           withCredentials: true,
-          headers: { Cookie: `${portalSsid}` },
+          headers: { Cookie: portalSsid, 'Accept-Encoding': 'gzip,deflate,compress' },
         });
 
         setUserDetails(data);
@@ -48,7 +48,7 @@ export function withCookieSession(serverSideProps: GetServerSideProps) {
           },
         };
       }
-    } catch {
+    } catch (error) {
       return {
         redirect: {
           permanent: false,
