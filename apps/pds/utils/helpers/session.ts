@@ -7,7 +7,6 @@ let userDetails = {} as EmployeeDetails;
 
 const setUserDetails = ({ user, profile, employmentDetails }: EmployeeDetails) => {
   userDetails = { user, profile, employmentDetails };
-
   return userDetails;
 };
 
@@ -116,15 +115,17 @@ export function withCookieSessionPds(serverSideProps: GetServerSideProps) {
       const cookiesArray = cookie.split(';') as string[];
       const portalSsid = getPortalSsid(cookiesArray);
 
-      if (portalSsid.length > 0) {
+      try {
         const { data } = await axios.get(`${process.env.NEXT_PUBLIC_PORTAL_URL}/users`, {
           withCredentials: true,
-          // headers: { Cookie: `${portalSsid}` },
           headers: { Cookie: `${portalSsid}`, 'Accept-Encoding': 'gzip,deflate,compress' },
         });
+
         setUserDetails(data);
+
         return await serverSideProps(context);
-      } else {
+      } catch (error) {
+        console.log(error);
         return {
           redirect: {
             permanent: false,
