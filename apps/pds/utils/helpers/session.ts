@@ -41,36 +41,36 @@ export function withSession(serverSideProps: GetServerSideProps) {
   };
 }
 
-// updated cookie with session - NOT USED - FOR REFERENCE ONLY
-// export function withCookieSession(serverSideProps: GetServerSideProps) {
-//   return async (context: GetServerSidePropsContext) => {
-//     // assign context cookie to cookie
-//     const cookie = context.req.headers.cookie;
+// updated cookie with session
+export function withCookieSession(serverSideProps: GetServerSideProps) {
+  return async (context: GetServerSidePropsContext) => {
+    // assign context cookie to cookie
+    const cookie = context.req.headers.cookie;
 
-//     if (!cookie) {
-//       return {
-//         redirect: {
-//           permanent: false,
-//           destination: '/login',
-//         },
-//       };
-//     } else {
-//       // assign the splitted cookie to cookies array
-//       const cookiesArray = cookie.split(';') as string[];
-//       const portalSsid = getPortalSsid(cookiesArray);
+    if (!cookie) {
+      return {
+        redirect: {
+          permanent: false,
+          destination: '/login',
+        },
+      };
+    } else {
+      // assign the splitted cookie to cookies array
+      const cookiesArray = cookie.split(';') as string[];
+      const portalSsid = getPortalSsid(cookiesArray);
 
-//       const { data } = await axios.get(`${process.env.NEXT_PUBLIC_PORTAL_URL}/users`, {
-//         withCredentials: true,
-//         // headers: { Cookie: `${portalSsid}` },
-//         headers: { Cookie: `${portalSsid}`, 'Accept-Encoding': 'gzip,deflate,compress' },
-//       });
+      const { data } = await axios.get(`${process.env.NEXT_PUBLIC_PORTAL_URL}/users`, {
+        withCredentials: true,
+        // headers: { Cookie: `${portalSsid}` },
+        headers: { Cookie: `${portalSsid}`, 'Accept-Encoding': 'gzip,deflate,compress' },
+      });
 
-//       setUserDetails(data);
+      setUserDetails(data);
 
-//       return await serverSideProps(context);
-//     }
-//   };
-// }
+      return await serverSideProps(context);
+    }
+  };
+}
 
 // // updated cookie with session specifically for pds
 // export function withCookieSessionPds(serverSideProps: GetServerSideProps) {
