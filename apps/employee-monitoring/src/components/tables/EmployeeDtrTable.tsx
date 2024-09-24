@@ -225,39 +225,61 @@ export const EmployeeDtrTable: FunctionComponent<EmployeeDtrTableProps> = ({ emp
                       let timeOutColor = '';
 
                       // time in color
-                      if (logs.isRestDay === true || logs.isHoliday === true) {
-                        timeInColor = normal;
+                      if (
+                        compareIfLate(logs.day, logs.dtr.timeIn, logs.schedule.timeIn) === true &&
+                        logs.isRestDay === false &&
+                        logs.isHoliday === false
+                      ) {
+                        timeInColor = underTime;
                       } else {
-                        compareIfLate(logs.day, logs.dtr.timeIn, logs.schedule.timeIn) === true
-                          ? (timeInColor = underTime)
-                          : (timeInColor = normal);
+                        timeInColor = normal;
                       }
+                      // if (logs.isRestDay === true || logs.isHoliday === true) {
+                      //   timeInColor = normal;
+                      // } else {
+                      //   compareIfLate(logs.day, logs.dtr.timeIn, logs.schedule.timeIn) === true
+                      //     ? (timeInColor = underTime)
+                      //     : (timeInColor = normal);
+                      // }
 
                       // lunch out color
                       compareIfEarly(logs.day, logs.dtr.lunchOut, logs.schedule.lunchOut) ||
-                      compareIfLate(logs.day, logs.dtr.lunchOut, logs.schedule.lunchIn) === true
+                      (compareIfLate(logs.day, logs.dtr.lunchOut, logs.schedule.lunchIn) === true &&
+                        logs.isRestDay === false &&
+                        logs.isHoliday === false)
                         ? (lunchOutColor = underTime)
                         : (lunchOutColor = normal);
 
                       // lunch in color
                       compareIfEarly(logs.day, logs.dtr.lunchIn, logs.schedule.lunchIn) ||
-                      compareIfLate(
+                      (compareIfLate(
                         logs.day,
                         logs.dtr.lunchIn,
                         logs.schedule.lunchIn,
                         29 // 12:31 lunch in + 20 = 1pm
-                      ) === true
+                      ) === true &&
+                        logs.isRestDay === false &&
+                        logs.isHoliday === false)
                         ? (lunchInColor = underTime)
                         : (lunchInColor = normal);
 
                       // time out color
-                      if (logs.isRestDay === true || logs.isHoliday === true) {
-                        timeOutColor = normal;
+                      if (
+                        compareIfEarly(logs.day, logs.dtr.timeOut, logs.schedule.timeOut) === true &&
+                        logs.isRestDay === false &&
+                        logs.isHoliday === false
+                      ) {
+                        timeOutColor = underTime;
                       } else {
-                        compareIfEarly(logs.day, logs.dtr.timeOut, logs.schedule.timeOut) === true
-                          ? (timeOutColor = underTime)
-                          : (timeOutColor = normal);
+                        timeOutColor = normal;
                       }
+                      // if (logs.isRestDay === true || logs.isHoliday === true) {
+                      //   timeOutColor = normal;
+                      // } else {
+                      //   compareIfEarly(logs.day, logs.dtr.timeOut, logs.schedule.timeOut) === true
+                      //     ? (timeOutColor = underTime)
+                      //     : (timeOutColor = normal);
+                      // }
 
                       return (
                         <Fragment key={index}>
