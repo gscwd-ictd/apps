@@ -13,6 +13,9 @@ import { Toast } from '../toast/Toast';
 import { OIOrgs } from './other-info/Organizations';
 import { OIRecogs } from './other-info/Recogs';
 import { OISkills } from './other-info/Skills';
+import { PageContentContext } from '@gscwd-apps/oneui';
+import { SolidPrevButton } from '../navigation/button/SolidPrevButton';
+import { SolidNextButton } from '../navigation/button/SolidNextButton';
 
 export default function OtherInfoPanel(): JSX.Element {
   // set tab state from tab store
@@ -23,38 +26,33 @@ export default function OtherInfoPanel(): JSX.Element {
   const skillsOnEdit = usePdsStore((state) => state.skillsOnEdit);
   const recognitionsOnEdit = usePdsStore((state) => state.recognitionsOnEdit);
   const organizationsOnEdit = usePdsStore((state) => state.organizationsOnEdit);
+
+  // page context
+  const {
+    aside: { isMobile },
+  } = useContext(PageContentContext);
+
+  // notification context
   const { notify } = useContext(NotificationContext);
 
   // fire when next button is clicked
   const onSubmit = () => {
-    if (hasPds && !skillsOnEdit && !recognitionsOnEdit && !organizationsOnEdit)
-      handleNextTab(selectedTab);
-    else if (
-      hasPds &&
-      (skillsOnEdit || recognitionsOnEdit || organizationsOnEdit)
-    )
-      addNotification(TabActions.NEXT);
+    if (hasPds && !skillsOnEdit && !recognitionsOnEdit && !organizationsOnEdit) handleNextTab(selectedTab);
+    else if (hasPds && (skillsOnEdit || recognitionsOnEdit || organizationsOnEdit)) addNotification(TabActions.NEXT);
     else if (!hasPds) handleNextTab(selectedTab);
   };
 
   // prev button
   const onPrev = () => {
-    if (hasPds && !skillsOnEdit && !recognitionsOnEdit && !organizationsOnEdit)
-      handlePrevTab(selectedTab);
-    else if (
-      hasPds &&
-      (skillsOnEdit || recognitionsOnEdit || organizationsOnEdit)
-    )
+    if (hasPds && !skillsOnEdit && !recognitionsOnEdit && !organizationsOnEdit) handlePrevTab(selectedTab);
+    else if (hasPds && (skillsOnEdit || recognitionsOnEdit || organizationsOnEdit))
       addNotification(TabActions.PREVIOUS);
     else if (!hasPds) handlePrevTab(selectedTab);
   };
 
   const addNotification = (action: TabActions) => {
     const notification = notify.custom(
-      <Toast
-        variant="error"
-        dismissAction={() => notify.dismiss(notification.id)}
-      >
+      <Toast variant="error" dismissAction={() => notify.dismiss(notification.id)}>
         {action === TabActions.NEXT
           ? 'Cannot proceed to the next tab. Either undo or update your changes to proceed.'
           : action === TabActions.PREVIOUS
@@ -70,14 +68,30 @@ export default function OtherInfoPanel(): JSX.Element {
       <HeadContainer title="PDS - Other Information" />
       <Page title="Other Information I" subtitle="">
         <>
+          {isMobile && (
+            <div className="flex w-full gap-1 justify-between pt-6">
+              <SolidPrevButton onClick={onPrev} type="button" />
+              <SolidNextButton onClick={onSubmit} type="button" />
+            </div>
+          )}
           <OISkills />
           <OIRecogs />
           <OIOrgs />
+          {isMobile && (
+            <div className="flex w-full gap-1 justify-between pt-6">
+              <SolidPrevButton onClick={onPrev} type="button" />
+              <SolidNextButton onClick={onSubmit} type="button" />
+            </div>
+          )}
         </>
       </Page>
-      <PrevButton action={onPrev} type="button" />
 
-      <NextButton action={onSubmit} type="button" />
+      {!isMobile && (
+        <>
+          <PrevButton action={onPrev} type="button" />
+          <NextButton action={onSubmit} type="button" />
+        </>
+      )}
     </>
   );
 }

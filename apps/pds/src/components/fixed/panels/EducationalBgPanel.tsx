@@ -20,6 +20,9 @@ import { NotificationContext } from 'apps/pds/src/context/NotificationContext';
 import { useEmployeeStore } from 'apps/pds/src/store/employee.store';
 import { usePdsStore } from 'apps/pds/src/store/pds.store';
 import { isEmpty } from 'lodash';
+import { PageContentContext } from '@gscwd-apps/oneui';
+import { SolidPrevButton } from '../navigation/button/SolidPrevButton';
+import { SolidNextButton } from '../navigation/button/SolidNextButton';
 
 // yup validation schema
 
@@ -40,15 +43,17 @@ export const EducationalBgPanel = (): JSX.Element => {
   const handlePrevTab = useTabStore((state) => state.handlePrevTab);
   const { notify } = useContext(NotificationContext);
 
+  // page context
+  const {
+    aside: { isMobile },
+  } = useContext(PageContentContext);
+
   // assigns the use form to 'methods', yup resolver to yup schema, and mode is onchange
   const methods = useForm({ resolver: yupResolver(schema), mode: 'onChange' });
 
   const addNotification = (action: TabActions) => {
     const notification = notify.custom(
-      <Toast
-        variant="error"
-        dismissAction={() => notify.dismiss(notification.id)}
-      >
+      <Toast variant="error" dismissAction={() => notify.dismiss(notification.id)}>
         {action === TabActions.NEXT
           ? 'Cannot proceed to the next tab. Either undo or update your changes to proceed.'
           : action === TabActions.PREVIOUS
@@ -78,46 +83,22 @@ export const EducationalBgPanel = (): JSX.Element => {
     }
 
     if (
-      (hasPds &&
-        !elementaryOnEdit &&
-        !secondaryOnEdit &&
-        !vocationalOnEdit &&
-        !collegeOnEdit &&
-        !graduateOnEdit) ||
+      (hasPds && !elementaryOnEdit && !secondaryOnEdit && !vocationalOnEdit && !collegeOnEdit && !graduateOnEdit) ||
       !hasPds
     )
       handleNextTab(selectedTab);
-    else if (
-      hasPds &&
-      (elementaryOnEdit ||
-        secondaryOnEdit ||
-        vocationalOnEdit ||
-        collegeOnEdit ||
-        graduateOnEdit)
-    )
+    else if (hasPds && (elementaryOnEdit || secondaryOnEdit || vocationalOnEdit || collegeOnEdit || graduateOnEdit))
       addNotification(TabActions.NEXT);
   };
 
   // prev button
   const onPrev = () => {
     if (
-      (hasPds &&
-        !elementaryOnEdit &&
-        !secondaryOnEdit &&
-        !vocationalOnEdit &&
-        !collegeOnEdit &&
-        !graduateOnEdit) ||
+      (hasPds && !elementaryOnEdit && !secondaryOnEdit && !vocationalOnEdit && !collegeOnEdit && !graduateOnEdit) ||
       !hasPds
     )
       handlePrevTab(selectedTab);
-    else if (
-      hasPds &&
-      (elementaryOnEdit ||
-        secondaryOnEdit ||
-        vocationalOnEdit ||
-        collegeOnEdit ||
-        graduateOnEdit)
-    )
+    else if (hasPds && (elementaryOnEdit || secondaryOnEdit || vocationalOnEdit || collegeOnEdit || graduateOnEdit))
       addNotification(TabActions.PREVIOUS);
   };
 
@@ -126,6 +107,12 @@ export const EducationalBgPanel = (): JSX.Element => {
       <HeadContainer title="PDS - Educational Background" />
       <Page title="Educational Background" subtitle="">
         <>
+          {isMobile && (
+            <div className="flex w-full gap-1 justify-between pt-6">
+              <SolidPrevButton onClick={onPrev} type="button" />
+              <SolidNextButton onClick={onSubmit} type="button" />
+            </div>
+          )}
           <FormProvider {...methods} key="educationInfo">
             <form onSubmit={methods.handleSubmit(onSubmit)} id="educationInfo">
               <Elementary />
@@ -135,10 +122,20 @@ export const EducationalBgPanel = (): JSX.Element => {
               <Graduate />
             </form>
           </FormProvider>
+          {isMobile && (
+            <div className="flex w-full gap-1 justify-between mt-2">
+              <SolidPrevButton onClick={onPrev} type="button" />
+              <SolidNextButton onClick={onSubmit} type="button" />
+            </div>
+          )}
+          {!isMobile && (
+            <>
+              <PrevButton action={onPrev} type="button" />
+              <NextButton action={onSubmit} type="button" />
+            </>
+          )}
         </>
       </Page>
-      <PrevButton action={onPrev} type="button" />
-      <NextButton formId="educationInfo" />
     </>
   );
 };
