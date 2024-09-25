@@ -11,6 +11,9 @@ import { NextButton } from '../navigation/button/NextButton';
 import { PrevButton } from '../navigation/button/PrevButton';
 import { Toast } from '../toast/Toast';
 import { VolWorkExp } from './voluntary-experience/VolWorkExp';
+import { PageContentContext } from '@gscwd-apps/oneui';
+import { SolidPrevButton } from '../navigation/button/SolidPrevButton';
+import { SolidNextButton } from '../navigation/button/SolidNextButton';
 
 export default function VolWorkPanel(): JSX.Element {
   // set tab state from tab store
@@ -19,7 +22,13 @@ export default function VolWorkPanel(): JSX.Element {
   const handlePrevTab = useTabStore((state) => state.handlePrevTab);
   const hasPds = useEmployeeStore((state) => state.hasPds);
   const voluntaryWorkOnEdit = usePdsStore((state) => state.voluntaryWorkOnEdit);
+  const voluntaryWork = usePdsStore((state) => state.voluntaryWork);
   const { notify } = useContext(NotificationContext);
+
+  // page context
+  const {
+    aside: { isMobile },
+  } = useContext(PageContentContext);
 
   // fire when next button is clicked
   const onSubmit = () => {
@@ -31,17 +40,13 @@ export default function VolWorkPanel(): JSX.Element {
   // prev button
   const onPrev = () => {
     if (hasPds && !voluntaryWorkOnEdit) handlePrevTab(selectedTab);
-    else if (hasPds && voluntaryWorkOnEdit)
-      addNotification(TabActions.PREVIOUS);
+    else if (hasPds && voluntaryWorkOnEdit) addNotification(TabActions.PREVIOUS);
     else if (!hasPds) handlePrevTab(selectedTab);
   };
 
   const addNotification = (action: TabActions) => {
     const notification = notify.custom(
-      <Toast
-        variant="error"
-        dismissAction={() => notify.dismiss(notification.id)}
-      >
+      <Toast variant="error" dismissAction={() => notify.dismiss(notification.id)}>
         {action === TabActions.NEXT
           ? 'Cannot proceed to the next tab. Either undo or update your changes to proceed.'
           : action === TabActions.PREVIOUS
@@ -58,12 +63,28 @@ export default function VolWorkPanel(): JSX.Element {
 
       <Page title="Voluntary Work Experience" subtitle="">
         <>
+          {isMobile && (
+            <div className="flex w-full gap-1 justify-between pt-6">
+              <SolidPrevButton onClick={onPrev} type="button" />
+              <SolidNextButton onClick={onSubmit} type="button" />
+            </div>
+          )}
           <VolWorkExp />
         </>
       </Page>
-      <PrevButton action={onPrev} type="button" />
+      {!isMobile && (
+        <>
+          <PrevButton action={onPrev} type="button" />
+          <NextButton action={onSubmit} type="button" />
+        </>
+      )}
 
-      <NextButton action={onSubmit} type="button" />
+      {isMobile && voluntaryWork.length > 3 && (
+        <div className="flex w-full gap-1 justify-between pt-6">
+          <SolidPrevButton onClick={onPrev} type="button" />
+          <SolidNextButton onClick={onSubmit} type="button" />
+        </div>
+      )}
     </>
   );
 }

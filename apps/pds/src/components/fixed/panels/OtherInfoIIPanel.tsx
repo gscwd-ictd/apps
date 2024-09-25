@@ -17,6 +17,9 @@ import { TabActions } from '../../../../utils/helpers/enums/toast.enum';
 import { Toast } from '../toast/Toast';
 import { NotificationContext } from 'apps/pds/src/context/NotificationContext';
 import { useEmployeeStore } from 'apps/pds/src/store/employee.store';
+import { PageContentContext } from '@gscwd-apps/oneui';
+import { SolidPrevButton } from '../navigation/button/SolidPrevButton';
+import { SolidNextButton } from '../navigation/button/SolidNextButton';
 
 export default function OtherInfoIIPanel(): JSX.Element {
   // call references array from pds context
@@ -26,16 +29,14 @@ export default function OtherInfoIIPanel(): JSX.Element {
   const references = usePdsStore((state) => state.references);
   const hasPds = useEmployeeStore((state) => state.hasPds);
   const referencesOnEdit = usePdsStore((state) => state.referencesOnEdit);
-  const governmentIssuedIdOnEdit = usePdsStore(
-    (state) => state.governmentIssuedIdOnEdit
-  );
-  const supportingInfoOnEdit = usePdsStore(
-    (state) => state.supportingInfoOnEdit
-  );
+  const {
+    aside: { isMobile },
+  } = useContext(PageContentContext);
+  const governmentIssuedIdOnEdit = usePdsStore((state) => state.governmentIssuedIdOnEdit);
+  const supportingInfoOnEdit = usePdsStore((state) => state.supportingInfoOnEdit);
   const { notify } = useContext(NotificationContext);
   // call ref error from ref error context
-  const { setRefError, refRef, shake, refError, setShake } =
-    useContext(RefErrorContext);
+  const { setRefError, refRef, shake, refError, setShake } = useContext(RefErrorContext);
 
   // assign use form function to a 'method' constant, yup resolver scema, mode is on change
   const methods = useForm({
@@ -57,60 +58,30 @@ export default function OtherInfoIIPanel(): JSX.Element {
 
     // --
     if (hasPds) {
-      if (
-        references.length === 3 &&
-        !referencesOnEdit &&
-        !governmentIssuedIdOnEdit &&
-        !supportingInfoOnEdit
-      ) {
+      if (references.length === 3 && !referencesOnEdit && !governmentIssuedIdOnEdit && !supportingInfoOnEdit) {
         handleNextTab(selectedTab);
-      } else if (
-        !referencesOnEdit ||
-        !governmentIssuedIdOnEdit ||
-        !supportingInfoOnEdit
-      ) {
+      } else if (!referencesOnEdit || !governmentIssuedIdOnEdit || !supportingInfoOnEdit) {
         addNotification(TabActions.NEXT);
       }
     } else if (!hasPds) {
-      if (
-        references.length === 3 &&
-        !referencesOnEdit &&
-        !governmentIssuedIdOnEdit &&
-        !supportingInfoOnEdit
-      ) {
+      if (references.length === 3 && !referencesOnEdit && !governmentIssuedIdOnEdit && !supportingInfoOnEdit) {
         handleNextTab(selectedTab);
-      } else if (
-        !referencesOnEdit ||
-        !governmentIssuedIdOnEdit ||
-        !supportingInfoOnEdit
-      ) {
+      } else if (!referencesOnEdit || !governmentIssuedIdOnEdit || !supportingInfoOnEdit) {
         addNotification(TabActions.NEXT);
       }
     }
   };
 
   const onPrev = () => {
-    if (
-      hasPds &&
-      !referencesOnEdit &&
-      !governmentIssuedIdOnEdit &&
-      !supportingInfoOnEdit
-    )
-      handlePrevTab(selectedTab);
-    else if (
-      hasPds &&
-      (referencesOnEdit || governmentIssuedIdOnEdit || supportingInfoOnEdit)
-    )
+    if (hasPds && !referencesOnEdit && !governmentIssuedIdOnEdit && !supportingInfoOnEdit) handlePrevTab(selectedTab);
+    else if (hasPds && (referencesOnEdit || governmentIssuedIdOnEdit || supportingInfoOnEdit))
       addNotification(TabActions.PREVIOUS);
     else if (!hasPds) handlePrevTab(selectedTab);
   };
 
   const addNotification = (action: TabActions) => {
     const notification = notify.custom(
-      <Toast
-        variant="error"
-        dismissAction={() => notify.dismiss(notification.id)}
-      >
+      <Toast variant="error" dismissAction={() => notify.dismiss(notification.id)}>
         {action === TabActions.NEXT
           ? 'Cannot proceed to the next tab. Either undo or update your changes to proceed.'
           : action === TabActions.PREVIOUS
@@ -130,6 +101,12 @@ export default function OtherInfoIIPanel(): JSX.Element {
       <HeadContainer title="PDS - Supporting Information" />
       <Page title="Other Information II" subtitle="">
         <>
+          {isMobile && (
+            <div className="flex w-full gap-1 justify-between pt-6">
+              <SolidPrevButton onClick={onPrev} type="button" />
+              {hasPds ? <SolidNextButton onClick={onSubmit} type="button" /> : <SolidNextButton formId="otherInfoII" />}
+            </div>
+          )}
           <FormProvider {...methods} key="otherInfoII">
             <form onSubmit={methods.handleSubmit(onSubmit)} id="otherInfoII">
               <SupportingDetails />
@@ -137,15 +114,32 @@ export default function OtherInfoIIPanel(): JSX.Element {
               <OIGovtID />
             </form>
           </FormProvider>
+          {isMobile && (
+            <div className="flex w-full gap-1 justify-between pt-6">
+              <SolidPrevButton onClick={onPrev} type="button" />
+              {hasPds ? (
+                <>
+                  <SolidNextButton onClick={onSubmit} type="button" />
+                </>
+              ) : (
+                <SolidNextButton formId="otherInfoII" />
+              )}
+            </div>
+          )}
         </>
       </Page>
-      <PrevButton action={onPrev} type="button" />
-      {hasPds ? (
+
+      {!isMobile && (
         <>
-          <NextButton action={onSubmit} type="button" />
+          <PrevButton action={onPrev} type="button" />
+          {hasPds ? (
+            <>
+              <NextButton action={onSubmit} type="button" />
+            </>
+          ) : (
+            <NextButton formId="otherInfoII" />
+          )}
         </>
-      ) : (
-        <NextButton formId="otherInfoII" />
       )}
     </>
   );

@@ -20,6 +20,10 @@ import { usePdsStore } from '../../../store/pds.store';
 import { useTabStore } from '../../../store/tab.store';
 import { HeadContainer } from '../head/Head';
 import { useEmployeeStore } from 'apps/pds/src/store/employee.store';
+import { useContext } from 'react';
+import { PageContentContext } from '@gscwd-apps/oneui';
+import { SolidPrevButton } from '../navigation/button/SolidPrevButton';
+import { SolidNextButton } from '../navigation/button/SolidNextButton';
 
 export default function ReviewPanel(): JSX.Element {
   // set tab state from tab store
@@ -58,14 +62,25 @@ export default function ReviewPanel(): JSX.Element {
   const governmentIssuedId = usePdsStore((state) => state.governmentIssuedId);
   const guiltyCharged = usePdsStore((state) => state.guiltyCharged);
 
+  const {
+    aside: { isMobile },
+  } = useContext(PageContentContext);
+
   return (
     <>
       <HeadContainer title="PDS - Review" />
       <Page title="" subtitle="">
         <>
           <div className="min-w-full">
-            <CardContainer title="Basic Information" className="py-5" cols={1}>
+            <CardContainer title="Basic Information" className="" cols={1}>
               <>
+                {isMobile && (
+                  <div className="flex w-full gap-1 justify-between pt-6">
+                    <SolidPrevButton onClick={() => handlePrevTab(selectedTab)} type="button" />
+
+                    {!hasPds && <SolidNextButton onClick={() => handleNextTab(selectedTab)} type="button" />}
+                  </div>
+                )}
                 <div className="px-5">
                   <CardPreview title="Personal Information" subtitle="">
                     <>
@@ -1065,11 +1080,15 @@ export default function ReviewPanel(): JSX.Element {
           </div>
         </>
       </Page>
-      {/* PREV BUTTON */}
-      <PrevButton action={() => handlePrevTab(selectedTab)} type="button" />
+      {!isMobile && (
+        <>
+          {/* PREV BUTTON */}
+          <PrevButton action={() => handlePrevTab(selectedTab)} type="button" />
 
-      {/* NEXT BUTTON */}
-      {!hasPds && <NextButton action={() => handleNextTab(selectedTab)} type="button" />}
+          {/* NEXT BUTTON */}
+          {!hasPds && <NextButton action={() => handleNextTab(selectedTab)} type="button" />}
+        </>
+      )}
     </>
   );
 }

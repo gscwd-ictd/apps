@@ -19,6 +19,9 @@ import { TabActions } from '../../../../utils/helpers/enums/toast.enum';
 import { trimmer } from '../../../../utils/functions/trimmer';
 import { isEmpty } from 'lodash';
 import { NotificationContext } from 'apps/pds/src/context/NotificationContext';
+import { PageContentContext } from '@gscwd-apps/oneui';
+import { SolidPrevButton } from '../navigation/button/SolidPrevButton';
+import { SolidNextButton } from '../navigation/button/SolidNextButton';
 
 export default function FamilyBgPanel(): JSX.Element {
   // set parents object state, employee object, and pds object from the pds store
@@ -48,10 +51,7 @@ export default function FamilyBgPanel(): JSX.Element {
 
   const addNotification = (action: TabActions) => {
     const notification = notify.custom(
-      <Toast
-        variant="error"
-        dismissAction={() => notify.dismiss(notification.id)}
-      >
+      <Toast variant="error" dismissAction={() => notify.dismiss(notification.id)}>
         {action === TabActions.NEXT
           ? 'Cannot proceed to the next tab. Either undo or update your changes to proceed.'
           : action === TabActions.PREVIOUS
@@ -61,6 +61,11 @@ export default function FamilyBgPanel(): JSX.Element {
     );
   };
 
+  // page context to get if page is mobile
+  const {
+    aside: { isMobile },
+  } = useContext(PageContentContext);
+
   // when submit is fired
   const onSubmit = () => {
     // trim spouse
@@ -69,9 +74,7 @@ export default function FamilyBgPanel(): JSX.Element {
       lastName: trimmer(spouse.lastName),
       firstName: trimmer(spouse.firstName),
       middleName: trimmer(spouse.middleName),
-      nameExtension: spouse.nameExtension
-        ? trimmer(spouse.nameExtension)
-        : undefined,
+      nameExtension: spouse.nameExtension ? trimmer(spouse.nameExtension) : undefined,
       employer: trimmer(spouse.employer),
       businessAddress: trimmer(spouse.businessAddress),
       telephoneNumber: trimmer(spouse.telephoneNumber),
@@ -84,17 +87,14 @@ export default function FamilyBgPanel(): JSX.Element {
       fatherLastName: trimmer(parents.fatherLastName),
       fatherFirstName: trimmer(parents.fatherFirstName),
       fatherMiddleName: trimmer(parents.fatherMiddleName),
-      fatherNameExtension: !isEmpty(parents.fatherNameExtension)
-        ? trimmer(parents.fatherNameExtension)
-        : 'N/A',
+      fatherNameExtension: !isEmpty(parents.fatherNameExtension) ? trimmer(parents.fatherNameExtension) : 'N/A',
       motherLastName: trimmer(parents.motherLastName),
       motherFirstName: trimmer(parents.motherFirstName),
       // motherMaidenName: trimmer(parents.motherMaidenName!),
       motherMiddleName: trimmer(parents.motherMiddleName),
     });
 
-    if (!spouseOnEdit && !fatherOnEdit && !motherOnEdit && !childrenOnEdit)
-      handleNextTab(selectedTab);
+    if (!spouseOnEdit && !fatherOnEdit && !motherOnEdit && !childrenOnEdit) handleNextTab(selectedTab);
     else if (spouseOnEdit || fatherOnEdit || motherOnEdit || childrenOnEdit) {
       addNotification(TabActions.PREVIOUS);
     }
@@ -102,34 +102,26 @@ export default function FamilyBgPanel(): JSX.Element {
 
   // prev button
   const onPrev = () => {
-    if (
-      hasPds &&
-      !spouseOnEdit &&
-      !fatherOnEdit &&
-      !motherOnEdit &&
-      !childrenOnEdit
-    )
-      handlePrevTab(selectedTab);
-    else if (
-      hasPds &&
-      (spouseOnEdit || fatherOnEdit || motherOnEdit || childrenOnEdit)
-    )
+    if (hasPds && !spouseOnEdit && !fatherOnEdit && !motherOnEdit && !childrenOnEdit) handlePrevTab(selectedTab);
+    else if (hasPds && (spouseOnEdit || fatherOnEdit || motherOnEdit || childrenOnEdit))
       addNotification(TabActions.PREVIOUS);
     else if (!hasPds) handlePrevTab(selectedTab);
   };
 
   // assigns the employee id on page load
-  useEffect(
-    () =>
-      setParents({ ...parents, employeeId: employee.employmentDetails.userId }),
-    []
-  );
+  useEffect(() => setParents({ ...parents, employeeId: employee.employmentDetails.userId }), []);
 
   return (
     <>
       <HeadContainer title="PDS - Family Information" />
       <Page title="Family Information" subtitle="">
         <>
+          {isMobile && (
+            <div className="flex w-full gap-1 justify-between pt-6">
+              <SolidPrevButton onClick={onPrev} type="button" />
+              <SolidNextButton formId="familyInfo" />
+            </div>
+          )}
           <FormProvider {...methods} key="familyInfo">
             <form onSubmit={methods.handleSubmit(onSubmit)} id="familyInfo">
               <SpouseInfo />
@@ -138,10 +130,20 @@ export default function FamilyBgPanel(): JSX.Element {
               <ChildrenInfo />
             </form>
           </FormProvider>
+          {isMobile && (
+            <div className="flex w-full gap-1 justify-between mt-2">
+              <SolidPrevButton onClick={onPrev} type="button" />
+              <SolidNextButton formId="familyInfo" />
+            </div>
+          )}
         </>
       </Page>
-      <PrevButton action={onPrev} type="button" />
-      <NextButton formId="familyInfo" />
+      {!isMobile && (
+        <>
+          <PrevButton action={onPrev} type="button" />
+          <NextButton formId="familyInfo" />
+        </>
+      )}
     </>
   );
 }
