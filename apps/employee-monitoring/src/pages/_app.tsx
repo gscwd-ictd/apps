@@ -27,7 +27,7 @@ export const AuthmiddlewareContext = createContext({} as AuthmiddlewareState);
 //   _id: 'af5dd57a-b26e-11ed-a79b-000c29f95a80',
 //   fullName: 'Chez Anne D. Sampani',
 //   isSuperUser: false,
-//   photoUrl: 'http://172.20.110.60:4500/SAMPANI.jpg',
+//   photoUrl: 'SAMPANI.jpg',
 //   email: 'chezannedolor@gscwd.com',
 //   userAccess: [
 //     { I: 'access', this: 'Settings' },
