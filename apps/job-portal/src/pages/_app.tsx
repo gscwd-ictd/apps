@@ -2,6 +2,8 @@ import { AppProps } from 'next/app';
 import Head from 'next/head';
 import '../styles/tailwind.css';
 import '../styles/custom.css';
+import { PageContent } from '@gscwd-apps/oneui';
+import TopNavigation from '../components/page-header/TopNavigation';
 
 function CustomApp({ Component, pageProps }: AppProps) {
   return (
@@ -10,7 +12,10 @@ function CustomApp({ Component, pageProps }: AppProps) {
         <title>Welcome to job-portal!</title>
       </Head>
       <main className="app">
-        <Component {...pageProps} />
+        <PageContent>
+          <TopNavigation />
+          <Component {...pageProps} />
+        </PageContent>
       </main>
     </>
   );

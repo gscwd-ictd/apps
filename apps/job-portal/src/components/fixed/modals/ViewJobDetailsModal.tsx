@@ -10,11 +10,7 @@ type ViewJobDetailsModalProps = {
   closeModalAction?: () => void;
 };
 
-export const ViewJobDetailsModal = ({
-  modalState,
-  closeModalAction,
-  setModalState,
-}: ViewJobDetailsModalProps) => {
+export const ViewJobDetailsModal = ({ modalState, closeModalAction, setModalState }: ViewJobDetailsModalProps) => {
   const publication = usePublicationStore((state) => state.publication);
 
   return (
@@ -35,6 +31,9 @@ export const ViewJobDetailsModal = ({
       <Modal.Body>
         <JobDetails publication={publication} />
       </Modal.Body>
+      <Modal.Footer>
+        <></>
+      </Modal.Footer>
     </Modal>
   );
 };
