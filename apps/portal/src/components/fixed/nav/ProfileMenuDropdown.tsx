@@ -179,7 +179,7 @@ export const ProfileMenuDropdown = ({
                             className={`${
                               active ? 'bg-slate-100' : 'text-gray-900'
                             } group flex w-full items-center gap-3 rounded-md px-3 py-2 text-sm`}
-                            onClick={() => router.push(`/${router.query.id}`)}
+                            onClick={() => router.push(`/${router.query.id}`, undefined, { shallow: true })}
                           >
                             <HiOutlineHome className="h-5 w-5 text-slate-600" />
                             <div className="flex w-full items-end justify-between">
@@ -199,7 +199,11 @@ export const ProfileMenuDropdown = ({
                                 className={`${
                                   active ? 'bg-slate-100' : 'text-gray-900'
                                 } group flex w-full items-center gap-3 rounded-md px-3 py-2 text-sm`}
-                                onClick={() => router.push(`/${router.query.id}/appointing-authority-selection`)}
+                                onClick={() =>
+                                  router.push(`/${router.query.id}/appointing-authority-selection`, undefined, {
+                                    shallow: true,
+                                  })
+                                }
                               >
                                 <HiClipboardCheck className="h-5 w-5 text-slate-600" />
                                 <div className="flex w-full items-end justify-between">
@@ -220,7 +224,9 @@ export const ProfileMenuDropdown = ({
                                 className={`${
                                   active ? 'bg-slate-100' : 'text-gray-900'
                                 } group flex w-full items-center gap-3 rounded-md px-3 py-2 text-sm`}
-                                onClick={() => router.push(`/${router.query.id}/pdc-gm-approvals`)}
+                                onClick={() =>
+                                  router.push(`/${router.query.id}/pdc-gm-approvals`, undefined, { shallow: true })
+                                }
                               >
                                 <HiAcademicCap className="w-5 h-5 text-slate-600" />
                                 <div className="flex w-full items-end justify-between">
@@ -259,7 +265,9 @@ export const ProfileMenuDropdown = ({
                                 className={`${
                                   active ? 'bg-slate-100' : 'text-gray-900'
                                 } group flex w-full items-center gap-3 rounded-md px-3 py-2 text-sm`}
-                                onClick={() => router.push(`/${router.query.id}/manager-approvals`)}
+                                onClick={() =>
+                                  router.push(`/${router.query.id}/manager-approvals`, undefined, { shallow: true })
+                                }
                               >
                                 <HiBadgeCheck className="h-5 w-5 text-slate-600" />
                                 <div className="flex w-full items-end justify-between">
@@ -295,7 +303,7 @@ export const ProfileMenuDropdown = ({
                                 className={`${
                                   active ? 'bg-slate-100' : 'text-gray-900'
                                 } group flex w-full items-center gap-3 rounded-md px-3 py-2 text-sm`}
-                                onClick={() => router.push(`/${router.query.id}`)}
+                                onClick={() => router.push(`/${router.query.id}`, undefined, { shallow: true })}
                               >
                                 <HiAcademicCap className="h-5 w-5 text-slate-600" />
                                 <div className="flex w-full items-end justify-between">
@@ -317,7 +325,7 @@ export const ProfileMenuDropdown = ({
                                 className={`${
                                   active ? 'bg-slate-100' : 'text-gray-900'
                                 } group flex w-full items-center gap-3 rounded-md px-3 py-2 text-sm`}
-                                onClick={() => router.push(`/${router.query.id}/prf`)}
+                                onClick={() => router.push(`/${router.query.id}/prf`, undefined, { shallow: true })}
                               >
                                 <HiCollection className="h-5 w-5 text-slate-600" />
                                 <div className="flex w-full items-end justify-between">
@@ -339,7 +347,9 @@ export const ProfileMenuDropdown = ({
                                 className={`${
                                   active ? 'bg-slate-100' : 'text-gray-900'
                                 } group flex w-full items-center gap-3 rounded-md px-3 py-2 text-sm`}
-                                onClick={() => router.push(`/${router.query.id}/applicant-endorsement`)}
+                                onClick={() =>
+                                  router.push(`/${router.query.id}/applicant-endorsement`, undefined, { shallow: true })
+                                }
                               >
                                 <HiClipboardList className="h-5 w-5 text-slate-600" />
                                 <div className="flex w-full items-end justify-between">
@@ -361,7 +371,11 @@ export const ProfileMenuDropdown = ({
                                 className={`${
                                   active ? 'bg-slate-100' : 'text-gray-900'
                                 } group flex w-full items-center gap-3 rounded-md px-3 py-2 text-sm`}
-                                onClick={() => router.push(`/${router.query.id}/duties-and-responsibilities`)}
+                                onClick={() =>
+                                  router.push(`/${router.query.id}/duties-and-responsibilities`, undefined, {
+                                    shallow: true,
+                                  })
+                                }
                               >
                                 <HiPuzzle className="h-5 w-5 text-slate-600" />
                                 <div className="flex w-full items-end justify-between">
@@ -389,7 +403,9 @@ export const ProfileMenuDropdown = ({
                                 className={`${
                                   active ? 'bg-slate-100' : 'text-gray-900'
                                 } group flex w-full items-center gap-3 rounded-md px-3 py-2 text-sm`}
-                                onClick={() => router.push(`/${router.query.id}/final-leave-approvals`)}
+                                onClick={() =>
+                                  router.push(`/${router.query.id}/final-leave-approvals`, undefined, { shallow: true })
+                                }
                               >
                                 <HiBadgeCheck className="h-5 w-5 text-slate-600" />
                                 <div className="flex w-full items-end justify-between">
@@ -415,7 +431,9 @@ export const ProfileMenuDropdown = ({
                               className={`${
                                 active ? 'bg-slate-100' : 'text-gray-900'
                               } group flex w-full items-center gap-3 rounded-md px-3 py-2 text-sm`}
-                              onClick={() => router.push(`/${router.query.id}/pdc-approvals`)}
+                              onClick={() =>
+                                router.push(`/${router.query.id}/pdc-approvals`, undefined, { shallow: true })
+                              }
                             >
                               <HiAcademicCap className="w-5 h-5 text-rose-600" />
                               <div className="flex w-full items-end justify-between">
@@ -442,7 +460,7 @@ export const ProfileMenuDropdown = ({
                               className={`${
                                 active ? 'bg-slate-100' : 'text-gray-900'
                               } group flex w-full items-center gap-3 rounded-md px-3 py-2 text-sm`}
-                              onClick={() => router.push(`/${router.query.id}/overtime`)}
+                              onClick={() => router.push(`/${router.query.id}/overtime`, undefined, { shallow: true })}
                             >
                               <HiClock className="w-5 h-5 text-slate-600" />
                               <div className="flex w-full items-end justify-between">
@@ -483,7 +501,7 @@ export const ProfileMenuDropdown = ({
                             className={`${
                               active ? 'bg-slate-100' : 'text-gray-900'
                             } group flex w-full items-center gap-3 rounded-md px-3 py-2 text-sm`}
-                            onClick={() => router.push(`/${router.query.id}/inbox`)}
+                            onClick={() => router.push(`/${router.query.id}/inbox`, undefined, { shallow: true })}
                           >
                             <HiOutlineBell className="h-5 w-5 text-slate-600" />
                             <div className="flex w-full items-end justify-between">
@@ -502,7 +520,7 @@ export const ProfileMenuDropdown = ({
                               className={`${
                                 active ? 'bg-slate-100' : 'text-gray-900'
                               } group flex w-full items-center gap-3 rounded-md px-3 py-2 text-sm`}
-                              onClick={() => router.push(`/${router.query.id}/vacancies`)}
+                              onClick={() => router.push(`/${router.query.id}/vacancies`, undefined, { shallow: true })}
                             >
                               <HiOutlineNewspaper className="h-5 w-5 text-slate-600" />
                               <div className="flex w-full items-end justify-between">

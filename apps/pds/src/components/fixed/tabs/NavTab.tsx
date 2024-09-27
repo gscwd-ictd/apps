@@ -15,10 +15,7 @@ import { ErrorProvider } from '../../../context/ErrorContext';
 import { useTabStore } from '../../../store/tab.store';
 import { tabs, tabsHasPds } from '../../../../utils/constants/tabs';
 import { useEffect, useState } from 'react';
-import {
-  NotificationController,
-  useNotification,
-} from '../../../../../../libs/oneui/src/components/Notification';
+import { NotificationController, useNotification } from '../../../../../../libs/oneui/src/components/Notification';
 import { NotificationContext } from 'apps/pds/src/context/NotificationContext';
 import { useEmployeeStore } from 'apps/pds/src/store/employee.store';
 
@@ -46,7 +43,7 @@ export const NavTab = (): JSX.Element => {
         {/* Main DIV */}
 
         <NotificationContext.Provider value={{ notify }}>
-          <div className="mt-16">
+          <div className="sm:pt-0 lg:pt-16">
             {allTabs.map((tab: any) => {
               const { tabIndex } = tab;
               return (
@@ -117,12 +114,7 @@ export const NavTab = (): JSX.Element => {
               );
             })}
           </div>
-          <NotificationController
-            ref={notifRef}
-            position="top-right"
-            autoClose={true}
-            duration={1200}
-          />
+          <NotificationController ref={notifRef} position="top-right" autoClose={true} duration={1200} />
         </NotificationContext.Provider>
       </div>
     </>

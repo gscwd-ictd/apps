@@ -144,7 +144,9 @@ export const ManagerMenuDropdown = ({
                           className={`${
                             active ? 'bg-slate-100' : 'text-gray-900'
                           } group flex justify-between w-80 items-center gap-2 px-3 py-3 text-sm`}
-                          onClick={() => router.push(`/${router.query.id}/manager-approvals`)}
+                          onClick={() =>
+                            router.push(`/${router.query.id}/manager-approvals`, undefined, { shallow: true })
+                          }
                         >
                           <div className="flex gap-2">
                             <HiBadgeCheck className="w-6 h-6 text-blue-600" />
@@ -209,7 +211,9 @@ export const ManagerMenuDropdown = ({
                             className={`${
                               active ? 'bg-slate-100' : 'text-gray-900'
                             } group flex w-80 items-center gap-2 px-3 py-3 text-sm`}
-                            onClick={() => router.push(`/${router.query.id}/training-selection`)}
+                            onClick={() =>
+                              router.push(`/${router.query.id}/training-selection`, undefined, { shallow: true })
+                            }
                           >
                             <div className="flex gap-2">
                               <HiAcademicCap className="w-6 h-6 text-rose-600" />
@@ -230,7 +234,7 @@ export const ManagerMenuDropdown = ({
                             className={`${
                               active ? 'bg-slate-100' : 'text-gray-900'
                             } group flex w-80 items-center gap-2 px-3 py-3 text-sm`}
-                            onClick={() => router.push(`/${router.query.id}/prf`)}
+                            onClick={() => router.push(`/${router.query.id}/prf`, undefined, { shallow: true })}
                           >
                             <div className="flex gap-2">
                               <HiCollection className="w-6 h-6 text-indigo-500" />
@@ -250,7 +254,9 @@ export const ManagerMenuDropdown = ({
                             className={`${
                               active ? 'bg-slate-100' : 'text-gray-900'
                             } group flex w-80 items-center gap-2 px-3 py-3 text-sm`}
-                            onClick={() => router.push(`/${router.query.id}/applicant-endorsement`)}
+                            onClick={() =>
+                              router.push(`/${router.query.id}/applicant-endorsement`, undefined, { shallow: true })
+                            }
                           >
                             <div className="flex gap-2">
                               <HiClipboardList className="w-6 h-6 text-green-600" />
@@ -271,7 +277,11 @@ export const ManagerMenuDropdown = ({
                             className={`${
                               active ? 'bg-slate-100' : 'text-gray-900'
                             } group flex w-80 items-center gap-2 px-3 py-3 text-sm`}
-                            onClick={() => router.push(`/${router.query.id}/duties-and-responsibilities`)}
+                            onClick={() =>
+                              router.push(`/${router.query.id}/duties-and-responsibilities`, undefined, {
+                                shallow: true,
+                              })
+                            }
                           >
                             <HiPuzzle className="w-6 h-6 text-orange-800" />
                             <span className="text-sm tracking-tight text-gray-700 text-left">

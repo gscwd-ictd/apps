@@ -11,14 +11,16 @@ import { NextButton } from '../navigation/button/NextButton';
 import { PrevButton } from '../navigation/button/PrevButton';
 import { Toast } from '../toast/Toast';
 import { WorkExp } from './work-experience/WorkExperience';
+import { PageContentContext } from '@gscwd-apps/oneui';
+import { SolidPrevButton } from '../navigation/button/SolidPrevButton';
+import { SolidNextButton } from '../navigation/button/SolidNextButton';
 
 export default function WorkExpPanel(): JSX.Element {
   // set tab state from tab store
   const selectedTab = useTabStore((state) => state.selectedTab);
   const hasPds = useEmployeeStore((state) => state.hasPds);
-  const workExperienceOnEdit = usePdsStore(
-    (state) => state.workExperienceOnEdit
-  );
+  const workExperienceOnEdit = usePdsStore((state) => state.workExperienceOnEdit);
+  const workExperience = usePdsStore((state) => state.workExperience);
   const handleNextTab = useTabStore((state) => state.handleNextTab);
   const handlePrevTab = useTabStore((state) => state.handlePrevTab);
   const { notify } = useContext(NotificationContext);
@@ -30,20 +32,21 @@ export default function WorkExpPanel(): JSX.Element {
     else if (!hasPds) handleNextTab(selectedTab);
   };
 
+  // page context
+  const {
+    aside: { isMobile },
+  } = useContext(PageContentContext);
+
   // prev button
   const onPrev = () => {
     if (hasPds && !workExperienceOnEdit) handlePrevTab(selectedTab);
-    else if (hasPds && workExperienceOnEdit)
-      addNotification(TabActions.PREVIOUS);
+    else if (hasPds && workExperienceOnEdit) addNotification(TabActions.PREVIOUS);
     else if (!hasPds) handlePrevTab(selectedTab);
   };
 
   const addNotification = (action: TabActions) => {
     const notification = notify.custom(
-      <Toast
-        variant="error"
-        dismissAction={() => notify.dismiss(notification.id)}
-      >
+      <Toast variant="error" dismissAction={() => notify.dismiss(notification.id)}>
         {action === TabActions.NEXT
           ? 'Cannot proceed to the next tab. Either undo or update your changes to proceed.'
           : action === TabActions.PREVIOUS
@@ -59,12 +62,28 @@ export default function WorkExpPanel(): JSX.Element {
       <HeadContainer title="PDS - Work Experience" />
       <Page title="Work Experience" subtitle="">
         <>
+          {isMobile && (
+            <div className="flex w-full gap-1 justify-between pt-6">
+              <SolidPrevButton onClick={onPrev} type="button" />
+              <SolidNextButton onClick={onSubmit} type="button" />
+            </div>
+          )}
           <WorkExp />
         </>
       </Page>
-      <PrevButton action={onPrev} type="button" />
+      {!isMobile && (
+        <>
+          <PrevButton action={onPrev} type="button" />
+          <NextButton action={onSubmit} type="button" />
+        </>
+      )}
 
-      <NextButton action={onSubmit} type="button" />
+      {isMobile && workExperience.length > 3 && (
+        <div className="flex w-full gap-1 justify-between pt-6">
+          <SolidPrevButton onClick={onPrev} type="button" />
+          <SolidNextButton onClick={onSubmit} type="button" />
+        </div>
+      )}
     </>
   );
 }

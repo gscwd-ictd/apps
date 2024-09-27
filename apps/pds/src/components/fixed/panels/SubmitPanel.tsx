@@ -13,11 +13,12 @@ import { HeadContainer } from '../head/Head';
 import { HiExclamationCircle } from 'react-icons/hi';
 import { PdsAlertSubmitConfirmation } from '../pds/PdsAlertSubmitConfirmation';
 import { PdsAlertSubmitSuccess } from '../pds/PdsAlertSubmitSuccess';
-import { Alert, Button } from '../../../../../../libs/oneui/src/index';
+import { Alert, Button, PageContentContext } from '../../../../../../libs/oneui/src/index';
 import { PdsAlertSubmitFailed } from '../pds/PdsAlertSubmitFailed';
 import { NotificationContext } from 'apps/pds/src/context/NotificationContext';
 import { Toast } from '../toast/Toast';
 import { Actions } from 'apps/pds/utils/helpers/enums/toast.enum';
+import { SolidPrevButton } from '../navigation/button/SolidPrevButton';
 
 export default function SubmitPanel(): JSX.Element {
   const pds = pdsToSubmit(usePdsStore((state) => state));
@@ -26,8 +27,7 @@ export default function SubmitPanel(): JSX.Element {
 
   const [isError, setIsError] = useState<boolean>(false);
 
-  const [isConfirmationPressed, setIsConfirmationPressed] =
-    useState<boolean>(false);
+  const [isConfirmationPressed, setIsConfirmationPressed] = useState<boolean>(false);
 
   const [alertConfirmation, setAlertConfirmation] = useState<boolean>(false);
 
@@ -47,6 +47,11 @@ export default function SubmitPanel(): JSX.Element {
 
   // set pds from pds store
   const employee = useEmployeeStore((state) => state.employeeDetails);
+
+  // page context
+  const {
+    aside: { isMobile },
+  } = useContext(PageContentContext);
 
   // fire submit
   const handleSubmit = async () => {
@@ -91,16 +96,9 @@ export default function SubmitPanel(): JSX.Element {
   // toast notification
   const addNotification = (action: Actions) => {
     const notification = notify.custom(
-      <Toast
-        variant={action}
-        dismissAction={() => notify.dismiss(notification.id)}
-      >
+      <Toast variant={action} dismissAction={() => notify.dismiss(notification.id)}>
         <div className="mt-2 text-xs font-light bg-inherit">
-          {action === Actions.SUCCESS
-            ? '  Hurray!'
-            : action === Actions.ERROR
-            ? '  Something went wrong.'
-            : null}
+          {action === Actions.SUCCESS ? '  Hurray!' : action === Actions.ERROR ? '  Something went wrong.' : null}
         </div>
       </Toast>
     );
@@ -148,11 +146,7 @@ export default function SubmitPanel(): JSX.Element {
           </div>
 
           <div className="">
-            <Button
-              onClick={alertConfirmationAction}
-              disabled={isDisabled ? true : false}
-              className="w-[7rem]"
-            >
+            <Button onClick={alertConfirmationAction} disabled={isDisabled ? true : false} className="w-[7rem]">
               {isLoading ? <div className="text-white">Submitting</div> : 'Yes'}
             </Button>
           </div>
@@ -166,10 +160,7 @@ export default function SubmitPanel(): JSX.Element {
         <Alert.Footer alignEnd>
           <div className="flex gap-2">
             <div className="max-w-auto min-w-[5rem]">
-              <Button
-                onClick={() => alertSuccessAction()}
-                disabled={isDisabled ? true : false}
-              >
+              <Button onClick={() => alertSuccessAction()} disabled={isDisabled ? true : false}>
                 <div className="text-white">View PDS</div>
               </Button>
             </div>
@@ -184,10 +175,7 @@ export default function SubmitPanel(): JSX.Element {
         <Alert.Footer alignEnd>
           <div className="flex gap-2">
             <div className="max-w-auto min-w-[5rem]">
-              <Button
-                onClick={alertFailedAction}
-                disabled={isDisabled ? true : false}
-              >
+              <Button onClick={alertFailedAction} disabled={isDisabled ? true : false}>
                 <div className="text-white">Close</div>
               </Button>
             </div>
@@ -197,7 +185,12 @@ export default function SubmitPanel(): JSX.Element {
       {/* Submit Page */}
       <Page title="" subtitle="">
         <>
-          <Card title="" subtitle="" className="mx-[18%]  px-[5%] ">
+          {isMobile && (
+            <div className="pt-6">
+              <SolidPrevButton onClick={() => handlePrevTab(selectedTab)} type="button" />
+            </div>
+          )}
+          <Card title="" subtitle="" className="sm:mx-2 sm:px-2 lg:mx-[18%] h-fit  lg:px-[5%] ">
             <div className="flex h-[7rem] gap-2">
               <div className="w-[15%]">
                 <HiExclamationCircle color="orange" className="w-full h-full" />
@@ -205,9 +198,8 @@ export default function SubmitPanel(): JSX.Element {
               <div className="flex w-[85%] flex-col justify-between">
                 <p className="pt-3 text-2xl font-medium">Information</p>
                 <p className="pb-2 mt-2 font-light">
-                  Any misrepresentation made in the Personal Data Sheet and the
-                  Work Experience Sheet shall cause the filing of administrative
-                  or criminal case(s) against the person concerned.
+                  Any misrepresentation made in the Personal Data Sheet and the Work Experience Sheet shall cause the
+                  filing of administrative or criminal case(s) against the person concerned.
                 </p>
               </div>
             </div>
@@ -224,9 +216,7 @@ export default function SubmitPanel(): JSX.Element {
               disabled={isDisabled ? true : false}
             >
               <span className="flex items-center justify-center gap-2">
-                <span className="text-sm font-medium uppercase">
-                  {isLoading ? 'Processing' : 'Submit PDS'}
-                </span>
+                <span className="text-sm font-medium uppercase">{isLoading ? 'Processing' : 'Submit PDS'}</span>
                 {isLoading && <LoadingIndicator size={5} />}
               </span>
             </button>
@@ -234,7 +224,7 @@ export default function SubmitPanel(): JSX.Element {
         </>
       </Page>
       {/* PREV BUTTON */}
-      <PrevButton action={() => handlePrevTab(selectedTab)} type="button" />
+      {!isMobile && <PrevButton action={() => handlePrevTab(selectedTab)} type="button" />}
     </>
   );
 }

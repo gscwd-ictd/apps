@@ -70,7 +70,9 @@ export const HRMenuDropdown = ({
                       className={`${
                         active ? 'bg-slate-100' : 'text-gray-900'
                       } group flex w-80 items-center gap-2 px-3 py-3 text-sm`}
-                      onClick={() => router.push(`/${router.query.id}/final-leave-approvals`)}
+                      onClick={() =>
+                        router.push(`/${router.query.id}/final-leave-approvals`, undefined, { shallow: true })
+                      }
                     >
                       <HiBadgeCheck className="w-6 h-6 text-rose-600" />
                       <span className="text-sm tracking-tight text-gray-700 text-left">Final Leave Approvals</span>

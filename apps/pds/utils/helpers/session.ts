@@ -5,13 +5,8 @@ import { EmployeeDetails } from '../../src/types/data/employee.type';
 
 let userDetails = {} as EmployeeDetails;
 
-const setUserDetails = ({
-  user,
-  profile,
-  employmentDetails,
-}: EmployeeDetails) => {
+const setUserDetails = ({ user, profile, employmentDetails }: EmployeeDetails) => {
   userDetails = { user, profile, employmentDetails };
-
   return userDetails;
 };
 
@@ -33,13 +28,10 @@ export function withSession(serverSideProps: GetServerSideProps) {
         },
       };
     } else {
-      const { data } = await axios.get(
-        `${process.env.NEXT_PUBLIC_PORTAL_URL}/users`,
-        {
-          withCredentials: true,
-          headers: { Cookie: `${context?.req.headers.cookie}` },
-        }
-      );
+      const { data } = await axios.get(`${process.env.NEXT_PUBLIC_PORTAL_URL}/users`, {
+        withCredentials: true,
+        headers: { Cookie: `${context?.req.headers.cookie}` },
+      });
 
       setUserDetails(data);
 
@@ -66,13 +58,11 @@ export function withCookieSession(serverSideProps: GetServerSideProps) {
       const cookiesArray = cookie.split(';') as string[];
       const portalSsid = getPortalSsid(cookiesArray);
 
-      const { data } = await axios.get(
-        `${process.env.NEXT_PUBLIC_PORTAL_URL}/users`,
-        {
-          withCredentials: true,
-          headers: { Cookie: `${portalSsid}` },
-        }
-      );
+      const { data } = await axios.get(`${process.env.NEXT_PUBLIC_PORTAL_URL}/users`, {
+        withCredentials: true,
+        // headers: { Cookie: `${portalSsid}` },
+        headers: { Cookie: `${portalSsid}`, 'Accept-Encoding': 'gzip,deflate,compress' },
+      });
 
       setUserDetails(data);
 
@@ -125,18 +115,17 @@ export function withCookieSessionPds(serverSideProps: GetServerSideProps) {
       const cookiesArray = cookie.split(';') as string[];
       const portalSsid = getPortalSsid(cookiesArray);
 
-      if (portalSsid.length > 0) {
-        const { data } = await axios.get(
-          `${process.env.NEXT_PUBLIC_PORTAL_URL}/users`,
-          {
-            withCredentials: true,
-            headers: { Cookie: `${portalSsid}` },
-          }
-        );
+      try {
+        const { data } = await axios.get(`${process.env.NEXT_PUBLIC_PORTAL_URL}/users`, {
+          withCredentials: true,
+          headers: { Cookie: `${portalSsid}`, 'Accept-Encoding': 'gzip,deflate,compress' },
+        });
 
         setUserDetails(data);
+
         return await serverSideProps(context);
-      } else {
+      } catch (error) {
+        console.log(error);
         return {
           redirect: {
             permanent: false,
@@ -156,9 +145,7 @@ export function withCookieSessionPds(serverSideProps: GetServerSideProps) {
 }
 
 // target portal ssid
-export function getPortalSsid(
-  cookiesArray: Array<string> | null
-): string | null {
+export function getPortalSsid(cookiesArray: Array<string> | null): string | null {
   // initialize the ssid array
   let cookieSsids: Array<string> = [];
 
@@ -186,8 +173,5 @@ export function getPortalSsid(
 }
 
 export function invalidateSession(response: ServerResponse) {
-  response.setHeader(
-    'Set-Cookie',
-    'ssid_portal=deleted; Max-Age=0; Path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT'
-  );
+  response.setHeader('Set-Cookie', 'ssid_portal=deleted; Max-Age=0; Path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT');
 }
