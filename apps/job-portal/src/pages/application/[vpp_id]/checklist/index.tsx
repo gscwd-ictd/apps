@@ -6,7 +6,7 @@ import { isEmpty } from 'lodash';
 import { GetServerSideProps, GetServerSidePropsContext } from 'next';
 import { useRouter } from 'next/router';
 import { useContext, useEffect, useState } from 'react';
-import { HiEye, HiInformationCircle } from 'react-icons/hi';
+import { HiBadgeCheck, HiCheckCircle, HiEye, HiInformationCircle } from 'react-icons/hi';
 import useSWR from 'swr';
 import { MyPopover } from '../../../../components/fixed/popover/helppopover';
 import { CardContainer } from '../../../../components/modular/cards/CardContainer';
@@ -96,24 +96,79 @@ export default function Checklist({ vppId, positionTitle }: ChecklistProps) {
   // do not forget to retun an empty array for the else statement
 
   const getSecondActions = (): VerticalDropdownProps['items'] => {
-    if (!progress.secondStep && !submission.hasSubmitted) {
+    // second step not done
+    if (!progress.secondStep && !submission.hasSubmitted)
       return [{ key: 'Create', value: 'create', onClick: onClickPds, type: 'button' }];
-    } else if (progress.secondStep && submission.hasSubmitted) {
+    // success second step
+    else if (progress.secondStep && !submission.hasSubmitted)
       return [
-        { key: 'Update', value: 'update-pds', onClick: onClickPds, type: 'button' },
-        { key: 'View', value: 'view', type: 'a', href: 'asdas' },
+        { key: 'Update PDS', value: 'update-pds', onClick: onClickPds, type: 'button' },
+        {
+          key: 'View PDS',
+          value: 'view',
+          type: 'a',
+          href: `${process.env.NEXT_PUBLIC_JOB_PORTAL}/application/${vppId}/pds/applicant/${externalApplicantId}`,
+        },
       ];
-    } else return [];
+    // submitted application
+    else if (progress.secondStep && submission.hasSubmitted)
+      return [
+        {
+          key: 'View PDS',
+          value: 'view',
+          type: 'a',
+          href: `${process.env.NEXT_PUBLIC_JOB_PORTAL}/application/${vppId}/pds/applicant/${externalApplicantId}`,
+        },
+      ];
+    else return [];
   };
 
   // this function determins the current step and what actions they can do
   // do not forget to retun an empty array for the else statement
   const getThirdActions = (): VerticalDropdownProps['items'] => {
-    if (progress.secondStep && !progress.thirdStep && isEmpty(submission.hasRelevantWorkExperience)) {
-      return [{ key: 'Select', value: 'select-wes', type: 'button', onClick: onClickWorkExpSheet }];
-    } else if (progress.secondStep && !progress.thirdStep && !isEmpty(submission.hasRelevantWorkExperience)) {
-      return [{ key: 'Update', value: 'update-wes', type: 'button', onClick: onClickWorkExpSheet }];
-    } else return [];
+    // for selecting work experience
+    if (progress.secondStep && !progress.thirdStep && !submission.hasSubmitted)
+      return [{ key: 'Select Work Experience', value: 'select-wes', type: 'button', onClick: onClickWorkExpSheet }];
+    // for selecting work experience && without work experience
+    else if (progress.secondStep && !progress.thirdStep && !submission.hasSubmitted && !noWorkExperience)
+      return [
+        { key: 'Update Work Experience', value: 'update-wes', type: 'button', onClick: onClickWorkExpSheet },
+        {
+          key: 'View Work Experience',
+          value: 'view-wes',
+          type: 'a',
+          href: `${process.env.NEXT_PUBLIC_JOB_PORTAL}/application/${vppId}/${externalApplicantId}/work-experience-sheet/pdf`,
+        },
+      ];
+    // for users with no work epxerience selected
+    else if (progress.secondStep && !progress.thirdStep && !submission.hasSubmitted && !noWorkExperience)
+      return [{ key: 'Update Work Experience', value: 'update-wes', type: 'button', onClick: onClickWorkExpSheet }];
+    // for viewing work experience
+    // else if(progress.secondStep && progress.thirdStep && !noWorkExperience){
+    //   return [{key:''}]
+    // }
+    else if (
+      progress.secondStep &&
+      progress.thirdStep &&
+      submission.hasSubmitted &&
+      !submission.hasRelevantWorkExperience
+    )
+      return [];
+    else if (
+      progress.secondStep &&
+      progress.thirdStep &&
+      submission.hasSubmitted &&
+      submission.hasRelevantWorkExperience
+    )
+      return [
+        {
+          key: 'View Work Experience',
+          value: 'view-wes',
+          type: 'a',
+          href: `${process.env.NEXT_PUBLIC_JOB_PORTAL}/application/${vppId}/${externalApplicantId}/work-experience-sheet/pdf`,
+        },
+      ];
+    else return [];
   };
 
   // submit
@@ -246,12 +301,7 @@ export default function Checklist({ vppId, positionTitle }: ChecklistProps) {
 
   return (
     <>
-      <div className="">
-        First Step: {JSON.stringify(progress.firstStep)}
-        Second Step: {JSON.stringify(progress.secondStep)}
-        Third Step: {JSON.stringify(progress.thirdStep)}
-        Submission: {JSON.stringify(submission.hasSubmitted)}
-        Has Relevant: {JSON.stringify(submission.hasRelevantWorkExperience)}
+      <div className="bg-slate-100">
         {/**Submit Alert */}
         <Alert open={alertSubmitIsOpen} setOpen={setAlertSubmitIsOpen}>
           <Alert.Description>
@@ -347,6 +397,44 @@ export default function Checklist({ vppId, positionTitle }: ChecklistProps) {
         </header>
         <main className="h-[42rem]">
           <div className="flex flex-col items-center justify-center">
+            {submission.hasSubmitted === false && (
+              <CardContainer
+                className="rounded-xl p-5 mx-2 "
+                bgColor={'bg-yellow-100'}
+                title={''}
+                remarks={''}
+                subtitle={''}
+              >
+                <div className="flex gap-2">
+                  <section>
+                    <HiInformationCircle size={40} className="text-slate-600" />
+                  </section>
+                  <section className="text-xs sm:text-xs md:text-md lg:text-sm">
+                    • {'  '}Do not refresh the page. Any changes you've made in the work experience sheet will be
+                    discarded. <br />• {'  '}If you proceed to the homepage, your session for this publication will end.
+                    <br />
+                  </section>
+                </div>
+              </CardContainer>
+            )}
+            {submission.hasSubmitted === true && (
+              <CardContainer
+                className="rounded-xl p-5 mx-2"
+                bgColor={'bg-sky-100'}
+                title={''}
+                remarks={''}
+                subtitle={''}
+              >
+                <section>
+                  <HiInformationCircle size={40} className="text-slate-600" />
+                </section>
+                <section className="text-xs sm:text-xs md:text-md lg:text-sm">
+                  You have submitted an application for this publication.
+                  <br />
+                </section>
+              </CardContainer>
+            )}
+
             {!isMobile && (
               <div className="p-5">
                 <CardContainer title="" bgColor="bg-slate-50" remarks="" subtitle="" className=" border rounded-xl">
@@ -355,7 +443,7 @@ export default function Checklist({ vppId, positionTitle }: ChecklistProps) {
                       <thead>
                         <tr className="border-b-4 text-slate-700">
                           <th className="w-[5%] py-5"></th>
-                          <th className="w-[50%] py-5 text-left text-xl font-medium">Checklist</th>
+                          <th className="w-[50%] py-5 text-left text-xl font-medium">Steps</th>
                           <th className="w-[20%] py-5 text-center text-xl font-medium">Actions</th>
                           <th className="w-[15%] py-5 text-center text-xl font-medium">PDF View</th>
                           <th className="w-[20%] py-5 text-center text-xl font-medium">Status</th>
@@ -374,9 +462,7 @@ export default function Checklist({ vppId, positionTitle }: ChecklistProps) {
                           <td className="w-[50%]">
                             <p className="grid py-5 text-left">
                               <span className="text-xl ">Initial Details</span>
-                              <span className="text-lg text-gray-500">
-                                Full name and Email address is provided here
-                              </span>
+                              <span className="text-lg text-gray-500">Full name and Email address</span>
                             </p>
                           </td>
                           <td className="w-[20%] py-5 text-center ">-</td>
@@ -411,7 +497,7 @@ export default function Checklist({ vppId, positionTitle }: ChecklistProps) {
                             <p className="grid py-5 text-left">
                               <span className="text-xl">Personal Data Sheet</span>
                               <span className="text-lg text-gray-500">
-                                Complete, Accurate, and clear information about you and your experiences
+                                Complete, accurate, and clear information about you and your experiences
                               </span>
                             </p>
                           </td>
@@ -594,20 +680,22 @@ export default function Checklist({ vppId, positionTitle }: ChecklistProps) {
               </div>
             )}
             {isMobile && (
-              <>
+              <div className="mx-2 flex flex-col gap-2">
                 {/* HEADER */}
-                <div className="flex w-full gap-2 justify-between pt-10 border px-2">
-                  <section className="w-[40%] text-xs">Checklist</section>
+                <div className="flex w-full gap-2 justify-center pt-10 px-2">
+                  <section className=" text-lg font-semibold">Steps</section>
                   {/* <section className="text-xs">Status</section> */}
                   {/* <section className="text-xs">PDF View</section> */}
                   {/* <section className="text-xs">Actions</section> */}
                 </div>
 
-                <div className="flex w-full gap-2 justify-between border rounded px-2 py-10">
-                  <section className="flex justify-center items-center w-[10%] text-xs">1</section>
+                <div className="flex w-full gap-2 justify-between border border-gray-300 rounded px-2 py-10 bg-white">
+                  <section className="flex justify-center items-center text-gray-700 w-[10%] text-lg">
+                    {progress.firstStep ? <HiCheckCircle className="text-green-600" /> : '1'}
+                  </section>
                   <section className="text-xs w-[50%] flex flex-col gap-1">
-                    <span className="font-medium text-sm">Initial Details</span>
-                    <span>Full Name and Email address is provided here</span>
+                    <span className="font-medium text-sm text-gray-700">Initial Details</span>
+                    <span className="text-gray-700 font-light">Full Name and Email address</span>
                   </section>
                   <section className="text-xs w-[30%] flex justify-center items-center">
                     {!progress.firstStep ? (
@@ -625,13 +713,15 @@ export default function Checklist({ vppId, positionTitle }: ChecklistProps) {
                   </section>
                 </div>
 
-                <hr className="border-b border-dashed" />
-
-                <div className="flex w-full gap-2 justify-between py-10 px-2 border rounded">
-                  <section className="flex justify-center items-center w-[10%] text-xs">2</section>
+                <div className="flex w-full gap-2 justify-between py-10 px-2 border border-gray-300 rounded bg-white">
+                  <section className={`flex justify-center items-center w-[10%] text-lg text-gray-700`}>
+                    {progress.secondStep ? <HiCheckCircle className="text-green-600" /> : '2'}
+                  </section>
                   <section className="text-xs w-[50%] flex flex-col gap-1">
-                    <span className="font-medium text-sm">Personal Data Sheet</span>
-                    <span>Complete, Accurate, and clear information about you and your experiences</span>
+                    <span className="font-medium text-sm text-gray-700">Personal Data Sheet</span>
+                    <span className="font-light text-gray-700">
+                      Complete, accurate, and clear information about you and your experiences
+                    </span>
                   </section>
                   <section className="text-xs w-[30%] flex justify-center items-center">
                     {!progress.secondStep ? (
@@ -649,13 +739,15 @@ export default function Checklist({ vppId, positionTitle }: ChecklistProps) {
                   </section>
                 </div>
 
-                <hr className="border-b border-dashed" />
-
-                <div className="flex w-full gap-2 justify-between py-10 px-2 border rounded">
-                  <section className="flex justify-center items-center w-[10%] text-xs">3</section>
+                <div className="flex w-full gap-2 justify-between py-10 px-2 rounded-lg border border-gray-300  bg-white">
+                  <section className="flex justify-center items-center w-[10%] text-lg text-gray-700">
+                    {progress.thirdStep ? <HiCheckCircle className="text-green-600" /> : '3'}
+                  </section>
                   <section className="text-xs w-[50%] flex flex-col gap-1">
-                    <span className="font-medium text-sm">Work Experience Sheet</span>
-                    <span>Select the work experiences that are relevant to the position you are applying for</span>
+                    <span className="font-medium text-sm text-gray-700">Work Experience Sheet</span>
+                    <span className="text-gray-700 font-light">
+                      Select the work experiences that are relevant to the position you are applying for
+                    </span>
                   </section>
                   <section className="text-xs w-[30%] flex justify-center items-center">
                     {!progress.thirdStep ? (
@@ -672,36 +764,11 @@ export default function Checklist({ vppId, positionTitle }: ChecklistProps) {
                     <VerticalDropdown items={getThirdActions()} />
                   </section>
                 </div>
-              </>
+              </div>
             )}
             {/* <CardContainer bgColor={''} title={''} remarks={''} subtitle={''}>
               
             </CardContainer> */}
-            {submission.hasSubmitted === false && (
-              <CardContainer className="rounded-xl" bgColor={'bg-sky-100'} title={''} remarks={''} subtitle={''}>
-                <section>
-                  <HiInformationCircle size={40} className="text-slate-600" />
-                </section>
-                <section className="text-sm">
-                  • Do not refresh the page. Any changes you've made in the work experience sheet will be discarded.{' '}
-                  <br />
-                  • If you proceed to the homepage, your session for this publication will be ended and you'll have to
-                  login again.
-                  <br />
-                </section>
-              </CardContainer>
-            )}
-            {submission.hasSubmitted === true && (
-              <CardContainer className=" rounded-xl" bgColor={'bg-sky-100'} title={''} remarks={''} subtitle={''}>
-                <section>
-                  <HiInformationCircle size={40} className="text-slate-600" />
-                </section>
-                <section className="text-sm">
-                  You have submitted an application for this publication.
-                  <br />
-                </section>
-              </CardContainer>
-            )}{' '}
           </div>
         </main>
         <footer>

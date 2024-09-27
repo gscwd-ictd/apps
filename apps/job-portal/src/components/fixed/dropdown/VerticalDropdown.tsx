@@ -16,7 +16,7 @@ export const VerticalDropdown = forwardRef<HTMLButtonElement, VerticalDropdownPr
   return (
     <Popover.Root>
       <Popover.Trigger className="h-full  select-none whitespace-nowrap rounded hover:cursor-pointer active:cursor-pointer active:outline-none  transition-colors text-black hover:text-gray-700 ease-in-out ">
-        <HiDotsVertical className="w-4 h-full" />
+        {items.length == 0 ? null : <HiDotsVertical className="w-4 h-full" />}
       </Popover.Trigger>
       <Popover.Content className="shadow-2xl PopoverContent" sideOffset={5} collisionPadding={20} avoidCollisions>
         {items.map((item, idx) => {

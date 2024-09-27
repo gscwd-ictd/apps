@@ -10,12 +10,7 @@ import { SelectCountry } from '../../select/SelectCountry';
 import { SelectListRFFL } from '../../../modular/select/SelectListRFFL';
 import { isEmpty } from 'lodash';
 import { usePdsStore } from '../../../../store/pds.store';
-import {
-  gender,
-  civilStatus,
-  bloodType,
-  citizenshipType,
-} from '../../../../../utils/constants/constants';
+import { gender, civilStatus, bloodType, citizenshipType } from '../../../../../utils/constants/constants';
 import fetcher from '../../../modular/fetcher/Fetcher';
 import dayjs from 'dayjs';
 import { PersonalInfo } from 'apps/job-portal/utils/types/data/basic-info.type';
@@ -91,9 +86,7 @@ export const PersonalInfoBI = (): JSX.Element => {
     <>
       <Card
         title={'Personal Information'}
-        subtitle={
-          'This contains your personal information. Write N/A if not applicable'
-        }
+        subtitle={'This contains your personal information. Write N/A if not applicable'}
       >
         <>
           <div className="gap-4 xs:block mt-7 sm:block md:block lg:flex lg:grid-cols-2 ">
@@ -149,9 +142,7 @@ export const PersonalInfoBI = (): JSX.Element => {
                 type="text"
                 controller={{
                   ...register('middleName', {
-                    value: isEmpty(personalInfo.middleName)
-                      ? 'N/A'
-                      : personalInfo.middleName,
+                    value: isEmpty(personalInfo.middleName) ? 'N/A' : personalInfo.middleName,
                     onChange: (e) =>
                       setPersonalInfo({
                         ...personalInfo,
@@ -174,9 +165,7 @@ export const PersonalInfoBI = (): JSX.Element => {
                 type="text"
                 controller={{
                   ...register('nameExtension', {
-                    value: isEmpty(personalInfo.nameExtension)
-                      ? 'N/A'
-                      : personalInfo.nameExtension,
+                    value: isEmpty(personalInfo.nameExtension) ? 'N/A' : personalInfo.nameExtension,
                     onChange: (e) =>
                       setPersonalInfo({
                         ...personalInfo,
@@ -199,9 +188,7 @@ export const PersonalInfoBI = (): JSX.Element => {
                 isRequired
                 defaultValue={
                   personalInfo.birthDate
-                    ? dayjs(personalInfo.birthDate, 'YYYY-MM-DD+h:mm')
-                        .format('YYYY-MM-DD')
-                        .toString()
+                    ? dayjs(personalInfo.birthDate, 'YYYY-MM-DD+h:mm').format('YYYY-MM-DD').toString()
                     : ''
                 }
                 type="date"
@@ -231,8 +218,7 @@ export const PersonalInfoBI = (): JSX.Element => {
                 controller={{
                   ...register('sex', {
                     value: personalInfo.sex,
-                    onChange: (e) =>
-                      setPersonalInfo({ ...personalInfo, sex: e.target.value }),
+                    onChange: (e) => setPersonalInfo({ ...personalInfo, sex: e.target.value }),
                   }),
                 }}
                 isError={errors.sex ? true : false}
@@ -247,9 +233,7 @@ export const PersonalInfoBI = (): JSX.Element => {
               isRequired
               placeholder="Place of Birth"
               type="text"
-              defaultValue={
-                personalInfo.birthPlace ? personalInfo.birthPlace : ''
-              }
+              defaultValue={personalInfo.birthPlace ? personalInfo.birthPlace : ''}
               controller={{
                 ...register('birthPlace', {
                   value: personalInfo.birthPlace,
@@ -273,9 +257,7 @@ export const PersonalInfoBI = (): JSX.Element => {
                 selectList={civilStatus}
                 variant="light"
                 defaultOption="Civil Status"
-                defaultValue={
-                  personalInfo.civilStatus ? personalInfo.civilStatus : ''
-                }
+                defaultValue={personalInfo.civilStatus ? personalInfo.civilStatus : ''}
                 controller={{
                   ...register('civilStatus', {
                     value: personalInfo.civilStatus,
@@ -343,9 +325,7 @@ export const PersonalInfoBI = (): JSX.Element => {
               <SelectListRFFL
                 id="bloodType"
                 isRequired
-                defaultValue={
-                  personalInfo.bloodType ? personalInfo.bloodType : ''
-                }
+                defaultValue={personalInfo.bloodType ? personalInfo.bloodType : ''}
                 selectList={bloodType}
                 variant="light"
                 defaultOption="Blood Type"
@@ -365,7 +345,7 @@ export const PersonalInfoBI = (): JSX.Element => {
             </div>
           </div>
 
-          <div className="xs:gap-8 xs:grid sm:grid sm:gap-8 md:grid md:gap-4 lg:grid xl:flex xl:grid-cols-2">
+          <div className="grid sm:grid-cols-1 gap-4 lg:grid-cols-2">
             <div className="w-full">
               <RadioGroup
                 groupName="citizenship"
@@ -379,9 +359,7 @@ export const PersonalInfoBI = (): JSX.Element => {
                       id="filipino"
                       name="citizenship"
                       label="Filipino"
-                      defaultChecked={
-                        personalInfo.citizenship === 'Filipino' ? true : false
-                      }
+                      defaultChecked={personalInfo.citizenship === 'Filipino' ? true : false}
                       value="Filipino"
                       controller={{
                         ...register('citizenship', {
@@ -394,11 +372,7 @@ export const PersonalInfoBI = (): JSX.Element => {
                       id="dual-citizenship"
                       name="citizenship"
                       label="Dual Citizenship"
-                      defaultChecked={
-                        personalInfo.citizenship === 'Dual Citizenship'
-                          ? true
-                          : false
-                      }
+                      defaultChecked={personalInfo.citizenship === 'Dual Citizenship' ? true : false}
                       value="Dual Citizenship"
                       controller={{
                         ...register('citizenship', {
@@ -423,13 +397,11 @@ export const PersonalInfoBI = (): JSX.Element => {
                 </>
               </RadioGroup>
               {errors.citizenship && (
-                <span className="mt-1 text-xs text-red-600 ">
-                  {errors.citizenship.message.toString()}
-                </span>
+                <span className="mt-1 text-xs text-red-600 ">{errors.citizenship.message.toString()}</span>
               )}
             </div>
 
-            <div className="w-full col-span-1 sm:mt-2 sm:mb-7 sm:grid md:mt-2 md:mb-7 md:grid lg:col-span-1 lg:mt-2 lg:mb-7">
+            <div className="w-full col-span-1 sm:mt-2  sm:grid md:mt-2  md:grid lg:col-span-1 lg:mt-2 ">
               {personalInfo.citizenship === 'Dual Citizenship' ? (
                 <>
                   <SelectListRFFL
@@ -438,11 +410,7 @@ export const PersonalInfoBI = (): JSX.Element => {
                     selectList={citizenshipType}
                     variant="light"
                     defaultOption="Citizenship Type"
-                    defaultValue={
-                      personalInfo.citizenshipType
-                        ? personalInfo.citizenshipType
-                        : ''
-                    }
+                    defaultValue={personalInfo.citizenshipType ? personalInfo.citizenshipType : ''}
                     controller={{
                       ...register('citizenshipType', {
                         value: personalInfo.citizenshipType,
@@ -461,7 +429,7 @@ export const PersonalInfoBI = (): JSX.Element => {
             </div>
           </div>
 
-          <div className="w-full col-span-1 mb-7">
+          <div className="w-full col-span-1 my-7">
             {!data ? (
               <>
                 <span className="flex justify-center py-2">
@@ -486,11 +454,7 @@ export const PersonalInfoBI = (): JSX.Element => {
                   }}
                   isError={errors.country ? true : false}
                 />
-                {errors.country && (
-                  <span className="text-xs text-red-600 ">
-                    {errors.country.message.toString()}
-                  </span>
-                )}
+                {errors.country && <span className="text-xs text-red-600 ">{errors.country.message.toString()}</span>}
               </>
             )}
           </div>
@@ -500,11 +464,7 @@ export const PersonalInfoBI = (): JSX.Element => {
               <FloatingLabelInputRF
                 id="telNo"
                 placeholder="Telephone Number"
-                defaultValue={
-                  personalInfo.telephoneNumber
-                    ? personalInfo.telephoneNumber
-                    : ''
-                }
+                defaultValue={personalInfo.telephoneNumber ? personalInfo.telephoneNumber : ''}
                 type="text"
                 isRequired
                 // maxLength={10}
@@ -528,9 +488,7 @@ export const PersonalInfoBI = (): JSX.Element => {
                 id="mobileNo"
                 isRequired
                 maxLength={11}
-                defaultValue={
-                  personalInfo.mobileNumber ? personalInfo.mobileNumber : ''
-                }
+                defaultValue={personalInfo.mobileNumber ? personalInfo.mobileNumber : ''}
                 placeholder="Mobile Number"
                 type="text"
                 controller={{

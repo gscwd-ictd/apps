@@ -12,10 +12,16 @@ import { ErrorContext } from '../../../context/ErrorContext';
 import { useTabStore } from '../../../store/tab.store';
 import { usePdsStore } from '../../../store/pds.store';
 import { HeadContainer } from '../head/Head';
+import { PageContentContext } from '@gscwd-apps/oneui';
+import { SolidNextButton } from '../navigation/button/SolidNextButton';
 
 export const BasicInfoPanel = (): JSX.Element => {
   const selectedTab = useTabStore((state) => state.selectedTab);
   const handleNextTab = useTabStore((state) => state.handleNextTab);
+
+  const {
+    aside: { isMobile },
+  } = useContext(PageContentContext);
 
   // residential and permanent address object from pds store
   const residentialAddress = usePdsStore((state) => state.residentialAddress);
@@ -121,6 +127,11 @@ export const BasicInfoPanel = (): JSX.Element => {
       {/* Basic Info Page */}
       <Page title="Basic Information" subtitle="">
         <>
+          {isMobile && (
+            <div className="flex w-full justify-end">
+              <SolidNextButton formId="basicInfo" />
+            </div>
+          )}
           <FormProvider {...methods} key="basicInfo">
             <form onSubmit={methods.handleSubmit(onSubmit)} id="basicInfo">
               <PersonalInfoBI />
@@ -129,9 +140,15 @@ export const BasicInfoPanel = (): JSX.Element => {
             </form>
           </FormProvider>
         </>
+        {isMobile && (
+          <div className="flex w-full justify-end mt-4">
+            <SolidNextButton formId="basicInfo" />
+          </div>
+        )}
       </Page>
       {/* NEXT BUTTON */}
-      <NextButton formId="basicInfo" />
+
+      {!isMobile && <NextButton formId="basicInfo" />}
     </>
   );
 };

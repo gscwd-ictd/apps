@@ -18,9 +18,9 @@ import { useTabStore } from '../../../store/tab.store';
 import { tabs } from '../../../../utils/constants/tabs';
 import TopNavigation from '../../page-header/TopNavigation';
 import { HiArrowSmLeft } from 'react-icons/hi';
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import { usePublicationStore } from '../../../store/publication.store';
-import { Alert, Button } from '@gscwd-apps/oneui';
+import { Alert, Button, PageContentContext } from '@gscwd-apps/oneui';
 
 export const NavTab = (): JSX.Element => {
   // get selected tab from tab store
@@ -29,6 +29,11 @@ export const NavTab = (): JSX.Element => {
   const publication = usePublicationStore((state) => state.publication);
   const router = useRouter(); // initialize router
   const [cancelAlertIsOpen, setCancelAlertIsOpen] = useState<boolean>(false);
+
+  // page context
+  const {
+    aside: { isMobile },
+  } = useContext(PageContentContext);
 
   return (
     <>
@@ -52,24 +57,18 @@ export const NavTab = (): JSX.Element => {
       <Alert open={cancelAlertIsOpen} setOpen={setCancelAlertIsOpen}>
         <Alert.Description>
           <div className="flex justify-center w-full h-full">
-            Any unsaved changes you have made will be discarded. Do you want to
-            proceed?
+            Any unsaved changes you have made will be discarded. Do you want to proceed?
           </div>
         </Alert.Description>
         <Alert.Footer alignEnd>
           <div className="flex gap-2">
-            <Button
-              onClick={() => setCancelAlertIsOpen(false)}
-              className="w-[6rem]"
-            >
+            <Button onClick={() => setCancelAlertIsOpen(false)} className="w-[6rem]">
               No
             </Button>
 
             <Button
               onClick={() => {
-                router.push(
-                  `${process.env.NEXT_PUBLIC_JOB_PORTAL}/application/${publication.vppId}/checklist`
-                );
+                router.push(`${process.env.NEXT_PUBLIC_JOB_PORTAL}/application/${publication.vppId}/checklist`);
                 setCancelAlertIsOpen(false);
                 setSelectedTab(1);
               }}
@@ -90,19 +89,21 @@ export const NavTab = (): JSX.Element => {
         <nav className="fixed top-0 z-40 grid justify-center w-full bg-slate-100">
           {/* START OF TABS HERE */}
 
-          <div className="justify-center mt-20 overflow-x-auto">
-            <FormWizard
-              selectedTab={selectedTab}
-              setSelectedTab={setSelectedTab}
-              tabsLength={tabs.length}
-              tabs={tabs}
-            />
-          </div>
+          {!isMobile && (
+            <div className="justify-center mt-20 overflow-x-auto">
+              <FormWizard
+                selectedTab={selectedTab}
+                setSelectedTab={setSelectedTab}
+                tabsLength={tabs.length}
+                tabs={tabs}
+              />
+            </div>
+          )}
 
           {/*END OF TABS HERE */}
         </nav>
 
-        <div className="mt-24">
+        <div className="sm:mt-0 lg:mt-24">
           {tabs.map((tab) => {
             const { tabIndex } = tab;
             return (
