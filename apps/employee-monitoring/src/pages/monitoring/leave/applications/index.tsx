@@ -70,7 +70,8 @@ const Index = () => {
   const { register, watch } = useForm<Filter>({
     mode: 'onChange',
     defaultValues: {
-      monthYear: ConvertToYearMonth(dayjs().toString()),
+      // monthYear: ConvertToYearMonth(dayjs().toString()),
+      monthYear: '',
     },
     resolver: yupResolver(yupSchema),
   });
@@ -82,7 +83,7 @@ const Index = () => {
     error: swrError,
     isLoading: swrIsLoading,
     mutate: mutateLeaveApplications,
-  } = useSWR(`/leave/hrmo/${watchMonthYear}`, fetcherEMS, {
+  } = useSWR(isEmpty(watchMonthYear) ? `/leave/hrmo/` : `/leave/hrmo/${watchMonthYear}`, fetcherEMS, {
     shouldRetryOnError: true,
     revalidateOnFocus: false,
   });
