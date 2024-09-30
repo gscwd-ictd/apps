@@ -1,13 +1,7 @@
-import {
-  NextPage,
-  GetServerSideProps,
-  InferGetServerSidePropsType,
-  GetServerSidePropsContext,
-} from 'next';
-import dayjs from 'dayjs';
-import { PdsDocument } from '../../../../../components/personal-data-sheet/PdsDocument';
+import { GetServerSideProps, GetServerSidePropsContext } from 'next';
 import axios from 'axios';
 import { Pds } from '../../../../../store/pds.store';
+import { PdsDocumentView } from 'apps/job-portal/src/components/personal-data-sheet/PdsDocumentView';
 
 type DashboardProps = {
   vppId: string;
@@ -15,36 +9,22 @@ type DashboardProps = {
   applicantPds: Pds;
 };
 
-export default function PersonalDataSheetPdf({
-  vppId,
-  applicantPds,
-  externalApplicantId,
-}: DashboardProps) {
-  const formatDate = (assignedDate: string) => {
-    const date = new Date(assignedDate);
-    return dayjs(date.toLocaleDateString()).format('MM/DD/YYYY');
-  };
-
+export default function PersonalDataSheetPdf({ applicantPds }: DashboardProps) {
   return (
     <>
       <div className="flex justify-center w-full h-screen">
-        <PdsDocument formatDate={formatDate} pds={applicantPds} />
+        <PdsDocumentView applicantPds={applicantPds} />
       </div>
     </>
   );
 }
 
-export const getServerSideProps: GetServerSideProps = async (
-  context: GetServerSidePropsContext
-) => {
+export const getServerSideProps: GetServerSideProps = async (context: GetServerSidePropsContext) => {
   try {
-    const { data } = await axios.get(
-      `${process.env.NEXT_PUBLIC_HRIS_DOMAIN}/external-applicants/pds`,
-      {
-        withCredentials: true,
-        headers: { Cookie: `${context.req.headers.cookie}` },
-      }
-    );
+    const { data } = await axios.get(`${process.env.NEXT_PUBLIC_HRIS_DOMAIN}/external-applicants/pds`, {
+      withCredentials: true,
+      headers: { Cookie: `${context.req.headers.cookie}` },
+    });
 
     return {
       props: {

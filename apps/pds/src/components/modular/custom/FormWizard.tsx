@@ -1,4 +1,5 @@
-import { Dispatch, forwardRef, FunctionComponent, MutableRefObject, SetStateAction, useContext, useRef } from 'react';
+import { PageContentContext } from '@gscwd-apps/oneui';
+import { forwardRef, HTMLAttributes, useContext, useRef } from 'react';
 import { HiCheck, HiStop } from 'react-icons/hi';
 
 export type TabType = {
@@ -29,7 +30,7 @@ type FormNodeProps = {
   endingIndex?: boolean;
 };
 
-export const FormWizard = forwardRef<HTMLDivElement, FormWizardProps>(
+export const FormWizard = forwardRef<HTMLDivElement, HTMLAttributes<HTMLDivElement> & FormWizardProps>(
   ({ selectedTab, setSelectedTab, onClick, tabsLength, tabs, ...props }, ref) => {
     const formNodeRef = useRef();
 
@@ -61,7 +62,7 @@ export const FormWizard = forwardRef<HTMLDivElement, FormWizardProps>(
 
 FormWizard.displayName = 'FormWizard';
 
-export const FormNode = forwardRef<HTMLDivElement, FormNodeProps>(
+export const FormNode = forwardRef<HTMLDivElement, HTMLAttributes<HTMLDivElement> & FormNodeProps>(
   (
     {
       title = 'something',
@@ -77,9 +78,12 @@ export const FormNode = forwardRef<HTMLDivElement, FormNodeProps>(
     },
     innerRef
   ) => {
+    const {
+      aside: { isMobile },
+    } = useContext(PageContentContext);
     return (
       <>
-        <div ref={innerRef} {...props}>
+        <div {...props} ref={innerRef}>
           <main className={`flex flex-col `}>
             <div className={`flex items-center sm:w-[5rem] md:w-[5rem] lg:w-[8rem]`}>
               <section
@@ -113,11 +117,13 @@ export const FormNode = forwardRef<HTMLDivElement, FormNodeProps>(
                 }  `}
               />
             </div>
-            <div className={`flex justify-center pb-1 sm:w-[5rem] md:w-[5rem] lg:w-[8rem]`}>
-              <p className="w-[80%] select-none truncate px-1 text-center text-xs font-light text-black sm:w-full sm:whitespace-nowrap  lg:w-[80%] lg:whitespace-normal">
-                {title}
-              </p>
-            </div>
+            {!isMobile && (
+              <div className={`flex justify-center pb-1 sm:w-[5rem] md:w-[5rem] lg:w-[8rem]`}>
+                <p className="w-[80%] select-none truncate px-1 text-center text-xs font-light text-black sm:w-full sm:whitespace-nowrap  lg:w-[80%] lg:whitespace-normal">
+                  {title}
+                </p>
+              </div>
+            )}
           </main>
         </div>
       </>

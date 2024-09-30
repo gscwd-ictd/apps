@@ -72,16 +72,16 @@ export default function ReviewPanel(): JSX.Element {
       <Page title="" subtitle="">
         <>
           <div className="min-w-full">
-            <CardContainer title="Basic Information" className="" cols={1}>
+            <CardContainer title="Basic Information" className="lg:px-0" cols={1}>
               <>
                 {isMobile && (
-                  <div className="flex w-full gap-1 justify-between pt-6">
+                  <div className="flex w-full gap-1 justify-between pt-6 ">
                     <SolidPrevButton onClick={() => handlePrevTab(selectedTab)} type="button" />
 
                     {!hasPds && <SolidNextButton onClick={() => handleNextTab(selectedTab)} type="button" />}
                   </div>
                 )}
-                <div className="px-5">
+                <div className="">
                   <CardPreview title="Personal Information" subtitle="">
                     <>
                       {/* PERSONAL INFO */}
@@ -149,7 +149,7 @@ export default function ReviewPanel(): JSX.Element {
                       />
                       <LabelFieldPreview
                         label="Email Address:"
-                        field={personalInfo.email ? personalInfo.email : 'N/A'}
+                        field={<span className="break-all">{personalInfo.email ? personalInfo.email : 'N/A'}</span>}
                       />
                     </>
                   </CardPreview>
@@ -250,7 +250,7 @@ export default function ReviewPanel(): JSX.Element {
 
             <CardContainer title="Family Background" className="py-5">
               <>
-                <div className="px-5">
+                <div className="">
                   <CardPreview title="Spouse" subtitle="">
                     <>
                       <LabelFieldPreview label="Last Name:" field={spouse.lastName ? spouse.lastName : 'N/A'} />
@@ -346,9 +346,9 @@ export default function ReviewPanel(): JSX.Element {
               </>
             </CardContainer>
 
-            <CardContainer title="Educational Background" className="py-5" cols={1}>
+            <CardContainer title="Educational Background" className="py-5 sm:px-[5%] lg:px-0" cols={1}>
               <>
-                <div className="px-5">
+                <div className="">
                   <CardContainer title="Elementary Education" titleSize="xl" titleClassName="font-medium" isArray>
                     <>
                       {elementary.schoolName === '' || elementary.schoolName === null ? (
@@ -568,9 +568,9 @@ export default function ReviewPanel(): JSX.Element {
               </>
             </CardContainer>
 
-            <CardContainer title="Eligibility" className="py-5">
+            <CardContainer title="Eligibility" className="py-5 sm:px-[5%] lg:px-0">
               <>
-                <div className="px-5">
+                <div className="">
                   {eligibility.length === 0 ? (
                     <div className="rounded-md shadow-sm shadow-slate-200">
                       <NotApplicableVisual />
@@ -602,9 +602,9 @@ export default function ReviewPanel(): JSX.Element {
               </>
             </CardContainer>
 
-            <CardContainer title="Work Experience" className="py-5">
+            <CardContainer title="Work Experience" className="py-5 sm:px-[5%] lg:px-0">
               <>
-                <div className="px-5">
+                <div className="">
                   {workExperience.length === 0 ? (
                     <div className="rounded-md shadow-sm shadow-slate-200">
                       <NotApplicableVisual />
@@ -663,9 +663,9 @@ export default function ReviewPanel(): JSX.Element {
               </>
             </CardContainer>
 
-            <CardContainer title="Voluntary Work Experience" className="py-5">
+            <CardContainer title="Voluntary Work Experience" className="py-5 sm:px-[5%] lg:px-0">
               <>
-                <div className="px-5">
+                <div className="">
                   {voluntaryWork.length === 0 ? (
                     <div className="rounded-md shadow-sm shadow-slate-200">
                       <NotApplicableVisual />
@@ -695,9 +695,9 @@ export default function ReviewPanel(): JSX.Element {
                 </div>
               </>
             </CardContainer>
-            <CardContainer title="Learning and Development" className="py-5">
+            <CardContainer title="Learning and Development" className="py-5 sm:px-[5%] lg:px-0">
               <>
-                <div className="px-5">
+                <div className="">
                   {learningDevelopment.length === 0 ? (
                     <div className="rounded-md shadow-sm shadow-slate-200">
                       <NotApplicableVisual />
@@ -726,9 +726,9 @@ export default function ReviewPanel(): JSX.Element {
                 </div>
               </>
             </CardContainer>
-            <CardContainer title="Skills" className="py-5">
+            <CardContainer title="Skills" className="py-5 sm:px-[5%] lg:px-0">
               <>
-                <div className="px-5">
+                <div className="">
                   {skills.length === 0 ? (
                     <div className="rounded-md shadow-sm shadow-slate-200">
                       <NotApplicableVisual />
@@ -751,9 +751,9 @@ export default function ReviewPanel(): JSX.Element {
                 </div>
               </>
             </CardContainer>
-            <CardContainer title="Non-Academic Distinctions & Recognitions" className="py-5">
+            <CardContainer title="Non-Academic Distinctions & Recognitions" className="py-5 sm:px-[5%] lg:px-0">
               <>
-                <div className="px-5">
+                <div className="">
                   {recognitions.length === 0 ? (
                     <div className="rounded-md shadow-sm shadow-slate-200">
                       <NotApplicableVisual />
@@ -776,9 +776,9 @@ export default function ReviewPanel(): JSX.Element {
                 </div>
               </>
             </CardContainer>
-            <CardContainer title="Membership in Organizations" className="py-5">
+            <CardContainer title="Membership in Organizations" className="py-5 sm:px-[5%] lg:px-0">
               <>
-                <div className="px-5">
+                <div className="">
                   {organizations.length === 0 ? (
                     <div className="rounded-md shadow-sm shadow-slate-200">
                       <NotApplicableVisual />
@@ -802,9 +802,9 @@ export default function ReviewPanel(): JSX.Element {
               </>
             </CardContainer>
 
-            <CardContainer title="Questions" className="py-5">
+            <CardContainer title="Questions" className="py-5 sm:px-[5%] lg:px-0">
               <>
-                <div className="flex flex-col gap-4 p-5">
+                <div className="flex flex-col gap-4">
                   <CardQuestion
                     mainQuestion='Are you related by consanguinity or affinity to the appointing or recommending authority, or to the chief of bureau or office or to the
                       person who has immediate supervision over you in the Office, Bureau or Department where you will be apppointed,"'
@@ -997,9 +997,9 @@ export default function ReviewPanel(): JSX.Element {
               </>
             </CardContainer>
 
-            <CardContainer title="References" className="py-5">
+            <CardContainer title="References" className="py-5 sm:px-[5%] lg:px-0">
               <>
-                <div className="flex flex-col gap-4 px-5">
+                <div className="flex flex-col gap-4">
                   {references.length === 0 ? (
                     <div className="rounded-md shadow-sm shadow-slate-200">
                       <NotApplicableVisual />
@@ -1051,9 +1051,9 @@ export default function ReviewPanel(): JSX.Element {
                 </div>
               </>
             </CardContainer>
-            <CardContainer title="Presented Government ID" className="py-5">
+            <CardContainer title="Presented Government ID" className="py-5 sm:px-[5%] lg:px-0">
               <>
-                <div className="px-5">
+                <div className="">
                   <CardPreview title="" subtitle="">
                     <>
                       <LabelFieldPreview

@@ -11,6 +11,10 @@ import { NextButton } from '../navigation/button/NextButton';
 import schema from '../../../schema/EducationInfo';
 import { useTabStore } from '../../../store/tab.store';
 import { HeadContainer } from '../head/Head';
+import { useContext } from 'react';
+import { PageContentContext } from '@gscwd-apps/oneui';
+import { SolidPrevButton } from '../navigation/button/SolidPrevButton';
+import { SolidNextButton } from '../navigation/button/SolidNextButton';
 
 // yup validation schema
 
@@ -23,6 +27,11 @@ export const EducationalBgPanel = (): JSX.Element => {
   // assigns the use form to 'methods', yup resolver to yup schema, and mode is onchange
   const methods = useForm({ resolver: yupResolver(schema), mode: 'onChange' });
 
+  // page context
+  const {
+    aside: { isMobile },
+  } = useContext(PageContentContext);
+
   // fire when next button is clicked
   const onSubmit: SubmitHandler<any> = () => {
     handleNextTab();
@@ -33,6 +42,12 @@ export const EducationalBgPanel = (): JSX.Element => {
       <HeadContainer title="PDS - Educational Background" />
       <Page title="Educational Background" subtitle="">
         <>
+          {isMobile && (
+            <div className="flex w-full justify-between ">
+              <SolidPrevButton onClick={() => handlePrevTab()} type="button" />
+              <SolidNextButton formId="educationInfo" />
+            </div>
+          )}
           <FormProvider {...methods} key="educationInfo">
             <form onSubmit={methods.handleSubmit(onSubmit)} id="educationInfo">
               <Elementary />
@@ -42,10 +57,20 @@ export const EducationalBgPanel = (): JSX.Element => {
               <Graduate />
             </form>
           </FormProvider>
+          {isMobile && (
+            <div className="flex w-full justify-between pt-4">
+              <SolidPrevButton onClick={() => handlePrevTab()} />
+              <SolidNextButton formId="educationInfo" />
+            </div>
+          )}
         </>
       </Page>
-      <PrevButton action={() => handlePrevTab()} type="button" />
-      <NextButton formId="educationInfo" />
+      {!isMobile && (
+        <>
+          <PrevButton action={() => handlePrevTab()} type="button" />
+          <NextButton formId="educationInfo" />
+        </>
+      )}
     </>
   );
 };

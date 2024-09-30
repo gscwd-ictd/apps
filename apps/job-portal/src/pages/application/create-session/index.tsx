@@ -1,18 +1,13 @@
 import axios from 'axios';
-import {
-  GetServerSideProps,
-  GetServerSidePropsContext,
-  InferGetServerSidePropsType,
-} from 'next';
+import { GetServerSideProps, GetServerSidePropsContext, InferGetServerSidePropsType } from 'next';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 import { useState } from 'react';
 import { HiCheckCircle, HiShieldExclamation } from 'react-icons/hi';
 import { SpinnerDotted } from 'spinners-react';
-import { fetchWithToken, serverSideFetch } from '../../../../utils/hoc/fetcher';
+import { fetchWithToken } from '../../../../utils/hoc/fetcher';
 import { CardContainer } from '../../../components/modular/cards/CardContainer';
-import TopNavigation from '../../../components/page-header/TopNavigation';
 
 type Loading = {
   state: boolean;
@@ -37,9 +32,7 @@ export default function CreateSession({ token }: CreateSessionProps) {
     state: false,
     level: 1,
   });
-  const [userDetails, setUserDetails] = useState<UserDetails>(
-    {} as UserDetails
-  );
+  const [userDetails, setUserDetails] = useState<UserDetails>({} as UserDetails);
 
   const getData = async () => {
     try {
@@ -73,9 +66,7 @@ export default function CreateSession({ token }: CreateSessionProps) {
     if (isLoading.level === 2 && userDetails.login === 'success') {
       setTimeout(async () => {
         setIsLoading({ state: true, level: 3 });
-        await router.push(
-          `${process.env.NEXT_PUBLIC_JOB_PORTAL}/application/${userDetails.details.vppId}/checklist`
-        );
+        await router.push(`${process.env.NEXT_PUBLIC_JOB_PORTAL}/application/${userDetails.details.vppId}/checklist`);
       }, 1000);
     } else if (isLoading.level === 2 && userDetails.login !== 'success') {
       setTimeout(() => {
@@ -87,7 +78,6 @@ export default function CreateSession({ token }: CreateSessionProps) {
   return (
     <>
       <div className="min-h-screen bg-white">
-        <TopNavigation />
         <header className="shadow ">
           <div className="px-4 py-6 mx-auto max-w-7xl sm:px-6 lg:px-8">
             <h1 className="text-3xl font-semibold tracking-tight text-gray-900">
@@ -104,26 +94,15 @@ export default function CreateSession({ token }: CreateSessionProps) {
         <main>
           <div className="h-[44rem] w-full">
             <div className="flex flex-col items-center justify-center w-full h-full text-3xl">
-              <CardContainer
-                bgColor={'bg-slate-50'}
-                title={''}
-                remarks={''}
-                subtitle={''}
-              >
-                <div className="static flex h-[20rem] w-[44rem] flex-col place-items-center items-center justify-items-center rounded shadow transition-all">
+              <CardContainer bgColor={'bg-slate-50'} title={''} remarks={''} subtitle={''} className="">
+                <div className="flex h-full w-full p-10 flex-col place-items-center items-center justify-items-center rounded shadow transition-all">
                   {isLoading.level <= 2 ? (
                     <>
                       <SpinnerDotted
                         speed={150}
                         thickness={120}
                         className="flex w-full h-full transition-all animate-pulse "
-                        color={
-                          isLoading.level === 1
-                            ? 'slateblue'
-                            : isLoading.level === 2
-                            ? 'indigo'
-                            : 'green'
-                        }
+                        color={isLoading.level === 1 ? 'slateblue' : isLoading.level === 2 ? 'indigo' : 'green'}
                         size={100}
                       />
                     </>
@@ -170,9 +149,7 @@ export default function CreateSession({ token }: CreateSessionProps) {
   );
 }
 
-export const getServerSideProps = async (
-  context: GetServerSidePropsContext
-) => {
+export const getServerSideProps = async (context: GetServerSidePropsContext) => {
   try {
     const token = context.query.token;
 

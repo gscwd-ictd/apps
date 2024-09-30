@@ -64,7 +64,7 @@ export type JobOpeningDetails = {
     salaryGrade: string;
     core: Array<JobCompetencies>;
     functional: Array<JobCompetencies>;
-    crossCutting: Array<JobCompetencies>;
+    // crossCutting: Array<JobCompetencies>; //! removed due to crosscutting and functional are merged
     managerial: Array<JobCompetencies>;
   };
 };

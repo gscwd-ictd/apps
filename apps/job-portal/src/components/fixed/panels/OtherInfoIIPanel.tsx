@@ -12,17 +12,24 @@ import schema from '../../../schema/OtherInfoII';
 import { usePdsStore } from '../../../store/pds.store';
 import { useTabStore } from '../../../store/tab.store';
 import { HeadContainer } from '../head/Head';
+import { PageContentContext } from '@gscwd-apps/oneui';
+import { SolidNextButton } from '../navigation/button/SolidNextButton';
+import { SolidPrevButton } from '../navigation/button/SolidPrevButton';
 
 export default function OtherInfoIIPanel(): JSX.Element {
   // call references array from pds context
-  const selectedTab = useTabStore((state) => state.selectedTab);
+
   const handleNextTab = useTabStore((state) => state.handleNextTab);
   const handlePrevTab = useTabStore((state) => state.handlePrevTab);
   const references = usePdsStore((state) => state.references);
 
+  // page context
+  const {
+    aside: { isMobile },
+  } = useContext(PageContentContext);
+
   // call ref error from ref error context
-  const { setRefError, refRef, shake, refError, setShake } =
-    useContext(RefErrorContext);
+  const { setRefError, refRef, shake, refError, setShake } = useContext(RefErrorContext);
 
   // assign use form function to a 'method' constant, yup resolver scema, mode is on change
   const methods = useForm({ resolver: yupResolver(schema), mode: 'onChange' });
@@ -47,6 +54,12 @@ export default function OtherInfoIIPanel(): JSX.Element {
       <HeadContainer title="PDS - Supporting Information" />
       <Page title="Other Information II" subtitle="">
         <>
+          {isMobile && (
+            <div className="flex w-full justify-between ">
+              <SolidPrevButton onClick={handlePrevTab} type="button" />
+              <SolidNextButton formId="otherInfoII" />
+            </div>
+          )}
           <FormProvider {...methods} key="otherInfoII">
             <form onSubmit={methods.handleSubmit(onSubmit)} id="otherInfoII">
               <SupportingDetails />
@@ -55,9 +68,20 @@ export default function OtherInfoIIPanel(): JSX.Element {
             </form>
           </FormProvider>
         </>
+        {isMobile && (
+          <div className="flex w-full justify-between pt-4">
+            <SolidPrevButton onClick={handlePrevTab} type="button" />
+            <SolidNextButton formId="otherInfoII" />
+          </div>
+        )}
       </Page>
-      <PrevButton action={() => handlePrevTab()} type="button" />
-      <NextButton formId="otherInfoII" />
+
+      {!isMobile && (
+        <>
+          <PrevButton action={handlePrevTab} type="button" />
+          <NextButton formId="otherInfoII" />
+        </>
+      )}
     </>
   );
 }

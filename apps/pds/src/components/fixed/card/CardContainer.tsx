@@ -28,10 +28,10 @@ export const CardContainer = ({
 }: CardContainerProps): JSX.Element => {
   return (
     <>
-      <div className={`${className} ${isArray ? '' : 'sm:mx-0 lg:mx-[5%]'}`}>
+      <div className={`${className}  ${isArray ? '' : 'sm:mx-0 lg:mx-[5%] '}`}>
         <h1
-          className={`${titleClassName} flex hover:text-indigo-800 ${
-            isArray ? 'mx-[5%] mt-5 justify-start uppercase' : 'justify-center'
+          className={`${titleClassName} flex justify-center text-center  hover:text-indigo-800 ${
+            isArray ? 'mx-[5%] mt-5  uppercase' : ''
           } ${size[titleSize]} `}
         >
           {title}

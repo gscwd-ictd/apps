@@ -20,11 +20,9 @@ export const CardPreview = ({
   return (
     <>
       <div
-        className={`${className} col-span-1 mt-3 justify-between rounded-md border bg-white py-[5%] text-justify shadow-sm  shadow-slate-200  hover:bg-indigo-50  `}
+        className={`${className} col-span-1 mt-1 justify-between rounded-md border bg-white py-[5%] shadow-sm  shadow-slate-200  hover:bg-indigo-50  `}
       >
-        <div
-          className={`${titleClassName} select-none text-xl font-medium uppercase hover:text-indigo-800 `}
-        >
+        <div className={`${titleClassName} select-none text-xl font-medium uppercase hover:text-indigo-800 `}>
           {title}
         </div>
         <div className={`${subtitleClassName} select-none`}>{subtitle}</div>

@@ -127,8 +127,6 @@ export default function WorkSheetPanel({ allWorkExperiences, vppId }: WorkSheetP
   return (
     <>
       <div className="min-h-screen bg-white">
-        <TopNavigation />
-
         <button
           className="fixed flex items-center gap-2 mb-5 text-gray-500 transition-colors ease-in-out hover:text-gray-700"
           onClick={() => setCancelAlertIsOpen(true)}
@@ -150,7 +148,7 @@ export default function WorkSheetPanel({ allWorkExperiences, vppId }: WorkSheetP
             </Alert.Description>
             <Alert.Footer alignEnd>
               <div className="flex gap-2">
-                <Button onClick={() => setCancelAlertIsOpen(false)} className="w-[6rem]">
+                <Button onClick={() => setCancelAlertIsOpen(false)} className="w-[6rem]" variant="default">
                   No
                 </Button>
                 <Button onClick={goBack} className="w-[6rem]">
@@ -266,6 +264,7 @@ export default function WorkSheetPanel({ allWorkExperiences, vppId }: WorkSheetP
 }
 
 export const getServerSideProps: GetServerSideProps = async (context: GetServerSidePropsContext) => {
+  console.log(context.params?.external_applicant_id);
   try {
     const { data } = await axios.get(
       `${process.env.NEXT_PUBLIC_HRIS_DOMAIN}/pds/work-experience/${context.params?.external_applicant_id}`,
@@ -276,7 +275,10 @@ export const getServerSideProps: GetServerSideProps = async (context: GetServerS
     );
 
     return {
-      props: { vppId: context.params?.vpp_id, allWorkExperiences: data },
+      props: {
+        vppId: context.params?.vpp_id,
+        allWorkExperiences: data,
+      },
     };
   } catch (error) {
     return { props: { vppId: context.query.vpp_id } };
