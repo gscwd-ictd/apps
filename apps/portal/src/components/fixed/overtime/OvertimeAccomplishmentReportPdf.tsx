@@ -28,7 +28,7 @@ const styles = StyleSheet.create({
 });
 
 export const OvertimeAccomplishmentReportPdf = () => {
-  const overtimeAccomplishmentReport = useOvertimeStore((state) => ({
+  const { overtimeAccomplishmentReport } = useOvertimeStore((state) => ({
     overtimeAccomplishmentReport: state.overtimeAccomplishmentReport,
   }));
 
