@@ -33,7 +33,12 @@ export const VerticalDropdown = forwardRef<HTMLButtonElement, VerticalDropdownPr
                   {item.key}
                 </button>
               ) : (
-                <a className="flex text-sm items-center w-full py-2 px-4  text-gray-500 rounded active:bg-slate-50 active:text-gray-900 group">
+                <a
+                  className="flex text-sm items-center w-full py-2 px-4  text-gray-500 rounded active:bg-slate-50 active:text-gray-900 group"
+                  href={item.href}
+                  target="_blank"
+                  rel="noreferrer"
+                >
                   {item.key}
                 </a>
               )}

@@ -62,7 +62,7 @@ export const NavTab = (): JSX.Element => {
         </Alert.Description>
         <Alert.Footer alignEnd>
           <div className="flex gap-2">
-            <Button onClick={() => setCancelAlertIsOpen(false)} className="w-[6rem]">
+            <Button onClick={() => setCancelAlertIsOpen(false)} className="w-[6rem]" variant="default">
               No
             </Button>
 

@@ -33,15 +33,18 @@ export const NavTab = (): JSX.Element => {
 
   // set notification controller
 
+  const firstName = 'Mikhail Anthony';
+  const lastName = 'Dela Cruz';
+
   return (
     <>
       <div tabIndex={-1}>
         {/* <SideNav action={logout} /> */}
         <DarkNav />
       </div>
+
       <div>
         {/* Main DIV */}
-
         <NotificationContext.Provider value={{ notify }}>
           <div className="sm:pt-0 lg:pt-16">
             {allTabs.map((tab: any) => {

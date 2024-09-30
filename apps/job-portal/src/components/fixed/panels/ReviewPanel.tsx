@@ -71,7 +71,7 @@ export default function ReviewPanel(): JSX.Element {
       <Page title="" subtitle="">
         <>
           <div className="w-full">
-            <CardContainer title="Basic Information" className="py-5 sm:px-[5%] lg:px-0" cols={1}>
+            <CardContainer title="Basic Information" className="sm:px-[5%] lg:px-0" cols={1}>
               <>
                 {isMobile && (
                   <div className="flex w-full justify-between ">
@@ -147,7 +147,7 @@ export default function ReviewPanel(): JSX.Element {
                       />
                       <LabelFieldPreview
                         label="Email Address:"
-                        field={personalInfo.email ? personalInfo.email : 'N/A'}
+                        field={<span className="break-all">{personalInfo.email ? personalInfo.email : 'N/A'}</span>}
                       />
                     </>
                   </CardPreview>
@@ -248,7 +248,7 @@ export default function ReviewPanel(): JSX.Element {
 
             <CardContainer title="Family Background" className="py-5 sm:px-[5%] lg:px-0">
               <>
-                <div className="px-5">
+                <div className="">
                   <CardPreview title="Spouse" subtitle="">
                     <>
                       <LabelFieldPreview label="Last Name:" field={spouse.lastName ? spouse.lastName : 'N/A'} />
@@ -317,10 +317,9 @@ export default function ReviewPanel(): JSX.Element {
                     cols={children.length}
                     titleClassName="font-medium"
                   >
-                    {' '}
                     <>
                       {children.length === 0 ? (
-                        <div className="shadow-sm rounded-3xl shadow-slate-200">
+                        <div className="shadow-sm rounded-xl shadow-slate-200">
                           <NotApplicableVisual />
                         </div>
                       ) : (
@@ -329,7 +328,7 @@ export default function ReviewPanel(): JSX.Element {
                             const { birthDate, childName } = child;
                             return (
                               <div
-                                className="h-30 col-span-1 mb-[0.2%]  justify-between rounded-3xl bg-white py-5 px-[5%] text-left align-middle shadow-md hover:bg-indigo-100 "
+                                className="h-30 col-span-1 mb-[0.2%]  justify-between rounded-xl bg-white py-5 px-[5%] text-left align-middle shadow-md hover:bg-indigo-100 "
                                 key={childIdx}
                               >
                                 <LabelFieldPreview label="Full Name:" field={childName} />
@@ -347,16 +346,16 @@ export default function ReviewPanel(): JSX.Element {
 
             <CardContainer title="Educational Background" className="py-5 sm:px-[5%] lg:px-0" cols={1}>
               <>
-                <div className="px-5">
+                <div className="">
                   <CardContainer title="Elementary Education" titleSize="xl" titleClassName="font-medium" isArray>
                     <>
                       {elementary.schoolName === '' || elementary.schoolName === null ? (
-                        <div className="shadow-sm rounded-3xl shadow-slate-200">
+                        <div className="shadow-sm rounded-xl shadow-slate-200">
                           <NotApplicableVisual />
                         </div>
                       ) : (
                         <>
-                          <div className=" col-span-1 mb-[0.2%] justify-between rounded-3xl bg-white py-10 px-[5%] text-left align-middle shadow-md hover:bg-indigo-100 ">
+                          <div className=" col-span-1 mb-[0.2%] justify-between rounded-xl bg-white py-10 px-[5%] text-left align-middle shadow-md hover:bg-indigo-100 ">
                             <LabelFieldPreview
                               label="School:"
                               field={elementary.schoolName ? elementary.schoolName : 'N/A'}
@@ -390,12 +389,12 @@ export default function ReviewPanel(): JSX.Element {
                   <CardContainer title="Secondary Education" titleSize="xl" titleClassName="font-medium" isArray>
                     <>
                       {secondary.schoolName === '' || secondary.schoolName === null ? (
-                        <div className="shadow-sm rounded-3xl shadow-slate-200">
+                        <div className="shadow-sm rounded-xl shadow-slate-200">
                           <NotApplicableVisual />
                         </div>
                       ) : (
                         <>
-                          <div className=" col-span-1 mb-[0.2%] justify-between rounded-3xl bg-white py-10 px-[5%] text-left align-middle shadow-md hover:bg-indigo-100  ">
+                          <div className=" col-span-1 mb-[0.2%] justify-between rounded-xl bg-white py-10 px-[5%] text-left align-middle shadow-md hover:bg-indigo-100  ">
                             <LabelFieldPreview label="School:" field={secondary.schoolName} />
                             <LabelFieldPreview
                               label="Basic Education:"
@@ -429,7 +428,7 @@ export default function ReviewPanel(): JSX.Element {
                   >
                     <>
                       {vocational.length === 0 ? (
-                        <div className="shadow-sm rounded-3xl shadow-slate-200">
+                        <div className="shadow-sm rounded-xl shadow-slate-200">
                           <NotApplicableVisual />
                         </div>
                       ) : (
@@ -439,7 +438,7 @@ export default function ReviewPanel(): JSX.Element {
                             return (
                               <div
                                 key={courseIdx}
-                                className="col-span-1 mb-[0.2%] justify-between rounded-3xl bg-white py-10 px-[5%] text-left align-middle shadow-md hover:bg-indigo-100 "
+                                className="col-span-1 mb-[0.2%] justify-between rounded-xl bg-white py-10 px-[5%] text-left align-middle shadow-md hover:bg-indigo-100 "
                               >
                                 <LabelFieldPreview label="School:" field={schoolName ? schoolName : 'N/A'} />
                                 <LabelFieldPreview label="Degree/Course:" field={degree ? degree : 'N/A'} />
@@ -470,7 +469,7 @@ export default function ReviewPanel(): JSX.Element {
                   >
                     <>
                       {college.length === 0 ? (
-                        <div className="shadow-sm rounded-3xl shadow-slate-200">
+                        <div className="shadow-sm rounded-xl shadow-slate-200">
                           <NotApplicableVisual />
                         </div>
                       ) : (
@@ -480,7 +479,7 @@ export default function ReviewPanel(): JSX.Element {
                             return (
                               <div
                                 key={courseIdx}
-                                className="col-span-1 mb-[0.2%] justify-between rounded-3xl bg-white py-10 px-[5%] text-left align-middle shadow-md hover:bg-indigo-100 "
+                                className="col-span-1 mb-[0.2%] justify-between rounded-xl bg-white py-10 px-[5%] text-left align-middle shadow-md hover:bg-indigo-100 "
                               >
                                 <LabelFieldPreview label="School:" field={schoolName ? schoolName : 'N/A'} />
                                 <LabelFieldPreview label="Degree/Course:" field={degree ? degree : 'N/A'} />
@@ -511,7 +510,7 @@ export default function ReviewPanel(): JSX.Element {
                   >
                     <>
                       {graduate.length === 0 ? (
-                        <div className="shadow-sm rounded-3xl shadow-slate-200">
+                        <div className="shadow-sm rounded-xl shadow-slate-200">
                           <NotApplicableVisual />
                         </div>
                       ) : (
@@ -521,7 +520,7 @@ export default function ReviewPanel(): JSX.Element {
                             return (
                               <div
                                 key={courseIdx}
-                                className="col-span-1 mb-[0.2%] justify-between rounded-3xl bg-white py-10 px-[5%] text-left align-middle shadow-md hover:bg-indigo-100 "
+                                className="col-span-1 mb-[0.2%] justify-between rounded-xl bg-white py-10 px-[5%] text-left align-middle shadow-md hover:bg-indigo-100 "
                               >
                                 <LabelFieldPreview label="School:" field={schoolName ? schoolName : 'N/A'} />
                                 <LabelFieldPreview label="Degree/Course:" field={degree ? degree : 'N/A'} />
@@ -549,9 +548,9 @@ export default function ReviewPanel(): JSX.Element {
 
             <CardContainer title="Eligibility" className="py-5 sm:px-[5%] lg:px-0">
               <>
-                <div className="flex flex-col gap-4 px-5">
+                <div className="flex flex-col gap-4">
                   {eligibility.length === 0 ? (
-                    <div className="shadow-sm rounded-3xl shadow-slate-200">
+                    <div className="shadow-sm rounded-xl shadow-slate-200">
                       <NotApplicableVisual />
                     </div>
                   ) : (
@@ -561,7 +560,7 @@ export default function ReviewPanel(): JSX.Element {
                         return (
                           <div
                             key={eligIdx}
-                            className="col-span-1 mb-[0.2%] justify-between rounded-3xl bg-white py-10 px-[5%] text-left align-middle shadow-md hover:bg-indigo-100  "
+                            className="col-span-1 mb-[0.2%] justify-between rounded-xl bg-white py-10 px-[5%] text-left align-middle shadow-md hover:bg-indigo-100  "
                           >
                             <LabelFieldPreview label="Name:" field={name ? name : 'N/A'} />
                             <LabelFieldPreview label="Rating:" field={rating ? rating : 'N/A'} />
@@ -580,9 +579,9 @@ export default function ReviewPanel(): JSX.Element {
             </CardContainer>
             <CardContainer title="Work Experience" className="py-5 sm:px-[5%] lg:px-0">
               <>
-                <div className="flex flex-col gap-4 px-5">
+                <div className="flex flex-col gap-4">
                   {workExperience.length === 0 ? (
-                    <div className="shadow-sm rounded-3xl shadow-slate-200">
+                    <div className="shadow-sm rounded-xl shadow-slate-200">
                       <NotApplicableVisual />
                     </div>
                   ) : (
@@ -601,7 +600,7 @@ export default function ReviewPanel(): JSX.Element {
                         return (
                           <div
                             key={workIdx}
-                            className="col-span-1 mb-[0.2%] justify-between rounded-3xl bg-white py-10 px-[5%] text-left align-middle shadow-md hover:bg-indigo-100 "
+                            className="col-span-1 mb-[0.2%] justify-between rounded-xl bg-white py-10 px-[5%] text-left align-middle shadow-md hover:bg-indigo-100 "
                           >
                             <LabelFieldPreview label="Position Title:" field={positionTitle ? positionTitle : 'N/A'} />
                             <LabelFieldPreview label="Company Name:" field={companyName ? companyName : 'N/A'} />
@@ -640,9 +639,9 @@ export default function ReviewPanel(): JSX.Element {
             </CardContainer>
             <CardContainer title="Voluntary Work Experience" className="py-5 sm:px-[5%] lg:px-0">
               <>
-                <div className="flex flex-col gap-4 px-5">
+                <div className="flex flex-col gap-4">
                   {voluntaryWork.length === 0 ? (
-                    <div className="shadow-sm rounded-3xl shadow-slate-200">
+                    <div className="shadow-sm rounded-xl shadow-slate-200">
                       <NotApplicableVisual />
                     </div>
                   ) : (
@@ -652,7 +651,7 @@ export default function ReviewPanel(): JSX.Element {
                         return (
                           <div
                             key={workIdx}
-                            className="col-span-1 mb-[0.2%] justify-between rounded-3xl bg-white py-10 px-[5%] text-left align-middle shadow-md hover:bg-indigo-100 "
+                            className="col-span-1 mb-[0.2%] justify-between rounded-xl bg-white py-10 px-[5%] text-left align-middle shadow-md hover:bg-indigo-100 "
                           >
                             <LabelFieldPreview label="Position Title:" field={position ? position : 'N/A'} />
                             <LabelFieldPreview
@@ -672,9 +671,9 @@ export default function ReviewPanel(): JSX.Element {
             </CardContainer>
             <CardContainer title="Learning and Development" className="py-5 sm:px-[5%] lg:px-0">
               <>
-                <div className="flex flex-col gap-4 px-5">
+                <div className="flex flex-col gap-4">
                   {learningDevelopment.length === 0 ? (
-                    <div className="shadow-sm rounded-3xl shadow-slate-200">
+                    <div className="shadow-sm rounded-xl shadow-slate-200">
                       <NotApplicableVisual />
                     </div>
                   ) : (
@@ -685,7 +684,7 @@ export default function ReviewPanel(): JSX.Element {
                         return (
                           <div
                             key={trainingIdx}
-                            className="col-span-1 mb-[0.2%] justify-between rounded-3xl bg-white py-10 px-[5%] text-left align-middle shadow-md hover:bg-indigo-100 "
+                            className="col-span-1 mb-[0.2%] justify-between rounded-xl bg-white py-10 px-[5%] text-left align-middle shadow-md hover:bg-indigo-100 "
                           >
                             <LabelFieldPreview label="Title:" field={title ? title : 'N/A'} />
                             <LabelFieldPreview label="Conducted by:" field={conductedBy ? conductedBy : 'N/A'} />
@@ -703,9 +702,9 @@ export default function ReviewPanel(): JSX.Element {
             </CardContainer>
             <CardContainer title="Skills" className="py-5 sm:px-[5%] lg:px-0">
               <>
-                <div className="flex flex-col gap-4 px-5">
+                <div className="flex flex-col gap-4">
                   {skills.length === 0 ? (
-                    <div className="shadow-sm rounded-3xl shadow-slate-200">
+                    <div className="shadow-sm rounded-xl shadow-slate-200">
                       <NotApplicableVisual />
                     </div>
                   ) : (
@@ -715,7 +714,7 @@ export default function ReviewPanel(): JSX.Element {
                         return (
                           <div
                             key={titleIdx}
-                            className="col-span-1 mb-[0.2%] justify-between rounded-3xl bg-white py-10 px-[5%] text-left align-middle shadow-md hover:bg-indigo-100 "
+                            className="col-span-1 mb-[0.2%] justify-between rounded-xl bg-white py-10 px-[5%] text-left align-middle shadow-md hover:bg-indigo-100 "
                           >
                             <LabelFieldPreview label="Title" field={skill ? skill : 'N/A'} />
                           </div>
@@ -728,9 +727,9 @@ export default function ReviewPanel(): JSX.Element {
             </CardContainer>
             <CardContainer title="Non-Academic Distinctions & Recognitions" className="py-5 sm:px-[5%] lg:px-0">
               <>
-                <div className="flex flex-col gap-4 px-5">
+                <div className="flex flex-col gap-4">
                   {recognitions.length === 0 ? (
-                    <div className="shadow-sm rounded-3xl shadow-slate-200">
+                    <div className="shadow-sm rounded-xl shadow-slate-200">
                       <NotApplicableVisual />
                     </div>
                   ) : (
@@ -740,7 +739,7 @@ export default function ReviewPanel(): JSX.Element {
                         return (
                           <div
                             key={recogIdx}
-                            className="col-span-1 mb-[0.2%] justify-between rounded-3xl bg-white py-10 px-[5%] text-left align-middle shadow-md hover:bg-indigo-100 "
+                            className="col-span-1 mb-[0.2%] justify-between rounded-xl bg-white py-10 px-[5%] text-left align-middle shadow-md hover:bg-indigo-100 "
                           >
                             <LabelFieldPreview label="Title" field={recognition ? recognition : 'N/A'} />
                           </div>
@@ -753,9 +752,9 @@ export default function ReviewPanel(): JSX.Element {
             </CardContainer>
             <CardContainer title="Membership in Organizations" className="py-5 sm:px-[5%] lg:px-0">
               <>
-                <div className="flex flex-col gap-4 px-5">
+                <div className="flex flex-col gap-4">
                   {organizations.length === 0 ? (
-                    <div className="shadow-sm rounded-3xl shadow-slate-200">
+                    <div className="shadow-sm rounded-xl shadow-slate-200">
                       <NotApplicableVisual />
                     </div>
                   ) : (
@@ -765,7 +764,7 @@ export default function ReviewPanel(): JSX.Element {
                         return (
                           <div
                             key={membershipIdx}
-                            className="col-span-1 mb-[0.2%] justify-between rounded-3xl bg-white py-10 px-[5%] text-left align-middle shadow-md hover:bg-indigo-100 "
+                            className="col-span-1 mb-[0.2%] justify-between rounded-xl bg-white py-10 px-[5%] text-left align-middle shadow-md hover:bg-indigo-100 "
                           >
                             <LabelFieldPreview label="Title" field={organization ? organization : 'N/A'} />
                           </div>
@@ -778,12 +777,11 @@ export default function ReviewPanel(): JSX.Element {
             </CardContainer>
             <CardContainer title="Questions" className="py-5 sm:px-[5%] lg:px-0">
               <>
-                <div className="flex flex-col gap-4 p-5">
+                <div className="flex flex-col gap-4 ">
                   <CardQuestion
                     mainQuestion='Are you related by consanguinity or affinity to the appointing or recommending authority, or to the chief of bureau or office or to the
                       person who has immediate supervision over you in the Office, Bureau or Department where you will be apppointed,"'
                   >
-                    {' '}
                     <>
                       <LabelQNA
                         question="a. Within the third degree?"
@@ -973,9 +971,9 @@ export default function ReviewPanel(): JSX.Element {
             </CardContainer>
             <CardContainer title="References" className="py-5 sm:px-[5%] lg:px-0">
               <>
-                <div className="flex flex-col gap-4 px-5">
+                <div className="flex flex-col gap-4">
                   {references.length === 0 ? (
-                    <div className="shadow-sm rounded-3xl shadow-slate-200">
+                    <div className="shadow-sm rounded-xl shadow-slate-200">
                       <NotApplicableVisual />
                     </div>
                   ) : (
@@ -985,7 +983,7 @@ export default function ReviewPanel(): JSX.Element {
                         return (
                           <div
                             key={refIdx}
-                            className="col-span-1 mb-[0.2%] justify-between rounded-3xl bg-white py-10 px-[5%] text-left align-middle shadow-md hover:bg-indigo-100"
+                            className="col-span-1 mb-[0.2%] justify-between rounded-xl bg-white py-10 px-[5%] text-left align-middle shadow-md hover:bg-indigo-100"
                           >
                             <LabelFieldPreview
                               label="Name: "
@@ -1027,7 +1025,7 @@ export default function ReviewPanel(): JSX.Element {
             </CardContainer>
             <CardContainer title="Presented Government ID" className="py-5 sm:px-[5%] lg:px-0">
               <>
-                <div className="px-5">
+                <div className="">
                   <CardPreview title="" subtitle="">
                     <>
                       <LabelFieldPreview

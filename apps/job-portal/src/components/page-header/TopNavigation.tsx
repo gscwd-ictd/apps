@@ -12,7 +12,7 @@ const TopNavigation: NextComponentType<NextPageContext, {}, Props> = (props: Pro
         <div className="flex items-center justify-between h-16">
           {/* LOGO */}
 
-          <div className="flex items-center px-8">
+          <div className="flex items-center sm:px-4 lg:px-8">
             <div className="flex-shrink-0">
               <a href={process.env.NEXT_PUBLIC_JOB_PORTAL} title="Home">
                 <Image width={48} height={48} src="/assets/img/circle.png" alt="General Santos City Water District" />

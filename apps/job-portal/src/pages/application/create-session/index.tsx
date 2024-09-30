@@ -6,9 +6,8 @@ import { useEffect } from 'react';
 import { useState } from 'react';
 import { HiCheckCircle, HiShieldExclamation } from 'react-icons/hi';
 import { SpinnerDotted } from 'spinners-react';
-import { fetchWithToken, serverSideFetch } from '../../../../utils/hoc/fetcher';
+import { fetchWithToken } from '../../../../utils/hoc/fetcher';
 import { CardContainer } from '../../../components/modular/cards/CardContainer';
-import TopNavigation from '../../../components/page-header/TopNavigation';
 
 type Loading = {
   state: boolean;
@@ -96,7 +95,7 @@ export default function CreateSession({ token }: CreateSessionProps) {
           <div className="h-[44rem] w-full">
             <div className="flex flex-col items-center justify-center w-full h-full text-3xl">
               <CardContainer bgColor={'bg-slate-50'} title={''} remarks={''} subtitle={''} className="">
-                <div className="flex h-[20rem] w-[44rem] flex-col place-items-center items-center justify-items-center rounded shadow transition-all">
+                <div className="flex h-full w-full p-10 flex-col place-items-center items-center justify-items-center rounded shadow transition-all">
                   {isLoading.level <= 2 ? (
                     <>
                       <SpinnerDotted

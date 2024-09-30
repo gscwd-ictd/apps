@@ -127,7 +127,7 @@ export default function Checklist({ vppId, positionTitle }: ChecklistProps) {
   // do not forget to retun an empty array for the else statement
   const getThirdActions = (): VerticalDropdownProps['items'] => {
     // for selecting work experience
-    if (progress.secondStep && !progress.thirdStep && !submission.hasSubmitted)
+    if (progress.secondStep && !progress.thirdStep && !submission.hasSubmitted && noWorkExperience)
       return [{ key: 'Select Work Experience', value: 'select-wes', type: 'button', onClick: onClickWorkExpSheet }];
     // for selecting work experience && without work experience
     else if (progress.secondStep && !progress.thirdStep && !submission.hasSubmitted && !noWorkExperience)
@@ -147,6 +147,17 @@ export default function Checklist({ vppId, positionTitle }: ChecklistProps) {
     // else if(progress.secondStep && progress.thirdStep && !noWorkExperience){
     //   return [{key:''}]
     // }
+    // has finished step 3
+    else if (progress.secondStep && progress.thirdStep && !submission.hasSubmitted)
+      return [
+        { key: 'Update Work Experience', value: 'update-wes', type: 'button', onClick: onClickWorkExpSheet },
+        {
+          key: 'View Work Experience',
+          value: 'view-wes',
+          type: 'a',
+          href: `${process.env.NEXT_PUBLIC_JOB_PORTAL}/application/${vppId}/${externalApplicantId}/work-experience-sheet/pdf`,
+        },
+      ];
     else if (
       progress.secondStep &&
       progress.thirdStep &&
@@ -773,8 +784,8 @@ export default function Checklist({ vppId, positionTitle }: ChecklistProps) {
         </main>
         <footer>
           {progress.firstStep && progress.secondStep && progress.thirdStep && submission.hasSubmitted === false && (
-            <div className="flex w-full justify-center sm:px-2 md:px-2 lg:px-[21.5%]">
-              <Button onClick={() => setAlertSubmitIsOpen(true)} type="button" className="w-full bg-blue-600">
+            <div className="flex w-full justify-center px-2 sm:px-2 py-5 lg:px-[21.5%]">
+              <Button onClick={() => setAlertSubmitIsOpen(true)} type="button" className="w-full h-[3rem] bg-blue-600">
                 Submit Application
               </Button>
             </div>

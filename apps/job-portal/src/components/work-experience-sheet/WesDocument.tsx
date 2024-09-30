@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { PDFViewer, Page, Text, View, Document, StyleSheet, Font } from '@react-pdf/renderer';
+import React from 'react';
+import { Page, Text, View, Document, StyleSheet, Font } from '@react-pdf/renderer';
 import { Accomplishment, Duty } from '../../store/work-experience-sheet.store';
 import { Data } from 'apps/job-portal/utils/types/data/wes.type';
 
@@ -109,8 +109,6 @@ Font.register({
 });
 
 export const WesDocument = ({ formatDate, workExperiencesSheet, isSubmitted, applicant }: Data): JSX.Element => {
-  const [isClient, setIsClient] = useState(false);
-
   // Rendering of individual row of work experience
   const renderWorkExperiences = () => {
     const content =
@@ -163,93 +161,85 @@ export const WesDocument = ({ formatDate, workExperiencesSheet, isSubmitted, app
     return content;
   };
 
-  useEffect(() => {
-    setIsClient(true);
-  }, []);
-
   return (
     <>
-      {isClient && (
-        <PDFViewer width={'100%'} height={'100%'} showToolbar>
-          <Document
-            author="General Santos City Water District"
-            subject="Attachment to CS Form No. 212."
-            title="Work Experience Sheet"
-          >
-            {/* Page 1 */}
-            <Page size={[612.3, 935.4]} style={styles.page}>
-              {/* <Text style={styles.pageNumber} render={({ pageNumber, totalPages }) => `${pageNumber} / ${totalPages}`} fixed /> */}
-              {/* <Text style={styles.pageNumber} render={({ pageNumber, totalPages }) => `${pageNumber} / ${totalPages}`} fixed /> */}
+      <Document
+        author="General Santos City Water District"
+        subject="Attachment to CS Form No. 212."
+        title="Work Experience Sheet"
+      >
+        {/* Page 1 */}
+        <Page size={[612.3, 935.4]} style={styles.page}>
+          {/* <Text style={styles.pageNumber} render={({ pageNumber, totalPages }) => `${pageNumber} / ${totalPages}`} fixed /> */}
+          {/* <Text style={styles.pageNumber} render={({ pageNumber, totalPages }) => `${pageNumber} / ${totalPages}`} fixed /> */}
 
-              <Text
-                style={{
-                  fontFamily: 'ArialNarrowBoldItalic',
-                  fontSize: 11,
-                  padding: '13 0 0 13',
-                }}
-                render={({ pageNumber }) => {
-                  if (pageNumber == 1) {
-                    return `${''}`;
-                  } else {
-                    return `${'Attachment to CS Form No. 212'}`;
-                  }
-                }}
-                fixed
-              />
+          <Text
+            style={{
+              fontFamily: 'ArialNarrowBoldItalic',
+              fontSize: 11,
+              padding: '13 0 0 13',
+            }}
+            render={({ pageNumber }) => {
+              if (pageNumber == 1) {
+                return `${''}`;
+              } else {
+                return `${'Attachment to CS Form No. 212'}`;
+              }
+            }}
+            fixed
+          />
 
-              <View style={styles.bodyBorder}>
-                {/* DOCUMENT TITLE */}
-                <View style={styles.mainTitleContainer}>
-                  <Text style={styles.mainTitle}>WORK EXPERIENCE SHEET</Text>
+          <View style={styles.bodyBorder}>
+            {/* DOCUMENT TITLE */}
+            <View style={styles.mainTitleContainer}>
+              <Text style={styles.mainTitle}>WORK EXPERIENCE SHEET</Text>
+            </View>
+
+            {/* INSTRUCTIONS */}
+            <View style={[styles.instructionsContainer]}>
+              <View style={[styles.rowContainer]}>
+                <View style={[styles.w15]}>
+                  <Text
+                    style={[
+                      {
+                        fontFamily: 'ArialBoldItalic',
+                        textAlign: 'center',
+                      },
+                    ]}
+                  >
+                    Instructions:
+                  </Text>
                 </View>
-
-                {/* INSTRUCTIONS */}
-                <View style={[styles.instructionsContainer]}>
-                  <View style={[styles.rowContainer]}>
-                    <View style={[styles.w15]}>
-                      <Text
-                        style={[
-                          {
-                            fontFamily: 'ArialBoldItalic',
-                            textAlign: 'center',
-                          },
-                        ]}
-                      >
-                        Instructions:
-                      </Text>
-                    </View>
-                    <View style={[styles.w85]}>
-                      <Text>1. Include only the work experiences relevant to the position being applied to.</Text>
-                      <Text style={[{ paddingTop: 15 }]}>
-                        2. The duration should include start and finish dates, if known, month in abbreviated form, if
-                        known, and year in full. For the current position, use the word Present, e.g., 1998-Present.
-                        Work experience should be listed from most recent first.
-                      </Text>
-                    </View>
-                  </View>
-                </View>
-
-                {/* WORK EXPERIENCE */}
-                {renderWorkExperiences()}
-              </View>
-
-              {/* SIGNATORY */}
-              <View style={[styles.signatoryContainer]} wrap={false}>
-                <View style={[styles.w60]}></View>
-                <View style={[styles.w40, { textAlign: 'center' }]}>
-                  <View style={[styles.borderBottom]}>
-                    <Text style={{ fontFamily: 'ArialBold' }}>{applicant.fullName?.toUpperCase()}</Text>
-                  </View>
-                  <Text>(Signature over Printed Name</Text>
-                  <Text>of Employee/Applicant)</Text>
-
-                  {isSubmitted ? <Text style={{ paddingTop: 15 }}>Date: {'MMMM DD, YYYY'}</Text> : null}
+                <View style={[styles.w85]}>
+                  <Text>1. Include only the work experiences relevant to the position being applied to.</Text>
+                  <Text style={[{ paddingTop: 15 }]}>
+                    2. The duration should include start and finish dates, if known, month in abbreviated form, if
+                    known, and year in full. For the current position, use the word Present, e.g., 1998-Present. Work
+                    experience should be listed from most recent first.
+                  </Text>
                 </View>
               </View>
-            </Page>
-          </Document>
-        </PDFViewer>
-      )}
+            </View>
+
+            {/* WORK EXPERIENCE */}
+            {renderWorkExperiences()}
+          </View>
+
+          {/* SIGNATORY */}
+          <View style={[styles.signatoryContainer]} wrap={false}>
+            <View style={[styles.w60]}></View>
+            <View style={[styles.w40, { textAlign: 'center' }]}>
+              <View style={[styles.borderBottom]}>
+                <Text style={{ fontFamily: 'ArialBold' }}>{applicant.fullName?.toUpperCase()}</Text>
+              </View>
+              <Text>(Signature over Printed Name</Text>
+              <Text>of Employee/Applicant)</Text>
+
+              {isSubmitted ? <Text style={{ paddingTop: 15 }}>Date: {'MMMM DD, YYYY'}</Text> : null}
+            </View>
+          </View>
+        </Page>
+      </Document>
     </>
   );
 };

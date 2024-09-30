@@ -323,7 +323,7 @@ export default function SubmitPanel(): JSX.Element {
             </div>
           </Card>
           {/* PDS Submit Button */}
-          <div className="mx-[18%] my-10 flex flex-col">
+          <div className="mx-[18%] my-10 flex flex-col ">
             <button
               className={`${
                 isLoading
