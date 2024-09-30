@@ -9,9 +9,9 @@ import { fetchWithToken } from 'apps/portal/src/utils/hoc/fetcher';
 import { isEmpty } from 'lodash';
 import { useOvertimeStore } from 'apps/portal/src/store/overtime.store';
 import { OvertimeAccomplishmentStatus } from 'libs/utils/src/lib/enums/overtime.enum';
-import OvertimeAccomplishmentReportPdfModal from './OvertimeAccomplishmentReportPdfModal';
 import { DateFormatter } from 'libs/utils/src/lib/functions/DateFormatter';
 import { DateTimeFormatter } from 'libs/utils/src/lib/functions/DateTimeFormatter';
+import OvertimeAccomplishmentReportModal from './OvertimeAccomplishmentReportModal';
 
 type ModalProps = {
   modalState: boolean;
@@ -204,7 +204,7 @@ export const OvertimeSupervisorAccomplishmentModal = ({ modalState, setModalStat
               </div>
             </div>
           )}
-          <OvertimeAccomplishmentReportPdfModal
+          <OvertimeAccomplishmentReportModal
             modalState={pdfAccomplishmentReportModalIsOpen}
             setModalState={setPdfAccomplishmentReportModalIsOpen}
             closeModalAction={closeOvertimeAccomplishmentModal}

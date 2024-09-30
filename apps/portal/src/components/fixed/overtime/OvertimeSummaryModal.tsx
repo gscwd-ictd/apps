@@ -2,11 +2,10 @@
 import { HiX } from 'react-icons/hi';
 import { Button, Modal } from '@gscwd-apps/oneui';
 import { SelectOption } from '../../../../../../libs/utils/src/lib/types/select.type';
-import { useEmployeeStore } from '../../../store/employee.store';
 import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
 import { useOvertimeStore } from 'apps/portal/src/store/overtime.store';
 import { format } from 'date-fns';
-import OvertimeSummaryReportPdfModal from './OvertimeSummaryReportPdfModal';
+import OvertimeSummaryReportModal from './OvertimeSummaryReportModal';
 
 type ModalProps = {
   modalState: boolean;
@@ -75,9 +74,6 @@ export const OvertimeSummaryModal = ({ modalState, setModalState, closeModalActi
     pdfOvertimeSummaryModalIsOpen: state.pdfOvertimeSummaryModalIsOpen,
     setPdfOvertimeSummaryModalIsOpen: state.setPdfOvertimeSummaryModalIsOpen,
   }));
-
-  // set state for employee store
-  const employeeDetails = useEmployeeStore((state) => state.employeeDetails);
 
   const onChangeMonth = (month: number) => {
     setSelectedMonth(month);
@@ -206,7 +202,7 @@ export const OvertimeSummaryModal = ({ modalState, setModalState, closeModalActi
               </div>
             </div>
           </div>
-          <OvertimeSummaryReportPdfModal
+          <OvertimeSummaryReportModal
             modalState={pdfOvertimeSummaryModalIsOpen}
             setModalState={setPdfOvertimeSummaryModalIsOpen}
             closeModalAction={closePdfOvertimeSummaryModal}

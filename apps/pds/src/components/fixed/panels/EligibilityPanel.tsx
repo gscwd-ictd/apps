@@ -69,17 +69,17 @@ export default function EligibilityPanel(): JSX.Element {
             </div>
           )}
           <CSEligibility />
-          {!isMobile && (
-            <>
-              <PrevButton action={onPrev} type="button" />
-              <NextButton action={onSubmit} type="button" />
-            </>
-          )}
           {isMobile && eligibility.length > 3 && (
             <div className="flex w-full gap-1 justify-between pt-6">
               <SolidPrevButton onClick={onPrev} type="button" />
               <SolidNextButton onClick={onSubmit} type="button" />
             </div>
+          )}
+          {!isMobile && (
+            <>
+              <PrevButton action={onPrev} type="button" />
+              <NextButton action={onSubmit} type="button" />
+            </>
           )}
         </>
       </Page>

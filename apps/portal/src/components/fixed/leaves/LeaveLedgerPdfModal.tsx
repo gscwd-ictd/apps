@@ -1,12 +1,10 @@
 import { Modal } from '@gscwd-apps/oneui';
-import { FunctionComponent, useEffect, useState } from 'react';
-import useSWR from 'swr';
+import { FunctionComponent } from 'react';
 import { isEmpty } from 'lodash';
-import { LeaveLedgerEntry } from 'libs/utils/src/lib/types/leave-ledger-entry.type';
 import LeaveLedgerPdf from './LeaveLedgerPdf';
 import { EmployeeDetails } from 'apps/portal/src/types/employee.type';
-import { fetchWithToken } from 'apps/portal/src/utils/hoc/fetcher';
 import { useLeaveLedgerStore } from 'apps/portal/src/store/leave-ledger.store';
+import { PDFDownloadLink, PDFViewer } from '@react-pdf/renderer';
 
 type LeaveLedgerPdfModalProps = {
   modalState: boolean;
@@ -45,9 +43,22 @@ const LeaveLedgerPdfModal: FunctionComponent<LeaveLedgerPdfModalProps> = ({
           </div>
         </Modal.Header>
         <Modal.Body>
-          <div>
-            <LeaveLedgerPdf employeeData={employeeData} leaveLedger={leaveLedger} />
-          </div>
+          {!isEmpty(employeeData) && !isEmpty(leaveLedger) ? (
+            <div className="text-center">
+              <PDFDownloadLink
+                document={<LeaveLedgerPdf employeeData={employeeData} leaveLedger={leaveLedger} />}
+                fileName={`${employeeData.employmentDetails.employeeFullName} Leave Ledger.pdf`}
+                className="md:hidden text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
+              >
+                {({ loading }) => (loading ? 'Loading document...' : 'Download PDF')}
+              </PDFDownloadLink>
+
+              <PDFViewer width={'100%'} height={1400} showToolbar className="hidden md:block ">
+                <LeaveLedgerPdf employeeData={employeeData} leaveLedger={leaveLedger} />
+              </PDFViewer>
+            </div>
+          ) : null}
+          <div></div>
         </Modal.Body>
         <Modal.Footer>
           <div className="flex justify-end w-full"></div>

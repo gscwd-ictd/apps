@@ -1,10 +1,11 @@
 /* eslint-disable @nx/enforce-module-boundaries */
-
 import { Button, Modal } from '@gscwd-apps/oneui';
 import { useDtrStore } from 'apps/portal/src/store/dtr.store';
 import DtrPdf from './DtrPdf';
 import { useEmployeeStore } from 'apps/portal/src/store/employee.store';
 import { HiX } from 'react-icons/hi';
+import { isEmpty } from 'lodash';
+import { PDFDownloadLink, PDFViewer } from '@react-pdf/renderer';
 
 type ModalProps = {
   modalState: boolean;
@@ -14,15 +15,11 @@ type ModalProps = {
 };
 
 export const DtrPdfModal = ({ modalState, setModalState, closeModalAction, title }: ModalProps) => {
-  const { employeeDtr, dtrIsLoading, dtrModalIsOpen, dtrPdfModalIsOpen, setDtrPdfModalIsOpen, setDtrModalIsOpen } =
-    useDtrStore((state) => ({
-      employeeDtr: state.employeeDtr,
-      dtrIsLoading: state.loading.loadingDtr,
-      dtrModalIsOpen: state.dtrModalIsOpen,
-      dtrPdfModalIsOpen: state.dtrModalIsOpen,
-      setDtrPdfModalIsOpen: state.setDtrPdfModalIsOpen,
-      setDtrModalIsOpen: state.setDtrModalIsOpen,
-    }));
+  const { employeeDtr, setDtrPdfModalIsOpen, setDtrModalIsOpen } = useDtrStore((state) => ({
+    employeeDtr: state.employeeDtr,
+    setDtrPdfModalIsOpen: state.setDtrPdfModalIsOpen,
+    setDtrModalIsOpen: state.setDtrModalIsOpen,
+  }));
 
   const employeeDetails = useEmployeeStore((state) => state.employeeDetails);
 
@@ -43,9 +40,23 @@ export const DtrPdfModal = ({ modalState, setModalState, closeModalAction, title
           </h3>
         </Modal.Header>
         <Modal.Body>
-          <>
-            <DtrPdf employeeDtr={employeeDtr} employeeData={employeeDetails} />
-          </>
+          <div className="text-center">
+            {!isEmpty(employeeDtr) ? (
+              <>
+                <PDFDownloadLink
+                  document={<DtrPdf employeeData={employeeDetails} employeeDtr={employeeDtr} />}
+                  fileName={`${employeeDetails.employmentDetails.employeeFullName} DTR.pdf`}
+                  className="md:hidden text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
+                >
+                  {({ loading }) => (loading ? 'Loading document...' : 'Download PDF')}
+                </PDFDownloadLink>
+
+                <PDFViewer width={'100%'} height={1400} className="hidden md:block ">
+                  <DtrPdf employeeData={employeeDetails} employeeDtr={employeeDtr} />
+                </PDFViewer>
+              </>
+            ) : null}
+          </div>
         </Modal.Body>
         <Modal.Footer>
           <div className="flex justify-end gap-2 px-4">

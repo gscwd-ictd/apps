@@ -5,6 +5,8 @@ import LeavePdf from './LeavePdf';
 import { useEmployeeStore } from 'apps/portal/src/store/employee.store';
 import { HiX } from 'react-icons/hi';
 import { useLeaveLedgerStore } from 'apps/portal/src/store/leave-ledger.store';
+import { isEmpty } from 'lodash';
+import { PDFDownloadLink, PDFViewer } from '@react-pdf/renderer';
 
 type ConfirmationModalProps = {
   modalState: boolean;
@@ -41,12 +43,32 @@ export const LeavePdfModal = ({ modalState, setModalState, closeModalAction, tit
           </h3>
         </Modal.Header>
         <Modal.Body>
-          <div className="w-full h-full flex flex-col gap-2 text-lg text-center px-4">
-            <LeavePdf
-              employeeDetails={employeeDetails}
-              leaveDetails={leaveIndividualDetail}
-              selectedLeaveLedger={selectedLeaveLedger}
-            />
+          <div className="text-center">
+            {!isEmpty(employeeDetails) && !isEmpty(leaveIndividualDetail) && !isEmpty(selectedLeaveLedger) ? (
+              <>
+                <PDFDownloadLink
+                  document={
+                    <LeavePdf
+                      employeeDetails={employeeDetails}
+                      leaveDetails={leaveIndividualDetail}
+                      selectedLeaveLedger={selectedLeaveLedger}
+                    />
+                  }
+                  fileName={`${employeeDetails.employmentDetails.employeeFullName} Leave Form.pdf`}
+                  className="md:hidden text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
+                >
+                  {({ loading }) => (loading ? 'Loading document...' : 'Download PDF')}
+                </PDFDownloadLink>
+
+                <PDFViewer width={'100%'} height={2800} showToolbar className="hidden md:block ">
+                  <LeavePdf
+                    employeeDetails={employeeDetails}
+                    leaveDetails={leaveIndividualDetail}
+                    selectedLeaveLedger={selectedLeaveLedger}
+                  />
+                </PDFViewer>
+              </>
+            ) : null}
           </div>
         </Modal.Body>
         <Modal.Footer>
