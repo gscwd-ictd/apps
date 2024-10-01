@@ -8,6 +8,7 @@ import useSWR from 'swr';
 import { useEffect } from 'react';
 import { isEmpty } from 'lodash';
 import OvertimeAccomplishmentReportPdf from './OvertimeAccomplishmentReportPdf';
+import { SpinnerDotted } from 'spinners-react';
 
 type ModalProps = {
   modalState: boolean;
@@ -84,10 +85,12 @@ export const OvertimeAccomplishmentReportModal = ({ modalState, setModalState, c
           </h3>
         </Modal.Header>
         <Modal.Body>
-          {!isEmpty(overtimeAccomplishmentReport) ? (
-            <>
+          {!isEmpty(swrOvertimeAccomplishmentReport) && !isEmpty(overtimeAccomplishmentReport) ? (
+            <div className="text-center">
               <PDFDownloadLink
-                document={<OvertimeAccomplishmentReportPdf />}
+                document={
+                  <OvertimeAccomplishmentReportPdf overtimeAccomplishmentReport={overtimeAccomplishmentReport} />
+                }
                 fileName={`${overtimeAccomplishmentReport.employeeName} ${overtimeAccomplishmentReport.date} Overtime Accomplishment.pdf`}
                 className="md:hidden text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg 
                 text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
@@ -96,10 +99,20 @@ export const OvertimeAccomplishmentReportModal = ({ modalState, setModalState, c
               </PDFDownloadLink>
 
               <PDFViewer width={'100%'} height={1000} showToolbar className="hidden md:block ">
-                <OvertimeAccomplishmentReportPdf />
+                <OvertimeAccomplishmentReportPdf overtimeAccomplishmentReport={overtimeAccomplishmentReport} />
               </PDFViewer>
-            </>
-          ) : null}
+            </div>
+          ) : (
+            <div className="w-full h-[90%]  static flex flex-col justify-items-center items-center place-items-center">
+              <SpinnerDotted
+                speed={70}
+                thickness={70}
+                className="w-full flex h-full transition-all "
+                color="slateblue"
+                size={100}
+              />
+            </div>
+          )}
         </Modal.Body>
         <Modal.Footer>
           <div className="flex justify-end gap-2 px-4">

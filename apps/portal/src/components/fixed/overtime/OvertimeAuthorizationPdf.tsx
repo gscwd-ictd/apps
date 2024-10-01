@@ -1,10 +1,9 @@
 /* eslint-disable jsx-a11y/alt-text */
 /* eslint-disable @nx/enforce-module-boundaries */
 import { PdfHeader } from '@gscwd-apps/oneui';
-import { useOvertimeStore } from 'apps/portal/src/store/overtime.store';
 import { Page, Text, Document, StyleSheet, View, Image } from '@react-pdf/renderer';
 import { DateFormatter } from 'libs/utils/src/lib/functions/DateFormatter';
-import { OvertimAuthorizationEmployee } from 'libs/utils/src/lib/types/overtime.type';
+import { OvertimAuthorizationEmployee, OvertimeAuthorization } from 'libs/utils/src/lib/types/overtime.type';
 
 const styles = StyleSheet.create({
   page: {
@@ -47,11 +46,11 @@ const styles = StyleSheet.create({
   },
 });
 
-export const OvertimeAuthorizationPdf = () => {
-  const { overtimeAuthorizationReport } = useOvertimeStore((state) => ({
-    overtimeAuthorizationReport: state.overtimeAuthorizationReport,
-  }));
+type PdfProps = {
+  overtimeAuthorizationReport: OvertimeAuthorization;
+};
 
+export const OvertimeAuthorizationPdf = ({ overtimeAuthorizationReport }: PdfProps): JSX.Element => {
   return (
     <>
       <Document title="Overtime Authorization Report">
@@ -84,7 +83,7 @@ export const OvertimeAuthorizationPdf = () => {
                   width: 350,
                 }}
               >
-                {overtimeAuthorizationReport.purpose}
+                {overtimeAuthorizationReport?.purpose}
               </Text>
               <Text>Date Covered: _____________</Text>
               <Text
@@ -95,7 +94,7 @@ export const OvertimeAuthorizationPdf = () => {
                   width: 90,
                 }}
               >
-                {DateFormatter(overtimeAuthorizationReport.plannedDate, 'MM-DD-YYYY')}
+                {DateFormatter(overtimeAuthorizationReport?.plannedDate, 'MM-DD-YYYY')}
               </Text>
             </View>
             <View
@@ -127,7 +126,7 @@ export const OvertimeAuthorizationPdf = () => {
                   width: 90,
                 }}
               >
-                {overtimeAuthorizationReport.estimatedHours}
+                {overtimeAuthorizationReport?.estimatedHours}
               </Text>
             </View>
 

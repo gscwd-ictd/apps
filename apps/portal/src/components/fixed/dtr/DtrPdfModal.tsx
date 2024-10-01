@@ -6,6 +6,7 @@ import { useEmployeeStore } from 'apps/portal/src/store/employee.store';
 import { HiX } from 'react-icons/hi';
 import { isEmpty } from 'lodash';
 import { PDFDownloadLink, PDFViewer } from '@react-pdf/renderer';
+import { SpinnerDotted } from 'spinners-react';
 
 type ModalProps = {
   modalState: boolean;
@@ -40,23 +41,31 @@ export const DtrPdfModal = ({ modalState, setModalState, closeModalAction, title
           </h3>
         </Modal.Header>
         <Modal.Body>
-          <div className="text-center">
-            {!isEmpty(employeeDtr) ? (
-              <>
-                <PDFDownloadLink
-                  document={<DtrPdf employeeData={employeeDetails} employeeDtr={employeeDtr} />}
-                  fileName={`${employeeDetails.employmentDetails.employeeFullName} DTR.pdf`}
-                  className="md:hidden text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
-                >
-                  {({ loading }) => (loading ? 'Loading document...' : 'Download PDF')}
-                </PDFDownloadLink>
+          {!isEmpty(employeeDtr) && !isEmpty(employeeDetails) ? (
+            <div className="text-center">
+              <PDFDownloadLink
+                document={<DtrPdf employeeData={employeeDetails} employeeDtr={employeeDtr} />}
+                fileName={`${employeeDetails.employmentDetails.employeeFullName} DTR.pdf`}
+                className="md:hidden text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
+              >
+                {({ loading }) => (loading ? 'Loading document...' : 'Download PDF')}
+              </PDFDownloadLink>
 
-                <PDFViewer width={'100%'} height={1400} className="hidden md:block ">
-                  <DtrPdf employeeData={employeeDetails} employeeDtr={employeeDtr} />
-                </PDFViewer>
-              </>
-            ) : null}
-          </div>
+              <PDFViewer width={'100%'} height={1400} className="hidden md:block ">
+                <DtrPdf employeeData={employeeDetails} employeeDtr={employeeDtr} />
+              </PDFViewer>
+            </div>
+          ) : (
+            <div className="w-full h-[90%]  static flex flex-col justify-items-center items-center place-items-center">
+              <SpinnerDotted
+                speed={70}
+                thickness={70}
+                className="w-full flex h-full transition-all "
+                color="slateblue"
+                size={100}
+              />
+            </div>
+          )}
         </Modal.Body>
         <Modal.Footer>
           <div className="flex justify-end gap-2 px-4">

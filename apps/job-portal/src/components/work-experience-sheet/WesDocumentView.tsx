@@ -43,7 +43,7 @@ export const WesDocumentView: FunctionComponent<WesDocumentViewProps> = ({ appli
 
   // fetch applicant name
   useEffect(() => {
-    console.log(data);
+    // console.log(data);
     if (!isEmpty(data)) {
       setApplicantData({
         ...applicantData,

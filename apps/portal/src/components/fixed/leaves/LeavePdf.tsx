@@ -2,7 +2,7 @@
 /* eslint-disable react/no-unescaped-entities */
 /* eslint-disable jsx-a11y/alt-text */
 import { Page, Text, Document, StyleSheet, View, Image } from '@react-pdf/renderer';
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { EmployeeDetails } from '../../../../src/types/employee.type';
 import { EmployeeLeaveDetails } from '../../../../../../libs/utils/src/lib/types/leave-application.type';
 import { LeaveName, LeaveStatus } from 'libs/utils/src/lib/enums/leave.enum';
@@ -159,16 +159,8 @@ type LeavePdfProps = {
 };
 
 export const LeavePdf = ({ employeeDetails, leaveDetails, selectedLeaveLedger }: LeavePdfProps): JSX.Element => {
-  // const [isClient, setIsClient] = useState<boolean>(false);
-
-  // useEffect(() => {
-  //   setIsClient(true);
-  // }, []);
-
   return (
     <>
-      {/* {isClient && (
-        <PDFViewer width={'100%'} height={2800} showToolbar> */}
       <Document title="Leave">
         <Page size={'A4'}>
           <View style={styles.page}>
@@ -1391,8 +1383,6 @@ export const LeavePdf = ({ employeeDetails, leaveDetails, selectedLeaveLedger }:
           </View>
         </Page>
       </Document>
-      {/* </PDFViewer>
-      )} */}
     </>
   );
 };

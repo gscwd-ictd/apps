@@ -5,6 +5,7 @@ import LeaveLedgerPdf from './LeaveLedgerPdf';
 import { EmployeeDetails } from 'apps/portal/src/types/employee.type';
 import { useLeaveLedgerStore } from 'apps/portal/src/store/leave-ledger.store';
 import { PDFDownloadLink, PDFViewer } from '@react-pdf/renderer';
+import { SpinnerDotted } from 'spinners-react';
 
 type LeaveLedgerPdfModalProps = {
   modalState: boolean;
@@ -57,7 +58,17 @@ const LeaveLedgerPdfModal: FunctionComponent<LeaveLedgerPdfModalProps> = ({
                 <LeaveLedgerPdf employeeData={employeeData} leaveLedger={leaveLedger} />
               </PDFViewer>
             </div>
-          ) : null}
+          ) : (
+            <div className="w-full h-[90%]  static flex flex-col justify-items-center items-center place-items-center">
+              <SpinnerDotted
+                speed={70}
+                thickness={70}
+                className="w-full flex h-full transition-all "
+                color="slateblue"
+                size={100}
+              />
+            </div>
+          )}
           <div></div>
         </Modal.Body>
         <Modal.Footer>

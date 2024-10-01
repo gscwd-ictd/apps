@@ -11,6 +11,8 @@ import { useEffect } from 'react';
 import { isEmpty } from 'lodash';
 import dayjs from 'dayjs';
 import OvertimeSummaryReportPdf from './OvertimeSummaryReportPdf';
+import { SpinnerDotted } from 'spinners-react';
+import { UseCapitalizer } from 'apps/employee-monitoring/src/utils/functions/Capitalizer';
 
 type ModalProps = {
   modalState: boolean;
@@ -96,21 +98,45 @@ export const OvertimeSummaryReportModal = ({ modalState, setModalState, closeMod
           </h3>
         </Modal.Header>
         <Modal.Body>
-          {!isEmpty(overtimeSummaryReport) ? (
-            <>
+          {!isEmpty(swrOvertimeSummary) && !isEmpty(overtimeSummaryReport) ? (
+            <div className="text-center">
               <PDFDownloadLink
-                document={<OvertimeSummaryReportPdf />}
-                fileName={`${overtimeSummaryReport.periodCovered}OvertimeSummary.pdf`}
+                document={
+                  <OvertimeSummaryReportPdf
+                    selectedMonth={selectedMonth}
+                    selectedPeriod={selectedPeriod}
+                    selectedEmployeeType={selectedEmployeeType}
+                    overtimeSummaryReport={overtimeSummaryReport}
+                  />
+                }
+                fileName={`${UseCapitalizer(
+                  selectedEmployeeType
+                )} ${selectedMonth}-${selectedYear} Overtime Summary.pdf`}
                 className="md:hidden text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
               >
                 {({ loading }) => (loading ? 'Loading document...' : 'Download PDF')}
               </PDFDownloadLink>
 
               <PDFViewer width={'100%'} height={1000} showToolbar className="hidden md:block ">
-                <OvertimeSummaryReportPdf />
+                <OvertimeSummaryReportPdf
+                  selectedMonth={selectedMonth}
+                  selectedPeriod={selectedPeriod}
+                  selectedEmployeeType={selectedEmployeeType}
+                  overtimeSummaryReport={overtimeSummaryReport}
+                />
               </PDFViewer>
-            </>
-          ) : null}
+            </div>
+          ) : (
+            <div className="w-full h-[90%]  static flex flex-col justify-items-center items-center place-items-center">
+              <SpinnerDotted
+                speed={70}
+                thickness={70}
+                className="w-full flex h-full transition-all "
+                color="slateblue"
+                size={100}
+              />
+            </div>
+          )}
         </Modal.Body>
         <Modal.Footer>
           <div className="flex justify-end gap-2 px-4">

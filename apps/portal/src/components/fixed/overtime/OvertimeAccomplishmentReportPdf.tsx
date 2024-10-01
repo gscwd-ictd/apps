@@ -1,9 +1,9 @@
 /* eslint-disable jsx-a11y/alt-text */
 /* eslint-disable @nx/enforce-module-boundaries */
 import { PdfHeader } from '@gscwd-apps/oneui';
-import { useOvertimeStore } from 'apps/portal/src/store/overtime.store';
 import { Page, Text, Document, StyleSheet, View, Image } from '@react-pdf/renderer';
 import { DateFormatter } from 'libs/utils/src/lib/functions/DateFormatter';
+import { OvertimeAccomplishmentReport } from 'libs/utils/src/lib/types/overtime.type';
 
 const styles = StyleSheet.create({
   page: {
@@ -27,14 +27,13 @@ const styles = StyleSheet.create({
   },
 });
 
-export const OvertimeAccomplishmentReportPdf = () => {
-  const { overtimeAccomplishmentReport } = useOvertimeStore((state) => ({
-    overtimeAccomplishmentReport: state.overtimeAccomplishmentReport,
-  }));
+type PdfProps = {
+  overtimeAccomplishmentReport: OvertimeAccomplishmentReport;
+};
 
+export const OvertimeAccomplishmentReportPdf = ({ overtimeAccomplishmentReport }: PdfProps): JSX.Element => {
   return (
     <>
-      {/* <PDFViewer width={'100%'} height={1000} showToolbar> */}
       <Document title="Overtime Accomplishment Report">
         <Page size={'A4'} orientation="portrait">
           <View style={styles.page}>
@@ -61,7 +60,7 @@ export const OvertimeAccomplishmentReportPdf = () => {
                   width: 175,
                 }}
               >
-                {overtimeAccomplishmentReport.employeeName}
+                {overtimeAccomplishmentReport?.employeeName}
               </Text>
               <Text>Office/Department/Division: ______________________________________</Text>
               <Text
@@ -72,7 +71,7 @@ export const OvertimeAccomplishmentReportPdf = () => {
                   width: 200,
                 }}
               >
-                {overtimeAccomplishmentReport.assignment}
+                {overtimeAccomplishmentReport?.assignment}
               </Text>
             </View>
             <View
@@ -95,7 +94,7 @@ export const OvertimeAccomplishmentReportPdf = () => {
                   width: 90,
                 }}
               >
-                {DateFormatter(overtimeAccomplishmentReport.date, 'MM-DD-YYYY')}
+                {DateFormatter(overtimeAccomplishmentReport?.date, 'MM-DD-YYYY')}
               </Text>
             </View>
             {/* MAIN TABLE CONTAINER */}
@@ -150,7 +149,7 @@ export const OvertimeAccomplishmentReportPdf = () => {
                     textAlign: 'justify',
                   }}
                 >
-                  <Text>{overtimeAccomplishmentReport.accomplishments}</Text>
+                  <Text>{overtimeAccomplishmentReport?.accomplishments}</Text>
                 </View>
               </View>
             </View>
@@ -215,7 +214,7 @@ export const OvertimeAccomplishmentReportPdf = () => {
                     textAlign: 'center',
                   }}
                 >
-                  {overtimeAccomplishmentReport.employeeName}
+                  {overtimeAccomplishmentReport?.employeeName}
                 </Text>
                 <Text>_______________________________</Text>
                 <Text
@@ -253,7 +252,7 @@ export const OvertimeAccomplishmentReportPdf = () => {
                     textAlign: 'center',
                   }}
                 >
-                  {overtimeAccomplishmentReport.supervisorName}
+                  {overtimeAccomplishmentReport?.supervisorName}
                 </Text>
                 <Text>_______________________________</Text>
                 <Text
@@ -262,14 +261,13 @@ export const OvertimeAccomplishmentReportPdf = () => {
                     textAlign: 'center',
                   }}
                 >
-                  {overtimeAccomplishmentReport.supervisorPosition}
+                  {overtimeAccomplishmentReport?.supervisorPosition}
                 </Text>
               </View>
             </View>
           </View>
         </Page>
       </Document>
-      {/* </PDFViewer> */}
     </>
   );
 };

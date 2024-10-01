@@ -14,6 +14,7 @@ import RenderOvertimeAccomplishmentStatus from 'apps/portal/src/utils/functions/
 import { TextSize } from 'libs/utils/src/lib/enums/text-size.enum';
 import OvertimeAuthorizationModal from './OvertimeAuthorizationModal';
 import { DateTimeFormatter } from 'libs/utils/src/lib/functions/DateTimeFormatter';
+import { isEmpty } from 'lodash';
 
 type ModalProps = {
   modalState: boolean;
@@ -103,18 +104,16 @@ export const OvertimeModal = ({ modalState, setModalState, closeModalAction }: M
             setModalState={setAccomplishmentOvertimeModalIsOpen}
             closeModalAction={closeOvertimeAccomplishmentModal}
           />
-          {!overtimeDetails ? (
-            <>
-              <div className="w-full h-[90%]  static flex flex-col justify-items-center items-center place-items-center">
-                <SpinnerDotted
-                  speed={70}
-                  thickness={70}
-                  className="w-full flex h-full transition-all "
-                  color="slateblue"
-                  size={100}
-                />
-              </div>
-            </>
+          {isEmpty(overtimeDetails) ? (
+            <div className="w-full h-[90%]  static flex flex-col justify-items-center items-center place-items-center">
+              <SpinnerDotted
+                speed={70}
+                thickness={70}
+                className="w-full flex h-full transition-all "
+                color="slateblue"
+                size={100}
+              />
+            </div>
           ) : (
             <div className="w-full h-full flex flex-col  ">
               <div className="w-full h-full flex flex-col gap-2 ">

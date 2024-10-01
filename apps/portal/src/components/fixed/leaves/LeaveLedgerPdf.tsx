@@ -1,6 +1,6 @@
 /* eslint-disable @nx/enforce-module-boundaries */
 /* eslint-disable jsx-a11y/alt-text */
-import { Page, Text, Document, StyleSheet, PDFViewer, View, Image } from '@react-pdf/renderer';
+import { Page, Text, Document, StyleSheet, View, Image } from '@react-pdf/renderer';
 import GscwdLogo from 'apps/employee-monitoring/public/gscwd-logo.png';
 import React, { FunctionComponent, useEffect, useState } from 'react';
 import dayjs from 'dayjs';
@@ -220,8 +220,6 @@ export const LeaveLedgerPdf: FunctionComponent<LeaveLedgerPdfProps> = ({ employe
 
   return (
     <>
-      {/* {isClient && (
-        <PDFViewer width={'100%'} height={1400}> */}
       <Document title="Leave Ledger">
         {/* FOLIO */}
         <Page size={'A4'} orientation={'landscape'} style={styles.page}>
@@ -486,8 +484,6 @@ export const LeaveLedgerPdf: FunctionComponent<LeaveLedgerPdfProps> = ({ employe
           </View>
         </Page>
       </Document>
-      {/* </PDFViewer>
-      )} */}
     </>
   );
 };

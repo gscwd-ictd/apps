@@ -125,7 +125,7 @@ export function withCookieSessionPds(serverSideProps: GetServerSideProps) {
 
         return await serverSideProps(context);
       } catch (error) {
-        console.log(error);
+        // console.log(error);
         return {
           redirect: {
             permanent: false,

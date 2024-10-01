@@ -1,9 +1,9 @@
 /* eslint-disable @nx/enforce-module-boundaries */
 /* eslint-disable jsx-a11y/alt-text */
-import { Page, Text, Document, StyleSheet, PDFViewer, View, Image } from '@react-pdf/renderer';
+import { Page, Text, Document, StyleSheet, View, Image } from '@react-pdf/renderer';
 import { EmployeeDtrWithScheduleAndSummary } from 'libs/utils/src/lib/types/dtr.type';
 import GscwdLogo from 'apps/employee-monitoring/public/gscwd-logo.png';
-import React, { FunctionComponent, useEffect, useState } from 'react';
+import React, { FunctionComponent } from 'react';
 import dayjs from 'dayjs';
 import { isEmpty } from 'lodash';
 import { HolidayTypes } from 'libs/utils/src/lib/enums/holiday-types.enum';
@@ -129,8 +129,6 @@ const styles = StyleSheet.create({
 });
 
 export const DtrPdf: FunctionComponent<DtrPdfProps> = ({ employeeData, employeeDtr }) => {
-  const [isClient, setIsClient] = useState<boolean>(false);
-
   // convert to 12-hour time format
   const twelveHourFormat = (time: string | null) => {
     if (time === null || isEmpty(time)) return '';
@@ -177,10 +175,6 @@ export const DtrPdf: FunctionComponent<DtrPdfProps> = ({ employeeData, employeeD
       return '';
     }
   };
-
-  useEffect(() => {
-    setIsClient(true);
-  }, []);
 
   return (
     <>

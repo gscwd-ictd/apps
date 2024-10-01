@@ -1,9 +1,8 @@
 /* eslint-disable jsx-a11y/alt-text */
 /* eslint-disable @nx/enforce-module-boundaries */
 import { PdfHeader } from '@gscwd-apps/oneui';
-import { useOvertimeStore } from 'apps/portal/src/store/overtime.store';
 import { Page, Text, Document, StyleSheet, View, Image } from '@react-pdf/renderer';
-import { OvertimeSummaryEmployee } from 'libs/utils/src/lib/types/overtime.type';
+import { OvertimeSummary, OvertimeSummaryEmployee } from 'libs/utils/src/lib/types/overtime.type';
 import dayjs from 'dayjs';
 
 const styles = StyleSheet.create({
@@ -109,14 +108,19 @@ const styles = StyleSheet.create({
   },
 });
 
-export const OvertimeSummaryReportPdf = () => {
-  const { selectedMonth, selectedPeriod, selectedEmployeeType, overtimeSummaryReport } = useOvertimeStore((state) => ({
-    selectedMonth: state.selectedMonth,
-    selectedPeriod: state.selectedPeriod,
-    selectedEmployeeType: state.selectedEmployeeType,
-    overtimeSummaryReport: state.overtimeSummaryReport,
-  }));
+type PdfProps = {
+  overtimeSummaryReport: OvertimeSummary;
+  selectedMonth: number;
+  selectedPeriod: string;
+  selectedEmployeeType: string;
+};
 
+export const OvertimeSummaryReportPdf = ({
+  selectedMonth,
+  selectedPeriod,
+  selectedEmployeeType,
+  overtimeSummaryReport,
+}: PdfProps): JSX.Element => {
   return (
     <>
       {/* <PDFViewer width={'100%'} height={1000} showToolbar> */}
