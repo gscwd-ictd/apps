@@ -25,7 +25,10 @@ export const PrfTimeline: FunctionComponent<PrfTimelineProps> = ({ prfTrail, cre
             createdAt={createdAt}
             updatedAt={division.updatedAt}
             designation={division.designation}
-            photoUrl={division.photoUrl ? division.photoUrl : defaultPhoto.src}
+            // photoUrl={division.photoUrl ? division.photoUrl : defaultPhoto.src}
+            photoUrl={
+              division.photoUrl ? process.env.NEXT_PUBLIC_IMAGE_SERVER_URL + division.photoUrl : defaultPhoto.src
+            }
             // photoUrl="https://cdn.lorem.space/images/face/.cache/500x0/pexels-alena-darmel-7710127.jpg"
           />
         ) : null}
@@ -40,7 +43,10 @@ export const PrfTimeline: FunctionComponent<PrfTimelineProps> = ({ prfTrail, cre
             updatedAt={department.updatedAt}
             position={department.position}
             // photoUrl="https://images.unsplash.com/photo-1550525811-e5869dd03032?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-            photoUrl={department.photoUrl ? department.photoUrl : defaultPhoto.src}
+            photoUrl={
+              department.photoUrl ? process.env.NEXT_PUBLIC_IMAGE_SERVER_URL + department.photoUrl : defaultPhoto.src
+            }
+            // photoUrl={department.photoUrl ? department.photoUrl : defaultPhoto.src}
           />
         ) : null}
 
@@ -53,7 +59,8 @@ export const PrfTimeline: FunctionComponent<PrfTimelineProps> = ({ prfTrail, cre
             designation={agm.designation}
             createdAt={createdAt}
             updatedAt={agm.updatedAt}
-            photoUrl={agm.photoUrl ? agm.photoUrl : defaultPhoto.src}
+            photoUrl={agm.photoUrl ? process.env.NEXT_PUBLIC_IMAGE_SERVER_URL + agm.photoUrl : defaultPhoto.src}
+            // photoUrl={agm.photoUrl ? agm.photoUrl : defaultPhoto.src}
           />
         ) : null}
 
@@ -65,7 +72,8 @@ export const PrfTimeline: FunctionComponent<PrfTimelineProps> = ({ prfTrail, cre
             designation={admin.designation}
             createdAt={createdAt}
             updatedAt={admin.updatedAt}
-            photoUrl={admin.photoUrl ? admin.photoUrl : defaultPhoto.src}
+            photoUrl={admin.photoUrl ? process.env.NEXT_PUBLIC_IMAGE_SERVER_URL + admin.photoUrl : defaultPhoto.src}
+            // photoUrl={admin.photoUrl ? admin.photoUrl : defaultPhoto.src}
           />
         ) : null}
 
@@ -75,7 +83,8 @@ export const PrfTimeline: FunctionComponent<PrfTimelineProps> = ({ prfTrail, cre
           position={gm.position}
           designation={gm.designation}
           updatedAt={gm.updatedAt}
-          photoUrl={gm.photoUrl ? gm.photoUrl : defaultPhoto.src}
+          photoUrl={gm.photoUrl ? process.env.NEXT_PUBLIC_IMAGE_SERVER_URL + gm.photoUrl : defaultPhoto.src}
+          // photoUrl={gm.photoUrl ? gm.photoUrl : defaultPhoto.src}
         />
       </div>
     </>

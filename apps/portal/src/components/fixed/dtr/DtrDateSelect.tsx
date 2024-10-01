@@ -108,7 +108,7 @@ export const DtrDateSelect = ({ employeeDetails }: DtrDateSelectProps) => {
   return (
     <form className="flex flex-col justify-end gap-2 md:flex-row">
       <Select
-        className="w-28 md:w-40"
+        className="w-36 md:w-40"
         data={months}
         initial={months[Number(monthNow) - 1]}
         listDef={list}

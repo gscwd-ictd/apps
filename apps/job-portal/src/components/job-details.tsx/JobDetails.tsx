@@ -26,9 +26,7 @@ export const JobDetails = ({ publication }: JobDetailsProps) => {
     }
   );
 
-  const [jobOpeningDetails, setJobOpeningDetails] = useState<JobOpeningDetails>(
-    {} as JobOpeningDetails
-  );
+  const [jobOpeningDetails, setJobOpeningDetails] = useState<JobOpeningDetails>({} as JobOpeningDetails);
 
   useEffect(() => {
     if (swrIsLoading) setJobOpeningDetails({} as JobOpeningDetails);
@@ -47,7 +45,7 @@ export const JobDetails = ({ publication }: JobDetailsProps) => {
     <>
       {swrIsLoading ? null : !isEmpty(jobOpeningDetails) ? (
         <>
-          <div className="w-full h-[44rem] flex flex-col max-h-[44rem] px-5 ">
+          <div className="w-full  flex flex-col sm:px-0 lg:px-5 ">
             <JobDetailsTitle jobOpeningDetails={jobOpeningDetails} />
             <JobDetailsTabPanel jobOpeningDetails={jobOpeningDetails} />
           </div>

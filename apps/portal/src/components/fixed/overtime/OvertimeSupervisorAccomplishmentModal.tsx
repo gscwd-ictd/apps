@@ -9,9 +9,9 @@ import { fetchWithToken } from 'apps/portal/src/utils/hoc/fetcher';
 import { isEmpty } from 'lodash';
 import { useOvertimeStore } from 'apps/portal/src/store/overtime.store';
 import { OvertimeAccomplishmentStatus } from 'libs/utils/src/lib/enums/overtime.enum';
-import OvertimeAccomplishmentReportPdfModal from './OvertimeAccomplishmentReportPdfModal';
 import { DateFormatter } from 'libs/utils/src/lib/functions/DateFormatter';
 import { DateTimeFormatter } from 'libs/utils/src/lib/functions/DateTimeFormatter';
+import OvertimeAccomplishmentReportModal from './OvertimeAccomplishmentReportModal';
 
 type ModalProps = {
   modalState: boolean;
@@ -99,18 +99,16 @@ export const OvertimeSupervisorAccomplishmentModal = ({ modalState, setModalStat
           </h3>
         </Modal.Header>
         <Modal.Body>
-          {!overtimeDetails ? (
-            <>
-              <div className="w-full h-[90%]  static flex flex-col justify-items-center items-center place-items-center">
-                <SpinnerDotted
-                  speed={70}
-                  thickness={70}
-                  className="w-full flex h-full transition-all "
-                  color="slateblue"
-                  size={100}
-                />
-              </div>
-            </>
+          {isEmpty(swrOvertimeAccomplishment) ? (
+            <div className="w-full h-[90%]  static flex flex-col justify-items-center items-center place-items-center">
+              <SpinnerDotted
+                speed={70}
+                thickness={70}
+                className="w-full flex h-full transition-all "
+                color="slateblue"
+                size={100}
+              />
+            </div>
           ) : (
             <div className="w-full h-full flex flex-col  ">
               <div className="w-full h-full flex flex-col gap-2 ">
@@ -140,7 +138,6 @@ export const OvertimeSupervisorAccomplishmentModal = ({ modalState, setModalStat
                       <div className="w-auto ml-5">
                         <label className="text-md font-medium">
                           {DateFormatter(overtimeDetails.plannedDate, 'MM-DD-YYYY')}
-                          {/* {DateTimeFormatter(overtimeDetails.plannedDate)} */}
                         </label>
                       </div>
                     </div>
@@ -204,7 +201,7 @@ export const OvertimeSupervisorAccomplishmentModal = ({ modalState, setModalStat
               </div>
             </div>
           )}
-          <OvertimeAccomplishmentReportPdfModal
+          <OvertimeAccomplishmentReportModal
             modalState={pdfAccomplishmentReportModalIsOpen}
             setModalState={setPdfAccomplishmentReportModalIsOpen}
             closeModalAction={closeOvertimeAccomplishmentModal}

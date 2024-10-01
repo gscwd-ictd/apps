@@ -1,78 +1,10 @@
 import Head from 'next/head';
-import {
-  NextPage,
-  GetServerSideProps,
-  InferGetServerSidePropsType,
-  GetServerSidePropsContext,
-} from 'next';
-import dayjs from 'dayjs';
+import { NextPage, GetServerSideProps, InferGetServerSidePropsType, GetServerSidePropsContext } from 'next';
 import axios from 'axios';
-import {
-  useWorkExpSheetStore,
-  WorkExperienceSheet,
-} from '../../../../../../store/work-experience-sheet.store';
-import { WesDocument } from '../../../../../../components/work-experience-sheet/WesDocument';
-import { useEffect, useState } from 'react';
 import { isEmpty } from 'lodash';
+import { WesDocumentView } from 'apps/job-portal/src/components/work-experience-sheet/WesDocumentView';
 
-import useSWR from 'swr';
-import { axiosFetcher } from '../../../../../../components/modular/fetcher/Fetcher';
-import { Applicant } from 'apps/job-portal/utils/types/data/types';
-
-const WorkExperienceSheetPdf: NextPage = ({
-  applicantWes,
-}: InferGetServerSidePropsType<typeof getServerSideProps>) => {
-  const formatDate = (assignedDate: string) => {
-    const date = new Date(assignedDate);
-    return dayjs(date.toLocaleDateString()).format('MMMM DD, YYYY');
-  };
-
-  const workExperiencesSheet = useWorkExpSheetStore(
-    (state) => state.workExperiencesSheet
-  );
-  const setWorkExperiencesSheet = useWorkExpSheetStore(
-    (state) => state.setWorkExperiencesSheet
-  );
-  const [hasSubmittedWES, setHasSubmittedWES] = useState<boolean>(false);
-  const [localWorkExperiencesSheet, setLocalWorkExperiencesSheet] = useState<
-    Array<WorkExperienceSheet>
-  >([]);
-  const [applicantData, setApplicantData] = useState({} as Applicant);
-
-  const { data } = useSWR(
-    `${process.env.NEXT_PUBLIC_HRIS_DOMAIN}/external-applicants/name`,
-    axiosFetcher
-  );
-
-  useEffect(() => {
-    if (!isEmpty(applicantWes)) {
-      localStorage.removeItem('workExperiencesSheet');
-
-      setHasSubmittedWES(true);
-      setWorkExperiencesSheet(applicantWes);
-      // setApplicantData(applicantWes.personalInfo)
-    } else if (isEmpty(applicantWes)) {
-      setHasSubmittedWES(false);
-      setLocalWorkExperiencesSheet(
-        JSON.parse(localStorage.getItem('workExperiencesSheet')!)
-      );
-    }
-  }, []);
-
-  // fetch applicant name
-  useEffect(() => {
-    if (!isEmpty(data)) {
-      setApplicantData({
-        ...applicantData,
-        firstName: data.applicantFirstName,
-        middleName: data.applicantMiddleName,
-        lastName: data.applicantLastName,
-        nameExtension: data.applicantNameExtension,
-        fullName: data.fullName,
-      });
-    }
-  }, [data]);
-
+const WorkExperienceSheetPdf: NextPage = ({ applicantWes }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
   return (
     <>
       <Head>
@@ -81,18 +13,7 @@ const WorkExperienceSheetPdf: NextPage = ({
       </Head>
       <main>
         <div className="flex justify-center w-full h-screen">
-          <WesDocument
-            formatDate={formatDate}
-            workExperiencesSheet={
-              hasSubmittedWES
-                ? workExperiencesSheet
-                : !hasSubmittedWES
-                ? localWorkExperiencesSheet
-                : []
-            }
-            applicant={applicantData}
-            isSubmitted={hasSubmittedWES ? true : false}
-          />
+          <WesDocumentView applicantWes={applicantWes && []} />
         </div>
       </main>
     </>
@@ -101,12 +22,10 @@ const WorkExperienceSheetPdf: NextPage = ({
 
 export default WorkExperienceSheetPdf;
 
-export const getServerSideProps: GetServerSideProps = async (
-  context: GetServerSidePropsContext
-) => {
+export const getServerSideProps: GetServerSideProps = async (context: GetServerSidePropsContext) => {
   try {
     const applicantWes = await axios.get(
-      `${process.env.NEXT_PUBLIC_HRIS_DOMAIN}/pds/work-experience-sheet/${context.query}`
+      `${process.env.NEXT_PUBLIC_HRIS_DOMAIN}/pds/work-experience-sheet/${context.query.external_applicant_id}`
     );
 
     return {

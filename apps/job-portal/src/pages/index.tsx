@@ -1,12 +1,8 @@
 /* eslint-disable @nx/enforce-module-boundaries */
-import {
-  NextPage,
-  GetServerSideProps,
-  InferGetServerSidePropsType,
-} from 'next';
+import { NextPage, GetServerSideProps, InferGetServerSidePropsType } from 'next';
 
 import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import axios from 'axios';
 import TopNavigation from '../components/page-header/TopNavigation';
 import JobOpeningsTable from '../components/table/JobOpeningsTable';
@@ -18,10 +14,9 @@ import { usePageStore } from '../store/page.store';
 import { usePublicationStore } from '../store/publication.store';
 import { ViewJobDetailsModal } from '../components/fixed/modals/ViewJobDetailsModal';
 import { Publication } from 'apps/job-portal/utils/types/data/publication-type';
+import { PageContentContext } from '@gscwd-apps/oneui';
 
-const Home: NextPage = ({
-  jobOpenings,
-}: InferGetServerSidePropsType<typeof getServerSideProps>) => {
+const Home: NextPage = ({ jobOpenings }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
   const router = useRouter();
   const isLoading = usePageStore((state) => state.isLoading);
   const { publication, setPublication } = usePublicationStore((state) => ({
@@ -31,23 +26,16 @@ const Home: NextPage = ({
 
   const setIsLoading = usePageStore((state) => state.setIsLoading);
 
-  const {
-    actionSelection,
-    checkboxTerms,
-    modal,
-    setActionSelection,
-    setCheckboxTerms,
-    setModal,
-    setPositionTab,
-  } = useJobOpeningsStore((state) => ({
-    modal: state.modal,
-    checkboxTerms: state.checkboxTerms,
-    actionSelection: state.actionSelection,
-    setActionSelection: state.setActionSelection,
-    setPositionTab: state.setPositionTab,
-    setCheckboxTerms: state.setCheckboxTerms,
-    setModal: state.setModal,
-  }));
+  const { actionSelection, checkboxTerms, modal, setActionSelection, setCheckboxTerms, setModal, setPositionTab } =
+    useJobOpeningsStore((state) => ({
+      modal: state.modal,
+      checkboxTerms: state.checkboxTerms,
+      actionSelection: state.actionSelection,
+      setActionSelection: state.setActionSelection,
+      setPositionTab: state.setPositionTab,
+      setCheckboxTerms: state.setCheckboxTerms,
+      setModal: state.setModal,
+    }));
 
   const [openDetailsModal, setOpenDetailsModal] = useState<boolean>(false);
 
@@ -61,9 +49,7 @@ const Home: NextPage = ({
       setTimeout(async () => {
         setIsLoading(false);
         localStorage.setItem('publication', JSON.stringify(publication));
-        await router.push(
-          `${process.env.NEXT_PUBLIC_JOB_PORTAL}/application/${publication.vppId}`
-        );
+        await router.push(`${process.env.NEXT_PUBLIC_JOB_PORTAL}/application/${publication.vppId}`);
         setModal({ ...modal, isOpen: false, page: 1 });
       }, 2000);
     }
@@ -88,14 +74,15 @@ const Home: NextPage = ({
     setOpenDetailsModal(false);
   };
 
+  // page context
+  const {
+    aside: { isMobile },
+  } = useContext(PageContentContext);
+
   // removes the ssid_hrms cookie on page load
   const removeCookie = async () => {
     try {
-      return await axios.post(
-        `${process.env.NEXT_PUBLIC_HRIS_DOMAIN}/auth/logout`,
-        {},
-        { withCredentials: true }
-      );
+      return await axios.post(`${process.env.NEXT_PUBLIC_HRIS_DOMAIN}/auth/logout`, {}, { withCredentials: true });
     } catch (error) {
       return error;
     }
@@ -112,14 +99,10 @@ const Home: NextPage = ({
   }, []);
 
   return (
-    <div className="w-full min-h-full">
-      <TopNavigation />
-
-      <header className="bg-white shadow">
+    <div className="flex flex-col ">
+      <header className="w-full bg-white shadow">
         <div className="px-4 py-6 mx-auto max-w-7xl sm:px-6 lg:px-8">
-          <h1 className="text-3xl font-bold tracking-tight text-gray-900">
-            JOB OPENINGS
-          </h1>
+          <h1 className="text-3xl font-bold tracking-tight text-gray-900">JOB OPENINGS</h1>
         </div>
       </header>
 
@@ -133,7 +116,7 @@ const Home: NextPage = ({
           onAction={onActionModal}
           onCancel={onCancelModal}
           onClose={onCloseModal}
-          modalSize="xxxxxxxl"
+          modalSize={isMobile ? 'full' : 'xxxxl'}
           title={'Data Privacy Act of 2012'}
           cancelBtnVariant="info"
           subtitle=""
@@ -178,9 +161,7 @@ export default Home;
 
 export const getServerSideProps: GetServerSideProps = async () => {
   try {
-    const { data } = await axios.get(
-      `${process.env.NEXT_PUBLIC_HRIS_DOMAIN}/vacant-position-postings/publications/`
-    );
+    const { data } = await axios.get(`${process.env.NEXT_PUBLIC_HRIS_DOMAIN}/vacant-position-postings/publications/`);
 
     return {
       props: {
@@ -188,6 +169,7 @@ export const getServerSideProps: GetServerSideProps = async () => {
       },
     };
   } catch (error) {
+    console.log('CATCH!!!');
     return {
       props: {},
     };

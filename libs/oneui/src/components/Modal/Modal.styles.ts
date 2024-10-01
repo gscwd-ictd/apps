@@ -12,11 +12,7 @@ export const panelContainerClass = ({ size }: ModalProps) => {
   });
 };
 
-export const panelClass = (
-  { size, className, fixedHeight }: ModalProps,
-  shake: boolean,
-  noShakeOnSteady: boolean
-) => {
+export const panelClass = ({ size, className, fixedHeight }: ModalProps, shake: boolean, noShakeOnSteady: boolean) => {
   return cls(className, 'bg-white rounded-md mx-auto', {
     'animate-shake': shake && noShakeOnSteady === false,
 
@@ -35,12 +31,12 @@ export const panelClass = (
     // 'overflow-y-auto h-[100%]': fixedHeight && size === 'full',
 
     // width styles
-    'w-[20%]': size === 'xs',
-    'w-[35%]': size === 'sm',
-    'w-[45%]': size === 'md',
-    'w-[65%]': size === 'lg',
-    'w-[80%]': size === 'xl',
-    'w-[100%]': size === 'full',
+    'sm:w-full lg:w-[20%]': size === 'xs',
+    'sm:w-full lg:w-[35%]': size === 'sm',
+    'sm:w-full lg:w-[45%]': size === 'md',
+    'sm:w-full lg:w-[65%]': size === 'lg',
+    'sm:w-full lg:w-[80%]': size === 'xl',
+    'sm:w-full lg:w-[100%]': size === 'full',
   });
 };
 

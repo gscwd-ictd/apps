@@ -190,8 +190,8 @@ export default function SubmitPanel(): JSX.Element {
               <SolidPrevButton onClick={() => handlePrevTab(selectedTab)} type="button" />
             </div>
           )}
-          <Card title="" subtitle="" className="sm:mx-2 sm:px-2 lg:mx-[18%] h-fit  lg:px-[5%] ">
-            <div className="flex h-[7rem] gap-2">
+          <Card title="" subtitle="" className="lg:mx-[18%] sm:mx-[5%] mx-[5%]  px-[5%] ">
+            <div className="flex h-fit gap-2">
               <div className="w-[15%]">
                 <HiExclamationCircle color="orange" className="w-full h-full" />
               </div>
