@@ -69,7 +69,9 @@ export const getServerSideProps: GetServerSideProps = async (context: GetServerS
     }
   */
   try {
-    const applicantPds = await axios.get(`${process.env.NEXT_PUBLIC_PORTAL_BE_URL}/pds/v2/${context.params?.id}`);
+    const applicantPds = await axios.get(`${process.env.NEXT_PUBLIC_PORTAL_BE_URL}/pds/v2/${context.params?.id}`, {
+      headers: { 'Accept-Encoding': 'gzip,deflate,compress' },
+    });
 
     return {
       props: {
