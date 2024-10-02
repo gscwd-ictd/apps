@@ -411,7 +411,9 @@ export const getServerSideProps: GetServerSideProps = withCookieSessionPds(
       }
     */
     try {
-      const applicantPds = await axios.get(`${process.env.NEXT_PUBLIC_PORTAL_BE_URL}/pds/v2/${context.params?.id}`);
+      const applicantPds = await axios.get(`${process.env.NEXT_PUBLIC_PORTAL_BE_URL}/pds/v2/${context.params?.id}`, {
+        headers: { 'Accept-Encoding': 'gzip,deflate,compress' },
+      });
 
       if (applicantPds.status === 200 && employee.employmentDetails.userId === context.params?.id) {
         return { props: { employee, pdsDetails: applicantPds.data } };
