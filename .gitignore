@@ -2,6 +2,7 @@
 
 # ENV
 .env
+.env.local
 
 # compiled output
 dist
