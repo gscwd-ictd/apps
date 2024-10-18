@@ -107,7 +107,13 @@ export const TrainingNominationModal = ({
 
   useEffect(() => {
     if (!initialLoad && trainingNominationModalIsOpen) {
+      // console.log(selectedEmployees, 'selected');
+      // console.log(selectedAuxiliaryEmployees, 'auxiliary');
+      // console.log(combinedNominatedEmployees, 'combined');
+
       setEmployeePool(employeeList.filter((item) => !combinedNominatedEmployees.includes(item)));
+      // selectedEmployees.some((e) => e.value == employee.employeeId)
+      // setEmployeePool(employeeList.filter(el=> el !== combinedNominatedEmployees));
     }
   }, [combinedNominatedEmployees]);
 
@@ -116,6 +122,31 @@ export const TrainingNominationModal = ({
     setAuxiliaryEmployees(selectedAuxiliaryEmployees); //store
     closeModalAction();
   };
+
+  const addEmployeeToList = (employee: SelectOption) => {
+    const employeeArray = employee;
+    // console.log(selectedEmployees, 'vs', employeeArray);
+    // console.log(selectedEmployees.some((e) => e.value === employeeArray[0].value));
+    if (selectedEmployees.some((e) => e.value === employeeArray.value)) {
+      // console.log('tanggal sa selected');
+      setSelectedEmployees(selectedEmployees.filter((e) => e.value != employeeArray.value));
+    } else if (selectedAuxiliaryEmployees.some((e) => e.value === employeeArray.value)) {
+      // console.log('tanggal sa aux');
+      setSelectedAuxiliaryEmployees(selectedAuxiliaryEmployees.filter((e) => e.value != employeeArray.value));
+      // console.log('added');
+      setSelectedEmployees([employee, ...selectedEmployees]);
+    } else {
+      // console.log('added');
+      setSelectedEmployees([employee, ...selectedEmployees]);
+    }
+
+    // const uniqueNames = Array.from(new Set([...employee, ...nominatedEmployees, ...auxiliaryEmployees]));
+    // handleInitialEmployeePool(uniqueNames);
+  };
+
+  // useEffect(() => {
+  //   // console.log(employeePool, 'pool');
+  // }, [employeePool]);
 
   const { windowWidth } = UseWindowDimensions();
 
@@ -176,13 +207,33 @@ export const TrainingNominationModal = ({
                       label: employee.name,
                     };
                     return (
-                      <div key={index} className="flex flex-row gap-1 items-center w-full md:w-1/2 ">
+                      <div
+                        key={index}
+                        className="flex flex-row gap-1 items-center w-full md:w-1/2 "
+                        // onClick={() =>
+                        //   addEmployeeToList({
+                        //     value: employee.employeeId,
+                        //     label: employee.name,
+                        //   })
+                        // }
+                      >
                         {selectedEmployees.some((e) => e.value == employee.employeeId) ? (
                           <HiCheck className="text-blue-500" />
                         ) : null}
 
+                        {/* <label
+                          className={`cursor-pointer select-none
+                             hover:text-blue-500
+                              hover:bg-slate-300 w-auto px-4 md:px-2 ${
+                                selectedEmployees.some((e) => e.value == employee.employeeId) ? 'text-blue-500' : ''
+                              }`}
+                          key={index}
+                        >
+                          {employee.name}
+                        </label> */}
+
                         <label
-                          className={`cursor-pointer select-none hover:text-blue-500 hover:bg-slate-300 w-auto px-4 md:px-2 ${
+                          className={`w-auto px-4 md:px-2 ${
                             selectedEmployees.some((e) => e.value == employee.employeeId) ? 'text-blue-500' : ''
                           }`}
                           key={index}

@@ -87,17 +87,13 @@ export const usePositionStore = create<PositionState>()(
 
     setTab: (tab: number) => set((state) => ({ ...state, tab })),
 
-    emptySelectedPosition: () =>
-      set((state) => ({ ...state, selectedPosition: {} as Position })),
+    emptySelectedPosition: () => set((state) => ({ ...state, selectedPosition: {} as Position })),
 
-    setFilteredPositions: (filteredPositions: Array<Position>) =>
-      set((state) => ({ ...state, filteredPositions })),
+    setFilteredPositions: (filteredPositions: Array<Position>) => set((state) => ({ ...state, filteredPositions })),
 
-    setFilteredValue: (filteredValue: string) =>
-      set((state) => ({ ...state, filteredValue })),
+    setFilteredValue: (filteredValue: string) => set((state) => ({ ...state, filteredValue })),
 
-    setSelectedPosition: (selectedPosition: Position) =>
-      set((state) => ({ ...state, selectedPosition })),
+    setSelectedPosition: (selectedPosition: Position) => set((state) => ({ ...state, selectedPosition })),
 
     getFilteredDrcPositions: (loading: boolean) =>
       set((state) => ({

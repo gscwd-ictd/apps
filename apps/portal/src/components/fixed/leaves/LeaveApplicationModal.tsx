@@ -653,11 +653,11 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
   };
 
   useEffect(() => {
-    console.log(
-      Number(vacationLeaveBalance) +
-        Number(sickLeaveBalance) +
-        Number(format(new Date(), 'd')) * Number(process.env.NEXT_PUBLIC_UNEARNED_CREDIT_MULTIPLIER)
-    );
+    // console.log(
+    //   Number(vacationLeaveBalance) +
+    //     Number(sickLeaveBalance) +
+    //     Number(format(new Date(), 'd')) * Number(process.env.NEXT_PUBLIC_UNEARNED_CREDIT_MULTIPLIER)
+    // );
   }, [estimatedAmount]);
 
   useEffect(() => {
@@ -1809,7 +1809,9 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
                     : Number(leaveDates.length > Math.round(vacationLeaveBalance) - pendingVacationLeaveDateCount) &&
                       watch('typeOfLeaveDetails.leaveName') === LeaveName.FORCED
                     ? true
-                    : estimatedAmount <= 0 && watch('typeOfLeaveDetails.leaveName') === LeaveName.TERMINAL
+                    : // : estimatedAmount <= 0 && watch('typeOfLeaveDetails.leaveName') === LeaveName.TERMINAL
+                    // ? true
+                    watch('typeOfLeaveDetails.leaveName') === LeaveName.TERMINAL
                     ? true
                     : false
                 }

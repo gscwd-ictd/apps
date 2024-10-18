@@ -24,6 +24,7 @@ import { useAppEndStore } from '../../../store/endorsement.store';
 import { useInboxStore } from '../../../store/inbox.store';
 import { NomineeStatus } from 'libs/utils/src/lib/enums/training.enum';
 import { usePdcApprovalsStore } from 'apps/portal/src/store/pdc-approvals.store';
+import { useTrainingSelectionStore } from 'apps/portal/src/store/training-selection.store';
 
 export type EmployeeLocalStorage = {
   employeeId: string;
@@ -98,6 +99,11 @@ export const SideNav = ({ employeeDetails }: NavDetails) => {
     patchResponseApplicantSelection: state.response.patchResponseApply,
   }));
 
+  //Training Nomination
+  const { postResponseTrainingNomination } = useTrainingSelectionStore((state) => ({
+    postResponseTrainingNomination: state.response.postResponseApply,
+  }));
+
   // const pendingApprovalsCountUrl = `${process.env.NEXT_PUBLIC_EMPLOYEE_MONITORING_URL}/v1/stats/${employeeDetails.employmentDetails.userId}`;
   // use useSWR, provide the URL and fetchWithSession function as a parameter
   const pendingApprovalsCountUrl = `${process.env.NEXT_PUBLIC_PORTAL_URL}/stats-notifications`;
@@ -156,6 +162,7 @@ export const SideNav = ({ employeeDetails }: NavDetails) => {
     updateResponseAppEnd,
     patchResponseAppSelection,
     patchResponsePdc,
+    postResponseTrainingNomination,
   ]);
 
   //FOR INBOX NOTIF
@@ -267,10 +274,8 @@ export const SideNav = ({ employeeDetails }: NavDetails) => {
   }, [putResponseApply, swrTrainingMessages]);
 
   useEffect(() => {
-    if (!isEmpty(patchResponseApply) || !isEmpty(putResponseApply)) {
-      mutatePsbMessages();
-      mutateTrainingMessages();
-    }
+    mutatePsbMessages();
+    mutateTrainingMessages();
   }, [patchResponseApply, putResponseApply]);
 
   return (
