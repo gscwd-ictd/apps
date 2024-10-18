@@ -30,6 +30,10 @@ import { ToastNotification } from '@gscwd-apps/oneui';
 import { useApprovalStore } from 'apps/portal/src/store/approvals.store';
 import { useEmployeeStore } from 'apps/portal/src/store/employee.store';
 import { SalaryGradeConverter } from 'libs/utils/src/lib/functions/SalaryGradeConverter';
+import { useInboxStore } from 'apps/portal/src/store/inbox.store';
+import { fetchWithToken } from 'apps/portal/src/utils/hoc/fetcher';
+import useSWR from 'swr';
+import { NomineeStatus } from 'libs/utils/src/lib/enums/training.enum';
 
 type MenuDropdownProps = {
   right?: boolean;
@@ -102,6 +106,122 @@ export const ProfileMenuDropdown = ({
       setEmployeeSalaryGrade(finalSalaryGrade);
     }
   }, [employeeDetails]);
+
+  //FOR INBOX NOTIF
+  const {
+    patchResponseApply,
+    putResponseApply,
+    psbMessages,
+    trainingMessages,
+    getPsbMessageList,
+    getPsbMessageListSuccess,
+    getPsbMessageListFail,
+
+    getTrainingMessageList,
+    getTrainingMessageListSuccess,
+    getTrainingMessageListFail,
+
+    emptyResponseAndErrorNotif,
+  } = useInboxStore((state) => ({
+    patchResponseApply: state.response.patchResponseApply,
+    putResponseApply: state.response.putResponseApply,
+    psbMessages: state.message.psbMessages,
+    trainingMessages: state.message.trainingMessages,
+
+    getPsbMessageList: state.getPsbMessageList,
+    getPsbMessageListSuccess: state.getPsbMessageListSuccess,
+    getPsbMessageListFail: state.getPsbMessageListFail,
+
+    getTrainingMessageList: state.getTrainingMessageList,
+    getTrainingMessageListSuccess: state.getTrainingMessageListSuccess,
+    getTrainingMessageListFail: state.getTrainingMessageListFail,
+
+    emptyResponseAndErrorNotif: state.emptyResponseAndError,
+  }));
+
+  //For Inbox Notification - red dot
+  const [currentPendingPsbCount, setcurrentPendingPsbCount] = useState<number>(0);
+  const [currentPendingTrainingCount, setcurrentPendingTrainingCount] = useState<number>(0);
+
+  // const unacknowledgedPsbUrl = `${process.env.NEXT_PUBLIC_HRIS_URL}/vacant-position-postings/psb/schedules/${employeeDetails.employmentDetails.userId}/unacknowledged`;
+  // // use useSWR, provide the URL and fetchWithSession function as a parameter
+
+  // const {
+  //   data: swrPsbMessages,
+  //   isLoading: swrIsLoadingPsbMessages,
+  //   error: swrPsbMessageError,
+  //   mutate: mutatePsbMessages,
+  // } = useSWR(
+  //   Boolean(employeeDetails.employmentDetails.isHRMPSB) === true ? unacknowledgedPsbUrl : null,
+  //   fetchWithToken
+  // );
+
+  // // Initial zustand state update
+  // useEffect(() => {
+  //   if (swrIsLoadingPsbMessages) {
+  //     getPsbMessageList(swrIsLoadingPsbMessages);
+  //   }
+  // }, [swrIsLoadingPsbMessages]);
+
+  // // Upon success/fail of swr request, zustand state will be updated
+  // useEffect(() => {
+  //   if (!isEmpty(swrPsbMessages)) {
+  //     getPsbMessageListSuccess(swrIsLoadingPsbMessages, swrPsbMessages);
+  //   }
+
+  //   if (!isEmpty(swrPsbMessageError)) {
+  //     getPsbMessageListFail(swrIsLoadingPsbMessages, swrPsbMessageError.message);
+  //   }
+  // }, [swrPsbMessages, swrPsbMessageError]);
+
+  //count any pending psb inbox action
+  useEffect(() => {
+    let pendingPsb = [];
+    pendingPsb = psbMessages?.filter((e) => !e.details.acknowledgedSchedule && !e.details.declinedSchedule);
+    setcurrentPendingPsbCount(pendingPsb?.length);
+  }, [patchResponseApply, psbMessages]);
+
+  // const trainingMessagesUrl = `${process.env.NEXT_PUBLIC_PORTAL_URL}/trainings/employees/${employeeDetails.employmentDetails.userId}`;
+  // // use useSWR, provide the URL and fetchWithSession function as a parameter
+
+  // const {
+  //   data: swrTrainingMessages,
+  //   isLoading: swrIsLoadingTrainingMessages,
+  //   error: swrTrainingMessageError,
+  //   mutate: mutateTrainingMessages,
+  // } = useSWR(employeeDetails.employmentDetails.userId ? trainingMessagesUrl : null, fetchWithToken);
+
+  // // Initial zustand state update
+  // useEffect(() => {
+  //   if (swrIsLoadingTrainingMessages) {
+  //     getTrainingMessageList(swrIsLoadingTrainingMessages);
+  //   }
+  // }, [swrIsLoadingTrainingMessages]);
+
+  // // Upon success/fail of swr request, zustand state will be updated
+  // useEffect(() => {
+  //   if (!isEmpty(swrTrainingMessages)) {
+  //     getTrainingMessageListSuccess(swrIsLoadingTrainingMessages, swrTrainingMessages);
+  //   }
+
+  //   if (!isEmpty(swrTrainingMessageError)) {
+  //     getTrainingMessageListFail(swrIsLoadingTrainingMessages, swrTrainingMessageError.message);
+  //   }
+  // }, [swrTrainingMessages, swrTrainingMessageError]);
+
+  useEffect(() => {
+    let pendingTraining = [];
+    pendingTraining = trainingMessages?.filter((e) => e.nomineeStatus === NomineeStatus.PENDING);
+    setcurrentPendingTrainingCount(pendingTraining?.length);
+  }, [putResponseApply, trainingMessages]);
+
+  // useEffect(() => {
+  //   if (!isEmpty(patchResponseApply) || !isEmpty(putResponseApply)) {
+  //     mutatePsbMessages();
+  //     mutateTrainingMessages();
+  //   }
+  // }, [patchResponseApply, putResponseApply]);
+
   return (
     <>
       {employeeDetails ? (
@@ -303,7 +423,9 @@ export const ProfileMenuDropdown = ({
                                 className={`${
                                   active ? 'bg-slate-100' : 'text-gray-900'
                                 } group flex w-full items-center gap-3 rounded-md px-3 py-2 text-sm`}
-                                onClick={() => router.push(`/${router.query.id}`, undefined, { shallow: true })}
+                                onClick={() =>
+                                  router.push(`/${router.query.id}/training-selection`, undefined, { shallow: true })
+                                }
                               >
                                 <HiAcademicCap className="h-5 w-5 text-slate-600" />
                                 <div className="flex w-full items-end justify-between">
@@ -507,6 +629,10 @@ export const ProfileMenuDropdown = ({
                             <div className="flex w-full items-end justify-between">
                               <span className="text-sm tracking-tight text-slate-500 text-left">Notifications</span>
                             </div>
+                            {currentPendingPsbCount > 0 || currentPendingTrainingCount > 0 ? (
+                              // <span className="absolute w-3 h-3 -mt-8 ml-8 bg-red-600 rounded-full select-none" />
+                              <span className="absolute w-3 h-3 right-5 z-40 bg-red-600 rounded-full select-none" />
+                            ) : null}
                           </button>
                         )}
                       </Menu.Item>
