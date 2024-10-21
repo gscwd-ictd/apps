@@ -326,7 +326,10 @@ export const OvertimeAuthorizationPdf = ({ overtimeAuthorizationReport }: PdfPro
                   style={{ width: 50, marginBottom: 2 }}
                   src={
                     process.env.NEXT_PUBLIC_IMAGE_SERVER_URL +
-                      overtimeAuthorizationReport?.signatories?.employeeSignature ?? '/'
+                    overtimeAuthorizationReport?.signatories?.employeeSignature
+                      ? process.env.NEXT_PUBLIC_IMAGE_SERVER_URL +
+                        overtimeAuthorizationReport?.signatories?.employeeSignature
+                      : '/'
                   }
                 />
                 <Text
@@ -395,7 +398,10 @@ export const OvertimeAuthorizationPdf = ({ overtimeAuthorizationReport }: PdfPro
                   style={{ width: 50, marginBottom: 2 }}
                   src={
                     process.env.NEXT_PUBLIC_IMAGE_SERVER_URL +
-                      overtimeAuthorizationReport?.signatories?.supervisorSignature ?? '/'
+                    overtimeAuthorizationReport?.signatories?.supervisorSignature
+                      ? process.env.NEXT_PUBLIC_IMAGE_SERVER_URL +
+                        overtimeAuthorizationReport?.signatories?.supervisorSignature
+                      : '/'
                   }
                 />
                 <Text
