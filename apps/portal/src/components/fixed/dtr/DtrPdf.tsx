@@ -386,25 +386,31 @@ export const DtrPdf: FunctionComponent<DtrPdfProps> = ({ employeeData, employeeD
                       if (log.isRestDay === true) {
                         timeInColor = gray;
                       } else {
-                        compareIfLate(log.day, log.dtr.timeIn, log.schedule.timeIn) === true
+                        compareIfLate(log.day, log.dtr.timeIn, log.schedule.timeIn) === true &&
+                        log.isRestDay === false &&
+                        log.isHoliday === false
                           ? (timeInColor = yellow)
                           : (timeInColor = '');
                       }
 
                       // lunch out color
                       compareIfEarly(log.day, log.dtr.lunchOut, log.schedule.lunchOut) ||
-                      compareIfLate(log.day, log.dtr.lunchOut, log.schedule.lunchIn) === true
+                      (compareIfLate(log.day, log.dtr.lunchOut, log.schedule.lunchIn) === true &&
+                        log.isRestDay === false &&
+                        log.isHoliday === false)
                         ? (lunchOutColor = yellow)
                         : (lunchOutColor = '');
 
                       // lunch in color
                       compareIfEarly(log.day, log.dtr.lunchIn, log.schedule.lunchIn) ||
-                      compareIfLate(
+                      (compareIfLate(
                         log.day,
                         log.dtr.lunchIn,
                         log.schedule.lunchIn,
                         29 // 12:31 lunch in + 20 = 1pm
-                      ) === true
+                      ) === true &&
+                        log.isRestDay === false &&
+                        log.isHoliday === false)
                         ? (lunchInColor = yellow)
                         : (lunchInColor = '');
 
@@ -412,7 +418,9 @@ export const DtrPdf: FunctionComponent<DtrPdfProps> = ({ employeeData, employeeD
                       if (log.isRestDay === true) {
                         timeOutColor = gray;
                       } else {
-                        compareIfEarly(log.day, log.dtr.timeOut, log.schedule.timeOut) === true
+                        compareIfEarly(log.day, log.dtr.timeOut, log.schedule.timeOut) === true &&
+                        log.isRestDay === false &&
+                        log.isHoliday === false
                           ? (timeOutColor = yellow)
                           : (timeOutColor = '');
                       }
@@ -827,7 +835,9 @@ export const DtrPdf: FunctionComponent<DtrPdfProps> = ({ employeeData, employeeD
                         textAlign: 'center',
                       }}
                       src={
-                        process.env.NEXT_PUBLIC_IMAGE_SERVER_URL + employeeData.employmentDetails.signatureUrl ?? '/'
+                        process.env.NEXT_PUBLIC_IMAGE_SERVER_URL + employeeData.employmentDetails.signatureUrl
+                          ? process.env.NEXT_PUBLIC_IMAGE_SERVER_URL + employeeData.employmentDetails.signatureUrl
+                          : '/'
                       }
                     />
                   </View>

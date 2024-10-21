@@ -714,8 +714,10 @@ export const OvertimeSummaryReportPdf = ({
                 <Image
                   style={{ width: 40, marginBottom: 2 }}
                   src={
-                    process.env.NEXT_PUBLIC_IMAGE_SERVER_URL +
-                      overtimeSummaryReport?.signatories?.preparedBy?.signature ?? '/'
+                    process.env.NEXT_PUBLIC_IMAGE_SERVER_URL + overtimeSummaryReport?.signatories?.preparedBy?.signature
+                      ? process.env.NEXT_PUBLIC_IMAGE_SERVER_URL +
+                        overtimeSummaryReport?.signatories?.preparedBy?.signature
+                      : '/'
                   }
                 />
 
@@ -753,8 +755,10 @@ export const OvertimeSummaryReportPdf = ({
                 <Image
                   style={{ width: 40, marginBottom: 2 }}
                   src={
-                    process.env.NEXT_PUBLIC_IMAGE_SERVER_URL + overtimeSummaryReport?.signatories?.notedBy?.signature ??
-                    '/'
+                    process.env.NEXT_PUBLIC_IMAGE_SERVER_URL + overtimeSummaryReport?.signatories?.notedBy?.signature
+                      ? process.env.NEXT_PUBLIC_IMAGE_SERVER_URL +
+                        overtimeSummaryReport?.signatories?.notedBy?.signature
+                      : '/'
                   }
                 />
 
@@ -791,8 +795,10 @@ export const OvertimeSummaryReportPdf = ({
                 <Image
                   style={{ width: 40, marginBottom: 2 }}
                   src={
-                    process.env.NEXT_PUBLIC_IMAGE_SERVER_URL +
-                      overtimeSummaryReport?.signatories?.approvedBy?.signature ?? '/'
+                    process.env.NEXT_PUBLIC_IMAGE_SERVER_URL + overtimeSummaryReport?.signatories?.approvedBy?.signature
+                      ? process.env.NEXT_PUBLIC_IMAGE_SERVER_URL +
+                        overtimeSummaryReport?.signatories?.approvedBy?.signature
+                      : '/'
                   }
                 />
 
