@@ -787,7 +787,10 @@ export const LeavePdf = ({ employeeDetails, leaveDetails, selectedLeaveLedger }:
                       }}
                       src={
                         process.env.NEXT_PUBLIC_IMAGE_SERVER_URL +
-                          leaveDetails?.leaveApplicationBasicInfo?.employeeSignature ?? '/'
+                        leaveDetails?.leaveApplicationBasicInfo?.employeeSignature
+                          ? process.env.NEXT_PUBLIC_IMAGE_SERVER_URL +
+                            leaveDetails?.leaveApplicationBasicInfo?.employeeSignature
+                          : '/'
                       }
                     />
                     <Text style={{ paddingTop: 6, paddingLeft: 6 }}>
@@ -941,7 +944,10 @@ export const LeavePdf = ({ employeeDetails, leaveDetails, selectedLeaveLedger }:
                         }}
                         src={
                           process.env.NEXT_PUBLIC_IMAGE_SERVER_URL +
-                            leaveDetails.leaveApplicationBasicInfo?.hrmoSignature ?? '/'
+                          leaveDetails.leaveApplicationBasicInfo?.hrmoSignature
+                            ? process.env.NEXT_PUBLIC_IMAGE_SERVER_URL +
+                              leaveDetails.leaveApplicationBasicInfo?.hrmoSignature
+                            : '/'
                         }
                       />
                       <Text style={{ textAlign: 'center', paddingTop: 22 }}>
@@ -1019,7 +1025,10 @@ export const LeavePdf = ({ employeeDetails, leaveDetails, selectedLeaveLedger }:
                       }}
                       src={
                         process.env.NEXT_PUBLIC_IMAGE_SERVER_URL +
-                          leaveDetails.leaveApplicationBasicInfo?.supervisorSignature ?? '/'
+                        leaveDetails.leaveApplicationBasicInfo?.supervisorSignature
+                          ? process.env.NEXT_PUBLIC_IMAGE_SERVER_URL +
+                            leaveDetails.leaveApplicationBasicInfo?.supervisorSignature
+                          : '/'
                       }
                     />
                     <Text style={{ textAlign: 'center', paddingTop: 22 }}>
@@ -1168,8 +1177,10 @@ export const LeavePdf = ({ employeeDetails, leaveDetails, selectedLeaveLedger }:
                       paddingBottom: 20,
                     }}
                     src={
-                      process.env.NEXT_PUBLIC_IMAGE_SERVER_URL +
-                        leaveDetails.leaveApplicationBasicInfo?.hrdmSignature ?? '/'
+                      process.env.NEXT_PUBLIC_IMAGE_SERVER_URL + leaveDetails.leaveApplicationBasicInfo?.hrdmSignature
+                        ? process.env.NEXT_PUBLIC_IMAGE_SERVER_URL +
+                          leaveDetails.leaveApplicationBasicInfo?.hrdmSignature
+                        : '/'
                     }
                   />
                   <Text style={{ textAlign: 'center', paddingTop: 22, fontSize: 9 }}>

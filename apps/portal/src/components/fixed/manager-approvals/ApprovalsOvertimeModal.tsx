@@ -430,7 +430,11 @@ export const OvertimeModal = ({ modalState, setModalState, closeModalAction }: M
                                     ? ''
                                     : '')
                                 }`}
-                                src={process.env.NEXT_PUBLIC_IMAGE_SERVER_URL + employee?.avatarUrl ?? '/'}
+                                src={
+                                  employee?.avatarUrl
+                                    ? process.env.NEXT_PUBLIC_IMAGE_SERVER_URL + employee?.avatarUrl
+                                    : '/'
+                                }
                                 alt={'photo'}
                               ></img>
                               <div className="w-full flex flex-col md:flex-row justify-between items-start md:items-center gap-2 md:gap-4 text-sm md:text-md">
