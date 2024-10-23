@@ -643,9 +643,13 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
       );
     } else {
       setEstimatedAmount(
-        employeeDetails.employmentDetails.salaryGradeAmount *
-          (Number(lessVlFl) + Number(lessSl)) *
-          leaveCreditMultiplier
+        Math.trunc(
+          Number(
+            employeeDetails.employmentDetails.salaryGradeAmount *
+              (Number(lessVlFl) + Number(lessSl)) *
+              leaveCreditMultiplier
+          ) * 100
+        ) / 100
       );
     }
   };
