@@ -106,6 +106,16 @@ export const InboxTrainingModal = ({ modalState, setModalState, closeModalAction
                   />
                 ) : null}
 
+                {trainingMessage?.nomineeStatus === NomineeStatus.NO_ACTION_TAKEN ? (
+                  <AlertNotification
+                    alertType="error"
+                    notifMessage={
+                      'Invitation has expired. You have not taken any action on the invitation of this Training.'
+                    }
+                    dismissible={false}
+                  />
+                ) : null}
+
                 {trainingMessage?.nomineeStatus === NomineeStatus.PENDING ? (
                   <AlertNotification alertType="warning" notifMessage={'Awaiting acknowledgment'} dismissible={false} />
                 ) : null}
@@ -232,7 +242,8 @@ export const InboxTrainingModal = ({ modalState, setModalState, closeModalAction
           <div className="flex justify-end gap-2 px-4">
             <div className="w-full justify-end flex gap-2">
               {trainingMessage?.nomineeStatus == NomineeStatus.ACCEPTED ||
-              trainingMessage?.nomineeStatus == NomineeStatus.DECLINED ? (
+              trainingMessage?.nomineeStatus == NomineeStatus.DECLINED ||
+              trainingMessage?.nomineeStatus == NomineeStatus.NO_ACTION_TAKEN ? (
                 <Button variant={'default'} size={'md'} loading={false} onClick={(e) => closeModalAction()}>
                   Close
                 </Button>

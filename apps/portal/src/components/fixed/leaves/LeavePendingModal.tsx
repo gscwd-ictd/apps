@@ -372,11 +372,14 @@ export const LeavePendingModal = ({ modalState, setModalState, closeModalAction 
                         {leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.TERMINAL ? (
                           <div className="flex flex-col justify-start items-start w-full sm:w-1/2 px-0.5 pb-3  ">
                             <label className="text-slate-500 text-md whitespace-nowrap pb-0.5 ">
-                              Running Unearned Credits for the Month:
+                              Converted Credits:
                             </label>
 
                             <div className="w-auto ml-5">
-                              <label className=" text-md font-medium">{12345678}</label>
+                              <label className=" text-md font-medium">
+                                VL: {leaveIndividualDetail?.leaveApplicationDetails?.vlBalance.afterTerminalLeave} / SL:{' '}
+                                {leaveIndividualDetail?.leaveApplicationDetails?.slBalance.afterTerminalLeave}
+                              </label>
                             </div>
                           </div>
                         ) : null}
@@ -386,8 +389,7 @@ export const LeavePendingModal = ({ modalState, setModalState, closeModalAction 
 
                           <div className="w-auto ml-5">
                             <label className=" text-md font-medium">
-                              P{' '}
-                              {Number(leaveIndividualDetail?.leaveApplicationDetails?.monetizedAmount).toLocaleString()}
+                              {leaveIndividualDetail?.leaveApplicationDetails?.monetizedAmount}
                             </label>
                           </div>
                         </div>
