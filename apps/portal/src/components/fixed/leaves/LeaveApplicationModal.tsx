@@ -528,16 +528,9 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
     } else if (data.typeOfLeaveDetails.leaveName === LeaveName.TERMINAL) {
       dataToSend = {
         leaveBenefitsId: data.typeOfLeaveDetails.id,
-        forMonetization: false,
+        forMonetization: true,
         employeeId: data.employeeId,
-        leaveApplicationDates: null,
-        leaveMonetization: {
-          convertedSl: sickLeaveBalance,
-          convertedVl: vacationLeaveBalance,
-
-          monetizationType: selectedLeaveMonetizationType,
-          monetizedAmount: estimatedAmount,
-        },
+        leaveApplicationDates: [leaveDateFrom],
       };
     } else {
       dataToSend = {
@@ -637,28 +630,29 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
 
     if (watch('typeOfLeaveDetails.leaveName') === LeaveName.TERMINAL) {
       const computedUnearnedCredits =
-        Number(format(new Date(), 'd')) * Number(process.env.NEXT_PUBLIC_UNEARNED_CREDIT_MULTIPLIER);
+        Number(format(new Date(leaveDateFrom), 'd')) * Number(process.env.NEXT_PUBLIC_UNEARNED_CREDIT_MULTIPLIER) * 2;
+
       setEstimatedAmount(
-        leaveCreditMultiplier *
-          employeeDetails.employmentDetails.salaryGradeAmount *
-          (computedUnearnedCredits + Number(vacationLeaveBalance) + Number(sickLeaveBalance))
+        Math.trunc(
+          Number(
+            leaveCreditMultiplier *
+              employeeDetails.employmentDetails.salaryGradeAmount *
+              (computedUnearnedCredits + Number(vacationLeaveBalance) + Number(sickLeaveBalance))
+          ) * 100
+        ) / 100
       );
     } else {
       setEstimatedAmount(
-        employeeDetails.employmentDetails.salaryGradeAmount *
-          (Number(lessVlFl) + Number(lessSl)) *
-          leaveCreditMultiplier
+        Math.trunc(
+          Number(
+            employeeDetails.employmentDetails.salaryGradeAmount *
+              (Number(lessVlFl) + Number(lessSl)) *
+              leaveCreditMultiplier
+          ) * 100
+        ) / 100
       );
     }
   };
-
-  useEffect(() => {
-    // console.log(
-    //   Number(vacationLeaveBalance) +
-    //     Number(sickLeaveBalance) +
-    //     Number(format(new Date(), 'd')) * Number(process.env.NEXT_PUBLIC_UNEARNED_CREDIT_MULTIPLIER)
-    // );
-  }, [estimatedAmount]);
 
   useEffect(() => {
     if (
@@ -667,7 +661,7 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
     ) {
       computeEstimateAmount();
     }
-  }, [leaveBalanceInput, watch('typeOfLeaveDetails.leaveName')]);
+  }, [leaveBalanceInput, leaveDateFrom, watch('typeOfLeaveDetails.leaveName')]);
 
   //FOR TERMINAL LEAVE AUTO COMPUTE
   useEffect(() => {
@@ -719,9 +713,10 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
                             (leave) =>
                               leave.leaveName === LeaveName.FORCED ||
                               leave.leaveName === LeaveName.VACATION ||
-                              leave.leaveName === LeaveName.SICK
+                              leave.leaveName === LeaveName.SICK ||
+                              leave.leaveName === LeaveName.TERMINAL
                           )
-                            ? 'Unable to apply for Monetization due to a pending Vacation, Forced, or Sick Leave application.'
+                            ? 'Unable to apply for Monetization due to a pending Vacation, Forced, Sick, or Terminal Leave application.'
                             : pendingleavesList?.some((leave) => leave.leaveName === LeaveName.MONETIZATION) &&
                               (watch('typeOfLeaveDetails.leaveName') === LeaveName.FORCED ||
                                 watch('typeOfLeaveDetails.leaveName') === LeaveName.VACATION ||
@@ -1229,6 +1224,24 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
                       <>
                         <div className="flex flex-row justify-between items-center w-full">
                           <div className="flex flex-row justify-between items-center w-full">
+                            <label className="pt-2 pr-2 text-slate-500 text-md font-medium">Last Day of Duty:</label>
+                          </div>
+
+                          <div className="flex gap-2 w-full items-center">
+                            <div className="w-full">
+                              <input
+                                required
+                                type="date"
+                                value={leaveDateFrom ? leaveDateFrom : ''}
+                                className="text-slate-500 text-md border-slate-300 rounded w-full h-12"
+                                onChange={(e) => setLeaveDateFrom(e.target.value as unknown as string)}
+                              />
+                            </div>
+                          </div>
+                        </div>
+
+                        <div className="flex flex-row justify-between items-center w-full">
+                          <div className="flex flex-row justify-between items-center w-full">
                             <label className="pt-2 pr-2 text-slate-500 text-md font-medium">
                               Leave Balance to Convert:
                             </label>
@@ -1252,7 +1265,7 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
                         <div className="flex flex-row justify-between items-center w-full">
                           <div className="flex flex-row justify-between items-center w-full">
                             <label className="pt-2 pr-2 text-slate-500 text-md font-medium">
-                              Running Unearned Credits for the Month:
+                              Unearned Credits for the Month:
                             </label>
                           </div>
 
@@ -1265,10 +1278,11 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
                                 className="border-slate-300 text-slate-500 h-12 text-md w-full rounded-md"
                                 placeholder="Running Unearned Leave Credits for the month"
                                 required
-                                value={
-                                  Number(format(new Date(), 'd')) *
-                                  Number(process.env.NEXT_PUBLIC_UNEARNED_CREDIT_MULTIPLIER)
-                                }
+                                value={(
+                                  Number(format(new Date(leaveDateFrom), 'd')) *
+                                  Number(process.env.NEXT_PUBLIC_UNEARNED_CREDIT_MULTIPLIER) *
+                                  2
+                                ).toFixed(3)}
                               />
                             </div>
                           </div>
@@ -1298,7 +1312,7 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
 
                         <div className="flex flex-row justify-between items-center w-full">
                           <div className="flex flex-row justify-between items-center w-full">
-                            <label className="pt-2 pr-2 text-slate-500 text-md font-medium">Monetization Amount:</label>
+                            <label className="pt-2 pr-2 text-slate-500 text-md font-medium">Total Amount:</label>
                           </div>
 
                           <div className="flex gap-2 w-full items-center">
@@ -1809,11 +1823,12 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
                     : Number(leaveDates.length > Math.round(vacationLeaveBalance) - pendingVacationLeaveDateCount) &&
                       watch('typeOfLeaveDetails.leaveName') === LeaveName.FORCED
                     ? true
-                    : // : estimatedAmount <= 0 && watch('typeOfLeaveDetails.leaveName') === LeaveName.TERMINAL
-                    // ? true
-                    watch('typeOfLeaveDetails.leaveName') === LeaveName.TERMINAL
+                    : (estimatedAmount <= 0 || !leaveDateFrom) &&
+                      watch('typeOfLeaveDetails.leaveName') === LeaveName.TERMINAL
                     ? true
-                    : false
+                    : // watch('typeOfLeaveDetails.leaveName') === LeaveName.TERMINAL
+                      // ? true
+                      false
                 }
               >
                 {watch('typeOfLeaveDetails.leaveName') === LeaveName.MONETIZATION

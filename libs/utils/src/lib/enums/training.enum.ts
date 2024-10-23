@@ -43,6 +43,7 @@ export enum NomineeStatus {
   PENDING = 'pending',
   ACCEPTED = 'accepted',
   DECLINED = 'declined',
+  NO_ACTION_TAKEN = 'no action taken',
 }
 
 //for PDC Chairman & Secretariat action
