@@ -44,7 +44,7 @@ export const LeavePdfModal = ({ modalState, setModalState, closeModalAction, tit
           </h3>
         </Modal.Header>
         <Modal.Body>
-          {!isEmpty(employeeDetails) && !isEmpty(leaveIndividualDetail) && !isEmpty(selectedLeaveLedger) ? (
+          {!isEmpty(employeeDetails) && !isEmpty(leaveIndividualDetail) ? (
             <div className="text-center">
               <PDFDownloadLink
                 document={

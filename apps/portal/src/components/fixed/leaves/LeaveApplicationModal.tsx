@@ -721,7 +721,7 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
                               (watch('typeOfLeaveDetails.leaveName') === LeaveName.FORCED ||
                                 watch('typeOfLeaveDetails.leaveName') === LeaveName.VACATION ||
                                 watch('typeOfLeaveDetails.leaveName') === LeaveName.SICK)
-                            ? 'Unable to apply for Leave due to a pending Leave Monetization application.'
+                            ? 'Unable to apply for this Leave due to a pending Leave Monetization application.'
                             : pendingleavesList?.some((leave) => leave.leaveName === LeaveName.TERMINAL) &&
                               (watch('typeOfLeaveDetails.leaveName') === LeaveName.FORCED ||
                                 watch('typeOfLeaveDetails.leaveName') === LeaveName.VACATION ||
@@ -729,8 +729,11 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
                             ? 'Unable to apply for Leave due to a pending Terminal Leave application.'
                             : pendingleavesList?.length > 0 &&
                               watch('typeOfLeaveDetails.leaveName') === LeaveName.TERMINAL
-                            ? 'Unable to apply for Terminal Leave due to other pending leave applications.'
-                            : 'You have a pending leave application of the same type.'
+                            ? 'Unable to apply for this Leave due to other pending Leave applications.'
+                            : watch('typeOfLeaveDetails.leaveName') != LeaveName.TERMINAL &&
+                              pendingleavesList?.some((leave) => leave.leaveName === LeaveName.TERMINAL)
+                            ? 'Unable to apply for this Leave due to a pending Terminal Leave application.'
+                            : 'You have a pending Leave application of the same type.'
                         }
                         `}
                       dismissible={false}
