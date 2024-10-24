@@ -54,7 +54,7 @@ export const LeaveLedgerModal = ({ modalState, setModalState, closeModalAction }
         <Modal.Body>
           <div className="flex flex-col px-4">
             <div className="flex items-end justify-end pb-2">
-              <Button onClick={(e) => setLeaveLedgerPdfModalIsOpen(true)} className="hidden lg:block" size={`md`}>
+              <Button onClick={(e) => setLeaveLedgerPdfModalIsOpen(true)} size={`md`}>
                 <div className="flex items-center w-full gap-2">
                   <HiPrinter /> Print Ledger
                 </div>

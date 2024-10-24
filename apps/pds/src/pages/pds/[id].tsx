@@ -405,7 +405,11 @@ export default function Dashboard({ employee, pdsDetails }: InferGetServerSidePr
 export const getServerSideProps: GetServerSideProps = withCookieSessionPds(
   async (context: GetServerSidePropsContext) => {
     const employee = getUserDetails();
-
+    /* 
+    , {
+        headers: { 'Accept-Encoding': 'gzip,deflate,compress' },
+      }
+    */
     try {
       const applicantPds = await axios.get(`${process.env.NEXT_PUBLIC_PORTAL_BE_URL}/pds/v2/${context.params?.id}`, {
         headers: { 'Accept-Encoding': 'gzip,deflate,compress' },

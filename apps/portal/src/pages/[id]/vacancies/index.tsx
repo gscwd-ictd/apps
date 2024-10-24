@@ -2,7 +2,7 @@
 import axios from 'axios';
 import { GetServerSideProps, GetServerSidePropsContext, InferGetServerSidePropsType } from 'next';
 import Head from 'next/head';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { HiNewspaper, HiX } from 'react-icons/hi';
 import SideNav from '../../../components/fixed/nav/SideNav';
 import { MessageCard } from '../../../components/modular/common/cards/MessageCard';
@@ -14,7 +14,7 @@ import {
   getWorkExp,
 } from '../../../utils/helpers/http-requests/applicants-requests';
 import { getUserDetails, withCookieSession } from '../../../utils/helpers/session';
-import { isEmpty } from 'lodash';
+import { isEmpty, isEqual } from 'lodash';
 import { AlertNotification, Button, CaptchaModal, Modal, ToastNotification } from '@gscwd-apps/oneui';
 import { JobDetailsPanel } from '../../../components/fixed/vacancies/JobDetailsPanel';
 import { VacancyModalController } from '../../../components/fixed/vacancies/VacancyModalController';
@@ -28,12 +28,22 @@ import { SpinnerDotted } from 'spinners-react';
 import { ContentBody } from 'apps/portal/src/components/modular/custom/containers/ContentBody';
 import { ContentHeader } from 'apps/portal/src/components/modular/custom/containers/ContentHeader';
 import { Roles } from 'apps/portal/src/utils/constants/user-roles';
+import useSWR from 'swr';
+import { useVacanciesStore } from 'apps/portal/src/store/vacancies.store';
+import { fetchWithToken } from 'apps/portal/src/utils/hoc/fetcher';
+import { useEmployeeStore } from 'apps/portal/src/store/employee.store';
 
-export default function Vacancies({
-  data,
-  employeeId,
-  employeeDetails,
-}: InferGetServerSidePropsType<typeof getServerSideProps>) {
+export default function Vacancies({ employeeDetails }: InferGetServerSidePropsType<typeof getServerSideProps>) {
+  const { setEmployeeDetails, employeeDetail } = useEmployeeStore((state) => ({
+    setEmployeeDetails: state.setEmployeeDetails,
+    employeeDetail: state.employeeDetails,
+  }));
+
+  // set the employee details on page load
+  useEffect(() => {
+    setEmployeeDetails(employeeDetails);
+  }, [employeeDetails]);
+
   const [messageContent, setMessageContent] = useState<VacancyDetails>();
   const [mailMessage, setMailMessage] = useState<string>('');
   const [isMessageOpen, setIsMessageOpen] = useState<boolean>(false);
@@ -88,7 +98,53 @@ export default function Vacancies({
     setHasApplied: state.setHasApplied,
   }));
 
+  const { vacancies, errorVacancies, loadingVacancies, getVacancies, getVacanciesSuccess, getVacanciesFail } =
+    useVacanciesStore((state) => ({
+      vacancies: state.vacancies,
+      errorVacancies: state.error.errorVacancies,
+      loadingVacancies: state.loading.loadingVacancies,
+      getVacancies: state.getVacancies,
+      getVacanciesSuccess: state.getVacanciesSuccess,
+      getVacanciesFail: state.getVacanciesFail,
+    }));
+
   const router = useRouter();
+
+  const vacanciesUrl = `${process.env.NEXT_PUBLIC_HRIS_URL}/vacant-position-postings/publications/`;
+
+  const {
+    data: swrVacancies,
+    isLoading: swrVacanciesIsLoading,
+    error: swrVacanciesError,
+    mutate: mutateVacancies,
+  } = useSWR(employeeDetails.employmentDetails.userId ? vacanciesUrl : null, fetchWithToken);
+
+  // Initial zustand state update
+  useEffect(() => {
+    if (swrVacanciesIsLoading) {
+      getVacancies(swrVacanciesIsLoading);
+    }
+  }, [swrVacanciesIsLoading]);
+
+  // Upon success/fail of swr request, zustand state will be updated
+  useEffect(() => {
+    if (!isEmpty(swrVacancies)) {
+      getVacanciesSuccess(swrVacanciesIsLoading, swrVacancies);
+    }
+
+    if (!isEmpty(swrVacanciesError)) {
+      getVacanciesFail(swrVacanciesIsLoading, swrVacanciesError.message);
+    }
+  }, [swrVacancies, swrVacanciesError]);
+
+  useEffect(() => {
+    if (!isEmpty(responseApply)) {
+      mutateVacancies();
+      setTimeout(() => {
+        emptyResponseAndError();
+      }, 5000);
+    }
+  }, [responseApply]);
 
   const handleMessage = async (vacancies: VacancyDetails) => {
     setHasApplied(false); //initial values when opening job basic info
@@ -105,7 +161,7 @@ export default function Vacancies({
       }
     }
 
-    const applicantApplication = await checkIfApplied(vacancies.vppId, employeeId);
+    const applicantApplication = await checkIfApplied(vacancies.vppId, employeeDetail.employmentDetails.userId);
     if (applicantApplication.hasApplied) {
       setHasApplied(applicantApplication.hasApplied);
     }
@@ -140,7 +196,7 @@ export default function Vacancies({
       setErrorMessage(null);
     }
     if (e == 2) {
-      handleWorkExperience(employeeId);
+      handleWorkExperience(employeeDetail.employmentDetails.userId);
     }
   };
 
@@ -169,6 +225,11 @@ export default function Vacancies({
 
   return (
     <>
+      {/* failed to load vacancies */}
+      {!isEmpty(swrVacanciesError) ? (
+        <ToastNotification toastType="error" notifMessage={`${swrVacanciesError}: Failed to load Vacancies.`} />
+      ) : null}
+
       {
         //error response from POST if tried to POST with empty supervisor/office
         !isEmpty(errorApplyJob) ? <ToastNotification toastType="error" notifMessage={`${errorApplyJob}`} /> : null
@@ -182,7 +243,7 @@ export default function Vacancies({
 
       {!isEmpty(errorJobOpening) ? <ToastNotification toastType="error" notifMessage={`${errorJobOpening}`} /> : null}
 
-      {!isEmpty(errorCaptcha) ? <ToastNotification toastType="error" notifMessage={`${errorCaptcha} test`} /> : null}
+      {!isEmpty(errorCaptcha) ? <ToastNotification toastType="error" notifMessage={`${errorCaptcha}`} /> : null}
 
       {!isEmpty(errorMessage) ? <ToastNotification toastType="error" notifMessage={`${errorMessage}`} /> : null}
 
@@ -240,7 +301,7 @@ export default function Vacancies({
               {/* contents */}
               <JobApplicationCaptcha
                 vppId={messageContent?.vppId}
-                employeeId={employeeId}
+                employeeId={employeeDetail?.employmentDetails.userId}
                 withRelevantExperience={withRelevantExperience}
                 workExperienceArray={workExperienceArray}
               />
@@ -296,7 +357,7 @@ export default function Vacancies({
               backUrl={`/${router.query.id}`}
             ></ContentHeader>
 
-            {!data ? (
+            {swrVacanciesIsLoading ? (
               <div className="w-full h-96 static flex flex-col justify-items-center items-center place-items-center">
                 <SpinnerDotted
                   speed={70}
@@ -313,8 +374,8 @@ export default function Vacancies({
                     {employeeDetails.employmentDetails.userRole !== UserRole.JOB_ORDER &&
                     employeeDetails.employmentDetails.userRole !== UserRole.COS &&
                     employeeDetails.employmentDetails.userRole !== UserRole.COS_JO ? (
-                      data && data.length > 0 ? (
-                        data.map((vacancies: VacancyDetails, messageIdx: number) => {
+                      vacancies && vacancies.length > 0 ? (
+                        vacancies.map((vacancies: VacancyDetails, messageIdx: number) => {
                           return (
                             <div key={messageIdx}>
                               <MessageCard
@@ -383,40 +444,23 @@ export default function Vacancies({
   );
 }
 
-//get list of all posted job positions
+export const getServerSideProps: GetServerSideProps = withCookieSession(async (context: GetServerSidePropsContext) => {
+  const employeeDetails = getUserDetails();
 
-export const getServerSideProps: GetServerSideProps = withCookieSession(async () => {
-  const userDetails = getUserDetails(); //get employee details from ssid token - using _id only
-
-  // check if user role is rank_and_file
+  // check if user role is job order or less = kick out
   if (
-    userDetails.employmentDetails.userRole === Roles.JOB_ORDER ||
-    userDetails.employmentDetails.userRole === UserRole.COS ||
-    userDetails.employmentDetails.userRole === UserRole.COS_JO
+    isEqual(employeeDetails.employmentDetails.userRole, UserRole.JOB_ORDER) ||
+    isEqual(employeeDetails.employmentDetails.userRole, UserRole.COS) ||
+    isEqual(employeeDetails.employmentDetails.userRole, UserRole.COS_JO)
   ) {
     // if true, the employee is not allowed to access this page
     return {
       redirect: {
         permanent: false,
-        destination: `/${userDetails.user._id}`,
+        destination: `/${employeeDetails.user._id}`,
       },
     };
   } else {
-    try {
-      const { data } = await axios.get(`${process.env.NEXT_PUBLIC_HRIS_URL}/vacant-position-postings/publications/`);
-      if (data) {
-        return {
-          props: {
-            data,
-            employeeId: userDetails.user._id,
-            employeeDetails: userDetails,
-          },
-        };
-      } else {
-        return { props: {} };
-      }
-    } catch (error) {
-      return { props: {} };
-    }
+    return { props: { employeeDetails } };
   }
 });

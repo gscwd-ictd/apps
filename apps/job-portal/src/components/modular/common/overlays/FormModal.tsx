@@ -7,18 +7,7 @@ type FormModalProps = {
   title?: string;
   subtitle?: string;
   children?: React.ReactNode;
-  modalSize?:
-    | 'sm'
-    | 'md'
-    | 'lg'
-    | 'xl'
-    | 'xxl'
-    | 'xxxl'
-    | 'xxxxl'
-    | 'xxxxxl'
-    | 'xxxxxxl'
-    | 'xxxxxxxl'
-    | 'full';
+  modalSize?: 'sm' | 'md' | 'lg' | 'xl' | 'xxl' | 'xxxl' | 'xxxxl' | 'xxxxxl' | 'xxxxxxl' | 'xxxxxxxl' | 'full';
   isOpen: boolean;
   verticalCenter?: boolean;
   isStatic?: boolean;
@@ -31,26 +20,8 @@ type FormModalProps = {
   cancelLabel?: React.ReactNode;
   actionBtnClassName?: string;
   cancelBtnClassName?: string;
-  actionBtnVariant?:
-    | 'primary'
-    | 'secondary'
-    | 'success'
-    | 'warning'
-    | 'danger'
-    | 'info'
-    | 'light'
-    | 'dark'
-    | 'theme';
-  cancelBtnVariant?:
-    | 'primary'
-    | 'secondary'
-    | 'success'
-    | 'warning'
-    | 'danger'
-    | 'info'
-    | 'light'
-    | 'dark'
-    | 'theme';
+  actionBtnVariant?: 'primary' | 'secondary' | 'success' | 'warning' | 'danger' | 'info' | 'light' | 'dark' | 'theme';
+  cancelBtnVariant?: 'primary' | 'secondary' | 'success' | 'warning' | 'danger' | 'info' | 'light' | 'dark' | 'theme';
   btnTypeState?: 'button' | 'submit' | 'reset' | undefined;
   onClose?: MouseEventHandler<HTMLButtonElement>;
   onCancel?: MouseEventHandler<HTMLButtonElement>;
@@ -117,17 +88,12 @@ export const FormModal = ({
                 leaveTo="opacity-0"
                 static={isStatic}
               >
-                <Dialog.Overlay
-                  className={`fixed inset-0 bg-black bg-opacity-20 transition-opacity`}
-                />
+                <Dialog.Overlay className={`fixed inset-0 bg-black bg-opacity-20 transition-opacity`} />
               </Transition.Child>
 
               {verticalCenter ? (
                 <>
-                  <span
-                    className="inline-block h-screen align-middle"
-                    aria-hidden="true"
-                  >
+                  <span className="inline-block h-screen align-middle" aria-hidden="true">
                     &#8203;
                   </span>
                 </>
@@ -143,14 +109,11 @@ export const FormModal = ({
                 leaveTo="opacity-0 scale-95"
               >
                 <div
-                  className={`${size[modalSize]} z-50 my-4 inline-block w-full transform overflow-visible rounded-lg bg-white p-10 text-left align-middle shadow-xl transition-all`}
+                  className={`${size[modalSize]} z-50 my-4 inline-block w-full transform overflow-visible rounded-lg bg-white p-5 text-left align-middle shadow-xl transition-all`}
                 >
-                  <header className="mb-3">
+                  <header className="mb-3 px-3">
                     <section className="flex items-center justify-between">
-                      <Dialog.Title
-                        as="h3"
-                        className="text-2xl font-medium leading-6 text-gray-600"
-                      >
+                      <Dialog.Title as="h3" className="text-2xl font-medium leading-6 text-gray-600">
                         {title}
                       </Dialog.Title>
 
@@ -162,10 +125,7 @@ export const FormModal = ({
                     </section>
 
                     <section>
-                      <Dialog.Title
-                        as="p"
-                        className="text-sm leading-6 text-gray-500"
-                      >
+                      <Dialog.Title as="p" className="text-sm leading-6 text-gray-500">
                         {subtitle}
                       </Dialog.Title>
                     </section>

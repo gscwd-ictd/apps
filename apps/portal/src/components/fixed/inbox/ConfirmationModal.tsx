@@ -1,6 +1,6 @@
 /* eslint-disable @nx/enforce-module-boundaries */
 
-import { Button, Modal } from '@gscwd-apps/oneui';
+import { Button, Checkbox, Modal } from '@gscwd-apps/oneui';
 import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
 import { patchPortal, putPortal } from 'apps/portal/src/utils/helpers/portal-axios-helper';
 import { useInboxStore } from 'apps/portal/src/store/inbox.store';
@@ -40,6 +40,7 @@ export const ConfirmationInboxModal = ({
     confirmationModalTitle: state.confirmationModalTitle,
     selectedMessageType: state.selectedMessageType,
     declineRemarks: state.declineRemarks,
+
     patchInboxResponse: state.patchInboxResponse,
     patchInboxResponseFail: state.patchInboxResponseSuccess,
     patchInboxResponseSuccess: state.patchInboxResponseSuccess,
@@ -125,20 +126,20 @@ export const ConfirmationInboxModal = ({
   };
 
   const { windowWidth } = UseWindowDimensions();
-  const [isBottom, setIsBottom] = useState<boolean>(false);
+  const [isPolicyRead, setIsPolicyRead] = useState<boolean>(false);
+
+  // const onScroll = useCallback((event) => {
+  //   console.log(event.target.scrollHeight - event.target.scrollTop <= event.target.clientHeight + 50);
+  //   setTrainingPolicyIsBottom(event.target.scrollHeight - event.target.scrollTop <= event.target.clientHeight + 50);
+  // }, []);
 
   useEffect(() => {
-    const handleScroll = (e) => {
-      const bottom = e.target.scrollHeight - e.target.scrollTop === e.target.clientHeight;
-      if (bottom) {
-        setIsBottom(true);
-      } else {
-        setIsBottom(false);
-      }
-    };
-    window.addEventListener('scroll', handleScroll, true); //moved it out the function's body
-    return window.removeEventListener('scroll', handleScroll);
-  }, []);
+    setIsPolicyRead(false);
+  }, [modalState]);
+
+  const handleAccept = () => {
+    setIsPolicyRead(!isPolicyRead);
+  };
 
   return (
     <>
@@ -152,20 +153,22 @@ export const ConfirmationInboxModal = ({
         </Modal.Header>
         <Modal.Body>
           <div className="flex flex-col w-full h-full gap-2 text-lg text-center px-4 ">
+            {/* invisible input - to avoid autofocusing on the checkbox at the bottom    */}
+            <input type="checkbox" className="w-0 h-0 opacity-0" />
             <div>
               {confirmationResponse == InboxMessageResponse.PSB_ACCEPT
                 ? 'Are you sure you want to accept this assignment?'
                 : confirmationResponse == InboxMessageResponse.PSB_DECLINE
                 ? 'Are you sure you want to decline this assignment?'
                 : confirmationResponse == InboxMessageResponse.TRAINING_ACCEPT
-                ? 'By accepting this training, you agree with the Training Policy indicated below. Kindly scroll to the bottom to accept this Training invitation.'
+                ? 'By accepting this training, you agree with the Training Policy indicated below. Kindly scroll to the bottom and check the checkbox to accept this Training invitation.'
                 : confirmationResponse == InboxMessageResponse.TRAINING_DECLINE
                 ? 'Are you sure you want to decline this training invitation? Your response will be irreversible.'
                 : 'Do you want to submit?'}
             </div>
             {confirmationResponse == InboxMessageResponse.TRAINING_ACCEPT ? (
               <div className="flex flex-col items-center w-full h-56 px-4 pt-4 text-md text-justify">
-                <label className="font-bold">Training Policy</label>
+                <label className="font-bold text-xl">Training Policy</label>
 
                 <label className="font-bold pt-4">Failure to Render the Service Obligation</label>
                 <div className="flex flex-col justify-start items-start gap-2">
@@ -239,6 +242,13 @@ export const ConfirmationInboxModal = ({
                       </label>
                     </div>
                   </div>
+
+                  <div className="flex flex-row justify-center items-center gap-4 mt-10 mb-4 p-4 bg-slate-300 rounded-md">
+                    <Checkbox onClick={handleAccept} />
+                    <div className="flex flex-col">
+                      <label>I have read the Training Policy and agree to its terms and conditions.</label>
+                    </div>
+                  </div>
                 </div>
               </div>
             ) : null}
@@ -248,7 +258,7 @@ export const ConfirmationInboxModal = ({
           <div className="flex justify-end gap-2 px-4">
             <div className="min-w-[6rem] max-w-auto flex gap-4">
               <Button
-                disabled={!isBottom && confirmationResponse == InboxMessageResponse.TRAINING_ACCEPT ? true : false}
+                disabled={!isPolicyRead && confirmationResponse == InboxMessageResponse.TRAINING_ACCEPT ? true : false}
                 variant={'primary'}
                 size={'lg'}
                 loading={false}

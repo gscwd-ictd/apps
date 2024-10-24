@@ -5,28 +5,21 @@ import Image from 'next/image';
 
 interface Props {}
 
-const TopNavigation: NextComponentType<NextPageContext, {}, Props> = (
-  props: Props
-) => {
+const TopNavigation: NextComponentType<NextPageContext, {}, Props> = (props: Props) => {
   return (
-    <nav className="bg-gray-800">
-      <div className="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
+    <nav className="w-full bg-gray-800">
+      <div className="px-4 mx-auto  sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           {/* LOGO */}
-          <div className="flex items-center">
+
+          <div className="flex items-center sm:px-4 lg:px-8">
             <div className="flex-shrink-0">
               <a href={process.env.NEXT_PUBLIC_JOB_PORTAL} title="Home">
-                <Image
-                  width={48}
-                  height={48}
-                  src="/assets/img/circle.png"
-                  alt="General Santos City Water District"
-                />
+                <Image width={48} height={48} src="/assets/img/circle.png" alt="General Santos City Water District" />
               </a>
             </div>
             <div className="hidden md:block"></div>
           </div>
-
           {/* BURGER MENU */}
           <div className="flex -mr-2 md:hidden">
             <button
@@ -45,11 +38,7 @@ const TopNavigation: NextComponentType<NextPageContext, {}, Props> = (
                 stroke="currentColor"
                 aria-hidden="true"
               >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"
-                />
+                <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
               </svg>
 
               <svg
@@ -61,11 +50,7 @@ const TopNavigation: NextComponentType<NextPageContext, {}, Props> = (
                 stroke="currentColor"
                 aria-hidden="true"
               >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M6 18L18 6M6 6l12 12"
-                />
+                <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
               </svg>
             </button>
           </div>

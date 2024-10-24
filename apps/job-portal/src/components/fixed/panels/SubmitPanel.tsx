@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { usePdsStore } from '../../../store/pds.store';
 import { useTabStore } from '../../../store/tab.store';
 import { Card } from '../../modular/cards/Card';
@@ -30,19 +30,17 @@ import {
 import { isEmpty } from 'lodash';
 import { usePageStore } from '../../../store/page.store';
 import { PdsAlertSubmitFailed } from '../pds/PdsAlertSubmitFailed';
-import { Alert, Button } from '@gscwd-apps/oneui';
+import { Alert, Button, PageContentContext } from '@gscwd-apps/oneui';
+import { SolidPrevButton } from '../navigation/button/SolidPrevButton';
 
 export default function SubmitPanel(): JSX.Element {
   const page = usePageStore((state) => state.page);
-  const isExistingApplicant = useApplicantStore(
-    (state) => state.isExistingApplicant
-  );
+  const isExistingApplicant = useApplicantStore((state) => state.isExistingApplicant);
   const pds = pdsToSubmit(usePdsStore((state) => state));
   const publication = usePublicationStore((state) => state.publication);
   const router = useRouter(); // initialize router
   const [isError, setIsError] = useState<boolean>(false);
-  const [isConfirmationPressed, setIsConfirmationPressed] =
-    useState<boolean>(false);
+  const [isConfirmationPressed, setIsConfirmationPressed] = useState<boolean>(false);
   const [alertConfirmation, setAlertConfirmation] = useState<boolean>(false);
   const [alertSuccess, setAlertSuccess] = useState<boolean>(false);
   const [alertFailed, setAlertFailed] = useState<boolean>(false);
@@ -53,26 +51,15 @@ export default function SubmitPanel(): JSX.Element {
   const deletedVocationals = usePdsStore((state) => state.deletedVocationals);
   const deletedColleges = usePdsStore((state) => state.deletedColleges);
   const deletedGraduates = usePdsStore((state) => state.deletedGraduates);
-  const deletedEligibilities = usePdsStore(
-    (state) => state.deletedEligibilities
-  );
-  const deletedWorkExperiences = usePdsStore(
-    (state) => state.deletedWorkExperiences
-  );
+  const deletedEligibilities = usePdsStore((state) => state.deletedEligibilities);
+  const deletedWorkExperiences = usePdsStore((state) => state.deletedWorkExperiences);
   const deletedVolWorks = usePdsStore((state) => state.deletedVolWorks);
-  const deletedLearningDevelopments = usePdsStore(
-    (state) => state.deletedLearningDevelopments
-  );
+  const deletedLearningDevelopments = usePdsStore((state) => state.deletedLearningDevelopments);
   const deletedSkills = usePdsStore((state) => state.deletedSkills);
-  const deletedOrganizations = usePdsStore(
-    (state) => state.deletedOrganizations
-  );
+  const deletedOrganizations = usePdsStore((state) => state.deletedOrganizations);
   const deletedRecognitions = usePdsStore((state) => state.deletedRecognitions);
   const deletedReferences = usePdsStore((state) => state.deletedReferences);
   const setSelectedTab = useTabStore((state) => state.setSelectedTab);
-
-  // set tab from tab store
-  const selectedTab = useTabStore((state) => state.selectedTab);
 
   const handlePrevTab = useTabStore((state) => state.handlePrevTab);
 
@@ -87,41 +74,20 @@ export default function SubmitPanel(): JSX.Element {
   // fetch the updated and deleted arrays
   const fetchUpdatedArrays = () => {
     const children = AssignChildrenForUpdating(pds.children, deletedChildren);
-    const vocational = AssignEducationForUpdating(
-      pds.vocational,
-      deletedVocationals
-    );
+    const vocational = AssignEducationForUpdating(pds.vocational, deletedVocationals);
     const college = AssignEducationForUpdating(pds.college, deletedColleges);
     const graduate = AssignEducationForUpdating(pds.graduate, deletedGraduates);
-    const eligibility = AssignEligibilitiesForUpdating(
-      pds.eligibility,
-      deletedEligibilities
-    );
-    const workExperience = AssignWorkExperiencesForUpdating(
-      pds.workExperience,
-      deletedWorkExperiences
-    );
-    const voluntaryWork = AssignVoluntaryWorksForUpdating(
-      pds.voluntaryWork,
-      deletedVolWorks
-    );
+    const eligibility = AssignEligibilitiesForUpdating(pds.eligibility, deletedEligibilities);
+    const workExperience = AssignWorkExperiencesForUpdating(pds.workExperience, deletedWorkExperiences);
+    const voluntaryWork = AssignVoluntaryWorksForUpdating(pds.voluntaryWork, deletedVolWorks);
     const learningDevelopment = AssignLearningDevelopmentsForUpdating(
       pds.learningDevelopment,
       deletedLearningDevelopments
     );
     const skill = AssignSkillsForUpdating(pds.skills, deletedSkills);
-    const organization = AssignOrganizationsForUpdating(
-      pds.organizations,
-      deletedOrganizations
-    );
-    const recognition = AssignRecognitionsForUpdating(
-      pds.recognitions,
-      deletedRecognitions
-    );
-    const reference = AssignReferencesForUpdating(
-      pds.references,
-      deletedReferences
-    );
+    const organization = AssignOrganizationsForUpdating(pds.organizations, deletedOrganizations);
+    const recognition = AssignRecognitionsForUpdating(pds.recognitions, deletedRecognitions);
+    const reference = AssignReferencesForUpdating(pds.references, deletedReferences);
     return {
       children,
       vocational,
@@ -137,6 +103,12 @@ export default function SubmitPanel(): JSX.Element {
       reference,
     };
   };
+
+  // page context
+  const {
+    aside: { isMobile },
+  } = useContext(PageContentContext);
+
   // fire submit
   const handleSubmit = async () => {
     // set disabled button to true
@@ -230,27 +202,16 @@ export default function SubmitPanel(): JSX.Element {
   // success action
   const alertSuccessAction = async () => {
     if (isExistingApplicant === false) {
-      await axios.post(
-        `${process.env.NEXT_PUBLIC_HRIS_DOMAIN}/auth/logout`,
-        {},
-        { withCredentials: true }
-      );
+      await axios.post(`${process.env.NEXT_PUBLIC_HRIS_DOMAIN}/auth/logout`, {}, { withCredentials: true });
 
-      await postData(
-        `${process.env.NEXT_PUBLIC_HRIS_DOMAIN}/external-applicants/${publication.vppId}`,
-        {
-          email: pds.personalInfo.email,
-        }
-      );
+      await postData(`${process.env.NEXT_PUBLIC_HRIS_DOMAIN}/external-applicants/${publication.vppId}`, {
+        email: pds.personalInfo.email,
+      });
 
-      router.push(
-        `${process.env.NEXT_PUBLIC_JOB_PORTAL}/application/${publication.vppId}/email?sent=true`
-      );
+      router.push(`${process.env.NEXT_PUBLIC_JOB_PORTAL}/application/${publication.vppId}/email?sent=true`);
       setSelectedTab(1);
     } else if (isExistingApplicant === true) {
-      router.push(
-        `${process.env.NEXT_PUBLIC_JOB_PORTAL}/application/${publication.vppId}/checklist`
-      );
+      router.push(`${process.env.NEXT_PUBLIC_JOB_PORTAL}/application/${publication.vppId}/checklist`);
       setSelectedTab(1);
     }
 
@@ -293,15 +254,14 @@ export default function SubmitPanel(): JSX.Element {
           <div className="flex gap-2">
             <Button
               onClick={() => setAlertConfirmation(false)}
+              variant="default"
+              className="min-w-[5rem]"
               disabled={isDisabled ? true : false}
             >
               No
             </Button>
 
-            <Button
-              onClick={alertConfirmationAction}
-              disabled={isDisabled ? true : false}
-            >
+            <Button onClick={alertConfirmationAction} className="min-w-[5rem]" disabled={isDisabled ? true : false}>
               {isLoading ? <div className="text-white">Submitting</div> : 'Yes'}
             </Button>
           </div>
@@ -311,17 +271,12 @@ export default function SubmitPanel(): JSX.Element {
       {/**Alert Success */}
       <Alert open={alertSuccess} setOpen={setAlertSuccess}>
         <Alert.Description>
-          <PdsAlertSubmitSuccess
-            text={isExistingApplicant ? 'updated' : 'submitted'}
-          />
+          <PdsAlertSubmitSuccess text={isExistingApplicant ? 'updated' : 'submitted'} />
         </Alert.Description>
         <Alert.Footer alignEnd>
           <div className="flex gap-2">
             <div className="max-w-auto min-w-[5rem]">
-              <Button
-                onClick={alertSuccessAction}
-                disabled={isDisabled ? true : false}
-              >
+              <Button onClick={alertSuccessAction} disabled={isDisabled ? true : false}>
                 <div className="text-white">Go back to Checklist</div>
               </Button>
             </div>
@@ -337,10 +292,7 @@ export default function SubmitPanel(): JSX.Element {
         <Alert.Footer alignEnd>
           <div className="flex gap-2">
             <div className="max-w-auto min-w-[5rem]">
-              <Button
-                onClick={alertFailedAction}
-                disabled={isDisabled ? true : false}
-              >
+              <Button onClick={alertFailedAction} disabled={isDisabled ? true : false}>
                 <div className="text-white">Close</div>
               </Button>
             </div>
@@ -351,23 +303,27 @@ export default function SubmitPanel(): JSX.Element {
       {/* Submit Page */}
       <Page title="" subtitle="">
         <>
-          <Card title="" subtitle="" className="mx-[18%]  px-[5%] ">
-            <div className="flex h-[7rem] gap-2">
+          {isMobile && (
+            <div className="flex w-full justify-between px-[5%]">
+              <SolidPrevButton onClick={handlePrevTab} type="button" />
+            </div>
+          )}
+          <Card title="" subtitle="" className="lg:mx-[18%] sm:mx-[5%]  px-[5%] ">
+            <div className="flex h-fit gap-2">
               <div className="w-[15%]">
                 <HiExclamationCircle color="orange" className="w-full h-full" />
               </div>
-              <div className="flex w-[85%] flex-col justify-between">
+              <div className="flex w-[85%] flex-col justify-center">
                 <div className="pt-3 text-2xl font-medium">Information</div>
-                <p className="pb-2 mt-2 font-light">
-                  Any misrepresentation made in the Personal Data Sheet and the
-                  Work Experience Sheet shall cause the filing of administrative
-                  or criminal case(s) against the person concerned.
+                <p className="pb-2 font-light">
+                  Any misrepresentation made in the Personal Data Sheet and the Work Experience Sheet shall cause the
+                  filing of administrative or criminal case(s) against the person concerned.
                 </p>
               </div>
             </div>
           </Card>
           {/* PDS Submit Button */}
-          <div className="mx-[18%] my-10 flex flex-col">
+          <div className="mx-[18%] my-10 flex flex-col ">
             <button
               className={`${
                 isLoading
@@ -394,7 +350,7 @@ export default function SubmitPanel(): JSX.Element {
         </>
       </Page>
       {/* PREV BUTTON */}
-      <PrevButton action={() => handlePrevTab()} type="button" />
+      {!isMobile && <PrevButton action={() => handlePrevTab()} type="button" />}
     </>
   );
 }

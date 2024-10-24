@@ -109,7 +109,7 @@ export const WorkExprSheet = (): JSX.Element => {
     <FormProvider {...methods}>
       <form onSubmit={methods.handleSubmit(modalAction)} id="workExpSheet">
         <CardContainer
-          className="w-[44rem] rounded-xl border p-5"
+          className="sm:w-full lg:w-[44rem] rounded-xl mx-2 border p-5"
           bgColor={'bg-yellow-100'}
           title={''}
           remarks={''}
@@ -127,7 +127,7 @@ export const WorkExprSheet = (): JSX.Element => {
           </div>
         </CardContainer>
         <CardContainer
-          className="w-[44rem] rounded-xl border p-5"
+          className="sm:w-full lg:w-[44rem] rounded-xl mx-2 border p-5"
           bgColor={'bg-sky-100'}
           title={''}
           remarks={''}
@@ -143,7 +143,7 @@ export const WorkExprSheet = (): JSX.Element => {
         {!noWorkExperience ? (
           <>
             <div className="flex flex-col w-full grid-cols-2 gap-4 py-7">
-              <div className="w-full col-span-1">
+              <div className="w-full col-span-1 px-2">
                 <Button onClick={openModal} btnLabel="Select a work experience" variant="theme" type="button" />
               </div>
               {/**  */}

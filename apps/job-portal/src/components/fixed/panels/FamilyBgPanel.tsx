@@ -1,5 +1,5 @@
 import Head from 'next/head';
-import React, { useEffect } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { Page } from '../../modular/pages/Page';
 import { NextButton } from '../navigation/button/NextButton';
 import { PrevButton } from '../navigation/button/PrevButton';
@@ -15,6 +15,9 @@ import { usePdsStore } from '../../../store/pds.store';
 import { useEmployeeStore } from '../../../store/employee.store';
 import { HeadContainer } from '../head/Head';
 import { useApplicantStore } from '../../../store/applicant.store';
+import { PageContentContext } from '@gscwd-apps/oneui';
+import { SolidNextButton } from '../navigation/button/SolidNextButton';
+import { SolidPrevButton } from '../navigation/button/SolidPrevButton';
 
 export default function FamilyBgPanel(): JSX.Element {
   const handleNextTab = useTabStore((state) => state.handleNextTab);
@@ -25,6 +28,11 @@ export default function FamilyBgPanel(): JSX.Element {
     mode: 'onChange',
   });
 
+  // page context
+  const {
+    aside: { isMobile },
+  } = useContext(PageContentContext);
+
   // when submit is fired
   const onSubmit = () => handleNextTab();
   return (
@@ -32,6 +40,12 @@ export default function FamilyBgPanel(): JSX.Element {
       <HeadContainer title="PDS - Family Information" />
       <Page title="Family Information" subtitle="">
         <>
+          {isMobile && (
+            <div className="flex w-full justify-between">
+              <SolidPrevButton onClick={() => handlePrevTab()} />
+              <SolidNextButton formId="familyInfo" />
+            </div>
+          )}
           <FormProvider {...methods} key="familyInfo">
             <form onSubmit={methods.handleSubmit(onSubmit)} id="familyInfo">
               <SpouseInfo />
@@ -41,9 +55,19 @@ export default function FamilyBgPanel(): JSX.Element {
             </form>
           </FormProvider>
         </>
+        {isMobile && (
+          <div className="flex w-full justify-between pt-4">
+            <SolidPrevButton onClick={() => handlePrevTab()} />
+            <SolidNextButton formId="familyInfo" />
+          </div>
+        )}
       </Page>
-      <PrevButton action={() => handlePrevTab()} type="button" />
-      <NextButton formId="familyInfo" />
+      {!isMobile && (
+        <>
+          <PrevButton action={() => handlePrevTab()} type="button" />
+          <NextButton formId="familyInfo" />
+        </>
+      )}
     </>
   );
 }
