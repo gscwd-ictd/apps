@@ -872,22 +872,31 @@ export const LeavePdf = ({ employeeDetails, leaveDetails, selectedLeaveLedger }:
                         </View>
                         <View style={styles.containerTableRow}>
                           <Text>
-                            {(
-                              parseFloat(`${selectedLeaveLedger[0]?.vacationLeaveBalance}`) +
-                              parseFloat(`${selectedLeaveLedger[0]?.vacationLeave}`) * -1
-                            )
-                              // +
-                              // (parseFloat(`${selectedLeaveLedger[0]?.forcedLeaveBalance}`) +
-                              //   parseFloat(`${selectedLeaveLedger[0]?.forcedLeave}`) * -1)
-                              .toFixed(3)}
+                            {leaveDetails.leaveApplicationBasicInfo.leaveName === LeaveName.VACATION ||
+                            leaveDetails.leaveApplicationBasicInfo.leaveName === LeaveName.FORCED
+                              ? (
+                                  parseFloat(`${selectedLeaveLedger[0]?.vacationLeaveBalance}`) +
+                                  parseFloat(`${selectedLeaveLedger[0]?.vacationLeave}`) * -1
+                                )
+                                  // +
+                                  // (parseFloat(`${selectedLeaveLedger[0]?.forcedLeaveBalance}`) +
+                                  //   parseFloat(`${selectedLeaveLedger[0]?.forcedLeave}`) * -1)
+                                  .toFixed(3)
+                              : leaveDetails.leaveApplicationBasicInfo.leaveName === LeaveName.TERMINAL
+                              ? leaveDetails.leaveApplicationDetails.vlBalance.afterTerminalLeave
+                              : '0.000'}
                           </Text>
                         </View>
                         <View style={styles.containerTableRow2}>
                           <Text>
-                            {(
-                              parseFloat(`${selectedLeaveLedger[0]?.sickLeaveBalance}`) +
-                              parseFloat(`${selectedLeaveLedger[0]?.sickLeave}`) * -1
-                            ).toFixed(3)}
+                            {leaveDetails.leaveApplicationBasicInfo.leaveName === LeaveName.SICK
+                              ? (
+                                  parseFloat(`${selectedLeaveLedger[0]?.sickLeaveBalance}`) +
+                                  parseFloat(`${selectedLeaveLedger[0]?.sickLeave}`) * -1
+                                ).toFixed(3)
+                              : leaveDetails.leaveApplicationBasicInfo.leaveName === LeaveName.TERMINAL
+                              ? leaveDetails.leaveApplicationDetails.slBalance.afterTerminalLeave
+                              : '0.000'}
                           </Text>
                         </View>
                       </View>
@@ -900,6 +909,10 @@ export const LeavePdf = ({ employeeDetails, leaveDetails, selectedLeaveLedger }:
                             {leaveDetails.leaveApplicationBasicInfo.leaveName === LeaveName.VACATION ||
                             leaveDetails.leaveApplicationBasicInfo.leaveName === LeaveName.FORCED
                               ? leaveDetails?.leaveApplicationBasicInfo?.leaveDates?.length.toFixed(3)
+                              : leaveDetails.leaveApplicationBasicInfo.leaveName === LeaveName.MONETIZATION
+                              ? leaveDetails.leaveApplicationDetails.convertedVl
+                              : leaveDetails.leaveApplicationBasicInfo.leaveName === LeaveName.TERMINAL
+                              ? leaveDetails.leaveApplicationDetails.vlBalance.afterTerminalLeave
                               : '0.000'}
                           </Text>
                         </View>
@@ -908,6 +921,10 @@ export const LeavePdf = ({ employeeDetails, leaveDetails, selectedLeaveLedger }:
                             {' '}
                             {leaveDetails.leaveApplicationBasicInfo.leaveName === LeaveName.SICK
                               ? leaveDetails?.leaveApplicationBasicInfo?.leaveDates?.length.toFixed(3)
+                              : leaveDetails.leaveApplicationBasicInfo.leaveName === LeaveName.MONETIZATION
+                              ? leaveDetails.leaveApplicationDetails.convertedSl
+                              : leaveDetails.leaveApplicationBasicInfo.leaveName === LeaveName.TERMINAL
+                              ? leaveDetails.leaveApplicationDetails.slBalance.afterTerminalLeave
                               : '0.000'}
                           </Text>
                         </View>
@@ -925,11 +942,19 @@ export const LeavePdf = ({ employeeDetails, leaveDetails, selectedLeaveLedger }:
                                   parseFloat(`${selectedLeaveLedger[0]?.vacationLeaveBalance}`) -
                                   leaveDetails?.leaveApplicationBasicInfo?.leaveDates?.length
                                 ).toFixed(3)
+                              : leaveDetails.leaveApplicationBasicInfo.leaveName === LeaveName.TERMINAL
+                              ? '0.000'
                               : parseFloat(`${selectedLeaveLedger[0]?.vacationLeaveBalance}`)}
                           </Text>
                         </View>
                         <View style={styles.containerTableRow2}>
-                          <Text>{parseFloat(`${selectedLeaveLedger[0]?.sickLeaveBalance}`).toFixed(3)}</Text>
+                          <Text>
+                            {leaveDetails.leaveApplicationBasicInfo.leaveName === LeaveName.SICK
+                              ? parseFloat(`${selectedLeaveLedger[0]?.sickLeaveBalance}`).toFixed(3)
+                              : leaveDetails.leaveApplicationBasicInfo.leaveName === LeaveName.TERMINAL
+                              ? '0.000'
+                              : parseFloat(`${selectedLeaveLedger[0]?.sickLeaveBalance}`).toFixed(3)}
+                          </Text>
                         </View>
                       </View>
                     </View>

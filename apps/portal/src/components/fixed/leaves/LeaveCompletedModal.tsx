@@ -807,7 +807,8 @@ export const LeaveCompletedModal = ({ modalState, setModalState, closeModalActio
                   </Button>
                 ) : null}
 
-                {leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName != LeaveName.MONETIZATION ? (
+                {leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName != LeaveName.MONETIZATION &&
+                leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName != LeaveName.TERMINAL ? (
                   <Button
                     variant={'warning'}
                     size={'md'}
