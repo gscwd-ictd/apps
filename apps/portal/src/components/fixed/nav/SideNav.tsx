@@ -1,6 +1,6 @@
 /* eslint-disable @nx/enforce-module-boundaries */
 import { useRouter } from 'next/router';
-import { HiOutlineBell, HiOutlineHome, HiOutlineNewspaper } from 'react-icons/hi';
+import { HiOutlineBell, HiOutlineHome, HiOutlineNewspaper, HiOutlineQuestionMarkCircle } from 'react-icons/hi';
 import { ProfileMenuDropdown } from './ProfileMenuDropdown';
 import { SideNavLink } from './SideNavLink';
 import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
@@ -396,6 +396,13 @@ export const SideNav = ({ employeeDetails }: NavDetails) => {
                   />
                 </div>
               ) : null}
+              {/* USER MANUAL  */}
+              <a href={`${process.env.NEXT_PUBLIC_PORTAL_USER_MANUAL}`} target="_blank" rel="noreferrer">
+                <SideNavLink
+                  icon={<HiOutlineQuestionMarkCircle className="w-6 h-6 text-indigo-500" />}
+                  destination={'/'}
+                />
+              </a>
             </>
           ) : null}
         </ul>
