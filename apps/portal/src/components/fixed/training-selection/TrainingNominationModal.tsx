@@ -161,12 +161,12 @@ export const TrainingNominationModal = ({
         </Modal.Header>
         <Modal.Body>
           {selectedEmployees.length > individualTrainingDetails.numberOfSlots ? (
-            <AlertNotification alertType="warning" notifMessage="Selected Participants exceeded." dismissible={false} />
+            <AlertNotification alertType="error" notifMessage="Selected Participants exceeded." dismissible={false} />
           ) : null}
 
           {selectedAuxiliaryEmployees.length > 2 ? (
             <AlertNotification
-              alertType="warning"
+              alertType="error"
               notifMessage="Selected Auxiliary Participants exceeded."
               dismissible={false}
             />
@@ -174,7 +174,7 @@ export const TrainingNominationModal = ({
 
           {isDuplicatedNominee ? (
             <AlertNotification
-              alertType="warning"
+              alertType="error"
               notifMessage="There are duplicate employee nominations."
               dismissible={false}
             />

@@ -37,6 +37,59 @@ export type Training = {
   nominationStatus: TrainingNominationStatus;
 };
 
+//from L&D route
+export type TrainingDetails = {
+  actualNumberOfParticipants: number;
+  courseContent: Array<{ title: string }>;
+  courseTitle: string;
+  createdAt: string;
+  deadlineForSubmission: string | null;
+  deletedAt: string | null;
+  id: string;
+  location: string;
+  lspSource: string; //speaker
+  numberOfHours: number;
+  numberOfParticipants: number;
+  preparedBy: {
+    employeeId: string;
+    name: string;
+    positionTitle: string;
+    signature: string;
+  };
+  source: {
+    id: string;
+    name: string; // host event organizer (either office or external organization)
+  };
+  status: TrainingStatus;
+  trainingDesign: {
+    courseTitle: string;
+    id: string;
+  };
+  trainingEnd: string;
+  trainingStart: string;
+  trainingLspDetails: Array<{
+    email: string;
+    id: string;
+    name: string;
+    source: string;
+    type: string;
+  }>;
+  trainingRequirements: Array<{
+    document: string;
+  }>;
+  trainingTags: Array<{
+    id: string;
+    name: string;
+  }>;
+  type: TrainingTypes;
+  updatedAt: string;
+};
+
+export type TrainingRequirement = {
+  document: string;
+  isSelected?: boolean;
+};
+
 // edit/viewing type
 export type TrainingWithTrainingId = Omit<Training, 'seminarTrainingType'> & TrainingTypeId;
 
