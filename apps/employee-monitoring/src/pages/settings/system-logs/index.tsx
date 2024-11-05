@@ -57,7 +57,7 @@ const Index = () => {
     data: systemLogs,
     error: systemLogsError,
     isLoading: systemLogsLoading,
-  } = useSWR(`/user-logs/${watchMonthYear}`, fetcherEMS, {
+  } = useSWR(`/user-logs/year-month/${watchMonthYear}`, fetcherEMS, {
     shouldRetryOnError: true,
     revalidateOnFocus: false,
   });
