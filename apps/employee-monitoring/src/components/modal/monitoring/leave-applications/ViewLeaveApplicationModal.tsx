@@ -1,7 +1,7 @@
 /* eslint-disable @nx/enforce-module-boundaries */
 import { Alert, AlertNotification, Modal, PageContentContext } from '@gscwd-apps/oneui';
 import dayjs from 'dayjs';
-import { LeaveName, LeaveStatus } from 'libs/utils/src/lib/enums/leave.enum';
+import { LeaveName, LeaveStatus, MonetizationType } from 'libs/utils/src/lib/enums/leave.enum';
 import { EmployeeLeaveDetails, MonitoringLeave } from 'libs/utils/src/lib/types/leave-application.type';
 import React, { FunctionComponent, useContext, useEffect, useState } from 'react';
 import { LabelValue } from '../../../labels/LabelValue';
@@ -342,58 +342,112 @@ const ViewLeaveApplicationModal: FunctionComponent<ViewLeaveApplicationModalProp
                     />
                   </div>
 
-                  <div className="grid grid-cols-2 grid-rows-1 px-3 sm:gap-2 md:gap:2 lg:gap-0">
-                    <LabelValue
-                      label="Applied Leave Dates"
-                      direction="top-to-bottom"
-                      textSize="md"
-                      value={
-                        rowData.leaveName === LeaveName.MATERNITY ||
-                        rowData.leaveName === LeaveName.STUDY ||
-                        rowData.leaveName === LeaveName.REHABILITATION ||
-                        rowData.leaveName === LeaveName.SPECIAL_LEAVE_BENEFITS_FOR_WOMEN ||
-                        rowData.leaveName === LeaveName.ADOPTION ? (
-                          // show first and last date (array) only if SBL (maternity, study, rehab...)
-                          `${DateFormatter(rowData.leaveDates[0], 'MM-DD-YYYY')} - ${DateFormatter(
-                            rowData.leaveDates[rowData.leaveDates?.length - 1],
-                            'MM-DD-YYYY'
-                          )}`
-                        ) : (
-                          // show all dates if not SBL (maternity, study, rehab...)
-                          <>
-                            <ul>
-                              {rowData.leaveDates?.map((dates: string, index: number) => {
-                                if (moreLeaveDates) {
-                                  return <li key={index}>{DateFormatter(dates, 'MM-DD-YYYY')}</li>;
-                                } else {
-                                  if (index <= 1) return <li key={index}>{DateFormatter(dates, 'MM-DD-YYYY')}</li>;
-                                }
-                              })}
-                            </ul>
-                            {rowData.leaveDates?.length > 2 ? (
-                              <label
-                                className="cursor-pointer text-sm text-indigo-500 hover:text-indigo-600"
-                                onClick={(e) => setMoreLeaveDates(!moreLeaveDates)}
-                              >
-                                {moreLeaveDates ? 'Less...' : 'More...'}
-                              </label>
-                            ) : null}
-                          </>
-                        )
-                      }
-                    />
+                  {/* Leave Dates and Number of Days */}
+                  {rowData.leaveName !== LeaveName.MONETIZATION && rowData.leaveName !== LeaveName.TERMINAL ? (
+                    <div className="grid grid-cols-2 grid-rows-1 px-3 sm:gap-2 md:gap:2 lg:gap-0">
+                      <LabelValue
+                        label="Applied Leave Dates"
+                        direction="top-to-bottom"
+                        textSize="md"
+                        value={
+                          rowData.leaveName === LeaveName.MATERNITY ||
+                          rowData.leaveName === LeaveName.STUDY ||
+                          rowData.leaveName === LeaveName.REHABILITATION ||
+                          rowData.leaveName === LeaveName.SPECIAL_LEAVE_BENEFITS_FOR_WOMEN ||
+                          rowData.leaveName === LeaveName.ADOPTION ? (
+                            // show first and last date (array) only if SBL (maternity, study, rehab...)
+                            `${DateFormatter(rowData.leaveDates[0], 'MM-DD-YYYY')} - ${DateFormatter(
+                              rowData.leaveDates[rowData.leaveDates?.length - 1],
+                              'MM-DD-YYYY'
+                            )}`
+                          ) : (
+                            // show all dates if not SBL (maternity, study, rehab...)
+                            <>
+                              <ul>
+                                {rowData.leaveDates?.map((dates: string, index: number) => {
+                                  if (moreLeaveDates) {
+                                    return <li key={index}>{DateFormatter(dates, 'MM-DD-YYYY')}</li>;
+                                  } else {
+                                    if (index <= 1) return <li key={index}>{DateFormatter(dates, 'MM-DD-YYYY')}</li>;
+                                  }
+                                })}
+                              </ul>
+                              {rowData.leaveDates?.length > 2 ? (
+                                <label
+                                  className="cursor-pointer text-sm text-indigo-500 hover:text-indigo-600"
+                                  onClick={(e) => setMoreLeaveDates(!moreLeaveDates)}
+                                >
+                                  {moreLeaveDates ? 'Less...' : 'More...'}
+                                </label>
+                              ) : null}
+                            </>
+                          )
+                        }
+                      />
 
-                    <LabelValue
-                      label="Applied Number of Days"
-                      direction="top-to-bottom"
-                      textSize="md"
-                      value={
-                        !isEmpty(leaveApplicationDetails.leaveApplicationBasicInfo?.leaveDates)
-                          ? leaveApplicationDetails.leaveApplicationBasicInfo?.leaveDates.length
-                          : 0
-                      }
-                    />
-                  </div>
+                      <LabelValue
+                        label="Applied Number of Days"
+                        direction="top-to-bottom"
+                        textSize="md"
+                        value={
+                          !isEmpty(leaveApplicationDetails.leaveApplicationBasicInfo?.leaveDates)
+                            ? leaveApplicationDetails.leaveApplicationBasicInfo?.leaveDates.length
+                            : 0
+                        }
+                      />
+                    </div>
+                  ) : null}
+
+                  {/* MONETIZATION - Converted Credits and Amount */}
+                  {leaveApplicationDetails?.leaveApplicationBasicInfo?.leaveName === LeaveName.MONETIZATION ? (
+                    <div className="grid grid-cols-2 grid-rows-1 px-3 sm:gap-2 md:gap:2 lg:gap-0">
+                      <LabelValue
+                        label="Type"
+                        direction="top-to-bottom"
+                        textSize="md"
+                        value={
+                          !isEmpty(
+                            leaveApplicationDetails.leaveApplicationDetails.monetizationType == MonetizationType.MAX20
+                              ? 'Max 20 Credits'
+                              : 'Max 50% of Credits'
+                          )
+                        }
+                      />
+
+                      <LabelValue
+                        label="Converted Credits"
+                        direction="top-to-bottom"
+                        textSize="md"
+                        value={` VL: ${leaveApplicationDetails?.leaveApplicationDetails?.convertedVl} / SL: ${leaveApplicationDetails?.leaveApplicationDetails?.convertedSl}`}
+                      />
+
+                      <LabelValue
+                        label="Amount"
+                        direction="top-to-bottom"
+                        textSize="md"
+                        value={leaveApplicationDetails?.leaveApplicationDetails?.monetizedAmount}
+                      />
+                    </div>
+                  ) : null}
+
+                  {/* TERMINAL LEAVE - Converted Credits and Amount */}
+                  {leaveApplicationDetails?.leaveApplicationBasicInfo?.leaveName === LeaveName.TERMINAL ? (
+                    <div className="grid grid-cols-2 grid-rows-1 px-3 sm:gap-2 md:gap:2 lg:gap-0">
+                      <LabelValue
+                        label="Converted Credits"
+                        direction="top-to-bottom"
+                        textSize="md"
+                        value={` VL: ${leaveApplicationDetails?.leaveApplicationDetails?.vlBalance.afterTerminalLeave} / SL: ${leaveApplicationDetails?.leaveApplicationDetails?.slBalance.afterTerminalLeave}`}
+                      />
+
+                      <LabelValue
+                        label="Amount"
+                        direction="top-to-bottom"
+                        textSize="md"
+                        value={leaveApplicationDetails?.leaveApplicationDetails?.monetizedAmount}
+                      />
+                    </div>
+                  ) : null}
 
                   <div className="grid grid-cols-2 grid-rows-1 px-3 sm:gap-2 md:gap:2 lg:gap-0">
                     {/* VACATION LEAVE */}
