@@ -1,15 +1,13 @@
-"use client";
-
-import { FunctionComponent, useCallback, useContext } from "react";
-import { ToolbarButton } from "../buttons/view/ToolbarButton";
-import { ToolbarContext } from "./Toolbar";
+import { FunctionComponent, useCallback, useContext } from 'react';
+import { ToolbarButton } from '../buttons/view/ToolbarButton';
+import { ToolbarContext } from './Toolbar';
 
 export const FormatLink: FunctionComponent = () => {
   const { editor } = useContext(ToolbarContext);
 
   const setLink = useCallback(() => {
-    const previousUrl = editor?.getAttributes("link").href;
-    const url = window.prompt("URL", previousUrl);
+    const previousUrl = editor?.getAttributes('link').href;
+    const url = window.prompt('URL', previousUrl);
 
     // cancelled
     if (url === null) {
@@ -17,14 +15,14 @@ export const FormatLink: FunctionComponent = () => {
     }
 
     // empty
-    if (url === "") {
-      editor?.chain().focus().extendMarkRange("link").unsetLink().run();
+    if (url === '') {
+      editor?.chain().focus().extendMarkRange('link').unsetLink().run();
 
       return;
     }
 
     // update link
-    editor?.chain().focus().extendMarkRange("link").setLink({ href: url }).run();
+    editor?.chain().focus().extendMarkRange('link').setLink({ href: url }).run();
   }, [editor]);
 
   return (
@@ -32,7 +30,7 @@ export const FormatLink: FunctionComponent = () => {
       tooltip="Link"
       action="link"
       onClick={setLink}
-      className={editor?.isActive("link") ? "is-active" : ""}
+      className={editor?.isActive('link') ? 'is-active' : ''}
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"

@@ -1,14 +1,12 @@
-"use client";
-
-import { FunctionComponent, useCallback, useContext } from "react";
-import { ToolbarButton } from "../buttons/view/ToolbarButton";
-import { ToolbarContext } from "./Toolbar";
+import { FunctionComponent, useCallback, useContext } from 'react';
+import { ToolbarButton } from '../buttons/view/ToolbarButton';
+import { ToolbarContext } from './Toolbar';
 
 export const FormatImg: FunctionComponent = () => {
   const { editor } = useContext(ToolbarContext);
 
   const addImage = useCallback(() => {
-    const url = window.prompt("URL");
+    const url = window.prompt('URL');
 
     if (url) {
       editor?.chain().focus().setImage({ src: url }).run();
@@ -24,7 +22,7 @@ export const FormatImg: FunctionComponent = () => {
       tooltip="Image"
       action="img"
       onClick={addImage}
-      className={editor?.isActive("image") ? "is-active" : ""}
+      className={editor?.isActive('image') ? 'is-active' : ''}
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"

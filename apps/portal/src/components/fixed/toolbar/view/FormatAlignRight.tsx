@@ -1,8 +1,6 @@
-"use client";
-
-import { FunctionComponent, useContext } from "react";
-import { ToolbarButton } from "../buttons/view/ToolbarButton";
-import { ToolbarContext } from "./Toolbar";
+import { FunctionComponent, useContext } from 'react';
+import { ToolbarButton } from '../buttons/view/ToolbarButton';
+import { ToolbarContext } from './Toolbar';
 
 export const FormatAlignRight: FunctionComponent = () => {
   const { editor } = useContext(ToolbarContext);
@@ -11,7 +9,7 @@ export const FormatAlignRight: FunctionComponent = () => {
     <ToolbarButton
       tooltip="Align Right (Ctrl + Shift + R)"
       action="align-right"
-      onClick={() => editor?.chain().focus().setTextAlign("right").run()}
+      onClick={() => editor?.chain().focus().setTextAlign('right').run()}
     >
       <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
         <path d="M20 5C20.5523 5 21 5.44772 21 6C21 6.55228 20.5523 7 20 7H4C3.44772 7 3 6.55228 3 6C3 5.44772 3.44772 5 4 5H20Z" />

@@ -1,8 +1,6 @@
-"use client";
-
-import { FunctionComponent, useContext } from "react";
-import { ToolbarContext } from "./Toolbar";
-import { ToolbarButton } from "../buttons/view/ToolbarButton";
+import { FunctionComponent, useContext } from 'react';
+import { ToolbarContext } from './Toolbar';
+import { ToolbarButton } from '../buttons/view/ToolbarButton';
 
 export const FormatBold: FunctionComponent = () => {
   const { editor } = useContext(ToolbarContext);
@@ -16,4 +14,4 @@ export const FormatBold: FunctionComponent = () => {
   );
 };
 
-FormatBold.displayName = "FormatBold";
+FormatBold.displayName = 'FormatBold';

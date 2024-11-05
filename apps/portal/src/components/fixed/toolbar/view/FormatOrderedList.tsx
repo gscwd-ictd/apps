@@ -1,8 +1,6 @@
-"use client";
-
-import { FunctionComponent, useContext } from "react";
-import { ToolbarButton } from "../buttons/view/ToolbarButton";
-import { ToolbarContext } from "./Toolbar";
+import { FunctionComponent, useContext } from 'react';
+import { ToolbarButton } from '../buttons/view/ToolbarButton';
+import { ToolbarContext } from './Toolbar';
 
 export const FormatOrderedList: FunctionComponent = () => {
   const { editor } = useContext(ToolbarContext);
@@ -12,7 +10,7 @@ export const FormatOrderedList: FunctionComponent = () => {
       tooltip="Ordered List (Ctrl + Shift + 7)"
       action="ordered-list"
       onClick={() => editor?.chain().focus().toggleOrderedList().run()}
-      className={editor?.isActive("orderedList") ? "is-active" : ""}
+      className={editor?.isActive('orderedList') ? 'is-active' : ''}
     >
       <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" className="bi bi-list-ol" viewBox="0 0 15 15">
         <path

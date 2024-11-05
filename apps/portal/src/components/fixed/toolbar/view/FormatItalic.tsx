@@ -1,8 +1,6 @@
-"use client";
-
-import { FunctionComponent, useContext } from "react";
-import { ToolbarContext } from "./Toolbar";
-import { ToolbarButton } from "../buttons/view/ToolbarButton";
+import { FunctionComponent, useContext } from 'react';
+import { ToolbarContext } from './Toolbar';
+import { ToolbarButton } from '../buttons/view/ToolbarButton';
 
 export const FormatItalic: FunctionComponent = () => {
   const { editor } = useContext(ToolbarContext);

@@ -1,8 +1,6 @@
-"use client";
-
-import { FunctionComponent, useContext } from "react";
-import { ToolbarButton } from "../buttons/view/ToolbarButton";
-import { ToolbarContext } from "./Toolbar";
+import { FunctionComponent, useContext } from 'react';
+import { ToolbarButton } from '../buttons/view/ToolbarButton';
+import { ToolbarContext } from './Toolbar';
 
 export const FormatBulletList: FunctionComponent = () => {
   const { editor } = useContext(ToolbarContext);
@@ -12,7 +10,7 @@ export const FormatBulletList: FunctionComponent = () => {
       tooltip="Bullet List (Ctrl + Shift + 8)"
       action="bullet-list"
       onClick={() => editor?.chain().focus().toggleBulletList().run()}
-      className={editor?.isActive("bulletList") ? "is-active" : ""}
+      className={editor?.isActive('bulletList') ? 'is-active' : ''}
     >
       <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" className="bi bi-list-ul" viewBox="0 0 15 15">
         <path

@@ -1,8 +1,6 @@
-"use client";
-
-import { FunctionComponent, useContext } from "react";
-import { ToolbarButton } from "../buttons/view/ToolbarButton";
-import { ToolbarContext } from "./Toolbar";
+import { FunctionComponent, useContext } from 'react';
+import { ToolbarButton } from '../buttons/view/ToolbarButton';
+import { ToolbarContext } from './Toolbar';
 
 export const FormatAlignJustify: FunctionComponent = () => {
   const { editor } = useContext(ToolbarContext);
@@ -12,8 +10,8 @@ export const FormatAlignJustify: FunctionComponent = () => {
       tooltip="Align Justify (Ctrl + Shift + J)"
       action="align-justify"
       onClick={() =>
-        editor?.isActive({ textAlign: "justify" }) === false
-          ? editor?.chain().focus().setTextAlign("justify").run()
+        editor?.isActive({ textAlign: 'justify' }) === false
+          ? editor?.chain().focus().setTextAlign('justify').run()
           : editor?.commands.unsetTextAlign()
       }
       className="border"
@@ -22,9 +20,9 @@ export const FormatAlignJustify: FunctionComponent = () => {
         width="20"
         height="20"
         className={
-          editor?.isActive({ textAlign: "justify" })
-            ? "bg-gray-100 rounded-sm fill-gray-900"
-            : "bg-transparent  fill-gray-900"
+          editor?.isActive({ textAlign: 'justify' })
+            ? 'bg-gray-100 rounded-sm fill-gray-900'
+            : 'bg-transparent  fill-gray-900'
         }
         strokeWidth={0.5}
         viewBox="0 0 24 24"

@@ -1,9 +1,7 @@
-"use client";
-
-import { forwardRef, useContext } from "react";
-import { ToolbarButtonProps } from "../utils/toolbar-button-props";
-import { Tooltip } from "../../../tooltip/view/Tooltip";
-import { ToolbarContext } from "../../view/Toolbar";
+import { forwardRef, useContext } from 'react';
+import { ToolbarButtonProps } from '../utils/toolbar-button-props';
+import { Tooltip } from '../../../tooltip/view/Tooltip';
+import { ToolbarContext } from '../../view/Toolbar';
 
 export const ToolbarButton = forwardRef<HTMLButtonElement, ToolbarButtonProps>(
   ({ action, tooltip, children, ...props }, ref) => {
@@ -17,7 +15,7 @@ export const ToolbarButton = forwardRef<HTMLButtonElement, ToolbarButtonProps>(
           ref={ref}
           {...props}
           className={`${
-            editor.isActive(action) ? "bg-zinc-100 text-zinc-100" : "text-zinc-500 hover:text-zinc-500"
+            editor.isActive(action) ? 'bg-zinc-100 text-zinc-100' : 'text-zinc-500 hover:text-zinc-500'
           } p-1 rounded-sm transition-colors duration-200`}
         >
           {children}
@@ -26,4 +24,4 @@ export const ToolbarButton = forwardRef<HTMLButtonElement, ToolbarButtonProps>(
     );
   }
 );
-ToolbarButton.displayName = "ToolbarButton";
+ToolbarButton.displayName = 'ToolbarButton';
