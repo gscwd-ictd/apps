@@ -247,8 +247,9 @@ export const LeaveCompletedModal = ({ modalState, setModalState, closeModalActio
                       </div>
                     </div>
 
-                    {leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName !== LeaveName.MONETIZATION ? (
-                      //IF NOT MONETIZATION
+                    {leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName !== LeaveName.MONETIZATION &&
+                    leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName !== LeaveName.TERMINAL ? (
+                      //IF NOT MONETIZATION AND TERMINAL
                       <>
                         <div className="flex flex-col justify-start items-start w-full sm:w-1/2 px-0.5 pb-3  ">
                           <label className="text-slate-500 text-md whitespace-nowrap pb-0.5 ">Number of Days:</label>
@@ -531,35 +532,57 @@ export const LeaveCompletedModal = ({ modalState, setModalState, closeModalActio
                     ) : (
                       //IF MONETIZATION
                       <>
-                        <div className="flex flex-col justify-start items-start w-full sm:w-1/2 px-0.5 pb-3  ">
-                          <label className="text-slate-500 text-md whitespace-nowrap pb-0.5 ">Type:</label>
+                        {leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.MONETIZATION ? (
+                          <>
+                            <div className="flex flex-col justify-start items-start w-full sm:w-1/2 px-0.5 pb-3  ">
+                              <label className="text-slate-500 text-md whitespace-nowrap pb-0.5 ">Type:</label>
 
-                          <div className="w-auto ml-5">
-                            <label className=" text-md font-medium">
-                              {leaveIndividualDetail?.leaveApplicationDetails?.monetizationType ==
-                              MonetizationType.MAX20
-                                ? 'Max 20 Credits'
-                                : 'Max 50% of Credits'}
-                            </label>
-                          </div>
-                        </div>
-                        <div className="flex flex-col justify-start items-start w-full sm:w-1/2 px-0.5 pb-3  ">
-                          <label className="text-slate-500 text-md whitespace-nowrap pb-0.5 ">Converted Credits:</label>
+                              <div className="w-auto ml-5">
+                                <label className=" text-md font-medium">
+                                  {leaveIndividualDetail?.leaveApplicationDetails?.monetizationType ==
+                                  MonetizationType.MAX20
+                                    ? 'Max 20 Credits'
+                                    : 'Max 50% of Credits'}
+                                </label>
+                              </div>
+                            </div>
 
-                          <div className="w-auto ml-5">
-                            <label className=" text-md font-medium">
-                              VL: {leaveIndividualDetail?.leaveApplicationDetails?.convertedVl} / SL:{' '}
-                              {leaveIndividualDetail?.leaveApplicationDetails?.convertedSl}
+                            <div className="flex flex-col justify-start items-start w-full sm:w-1/2 px-0.5 pb-3  ">
+                              <label className="text-slate-500 text-md whitespace-nowrap pb-0.5 ">
+                                Converted Credits:
+                              </label>
+
+                              <div className="w-auto ml-5">
+                                <label className=" text-md font-medium">
+                                  VL: {leaveIndividualDetail?.leaveApplicationDetails?.convertedVl} / SL:{' '}
+                                  {leaveIndividualDetail?.leaveApplicationDetails?.convertedSl}
+                                </label>
+                              </div>
+                            </div>
+                          </>
+                        ) : null}
+
+                        {leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.TERMINAL ? (
+                          <div className="flex flex-col justify-start items-start w-full sm:w-1/2 px-0.5 pb-3  ">
+                            <label className="text-slate-500 text-md whitespace-nowrap pb-0.5 ">
+                              Converted Credits:
                             </label>
+
+                            <div className="w-auto ml-5">
+                              <label className=" text-md font-medium">
+                                VL: {leaveIndividualDetail?.leaveApplicationDetails?.vlBalance.afterTerminalLeave} / SL:{' '}
+                                {leaveIndividualDetail?.leaveApplicationDetails?.slBalance.afterTerminalLeave}
+                              </label>
+                            </div>
                           </div>
-                        </div>
+                        ) : null}
+
                         <div className="flex flex-col justify-start items-start w-full sm:w-1/2 px-0.5 pb-3  ">
                           <label className="text-slate-500 text-md whitespace-nowrap pb-0.5 ">Amount:</label>
 
                           <div className="w-auto ml-5">
                             <label className=" text-md font-medium">
-                              P{' '}
-                              {Number(leaveIndividualDetail?.leaveApplicationDetails?.monetizedAmount).toLocaleString()}
+                              {leaveIndividualDetail?.leaveApplicationDetails?.monetizedAmount}
                             </label>
                           </div>
                         </div>
@@ -784,7 +807,8 @@ export const LeaveCompletedModal = ({ modalState, setModalState, closeModalActio
                   </Button>
                 ) : null}
 
-                {leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName != LeaveName.MONETIZATION ? (
+                {leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName != LeaveName.MONETIZATION &&
+                leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName != LeaveName.TERMINAL ? (
                   <Button
                     variant={'warning'}
                     size={'md'}

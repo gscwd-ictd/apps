@@ -14,9 +14,18 @@ import { Card } from 'apps/employee-monitoring/src/components/cards/Card';
 import { BreadCrumbs } from 'apps/employee-monitoring/src/components/navigations/BreadCrumbs';
 import { createColumnHelper } from '@tanstack/react-table';
 import dayjs from 'dayjs';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { LabelInput } from 'apps/employee-monitoring/src/components/inputs/LabelInput';
+import * as yup from 'yup';
+import { useForm } from 'react-hook-form';
+import ConvertToYearMonth from 'apps/employee-monitoring/src/utils/functions/ConvertToYearMonth';
 
 // modals
 import ViewSystemLogModal from 'apps/employee-monitoring/src/components/modal/settings/system-logs/ViewSystemLogModal';
+
+type Filter = {
+  monthYear: string;
+};
 
 const Index = () => {
   // View modal function
@@ -29,8 +38,29 @@ const Index = () => {
 
   const [currentRowData, setCurrentRowData] = useState<SystemLog>({} as SystemLog);
 
+  const yupSchema = yup.object().shape({
+    monthYear: yup.date().max(new Date(), 'Must not be greater than current date').nullable(),
+  });
+
+  // React hook form
+  const { register, watch } = useForm<Filter>({
+    mode: 'onChange',
+    defaultValues: {
+      monthYear: ConvertToYearMonth(dayjs().toString()),
+    },
+    resolver: yupResolver(yupSchema),
+  });
+  const watchMonthYear = watch('monthYear');
+
   // fetch data for list of user
-  const { data: systemLogs, error: systemLogsError, isLoading: systemLogsLoading } = useSWR('/user-logs', fetcherEMS);
+  const {
+    data: systemLogs,
+    error: systemLogsError,
+    isLoading: systemLogsLoading,
+  } = useSWR(`/user-logs/year-month/${watchMonthYear}`, fetcherEMS, {
+    shouldRetryOnError: true,
+    revalidateOnFocus: false,
+  });
 
   // Zustand initialization
   const {
@@ -139,8 +169,13 @@ const Index = () => {
               {systemLogsLoading ? (
                 <LoadingSpinner size="lg" />
               ) : (
-                <div className="flex flex-row flex-wrap">
-                  <div className="flex justify-end order-2 w-1/2 table-actions-wrapper"></div>
+                <div className="flex flex-row flex-wrap justify-between">
+                  <form className="order-2">
+                    <div className="mb-6 flex ">
+                      <LabelInput id="monthYear" type="month" controller={{ ...register('monthYear') }} />
+                    </div>
+                  </form>
+
                   <DataTable model={table} showGlobalFilter={true} showColumnFilter={false} paginate={true} />
                 </div>
               )}

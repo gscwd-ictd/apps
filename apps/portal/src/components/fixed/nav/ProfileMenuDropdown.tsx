@@ -15,6 +15,7 @@ import {
   HiOutlineHome,
   HiOutlineLogout,
   HiOutlineNewspaper,
+  HiOutlineQuestionMarkCircle,
   HiPuzzle,
   HiUserGroup,
 } from 'react-icons/hi';
@@ -656,6 +657,21 @@ export const ProfileMenuDropdown = ({
                           )}
                         </Menu.Item>
                       ) : null}
+                      <Menu.Item>
+                        {({ active }) => (
+                          <a
+                            href={`${process.env.NEXT_PUBLIC_PORTAL_USER_MANUAL}`}
+                            target="_blank"
+                            rel="noreferrer"
+                            className={`${
+                              active ? 'bg-slate-100' : 'text-gray-900'
+                            } group flex w-full items-center gap-3 px-3 py-3 text-sm`}
+                          >
+                            <HiOutlineQuestionMarkCircle className="h-5 w-5 text-gray-600" />
+                            <span className="text-sm tracking-tight text-slate-500">User Manual</span>
+                          </a>
+                        )}
+                      </Menu.Item>
                     </div>
                   ) : null}
 
@@ -673,6 +689,7 @@ export const ProfileMenuDropdown = ({
                     )}
                   </Menu.Item>
                 </div>
+
                 <div>
                   <Menu.Item>
                     {({ active }) => (

@@ -125,7 +125,17 @@ export type EmployeeLeaveDetails = {
     monetizationType?: MonetizationType;
     convertedVl?: number;
     convertedSl?: number;
-    monetizedAmount?: string;
+    monetizedAmount?: string; //also used for terminal
+
+    //for terminal leave
+    slBalance?: {
+      beforeTerminalLeave?: number;
+      afterTerminalLeave?: number;
+    };
+    vlBalance?: {
+      beforeTerminalLeave?: number;
+      afterTerminalLeave?: number;
+    };
   };
 };
 
@@ -213,8 +223,16 @@ export type SupervisorLeaveDetails = {
   isLateFiling: boolean;
   referenceNo: string | null;
   monetizationType: MonetizationType;
-  convertedVl: number;
-  convertedSl: number;
+  convertedVl?: number; //monetization
+  convertedSl?: number; //monetization
+  slBalance?: {
+    afterTerminalLeave: number; //terminal
+    beforeTerminalLeave: number; //terminal
+  };
+  vlBalance?: {
+    afterTerminalLeave: number; //terminal
+    beforeTerminalLeave: number; //terminal
+  };
   monetizedAmount: string;
   employee: {
     employeeId: string;

@@ -6,26 +6,33 @@ import {
   PdcGeneralManagerApproval,
   PdcSecretariatApproval,
   Training,
+  TrainingDetails,
 } from '../../../../libs/utils/src/lib/types/training.type';
 
 export type PdcApprovalsState = {
   trainingList: Array<Training>;
-  individualTrainingDetails: Training;
+  individualTrainingDetails: Training; //for data table
+  trainingDetails: TrainingDetails; //for modal info - same UI as L&D
   response: {
     patchResponseApply: any;
     cancelResponse: any;
   };
   loading: {
     loadingTrainingList: boolean;
+    loadingTrainingDetails: boolean;
     loadingResponse: boolean;
   };
   error: {
     errorTrainingList: string;
+    errorTrainingDetails: string;
     errorResponse: string;
   };
 
   trainingModalIsOpen: boolean;
   setTrainingModalIsOpen: (trainingModalIsOpen: boolean) => void;
+
+  trainingDesignModalIsOpen: boolean;
+  setTrainingDesignModalIsOpen: (trainingDesignModalIsOpen: boolean) => void;
 
   confirmTrainingModalIsOpen: boolean;
   setConfirmTrainingModalIsOpen: (confirmTrainingModalIsOpen: boolean) => void;
@@ -37,9 +44,15 @@ export type PdcApprovalsState = {
   setCaptchaPdcModalIsOpen: (captchaPdcModalIsOpen: boolean) => void;
 
   setIndividualTrainingDetails: (individualTrainingDetails: Training) => void;
+
   getTrainingSelectionList: (loading: boolean) => void;
   getTrainingSelectionListSuccess: (loading: boolean, response) => void;
   getTrainingSelectionListFail: (loading: boolean, error: string) => void;
+
+  //get training details from L&D route
+  getTrainingDetails: (loading: boolean) => void;
+  getTrainingDetailsSuccess: (loading: boolean, response) => void;
+  getTrainingDetailsFail: (loading: boolean, error: string) => void;
 
   patchTrainingSelection: () => void;
   patchTrainingSelectionSuccess: (response) => void;
@@ -52,6 +65,7 @@ export const usePdcApprovalsStore = create<PdcApprovalsState>()(
   devtools((set) => ({
     trainingList: [],
     individualTrainingDetails: {} as Training,
+    trainingDetails: {} as TrainingDetails,
     response: {
       patchResponseApply: {},
       cancelResponse: {},
@@ -59,13 +73,16 @@ export const usePdcApprovalsStore = create<PdcApprovalsState>()(
 
     loading: {
       loadingTrainingList: false,
+      loadingTrainingDetails: false,
       loadingResponse: false,
     },
     error: {
       errorTrainingList: '',
+      errorTrainingDetails: '',
       errorResponse: '',
     },
 
+    trainingDesignModalIsOpen: false,
     trainingModalIsOpen: false,
     confirmTrainingModalIsOpen: false,
     otpPdcModalIsOpen: false,
@@ -73,6 +90,10 @@ export const usePdcApprovalsStore = create<PdcApprovalsState>()(
 
     setIndividualTrainingDetails: (individualTrainingDetails: Training) => {
       set((state) => ({ ...state, individualTrainingDetails }));
+    },
+
+    setTrainingDesignModalIsOpen: (trainingDesignModalIsOpen: boolean) => {
+      set((state) => ({ ...state, trainingDesignModalIsOpen }));
     },
 
     setTrainingModalIsOpen: (trainingModalIsOpen: boolean) => {
@@ -125,6 +146,44 @@ export const usePdcApprovalsStore = create<PdcApprovalsState>()(
         error: {
           ...state.error,
           errorTrainingList: error,
+        },
+      }));
+    },
+
+    getTrainingDetails: (loading: boolean) => {
+      set((state) => ({
+        ...state,
+        trainingDetails: {} as TrainingDetails,
+        loading: {
+          ...state.loading,
+          loadingTrainingDetails: loading,
+        },
+        error: {
+          ...state.error,
+          errorTrainingDetails: '',
+        },
+      }));
+    },
+    getTrainingDetailsSuccess: (loading: boolean, response) => {
+      set((state) => ({
+        ...state,
+        trainingDetails: response,
+        loading: {
+          ...state.loading,
+          loadingTrainingDetails: loading,
+        },
+      }));
+    },
+    getTrainingDetailsFail: (loading: boolean, error: string) => {
+      set((state) => ({
+        ...state,
+        loading: {
+          ...state.loading,
+          loadingTrainingDetails: loading,
+        },
+        error: {
+          ...state.error,
+          errorTrainingDetails: error,
         },
       }));
     },

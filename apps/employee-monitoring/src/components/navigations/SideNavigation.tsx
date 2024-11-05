@@ -90,10 +90,7 @@ export const SideNavigation = () => {
           </Can>
 
           {/**Monitoring Header */}
-          <Can
-            I="access"
-            this={'Scheduling_sheets' || 'Leave_applications' || 'Overtime' || 'Pass_slips' || 'Travel_orders'}
-          >
+          <Can I="access" this={['Scheduling_sheets', 'Leave_applications', 'Overtime', 'Pass_slips', 'Travel_orders']}>
             <Sidebar.Header className={`py-2`}>
               <span className="pl-4 text-xs font-medium text-gray-500 uppercase">
                 {isCollapsed ? <hr className="border border-slate-600" /> : 'Monitoring'}
@@ -274,7 +271,7 @@ export const SideNavigation = () => {
           </Can>
 
           {/**Maintenance Header */}
-          <Can I="access" this={'Schedules' || 'Leave_benefits' || 'Events'}>
+          <Can I="access" this={['Schedules', 'Leave_benefits', 'Events']}>
             <Sidebar.Header className={`py-2`}>
               <span className="pl-4 text-xs font-medium text-gray-500 uppercase">
                 {isCollapsed ? <hr className="border border-slate-600" /> : 'Maintenance'}
@@ -454,7 +451,7 @@ export const SideNavigation = () => {
           {/**Settings Header */}
           <Can
             I="access"
-            this={'Custom_groups' || 'Modules' || 'Users' || 'Officer_of_the_day' || 'System_logs' || 'Announcements'}
+            this={['Custom_groups', 'Modules', 'Users', 'Officer_of_the_day', 'System_logs', 'Announcements']}
           >
             <Sidebar.Header className={`py-2`}>
               <span className="pl-4 text-xs font-medium text-gray-500 uppercase">

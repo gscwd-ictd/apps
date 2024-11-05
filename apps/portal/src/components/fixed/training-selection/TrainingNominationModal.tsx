@@ -107,13 +107,18 @@ export const TrainingNominationModal = ({
 
   useEffect(() => {
     if (!initialLoad && trainingNominationModalIsOpen) {
-      // console.log(selectedEmployees, 'selected');
-      // console.log(selectedAuxiliaryEmployees, 'auxiliary');
-      // console.log(combinedNominatedEmployees, 'combined');
-
-      setEmployeePool(employeeList.filter((item) => !combinedNominatedEmployees.includes(item)));
-      // selectedEmployees.some((e) => e.value == employee.employeeId)
-      // setEmployeePool(employeeList.filter(el=> el !== combinedNominatedEmployees));
+      //recreate employee pool - removing combined selected and aux employees and then sorting them
+      setEmployeePool(
+        employeeList
+          .filter(function (objFromA) {
+            return !combinedNominatedEmployees.find(function (objFromB) {
+              return objFromA.value === objFromB.value;
+            });
+          })
+          .sort(function (a, b) {
+            return a.label.localeCompare(b.label);
+          })
+      );
     }
   }, [combinedNominatedEmployees]);
 
@@ -125,28 +130,16 @@ export const TrainingNominationModal = ({
 
   const addEmployeeToList = (employee: SelectOption) => {
     const employeeArray = employee;
-    // console.log(selectedEmployees, 'vs', employeeArray);
-    // console.log(selectedEmployees.some((e) => e.value === employeeArray[0].value));
     if (selectedEmployees.some((e) => e.value === employeeArray.value)) {
-      // console.log('tanggal sa selected');
       setSelectedEmployees(selectedEmployees.filter((e) => e.value != employeeArray.value));
     } else if (selectedAuxiliaryEmployees.some((e) => e.value === employeeArray.value)) {
-      // console.log('tanggal sa aux');
       setSelectedAuxiliaryEmployees(selectedAuxiliaryEmployees.filter((e) => e.value != employeeArray.value));
-      // console.log('added');
+
       setSelectedEmployees([employee, ...selectedEmployees]);
     } else {
-      // console.log('added');
       setSelectedEmployees([employee, ...selectedEmployees]);
     }
-
-    // const uniqueNames = Array.from(new Set([...employee, ...nominatedEmployees, ...auxiliaryEmployees]));
-    // handleInitialEmployeePool(uniqueNames);
   };
-
-  // useEffect(() => {
-  //   // console.log(employeePool, 'pool');
-  // }, [employeePool]);
 
   const { windowWidth } = UseWindowDimensions();
 
@@ -168,12 +161,12 @@ export const TrainingNominationModal = ({
         </Modal.Header>
         <Modal.Body>
           {selectedEmployees.length > individualTrainingDetails.numberOfSlots ? (
-            <AlertNotification alertType="warning" notifMessage="Selected Participants exceeded." dismissible={false} />
+            <AlertNotification alertType="error" notifMessage="Selected Participants exceeded." dismissible={false} />
           ) : null}
 
           {selectedAuxiliaryEmployees.length > 2 ? (
             <AlertNotification
-              alertType="warning"
+              alertType="error"
               notifMessage="Selected Auxiliary Participants exceeded."
               dismissible={false}
             />
@@ -181,7 +174,7 @@ export const TrainingNominationModal = ({
 
           {isDuplicatedNominee ? (
             <AlertNotification
-              alertType="warning"
+              alertType="error"
               notifMessage="There are duplicate employee nominations."
               dismissible={false}
             />
@@ -210,32 +203,23 @@ export const TrainingNominationModal = ({
                       <div
                         key={index}
                         className="flex flex-row gap-1 items-center w-full md:w-1/2 "
-                        // onClick={() =>
-                        //   addEmployeeToList({
-                        //     value: employee.employeeId,
-                        //     label: employee.name,
-                        //   })
-                        // }
+                        onClick={() =>
+                          addEmployeeToList({
+                            value: employee.employeeId,
+                            label: employee.name,
+                          })
+                        }
                       >
                         {selectedEmployees.some((e) => e.value == employee.employeeId) ? (
                           <HiCheck className="text-blue-500" />
                         ) : null}
 
-                        {/* <label
+                        <label
                           className={`cursor-pointer select-none
                              hover:text-blue-500
                               hover:bg-slate-300 w-auto px-4 md:px-2 ${
                                 selectedEmployees.some((e) => e.value == employee.employeeId) ? 'text-blue-500' : ''
                               }`}
-                          key={index}
-                        >
-                          {employee.name}
-                        </label> */}
-
-                        <label
-                          className={`w-auto px-4 md:px-2 ${
-                            selectedEmployees.some((e) => e.value == employee.employeeId) ? 'text-blue-500' : ''
-                          }`}
                           key={index}
                         >
                           {employee.name}

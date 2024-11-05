@@ -188,6 +188,7 @@ export const ApprovalsPendingLeaveModal = ({
   }, [swrLeaveLedger, swrLeaveLedgerError]);
 
   const { windowWidth } = UseWindowDimensions();
+
   return (
     <>
       <Modal size={windowWidth > 1024 ? 'sm' : 'full'} open={modalState} setOpen={setModalState}>
@@ -302,8 +303,9 @@ export const ApprovalsPendingLeaveModal = ({
                       </div>
                     </div>
 
-                    {leaveIndividualDetail?.leaveName !== LeaveName.MONETIZATION ? (
-                      //IF NOT MONETIZATION
+                    {leaveIndividualDetail?.leaveName !== LeaveName.MONETIZATION &&
+                    leaveIndividualDetail?.leaveName !== LeaveName.TERMINAL ? (
+                      //IF NOT MONETIZATION AND NOT TERMINAL
                       <>
                         <div className="flex flex-col justify-start items-start w-full sm:w-1/2 px-0.5 pb-3  ">
                           <label className="text-slate-500 text-md whitespace-nowrap pb-0.5">Leave Dates:</label>
@@ -445,35 +447,54 @@ export const ApprovalsPendingLeaveModal = ({
                         ) : null}
                       </>
                     ) : (
-                      //IF MONETIZATION
+                      //IF MONETIZATION OR TERMINAL
                       <>
-                        <div className="flex flex-col justify-start items-start w-full sm:w-1/2 px-0.5 pb-3  ">
-                          <label className="text-slate-500 text-md whitespace-nowrap pb-0.5 ">Type:</label>
+                        {leaveIndividualDetail?.leaveName === LeaveName.MONETIZATION ? (
+                          <>
+                            <div className="flex flex-col justify-start items-start w-full sm:w-1/2 px-0.5 pb-3  ">
+                              <label className="text-slate-500 text-md whitespace-nowrap pb-0.5 ">Type:</label>
 
-                          <div className="w-auto ml-5">
-                            <label className=" text-md font-medium">
-                              {leaveIndividualDetail?.monetizationType == MonetizationType.MAX20
-                                ? 'Max 20 Credits'
-                                : 'Max 50% of Credits'}
-                            </label>
-                          </div>
-                        </div>
-                        <div className="flex flex-col justify-start items-start w-full sm:w-1/2 px-0.5 pb-3  ">
-                          <label className="text-slate-500 text-md whitespace-nowrap pb-0.5 ">Converted Credits:</label>
+                              <div className="w-auto ml-5">
+                                <label className=" text-md font-medium">
+                                  {leaveIndividualDetail?.monetizationType == MonetizationType.MAX20
+                                    ? 'Max 20 Credits'
+                                    : 'Max 50% of Credits'}
+                                </label>
+                              </div>
+                            </div>
+                            <div className="flex flex-col justify-start items-start w-full sm:w-1/2 px-0.5 pb-3  ">
+                              <label className="text-slate-500 text-md whitespace-nowrap pb-0.5 ">
+                                Converted Credits:
+                              </label>
 
-                          <div className="w-auto ml-5">
-                            <label className=" text-md font-medium">
-                              VL: {leaveIndividualDetail?.convertedVl} / SL: {leaveIndividualDetail?.convertedSl}
+                              <div className="w-auto ml-5">
+                                <label className=" text-md font-medium">
+                                  VL: {leaveIndividualDetail?.convertedVl} / SL: {leaveIndividualDetail?.convertedSl}
+                                </label>
+                              </div>
+                            </div>
+                          </>
+                        ) : null}
+                        {leaveIndividualDetail?.leaveName === LeaveName.TERMINAL ? (
+                          <div className="flex flex-col justify-start items-start w-full sm:w-1/2 px-0.5 pb-3  ">
+                            <label className="text-slate-500 text-md whitespace-nowrap pb-0.5 ">
+                              Converted Credits:
                             </label>
+
+                            <div className="w-auto ml-5">
+                              <label className=" text-md font-medium">
+                                VL: {leaveIndividualDetail?.vlBalance.afterTerminalLeave} / SL:{' '}
+                                {leaveIndividualDetail?.slBalance.afterTerminalLeave}
+                              </label>
+                            </div>
                           </div>
-                        </div>
+                        ) : null}
+
                         <div className="flex flex-col justify-start items-start w-full sm:w-1/2 px-0.5 pb-3  ">
                           <label className="text-slate-500 text-md whitespace-nowrap pb-0.5 ">Amount:</label>
 
                           <div className="w-auto ml-5">
-                            <label className=" text-md font-medium">
-                              P {Number(leaveIndividualDetail?.monetizedAmount).toLocaleString()}
-                            </label>
+                            <label className=" text-md font-medium">{leaveIndividualDetail?.monetizedAmount}</label>
                           </div>
                         </div>
                       </>
