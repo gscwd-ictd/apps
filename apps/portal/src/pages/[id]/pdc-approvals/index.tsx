@@ -94,7 +94,6 @@ export default function PdcApprovals({ userDetails }: InferGetServerSidePropsTyp
   // Upon success/fail of swr request, zustand state will be updated
   useEffect(() => {
     if (!isEmpty(swrTrainingList)) {
-      console.log(swrTrainingList);
       getTrainingSelectionListSuccess(swrTrainingListIsLoading, swrTrainingList);
     }
 
