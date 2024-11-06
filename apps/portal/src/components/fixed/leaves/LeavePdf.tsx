@@ -329,7 +329,7 @@ export const LeavePdf = ({ employeeDetails, leaveDetails, selectedLeaveLedger }:
                     width: '140px',
                   }}
                 >
-                  {leaveDetails.employeeDetails.assignment.salary}
+                  P{leaveDetails.employeeDetails.assignment.salary.substring(1)}
                 </Text>
                 <Text style={{ marginRight: 1 }}>___________________</Text>
               </View>
@@ -706,9 +706,24 @@ export const LeavePdf = ({ employeeDetails, leaveDetails, selectedLeaveLedger }:
                         marginTop: 8,
                         lineHeight: 2.1,
                         textIndent: 5,
+                        width: 250,
                       }}
                     >
-                      {leaveDetails.leaveApplicationBasicInfo.leaveDates.length} DAY/S
+                      {leaveDetails.leaveApplicationBasicInfo.leaveName == LeaveName.MONETIZATION
+                        ? `P${leaveDetails.employeeDetails.assignment.salary.substring(1)} x ${
+                            Number(leaveDetails.leaveApplicationDetails.convertedVl) +
+                            Number(leaveDetails.leaveApplicationDetails.convertedSl)
+                          } day(s) x ${
+                            process.env.NEXT_PUBLIC_MONETIZATION_CONSTANT
+                          } = P${leaveDetails.leaveApplicationDetails.monetizedAmount.substring(1)} `
+                        : leaveDetails.leaveApplicationBasicInfo.leaveName == LeaveName.TERMINAL
+                        ? `P${leaveDetails.employeeDetails.assignment.salary.substring(1)} x ${
+                            Number(leaveDetails.leaveApplicationDetails.vlBalance.afterTerminalLeave) +
+                            Number(leaveDetails.leaveApplicationDetails.slBalance.afterTerminalLeave)
+                          } day(s) x ${
+                            process.env.NEXT_PUBLIC_MONETIZATION_CONSTANT
+                          } = P${leaveDetails.leaveApplicationDetails.monetizedAmount.substring(1)} `
+                        : leaveDetails.leaveApplicationBasicInfo.leaveDates.length}
                     </Text>
                     <Text style={{ padding: 5 }}>_____________________________________________________</Text>
                   </View>
@@ -735,7 +750,9 @@ export const LeavePdf = ({ employeeDetails, leaveDetails, selectedLeaveLedger }:
                         textIndent: 5,
                       }}
                     >
-                      {leaveDetails.leaveApplicationBasicInfo.leaveDates
+                      {leaveDetails.leaveApplicationBasicInfo.leaveName != LeaveName.MONETIZATION &&
+                      leaveDetails.leaveApplicationBasicInfo.leaveName != LeaveName.TERMINAL &&
+                      leaveDetails.leaveApplicationBasicInfo.leaveDates
                         ? leaveDetails.leaveApplicationBasicInfo.leaveDates.length > 5
                           ? `From ${leaveDetails.leaveApplicationBasicInfo.leaveDates[0]} To ${
                               leaveDetails.leaveApplicationBasicInfo.leaveDates[
@@ -884,6 +901,8 @@ export const LeavePdf = ({ employeeDetails, leaveDetails, selectedLeaveLedger }:
                                   .toFixed(3)
                               : leaveDetails.leaveApplicationBasicInfo.leaveName === LeaveName.TERMINAL
                               ? leaveDetails.leaveApplicationDetails.vlBalance.afterTerminalLeave
+                              : leaveDetails.leaveApplicationBasicInfo.leaveName === LeaveName.MONETIZATION
+                              ? ''
                               : '0.000'}
                           </Text>
                         </View>
@@ -896,6 +915,8 @@ export const LeavePdf = ({ employeeDetails, leaveDetails, selectedLeaveLedger }:
                                 ).toFixed(3)
                               : leaveDetails.leaveApplicationBasicInfo.leaveName === LeaveName.TERMINAL
                               ? leaveDetails.leaveApplicationDetails.slBalance.afterTerminalLeave
+                              : leaveDetails.leaveApplicationBasicInfo.leaveName === LeaveName.MONETIZATION
+                              ? ''
                               : '0.000'}
                           </Text>
                         </View>
@@ -925,6 +946,8 @@ export const LeavePdf = ({ employeeDetails, leaveDetails, selectedLeaveLedger }:
                               ? leaveDetails.leaveApplicationDetails.convertedSl
                               : leaveDetails.leaveApplicationBasicInfo.leaveName === LeaveName.TERMINAL
                               ? leaveDetails.leaveApplicationDetails.slBalance.afterTerminalLeave
+                              : leaveDetails.leaveApplicationBasicInfo.leaveName === LeaveName.MONETIZATION
+                              ? ''
                               : '0.000'}
                           </Text>
                         </View>
@@ -944,6 +967,8 @@ export const LeavePdf = ({ employeeDetails, leaveDetails, selectedLeaveLedger }:
                                 ).toFixed(3)
                               : leaveDetails.leaveApplicationBasicInfo.leaveName === LeaveName.TERMINAL
                               ? '0.000'
+                              : leaveDetails.leaveApplicationBasicInfo.leaveName === LeaveName.MONETIZATION
+                              ? ''
                               : parseFloat(`${selectedLeaveLedger[0]?.vacationLeaveBalance}`)}
                           </Text>
                         </View>
@@ -953,6 +978,8 @@ export const LeavePdf = ({ employeeDetails, leaveDetails, selectedLeaveLedger }:
                               ? parseFloat(`${selectedLeaveLedger[0]?.sickLeaveBalance}`).toFixed(3)
                               : leaveDetails.leaveApplicationBasicInfo.leaveName === LeaveName.TERMINAL
                               ? '0.000'
+                              : leaveDetails.leaveApplicationBasicInfo.leaveName === LeaveName.MONETIZATION
+                              ? ''
                               : parseFloat(`${selectedLeaveLedger[0]?.sickLeaveBalance}`).toFixed(3)}
                           </Text>
                         </View>
@@ -1109,7 +1136,9 @@ export const LeavePdf = ({ employeeDetails, leaveDetails, selectedLeaveLedger }:
                         marginLeft: 13,
                       }}
                     >
-                      {leaveDetails.leaveApplicationBasicInfo.leaveName != LeaveName.LEAVE_WITHOUT_PAY
+                      {leaveDetails.leaveApplicationBasicInfo.leaveName != LeaveName.LEAVE_WITHOUT_PAY &&
+                      leaveDetails.leaveApplicationBasicInfo.leaveName != LeaveName.MONETIZATION &&
+                      leaveDetails.leaveApplicationBasicInfo.leaveName != LeaveName.TERMINAL
                         ? leaveDetails?.leaveApplicationBasicInfo?.leaveDates?.length
                         : 0}
                     </Text>

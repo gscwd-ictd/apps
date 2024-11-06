@@ -5,7 +5,7 @@ import Image from 'next/image';
 import GscwdLogo from 'apps/employee-monitoring/public/gscwd-logo.png';
 import iso_logo from 'apps/employee-monitoring/public/socotec-logo.jpg';
 import { StyleSheet } from '@react-pdf/renderer';
-import { Modal, ToastNotification } from '@gscwd-apps/oneui';
+import { Button, Modal, ToastNotification } from '@gscwd-apps/oneui';
 import { Tiptap } from '../tiptap/view/Tiptap';
 import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
 import { HiX } from 'react-icons/hi';
@@ -346,6 +346,15 @@ export const TrainingDesignModal: FunctionComponent<ModalProps> = ({
             </div>
           </div>
         </Modal.Body>
+        <Modal.Footer>
+          <div className="flex justify-end gap-2 px-4">
+            <div className="max-w-auto">
+              <Button variant={'default'} size={'md'} loading={false} type="submit" onClick={closeModalAction}>
+                Close
+              </Button>
+            </div>
+          </div>
+        </Modal.Footer>
       </Modal>
     </>
   );
