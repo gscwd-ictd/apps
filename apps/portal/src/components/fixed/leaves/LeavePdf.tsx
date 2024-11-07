@@ -894,16 +894,15 @@ export const LeavePdf = ({ employeeDetails, leaveDetails, selectedLeaveLedger }:
                               ? (
                                   parseFloat(`${selectedLeaveLedger[0]?.vacationLeaveBalance}`) +
                                   parseFloat(`${selectedLeaveLedger[0]?.vacationLeave}`) * -1
-                                )
-                                  // +
-                                  // (parseFloat(`${selectedLeaveLedger[0]?.forcedLeaveBalance}`) +
-                                  //   parseFloat(`${selectedLeaveLedger[0]?.forcedLeave}`) * -1)
-                                  .toFixed(3)
+                                ).toFixed(3)
                               : leaveDetails.leaveApplicationBasicInfo.leaveName === LeaveName.TERMINAL
                               ? leaveDetails.leaveApplicationDetails.vlBalance.afterTerminalLeave
                               : leaveDetails.leaveApplicationBasicInfo.leaveName === LeaveName.MONETIZATION
                               ? ''
-                              : '0.000'}
+                              : (
+                                  parseFloat(`${selectedLeaveLedger[0]?.vacationLeaveBalance}`) +
+                                  parseFloat(`${selectedLeaveLedger[0]?.vacationLeave}`) * -1
+                                ).toFixed(3)}
                           </Text>
                         </View>
                         <View style={styles.containerTableRow2}>
@@ -917,7 +916,10 @@ export const LeavePdf = ({ employeeDetails, leaveDetails, selectedLeaveLedger }:
                               ? leaveDetails.leaveApplicationDetails.slBalance.afterTerminalLeave
                               : leaveDetails.leaveApplicationBasicInfo.leaveName === LeaveName.MONETIZATION
                               ? ''
-                              : '0.000'}
+                              : (
+                                  parseFloat(`${selectedLeaveLedger[0]?.sickLeaveBalance}`) +
+                                  parseFloat(`${selectedLeaveLedger[0]?.sickLeave}`) * -1
+                                ).toFixed(3)}
                           </Text>
                         </View>
                       </View>
