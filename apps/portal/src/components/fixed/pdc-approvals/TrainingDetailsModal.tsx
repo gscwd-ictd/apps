@@ -307,7 +307,10 @@ export const TrainingDetailsModal = ({ modalState, setModalState, closeModalActi
                     />
                   </svg>
                   {trainingDetails?.source?.name === 'Internal' ? (
-                    <button className="border-none bg-transparent cursor-pointer" onClick={openTrainingDesignModal}>
+                    <button
+                      className="border-none bg-transparent cursor-pointer text-left"
+                      onClick={openTrainingDesignModal}
+                    >
                       <span className="underline">{trainingDetails?.courseTitle}</span>
                     </button>
                   ) : (
