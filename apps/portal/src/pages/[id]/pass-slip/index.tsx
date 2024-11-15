@@ -30,6 +30,7 @@ import { useRouter } from 'next/router';
 import { useTimeLogStore } from 'apps/portal/src/store/timelogs.store';
 import { format } from 'date-fns';
 import { UserRole } from 'apps/portal/src/utils/enums/userRoles';
+import { useLeaveLedgerStore } from 'apps/portal/src/store/leave-ledger.store';
 
 export default function PassSlip({ employeeDetails }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const {
@@ -74,16 +75,21 @@ export default function PassSlip({ employeeDetails }: InferGetServerSidePropsTyp
     emptyResponseAndError: state.emptyResponseAndError,
   }));
 
-  const { dtr, schedule, loadingTimeLogs, errorTimeLogs, getTimeLogs, getTimeLogsSuccess, getTimeLogsFail } =
-    useTimeLogStore((state) => ({
-      dtr: state.dtr,
-      schedule: state.schedule,
-      loadingTimeLogs: state.loading.loadingTimeLogs,
-      errorTimeLogs: state.error.errorTimeLogs,
-      getTimeLogs: state.getTimeLogs,
-      getTimeLogsSuccess: state.getTimeLogsSuccess,
-      getTimeLogsFail: state.getTimeLogsFail,
-    }));
+  const { errorLeaveLedger } = useLeaveLedgerStore((state) => ({
+    errorLeaveLedger: state.error.errorLeaveLedger,
+  }));
+
+  // FACE SCAN STORE - WAS REQUIRED TO BE ABLE TO APPLY PASS SLIP - REMOVED
+  // const { dtr, schedule, loadingTimeLogs, errorTimeLogs, getTimeLogs, getTimeLogsSuccess, getTimeLogsFail } =
+  //   useTimeLogStore((state) => ({
+  //     dtr: state.dtr,
+  //     schedule: state.schedule,
+  //     loadingTimeLogs: state.loading.loadingTimeLogs,
+  //     errorTimeLogs: state.error.errorTimeLogs,
+  //     getTimeLogs: state.getTimeLogs,
+  //     getTimeLogsSuccess: state.getTimeLogsSuccess,
+  //     getTimeLogsFail: state.getTimeLogsFail,
+  //   }));
 
   const router = useRouter();
 
@@ -126,7 +132,11 @@ export default function PassSlip({ employeeDetails }: InferGetServerSidePropsTyp
     isLoading: swrIsLoading,
     error: swrError,
     mutate: mutatePassSlips,
-  } = useSWR(employeeDetails.employmentDetails.userId ? passSlipUrl : null, fetchWithToken);
+  } = useSWR(employeeDetails.employmentDetails.userId ? passSlipUrl : null, fetchWithToken, {
+    shouldRetryOnError: true,
+    revalidateOnFocus: true,
+    errorRetryInterval: 3000,
+  });
 
   // Initial zustand state update
   useEffect(() => {
@@ -155,35 +165,40 @@ export default function PassSlip({ employeeDetails }: InferGetServerSidePropsTyp
     }
   }, [responsePatch, responsePost, responseCancel]);
 
-  const faceScanUrl = `${process.env.NEXT_PUBLIC_EMPLOYEE_MONITORING_URL}/v1/daily-time-record/employees/${
-    employeeDetails.employmentDetails.companyId
-  }/${format(new Date(), 'yyyy-MM-dd')}`;
-  // use useSWR, provide the URL and fetchWithSession function as a parameter
+  //USED FOR CHECKING FACE SCAN AS IT WAS REQUIRED BEFORE TO HAVE FACE SCAN BEFORE EMPLOYEE CAN APPLY PASS SLIP - REMOVED
+  // const faceScanUrl = `${process.env.NEXT_PUBLIC_EMPLOYEE_MONITORING_URL}/asdas/dsadsa/v1/daily-time-record/employees/${
+  //   employeeDetails.employmentDetails.companyId
+  // }/${format(new Date(), 'yyyy-MM-dd')}`;
+  // // use useSWR, provide the URL and fetchWithSession function as a parameter
 
-  const {
-    data: swrFaceScan,
-    isLoading: swrFaceScanIsLoading,
-    error: swrFaceScanError,
-    mutate: mutateFaceScanUrl,
-  } = useSWR(faceScanUrl, fetchWithToken);
+  // const {
+  //   data: swrFaceScan,
+  //   isLoading: swrFaceScanIsLoading,
+  //   error: swrFaceScanError,
+  //   mutate: mutateFaceScanUrl,
+  // } = useSWR(faceScanUrl, fetchWithToken, {
+  //   shouldRetryOnError: true,
+  //   revalidateOnFocus: true,
+  //   errorRetryInterval: 3000,
+  // });
 
-  // Initial zustand state update
-  useEffect(() => {
-    if (swrFaceScanIsLoading) {
-      getTimeLogs(swrFaceScanIsLoading);
-    }
-  }, [swrFaceScanIsLoading]);
+  // // Initial zustand state update
+  // useEffect(() => {
+  //   if (swrFaceScanIsLoading) {
+  //     getTimeLogs(swrFaceScanIsLoading);
+  //   }
+  // }, [swrFaceScanIsLoading]);
 
-  // Upon success/fail of swr request, zustand state will be updated
-  useEffect(() => {
-    if (!isEmpty(swrFaceScan)) {
-      getTimeLogsSuccess(swrFaceScanIsLoading, swrFaceScan);
-    }
+  // // Upon success/fail of swr request, zustand state will be updated
+  // useEffect(() => {
+  //   if (!isEmpty(swrFaceScan)) {
+  //     getTimeLogsSuccess(swrFaceScanIsLoading, swrFaceScan);
+  //   }
 
-    if (!isEmpty(swrFaceScanError)) {
-      getTimeLogsFail(swrFaceScanIsLoading, swrFaceScanError.message);
-    }
-  }, [swrFaceScan, swrFaceScanError]);
+  //   if (!isEmpty(swrFaceScanError)) {
+  //     getTimeLogsFail(swrFaceScanIsLoading, swrFaceScanError.message);
+  //   }
+  // }, [swrFaceScan, swrFaceScanError]);
 
   const [navDetails, setNavDetails] = useState<NavButtonDetails>();
 
@@ -199,9 +214,9 @@ export default function PassSlip({ employeeDetails }: InferGetServerSidePropsTyp
     <>
       <>
         {/* Failed to get face scan today */}
-        {!isEmpty(swrFaceScanError) ? (
+        {/* {!isEmpty(swrFaceScanError) ? (
           <ToastNotification toastType="error" notifMessage={`Face Scans: ${swrFaceScanError.message}.`} />
-        ) : null}
+        ) : null} */}
 
         {/* Pass Slip List Load Failed Error */}
         {!isEmpty(errorPassSlips) ? (
@@ -231,6 +246,14 @@ export default function PassSlip({ employeeDetails }: InferGetServerSidePropsTyp
         {/* Cancel Pass Slip Success */}
         {!isEmpty(errorSupervisors) ? (
           <ToastNotification toastType="error" notifMessage="Failed to load Supervisor List." />
+        ) : null}
+
+        {/* Leave Ledger Modal Error */}
+        {!isEmpty(errorLeaveLedger) ? (
+          <ToastNotification
+            toastType="error"
+            notifMessage={`${errorLeaveLedger}: Failed to load Leave Credit Balance.`}
+          />
         ) : null}
       </>
 

@@ -87,8 +87,9 @@ export default function Calendar({
     isLoading: swrIsLoading,
     error: swrError,
   } = useSWR(unavailableDatesUrl, fetchWithToken, {
-    shouldRetryOnError: false,
-    revalidateOnFocus: false,
+    shouldRetryOnError: true,
+    revalidateOnFocus: true,
+    refreshInterval: 3000,
   });
   const [holidayCount, setHolidayCount] = useState<number>(0);
 
@@ -194,7 +195,7 @@ export default function Calendar({
       } else {
         //adds date to array
         //if selected date is not found in unavailable dates array
-        if (!swrUnavailableDates.some((item) => item.date === specifiedDate)) {
+        if (!swrUnavailableDates?.some((item) => item.date === specifiedDate)) {
           //for all leaves with credits with future dates from today and has future approved/pending leaves - allow future dates till infinity
           if (
             (leaveName === LeaveName.VACATION ||

@@ -231,6 +231,10 @@ export const useLeaveStore = create<LeavesState>()(
           ...state.loading,
           loadingLeaves: loading,
         },
+        error: {
+          ...state.error,
+          errorLeaves: '',
+        },
       }));
     },
     getLeaveListFail: (loading: boolean, error: string) => {
@@ -362,6 +366,10 @@ export const useLeaveStore = create<LeavesState>()(
           ...state.loading,
           loadingLeaveTypes: loading,
         },
+        error: {
+          ...state.error,
+          errorLeaveTypes: '',
+        },
       }));
     },
     getLeaveTypesFail: (loading: boolean, error: string) => {
@@ -406,6 +414,10 @@ export const useLeaveStore = create<LeavesState>()(
         loading: {
           ...state.loading,
           loadingUnavailableDates: loading,
+        },
+        error: {
+          ...state.error,
+          errorUnavailableDates: '',
         },
       }));
     },
