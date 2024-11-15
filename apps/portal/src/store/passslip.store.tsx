@@ -173,6 +173,10 @@ export const usePassSlipStore = create<PassSlipState>()(
           ...state.loading,
           loadingSupervisors: loading,
         },
+        error: {
+          ...state.error,
+          errorSupervisors: '',
+        },
       }));
     },
     getSupervisorsFail: (loading: boolean, error: string) => {
@@ -212,6 +216,10 @@ export const usePassSlipStore = create<PassSlipState>()(
         loading: {
           ...state.loading,
           loadingPassSlipCount: loading,
+        },
+        error: {
+          ...state.error,
+          errorPassSlipCount: '',
         },
       }));
     },
@@ -261,6 +269,10 @@ export const usePassSlipStore = create<PassSlipState>()(
         loading: {
           ...state.loading,
           loadingPassSlips: loading,
+        },
+        error: {
+          ...state.error,
+          errorPassSlips: '',
         },
       }));
     },
@@ -401,6 +413,10 @@ export const usePassSlipStore = create<PassSlipState>()(
           ...state.loading,
           loadingResponse: false,
         },
+        error: {
+          ...state.error,
+          errorResponse: '',
+        },
       }));
     },
     cancelPassSlipFail: (error: string) => {
@@ -430,6 +446,8 @@ export const usePassSlipStore = create<PassSlipState>()(
           ...state.error,
           errorResponse: '',
           errorPassSlips: '',
+          errorSupervisors: '',
+          errorPassSlipCount: '',
         },
       }));
     },

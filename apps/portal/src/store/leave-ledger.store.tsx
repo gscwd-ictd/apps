@@ -81,7 +81,7 @@ export const useLeaveLedgerStore = create<LeaveLedgerState>()(
       },
     },
     error: {
-      errorLeaveLedger: '',
+      errorLeaveLedger: '', //error for fetching leave ledger
       error: { errorEntry: '', errorLedger: '' },
     },
 
@@ -133,6 +133,10 @@ export const useLeaveLedgerStore = create<LeaveLedgerState>()(
         loading: {
           ...state.loading,
           loadingLeaveLedger: loading,
+        },
+        error: {
+          ...state.error,
+          errorLeaveLedger: '',
         },
       }));
     },
