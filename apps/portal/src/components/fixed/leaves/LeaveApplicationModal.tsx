@@ -1422,7 +1422,7 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
                 watch('typeOfLeaveDetails.leaveName') != LeaveName.MONETIZATION &&
                 watch('typeOfLeaveDetails.leaveName') != LeaveName.TERMINAL ? (
                   <>
-                    <div className="flex flex-row justify-between">
+                    <div className="flex flex-row justify-between items-center">
                       <label className="text-slate-500 text-md font-medium">
                         Select Leave Dates:<span className="text-red-600">*</span>
                       </label>
@@ -1432,17 +1432,13 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
                       watch('typeOfLeaveDetails.leaveName') === LeaveName.SPECIAL_PRIVILEGE ||
                       watch('typeOfLeaveDetails.leaveName') === LeaveName.SOLO_PARENT ||
                       watch('typeOfLeaveDetails.leaveName') === LeaveName.SICK ? (
-                        <div className="flex gap-2 items-center">
-                          <label className="text-slate-500 text-md font-medium">Late Filing:</label>
+                        <div className="flex gap-2 items-center bg-red-100 p-2 rounded">
+                          <label className="text-red-500 text-md font-medium">Enable Late Filing:</label>
                           <Checkbox
                             id="isLateFiling"
                             checked={lateFiling}
                             label="Late Filing"
-                            className={
-                              watch('isLateFiling') === true
-                                ? 'cursor-not-allowed italic'
-                                : 'hover:text-indigo-800 italic'
-                            }
+                            className={'w-5 h-5 border-red-500'}
                             onChange={() => handleTypeOfFiling(!lateFiling)}
                           />
                         </div>

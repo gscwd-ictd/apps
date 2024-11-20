@@ -148,7 +148,7 @@ export const LeavePendingModal = ({ modalState, setModalState, closeModalAction 
                     />
                   ) : null}
 
-                  {leaveIndividualDetail?.leaveApplicationBasicInfo?.isLateFiling ? (
+                  {leaveIndividualDetail?.leaveApplicationBasicInfo?.isLateFiling === 'true' ? (
                     <AlertNotification alertType="error" notifMessage={'Late Filing'} dismissible={false} />
                   ) : null}
 
