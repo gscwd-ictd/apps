@@ -88,7 +88,7 @@ export type EmployeeLeaveDetails = {
     cancelledLeaveDates: Array<string>;
     forCancellationLeaveDates: Array<string>;
     leaveDateCancellationRemarks: string;
-    isLateFiling: boolean;
+    isLateFiling: string;
 
     employeeName: string;
     employeeSignature: string;

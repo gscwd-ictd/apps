@@ -131,7 +131,11 @@ export default function Leaves({ employeeDetails }: InferGetServerSidePropsType<
     isLoading: swrIsLoading,
     error: swrError,
     mutate: mutateLeaves,
-  } = useSWR(employeeDetails.employmentDetails.userId ? leaveUrl : null, fetchWithToken);
+  } = useSWR(employeeDetails.employmentDetails.userId ? leaveUrl : null, fetchWithToken, {
+    shouldRetryOnError: true,
+    revalidateOnFocus: true,
+    errorRetryInterval: 3000,
+  });
 
   // Initial zustand state update
   useEffect(() => {
@@ -174,33 +178,33 @@ export default function Leaves({ employeeDetails }: InferGetServerSidePropsType<
       <>
         {/* Individual Leave Details Load Failed Error COMPLETED MODAL */}
         {!isEmpty(errorLeaveDetails) && completedLeaveModalIsOpen ? (
-          <>
-            <ToastNotification toastType="error" notifMessage={`${errorLeaveDetails}: Failed to load Leave Details.`} />
-          </>
+          <ToastNotification
+            toastType="error"
+            notifMessage={`${errorUnavailableDates}: Failed to load Leave Details.`}
+          />
+        ) : null}
+
+        {/* Individual Leave Details Load Failed Error COMPLETED MODAL */}
+        {!isEmpty(errorLeaveDetails) && completedLeaveModalIsOpen ? (
+          <ToastNotification toastType="error" notifMessage={`${errorLeaveDetails}: Failed to load Leave Details.`} />
         ) : null}
 
         {/* Individual Leave Details Load Failed Error ONGOING MODAL */}
         {!isEmpty(errorLeaveDetails) && pendingLeaveModalIsOpen ? (
-          <>
-            <ToastNotification toastType="error" notifMessage={`${errorLeaveDetails}: Failed to load Leave Details.`} />
-          </>
+          <ToastNotification toastType="error" notifMessage={`${errorLeaveDetails}: Failed to load Leave Details.`} />
         ) : null}
 
         {/* Leave Ledger Modal Error */}
-        {!isEmpty(errorLeaveLedger) && leaveLedgerModalIsOpen ? (
-          <>
-            <ToastNotification toastType="error" notifMessage={`${errorLeaveLedger}: Failed to load Leave Ledger.`} />
-          </>
+        {!isEmpty(errorLeaveLedger) ? (
+          <ToastNotification toastType="error" notifMessage={`${errorLeaveLedger}: Failed to load Leave Ledger.`} />
         ) : null}
 
         {/* Unavailable Calendar Dates Load Failed Error */}
         {!isEmpty(errorUnavailableDates) ? (
-          <>
-            <ToastNotification
-              toastType="error"
-              notifMessage={`${errorUnavailableDates}: Failed to load Holiday and Leave dates in calendar.`}
-            />
-          </>
+          <ToastNotification
+            toastType="error"
+            notifMessage={`${errorUnavailableDates}: Failed to load Holiday and Leave dates in calendar.`}
+          />
         ) : null}
 
         {/* Leave List Load Failed Error */}

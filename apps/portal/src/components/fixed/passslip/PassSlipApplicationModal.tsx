@@ -58,10 +58,11 @@ export const PassSlipApplicationModal = ({
     employeeDetails: state.employeeDetails,
   }));
 
-  const { dtr, schedule } = useTimeLogStore((state) => ({
-    dtr: state.dtr,
-    schedule: state.schedule,
-  }));
+  //FACE SCAN STORE
+  // const { dtr, schedule } = useTimeLogStore((state) => ({
+  //   dtr: state.dtr,
+  //   schedule: state.schedule,
+  // }));
 
   //zustand initialization to access pass slip store
   const {
@@ -76,6 +77,9 @@ export const PassSlipApplicationModal = ({
     getSupervisorsSuccess,
     getSupervisorsFail,
     supervisors,
+
+    errorPassSlipsList,
+    errorSupervisorList,
   } = usePassSlipStore((state) => ({
     loadingResponse: state.loading.loadingResponse,
     passSlipsForApproval: state.passSlips.forApproval,
@@ -88,14 +92,19 @@ export const PassSlipApplicationModal = ({
     getSupervisorsSuccess: state.getSupervisorsSuccess,
     getSupervisorsFail: state.getSupervisorsFail,
     supervisors: state.supervisors,
+
+    errorPassSlipsList: state.error.errorPassSlips,
+    errorSupervisorList: state.error.errorSupervisors,
   }));
 
-  const { errorLedger, getLeaveLedger, getLeaveLedgerSuccess, getLeaveLedgerFail } = useLeaveLedgerStore((state) => ({
-    errorLedger: state.error.errorLeaveLedger,
-    getLeaveLedger: state.getLeaveLedger,
-    getLeaveLedgerSuccess: state.getLeaveLedgerSuccess,
-    getLeaveLedgerFail: state.getLeaveLedgerFail,
-  }));
+  const { errorLeaveLedger, getLeaveLedger, getLeaveLedgerSuccess, getLeaveLedgerFail } = useLeaveLedgerStore(
+    (state) => ({
+      errorLeaveLedger: state.error.errorLeaveLedger,
+      getLeaveLedger: state.getLeaveLedger,
+      getLeaveLedgerSuccess: state.getLeaveLedgerSuccess,
+      getLeaveLedgerFail: state.getLeaveLedgerFail,
+    })
+  );
 
   const [forcedLeaveBalance, setForcedLeaveBalance] = useState<number>(0);
   const [vacationLeaveBalance, setVacationLeaveBalance] = useState<number>(0);
@@ -120,7 +129,8 @@ export const PassSlipApplicationModal = ({
     error: swrLeaveLedgerError,
   } = useSWR(employeeDetails.user._id && employeeDetails.profile.companyId ? leaveLedgerUrl : null, fetchWithToken, {
     shouldRetryOnError: true,
-    revalidateOnFocus: false,
+    revalidateOnFocus: true,
+    errorRetryInterval: 3000,
   });
 
   // Initial zustand state update
@@ -181,7 +191,8 @@ export const PassSlipApplicationModal = ({
     error: swrSupervisorError,
   } = useSWR(applyPassSlipModalIsOpen ? supervisorDropDownUrl : null, fetchWithToken, {
     shouldRetryOnError: true,
-    revalidateOnFocus: false,
+    revalidateOnFocus: true,
+    errorRetryInterval: 3000,
   });
 
   // Initial zustand state update
@@ -265,6 +276,7 @@ export const PassSlipApplicationModal = ({
                   />
                 ) : null}
 
+                {/* FACE SCAN CHECK */}
                 {/* {dtr?.timeIn == null && dtr?.lunchOut == null && dtr?.lunchIn == null ? (
                   <AlertNotification
                     alertType="warning"
@@ -506,7 +518,9 @@ export const PassSlipApplicationModal = ({
                 form="ApplyPassSlipForm"
                 type="submit"
                 disabled={
-                  !allowedToApplyForNew || passSlipsForApproval.length >= 1
+                  !isEmpty(errorPassSlipsList) || !isEmpty(errorSupervisorList) || !isEmpty(errorLeaveLedger)
+                    ? true
+                    : !allowedToApplyForNew || passSlipsForApproval.length >= 1
                     ? // ||
                       // (dtr?.timeIn == null && dtr?.lunchOut == null && dtr?.lunchIn == null)
                       true

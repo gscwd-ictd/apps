@@ -108,11 +108,11 @@ export const LeaveLedgerTable: FunctionComponent<LeaveLedgerTableProps> = ({ emp
 
   // get the latest balance by last index value
   const getLatestBalance = (leaveLedger: Array<LeaveLedgerEntry>) => {
-    const lastIndexValue = leaveLedger[leaveLedger.length - 1];
-    setForcedLeaveBalance(lastIndexValue.forcedLeaveBalance);
-    setVacationLeaveBalance(lastIndexValue.vacationLeaveBalance ?? 0);
-    setSickLeaveBalance(lastIndexValue.sickLeaveBalance ?? 0);
-    setSpecialPrivilegeLeaveBalance(lastIndexValue.specialPrivilegeLeaveBalance ?? 0);
+    const lastIndexValue = leaveLedger[leaveLedger?.length - 1];
+    setForcedLeaveBalance(lastIndexValue?.forcedLeaveBalance);
+    setVacationLeaveBalance(lastIndexValue?.vacationLeaveBalance ?? 0);
+    setSickLeaveBalance(lastIndexValue?.sickLeaveBalance ?? 0);
+    setSpecialPrivilegeLeaveBalance(lastIndexValue?.specialPrivilegeLeaveBalance ?? 0);
   };
 
   // value color
