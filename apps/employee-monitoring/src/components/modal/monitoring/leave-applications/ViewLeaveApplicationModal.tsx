@@ -286,7 +286,7 @@ const ViewLeaveApplicationModal: FunctionComponent<ViewLeaveApplicationModalProp
 
         <Modal.Body>
           {/* Alert notif if leave application is late filing */}
-          {leaveApplicationDetails.leaveApplicationBasicInfo.isLateFiling === 'true' ? (
+          {leaveApplicationDetails?.leaveApplicationBasicInfo?.isLateFiling === 'true' ? (
             <AlertNotification alertType="warning" notifMessage="Late Filling Application" dismissible={false} />
           ) : null}
 
