@@ -1,53 +1,36 @@
+/* eslint-disable @nx/enforce-module-boundaries */
 import dayjs from 'dayjs';
 import { isEmpty } from 'lodash';
 import * as yup from 'yup';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
 import isBetween from 'dayjs/plugin/isBetween';
+import { ScheduleShifts } from 'libs/utils/src/lib/enums/schedule.enum';
 
 dayjs.extend(customParseFormat);
 dayjs.extend(isBetween);
 
 // parse date if after and return boolean
-const parseDateIfAfter = (
-  date: string,
-  value: string | null,
-  compare: string | null
-) => {
+const parseDateIfAfter = (date: string, value: string | null, compare: string | null) => {
   // if value or compare is not valid return false
 
-  if (
-    dayjs(value, 'HH:mm', true).isValid() === false ||
-    dayjs(compare, 'HH:mm', true).isValid() === false
-  )
+  if (dayjs(value, 'HH:mm', true).isValid() === false || dayjs(compare, 'HH:mm', true).isValid() === false)
     return false;
   // return true
   else return dayjs(date + ' ' + value).isAfter(dayjs(date + ' ' + compare));
 };
 
 // parse date if before and return boolean
-const parseDateIfBefore = (
-  date: string,
-  value: string | null,
-  compare: string | null
-) => {
+const parseDateIfBefore = (date: string, value: string | null, compare: string | null) => {
   // if value or compare is not valid return false
 
-  if (
-    dayjs(value, 'HH:mm', true).isValid() === false ||
-    dayjs(compare, 'HH:mm', true).isValid() === false
-  )
+  if (dayjs(value, 'HH:mm', true).isValid() === false || dayjs(compare, 'HH:mm', true).isValid() === false)
     return false;
   // return true
   else return dayjs(date + ' ' + value).isBefore(dayjs(date + ' ' + compare));
 };
 
 // parse date and return boolean
-const parseDateIfBetween = (
-  date: string,
-  value: string | null,
-  before: string | null,
-  after: string | null
-) => {
+const parseDateIfBetween = (date: string, value: string | null, before: string | null, after: string | null) => {
   // if value or compare is not valid return false
 
   if (
@@ -57,12 +40,7 @@ const parseDateIfBetween = (
   )
     return false;
   // return true
-  else
-    return dayjs(date + ' ' + value).isBetween(
-      dayjs(date + ' ' + before),
-      dayjs(date + ' ' + after),
-      'minutes'
-    );
+  else return dayjs(date + ' ' + value).isBetween(dayjs(date + ' ' + before), dayjs(date + ' ' + after), 'minutes');
 };
 
 export const OfficeSchema = yup.object().shape({
@@ -80,11 +58,11 @@ export const OfficeSchema = yup.object().shape({
       .test('test-time-in', (value, validationContext) => {
         const {
           createError,
-          parent: { lunchOut, dtrDate, lunchIn, timeOut },
+          parent: { lunchOut, dtrDate, lunchIn, timeOut, shift },
         } = validationContext;
         // if lunch out and value is not empty
         if (!isEmpty(lunchOut) && !isEmpty(value)) {
-          if (parseDateIfBefore(dtrDate, value, lunchOut) === false) {
+          if (parseDateIfBefore(dtrDate, value, lunchOut) === false && shift === ScheduleShifts.DAY) {
             return createError({
               message: 'Time in should be lesser than lunch out!',
             });
@@ -92,7 +70,7 @@ export const OfficeSchema = yup.object().shape({
         }
         // if lunch in and value is not empty
         else if (!isEmpty(lunchIn) && !isEmpty(value)) {
-          if (parseDateIfBefore(dtrDate, value, lunchIn) === false) {
+          if (parseDateIfBefore(dtrDate, value, lunchIn) === false && shift === ScheduleShifts.DAY) {
             return createError({
               message: 'Time in should be lesser than lunch in!',
             });
@@ -100,18 +78,12 @@ export const OfficeSchema = yup.object().shape({
         }
         // if time out and value is not empty
         else if (!isEmpty(timeOut) && !isEmpty(value)) {
-          if (parseDateIfBefore(dtrDate, value, timeOut) === false) {
+          if (parseDateIfBefore(dtrDate, value, timeOut) === false && shift === ScheduleShifts.DAY) {
             return createError({
               message: 'Time in should be lesser than time out!',
             });
           } else return true;
-        } else if (
-          !isEmpty(value) &&
-          isEmpty(lunchOut) &&
-          isEmpty(lunchIn) &&
-          isEmpty(timeOut)
-        )
-          return true;
+        } else if (!isEmpty(value) && isEmpty(lunchOut) && isEmpty(lunchIn) && isEmpty(timeOut)) return true;
         else if (isEmpty(value)) return true;
       }),
     otherwise: yup
@@ -122,12 +94,12 @@ export const OfficeSchema = yup.object().shape({
       .test('test-time-in', (value, validationContext) => {
         const {
           createError,
-          parent: { dtrDate, timeOut },
+          parent: { dtrDate, timeOut, shift },
         } = validationContext;
 
         // if time out and value is not empty
         if (!isEmpty(timeOut) && !isEmpty(value)) {
-          if (parseDateIfBefore(dtrDate, value, timeOut) === false) {
+          if (parseDateIfBefore(dtrDate, value, timeOut) === false && shift === ScheduleShifts.DAY) {
             // create error
             return createError({
               message: 'Time in must be lesser than time out!',
@@ -148,18 +120,13 @@ export const OfficeSchema = yup.object().shape({
       .test('lunch-out-test', (value, validationContext) => {
         const {
           createError,
-          parent: { timeIn, dtrDate, lunchIn, timeOut },
+          parent: { timeIn, dtrDate, lunchIn, timeOut, shift },
         } = validationContext;
 
         // if time in and value is not empty
-        if (
-          !isEmpty(timeIn) &&
-          isEmpty(lunchIn) &&
-          isEmpty(timeOut) &&
-          !isEmpty(value)
-        ) {
+        if (!isEmpty(timeIn) && isEmpty(lunchIn) && isEmpty(timeOut) && !isEmpty(value)) {
           // parse
-          if (parseDateIfAfter(dtrDate, value, timeIn) === false)
+          if (parseDateIfAfter(dtrDate, value, timeIn) === false && shift === ScheduleShifts.DAY)
             return createError({
               message: 'Lunch out must be greater than time in!',
             });
@@ -169,7 +136,7 @@ export const OfficeSchema = yup.object().shape({
         // if time in, lunchin value is not empty
         else if (!isEmpty(timeIn) && !isEmpty(lunchIn) && !isEmpty(value)) {
           // parse between
-          if (parseDateIfBetween(dtrDate, value, timeIn, lunchIn) === false) {
+          if (parseDateIfBetween(dtrDate, value, timeIn, lunchIn) === false && shift === ScheduleShifts.DAY) {
             return createError({
               message: 'Lunch out must be in between time in and lunch in!',
             });
@@ -177,14 +144,9 @@ export const OfficeSchema = yup.object().shape({
         }
 
         // if time in, lunchin value is not empty
-        else if (
-          !isEmpty(timeIn) &&
-          isEmpty(lunchIn) &&
-          !isEmpty(timeOut) &&
-          !isEmpty(value)
-        ) {
+        else if (!isEmpty(timeIn) && isEmpty(lunchIn) && !isEmpty(timeOut) && !isEmpty(value)) {
           // parse between
-          if (parseDateIfBetween(dtrDate, value, timeIn, timeOut) === false) {
+          if (parseDateIfBetween(dtrDate, value, timeIn, timeOut) === false && shift === ScheduleShifts.DAY) {
             return createError({
               message: 'Lunch out must be in between time in and time out!',
             });
@@ -192,12 +154,7 @@ export const OfficeSchema = yup.object().shape({
         }
 
         // if time in, lunch in, time out is empty and value is not empty
-        else if (
-          isEmpty(timeIn) &&
-          isEmpty(lunchIn) &&
-          isEmpty(timeOut) &&
-          !isEmpty(value)
-        ) {
+        else if (isEmpty(timeIn) && isEmpty(lunchIn) && isEmpty(timeOut) && !isEmpty(value)) {
           // if valid return error
           if (dayjs(dtrDate + ' ' + value).isValid() === false) {
             return false;
@@ -205,7 +162,7 @@ export const OfficeSchema = yup.object().shape({
         }
         // if time in is empty and lunch in has a value
         else if (isEmpty(timeIn) && !isEmpty(lunchIn) && !isEmpty(value)) {
-          if (parseDateIfBefore(dtrDate, value, lunchIn) === false) {
+          if (parseDateIfBefore(dtrDate, value, lunchIn) === false && shift === ScheduleShifts.DAY) {
             return createError({
               message: 'Lunch out must be lesser than lunch in!',
             });
@@ -228,17 +185,12 @@ export const OfficeSchema = yup.object().shape({
       .test('test-lunch-in', (value, validationContext) => {
         const {
           createError,
-          parent: { dtrDate, timeIn, lunchOut, timeOut },
+          parent: { dtrDate, timeIn, lunchOut, timeOut, shift },
         } = validationContext;
         // if timeout and everything is empty and value is not empty
-        if (
-          !isEmpty(timeOut) &&
-          isEmpty(lunchOut) &&
-          isEmpty(timeIn) &&
-          !isEmpty(value)
-        ) {
+        if (!isEmpty(timeOut) && isEmpty(lunchOut) && isEmpty(timeIn) && !isEmpty(value)) {
           // parse
-          if (parseDateIfBefore(dtrDate, value, timeOut) === false)
+          if (parseDateIfBefore(dtrDate, value, timeOut) === false && shift === ScheduleShifts.DAY)
             return createError({
               message: 'Lunch in must be lesser than time out!',
             });
@@ -248,7 +200,7 @@ export const OfficeSchema = yup.object().shape({
         // if time out, lunch out, and value is not empty
         else if (!isEmpty(timeOut) && !isEmpty(lunchOut) && !isEmpty(value)) {
           // parse between
-          if (parseDateIfBetween(dtrDate, value, lunchOut, timeOut) === false) {
+          if (parseDateIfBetween(dtrDate, value, lunchOut, timeOut) === false && shift === ScheduleShifts.DAY) {
             return createError({
               message: 'Lunch in must be in between lunch out and time out!',
             });
@@ -256,14 +208,9 @@ export const OfficeSchema = yup.object().shape({
         }
 
         // if time time out, time in, and value is not empty
-        else if (
-          !isEmpty(timeOut) &&
-          isEmpty(lunchOut) &&
-          !isEmpty(timeIn) &&
-          !isEmpty(value)
-        ) {
+        else if (!isEmpty(timeOut) && isEmpty(lunchOut) && !isEmpty(timeIn) && !isEmpty(value)) {
           // parse between
-          if (parseDateIfBetween(dtrDate, value, timeIn, timeOut) === false) {
+          if (parseDateIfBetween(dtrDate, value, timeIn, timeOut) === false && shift === ScheduleShifts.DAY) {
             return createError({
               message: 'Lunch out must be in between time in and time out!',
             });
@@ -271,12 +218,7 @@ export const OfficeSchema = yup.object().shape({
         }
 
         // if time in, lunch in, time out is empty and value is not empty
-        else if (
-          isEmpty(timeIn) &&
-          isEmpty(lunchOut) &&
-          isEmpty(timeOut) &&
-          !isEmpty(value)
-        ) {
+        else if (isEmpty(timeIn) && isEmpty(lunchOut) && isEmpty(timeOut) && !isEmpty(value)) {
           // if valid return error
           if (dayjs(dtrDate + ' ' + value).isValid() === false) {
             return false;
@@ -299,13 +241,13 @@ export const OfficeSchema = yup.object().shape({
       .test('test-time-out', (value, validationContext) => {
         const {
           createError,
-          parent: { dtrDate, lunchIn, lunchOut, timeIn },
+          parent: { dtrDate, lunchIn, lunchOut, timeIn, shift },
         } = validationContext;
 
         // if lunch in and value is not empty
         if (!isEmpty(lunchIn) && !isEmpty(value)) {
           // parse if before
-          if (parseDateIfAfter(dtrDate, value, lunchIn) === false) {
+          if (parseDateIfAfter(dtrDate, value, lunchIn) === false && shift === ScheduleShifts.DAY) {
             // return error
             return createError({
               message: 'Time out must be greater than lunch in!',
@@ -314,7 +256,7 @@ export const OfficeSchema = yup.object().shape({
         }
         // if lunch out, value is not empty, and else is empty
         else if (isEmpty(lunchIn) && !isEmpty(lunchOut) && !isEmpty(value)) {
-          if (parseDateIfAfter(dtrDate, value, lunchOut) === false) {
+          if (parseDateIfAfter(dtrDate, value, lunchOut) === false && shift === ScheduleShifts.DAY) {
             // return error
             return createError({
               message: 'Time out must be greater than lunch out!',
@@ -324,13 +266,8 @@ export const OfficeSchema = yup.object().shape({
         }
 
         // if lunch out, value is not empty, and else is empty
-        else if (
-          isEmpty(lunchIn) &&
-          isEmpty(lunchOut) &&
-          !isEmpty(timeIn) &&
-          !isEmpty(value)
-        ) {
-          if (parseDateIfAfter(dtrDate, value, timeIn) === false) {
+        else if (isEmpty(lunchIn) && isEmpty(lunchOut) && !isEmpty(timeIn) && !isEmpty(value)) {
+          if (parseDateIfAfter(dtrDate, value, timeIn) === false && shift === ScheduleShifts.DAY) {
             // return error
             return createError({
               message: 'Time out must be greater than time in!',
@@ -339,12 +276,7 @@ export const OfficeSchema = yup.object().shape({
         }
 
         // if time in, value is not empty, and else is empty
-        else if (
-          isEmpty(lunchIn) &&
-          isEmpty(lunchOut) &&
-          isEmpty(timeIn) &&
-          !isEmpty(value)
-        ) {
+        else if (isEmpty(lunchIn) && isEmpty(lunchOut) && isEmpty(timeIn) && !isEmpty(value)) {
           // if valid return error
           if (dayjs(dtrDate + ' ' + value).isValid() === false) {
             return false;
@@ -362,12 +294,12 @@ export const OfficeSchema = yup.object().shape({
       .test('test-time-out', (value, validationContext) => {
         const {
           createError,
-          parent: { dtrDate, timeIn },
+          parent: { dtrDate, timeIn, shift },
         } = validationContext;
 
         // if time out and value is not empty
         if (!isEmpty(timeIn) && !isEmpty(value)) {
-          if (parseDateIfAfter(dtrDate, value, timeIn) === false) {
+          if (parseDateIfAfter(dtrDate, value, timeIn) === false && shift === ScheduleShifts.DAY) {
             // create error
             return createError({
               message: 'Time out must be greater than time in!',
