@@ -87,6 +87,9 @@ const leaveCommutation: Array<SelectOption> = [
 ];
 
 export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAction }: LeaveApplicationModalProps) => {
+  //get month now (1 = January, 2 = Feb...)
+  const monthNow = format(new Date(), 'M');
+
   //zustand initialization to access Leave store
   const {
     pendingleavesList,
@@ -750,6 +753,16 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
                             : 'You have a pending Leave application of the same type.'
                         }
                         `}
+                      dismissible={false}
+                      className="mb-1"
+                    />
+                  ) : null}
+
+                  {/* Disable Force Leave Application during December */}
+                  {monthNow === '12' && watch('typeOfLeaveDetails.leaveName') === LeaveName.FORCED ? (
+                    <AlertNotification
+                      alertType="warning"
+                      notifMessage="Forced Leaves cannot be applied during December."
                       dismissible={false}
                       className="mb-1"
                     />
@@ -1759,10 +1772,14 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
                 form="ApplyLeaveForm"
                 type="submit"
                 disabled={
-                  !isEmpty(errorLeaveList) ||
-                  !isEmpty(errorUnavailableDates) ||
-                  !isEmpty(errorLeaveLedger) ||
-                  !isEmpty(errorLeaveTypes)
+                  //disabled if applying for force leave and is December
+                  monthNow === '12' && watch('typeOfLeaveDetails.leaveName') === LeaveName.FORCED
+                    ? true
+                    : //disabled if there are errors in SWR fetches
+                    !isEmpty(errorLeaveList) ||
+                      !isEmpty(errorUnavailableDates) ||
+                      !isEmpty(errorLeaveLedger) ||
+                      !isEmpty(errorLeaveTypes)
                     ? true
                     : Number(roundedFinalVacationLeaveBalance) - Number(pendingVacationLeaveDateCount) < 0 &&
                       watch('typeOfLeaveDetails.leaveName') === LeaveName.VACATION
@@ -1801,7 +1818,8 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
                     ? true
                     : hasPendingLeave
                     ? true
-                    : employeeDetails.profile.sex === 'Male' &&
+                    : //disabled if employee is male and is applying for women only leave benefits
+                    employeeDetails.profile.sex === 'Male' &&
                       (watch('typeOfLeaveDetails.leaveName') === LeaveName.MATERNITY ||
                         watch('typeOfLeaveDetails.leaveName') === LeaveName.VAWC ||
                         watch('typeOfLeaveDetails.leaveName') === LeaveName.SPECIAL_LEAVE_BENEFITS_FOR_WOMEN)
