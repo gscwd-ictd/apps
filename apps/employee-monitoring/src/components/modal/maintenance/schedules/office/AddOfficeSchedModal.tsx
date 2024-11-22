@@ -1,10 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import {
-  AlertNotification,
-  Button,
-  LoadingSpinner,
-  Modal,
-} from '@gscwd-apps/oneui';
+import { AlertNotification, Button, LoadingSpinner, Modal } from '@gscwd-apps/oneui';
 import { LabelInput } from 'apps/employee-monitoring/src/components/inputs/LabelInput';
 import { SelectListRF } from 'apps/employee-monitoring/src/components/inputs/SelectListRF';
 import Toggle from 'apps/employee-monitoring/src/components/switch/Toggle';
@@ -26,20 +21,15 @@ type AddModalProps = {
   closeModalAction: () => void;
 };
 
-const AddOfficeSchedModal: FunctionComponent<AddModalProps> = ({
-  modalState,
-  setModalState,
-  closeModalAction,
-}) => {
-  const { IsLoading, PostSchedule, PostScheduleFail, PostScheduleSuccess } =
-    useScheduleStore((state) => ({
-      SchedulePostResponse: state.schedule.postResponse,
-      IsLoading: state.loading.loadingSchedule,
-      Error: state.error.errorSchedule,
-      PostSchedule: state.postSchedule,
-      PostScheduleSuccess: state.postScheduleSuccess,
-      PostScheduleFail: state.postScheduleFail,
-    }));
+const AddOfficeSchedModal: FunctionComponent<AddModalProps> = ({ modalState, setModalState, closeModalAction }) => {
+  const { IsLoading, PostSchedule, PostScheduleFail, PostScheduleSuccess } = useScheduleStore((state) => ({
+    SchedulePostResponse: state.schedule.postResponse,
+    IsLoading: state.loading.loadingSchedule,
+    Error: state.error.errorSchedule,
+    PostSchedule: state.postSchedule,
+    PostScheduleSuccess: state.postScheduleSuccess,
+    PostScheduleFail: state.postScheduleFail,
+  }));
 
   const [withLunch, setWithLunch] = useState<boolean>(true);
 
@@ -207,11 +197,7 @@ const AddOfficeSchedModal: FunctionComponent<AddModalProps> = ({
                   label={'With Lunch In & Out:'}
                   disabled={IsLoading ? true : false}
                 />
-                <div
-                  className={`text-xs ${
-                    withLunch ? 'text-blue-400' : 'text-gray-400'
-                  }`}
-                >
+                <div className={`text-xs ${withLunch ? 'text-blue-400' : 'text-gray-400'}`}>
                   {withLunch ? (
                     <button
                       onClick={() => setWithLunch((prev) => !prev)}
@@ -235,30 +221,30 @@ const AddOfficeSchedModal: FunctionComponent<AddModalProps> = ({
               </div>
 
               {/** Lunch Out */}
-              {watch('withLunch') === true ? (
-                <LabelInput
-                  id={'scheduleLunchOut'}
-                  type="time"
-                  label={'Lunch Out'}
-                  controller={{ ...register('lunchOut') }}
-                  isError={errors.lunchOut ? true : false}
-                  errorMessage={errors.lunchOut?.message}
-                  disabled={IsLoading ? true : false}
-                />
-              ) : null}
+              {/* {watch('withLunch') === true ? ( */}
+              <LabelInput
+                id={'scheduleLunchOut'}
+                type="time"
+                label={'Lunch Out'}
+                controller={{ ...register('lunchOut') }}
+                isError={errors.lunchOut ? true : false}
+                errorMessage={errors.lunchOut?.message}
+                disabled={IsLoading ? true : false}
+              />
+              {/* ) : null} */}
 
               {/** Lunch In */}
-              {watch('withLunch') === true ? (
-                <LabelInput
-                  id={'scheduleLunchIn'}
-                  type="time"
-                  label={'Lunch In'}
-                  controller={{ ...register('lunchIn') }}
-                  isError={errors.lunchIn ? true : false}
-                  errorMessage={errors.lunchIn?.message}
-                  disabled={IsLoading ? true : false}
-                />
-              ) : null}
+              {/* {watch('withLunch') === true ? ( */}
+              <LabelInput
+                id={'scheduleLunchIn'}
+                type="time"
+                label={'Lunch In'}
+                controller={{ ...register('lunchIn') }}
+                isError={errors.lunchIn ? true : false}
+                errorMessage={errors.lunchIn?.message}
+                disabled={IsLoading ? true : false}
+              />
+              {/* ) : null} */}
 
               {/** Shift  */}
               <SelectListRF
