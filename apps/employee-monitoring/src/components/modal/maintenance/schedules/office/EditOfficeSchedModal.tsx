@@ -1,11 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import {
-  AlertNotification,
-  Button,
-  LoadingSpinner,
-  Modal,
-  ToastNotification,
-} from '@gscwd-apps/oneui';
+import { AlertNotification, Button, LoadingSpinner, Modal, ToastNotification } from '@gscwd-apps/oneui';
 import { LabelInput } from 'apps/employee-monitoring/src/components/inputs/LabelInput';
 import { MySelectList } from 'apps/employee-monitoring/src/components/inputs/SelectList';
 import { SelectListRF } from 'apps/employee-monitoring/src/components/inputs/SelectListRF';
@@ -47,12 +41,7 @@ const EditOfficeSchedModal: FunctionComponent<EditModalProps> = ({
   closeModalAction,
   rowData,
 }) => {
-  const {
-    IsLoading,
-    UpdateSchedule,
-    UpdateScheduleFail,
-    UpdateScheduleSuccess,
-  } = useScheduleStore((state) => ({
+  const { IsLoading, UpdateSchedule, UpdateScheduleFail, UpdateScheduleSuccess } = useScheduleStore((state) => ({
     SchedulePostResponse: state.schedule.postResponse,
     IsLoading: state.loading.loadingSchedule,
     UpdateSchedule: state.updateSchedule,
@@ -77,11 +66,7 @@ const EditOfficeSchedModal: FunctionComponent<EditModalProps> = ({
 
   // load default values
   const loadNewDefaultValues = (sched: Schedule) => {
-    if (
-      sched.withLunch.toString() === 'true' ||
-      sched.withLunch.toString() === '1'
-    )
-      sched.withLunch = true;
+    if (sched.withLunch.toString() === 'true' || sched.withLunch.toString() === '1') sched.withLunch = true;
     else sched.withLunch = false;
 
     setValue('id', sched.id);
@@ -263,11 +248,7 @@ const EditOfficeSchedModal: FunctionComponent<EditModalProps> = ({
                   disabled={IsLoading ? true : false}
                 />
 
-                <div
-                  className={`text-xs ${
-                    withLunch ? 'text-blue-400' : 'text-gray-400'
-                  }`}
-                >
+                <div className={`text-xs ${withLunch ? 'text-blue-400' : 'text-gray-400'}`}>
                   {withLunch ? (
                     <button
                       onClick={() => setWithLunch((prev) => !prev)}
@@ -291,30 +272,30 @@ const EditOfficeSchedModal: FunctionComponent<EditModalProps> = ({
               </div>
 
               {/** Lunch Out */}
-              {watch('withLunch') === true ? (
-                <LabelInput
-                  id={'scheduleLunchOut'}
-                  type="time"
-                  label={'Lunch Out'}
-                  controller={{ ...register('lunchOut') }}
-                  isError={errors.lunchOut ? true : false}
-                  errorMessage={errors.lunchOut?.message}
-                  disabled={IsLoading ? true : false}
-                />
-              ) : null}
+              {/* {watch('withLunch') === true ? ( */}
+              <LabelInput
+                id={'scheduleLunchOut'}
+                type="time"
+                label={'Lunch Out'}
+                controller={{ ...register('lunchOut') }}
+                isError={errors.lunchOut ? true : false}
+                errorMessage={errors.lunchOut?.message}
+                disabled={IsLoading ? true : false}
+              />
+              {/* ) : null} */}
 
               {/** Lunch In */}
-              {watch('withLunch') === true ? (
-                <LabelInput
-                  id={'scheduleLunchIn'}
-                  type="time"
-                  label={'Lunch In'}
-                  controller={{ ...register('lunchIn') }}
-                  isError={errors.lunchIn ? true : false}
-                  errorMessage={errors.lunchIn?.message}
-                  disabled={IsLoading ? true : false}
-                />
-              ) : null}
+              {/* {watch('withLunch') === true ? ( */}
+              <LabelInput
+                id={'scheduleLunchIn'}
+                type="time"
+                label={'Lunch In'}
+                controller={{ ...register('lunchIn') }}
+                isError={errors.lunchIn ? true : false}
+                errorMessage={errors.lunchIn?.message}
+                disabled={IsLoading ? true : false}
+              />
+              {/* ) : null} */}
 
               {/** Shift  */}
               <SelectListRF
