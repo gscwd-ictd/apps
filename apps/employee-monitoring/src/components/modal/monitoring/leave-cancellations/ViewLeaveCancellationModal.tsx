@@ -238,7 +238,7 @@ const ViewLeaveCancellationModal: FunctionComponent<ViewLeaveCancellationModalPr
                       rowData.leaveDates && rowData.leaveDates.length >= 2 ? (
                         <div className="flex items-center gap-2 text-sm font-semibold">
                           {UseRenderBadgePill(firstAndLastDate(rowData.leaveDates).start, 'text-md')}
-                          <div>to</div>
+                          <div>,</div>
                           {UseRenderBadgePill(firstAndLastDate(rowData.leaveDates).end, 'text-md')}
                         </div>
                       ) : rowData.leaveDates && rowData.leaveDates.length === 1 ? (
