@@ -172,3 +172,17 @@ export type ReportOnEmpRehabLeaveCredits = {
   report: Array<EmployeeRoRl>;
   signatory: ReportSignatories;
 };
+
+// Detailed Report on Personal Business Pass Slip CosJo = DroPbPsCJ
+export type EmployeeDroPbPsCJ = {
+  employeeId: string;
+  name: string;
+  psDate: string;
+  noOfMinConsumed: string;
+  conversion: string;
+  timeInTimeOut: string;
+};
+export type DetailedReportOnPbPassSlipCosJo = {
+  report: Array<EmployeeDroPbPsCJ>;
+  signatory: ReportSignatories;
+};
