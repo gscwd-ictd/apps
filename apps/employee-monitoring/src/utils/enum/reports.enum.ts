@@ -54,4 +54,9 @@ export const Reports = [
     label: 'Report on Summary of Rehabilitation Leave',
     value: 'report on summary of rehabilitation leave',
   },
+  // 11
+  {
+    label: 'Detailed Report on Personal Business Pass Slip (COS-JO)',
+    value: 'detailed report on personal business pass slip (cos-jo)',
+  },
 ];
