@@ -156,3 +156,12 @@ export type PdcGeneralManagerApproval = {
   trainingDetails: string;
   remarks?: string;
 };
+
+export type BucketFile = {
+  id: string;
+  name: string;
+  href: string;
+  fileLink: string;
+  sizeOriginal: string;
+  mimeType: string;
+};

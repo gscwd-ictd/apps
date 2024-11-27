@@ -13,7 +13,12 @@ import { SelectOption } from 'libs/utils/src/lib/types/select.type';
 import { UserRole } from 'libs/utils/src/lib/enums/user-roles.enum';
 import { ApprovalCaptcha } from './PdcApprovalOtp/ApprovalCaptcha';
 import { createColumnHelper } from '@tanstack/react-table';
-import { NominatedEmployees, TrainingRequirement } from 'libs/utils/src/lib/types/training.type';
+import {
+  NominatedEmployees,
+  Training,
+  TrainingDetails,
+  TrainingRequirement,
+} from 'libs/utils/src/lib/types/training.type';
 import UseRenderTrainingNomineeStatus from 'apps/portal/src/utils/functions/RenderTrainingNomineeStatus';
 import { TextSize } from 'libs/utils/src/lib/enums/text-size.enum';
 import { DataTablePortal, useDataTable } from 'libs/oneui/src/components/Tables/DataTablePortal';
@@ -22,6 +27,12 @@ import useSWR from 'swr';
 import { fetchWithToken } from 'apps/portal/src/utils/hoc/fetcher';
 import dayjs from 'dayjs';
 import { TrainingDesignModal } from './TrainingDesignModal';
+import { useLnd } from 'apps/portal/src/utils/hooks/use-lnd';
+import { Storage } from 'appwrite';
+import { Disclosure } from '@headlessui/react';
+import axios from 'axios';
+import convertSize from 'convert-size';
+import Link from 'next/link';
 
 type ModalProps = {
   modalState: boolean;
@@ -57,7 +68,16 @@ export const TrainingDetailsModal = ({ modalState, setModalState, closeModalActi
     getTrainingDetailsFail,
 
     trainingDesignModalIsOpen,
+
+    bucketFiles,
+    errorBucketFiles,
+    getBucketFiles,
+    getBucketFilesSuccess,
+    getBucketFilesFail,
+
+    setBucketFiles,
     setTrainingDesignModalIsOpen,
+    setTrainingDetails,
   } = usePdcApprovalsStore((state) => ({
     individualTrainingDetails: state.individualTrainingDetails,
     loadingResponse: state.loading.loadingResponse,
@@ -77,6 +97,15 @@ export const TrainingDetailsModal = ({ modalState, setModalState, closeModalActi
 
     trainingDesignModalIsOpen: state.trainingDesignModalIsOpen,
     setTrainingDesignModalIsOpen: state.setTrainingDesignModalIsOpen,
+
+    bucketFiles: state.bucketFiles,
+    errorBucketFiles: state.error.errorBucketFiles,
+    getBucketFiles: state.getBucketFiles,
+    getBucketFilesSuccess: state.getBucketFilesSuccess,
+    getBucketFilesFail: state.getBucketFilesFail,
+    setBucketFiles: state.setBucketFiles,
+
+    setTrainingDetails: state.setTrainingDetails,
   }));
 
   const employeeDetail = useEmployeeStore((state) => state.employeeDetails);
@@ -94,6 +123,7 @@ export const TrainingDetailsModal = ({ modalState, setModalState, closeModalActi
   useEffect(() => {
     if (!modalState) {
       setValue('action', null);
+      setTrainingDetails({} as TrainingDetails);
     }
   }, [modalState]);
 
@@ -176,6 +206,72 @@ export const TrainingDetailsModal = ({ modalState, setModalState, closeModalActi
   const closeTrainingDesignModal = () => {
     setTrainingDesignModalIsOpen(false);
   };
+  const client = useLnd();
+
+  // Initial zustand state update
+  useEffect(() => {
+    if (trainingDetails && trainingDetails?.source?.name === 'External') {
+      const getBucketList = async () => {
+        const storage = new Storage(client!);
+        const getBucketListFiles = await axios.get(
+          `${process.env.NEXT_PUBLIC_LND_FE_URL}/api/bucket/lnd?id=${individualTrainingDetails?.trainingId}`,
+          { withCredentials: true }
+        );
+
+        if (getBucketListFiles.data.files.length > 0) {
+          const newBucketFiles = Promise.all(
+            getBucketListFiles.data.files.map(async (file: any) => {
+              const fileDetails = await storage.getFile(individualTrainingDetails?.trainingId!, file.$id);
+              const filePreview = storage.getFilePreview(individualTrainingDetails?.trainingId!, file.$id);
+              const fileView = storage.getFileView(individualTrainingDetails?.trainingId!, file.$id);
+
+              return {
+                id: file.$id,
+                name: fileDetails.name,
+                href: fileView.href,
+                fileLink: fileView.href,
+                sizeOriginal: convertSize(fileDetails.sizeOriginal, 'KB', { stringify: true }),
+                mimeType: fileDetails.mimeType,
+              };
+            })
+          );
+          setBucketFiles(await newBucketFiles);
+          return await newBucketFiles;
+        } else setBucketFiles([]);
+      };
+      getBucketList();
+    }
+  }, [trainingDetails?.source?.name]);
+
+  // const bucketFilesUrl = `${process.env.NEXT_PUBLIC_LND_FE_URL}/api/bucket/lnd?id=${individualTrainingDetails?.trainingId}`;
+
+  // const {
+  //   data: swrBucketFiles,
+  //   isLoading: swrBucketFilesLoading,
+  //   error: swrBucketFilesError,
+  //   mutate: mutateBucketFiles,
+  // } = useSWR(
+  //   trainingDetails?.source?.name === 'External' && individualTrainingDetails.trainingId ? bucketFilesUrl : null,
+  //   fetchWithToken
+  // );
+
+  // // Initial zustand state update
+  // useEffect(() => {
+  //   if (swrBucketFilesLoading) {
+  //     getBucketFiles(swrBucketFilesLoading);
+  //   }
+  // }, [swrBucketFilesLoading]);
+
+  // // Upon success/fail of swr request, zustand state will be updated
+  // useEffect(() => {
+  //   if (!isEmpty(swrBucketFiles)) {
+  //     getBucketFilesSuccess(swrBucketFilesLoading, swrBucketFiles);
+  //   }
+
+  //   if (!isEmpty(swrBucketFilesError)) {
+  //     getBucketFilesFail(swrBucketFilesLoading, swrBucketFilesError.message);
+  //   }
+  // }, [swrBucketFiles, swrBucketFilesError]);
 
   return (
     <>
@@ -184,6 +280,10 @@ export const TrainingDetailsModal = ({ modalState, setModalState, closeModalActi
           toastType="error"
           notifMessage={`${errorTrainingDetails}: Failed to load Training Details.`}
         />
+      ) : null}
+
+      {!isEmpty(errorBucketFiles) && modalState ? (
+        <ToastNotification toastType="error" notifMessage={`${errorBucketFiles}: Failed to load attached files.`} />
       ) : null}
 
       <TrainingDesignModal
@@ -353,6 +453,55 @@ export const TrainingDetailsModal = ({ modalState, setModalState, closeModalActi
                       })}
                   </div>
                 </div>
+
+                {trainingDetails?.source?.name === 'External' && bucketFiles && bucketFiles.length > 0 && (
+                  <div className="flex items-start justify-start gap-2">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path
+                        d="M14 0C16.7614 0 19 2.23858 19 5V17C19 20.866 15.866 24 12 24C8.13401 24 5 20.866 5 17V9H7V17C7 19.7614 9.23858 22 12 22C14.7614 22 17 19.7614 17 17V5C17 3.34315 15.6569 2 14 2C12.3431 2 11 3.34315 11 5V17C11 17.5523 11.4477 18 12 18C12.5523 18 13 17.5523 13 17V6H15V17C15 18.6569 13.6569 20 12 20C10.3431 20 9 18.6569 9 17V5C9 2.23858 11.2386 0 14 0Z"
+                        fill="currentColor"
+                      />
+                    </svg>
+
+                    {bucketFiles && (
+                      <Disclosure>
+                        {({ open }) => (
+                          <div>
+                            <Disclosure.Button
+                              className="flex items-center justify-between w-full transition-all "
+                              tabIndex={-1}
+                            >
+                              <div className="text-indigo-500 ">
+                                {bucketFiles?.length}{' '}
+                                {bucketFiles?.length > 1
+                                  ? 'attached training design files'
+                                  : bucketFiles?.length === 1
+                                  ? 'attached training design file'
+                                  : null}
+                              </div>
+                            </Disclosure.Button>
+
+                            <Disclosure.Panel className="" as="ul">
+                              {bucketFiles &&
+                                bucketFiles.map((file, idx) => {
+                                  return (
+                                    <div key={idx} className="pb-1 pl-5">
+                                      <span className="text-xs">{idx + 1}. </span>
+                                      <Link href={file.href} target="_blank">
+                                        <span className="text-xs text-zinc-500 hover:text-indigo-700 active:text-indigo-800 ">
+                                          {file.name}
+                                        </span>
+                                      </Link>
+                                    </div>
+                                  );
+                                })}
+                            </Disclosure.Panel>
+                          </div>
+                        )}
+                      </Disclosure>
+                    )}
+                  </div>
+                )}
 
                 <div className="flex items-center capitalize justify-start gap-2">
                   <svg

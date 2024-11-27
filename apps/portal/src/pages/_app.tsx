@@ -4,6 +4,7 @@ import '../../styles/carousel.css';
 
 import { AppProps } from 'next/app';
 import Head from 'next/head';
+import { AppwriteClientContainer } from '../components/fixed/appwrite/view/AppwriteContainer';
 
 export default function App({ Component, pageProps }: AppProps) {
   return (
@@ -12,7 +13,9 @@ export default function App({ Component, pageProps }: AppProps) {
         <title>Welcome to portal!</title>
       </Head>
       <main className="app">
-        <Component {...pageProps} />
+        <AppwriteClientContainer>
+          <Component {...pageProps} />
+        </AppwriteClientContainer>
       </main>
     </>
   );
