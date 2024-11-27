@@ -28,4 +28,5 @@ export const fetchWithToken = (url: string, token: string) =>
     headers: {
       Authorization: `Bearer ${token}`,
     },
+    withCredentials: true,
   }).then((res: any) => res.data);

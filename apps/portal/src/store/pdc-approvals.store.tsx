@@ -2,6 +2,7 @@
 import { create } from 'zustand';
 import { devtools } from 'zustand/middleware';
 import {
+  BucketFile,
   PdcChairmanApproval,
   PdcGeneralManagerApproval,
   PdcSecretariatApproval,
@@ -21,12 +22,17 @@ export type PdcApprovalsState = {
     loadingTrainingList: boolean;
     loadingTrainingDetails: boolean;
     loadingResponse: boolean;
+    loadingBucketFiles: boolean;
   };
   error: {
     errorTrainingList: string;
     errorTrainingDetails: string;
     errorResponse: string;
+    errorBucketFiles: string;
   };
+
+  bucketFiles: Array<BucketFile>;
+  setBucketFiles: (bucketFiles: Array<BucketFile>) => void;
 
   trainingModalIsOpen: boolean;
   setTrainingModalIsOpen: (trainingModalIsOpen: boolean) => void;
@@ -45,6 +51,8 @@ export type PdcApprovalsState = {
 
   setIndividualTrainingDetails: (individualTrainingDetails: Training) => void;
 
+  setTrainingDetails: (trainingDetails: TrainingDetails) => void;
+
   getTrainingSelectionList: (loading: boolean) => void;
   getTrainingSelectionListSuccess: (loading: boolean, response) => void;
   getTrainingSelectionListFail: (loading: boolean, error: string) => void;
@@ -53,6 +61,10 @@ export type PdcApprovalsState = {
   getTrainingDetails: (loading: boolean) => void;
   getTrainingDetailsSuccess: (loading: boolean, response) => void;
   getTrainingDetailsFail: (loading: boolean, error: string) => void;
+
+  getBucketFiles: (loading: boolean) => void;
+  getBucketFilesSuccess: (loading: boolean, response) => void;
+  getBucketFilesFail: (loading: boolean, error: string) => void;
 
   patchTrainingSelection: () => void;
   patchTrainingSelectionSuccess: (response) => void;
@@ -64,8 +76,8 @@ export type PdcApprovalsState = {
 export const usePdcApprovalsStore = create<PdcApprovalsState>()(
   devtools((set) => ({
     trainingList: [],
-    individualTrainingDetails: {} as Training,
-    trainingDetails: {} as TrainingDetails,
+    individualTrainingDetails: {} as Training, //Portal format
+    trainingDetails: {} as TrainingDetails, //L&D format
     response: {
       patchResponseApply: {},
       cancelResponse: {},
@@ -75,11 +87,13 @@ export const usePdcApprovalsStore = create<PdcApprovalsState>()(
       loadingTrainingList: false,
       loadingTrainingDetails: false,
       loadingResponse: false,
+      loadingBucketFiles: false,
     },
     error: {
       errorTrainingList: '',
       errorTrainingDetails: '',
       errorResponse: '',
+      errorBucketFiles: '',
     },
 
     trainingDesignModalIsOpen: false,
@@ -88,8 +102,17 @@ export const usePdcApprovalsStore = create<PdcApprovalsState>()(
     otpPdcModalIsOpen: false,
     captchaPdcModalIsOpen: false,
 
+    bucketFiles: [],
+    setBucketFiles: (bucketFiles: Array<BucketFile>) => set({ bucketFiles }),
+
+    //Portal FORMAT
     setIndividualTrainingDetails: (individualTrainingDetails: Training) => {
       set((state) => ({ ...state, individualTrainingDetails }));
+    },
+
+    //L&D FORMAT
+    setTrainingDetails: (trainingDetails: TrainingDetails) => {
+      set((state) => ({ ...state, trainingDetails }));
     },
 
     setTrainingDesignModalIsOpen: (trainingDesignModalIsOpen: boolean) => {
@@ -188,6 +211,44 @@ export const usePdcApprovalsStore = create<PdcApprovalsState>()(
       }));
     },
 
+    getBucketFiles: (loading: boolean) => {
+      set((state) => ({
+        ...state,
+        bucketFiles: [],
+        loading: {
+          ...state.loading,
+          loadingBucketFiles: loading,
+        },
+        error: {
+          ...state.error,
+          errorBucketFiles: '',
+        },
+      }));
+    },
+    getBucketFilesSuccess: (loading: boolean, response) => {
+      set((state) => ({
+        ...state,
+        bucketFiles: response,
+        loading: {
+          ...state.loading,
+          loadingBucketFiles: loading,
+        },
+      }));
+    },
+    getBucketFilesFail: (loading: boolean, error: string) => {
+      set((state) => ({
+        ...state,
+        loading: {
+          ...state.loading,
+          loadingBucketFiles: loading,
+        },
+        error: {
+          ...state.error,
+          errorBucketFiles: error,
+        },
+      }));
+    },
+
     patchTrainingSelection: () => {
       set((state) => ({
         ...state,
@@ -246,6 +307,7 @@ export const usePdcApprovalsStore = create<PdcApprovalsState>()(
           ...state.error,
           errorTrainingList: '',
           errorResponse: '',
+          errorBucketFiles: '',
         },
       }));
     },

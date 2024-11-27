@@ -124,7 +124,11 @@ export default function Calendar({
   }, [swrUnavailableDates, swrError]);
 
   useEffect(() => {
-    if (leaveName === LeaveName.SICK || leaveName === LeaveName.SPECIAL_PRIVILEGE) {
+    if (
+      leaveName === LeaveName.SICK ||
+      leaveName === LeaveName.SPECIAL_PRIVILEGE ||
+      leaveName === LeaveName.SOLO_PARENT
+    ) {
       //remove past dates up to last date of duty
       setSelectedDates(selectedDates.filter((dates) => dayjs(`${dates}`).diff(`${lastDateOfDuty}`, 'day') > 0));
     } else {
@@ -148,18 +152,20 @@ export default function Calendar({
         leaveName === LeaveName.SICK) &&
       futureLeaveCount <= 0
     ) {
-      //check if there are only past dates selected for VL, FL, SOLO PARENT - legit late filing
+      //check if there are only past dates selected for VL, FL - legit late filing
       if (
-        (leaveName === LeaveName.VACATION || leaveName === LeaveName.FORCED || leaveName === LeaveName.SOLO_PARENT) &&
+        (leaveName === LeaveName.VACATION || leaveName === LeaveName.FORCED) &&
         isLateFiling &&
         selectedDates.filter((dates) => dayjs(`${dates}`).diff(`${today}`, 'day') < 0).length > 0 &&
         selectedDates.filter((dates) => dayjs(`${dates}`).diff(`${today}`, 'day') > 10).length <= 0
       ) {
         //do nothing - will not clear the selected dates array
       }
-      //check if there are only past dates selected for SPL/SICK - legit late filing
+      //check if there are only past dates selected for SPL/SICK/SOLO PARENT - legit late filing
       else if (
-        (leaveName === LeaveName.SICK || leaveName === LeaveName.SPECIAL_PRIVILEGE) &&
+        (leaveName === LeaveName.SICK ||
+          leaveName === LeaveName.SPECIAL_PRIVILEGE ||
+          leaveName === LeaveName.SOLO_PARENT) &&
         isLateFiling &&
         selectedDates.filter((dates) => dayjs(`${dates}`).diff(`${lastDateOfDuty}`, 'day') < 0).length > 0 &&
         selectedDates.filter((dates) => dayjs(`${dates}`).diff(`${lastDateOfDuty}`, 'day') > 10).length <= 0
@@ -232,9 +238,11 @@ export default function Calendar({
           ) {
             setSelectedDates((selectedDates) => [...selectedDates, specifiedDate]);
           }
-          //for SPL/SICK, between last duty date and today and not late filing
+          //for SPL/SICK/SOLO PARENT, between last duty date and today and not late filing
           if (
-            (leaveName === LeaveName.SPECIAL_PRIVILEGE || leaveName === LeaveName.SICK) &&
+            (leaveName === LeaveName.SPECIAL_PRIVILEGE ||
+              leaveName === LeaveName.SICK ||
+              leaveName === LeaveName.SOLO_PARENT) &&
             DateFormatter(specifiedDate, 'MM-DD-YYYY') > DateFormatter(lastDateOfDuty, 'MM-DD-YYYY') &&
             dayjs(`${specifiedDate}`).diff(`${today}`, 'day') <= 10 &&
             !isLateFiling
@@ -375,7 +383,12 @@ export default function Calendar({
   //search for last date of duty from today
   useEffect(() => {
     setErrorAllowableSpl(null);
-    if ((leaveName === LeaveName.SPECIAL_PRIVILEGE || leaveName === LeaveName.SICK) && applyLeaveModalIsOpen) {
+    if (
+      (leaveName === LeaveName.SPECIAL_PRIVILEGE ||
+        leaveName === LeaveName.SICK ||
+        leaveName === LeaveName.SOLO_PARENT) &&
+      applyLeaveModalIsOpen
+    ) {
       isLastDutyDate(today);
     }
   }, [leaveName, applyLeaveModalIsOpen]);
@@ -476,10 +489,8 @@ export default function Calendar({
                         className={classNames(
                           isEqual(day, selectedDay) && 'text-gray-900 font-semibold',
 
-                          //disable date selection for past dates from current day for VL/FL/SOLO
-                          (leaveName === LeaveName.VACATION ||
-                            leaveName === LeaveName.FORCED ||
-                            leaveName === LeaveName.SOLO_PARENT) &&
+                          //disable date selection for past dates from current day for VL/FL
+                          (leaveName === LeaveName.VACATION || leaveName === LeaveName.FORCED) &&
                             dayjs(`${day}`).diff(`${today}`, 'day') < 0 &&
                             isLateFiling === false &&
                             'text-slate-300',
@@ -515,8 +526,10 @@ export default function Calendar({
                                 dayjs(`${dates}`).diff(`${today}`, 'day') <= 10
                             ).length <= 0 &&
                             'text-slate-300',
-                          //disable date selection for past dates from current day for SPL/SICK ONLY
-                          (leaveName === LeaveName.SPECIAL_PRIVILEGE || leaveName === LeaveName.SICK) &&
+                          //disable date selection for past dates from last day of duty for SPL/SICK ONLY
+                          (leaveName === LeaveName.SPECIAL_PRIVILEGE ||
+                            leaveName === LeaveName.SICK ||
+                            leaveName === LeaveName.SOLO_PARENT) &&
                             DateFormatter(day, 'MM-DD-YYYY') <= DateFormatter(lastDateOfDuty, 'MM-DD-YYYY') &&
                             isLateFiling === false &&
                             'text-slate-300',
