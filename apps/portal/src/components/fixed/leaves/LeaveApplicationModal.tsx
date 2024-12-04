@@ -309,6 +309,17 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
     setValue('isLateFiling', lateFiling);
   };
 
+  //reset late filing justification field if lateFiling is off
+  useEffect(() => {
+    if (lateFiling === false) {
+      setValue('lateFilingJustification', null);
+    }
+  }, [lateFiling]);
+
+  useEffect(() => {
+    console.log(watch('lateFilingJustification'), 'aaaaaaa');
+  }, [watch('lateFilingJustification')]);
+
   //check if there are pending leaves of the same name being filed, return true/false
   useEffect(() => {
     //store pending leaves to temporary var if any
@@ -1478,6 +1489,32 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
                         />
                       )}
                     </div>
+                  </>
+                ) : null}
+
+                {lateFiling ? (
+                  <>
+                    <label className="text-slate-500 text-md font-medium">
+                      Justification Letter:<span className="text-red-600">*</span>
+                    </label>
+                    <textarea
+                      // {...(watch('typeOfLeaveDetails.leaveName') === LeaveName.VACATION ||
+                      // watch('typeOfLeaveDetails.leaveName') === LeaveName.FORCED ||
+                      // watch('typeOfLeaveDetails.leaveName') === LeaveName.SPECIAL_PRIVILEGE
+                      //   ? { ...register('location') }
+                      //   : watch('typeOfLeaveDetails.leaveName') === LeaveName.SICK
+                      //   ? { ...register('illness') }
+                      //   : watch('typeOfLeaveDetails.leaveName') === LeaveName.STUDY
+                      //   ? { ...register('studyLeaveOther') }
+                      //   : watch('typeOfLeaveDetails.leaveName') === LeaveName.SPECIAL_LEAVE_BENEFITS_FOR_WOMEN
+                      //   ? { ...register('specialLeaveWomenIllness') }
+                      //   : null)}
+                      {...register('lateFilingJustification')}
+                      required
+                      rows={5}
+                      placeholder={`Specify reason why Leave was filed late`}
+                      className="resize-none w-full p-2 mt-1 rounded-md text-slate-500 text-md border-slate-300 mb-2"
+                    ></textarea>
                   </>
                 ) : null}
 

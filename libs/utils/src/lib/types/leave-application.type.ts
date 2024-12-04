@@ -51,6 +51,8 @@ export type LeaveApplicationForm = {
   isLateFiling: boolean;
 
   leaveMonetization?: LeaveMonetizationDetail;
+
+  lateFilingJustification?: string | null;
 };
 
 // Employee full leave details
