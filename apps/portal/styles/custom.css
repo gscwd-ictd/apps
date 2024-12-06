@@ -225,3 +225,17 @@ body {
   -ms-transform-origin: 100% 100%;
   transform-origin: 100% 100%;
 }
+
+/* TIP TAP PLACEHOLDER -used in Leave Application modal */
+.tiptap p.is-editor-empty:first-child::before {
+  color: #adb5bd;
+  content: attr(data-placeholder);
+  float: left;
+  height: 0;
+  pointer-events: none;
+}
+
+.tiptap {
+  padding-top: 10px;
+  padding-bottom: 25px;
+}

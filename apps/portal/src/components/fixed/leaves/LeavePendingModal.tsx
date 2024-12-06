@@ -13,6 +13,7 @@ import { useLeaveLedgerStore } from 'apps/portal/src/store/leave-ledger.store';
 import CancelLeaveModal from './CancelLeaveModal';
 import { DateFormatter } from 'libs/utils/src/lib/functions/DateFormatter';
 import { DateTimeFormatter } from 'libs/utils/src/lib/functions/DateTimeFormatter';
+import { JustificationLetterPdfModal } from './JustificationLetterPdfModal';
 
 type LeavePendingModalProps = {
   modalState: boolean;
@@ -28,10 +29,13 @@ export const LeavePendingModal = ({ modalState, setModalState, closeModalAction 
     errorLeaveDetails,
     pendingLeaveModalIsOpen,
     cancelLeaveModalIsOpen,
+    justificationLetterPdfModalIsOpen,
+
     setCancelLeaveModalIsOpen,
     getLeaveIndividualDetail,
     getLeaveIndividualDetailSuccess,
     getLeaveIndividualDetailFail,
+    setJustificationLetterPdfModalIsOpen,
   } = useLeaveStore((state) => ({
     leaveIndividualDetail: state.leaveIndividualDetail,
     leaveId: state.leaveId,
@@ -39,10 +43,12 @@ export const LeavePendingModal = ({ modalState, setModalState, closeModalAction 
     errorLeaveDetails: state.error.errorIndividualLeave,
     pendingLeaveModalIsOpen: state.pendingLeaveModalIsOpen,
     cancelLeaveModalIsOpen: state.cancelLeaveModalIsOpen,
+    justificationLetterPdfModalIsOpen: state.justificationLetterPdfModalIsOpen,
     setCancelLeaveModalIsOpen: state.setCancelLeaveModalIsOpen,
     getLeaveIndividualDetail: state.getLeaveIndividualDetail,
     getLeaveIndividualDetailSuccess: state.getLeaveIndividualDetailSuccess,
     getLeaveIndividualDetailFail: state.getLeaveIndividualDetailFail,
+    setJustificationLetterPdfModalIsOpen: state.setJustificationLetterPdfModalIsOpen,
   }));
 
   //swr fetch for these are found in Leave Application Modal
@@ -86,6 +92,11 @@ export const LeavePendingModal = ({ modalState, setModalState, closeModalAction 
     setCancelLeaveModalIsOpen(false);
   };
 
+  // close action for Justification Letter PDF Modal
+  const closeJustificationLetterPdfModal = async () => {
+    setJustificationLetterPdfModalIsOpen(false);
+  };
+
   return (
     <>
       <Modal
@@ -113,6 +124,15 @@ export const LeavePendingModal = ({ modalState, setModalState, closeModalAction 
             setModalState={setCancelLeaveModalIsOpen}
             closeModalAction={closeCancelLeaveModal}
           />
+
+          {/* Justification Letter PDF Modal */}
+          <JustificationLetterPdfModal
+            title="Justification Letter"
+            modalState={justificationLetterPdfModalIsOpen}
+            setModalState={setJustificationLetterPdfModalIsOpen}
+            closeModalAction={closeJustificationLetterPdfModal}
+          />
+
           {loadingLeaveDetails || errorLeaveDetails ? (
             <div className="w-full h-[90%]  static flex flex-col justify-items-center items-center place-items-center">
               <SpinnerDotted
@@ -551,15 +571,28 @@ export const LeavePendingModal = ({ modalState, setModalState, closeModalAction 
         <Modal.Footer>
           <div className="flex justify-end gap-2 px-4">
             {leaveIndividualDetail?.leaveApplicationBasicInfo?.status ? (
-              <Button
-                variant={'warning'}
-                size={'md'}
-                loading={false}
-                onClick={(e) => setCancelLeaveModalIsOpen(true)}
-                type="submit"
-              >
-                Cancel Leave
-              </Button>
+              <>
+                {leaveIndividualDetail?.leaveApplicationBasicInfo?.isLateFiling === 'true' ? (
+                  <Button
+                    variant={'primary'}
+                    size={'md'}
+                    loading={false}
+                    onClick={(e) => setJustificationLetterPdfModalIsOpen(true)}
+                  >
+                    Justification
+                  </Button>
+                ) : null}
+
+                <Button
+                  variant={'warning'}
+                  size={'md'}
+                  loading={false}
+                  onClick={(e) => setCancelLeaveModalIsOpen(true)}
+                  type="submit"
+                >
+                  Cancel Leave
+                </Button>
+              </>
             ) : null}
           </div>
         </Modal.Footer>

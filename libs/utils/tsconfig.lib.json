@@ -16,5 +16,5 @@
     "**/*.spec.jsx",
     "**/*.test.jsx"
   ],
-  "include": ["**/*.js", "**/*.jsx", "**/*.ts", "**/*.tsx"]
+  "include": ["**/*.js", "**/*.jsx", "**/*.ts", "**/*.tsx", "../oneui/src/components/RichTextMenuBar.tsx"]
 }
