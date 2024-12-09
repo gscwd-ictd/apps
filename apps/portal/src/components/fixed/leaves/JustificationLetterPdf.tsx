@@ -6,7 +6,6 @@ import React from 'react';
 import { EmployeeDetails } from '../../../types/employee.type';
 import { EmployeeLeaveDetails } from '../../../../../../libs/utils/src/lib/types/leave-application.type';
 import Html from 'react-pdf-html';
-import parse from 'html-react-parser';
 
 const styles = StyleSheet.create({
   page: {

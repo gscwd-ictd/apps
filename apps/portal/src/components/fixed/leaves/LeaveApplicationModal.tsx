@@ -1510,23 +1510,6 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
                       <label className="text-slate-500 text-md font-medium">
                         Select Leave Dates:<span className="text-red-600">*</span>
                       </label>
-
-                      {watch('typeOfLeaveDetails.leaveName') === LeaveName.FORCED ||
-                      watch('typeOfLeaveDetails.leaveName') === LeaveName.VACATION ||
-                      watch('typeOfLeaveDetails.leaveName') === LeaveName.SPECIAL_PRIVILEGE ||
-                      watch('typeOfLeaveDetails.leaveName') === LeaveName.SOLO_PARENT ||
-                      watch('typeOfLeaveDetails.leaveName') === LeaveName.SICK ? (
-                        <div className="flex gap-2 items-center  p-2 rounded">
-                          <label className=" text-md font-medium">Enable Late Filing:</label>
-                          <Checkbox
-                            id="isLateFiling"
-                            checked={lateFiling}
-                            label="Late Filing"
-                            className={'w-5 h-5'}
-                            onChange={() => handleTypeOfFiling(!lateFiling)}
-                          />
-                        </div>
-                      ) : null}
                     </div>
 
                     <div className="w-full p-4 bg-gray-50 rounded">
@@ -1549,6 +1532,30 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
                         />
                       )}
                     </div>
+
+                    {watch('typeOfLeaveDetails.leaveName') === LeaveName.FORCED ||
+                    watch('typeOfLeaveDetails.leaveName') === LeaveName.VACATION ||
+                    watch('typeOfLeaveDetails.leaveName') === LeaveName.SPECIAL_PRIVILEGE ||
+                    watch('typeOfLeaveDetails.leaveName') === LeaveName.SOLO_PARENT ||
+                    watch('typeOfLeaveDetails.leaveName') === LeaveName.SICK ? (
+                      <div className="flex flex-col gap-1 w-full bg-slate-100 text-sm p-2 mt-1">
+                        <div className="flex gap-2 items-center justify-start rounded ">
+                          <label className="text-sm font-medium text-slate-500 whitespace-nowrap">
+                            Enable Late Filing:
+                          </label>
+                          <Checkbox
+                            id="isLateFiling"
+                            checked={lateFiling}
+                            label="Late Filing"
+                            className={'w-5 h-5'}
+                            onChange={() => handleTypeOfFiling(!lateFiling)}
+                          />
+                        </div>
+                        <label className="text-xs text-red-400">
+                          Note: Only check this if you were unable to file leave upon return to work.
+                        </label>
+                      </div>
+                    ) : null}
                   </>
                 ) : null}
 
