@@ -1,11 +1,12 @@
 /* eslint-disable @nx/enforce-module-boundaries */
 /* eslint-disable react/no-unescaped-entities */
 /* eslint-disable jsx-a11y/alt-text */
-import { Page, Text, Document, StyleSheet, View, Image } from '@react-pdf/renderer';
+import { Page, Text, Document, StyleSheet, View, Image, Font } from '@react-pdf/renderer';
 import React from 'react';
 import { EmployeeDetails } from '../../../types/employee.type';
 import { EmployeeLeaveDetails } from '../../../../../../libs/utils/src/lib/types/leave-application.type';
 import Html from 'react-pdf-html';
+import parse from 'html-react-parser';
 
 const styles = StyleSheet.create({
   page: {
@@ -15,7 +16,7 @@ const styles = StyleSheet.create({
     marginRight: 35,
     display: 'flex',
     flexDirection: 'column',
-    fontFamily: 'Times-Roman',
+    fontFamily: 'Helvetica',
   },
   header: {
     display: 'flex',
@@ -32,6 +33,9 @@ const styles = StyleSheet.create({
     paddingTop: 5,
     paddingBottom: 5,
   },
+  p: {
+    fontWeight: 900,
+  },
 });
 
 type JustificationLetterPdfProps = {
@@ -42,6 +46,8 @@ type JustificationLetterPdfProps = {
 export const JustificationLetterPdf = ({ employeeDetails, leaveDetails }: JustificationLetterPdfProps): JSX.Element => {
   console.log(leaveDetails.leaveApplicationBasicInfo.lateFilingJustification);
   const html = `
+  <html>
+  <body>
   <style>
     p {
       margin-top: 0px; /* between paragraphs */
@@ -49,9 +55,6 @@ export const JustificationLetterPdf = ({ employeeDetails, leaveDetails }: Justif
       font-size: 16px;
      },
   </style>
-
-  <html>
-  <body>
   ${leaveDetails.leaveApplicationBasicInfo.lateFilingJustification}
   </body>
   </html>
@@ -74,7 +77,7 @@ export const JustificationLetterPdf = ({ employeeDetails, leaveDetails }: Justif
                   style={{
                     fontSize: 18,
                     paddingTop: 20,
-                    fontFamily: 'Times-Bold',
+                    fontFamily: 'Helvetica-Bold',
                   }}
                 >
                   Justification Letter
@@ -82,11 +85,12 @@ export const JustificationLetterPdf = ({ employeeDetails, leaveDetails }: Justif
               </View>
             </View>
 
-            <View style={{ height: 5 }}></View>
-            {/* OFFICE and Employee Name */}
-            <View style={styles.container}>
-              <Html>{html}</Html>
+            <View style={{ height: 30 }}></View>
 
+            {/* actual justification letter in html */}
+            <Html>{html}</Html>
+
+            <View style={styles.container}>
               <View
                 style={{
                   width: '30%',

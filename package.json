@@ -80,6 +80,7 @@
     "date-fns": "^2.29.3",
     "dayjs": "^1.11.8",
     "framer-motion": "^7.6.4",
+    "html-react-parser": "^5.2.0",
     "keen-slider": "^6.8.5",
     "lodash.debounce": "^4.0.8",
     "lucide-react": "^0.108.0",

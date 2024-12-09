@@ -1516,13 +1516,13 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
                       watch('typeOfLeaveDetails.leaveName') === LeaveName.SPECIAL_PRIVILEGE ||
                       watch('typeOfLeaveDetails.leaveName') === LeaveName.SOLO_PARENT ||
                       watch('typeOfLeaveDetails.leaveName') === LeaveName.SICK ? (
-                        <div className="flex gap-2 items-center bg-red-100 p-2 rounded">
-                          <label className="text-red-500 text-md font-medium">Enable Late Filing:</label>
+                        <div className="flex gap-2 items-center  p-2 rounded">
+                          <label className=" text-md font-medium">Enable Late Filing:</label>
                           <Checkbox
                             id="isLateFiling"
                             checked={lateFiling}
                             label="Late Filing"
-                            className={'w-5 h-5 border-red-500'}
+                            className={'w-5 h-5'}
                             onChange={() => handleTypeOfFiling(!lateFiling)}
                           />
                         </div>
@@ -1559,9 +1559,9 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
                     </label>
 
                     <div className="resize-none w-full p-2 mt-1 rounded-md text-slate-500 text-md border-slate-300 mb-2 border focus:border-0">
-                      <RichTextMenuBar editor={editor} content={''} />
+                      {/* <RichTextMenuBar editor={editor} content={''} /> */}
                       <EditorContent
-                        placeholder={'<p>asdasdas</p>'}
+                        placeholder={''}
                         editor={editor}
                         style={{ whiteSpace: 'pre-line' }}
                       ></EditorContent>
