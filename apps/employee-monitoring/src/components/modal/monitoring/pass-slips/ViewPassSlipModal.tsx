@@ -245,10 +245,10 @@ const ViewPassSlipModal: FunctionComponent<ViewPassSlipModalProps> = ({
                 <div className="grid px-5 mt-2 sm:grid-rows-2 sm:grid-cols-1 md:grid-rows-2 md:grid-cols-1 lg:grid-rows-1 lg:grid-cols-2">
                   <div className="sm:order-1 md:order-1 lg:order-2">
                     <LabelValue
-                      label="Pass Slip Date"
+                      label="Nature of Business"
                       direction="top-to-bottom"
                       textSize="md"
-                      value={DateTimeFormatter(rowData.createdAt, 'MMMM DD, YYYY hh:mm A')}
+                      value={rowData.natureOfBusiness}
                     />
                   </div>
 
@@ -261,6 +261,49 @@ const ViewPassSlipModal: FunctionComponent<ViewPassSlipModalProps> = ({
                     />
                   </div>
                 </div>
+
+                {!isEmpty(rowData.hrmoDisapprovalRemarks) ? (
+                  <div className="grid grid-cols-1 grid-rows-1 px-5 sm:gap-2 md:gap:2 lg:gap-0">
+                    <LabelValue
+                      label="Disapproval Remarks"
+                      direction="top-to-bottom"
+                      textSize="md"
+                      value={rowData.hrmoDisapprovalRemarks ? rowData.hrmoDisapprovalRemarks : 'N/A'}
+                    />
+                  </div>
+                ) : null}
+
+                <hr />
+                <div className="grid grid-cols-1 grid-rows-1 px-5 sm:gap-2 md:gap:2 lg:gap-0">
+                  <LabelValue
+                    label="Pass Slip Date: "
+                    textSize="md"
+                    value={DateTimeFormatter(rowData.createdAt, 'MMMM DD, YYYY hh:mm A')}
+                    direction="left-to-right"
+                  />
+                </div>
+
+                {!isEmpty(rowData.hrmoApprovalDate) ? (
+                  <div className="grid grid-cols-1 grid-rows-1 px-5 sm:gap-2 md:gap:2 lg:gap-0">
+                    <LabelValue
+                      label="HRMO Approval Date: "
+                      textSize="md"
+                      value={DateTimeFormatter(rowData.hrmoApprovalDate, 'MMMM DD, YYYY hh:mm A')}
+                      direction="left-to-right"
+                    />
+                  </div>
+                ) : null}
+
+                {!isEmpty(rowData.supervisorApprovalDate) ? (
+                  <div className="grid grid-cols-1 grid-rows-1 px-5 sm:gap-2 md:gap:2 lg:gap-0">
+                    <LabelValue
+                      label="Supervisor Approval Date: "
+                      textSize="md"
+                      value={DateTimeFormatter(rowData.supervisorApprovalDate, 'MMMM DD, YYYY hh:mm A')}
+                      direction="left-to-right"
+                    />
+                  </div>
+                ) : null}
 
                 <hr />
                 <div className="grid px-5 sm:grid-rows-2 sm:grid-cols-1 md:grid-rows-2 md:grid-cols-1 lg:grid-rows-1 lg:grid-cols-2 sm:gap-2 md:gap:2 lg:gap-0">
@@ -284,16 +327,17 @@ const ViewPassSlipModal: FunctionComponent<ViewPassSlipModalProps> = ({
 
                 <div className="grid px-5 sm:grid-rows-2 sm:grid-cols-1 md:grid-rows-2 md:grid-cols-1 lg:grid-rows-1 lg:grid-cols-2 sm:gap-2 md:gap:2 lg:gap-0">
                   <LabelValue
-                    label="Nature of Business"
-                    direction="top-to-bottom"
-                    textSize="md"
-                    value={rowData.natureOfBusiness}
-                  />
-                  <LabelValue
                     label="Estimated Hours"
                     direction="top-to-bottom"
                     textSize="md"
                     value={rowData.estimateHours}
+                  />
+
+                  <LabelValue
+                    label="Medical Purpose"
+                    direction="top-to-bottom"
+                    textSize="md"
+                    value={rowData.isMedical ? 'Yes' : 'No'}
                   />
                 </div>
 
