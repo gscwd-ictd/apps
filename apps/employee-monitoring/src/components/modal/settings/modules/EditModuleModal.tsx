@@ -75,7 +75,6 @@ const EditModuleModal: FunctionComponent<EditModalProps> = ({
   const onSubmit: SubmitHandler<Module> = (data: Module) => {
     EmptyResponse();
 
-    // console.log(data);
     handlePatchResult(data);
   };
 

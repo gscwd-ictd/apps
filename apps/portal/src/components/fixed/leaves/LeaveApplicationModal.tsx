@@ -737,7 +737,6 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
 
   useEffect(() => {
     setValue('lateFilingJustification', lateFilingJustification);
-    console.log(lateFilingJustification);
   }, [lateFilingJustification]);
 
   //reset late filing justification field if lateFiling is off
@@ -1552,7 +1551,8 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
                           />
                         </div>
                         <label className="text-xs text-red-400">
-                          Note: Only check this if you were unable to file leave upon return to work.
+                          Note: Only check this if you were unable to file leave upon return to work for Sick and
+                          Special Leave and within 10 days from the date of leave for Vacation or Forced Leave.
                         </label>
                       </div>
                     ) : null}

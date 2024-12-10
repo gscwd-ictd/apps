@@ -1,14 +1,13 @@
 /* eslint-disable @nx/enforce-module-boundaries */
 import { Button, Modal } from '@gscwd-apps/oneui';
 import { useLeaveStore } from 'apps/portal/src/store/leave.store';
-import LeavePdf from './LeavePdf';
 import { useEmployeeStore } from 'apps/portal/src/store/employee.store';
 import { HiX } from 'react-icons/hi';
-import { useLeaveLedgerStore } from 'apps/portal/src/store/leave-ledger.store';
 import { isEmpty } from 'lodash';
 import { PDFDownloadLink, PDFViewer } from '@react-pdf/renderer';
 import { SpinnerDotted } from 'spinners-react';
 import JustificationLetterPdf from './JustificationLetterPdf';
+import { useApprovalStore } from 'apps/portal/src/store/approvals.store';
 
 type ConfirmationModalProps = {
   modalState: boolean;
@@ -23,10 +22,9 @@ export const JustificationLetterPdfModal = ({
   closeModalAction,
   title,
 }: ConfirmationModalProps) => {
-  const { leaveIndividualDetail } = useLeaveStore((state) => ({
+  const { leaveIndividualDetail } = useApprovalStore((state) => ({
     leaveIndividualDetail: state.leaveIndividualDetail,
   }));
-
   const employeeDetails = useEmployeeStore((state) => state.employeeDetails);
 
   return (

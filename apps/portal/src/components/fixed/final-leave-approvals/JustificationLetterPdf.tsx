@@ -4,7 +4,10 @@
 import { Page, Text, Document, StyleSheet, View, Image, Font } from '@react-pdf/renderer';
 import React from 'react';
 import { EmployeeDetails } from '../../../types/employee.type';
-import { EmployeeLeaveDetails } from '../../../../../../libs/utils/src/lib/types/leave-application.type';
+import {
+  EmployeeLeaveDetails,
+  SupervisorLeaveDetails,
+} from '../../../../../../libs/utils/src/lib/types/leave-application.type';
 import Html from 'react-pdf-html';
 
 const styles = StyleSheet.create({
@@ -38,7 +41,7 @@ const styles = StyleSheet.create({
 });
 
 type JustificationLetterPdfProps = {
-  leaveDetails: EmployeeLeaveDetails;
+  leaveDetails: SupervisorLeaveDetails;
 };
 
 export const JustificationLetterPdf = ({ leaveDetails }: JustificationLetterPdfProps): JSX.Element => {
@@ -52,13 +55,13 @@ export const JustificationLetterPdf = ({ leaveDetails }: JustificationLetterPdfP
       font-size: 16px;
      },
   </style>
-  ${
-    leaveDetails?.leaveApplicationBasicInfo?.lateFilingJustification != null &&
-    leaveDetails?.leaveApplicationBasicInfo?.lateFilingJustification != '' &&
-    leaveDetails?.leaveApplicationBasicInfo?.lateFilingJustification != '<p></p>'
-      ? leaveDetails?.leaveApplicationBasicInfo?.lateFilingJustification
-      : '<p>No Letter Found</p>'
-  }
+    ${
+      leaveDetails?.lateFilingJustification != null &&
+      leaveDetails?.lateFilingJustification != '' &&
+      leaveDetails?.lateFilingJustification != '<p></p>'
+        ? leaveDetails?.lateFilingJustification
+        : '<p>No Letter Found</p>'
+    }
   </body>
   </html>
   `;
@@ -112,16 +115,14 @@ export const JustificationLetterPdf = ({ leaveDetails }: JustificationLetterPdfP
                     marginLeft: 0,
                   }}
                   src={
-                    process.env.NEXT_PUBLIC_IMAGE_SERVER_URL +
-                    leaveDetails?.leaveApplicationBasicInfo?.employeeSignature
-                      ? process.env.NEXT_PUBLIC_IMAGE_SERVER_URL +
-                        leaveDetails?.leaveApplicationBasicInfo?.employeeSignature
+                    process.env.NEXT_PUBLIC_IMAGE_SERVER_URL + leaveDetails?.employee?.signatureUrl
+                      ? process.env.NEXT_PUBLIC_IMAGE_SERVER_URL + leaveDetails?.employee?.signatureUrl
                       : '/'
                   }
                 />
                 <Text style={{ paddingTop: 0, textAlign: 'center', fontSize: 14 }}>
                   {' '}
-                  {leaveDetails.leaveApplicationBasicInfo.employeeName}
+                  {leaveDetails.employee.employeeName}
                 </Text>
                 <Text style={{ marginTop: -12, textAlign: 'center' }}>_____________</Text>
                 <Text

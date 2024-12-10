@@ -47,6 +47,9 @@ export type ApprovalState = {
 
   leaveApplications: Array<SupervisorLeaveDetails>; // new approval page using data tables
 
+  justificationLetterPdfModalIsOpen: boolean;
+  setJustificationLetterPdfModalIsOpen: (justificationLetterPdfModalIsOpen: boolean) => void;
+
   confirmApplicationModalIsOpen: boolean;
   setConfirmApplicationModalIsOpen: (confirmApplicationModalIsOpen: boolean) => void;
 
@@ -136,6 +139,11 @@ export const useFinalLeaveApprovalStore = create<ApprovalState>()(
 
     leaveId: '',
     leaveIndividualDetail: {} as SupervisorLeaveDetails,
+
+    justificationLetterPdfModalIsOpen: false,
+    setJustificationLetterPdfModalIsOpen: (justificationLetterPdfModalIsOpen: boolean) => {
+      set((state) => ({ ...state, justificationLetterPdfModalIsOpen }));
+    },
 
     tab: 1,
     setAlert: (alert: AlertState) => {

@@ -10,7 +10,9 @@ function UseRenderPassSlipStatus(status: PassSlipStatus, textSize: TextSize) {
     <BadgePill
       textSize={textSize}
       variant={
-        status === PassSlipStatus.APPROVED
+        status === PassSlipStatus.APPROVED ||
+        status === PassSlipStatus.APPROVED_WITHOUT_MEDICAL_CERTIFICATE ||
+        status === PassSlipStatus.APPROVED_WITH_MEDICAL_CERTIFICATE
           ? 'success'
           : status === PassSlipStatus.DISAPPROVED || status === PassSlipStatus.DISAPPROVED_BY_HRMO
           ? 'error'
@@ -50,6 +52,10 @@ function UseRenderPassSlipStatus(status: PassSlipStatus, textSize: TextSize) {
           ? 'Used'
           : status === PassSlipStatus.UNUSED
           ? 'Unused'
+          : status === PassSlipStatus.APPROVED_WITHOUT_MEDICAL_CERTIFICATE
+          ? 'Approved without Medical Certificate'
+          : status === PassSlipStatus.APPROVED_WITH_MEDICAL_CERTIFICATE
+          ? 'Approved with Medical Certificate'
           : status
       }
     />

@@ -29,6 +29,7 @@ import UseRenderPassSlipStatus from 'apps/portal/src/utils/functions/RenderPassS
 import { TextSize } from 'libs/utils/src/lib/enums/text-size.enum';
 import { SalaryGradeConverter } from 'libs/utils/src/lib/functions/SalaryGradeConverter';
 import { ApprovalType } from 'libs/utils/src/lib/enums/approval-type.enum';
+import UseRenderPassSlipIsMedical from 'apps/portal/src/utils/functions/RenderPassSlipIsMedical';
 
 export default function PassSlipApprovals({ employeeDetails }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const {
@@ -213,9 +214,14 @@ export default function PassSlipApprovals({ employeeDetails }: InferGetServerSid
       cell: (info) => info.getValue(),
     }),
     columnHelper.accessor('estimateHours', {
-      header: 'Estimated Hours',
+      header: 'Hours',
       enableColumnFilter: false,
       cell: (info) => info.getValue(),
+    }),
+    columnHelper.accessor('isMedical', {
+      header: 'Is Medical',
+      enableColumnFilter: false,
+      cell: (info) => UseRenderPassSlipIsMedical(info.getValue(), TextSize.TEXT_SM),
     }),
     columnHelper.accessor('status', {
       header: 'Status',

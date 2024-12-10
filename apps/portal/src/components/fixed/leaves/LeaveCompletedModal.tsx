@@ -815,19 +815,18 @@ export const LeaveCompletedModal = ({ modalState, setModalState, closeModalActio
               </>
             ) : leaveIndividualDetail?.leaveApplicationBasicInfo?.status ? (
               <>
+                {leaveIndividualDetail?.leaveApplicationBasicInfo?.isLateFiling === 'true' ? (
+                  <Button
+                    variant={'primary'}
+                    size={'md'}
+                    loading={false}
+                    onClick={(e) => setJustificationLetterPdfModalIsOpen(true)}
+                  >
+                    Justification
+                  </Button>
+                ) : null}
                 {leaveIndividualDetail?.leaveApplicationBasicInfo?.status === LeaveStatus.APPROVED ? (
                   <>
-                    {leaveIndividualDetail?.leaveApplicationBasicInfo?.isLateFiling === 'true' ? (
-                      <Button
-                        variant={'primary'}
-                        size={'md'}
-                        loading={false}
-                        onClick={(e) => setJustificationLetterPdfModalIsOpen(true)}
-                      >
-                        Justification
-                      </Button>
-                    ) : null}
-
                     <Button
                       variant={'primary'}
                       size={'md'}

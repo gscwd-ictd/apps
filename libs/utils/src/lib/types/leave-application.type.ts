@@ -241,6 +241,7 @@ export type SupervisorLeaveDetails = {
     employeeId: string;
     employeeName: string;
     companyId: string;
+    signatureUrl: string;
   };
   supervisor: {
     supervisorId: string;
@@ -249,6 +250,8 @@ export type SupervisorLeaveDetails = {
   leaveName: string;
   leaveType?: string;
   leaveDates: Array<string>;
+
+  lateFilingJustification: string | null;
 };
 
 // leave cancellation
