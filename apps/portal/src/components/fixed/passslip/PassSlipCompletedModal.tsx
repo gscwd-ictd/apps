@@ -147,8 +147,7 @@ export const PassSlipCompletedModal = ({
                 {employeeDetails.employmentDetails.userRole != UserRole.JOB_ORDER &&
                 employeeDetails.employmentDetails.userRole != UserRole.COS &&
                 employeeDetails.employmentDetails.userRole != UserRole.COS_JO &&
-                passSlip.isDeductibleToPay? (
-
+                passSlip.isDeductibleToPay ? (
                   <AlertNotification alertType={`warning`} notifMessage={`Deductible to Pay`} dismissible={false} />
                 ) : null}
 
@@ -253,38 +252,30 @@ export const PassSlipCompletedModal = ({
                   </div>
                 </div>
 
-                <div className="flex flex-col justify-start items-start w-full sm:w-1/2 px-0.5 pb-3  ">
+                {passSlip.natureOfBusiness == NatureOfBusiness.OFFICIAL_BUSINESS ? (
+                  <div className="flex flex-col justify-start items-start w-full px-0.5 pb-3  ">
+                    <label className="text-slate-500 text-md whitespace-nowrap pb-0.5 ">
+                      {passSlip?.status === PassSlipStatus.DISAPPROVED_BY_HRMO
+                        ? `Date Disapproved by HRMO:`
+                        : 'Date Approved by HRMO:'}
+                    </label>
+
+                    <div className="w-auto ml-5">
+                      <label className=" text-md font-medium">{DateTimeFormatter(passSlip?.hrmoApprovalDate)}</label>
+                    </div>
+                  </div>
+                ) : null}
+
+                <div className="flex flex-col justify-start items-start w-full px-0.5 pb-3  ">
                   <label className="text-slate-500 text-md whitespace-nowrap pb-0.5 ">
-                    {passSlip.status === PassSlipStatus.APPROVED ||
-                    PassSlipStatus.AWAITING_MEDICAL_CERTIFICATE ||
-                    passSlip.status === PassSlipStatus.APPROVED_WITHOUT_MEDICAL_CERTIFICATE ||
-                    passSlip.status === PassSlipStatus.APPROVED_WITH_MEDICAL_CERTIFICATE
-                      ? `Date Approved:`
-                      : passSlip.status === PassSlipStatus.DISAPPROVED
-                      ? 'Date Disapproved:'
-                      : passSlip.status === PassSlipStatus.DISAPPROVED_BY_HRMO
-                      ? 'Date Disapproved:'
-                      : passSlip.status === PassSlipStatus.FOR_SUPERVISOR_APPROVAL &&
-                        passSlip.natureOfBusiness === NatureOfBusiness.OFFICIAL_BUSINESS
-                      ? 'Date Approved by HRMO:'
-                      : 'Date Approved:'}
+                    {passSlip?.status === PassSlipStatus.DISAPPROVED
+                      ? `Date Disapproved by Supervisor:`
+                      : 'Date Approved by Supervisor:'}
                   </label>
 
                   <div className="w-auto ml-5">
                     <label className=" text-md font-medium">
-                      {passSlip.status === PassSlipStatus.APPROVED ||
-                      PassSlipStatus.AWAITING_MEDICAL_CERTIFICATE ||
-                      passSlip.status === PassSlipStatus.APPROVED_WITHOUT_MEDICAL_CERTIFICATE ||
-                      passSlip.status === PassSlipStatus.APPROVED_WITH_MEDICAL_CERTIFICATE
-                        ? DateTimeFormatter(passSlip.supervisorApprovalDate)
-                        : passSlip.status === PassSlipStatus.DISAPPROVED
-                        ? DateTimeFormatter(passSlip.supervisorApprovalDate)
-                        : passSlip.status === PassSlipStatus.DISAPPROVED_BY_HRMO
-                        ? DateTimeFormatter(passSlip.hrmoApprovalDate)
-                        : passSlip.status === PassSlipStatus.FOR_SUPERVISOR_APPROVAL &&
-                          passSlip.natureOfBusiness === NatureOfBusiness.OFFICIAL_BUSINESS
-                        ? DateTimeFormatter(passSlip.hrmoApprovalDate)
-                        : '-- -- ----'}
+                      {DateTimeFormatter(passSlip?.supervisorApprovalDate)}
                     </label>
                   </div>
                 </div>

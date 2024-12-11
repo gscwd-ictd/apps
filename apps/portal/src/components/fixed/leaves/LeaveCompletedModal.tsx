@@ -14,6 +14,7 @@ import { useLeaveLedgerStore } from 'apps/portal/src/store/leave-ledger.store';
 import { DateFormatter } from 'libs/utils/src/lib/functions/DateFormatter';
 import { LeavePdfModal } from './LeavePdfModal';
 import { DateTimeFormatter } from 'libs/utils/src/lib/functions/DateTimeFormatter';
+import { JustificationLetterPdfModal } from './JustificationLetterPdfModal';
 
 type LeaveCompletedModalProps = {
   modalState: boolean;
@@ -30,7 +31,9 @@ export const LeaveCompletedModal = ({ modalState, setModalState, closeModalActio
     completedLeaveModalIsOpen,
     cancelLeaveModalIsOpen,
     leaveDetailsPdfModalIsOpen,
+    justificationLetterPdfModalIsOpen,
 
+    setJustificationLetterPdfModalIsOpen,
     getLeaveIndividualDetail,
     getLeaveIndividualDetailSuccess,
     getLeaveIndividualDetailFail,
@@ -44,7 +47,9 @@ export const LeaveCompletedModal = ({ modalState, setModalState, closeModalActio
     completedLeaveModalIsOpen: state.completedLeaveModalIsOpen,
     cancelLeaveModalIsOpen: state.cancelLeaveModalIsOpen,
     leaveDetailsPdfModalIsOpen: state.leaveDetailsPdfModalIsOpen,
+    justificationLetterPdfModalIsOpen: state.justificationLetterPdfModalIsOpen,
 
+    setJustificationLetterPdfModalIsOpen: state.setJustificationLetterPdfModalIsOpen,
     getLeaveIndividualDetail: state.getLeaveIndividualDetail,
     getLeaveIndividualDetailSuccess: state.getLeaveIndividualDetailSuccess,
     getLeaveIndividualDetailFail: state.getLeaveIndividualDetailFail,
@@ -95,6 +100,12 @@ export const LeaveCompletedModal = ({ modalState, setModalState, closeModalActio
   const closeLeaveDetailsPdfModal = async () => {
     setLeaveDetailsPdfModalIsOpen(false);
   };
+
+  // close action for Justification Letter PDF Modal
+  const closeJustificationLetterPdfModal = async () => {
+    setJustificationLetterPdfModalIsOpen(false);
+  };
+
   return (
     <>
       <Modal
@@ -129,6 +140,14 @@ export const LeaveCompletedModal = ({ modalState, setModalState, closeModalActio
             modalState={leaveDetailsPdfModalIsOpen}
             setModalState={setLeaveDetailsPdfModalIsOpen}
             closeModalAction={closeLeaveDetailsPdfModal}
+          />
+
+          {/* Justification Letter PDF Modal */}
+          <JustificationLetterPdfModal
+            title="Justification Letter"
+            modalState={justificationLetterPdfModalIsOpen}
+            setModalState={setJustificationLetterPdfModalIsOpen}
+            closeModalAction={closeJustificationLetterPdfModal}
           />
 
           {loadingLeaveDetails || errorLeaveDetails ? (
@@ -796,15 +815,27 @@ export const LeaveCompletedModal = ({ modalState, setModalState, closeModalActio
               </>
             ) : leaveIndividualDetail?.leaveApplicationBasicInfo?.status ? (
               <>
-                {leaveIndividualDetail?.leaveApplicationBasicInfo?.status === LeaveStatus.APPROVED ? (
+                {leaveIndividualDetail?.leaveApplicationBasicInfo?.isLateFiling === 'true' ? (
                   <Button
                     variant={'primary'}
                     size={'md'}
                     loading={false}
-                    onClick={(e) => setLeaveDetailsPdfModalIsOpen(true)}
+                    onClick={(e) => setJustificationLetterPdfModalIsOpen(true)}
                   >
-                    View PDF
+                    Justification
                   </Button>
+                ) : null}
+                {leaveIndividualDetail?.leaveApplicationBasicInfo?.status === LeaveStatus.APPROVED ? (
+                  <>
+                    <Button
+                      variant={'primary'}
+                      size={'md'}
+                      loading={false}
+                      onClick={(e) => setLeaveDetailsPdfModalIsOpen(true)}
+                    >
+                      View PDF
+                    </Button>
+                  </>
                 ) : null}
 
                 {leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName != LeaveName.MONETIZATION &&

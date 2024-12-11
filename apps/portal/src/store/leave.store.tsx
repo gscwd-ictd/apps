@@ -48,6 +48,7 @@ export type LeavesState = {
   leaveTypes: Array<LeaveBenefitOptions>;
   overlappingLeaveCount: number;
 
+  justificationLetterPdfModalIsOpen: boolean;
   leaveDetailsPdfModalIsOpen: boolean;
   applyLeaveModalIsOpen: boolean;
   pendingLeaveModalIsOpen: boolean;
@@ -87,6 +88,7 @@ export type LeavesState = {
   getUnavailableSuccess: (loading: boolean, response) => void;
   getUnavailableFail: (loading: boolean, error: string) => void;
 
+  setJustificationLetterPdfModalIsOpen: (justificationLetterPdfModalIsOpen: boolean) => void;
   setLeaveDetailsPdfModalIsOpen: (leaveDetailsPdfModalIsOpen: boolean) => void;
   setApplyLeaveModalIsOpen: (applyLeaveModalIsOpen: boolean) => void;
   setPendingLeaveModalIsOpen: (pendingLeaveModalIsOpen: boolean) => void;
@@ -138,6 +140,7 @@ export const useLeaveStore = create<LeavesState>()(
     overlappingLeaveCount: 0,
 
     //LEAVE MODAL
+    justificationLetterPdfModalIsOpen: false,
     leaveDetailsPdfModalIsOpen: false,
     applyLeaveModalIsOpen: false,
     pendingLeaveModalIsOpen: false,
@@ -174,6 +177,10 @@ export const useLeaveStore = create<LeavesState>()(
 
     setTab: (tab: number) => {
       set((state) => ({ ...state, tab }));
+    },
+
+    setJustificationLetterPdfModalIsOpen: (justificationLetterPdfModalIsOpen: boolean) => {
+      set((state) => ({ ...state, justificationLetterPdfModalIsOpen }));
     },
 
     setLeaveDetailsPdfModalIsOpen: (leaveDetailsPdfModalIsOpen: boolean) => {

@@ -51,6 +51,8 @@ export type LeaveApplicationForm = {
   isLateFiling: boolean;
 
   leaveMonetization?: LeaveMonetizationDetail;
+
+  lateFilingJustification?: string | null;
 };
 
 // Employee full leave details
@@ -89,6 +91,7 @@ export type EmployeeLeaveDetails = {
     forCancellationLeaveDates: Array<string>;
     leaveDateCancellationRemarks: string;
     isLateFiling: string;
+    lateFilingJustification: string;
 
     employeeName: string;
     employeeSignature: string;
@@ -238,6 +241,7 @@ export type SupervisorLeaveDetails = {
     employeeId: string;
     employeeName: string;
     companyId: string;
+    signatureUrl: string;
   };
   supervisor: {
     supervisorId: string;
@@ -246,6 +250,8 @@ export type SupervisorLeaveDetails = {
   leaveName: string;
   leaveType?: string;
   leaveDates: Array<string>;
+
+  lateFilingJustification: string | null;
 };
 
 // leave cancellation

@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { HiX } from 'react-icons/hi';
 import { AlertNotification, Button, Checkbox, LoadingSpinner, Modal } from '@gscwd-apps/oneui';
 import { useLeaveStore } from '../../../../src/store/leave.store';
-import { SubmitHandler, useFieldArray, useForm } from 'react-hook-form';
+import { SubmitHandler, useForm } from 'react-hook-form';
 import { postPortal } from '../../../../src/utils/helpers/portal-axios-helper';
 import { SelectOption } from '../../../../../../libs/utils/src/lib/types/select.type';
 import { fetchWithToken } from '../../../../src/utils/hoc/fetcher';
@@ -17,8 +17,12 @@ import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
 import { LeaveName, MonetizationType } from 'libs/utils/src/lib/enums/leave.enum';
 import { useLeaveLedgerStore } from 'apps/portal/src/store/leave-ledger.store';
 import { LeaveLedgerEntry } from 'libs/utils/src/lib/types/leave-ledger-entry.type';
-import dayjs from 'dayjs';
 import { format } from 'date-fns';
+import { EditorContent, useEditor } from '@tiptap/react';
+import { RichTextMenuBar } from '../../../../../../libs/oneui/src/components/RichTextMenuBar';
+import StarterKit from '@tiptap/starter-kit';
+import Underline from '@tiptap/extension-underline';
+import Placeholder from '@tiptap/extension-placeholder';
 
 type LeaveApplicationModalProps = {
   modalState: boolean;
@@ -462,6 +466,7 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
           inPhilippines: data.location,
           leaveApplicationDates: data.leaveApplicationDates,
           isLateFiling: data.isLateFiling,
+          lateFilingJustification: data.lateFilingJustification,
         };
       } else {
         dataToSend = {
@@ -470,6 +475,7 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
           abroad: data.location,
           leaveApplicationDates: data.leaveApplicationDates,
           isLateFiling: data.isLateFiling,
+          lateFilingJustification: data.lateFilingJustification,
         };
       }
     } else if (data.typeOfLeaveDetails.leaveName === LeaveName.SICK) {
@@ -480,6 +486,7 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
           inHospital: data.illness,
           leaveApplicationDates: data.leaveApplicationDates,
           isLateFiling: data.isLateFiling,
+          lateFilingJustification: data.lateFilingJustification,
         };
       } else {
         dataToSend = {
@@ -488,6 +495,7 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
           outPatient: data.illness,
           leaveApplicationDates: data.leaveApplicationDates,
           isLateFiling: data.isLateFiling,
+          lateFilingJustification: data.lateFilingJustification,
         };
       }
     } else if (data.typeOfLeaveDetails.leaveName === LeaveName.STUDY) {
@@ -499,6 +507,7 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
         forBarBoardReview: data.forBarBoardReview,
         studyLeaveOther: data.studyLeaveOther,
         isLateFiling: data.isLateFiling,
+        lateFilingJustification: data.lateFilingJustification,
       };
     } else if (data.typeOfLeaveDetails.leaveName === LeaveName.SPECIAL_LEAVE_BENEFITS_FOR_WOMEN) {
       dataToSend = {
@@ -507,6 +516,7 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
         leaveApplicationDates: data.leaveApplicationDatesRange,
         splWomen: data.specialLeaveWomenIllness,
         isLateFiling: data.isLateFiling,
+        lateFilingJustification: data.lateFilingJustification,
       };
     } else if (
       data.typeOfLeaveDetails.leaveName === LeaveName.MATERNITY ||
@@ -519,6 +529,7 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
         employeeId: data.employeeId,
         leaveApplicationDates: data.leaveApplicationDatesRange,
         isLateFiling: data.isLateFiling,
+        lateFilingJustification: data.lateFilingJustification,
       };
     } else if (data.typeOfLeaveDetails.leaveName === LeaveName.OTHERS) {
       dataToSend = {
@@ -528,6 +539,7 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
         other: data.other,
         commutation: data.commutation ? data.commutation : null,
         isLateFiling: data.isLateFiling,
+        lateFilingJustification: data.lateFilingJustification,
       };
     } else if (data.typeOfLeaveDetails.leaveName === LeaveName.MONETIZATION) {
       dataToSend = {
@@ -555,6 +567,7 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
         employeeId: data.employeeId,
         leaveApplicationDates: data.leaveApplicationDates,
         isLateFiling: data.isLateFiling,
+        lateFilingJustification: data.lateFilingJustification,
       };
     }
     //check first if leave dates or leave date range are filled
@@ -689,6 +702,52 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
 
   const { windowWidth } = UseWindowDimensions();
 
+  const [lateFilingJustification, setLateFilingJustification] = useState<string>('');
+
+  //Justification Letter Text Editor
+  const editor = useEditor({
+    immediatelyRender: false,
+    content: lateFilingJustification,
+    extensions: [
+      StarterKit,
+      Underline,
+      Placeholder.configure({
+        emptyEditorClass: 'is-editor-empty',
+        // Use a placeholder:
+        // placeholder: 'Write something …',
+        // Use different placeholders depending on the node type:
+        placeholder: ({ node }) => {
+          if (node.type.name === 'heading') {
+            return 'Dear HR, I am writing this letter to inform you that... Sincerely, ...';
+          }
+          return 'Dear HR, I am writing this letter to inform you that... Sincerely, ...';
+        },
+      }),
+    ],
+
+    editorProps: {
+      attributes: {
+        class: 'border-none outline-none h-30',
+      },
+    },
+    onUpdate: ({ editor }) => {
+      setLateFilingJustification(editor.getHTML());
+    },
+  });
+
+  useEffect(() => {
+    setValue('lateFilingJustification', lateFilingJustification);
+  }, [lateFilingJustification]);
+
+  //reset late filing justification field if lateFiling is off
+  useEffect(() => {
+    if (lateFiling === false) {
+      setValue('lateFilingJustification', null); //submit form
+      setLateFilingJustification(''); //state
+      editor?.commands?.clearContent(true); //delete contents of tiptap editor
+    }
+  }, [lateFiling]);
+
   return (
     <>
       <Modal size={`${windowWidth > 1024 ? 'md' : 'full'}`} open={modalState} setOpen={setModalState}>
@@ -719,6 +778,17 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
             <div className="w-full h-full flex flex-col gap-2 ">
               <div className="w-full flex flex-col gap-2 px-4 rounded">
                 <div className="w-full flex flex-col gap-0">
+                  {(watch('lateFilingJustification') === '' ||
+                    watch('lateFilingJustification') === null ||
+                    watch('lateFilingJustification') === '<p></p>') &&
+                  lateFiling ? (
+                    <AlertNotification
+                      alertType="warning"
+                      notifMessage="Justification Letter for Late Filing is empty."
+                      dismissible={false}
+                      className="mb-1"
+                    />
+                  ) : null}
                   {/* Has Existing Pending Leave of the Same Name - cannot file a new one */}
                   {hasPendingLeave ? (
                     <AlertNotification
@@ -1439,23 +1509,6 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
                       <label className="text-slate-500 text-md font-medium">
                         Select Leave Dates:<span className="text-red-600">*</span>
                       </label>
-
-                      {watch('typeOfLeaveDetails.leaveName') === LeaveName.FORCED ||
-                      watch('typeOfLeaveDetails.leaveName') === LeaveName.VACATION ||
-                      watch('typeOfLeaveDetails.leaveName') === LeaveName.SPECIAL_PRIVILEGE ||
-                      watch('typeOfLeaveDetails.leaveName') === LeaveName.SOLO_PARENT ||
-                      watch('typeOfLeaveDetails.leaveName') === LeaveName.SICK ? (
-                        <div className="flex gap-2 items-center bg-red-100 p-2 rounded">
-                          <label className="text-red-500 text-md font-medium">Enable Late Filing:</label>
-                          <Checkbox
-                            id="isLateFiling"
-                            checked={lateFiling}
-                            label="Late Filing"
-                            className={'w-5 h-5 border-red-500'}
-                            onChange={() => handleTypeOfFiling(!lateFiling)}
-                          />
-                        </div>
-                      ) : null}
                     </div>
 
                     <div className="w-full p-4 bg-gray-50 rounded">
@@ -1477,6 +1530,48 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
                           isLateFiling={lateFiling}
                         />
                       )}
+                    </div>
+
+                    {watch('typeOfLeaveDetails.leaveName') === LeaveName.FORCED ||
+                    watch('typeOfLeaveDetails.leaveName') === LeaveName.VACATION ||
+                    watch('typeOfLeaveDetails.leaveName') === LeaveName.SPECIAL_PRIVILEGE ||
+                    watch('typeOfLeaveDetails.leaveName') === LeaveName.SOLO_PARENT ||
+                    watch('typeOfLeaveDetails.leaveName') === LeaveName.SICK ? (
+                      <div className="flex flex-col gap-1 w-full bg-slate-100 text-sm p-2 mt-1">
+                        <div className="flex gap-2 items-center justify-start rounded ">
+                          <label className="text-sm font-medium text-slate-500 whitespace-nowrap">
+                            Enable Late Filing:
+                          </label>
+                          <Checkbox
+                            id="isLateFiling"
+                            checked={lateFiling}
+                            label="Late Filing"
+                            className={'w-5 h-5'}
+                            onChange={() => handleTypeOfFiling(!lateFiling)}
+                          />
+                        </div>
+                        <label className="text-xs text-red-400">
+                          Note: Only check this if you were unable to file leave upon return to work for Sick and
+                          Special Leave and within 10 days from the date of leave for Vacation or Forced Leave.
+                        </label>
+                      </div>
+                    ) : null}
+                  </>
+                ) : null}
+
+                {lateFiling ? (
+                  <>
+                    <label className="text-slate-500 text-md font-medium">
+                      Justification Letter:<span className="text-red-600">*</span>
+                    </label>
+
+                    <div className="resize-none w-full p-2 mt-1 rounded-md text-slate-500 text-md border-slate-300 mb-2 border focus:border-0">
+                      {/* <RichTextMenuBar editor={editor} content={''} /> */}
+                      <EditorContent
+                        placeholder={''}
+                        editor={editor}
+                        style={{ whiteSpace: 'pre-line' }}
+                      ></EditorContent>
                     </div>
                   </>
                 ) : null}
@@ -1772,8 +1867,14 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
                 form="ApplyLeaveForm"
                 type="submit"
                 disabled={
-                  //disabled if applying for force leave and is December
-                  monthNow === '12' && watch('typeOfLeaveDetails.leaveName') === LeaveName.FORCED
+                  //if late filing and justification letter is empty
+                  (watch('lateFilingJustification') === '' ||
+                    watch('lateFilingJustification') === null ||
+                    watch('lateFilingJustification') === '<p></p>') &&
+                  lateFiling
+                    ? true
+                    : //disabled if applying for force leave and is December
+                    monthNow === '12' && watch('typeOfLeaveDetails.leaveName') === LeaveName.FORCED
                     ? true
                     : //disabled if there are errors in SWR fetches
                     !isEmpty(errorLeaveList) ||

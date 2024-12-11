@@ -128,11 +128,6 @@ export const ConfirmationInboxModal = ({
   const { windowWidth } = UseWindowDimensions();
   const [isPolicyRead, setIsPolicyRead] = useState<boolean>(false);
 
-  // const onScroll = useCallback((event) => {
-  //   console.log(event.target.scrollHeight - event.target.scrollTop <= event.target.clientHeight + 50);
-  //   setTrainingPolicyIsBottom(event.target.scrollHeight - event.target.scrollTop <= event.target.clientHeight + 50);
-  // }, []);
-
   useEffect(() => {
     setIsPolicyRead(false);
   }, [modalState]);
