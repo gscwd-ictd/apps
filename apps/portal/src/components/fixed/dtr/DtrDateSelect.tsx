@@ -22,6 +22,7 @@ export const DtrDateSelect = ({ employeeDetails }: DtrDateSelectProps) => {
 
   const selectedMonth = useDtrStore((state) => state.selectedMonth);
   const selectedYear = useDtrStore((state) => state.selectedYear);
+  const dtrPeriod = useDtrStore((state) => state.dtrPeriod);
 
   const setSelectedMonth = useDtrStore((state) => state.setSelectedMonth);
   const setSelectedYear = useDtrStore((state) => state.setSelectedYear);
@@ -31,6 +32,11 @@ export const DtrDateSelect = ({ employeeDetails }: DtrDateSelectProps) => {
   const getEmployeeDtrFail = useDtrStore((state) => state.getEmployeeDtrFail);
   const emptyResponseAndError = useDtrStore((state) => state.emptyResponseAndError);
   const setDtrPdfModalIsOpen = useDtrStore((state) => state.setDtrPdfModalIsOpen);
+  const setDtrPeriod = useDtrStore((state) => state.setDtrPeriod);
+
+  const getEmployeeDtrPdf = useDtrStore((state) => state.getEmployeeDtrPdf);
+  const getEmployeeDtrPdfSuccess = useDtrStore((state) => state.getEmployeeDtrPdfSuccess);
+  const getEmployeeDtrPdfFail = useDtrStore((state) => state.getEmployeeDtrPdfFail);
 
   const monthNow = format(new Date(), 'M');
   const yearNow = format(new Date(), 'yyyy');
@@ -70,6 +76,29 @@ export const DtrDateSelect = ({ employeeDetails }: DtrDateSelectProps) => {
         {info.year}
       </div>
     ),
+  };
+
+  const ViewDtrPdf = async (period: number) => {
+    setDtrPeriod(period);
+
+    getEmployeeDtrPdf(true);
+
+    if (employeeDetails.employmentDetails.companyId && selectedYear && selectedMonth) {
+      try {
+        const { data } = await axios.get(
+          `${process.env.NEXT_PUBLIC_EMPLOYEE_MONITORING_URL}/v1/daily-time-record/employees/${employeeDetails.employmentDetails.companyId}/${selectedYear}/${selectedMonth}?period=${period}`
+        );
+
+        if (!isEmpty(data)) {
+          getEmployeeDtrPdfSuccess(false, data);
+        }
+      } catch (error) {
+        getEmployeeDtrPdfFail(false, error.message);
+      }
+
+      setDate(`${selectedMonth ? selectedMonth : monthNow}-01-${selectedYear ? selectedYear : yearNow}`);
+      setDtrPdfModalIsOpen(true);
+    }
   };
 
   const onChangeMonth = (month: string) => {
@@ -126,8 +155,14 @@ export const DtrDateSelect = ({ employeeDetails }: DtrDateSelectProps) => {
           <HiOutlineSearch className="w-6 h-6 md:w-5 md:h-5" />
         </div>
       </Button>
-      <Button variant={'primary'} size={'md'} loading={false} type="button" onClick={() => setDtrPdfModalIsOpen(true)}>
-        View PDF
+      <Button variant={'primary'} size={'md'} loading={false} type="button" onClick={() => ViewDtrPdf(1)}>
+        1st Period
+      </Button>
+      <Button variant={'primary'} size={'md'} loading={false} type="button" onClick={() => ViewDtrPdf(2)}>
+        2nd Period
+      </Button>
+      <Button variant={'primary'} size={'md'} loading={false} type="button" onClick={() => ViewDtrPdf(3)}>
+        Full DTR
       </Button>
     </form>
   );

@@ -21,15 +21,23 @@ type DtrTableProps = {
 };
 
 export const DtrTable = ({ employeeDetails }: DtrTableProps) => {
-  const { employeeDtr, dtrIsLoading, dtrModalIsOpen, dtrPdfModalIsOpen, setDtrPdfModalIsOpen, setDtrModalIsOpen } =
-    useDtrStore((state) => ({
-      employeeDtr: state.employeeDtr,
-      dtrIsLoading: state.loading.loadingDtr,
-      dtrModalIsOpen: state.dtrModalIsOpen,
-      dtrPdfModalIsOpen: state.dtrPdfModalIsOpen,
-      setDtrPdfModalIsOpen: state.setDtrPdfModalIsOpen,
-      setDtrModalIsOpen: state.setDtrModalIsOpen,
-    }));
+  const {
+    dtrPeriod,
+    employeeDtr,
+    dtrIsLoading,
+    dtrModalIsOpen,
+    dtrPdfModalIsOpen,
+    setDtrPdfModalIsOpen,
+    setDtrModalIsOpen,
+  } = useDtrStore((state) => ({
+    dtrPeriod: state.dtrPeriod,
+    employeeDtr: state.employeeDtr,
+    dtrIsLoading: state.loading.loadingDtr,
+    dtrModalIsOpen: state.dtrModalIsOpen,
+    dtrPdfModalIsOpen: state.dtrPdfModalIsOpen,
+    setDtrPdfModalIsOpen: state.setDtrPdfModalIsOpen,
+    setDtrModalIsOpen: state.setDtrModalIsOpen,
+  }));
 
   // Edit modal function
   const [currentRowData, setCurrentRowData] = useState<EmployeeDtrWithSchedule>({} as EmployeeDtrWithSchedule);
@@ -45,9 +53,11 @@ export const DtrTable = ({ employeeDetails }: DtrTableProps) => {
 
   // close dtr pdf modal function
   const closeDtrPdfModal = () => setDtrPdfModalIsOpen(false);
+
   return (
     <>
       <DtrPdfModal
+        period={dtrPeriod}
         modalState={dtrPdfModalIsOpen}
         setModalState={setDtrPdfModalIsOpen}
         closeModalAction={closeDtrPdfModal}

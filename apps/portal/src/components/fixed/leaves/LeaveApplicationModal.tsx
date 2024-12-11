@@ -385,6 +385,13 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
     ) {
       //if filing for a leave but there's a pending terminal leave
       setHasPendingLeave(true);
+    } else if (
+      (pendingleavesList?.some((leave) => leave.leaveName === LeaveName.VACATION) ||
+        pendingleavesList?.some((leave) => leave.leaveName === LeaveName.FORCED)) &&
+      watch('typeOfLeaveDetails.leaveName') === LeaveName.LEAVE_WITHOUT_PAY
+    ) {
+      //if filing for LWOP but has pending Vacation leave
+      setHasPendingLeave(true);
     } else {
       setHasPendingLeave(false);
     }
@@ -741,11 +748,9 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
 
   //reset late filing justification field if lateFiling is off
   useEffect(() => {
-    if (lateFiling === false) {
-      setValue('lateFilingJustification', null); //submit form
-      setLateFilingJustification(''); //state
-      editor?.commands?.clearContent(true); //delete contents of tiptap editor
-    }
+    setValue('lateFilingJustification', null); //submit form
+    setLateFilingJustification(''); //state
+    editor?.commands?.clearContent(true); //delete contents of tiptap editor
   }, [lateFiling]);
 
   return (
@@ -789,7 +794,18 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
                       className="mb-1"
                     />
                   ) : null}
-                  {/* Has Existing Pending Leave of the Same Name - cannot file a new one */}
+
+                  {watch('typeOfLeaveDetails.leaveName') === LeaveName.LEAVE_WITHOUT_PAY &&
+                  Number(vacationLeaveBalance) - Number(pendingVacationLeaveDateCount) >= 0.5 ? (
+                    <AlertNotification
+                      alertType="warning"
+                      notifMessage="Unable to file Leave Without Pay if Vacation Leave credits are not exhausted."
+                      dismissible={false}
+                      className="mb-1"
+                    />
+                  ) : null}
+
+                  {/* Has Existing Pending Leave of the Same Name or related leave - cannot file a new one */}
                   {hasPendingLeave ? (
                     <AlertNotification
                       alertType="warning"
@@ -820,6 +836,10 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
                             : watch('typeOfLeaveDetails.leaveName') != LeaveName.TERMINAL &&
                               pendingleavesList?.some((leave) => leave.leaveName === LeaveName.TERMINAL)
                             ? 'Unable to apply for this Leave due to a pending Terminal Leave application.'
+                            : (pendingleavesList?.some((leave) => leave.leaveName === LeaveName.VACATION) ||
+                                pendingleavesList?.some((leave) => leave.leaveName === LeaveName.FORCED)) &&
+                              watch('typeOfLeaveDetails.leaveName') === LeaveName.LEAVE_WITHOUT_PAY
+                            ? 'Unable to apply for Leave due to a pending Vacation or Forced Leave application.'
                             : 'You have a pending Leave application of the same type.'
                         }
                         `}
@@ -1867,11 +1887,16 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
                 form="ApplyLeaveForm"
                 type="submit"
                 disabled={
-                  //if late filing and justification letter is empty
-                  (watch('lateFilingJustification') === '' ||
-                    watch('lateFilingJustification') === null ||
-                    watch('lateFilingJustification') === '<p></p>') &&
-                  lateFiling
+                  //if filing for LWOP but still has 0.5+ VL credits
+                  watch('typeOfLeaveDetails.leaveName') === LeaveName.LEAVE_WITHOUT_PAY &&
+                  Number(vacationLeaveBalance) - Number(pendingVacationLeaveDateCount) >= 0.5
+                    ? true
+                    : //if late filing and justification letter is empty
+                    (lateFilingJustification === '' ||
+                        watch('lateFilingJustification') === '' ||
+                        watch('lateFilingJustification') === null ||
+                        watch('lateFilingJustification') === '<p></p>') &&
+                      lateFiling
                     ? true
                     : //disabled if applying for force leave and is December
                     monthNow === '12' && watch('typeOfLeaveDetails.leaveName') === LeaveName.FORCED
