@@ -22,6 +22,7 @@ import useSWR from 'swr';
 import { useSupervisorLeaveApprovalLeaveLedgerStore } from 'apps/portal/src/store/supervisor-leave-approvals-leave-ledger.store';
 import { LeaveLedgerEntry } from 'libs/utils/src/lib/types/leave-ledger-entry.type';
 import { ApprovalCaptcha } from './ApprovalOtp/ApprovalCaptcha';
+import { JustificationLetterPdfModal } from './JustificationLetterPdfModal';
 
 type ApprovalsPendingLeaveModalProps = {
   modalState: boolean;
@@ -48,6 +49,8 @@ export const ApprovalsPendingLeaveModal = ({
     setConfirmApplicationModalIsOpen,
     captchaModalIsOpen,
     setCaptchaModalIsOpen,
+    justificationLetterPdfModalIsOpen,
+    setJustificationLetterPdfModalIsOpen,
   } = useApprovalStore((state) => ({
     leaveIndividualDetail: state.leaveIndividualDetail,
     leaveId: state.leaveId,
@@ -58,6 +61,8 @@ export const ApprovalsPendingLeaveModal = ({
     setConfirmApplicationModalIsOpen: state.setConfirmApplicationModalIsOpen,
     captchaModalIsOpen: state.captchaModalIsOpen,
     setCaptchaModalIsOpen: state.setCaptchaModalIsOpen,
+    justificationLetterPdfModalIsOpen: state.justificationLetterPdfModalIsOpen,
+    setJustificationLetterPdfModalIsOpen: state.setJustificationLetterPdfModalIsOpen,
   }));
 
   const [reason, setReason] = useState<string>('');
@@ -187,6 +192,11 @@ export const ApprovalsPendingLeaveModal = ({
     }
   }, [swrLeaveLedger, swrLeaveLedgerError]);
 
+  // close action for Justification Letter PDF Modal
+  const closeJustificationLetterPdfModal = async () => {
+    setJustificationLetterPdfModalIsOpen(false);
+  };
+
   const { windowWidth } = UseWindowDimensions();
 
   return (
@@ -206,6 +216,14 @@ export const ApprovalsPendingLeaveModal = ({
           </h3>
         </Modal.Header>
         <Modal.Body>
+          {/* Justification Letter PDF Modal */}
+          <JustificationLetterPdfModal
+            title="Justification Letter"
+            modalState={justificationLetterPdfModalIsOpen}
+            setModalState={setJustificationLetterPdfModalIsOpen}
+            closeModalAction={closeJustificationLetterPdfModal}
+          />
+
           {!leaveIndividualDetail ? (
             <>
               <div className="w-full h-[90%]  static flex flex-col justify-items-center items-center place-items-center">
@@ -500,7 +518,7 @@ export const ApprovalsPendingLeaveModal = ({
                       </>
                     )}
 
-                    <div className="flex flex-col sm:flex-col justify-start items-start w-full sm:w-1/2 px-0.5 pb-3 ">
+                    <div className="flex flex-col sm:flex-col justify-start items-start w-full px-0.5 pb-3 ">
                       <label className="text-slate-500 text-md whitespace-nowrap pb-0.5 ">Supervisor:</label>
 
                       <div className="w-auto ml-5">
@@ -509,6 +527,60 @@ export const ApprovalsPendingLeaveModal = ({
                         </label>
                       </div>
                     </div>
+
+                    <div className="flex flex-col justify-start items-start w-full px-0.5 pb-3  ">
+                      <label className="text-slate-500 text-md whitespace-nowrap pb-0.5 ">
+                        {leaveIndividualDetail?.status === LeaveStatus.DISAPPROVED_BY_HRMO
+                          ? 'Date Disapproved by HRMO:'
+                          : 'Date Approved by HRMO:'}
+                      </label>
+
+                      <div className="w-auto ml-5">
+                        <label className=" text-md font-medium ">
+                          {DateTimeFormatter(leaveIndividualDetail?.hrmoApprovalDate)}
+                        </label>
+                      </div>
+                    </div>
+
+                    <div className="flex flex-col justify-start items-start w-full px-0.5 pb-3  ">
+                      <label className="text-slate-500 text-md whitespace-nowrap pb-0.5 ">
+                        {leaveIndividualDetail?.status === LeaveStatus.DISAPPROVED_BY_SUPERVISOR
+                          ? 'Date Disapproved by Supervisor:'
+                          : 'Date Approved by Supervisor:'}
+                      </label>
+
+                      <div className="w-auto ml-5">
+                        <label className=" text-md font-medium ">
+                          {DateTimeFormatter(leaveIndividualDetail?.supervisorApprovalDate)}
+                        </label>
+                      </div>
+                    </div>
+
+                    <div className="flex flex-col justify-start items-start w-full px-0.5 pb-3  ">
+                      <label className="text-slate-500 text-md whitespace-nowrap pb-0.5 ">
+                        {leaveIndividualDetail?.status === LeaveStatus.DISAPPROVED_BY_HRDM
+                          ? 'Date Disapproved by HRDM:'
+                          : 'Date Approved by HRDM:'}
+                      </label>
+
+                      <div className="w-auto ml-5">
+                        <label className=" text-md font-medium ">
+                          {DateTimeFormatter(leaveIndividualDetail?.hrdmApprovalDate)}
+                        </label>
+                      </div>
+                    </div>
+
+                    {leaveIndividualDetail?.status === LeaveStatus.CANCELLED ? (
+                      <div className="flex flex-col justify-start items-start w-full sm:w-1/2 px-0.5 pb-3  ">
+                        <label className="text-slate-500 text-md whitespace-nowrap pb-0.5 ">Date Cancelled:</label>
+
+                        <div className="w-auto ml-5">
+                          <label className=" text-md font-medium ">
+                            {DateTimeFormatter(leaveIndividualDetail?.cancelDate)}
+                          </label>
+                        </div>
+                      </div>
+                    ) : null}
 
                     {leaveIndividualDetail?.status === LeaveStatus.DISAPPROVED_BY_HRDM ||
                     leaveIndividualDetail?.status === LeaveStatus.DISAPPROVED_BY_SUPERVISOR ||
@@ -684,21 +756,46 @@ export const ApprovalsPendingLeaveModal = ({
         </Modal.Body>
         <Modal.Footer>
           <div className="flex justify-end gap-2 px-4">
-            <div className="w-full flex justify-end">
+            <div className="w-full flex justify-end gap-2">
               {leaveIndividualDetail?.status === LeaveStatus.FOR_SUPERVISOR_APPROVAL ? (
-                <Button form={`LeaveAction`} variant={'primary'} size={'md'} loading={false} type="submit">
-                  Submit
-                </Button>
+                <>
+                  {leaveIndividualDetail?.isLateFiling === true ? (
+                    <Button
+                      variant={'primary'}
+                      size={'md'}
+                      loading={false}
+                      onClick={(e) => setJustificationLetterPdfModalIsOpen(true)}
+                    >
+                      Justification
+                    </Button>
+                  ) : null}
+
+                  <Button form={`LeaveAction`} variant={'primary'} size={'md'} loading={false} type="submit">
+                    Submit
+                  </Button>
+                </>
               ) : leaveIndividualDetail?.status ? (
-                <Button
-                  variant={'default'}
-                  size={'md'}
-                  loading={false}
-                  onClick={(e) => closeModalAction()}
-                  type="submit"
-                >
-                  Close
-                </Button>
+                <>
+                  {leaveIndividualDetail?.isLateFiling === true ? (
+                    <Button
+                      variant={'primary'}
+                      size={'md'}
+                      loading={false}
+                      onClick={(e) => setJustificationLetterPdfModalIsOpen(true)}
+                    >
+                      Justification
+                    </Button>
+                  ) : null}
+                  <Button
+                    variant={'default'}
+                    size={'md'}
+                    loading={false}
+                    onClick={(e) => closeModalAction()}
+                    type="submit"
+                  >
+                    Close
+                  </Button>
+                </>
               ) : null}
             </div>
           </div>

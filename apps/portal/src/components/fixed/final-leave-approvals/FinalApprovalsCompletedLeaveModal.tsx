@@ -13,6 +13,7 @@ import useSWR from 'swr';
 import { fetchWithToken } from 'apps/portal/src/utils/hoc/fetcher';
 import { isEmpty } from 'lodash';
 import { useFinalLeaveApprovalLeaveLedgerStore } from 'apps/portal/src/store/final-leave-approvals-leave-ledger.store';
+import { JustificationLetterPdfModal } from './JustificationLetterPdfModal';
 
 type ApprovalsCompletedLeaveModalProps = {
   modalState: boolean;
@@ -25,12 +26,15 @@ export const ApprovalsCompletedLeaveModal = ({
   setModalState,
   closeModalAction,
 }: ApprovalsCompletedLeaveModalProps) => {
-  const { leaveIndividualDetail } = useFinalLeaveApprovalStore((state) => ({
-    leaveIndividualDetail: state.leaveIndividualDetail,
-    leaveId: state.leaveId,
-    pendingLeaveModalIsOpen: state.pendingLeaveModalIsOpen,
-    setPendingLeaveModalIsOpen: state.setPendingLeaveModalIsOpen,
-  }));
+  const { leaveIndividualDetail, justificationLetterPdfModalIsOpen, setJustificationLetterPdfModalIsOpen } =
+    useFinalLeaveApprovalStore((state) => ({
+      leaveIndividualDetail: state.leaveIndividualDetail,
+      leaveId: state.leaveId,
+      pendingLeaveModalIsOpen: state.pendingLeaveModalIsOpen,
+      setPendingLeaveModalIsOpen: state.setPendingLeaveModalIsOpen,
+      justificationLetterPdfModalIsOpen: state.justificationLetterPdfModalIsOpen,
+      setJustificationLetterPdfModalIsOpen: state.setJustificationLetterPdfModalIsOpen,
+    }));
 
   const [moreLeaveDates, setMoreLeaveDates] = useState<boolean>(false);
   const { windowWidth } = UseWindowDimensions();
@@ -93,6 +97,11 @@ export const ApprovalsCompletedLeaveModal = ({
     }
   }, [swrLeaveLedger, swrLeaveLedgerError]);
 
+  // close action for Justification Letter PDF Modal
+  const closeJustificationLetterPdfModal = async () => {
+    setJustificationLetterPdfModalIsOpen(false);
+  };
+
   return (
     <>
       <Modal size={windowWidth > 1024 ? 'sm' : 'full'} open={modalState} setOpen={setModalState}>
@@ -110,6 +119,14 @@ export const ApprovalsCompletedLeaveModal = ({
           </h3>
         </Modal.Header>
         <Modal.Body>
+          {/* Justification Letter PDF Modal */}
+          <JustificationLetterPdfModal
+            title="Justification Letter"
+            modalState={justificationLetterPdfModalIsOpen}
+            setModalState={setJustificationLetterPdfModalIsOpen}
+            closeModalAction={closeJustificationLetterPdfModal}
+          />
+
           {!leaveIndividualDetail ? (
             <>
               <div className="w-full h-[90%]  static flex flex-col justify-items-center items-center place-items-center">
@@ -320,7 +337,9 @@ export const ApprovalsCompletedLeaveModal = ({
                         leaveIndividualDetail?.leaveName === LeaveName.SPECIAL_LEAVE_BENEFITS_FOR_WOMEN ||
                         (leaveIndividualDetail?.leaveName === LeaveName.STUDY &&
                           leaveIndividualDetail?.studyLeaveOther) ? (
-                          <div className={`flex flex-col sm:flex-col justify-start items-start w-full px-0.5 pb-3`}>
+                          <div
+                            className={`flex flex-col sm:flex-col justify-start items-start w-full sm:w-1/2 px-0.5 pb-3`}
+                          >
                             <label className="text-slate-500 text-md whitespace-nowrap pb-0.5 ">
                               Specific Details:
                             </label>
@@ -404,7 +423,7 @@ export const ApprovalsCompletedLeaveModal = ({
                       </>
                     )}
 
-                    <div className="flex flex-col sm:flex-col justify-start items-start w-full sm:w-1/2 px-0.5 pb-3 ">
+                    <div className="flex flex-col sm:flex-col justify-start items-start w-full px-0.5 pb-3 ">
                       <label className="text-slate-500 text-md whitespace-nowrap pb-0.5 ">Supervisor:</label>
 
                       <div className="w-auto ml-5">
@@ -414,37 +433,59 @@ export const ApprovalsCompletedLeaveModal = ({
                       </div>
                     </div>
 
-                    <div className="flex flex-col justify-start items-start w-full sm:w-1/2 px-0.5 pb-3  ">
+                    <div className="flex flex-col justify-start items-start w-full px-0.5 pb-3  ">
                       <label className="text-slate-500 text-md whitespace-nowrap pb-0.5 ">
-                        {leaveIndividualDetail?.status === LeaveStatus.DISAPPROVED_BY_HRDM
-                          ? 'Date Disapproved:'
-                          : leaveIndividualDetail?.status === LeaveStatus.DISAPPROVED_BY_SUPERVISOR
-                          ? 'Date Disapproved:'
-                          : leaveIndividualDetail?.status === LeaveStatus.DISAPPROVED_BY_HRMO
-                          ? 'Date Disapproved:'
-                          : leaveIndividualDetail?.status === LeaveStatus.APPROVED
-                          ? 'Date Approved:'
-                          : leaveIndividualDetail?.status === LeaveStatus.CANCELLED
-                          ? 'Date Cancelled:'
-                          : null}
+                        {leaveIndividualDetail?.status === LeaveStatus.DISAPPROVED_BY_HRMO
+                          ? 'Date Disapproved by HRMO:'
+                          : 'Date Approved by HRMO:'}
                       </label>
 
                       <div className="w-auto ml-5">
                         <label className=" text-md font-medium ">
-                          {leaveIndividualDetail?.status === LeaveStatus.DISAPPROVED_BY_HRDM
-                            ? DateTimeFormatter(leaveIndividualDetail?.hrdmApprovalDate)
-                            : leaveIndividualDetail?.status === LeaveStatus.DISAPPROVED_BY_SUPERVISOR
-                            ? DateTimeFormatter(leaveIndividualDetail?.supervisorApprovalDate)
-                            : leaveIndividualDetail?.status === LeaveStatus.DISAPPROVED_BY_HRMO
-                            ? DateTimeFormatter(leaveIndividualDetail?.hrmoApprovalDate)
-                            : leaveIndividualDetail?.status === LeaveStatus.APPROVED
-                            ? DateTimeFormatter(leaveIndividualDetail?.hrdmApprovalDate)
-                            : leaveIndividualDetail?.status === LeaveStatus.CANCELLED
-                            ? DateTimeFormatter(leaveIndividualDetail?.cancelDate)
-                            : null}
+                          {DateTimeFormatter(leaveIndividualDetail?.hrmoApprovalDate)}
                         </label>
                       </div>
                     </div>
+
+                    <div className="flex flex-col justify-start items-start w-full px-0.5 pb-3  ">
+                      <label className="text-slate-500 text-md whitespace-nowrap pb-0.5 ">
+                        {leaveIndividualDetail?.status === LeaveStatus.DISAPPROVED_BY_SUPERVISOR
+                          ? 'Date Disapproved by Supervisor:'
+                          : 'Date Approved by Supervisor:'}
+                      </label>
+
+                      <div className="w-auto ml-5">
+                        <label className=" text-md font-medium ">
+                          {DateTimeFormatter(leaveIndividualDetail?.supervisorApprovalDate)}
+                        </label>
+                      </div>
+                    </div>
+
+                    <div className="flex flex-col justify-start items-start w-full px-0.5 pb-3  ">
+                      <label className="text-slate-500 text-md whitespace-nowrap pb-0.5 ">
+                        {leaveIndividualDetail?.status === LeaveStatus.DISAPPROVED_BY_HRDM
+                          ? 'Date Disapproved by HRDM:'
+                          : 'Date Approved by HRDM:'}
+                      </label>
+
+                      <div className="w-auto ml-5">
+                        <label className=" text-md font-medium ">
+                          {DateTimeFormatter(leaveIndividualDetail?.hrdmApprovalDate)}
+                        </label>
+                      </div>
+                    </div>
+
+                    {leaveIndividualDetail?.status === LeaveStatus.CANCELLED ? (
+                      <div className="flex flex-col justify-start items-start w-full sm:w-1/2 px-0.5 pb-3  ">
+                        <label className="text-slate-500 text-md whitespace-nowrap pb-0.5 ">Date Cancelled:</label>
+
+                        <div className="w-auto ml-5">
+                          <label className=" text-md font-medium ">
+                            {DateTimeFormatter(leaveIndividualDetail?.cancelDate)}
+                          </label>
+                        </div>
+                      </div>
+                    ) : null}
 
                     {leaveIndividualDetail?.status === LeaveStatus.DISAPPROVED_BY_HRDM ||
                     leaveIndividualDetail?.status === LeaveStatus.DISAPPROVED_BY_SUPERVISOR ||
@@ -564,6 +605,17 @@ export const ApprovalsCompletedLeaveModal = ({
         <Modal.Footer>
           <div className="flex justify-end gap-2 px-4">
             <div className="w-full justify-end flex gap-2">
+              {leaveIndividualDetail?.isLateFiling === true ? (
+                <Button
+                  variant={'primary'}
+                  size={'md'}
+                  loading={false}
+                  onClick={(e) => setJustificationLetterPdfModalIsOpen(true)}
+                >
+                  Justification
+                </Button>
+              ) : null}
+
               <Button variant={'default'} size={'md'} loading={false} onClick={(e) => closeModalAction()} type="submit">
                 Close
               </Button>

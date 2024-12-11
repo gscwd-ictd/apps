@@ -168,6 +168,10 @@ export type ApprovalState = {
   getPassSlipApplicationsListFail: (loading: boolean, error: string) => void;
 
   // LEAVES
+
+  justificationLetterPdfModalIsOpen: boolean;
+  setJustificationLetterPdfModalIsOpen: (justificationLetterPdfModalIsOpen: boolean) => void;
+
   leaveId: string;
   setLeaveId: (id: string) => void;
 
@@ -342,6 +346,11 @@ export const useApprovalStore = create<ApprovalState>()(
     captchaModalIsOpen: false,
     disputeConfirmModalIsOpen: false,
     approveAllAccomplishmentModalIsOpen: false,
+
+    justificationLetterPdfModalIsOpen: false,
+    setJustificationLetterPdfModalIsOpen: (justificationLetterPdfModalIsOpen: boolean) => {
+      set((state) => ({ ...state, justificationLetterPdfModalIsOpen }));
+    },
 
     dtrCorrectionDetail: {} as DtrCorrection,
     accomplishmentDetails: {} as OvertimeAccomplishment,

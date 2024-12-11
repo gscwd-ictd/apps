@@ -150,13 +150,3 @@ export const profile = {
   nameExtension: '',
   photoUrl: '',
 };
-
-// export const getServerSideProps: GetServerSideProps = async () => {
-//   try {
-//     return { props: { user, employee: employeeDetails, profile } };
-//   } catch (error) {
-//     console.log(error);
-//   }
-
-//   return { props: {} };
-// };

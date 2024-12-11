@@ -377,7 +377,6 @@ export const getServerSideProps: GetServerSideProps = async (context: GetServerS
           },
         };
       } catch (error) {
-        // console.log('no cookie');
         return {
           props: {},
         };

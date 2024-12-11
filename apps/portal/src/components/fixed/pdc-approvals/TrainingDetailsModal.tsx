@@ -123,7 +123,9 @@ export const TrainingDetailsModal = ({ modalState, setModalState, closeModalActi
   useEffect(() => {
     if (!modalState) {
       setValue('action', null);
-      setTrainingDetails({} as TrainingDetails);
+      // setTrainingDetails({} as TrainingDetails);
+    } else {
+      // mutateTrainingDetails();
     }
   }, [modalState]);
 
@@ -206,6 +208,7 @@ export const TrainingDetailsModal = ({ modalState, setModalState, closeModalActi
   const closeTrainingDesignModal = () => {
     setTrainingDesignModalIsOpen(false);
   };
+
   const client = useLnd();
 
   // Initial zustand state update
@@ -241,7 +244,7 @@ export const TrainingDetailsModal = ({ modalState, setModalState, closeModalActi
       };
       getBucketList();
     }
-  }, [trainingDetails?.source?.name]);
+  }, [trainingDetails.id]);
 
   // const bucketFilesUrl = `${process.env.NEXT_PUBLIC_LND_FE_URL}/api/bucket/lnd?id=${individualTrainingDetails?.trainingId}`;
 
