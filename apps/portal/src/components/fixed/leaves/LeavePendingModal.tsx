@@ -416,41 +416,6 @@ export const LeavePendingModal = ({ modalState, setModalState, closeModalAction 
                       </>
                     )}
 
-                    {leaveIndividualDetail?.leaveApplicationBasicInfo?.status === LeaveStatus.DISAPPROVED_BY_HRDM ||
-                    leaveIndividualDetail?.leaveApplicationBasicInfo?.status ===
-                      LeaveStatus.DISAPPROVED_BY_SUPERVISOR ||
-                    leaveIndividualDetail?.leaveApplicationBasicInfo?.status === LeaveStatus.DISAPPROVED_BY_HRMO ||
-                    leaveIndividualDetail?.leaveApplicationBasicInfo?.status === LeaveStatus.CANCELLED ? (
-                      <div className="flex flex-col sm:flex-col justify-start items-start w-full sm:w-1/2 px-0.5 pb-3 ">
-                        <label className="text-slate-500 text-md whitespace-nowrap pb-0.5 ">
-                          {leaveIndividualDetail?.leaveApplicationBasicInfo?.status === LeaveStatus.DISAPPROVED_BY_HRDM
-                            ? 'HRDM Remarks:'
-                            : leaveIndividualDetail?.leaveApplicationBasicInfo?.status ===
-                              LeaveStatus.DISAPPROVED_BY_SUPERVISOR
-                            ? 'Supervisor Remarks:'
-                            : leaveIndividualDetail?.leaveApplicationBasicInfo?.status ===
-                              LeaveStatus.DISAPPROVED_BY_HRMO
-                            ? 'HRMO Remarks:'
-                            : leaveIndividualDetail?.leaveApplicationBasicInfo?.status === LeaveStatus.CANCELLED
-                            ? 'Cancel Reason:'
-                            : 'Remarks:'}
-                        </label>
-                        <div className="w-auto ml-5">
-                          <label className=" text-md font-medium">
-                            {leaveIndividualDetail?.leaveApplicationBasicInfo?.status ===
-                            LeaveStatus.DISAPPROVED_BY_HRDM
-                              ? leaveIndividualDetail?.leaveApplicationBasicInfo?.hrdmDisapprovalRemarks
-                              : leaveIndividualDetail?.leaveApplicationBasicInfo?.status ===
-                                LeaveStatus.DISAPPROVED_BY_SUPERVISOR
-                              ? leaveIndividualDetail?.leaveApplicationBasicInfo?.supervisorDisapprovalRemarks
-                              : leaveIndividualDetail?.leaveApplicationBasicInfo?.status === LeaveStatus.CANCELLED
-                              ? leaveIndividualDetail?.leaveApplicationBasicInfo?.cancelReason
-                              : 'N/A'}
-                          </label>
-                        </div>
-                      </div>
-                    ) : null}
-
                     <div className="flex flex-col sm:flex-col justify-start items-start w-full sm:w-1/2 px-0.5 pb-3 ">
                       <label className="text-slate-500 text-md whitespace-nowrap pb-0.5 ">Supervisor:</label>
 
@@ -460,36 +425,94 @@ export const LeavePendingModal = ({ modalState, setModalState, closeModalAction 
                         </label>
                       </div>
                     </div>
-                    <div className="flex flex-col justify-start items-start w-full sm:w-1/2 px-0.5 pb-3  ">
+
+                    <div className="flex flex-col justify-start items-start w-full px-0.5 pb-3  ">
                       <label className="text-slate-500 text-md whitespace-nowrap pb-0.5 ">
-                        {leaveIndividualDetail?.leaveApplicationBasicInfo?.status ===
-                        LeaveStatus.FOR_SUPERVISOR_APPROVAL
-                          ? 'Date Approved by HRMO:'
-                          : leaveIndividualDetail?.leaveApplicationBasicInfo?.status === LeaveStatus.FOR_HRDM_APPROVAL
-                          ? 'Date Approved by Supv.:'
-                          : leaveIndividualDetail?.leaveApplicationBasicInfo?.status === LeaveStatus.APPROVED
-                          ? 'Date Approved by HRDM:'
-                          : leaveIndividualDetail?.leaveApplicationBasicInfo?.status === LeaveStatus.CANCELLED
-                          ? 'Date Cancelled:'
-                          : 'Date Approved:'}
+                        {leaveIndividualDetail?.leaveApplicationBasicInfo?.status === LeaveStatus.DISAPPROVED_BY_HRMO
+                          ? 'Date Disapproved by HRMO:'
+                          : 'Date Approved by HRMO:'}
                       </label>
 
                       <div className="w-auto ml-5">
                         <label className=" text-md font-medium ">
-                          {leaveIndividualDetail?.leaveApplicationBasicInfo?.status ===
-                          LeaveStatus.FOR_SUPERVISOR_APPROVAL
-                            ? DateTimeFormatter(leaveIndividualDetail?.leaveApplicationBasicInfo?.hrmoApprovalDate)
-                            : leaveIndividualDetail?.leaveApplicationBasicInfo?.status === LeaveStatus.FOR_HRDM_APPROVAL
-                            ? DateTimeFormatter(
-                                leaveIndividualDetail?.leaveApplicationBasicInfo?.supervisorApprovalDate
-                              )
-                            : leaveIndividualDetail?.leaveApplicationBasicInfo?.status === LeaveStatus.APPROVED
-                            ? DateTimeFormatter(leaveIndividualDetail?.leaveApplicationBasicInfo?.hrdmApprovalDate)
-                            : '-- -- ----'}
+                          {DateTimeFormatter(leaveIndividualDetail?.leaveApplicationBasicInfo?.hrmoApprovalDate)}
                         </label>
                       </div>
                     </div>
+
+                    <div className="flex flex-col justify-start items-start w-full px-0.5 pb-3  ">
+                      <label className="text-slate-500 text-md whitespace-nowrap pb-0.5 ">
+                        {leaveIndividualDetail?.leaveApplicationBasicInfo?.status ===
+                        LeaveStatus.DISAPPROVED_BY_SUPERVISOR
+                          ? 'Date Disapproved by Supervisor:'
+                          : 'Date Approved by Supervisor:'}
+                      </label>
+
+                      <div className="w-auto ml-5">
+                        <label className=" text-md font-medium ">
+                          {DateTimeFormatter(leaveIndividualDetail?.leaveApplicationBasicInfo?.supervisorApprovalDate)}
+                        </label>
+                      </div>
+                    </div>
+
+                    <div className="flex flex-col justify-start items-start w-full px-0.5 pb-3  ">
+                      <label className="text-slate-500 text-md whitespace-nowrap pb-0.5 ">
+                        {leaveIndividualDetail?.leaveApplicationBasicInfo?.status === LeaveStatus.DISAPPROVED_BY_HRDM
+                          ? 'Date Disapproved by HRDM:'
+                          : 'Date Approved by HRDM:'}
+                      </label>
+
+                      <div className="w-auto ml-5">
+                        <label className=" text-md font-medium ">
+                          {DateTimeFormatter(leaveIndividualDetail?.leaveApplicationBasicInfo?.hrdmApprovalDate)}
+                        </label>
+                      </div>
+                    </div>
+
+                    {leaveIndividualDetail?.leaveApplicationBasicInfo?.status === LeaveStatus.CANCELLED ? (
+                      <div className="flex flex-col justify-start items-start w-full sm:w-1/2 px-0.5 pb-3  ">
+                        <label className="text-slate-500 text-md whitespace-nowrap pb-0.5 ">Date Cancelled:</label>
+
+                        <div className="w-auto ml-5">
+                          <label className=" text-md font-medium ">
+                            {DateTimeFormatter(leaveIndividualDetail?.leaveApplicationBasicInfo?.cancelDate)}
+                          </label>
+                        </div>
+                      </div>
+                    ) : null}
                   </div>
+
+                  {leaveIndividualDetail?.leaveApplicationBasicInfo?.status === LeaveStatus.DISAPPROVED_BY_HRDM ||
+                  leaveIndividualDetail?.leaveApplicationBasicInfo?.status === LeaveStatus.DISAPPROVED_BY_SUPERVISOR ||
+                  leaveIndividualDetail?.leaveApplicationBasicInfo?.status === LeaveStatus.DISAPPROVED_BY_HRMO ||
+                  leaveIndividualDetail?.leaveApplicationBasicInfo?.status === LeaveStatus.CANCELLED ? (
+                    <div className="flex flex-col sm:flex-col justify-start items-start w-full sm:w-1/2 px-0.5 pb-3 ">
+                      <label className="text-slate-500 text-md whitespace-nowrap pb-0.5 ">
+                        {leaveIndividualDetail?.leaveApplicationBasicInfo?.status === LeaveStatus.DISAPPROVED_BY_HRDM
+                          ? 'HRDM Remarks:'
+                          : leaveIndividualDetail?.leaveApplicationBasicInfo?.status ===
+                            LeaveStatus.DISAPPROVED_BY_SUPERVISOR
+                          ? 'Supervisor Remarks:'
+                          : leaveIndividualDetail?.leaveApplicationBasicInfo?.status === LeaveStatus.DISAPPROVED_BY_HRMO
+                          ? 'HRMO Remarks:'
+                          : leaveIndividualDetail?.leaveApplicationBasicInfo?.status === LeaveStatus.CANCELLED
+                          ? 'Cancel Reason:'
+                          : 'Remarks:'}
+                      </label>
+                      <div className="w-auto ml-5">
+                        <label className=" text-md font-medium">
+                          {leaveIndividualDetail?.leaveApplicationBasicInfo?.status === LeaveStatus.DISAPPROVED_BY_HRDM
+                            ? leaveIndividualDetail?.leaveApplicationBasicInfo?.hrdmDisapprovalRemarks
+                            : leaveIndividualDetail?.leaveApplicationBasicInfo?.status ===
+                              LeaveStatus.DISAPPROVED_BY_SUPERVISOR
+                            ? leaveIndividualDetail?.leaveApplicationBasicInfo?.supervisorDisapprovalRemarks
+                            : leaveIndividualDetail?.leaveApplicationBasicInfo?.status === LeaveStatus.CANCELLED
+                            ? leaveIndividualDetail?.leaveApplicationBasicInfo?.cancelReason
+                            : 'N/A'}
+                        </label>
+                      </div>
+                    </div>
+                  ) : null}
 
                   {(leaveIndividualDetail?.leaveApplicationBasicInfo?.status !==
                     LeaveStatus.DISAPPROVED_BY_SUPERVISOR &&
