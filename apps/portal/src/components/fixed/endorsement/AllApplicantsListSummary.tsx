@@ -29,20 +29,15 @@ export const AllApplicantsListSummary = () => {
   }));
 
   // use swr
-  const { data: swrApplicants } = useSWR(
-    `/applicant-endorsement/shortlisted/${vppId}`,
-    fetcherHRIS
-  );
+  const { data: swrApplicants } = useSWR(`/applicant-endorsement/shortlisted/${vppId}`, fetcherHRIS, {});
 
   useEffect(() => {
     if (swrApplicants) {
-      const applicants = swrApplicants.data.map(
-        (applicant: any, index: number) => {
-          applicant.state = false;
-          applicant.sequenceNo = index;
-          return applicant;
-        }
-      );
+      const applicants = swrApplicants.data.map((applicant: any, index: number) => {
+        applicant.state = false;
+        applicant.sequenceNo = index;
+        return applicant;
+      });
       setApplicantList(applicants);
     }
   }, [swrApplicants]);
@@ -89,11 +84,7 @@ export const AllApplicantsListSummary = () => {
         )}
       </div> */}
       <div className="flex w-full grid-cols-2 gap-5 ">
-        <ul
-          className={`border-2 rounded w-full ${
-            showPds === false ? 'col-span-2' : 'col-span-1'
-          }`}
-        >
+        <ul className={`border-2 rounded w-full ${showPds === false ? 'col-span-2' : 'col-span-1'}`}>
           {applicantList.map((applicant: Applicant, index: number) => {
             return (
               <li
@@ -105,9 +96,7 @@ export const AllApplicantsListSummary = () => {
                   key={index}
                 >
                   <div>
-                    <p className="font-medium text-gray-600">
-                      {applicant.applicantName}
-                    </p>
+                    <p className="font-medium text-gray-600">{applicant.applicantName}</p>
                   </div>
                 </div>
                 <div className="flex items-center justify-center text-indigo-400 border border-indigo-200 rounded h-7 bg-indigo-50 hover:bg-indigo-500 hover:text-white">

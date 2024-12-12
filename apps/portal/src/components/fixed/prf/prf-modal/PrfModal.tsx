@@ -24,15 +24,14 @@ export const PrfModal: FunctionComponent = () => {
   const setPositions = usePrfStore((state) => state.setPositions);
 
   // access function to set filtered positions in the store
-  const setFilteredPositions = usePrfStore(
-    (state) => state.setFilteredPositions
-  );
+  const setFilteredPositions = usePrfStore((state) => state.setFilteredPositions);
 
   // query positions data from hrms api
   //route is for fetching positions for request to the manager
   const { data } = useSWR(
     `${url}/organizational-positions/${employee.employmentDetails.assignment.id}/${employee.user._id}`,
-    getWithToken
+    getWithToken,
+    {}
   );
 
   //const data = orgPos;

@@ -22,7 +22,7 @@ export const PersonalInfoBI = (): JSX.Element => {
   }));
   const [countryList, setCountryList] = useState<Array<any>>([]); // set country list
   const countriesUrl = process.env.NEXT_PUBLIC_COUNTRIES; // assign the public countries url
-  const { data } = useSWR(`${countriesUrl}`, fetcher); // call the data constant from countries API
+  const { data } = useSWR(`${countriesUrl}`, fetcher, {}); // call the data constant from countries API
 
   // intialize react hook forms
   const {
@@ -384,7 +384,7 @@ export const PersonalInfoBI = (): JSX.Element => {
                   </div>
                   <label
                     htmlFor="citizenship"
-                    className="peer-focus:font-sm peer-focus:-pt-1 absolute -top-6 left-0 mx-4  mt-4 h-fit 
+                    className="peer-focus:font-sm peer-focus:-pt-1 absolute -top-6 left-0 mx-4  mt-4 h-fit
           cursor-text bg-white text-xs font-normal text-gray-400 transition-all peer-placeholder-shown:-inset-y-[0.85rem] peer-placeholder-shown:left-0  peer-placeholder-shown:text-base
             peer-placeholder-shown:text-gray-600 peer-focus:bg-white peer-focus:text-xs peer-focus:text-gray-400"
                   >

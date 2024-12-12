@@ -43,15 +43,10 @@ const CardEmployeeSchedules: FunctionComponent<CardEmployeeSchedulesProps> = ({ 
     isLoading: swrEsIsLoading,
     error: swrEsError,
     mutate: mutateEs,
-  } = useSWR(
-    employeeData.userId ? `/employee-schedule/${employeeData.userId}/all` : null,
-
-    fetcherEMS,
-    {
-      shouldRetryOnError: false,
-      revalidateOnFocus: false,
-    }
-  );
+  } = useSWR(employeeData.userId ? `/employee-schedule/${employeeData.userId}/all` : null, fetcherEMS, {
+    shouldRetryOnError: false,
+    revalidateOnFocus: false,
+  });
 
   // month day and year
   const formatDateInWords = (date: string) => {

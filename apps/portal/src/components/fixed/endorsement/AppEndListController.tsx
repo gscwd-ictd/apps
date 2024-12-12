@@ -23,18 +23,10 @@ export const AppEndModalController = ({ page }: AppEndListControllerProps) => {
     isLoading: swrPublicationsIsLoading,
     error: swrPublicationsError,
     mutate: swrPublicationsMutate,
-  } = useSWR(
-    `/applicant-endorsement/publications/${employee.employmentDetails.userId}`,
-    fetcherHRIS
-  );
+  } = useSWR(`/applicant-endorsement/publications/${employee.employmentDetails.userId}`, fetcherHRIS, {});
 
   // get app end store
-  const {
-    updateResponse,
-    getPublications,
-    getPublicationsFail,
-    getPublicationsSuccess,
-  } = useAppEndStore((state) => ({
+  const { updateResponse, getPublications, getPublicationsFail, getPublicationsSuccess } = useAppEndStore((state) => ({
     getPublications: state.getPublications,
     getPublicationsSuccess: state.getPublicationsSuccess,
     getPublicationsFail: state.getPublicationsFail,
@@ -52,8 +44,7 @@ export const AppEndModalController = ({ page }: AppEndListControllerProps) => {
       getPublicationsSuccess(swrPublications.data);
     }
 
-    if (!isEmpty(swrPublicationsError))
-      getPublicationsFail(swrPublicationsError);
+    if (!isEmpty(swrPublicationsError)) getPublicationsFail(swrPublicationsError);
   }, [swrPublications, swrPublicationsError]);
 
   // mutate publication list
