@@ -81,7 +81,8 @@ export default function PdcApprovals({ userDetails }: InferGetServerSidePropsTyp
       : employeeDetails.employmentDetails.isPdcSecretariat
       ? trainingSecretariatUrl
       : null,
-    fetchWithToken
+    fetchWithToken,
+    {}
   );
 
   // Initial zustand state update

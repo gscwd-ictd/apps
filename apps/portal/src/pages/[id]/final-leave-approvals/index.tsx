@@ -105,7 +105,7 @@ export default function FinalLeaveApprovals({
     isLoading: swrLeaveIsLoading,
     error: swrLeaveError,
     mutate: mutateLeaves,
-  } = useSWR(leaveUrl, fetchWithToken);
+  } = useSWR(leaveUrl, fetchWithToken, {});
 
   // Initial zustand state update
   useEffect(() => {

@@ -90,7 +90,7 @@ export default function OvertimeAccomplishment({
     isLoading: swrFaceScanIsLoading,
     error: swrFaceScanError,
     mutate: mutateFaceScanUrl,
-  } = useSWR(employeeDetails.employmentDetails.companyId ? faceScanUrl : null, fetchWithToken);
+  } = useSWR(employeeDetails.employmentDetails.companyId ? faceScanUrl : null, fetchWithToken, {});
 
   // Initial zustand state update
   useEffect(() => {
@@ -117,7 +117,7 @@ export default function OvertimeAccomplishment({
     isLoading: swrOvertimeAccomplishmentListIsLoading,
     error: swrOvertimeAccomplishmentListError,
     mutate: mutateOvertimeAccomplishments,
-  } = useSWR(employeeDetails.employmentDetails.userId ? overtimeAccomplishmentUrl : null, fetchWithToken);
+  } = useSWR(employeeDetails.employmentDetails.userId ? overtimeAccomplishmentUrl : null, fetchWithToken, {});
 
   // Initial zustand state update
   useEffect(() => {

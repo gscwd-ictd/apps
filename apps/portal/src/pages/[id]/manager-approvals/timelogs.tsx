@@ -78,7 +78,7 @@ export default function PassSlipApprovals({ employeeDetails }: InferGetServerSid
     isLoading: swrDtrCorrectionIsLoading,
     error: swrDtrCorrectionError,
     mutate: mutateDtrCorrection,
-  } = useSWR(dtrCorrectionUrl, fetchWithToken);
+  } = useSWR(dtrCorrectionUrl, fetchWithToken, {});
 
   // Initial zustand state update
   useEffect(() => {

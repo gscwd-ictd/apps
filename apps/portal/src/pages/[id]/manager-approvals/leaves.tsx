@@ -118,7 +118,7 @@ export default function LeaveApprovals({ employeeDetails }: InferGetServerSidePr
     isLoading: swrLeaveIsLoading,
     error: swrLeaveError,
     mutate: mutateLeaves,
-  } = useSWR(employeeDetails.employmentDetails.userId ? leaveUrl : null, fetchWithToken);
+  } = useSWR(employeeDetails.employmentDetails.userId ? leaveUrl : null, fetchWithToken, {});
 
   // Initial zustand state update
   useEffect(() => {

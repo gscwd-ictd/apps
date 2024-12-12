@@ -179,7 +179,7 @@ export const TrainingDesignModal: FunctionComponent<ModalProps> = ({
     isLoading: swrTrainingDesignIsLoading,
     error: swrTrainingDesignError,
     mutate: mutateTrainingDesign,
-  } = useSWR(id ? trainingDesignUrl : null, fetchWithToken);
+  } = useSWR(id ? trainingDesignUrl : null, fetchWithToken, {});
 
   // Upon success/fail of swr request, zustand state will be updated
   useEffect(() => {

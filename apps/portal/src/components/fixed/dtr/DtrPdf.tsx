@@ -3,7 +3,7 @@
 import { Page, Text, Document, StyleSheet, View, Image } from '@react-pdf/renderer';
 import { EmployeeDtrWithScheduleAndSummary } from 'libs/utils/src/lib/types/dtr.type';
 import GscwdLogo from 'apps/employee-monitoring/public/gscwd-logo.png';
-import React, { FunctionComponent, useEffect, useState } from 'react';
+import React, { FunctionComponent } from 'react';
 import dayjs from 'dayjs';
 import { isEmpty } from 'lodash';
 import { HolidayTypes } from 'libs/utils/src/lib/enums/holiday-types.enum';
@@ -13,7 +13,6 @@ import { EmployeeDetails } from 'apps/portal/src/types/employee.type';
 type DtrPdfProps = {
   employeeDtr: EmployeeDtrWithScheduleAndSummary;
   employeeData: EmployeeDetails;
-  period: number;
 };
 
 const styles = StyleSheet.create({
@@ -129,23 +128,7 @@ const styles = StyleSheet.create({
   w5: { width: '5%' },
 });
 
-export const DtrPdf: FunctionComponent<DtrPdfProps> = ({ employeeData, employeeDtr, period }) => {
-  const [startingDateLimit, setStartingDateLimit] = useState<number>(0);
-  const [endingDateLimit, setEndingDateLimit] = useState<number>(0);
-
-  useEffect(() => {
-    if (period == 1) {
-      setStartingDateLimit(0);
-      setEndingDateLimit(14);
-    } else if (period == 2) {
-      setStartingDateLimit(15);
-      setEndingDateLimit(employeeDtr.dtrDays.length);
-    } else {
-      setStartingDateLimit(0);
-      setEndingDateLimit(employeeDtr.dtrDays.length);
-    }
-  }, [period]);
-
+export const DtrPdf: FunctionComponent<DtrPdfProps> = ({ employeeData, employeeDtr }) => {
   // convert to 12-hour time format
   const twelveHourFormat = (time: string | null) => {
     if (time === null || isEmpty(time)) return '';
@@ -377,152 +360,149 @@ export const DtrPdf: FunctionComponent<DtrPdfProps> = ({ employeeData, employeeD
               <View>
                 {/* For Office Schedule */}
                 {employeeData && employeeData.employmentDetails.scheduleBase === ScheduleBases.OFFICE
-                  ? employeeDtr.dtrDays
-                      .filter((e, index) => index >= startingDateLimit && index <= endingDateLimit)
-                      .map((log, index) => {
-                        const yellow = 'yellow';
-                        const gray = '#9CA3AF';
-                        const white = '#FFFFFF';
-                        const red = '#ff8b8b';
-                        const blue = '#6eb4ff';
+                  ? employeeDtr.dtrDays?.map((log, index) => {
+                      const yellow = 'yellow';
+                      const gray = '#9CA3AF';
+                      const white = '#FFFFFF';
+                      const red = '#ff8b8b';
+                      const blue = '#6eb4ff';
 
-                        let logBgColor = '';
-                        let timeInColor = '';
-                        let lunchOutColor = '';
-                        let lunchInColor = '';
-                        let timeOutColor = '';
+                      let logBgColor = '';
+                      let timeInColor = '';
+                      let lunchOutColor = '';
+                      let lunchInColor = '';
+                      let timeOutColor = '';
 
-                        // row color
-                        checkIfHoliday(log.holidayType) === HolidayTypes.REGULAR
-                          ? (logBgColor = red)
-                          : checkIfHoliday(log.holidayType) === HolidayTypes.SPECIAL
-                          ? (logBgColor = blue)
-                          : checkIfRestDay(log.dtr.remarks) === true
-                          ? (logBgColor = gray)
-                          : (logBgColor = white);
+                      // row color
+                      checkIfHoliday(log.holidayType) === HolidayTypes.REGULAR
+                        ? (logBgColor = red)
+                        : checkIfHoliday(log.holidayType) === HolidayTypes.SPECIAL
+                        ? (logBgColor = blue)
+                        : checkIfRestDay(log.dtr.remarks) === true
+                        ? (logBgColor = gray)
+                        : (logBgColor = white);
 
-                        // time in color
-                        if (log.isRestDay === true) {
-                          timeInColor = gray;
-                        } else {
-                          compareIfLate(log.day, log.dtr.timeIn, log.schedule.timeIn) === true &&
-                          log.isRestDay === false &&
-                          log.isHoliday === false
-                            ? (timeInColor = yellow)
-                            : (timeInColor = '');
-                        }
+                      // time in color
+                      if (log.isRestDay === true) {
+                        timeInColor = gray;
+                      } else {
+                        compareIfLate(log.day, log.dtr.timeIn, log.schedule.timeIn) === true &&
+                        log.isRestDay === false &&
+                        log.isHoliday === false
+                          ? (timeInColor = yellow)
+                          : (timeInColor = '');
+                      }
 
-                        // lunch out color
-                        compareIfEarly(log.day, log.dtr.lunchOut, log.schedule.lunchOut) ||
-                        (compareIfLate(log.day, log.dtr.lunchOut, log.schedule.lunchIn) === true &&
-                          log.isRestDay === false &&
-                          log.isHoliday === false)
-                          ? (lunchOutColor = yellow)
-                          : (lunchOutColor = '');
+                      // lunch out color
+                      compareIfEarly(log.day, log.dtr.lunchOut, log.schedule.lunchOut) ||
+                      (compareIfLate(log.day, log.dtr.lunchOut, log.schedule.lunchIn) === true &&
+                        log.isRestDay === false &&
+                        log.isHoliday === false)
+                        ? (lunchOutColor = yellow)
+                        : (lunchOutColor = '');
 
-                        // lunch in color
-                        compareIfEarly(log.day, log.dtr.lunchIn, log.schedule.lunchIn) ||
-                        (compareIfLate(
-                          log.day,
-                          log.dtr.lunchIn,
-                          log.schedule.lunchIn,
-                          29 // 12:31 lunch in + 20 = 1pm
-                        ) === true &&
-                          log.isRestDay === false &&
-                          log.isHoliday === false)
-                          ? (lunchInColor = yellow)
-                          : (lunchInColor = '');
+                      // lunch in color
+                      compareIfEarly(log.day, log.dtr.lunchIn, log.schedule.lunchIn) ||
+                      (compareIfLate(
+                        log.day,
+                        log.dtr.lunchIn,
+                        log.schedule.lunchIn,
+                        29 // 12:31 lunch in + 20 = 1pm
+                      ) === true &&
+                        log.isRestDay === false &&
+                        log.isHoliday === false)
+                        ? (lunchInColor = yellow)
+                        : (lunchInColor = '');
 
-                        // time out color
-                        if (log.isRestDay === true) {
-                          timeOutColor = gray;
-                        } else {
-                          compareIfEarly(log.day, log.dtr.timeOut, log.schedule.timeOut) === true &&
-                          log.isRestDay === false &&
-                          log.isHoliday === false
-                            ? (timeOutColor = yellow)
-                            : (timeOutColor = '');
-                        }
+                      // time out color
+                      if (log.isRestDay === true) {
+                        timeOutColor = gray;
+                      } else {
+                        compareIfEarly(log.day, log.dtr.timeOut, log.schedule.timeOut) === true &&
+                        log.isRestDay === false &&
+                        log.isHoliday === false
+                          ? (timeOutColor = yellow)
+                          : (timeOutColor = '');
+                      }
 
-                        return (
+                      return (
+                        <View
+                          style={[
+                            styles.rowContainer,
+                            styles.borderTop,
+                            { width: '100%', backgroundColor: logBgColor },
+                          ]}
+                          key={index}
+                        >
+                          {/* DATE */}
+                          <View style={[styles.tableData, styles.w10]}>
+                            <Text style={[styles.tableDataText]}>{log.day}</Text>
+                          </View>
+
+                          {/* DAY OF THE WEEK */}
+                          <View style={[styles.tableData, styles.w5]}>
+                            <Text style={[styles.tableDataText]}>{dayjs(log.day).format('ddd')}</Text>
+                          </View>
+
+                          {/* REMARKS */}
+                          <View style={[styles.tableData, styles.w25]}>
+                            <Text style={[styles.tableDataText]}>{log.dtr.remarks}</Text>
+                          </View>
+
+                          {/* TIME IN */}
+                          <View style={[styles.tableData, styles.w15]}>
+                            {log.dtr.timeIn ? (
+                              <Text style={[styles.tableDataText]}>{twelveHourFormat(log.dtr.timeIn)}</Text>
+                            ) : checkIfRestDay(log.dtr.remarks) || !isEmpty(log.holidayType) ? (
+                              <Text></Text>
+                            ) : (
+                              <Text style={[styles.tableDataText, { color: 'red' }]}>No Entry</Text>
+                            )}
+                          </View>
+
+                          {/* LUNCH OUT */}
+                          <View style={[styles.tableData, styles.w15, { backgroundColor: lunchOutColor }]}>
+                            {log.dtr.lunchOut ? (
+                              <Text style={[styles.tableDataText]}>{twelveHourFormat(log.dtr.lunchOut)}</Text>
+                            ) : checkIfRestDay(log.dtr.remarks) || !isEmpty(log.holidayType) ? (
+                              <Text></Text>
+                            ) : (
+                              <Text style={[styles.tableDataText, { color: 'red' }]}>No Entry</Text>
+                            )}
+                          </View>
+
+                          {/* LUNCH IN */}
+                          <View style={[styles.tableData, styles.w15, { backgroundColor: lunchInColor }]}>
+                            {log.dtr.lunchIn ? (
+                              <Text style={[styles.tableDataText]}>{twelveHourFormat(log.dtr.lunchIn)}</Text>
+                            ) : checkIfRestDay(log.dtr.remarks) || !isEmpty(log.holidayType) ? (
+                              <Text></Text>
+                            ) : (
+                              <Text style={[styles.tableDataText, { color: 'red' }]}>No Entry</Text>
+                            )}
+                          </View>
+
+                          {/* TIME OUT */}
                           <View
                             style={[
-                              styles.rowContainer,
-                              styles.borderTop,
-                              { width: '100%', backgroundColor: logBgColor },
+                              styles.tableData,
+                              styles.w15,
+                              {
+                                borderRight: 'none',
+                              },
                             ]}
-                            key={index}
                           >
-                            {/* DATE */}
-                            <View style={[styles.tableData, styles.w10]}>
-                              <Text style={[styles.tableDataText]}>{log.day}</Text>
-                            </View>
-
-                            {/* DAY OF THE WEEK */}
-                            <View style={[styles.tableData, styles.w5]}>
-                              <Text style={[styles.tableDataText]}>{dayjs(log.day).format('ddd')}</Text>
-                            </View>
-
-                            {/* REMARKS */}
-                            <View style={[styles.tableData, styles.w25]}>
-                              <Text style={[styles.tableDataText]}>{log.dtr.remarks}</Text>
-                            </View>
-
-                            {/* TIME IN */}
-                            <View style={[styles.tableData, styles.w15, { backgroundColor: timeInColor }]}>
-                              {log.dtr.timeIn ? (
-                                <Text style={[styles.tableDataText]}>{twelveHourFormat(log.dtr.timeIn)}</Text>
-                              ) : checkIfRestDay(log.dtr.remarks) || !isEmpty(log.holidayType) ? (
-                                <Text></Text>
-                              ) : (
-                                <Text style={[styles.tableDataText, { color: 'red' }]}>No Entry</Text>
-                              )}
-                            </View>
-
-                            {/* LUNCH OUT */}
-                            <View style={[styles.tableData, styles.w15, { backgroundColor: lunchOutColor }]}>
-                              {log.dtr.lunchOut ? (
-                                <Text style={[styles.tableDataText]}>{twelveHourFormat(log.dtr.lunchOut)}</Text>
-                              ) : checkIfRestDay(log.dtr.remarks) || !isEmpty(log.holidayType) ? (
-                                <Text></Text>
-                              ) : (
-                                <Text style={[styles.tableDataText, { color: 'red' }]}>No Entry</Text>
-                              )}
-                            </View>
-
-                            {/* LUNCH IN */}
-                            <View style={[styles.tableData, styles.w15, { backgroundColor: lunchInColor }]}>
-                              {log.dtr.lunchIn ? (
-                                <Text style={[styles.tableDataText]}>{twelveHourFormat(log.dtr.lunchIn)}</Text>
-                              ) : checkIfRestDay(log.dtr.remarks) || !isEmpty(log.holidayType) ? (
-                                <Text></Text>
-                              ) : (
-                                <Text style={[styles.tableDataText, { color: 'red' }]}>No Entry</Text>
-                              )}
-                            </View>
-
-                            {/* TIME OUT */}
-                            <View
-                              style={[
-                                styles.tableData,
-                                styles.w15,
-                                {
-                                  borderRight: 'none',
-                                  backgroundColor: timeOutColor,
-                                },
-                              ]}
-                            >
-                              {log.dtr.timeOut ? (
-                                <Text style={[styles.tableDataText]}>{twelveHourFormat(log.dtr.timeOut)}</Text>
-                              ) : checkIfRestDay(log.dtr.remarks) || !isEmpty(log.holidayType) ? (
-                                <Text></Text>
-                              ) : (
-                                <Text style={[styles.tableDataText, { color: 'red' }]}>No Entry</Text>
-                              )}
-                            </View>
+                            {log.dtr.timeOut ? (
+                              <Text style={[styles.tableDataText]}>{twelveHourFormat(log.dtr.timeOut)}</Text>
+                            ) : checkIfRestDay(log.dtr.remarks) || !isEmpty(log.holidayType) ? (
+                              <Text></Text>
+                            ) : (
+                              <Text style={[styles.tableDataText, { color: 'red' }]}>No Entry</Text>
+                            )}
                           </View>
-                        );
-                      })
+                        </View>
+                      );
+                    })
                   : null}
 
                 {/* For Field/Pumping Station Schedule */}

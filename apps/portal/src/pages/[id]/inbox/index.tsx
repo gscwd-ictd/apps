@@ -117,7 +117,8 @@ export default function PassSlip({ employeeDetails }: InferGetServerSidePropsTyp
     mutate: mutatePsbMessages,
   } = useSWR(
     Boolean(employeeDetails.employmentDetails.isHRMPSB) === true ? unacknowledgedPsbUrl : null,
-    fetchWithToken
+    fetchWithToken,
+    {}
   );
 
   // Initial zustand state update
@@ -146,7 +147,7 @@ export default function PassSlip({ employeeDetails }: InferGetServerSidePropsTyp
     isLoading: swrIsLoadingOvertimeMessages,
     error: swrOvertimeMessageError,
     mutate: mutateOvertimeMessages,
-  } = useSWR(overtimeMessagesUrl, fetchWithToken);
+  } = useSWR(overtimeMessagesUrl, fetchWithToken, {});
 
   // Initial zustand state update
   useEffect(() => {
@@ -174,7 +175,7 @@ export default function PassSlip({ employeeDetails }: InferGetServerSidePropsTyp
     isLoading: swrIsLoadingTrainingMessages,
     error: swrTrainingMessageError,
     mutate: mutateTrainingMessages,
-  } = useSWR(employeeDetails.employmentDetails.userId ? trainingMessagesUrl : null, fetchWithToken);
+  } = useSWR(employeeDetails.employmentDetails.userId ? trainingMessagesUrl : null, fetchWithToken, {});
 
   // Initial zustand state update
   useEffect(() => {

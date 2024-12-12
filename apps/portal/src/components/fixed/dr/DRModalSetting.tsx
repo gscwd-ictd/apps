@@ -6,11 +6,7 @@ import useSWR from 'swr';
 
 import { useDrStore } from '../../../store/dr.store';
 import { useEmployeeStore } from '../../../store/employee.store';
-import {
-  DutyResponsibility,
-  DutiesResponsibilities,
-  Competency,
-} from '../../../types/dr.type';
+import { DutyResponsibility, DutiesResponsibilities, Competency } from '../../../types/dr.type';
 import { Button } from '../../modular/common/forms/Button';
 import LoadingVisual from '../loading/LoadingVisual';
 import { DRModalLoading } from './DRModalLoading';
@@ -48,24 +44,17 @@ export const DRModalSetting = (): JSX.Element => {
 
   const setDrcPoolIsFilled = useDrStore((state) => state.setDrcPoolIsFilled);
 
-  const setSelectedDRCsOnLoad = useDrStore(
-    (state) => state.setSelectedDRCsOnLoad
-  );
+  const setSelectedDRCsOnLoad = useDrStore((state) => state.setSelectedDRCsOnLoad);
 
   // selector
-  const {
-    PostPositionResponse,
-    UpdatePositionResponse,
-    PostPosition,
-    UpdatePositionSuccess,
-    PostPositionSuccess,
-  } = useDrStore((state) => ({
-    PostPosition: state.postPosition,
-    PostPositionSuccess: state.postPositionSuccess,
-    UpdatePositionSuccess: state.updatePositionSuccess,
-    PostPositionResponse: state.position.postResponse,
-    UpdatePositionResponse: state.position.updateResponse,
-  }));
+  const { PostPositionResponse, UpdatePositionResponse, PostPosition, UpdatePositionSuccess, PostPositionSuccess } =
+    useDrStore((state) => ({
+      PostPosition: state.postPosition,
+      PostPositionSuccess: state.postPositionSuccess,
+      UpdatePositionSuccess: state.updatePositionSuccess,
+      PostPositionResponse: state.position.postResponse,
+      UpdatePositionResponse: state.position.updateResponse,
+    }));
 
   const setPoolInitialLoad = useDrStore((state) => state.setPoolInitialLoad);
 
@@ -93,17 +82,11 @@ export const DRModalSetting = (): JSX.Element => {
 
   // query duties and responsibilities data from HRIS using access token
   // const { data: getPool } = useSWR(`${prodUrl}`, fetchWithToken);
-  const { data: getPool, mutate: mutateGetPool } = useSWR(
-    prodUrl,
-    fetchWithToken
-  );
+  const { data: getPool, mutate: mutateGetPool } = useSWR(prodUrl, fetchWithToken, {});
 
   // query existing duties,responsibilities, and competencies  from HRIS
   // const { data: getDRCs } = useSWR(`${getUrl}`, fetchWithToken);
-  const { data: getDRCs, mutate: mutateGetDRCs } = useSWR(
-    getUrl,
-    fetchWithToken
-  );
+  const { data: getDRCs, mutate: mutateGetDRCs } = useSWR(getUrl, fetchWithToken, {});
 
   // fires when core button is clicked
   const onClickCoreBtn = () => {
@@ -121,30 +104,23 @@ export const DRModalSetting = (): JSX.Element => {
     // add existing DRCs and unsettled DRCs
     const tempOrigPool: any = [...drPool]; // temporary original pool
 
-    tempOrigPool.sort((a: DutyResponsibility, b: DutyResponsibility) =>
-      a.description.localeCompare(b.description)
-    );
+    tempOrigPool.sort((a: DutyResponsibility, b: DutyResponsibility) => a.description.localeCompare(b.description));
 
     if (fetchedDRCs && fetchedDRCs.core.length > 0) {
       fetchedDRCs.core.map((dr: DutyResponsibility) => {
-        tempOrigPool.push(
-          (({ competency, percentage, state, onEdit, ...rest }) => rest)(dr)
-        );
+        tempOrigPool.push((({ competency, percentage, state, onEdit, ...rest }) => rest)(dr));
       });
     }
 
     if (fetchedDRCs && fetchedDRCs.support.length > 0) {
       fetchedDRCs.support.map((dr: DutyResponsibility) => {
-        tempOrigPool.push(
-          (({ competency, percentage, state, onEdit, ...rest }) => rest)(dr)
-        );
+        tempOrigPool.push((({ competency, percentage, state, onEdit, ...rest }) => rest)(dr));
       });
     }
 
     // sort and assign to temporary original pool
-    const pool = tempOrigPool.sort(
-      (a: DutyResponsibility, b: DutyResponsibility) =>
-        a.description.localeCompare(b.description)
+    const pool = tempOrigPool.sort((a: DutyResponsibility, b: DutyResponsibility) =>
+      a.description.localeCompare(b.description)
     );
 
     return pool;
@@ -165,17 +141,11 @@ export const DRModalSetting = (): JSX.Element => {
   // this sets the all dr pool
   useEffect(() => {
     if (DRCIsLoaded === true) {
-      if (
-        action === 'update' &&
-        allDRCPool.length === 0 &&
-        poolInitialLoad === false
-      ) {
+      if (action === 'update' && allDRCPool.length === 0 && poolInitialLoad === false) {
         const pool = [...getPool];
 
         pool
-          .sort((a: DutyResponsibility, b: DutyResponsibility) =>
-            a.description.localeCompare(b.description)
-          )
+          .sort((a: DutyResponsibility, b: DutyResponsibility) => a.description.localeCompare(b.description))
           .map((dr: DutyResponsibility, index: number) => {
             dr.sequenceNo = index;
             dr.state = false;
@@ -257,15 +227,13 @@ export const DRModalSetting = (): JSX.Element => {
         const supportDRCs = [...getDRCs.support];
 
         // sort core DRCs
-        const sortedCoreDRCs = coreDRCs.sort(
-          (a: DutyResponsibility, b: DutyResponsibility) =>
-            a.description.localeCompare(b.description)
+        const sortedCoreDRCs = coreDRCs.sort((a: DutyResponsibility, b: DutyResponsibility) =>
+          a.description.localeCompare(b.description)
         );
 
         // copy existing support DRCs
-        const sortedSupportDRCs = supportDRCs.sort(
-          (a: DutyResponsibility, b: DutyResponsibility) =>
-            a.description.localeCompare(b.description)
+        const sortedSupportDRCs = supportDRCs.sort((a: DutyResponsibility, b: DutyResponsibility) =>
+          a.description.localeCompare(b.description)
         );
 
         sortedCoreDRCs.map((dr: DutyResponsibility, index: number) => {
@@ -348,12 +316,8 @@ export const DRModalSetting = (): JSX.Element => {
   return (
     <div className="h-auto px-5 rounded">
       <div className="flex flex-col pt-2 mb-8 font-semibold text-gray-500">
-        <span className="text-xl text-slate-500">
-          {selectedPosition.positionTitle}
-        </span>
-        <span className="text-sm font-normal">
-          {selectedPosition.itemNumber}
-        </span>
+        <span className="text-xl text-slate-500">{selectedPosition.positionTitle}</span>
+        <span className="text-sm font-normal">{selectedPosition.itemNumber}</span>
         <div className="flex flex-col mt-5">
           <section>
             <div className="flex items-end justify-between ">
@@ -392,8 +356,7 @@ export const DRModalSetting = (): JSX.Element => {
                       <>
                         <div className="flex items-center justify-center h-full">
                           <h1 className="text-2xl font-normal text-gray-300">
-                            No selected core duties, responsibilities, &
-                            competencies
+                            No selected core duties, responsibilities, & competencies
                           </h1>
                         </div>
                       </>
@@ -443,8 +406,7 @@ export const DRModalSetting = (): JSX.Element => {
                       <>
                         <div className="flex items-center justify-center h-full">
                           <h1 className="text-2xl font-normal text-gray-300">
-                            No selected support duties, responsibilities, &
-                            competencies
+                            No selected support duties, responsibilities, & competencies
                           </h1>
                         </div>
                       </>

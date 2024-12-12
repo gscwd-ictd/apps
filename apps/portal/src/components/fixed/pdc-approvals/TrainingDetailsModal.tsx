@@ -181,7 +181,7 @@ export const TrainingDetailsModal = ({ modalState, setModalState, closeModalActi
     isLoading: swrTrainingDetailsIsLoading,
     error: swrTrainingDetailsError,
     mutate: mutateTrainingDetails,
-  } = useSWR(individualTrainingDetails.trainingId ? trainingDetailsUrl : null, fetchWithToken);
+  } = useSWR(individualTrainingDetails.trainingId ? trainingDetailsUrl : null, fetchWithToken, {});
 
   // Initial zustand state update
   useEffect(() => {

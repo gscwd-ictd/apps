@@ -211,7 +211,8 @@ export const SideNav = ({ employeeDetails }: NavDetails) => {
     mutate: mutatePsbMessages,
   } = useSWR(
     Boolean(employeeDetails.employmentDetails.isHRMPSB) === true ? unacknowledgedPsbUrl : null,
-    fetchWithToken
+    fetchWithToken,
+    {}
   );
 
   // Initial zustand state update
@@ -247,7 +248,7 @@ export const SideNav = ({ employeeDetails }: NavDetails) => {
     isLoading: swrIsLoadingTrainingMessages,
     error: swrTrainingMessageError,
     mutate: mutateTrainingMessages,
-  } = useSWR(employeeDetails.employmentDetails.userId ? trainingMessagesUrl : null, fetchWithToken);
+  } = useSWR(employeeDetails.employmentDetails.userId ? trainingMessagesUrl : null, fetchWithToken, {});
 
   // Initial zustand state update
   useEffect(() => {

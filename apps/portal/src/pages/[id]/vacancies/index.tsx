@@ -117,7 +117,7 @@ export default function Vacancies({ employeeDetails }: InferGetServerSidePropsTy
     isLoading: swrVacanciesIsLoading,
     error: swrVacanciesError,
     mutate: mutateVacancies,
-  } = useSWR(employeeDetails.employmentDetails.userId ? vacanciesUrl : null, fetchWithToken);
+  } = useSWR(employeeDetails.employmentDetails.userId ? vacanciesUrl : null, fetchWithToken, {});
 
   // Initial zustand state update
   useEffect(() => {

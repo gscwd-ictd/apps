@@ -84,7 +84,7 @@ export default function TrainingSelection({ employeeDetails }: InferGetServerSid
     isLoading: swrEmployeeListIsLoading,
     error: swrEmployeeListError,
     mutate: mutateEmployeeList,
-  } = useSWR(employeeDetails.employmentDetails.userId ? employeeListUrl : null, fetchWithToken);
+  } = useSWR(employeeDetails.employmentDetails.userId ? employeeListUrl : null, fetchWithToken, {});
 
   // Initial zustand state update
   useEffect(() => {
@@ -111,7 +111,7 @@ export default function TrainingSelection({ employeeDetails }: InferGetServerSid
     isLoading: swrTrainingListIsLoading,
     error: swrTrainingListError,
     mutate: mutateTrainingList,
-  } = useSWR(employeeDetails.employmentDetails.userId ? trainingUrl : null, fetchWithToken);
+  } = useSWR(employeeDetails.employmentDetails.userId ? trainingUrl : null, fetchWithToken, {});
 
   // Initial zustand state update
   useEffect(() => {

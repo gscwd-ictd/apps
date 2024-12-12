@@ -16,9 +16,7 @@ export const CompetencyDropdown = ({ index }: CompetencyDropDownProps) => {
 
   const allCompetencyPool = useDrStore((state) => state.allCompetencyPool);
 
-  const setAllCompetencyPool = useDrStore(
-    (state) => state.setAllCompetencyPool
-  );
+  const setAllCompetencyPool = useDrStore((state) => state.setAllCompetencyPool);
 
   const checkedDRCs = useDrStore((state) => state.checkedDRCs);
 
@@ -30,7 +28,7 @@ export const CompetencyDropdown = ({ index }: CompetencyDropDownProps) => {
   const prodUrl = `${process.env.NEXT_PUBLIC_HRIS_URL}/competency-proficiency-level/single/functional/${selectedPosition.positionId}`;
 
   // query competencies data from HRIS using access token
-  const { data } = useSWR(`${prodUrl}`, fetchWithToken);
+  const { data } = useSWR(`${prodUrl}`, fetchWithToken, {});
 
   const handleSelectedDefaultCompetency = (index: number, item: Competency) => {
     if (selectedDRCType === 'core') {
@@ -100,13 +98,9 @@ export const CompetencyDropdown = ({ index }: CompetencyDropDownProps) => {
                     <Menu.Item>
                       {({ active }) => (
                         <button
-                          onClick={() =>
-                            handleSelectedDefaultCompetency(index, item)
-                          }
+                          onClick={() => handleSelectedDefaultCompetency(index, item)}
                           className={`${
-                            active
-                              ? 'bg-indigo-200 text-gray-900'
-                              : 'text-gray-500'
+                            active ? 'bg-indigo-200 text-gray-900' : 'text-gray-500'
                           } group flex w-full items-center text-left py-3 pl-4 pr-2`}
                         >
                           <div className="flex flex-row w-full gap-2 divide-x">
