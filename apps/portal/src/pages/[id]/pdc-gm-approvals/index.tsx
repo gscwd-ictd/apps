@@ -78,7 +78,7 @@ export default function PdcGeneralManagerApprovals({
     isLoading: swrTrainingListIsLoading,
     error: swrTrainingListError,
     mutate: mutateTrainingList,
-  } = useSWR(trainingGeneralManagerUrl, fetchWithToken);
+  } = useSWR(trainingGeneralManagerUrl, fetchWithToken, {});
 
   // Initial zustand state update
   useEffect(() => {

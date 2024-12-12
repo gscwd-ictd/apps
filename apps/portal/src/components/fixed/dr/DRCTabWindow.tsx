@@ -19,9 +19,9 @@ export const DrcTabWindow = ({ positionId }: DrcTabWindowProps) => {
   const pendingUrl = `${process.env.NEXT_PUBLIC_HRIS_URL}/occupational-group-duties-responsibilities/${positionId}/pending`;
   const fulfilledUrl = `${process.env.NEXT_PUBLIC_HRIS_URL}/occupational-group-duties-responsibilities/${positionId}/finished`;
 
-  const { data: pendingPositionList } = useSWR(pendingUrl, fetchWithSession);
+  const { data: pendingPositionList } = useSWR(pendingUrl, fetchWithSession, {});
 
-  const { data: fulfilledPositionList } = useSWR(fulfilledUrl, fetchWithSession);
+  const { data: fulfilledPositionList } = useSWR(fulfilledUrl, fetchWithSession, {});
 
   const pendingPositions = useDrStore((state) => state.pendingPositions);
 

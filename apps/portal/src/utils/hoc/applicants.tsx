@@ -9,7 +9,7 @@ export const getApplicants = async (vppId: string) => {
   const mockUrl = 'http://192.168.1.84:2000/auth/dashboard/';
 
   // get data from the backend
-  const { data: applicants } = useSWR(applicantGetUrl, fetchWithSession);
+  const { data: applicants } = useSWR(applicantGetUrl, fetchWithSession, {});
 
   // return employee data
   return applicants;
