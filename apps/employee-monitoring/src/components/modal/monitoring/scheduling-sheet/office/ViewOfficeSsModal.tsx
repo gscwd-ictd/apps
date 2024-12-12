@@ -128,7 +128,8 @@ const ViewOfficeSsModal: FunctionComponent<ViewOfficeSsModalProps> = ({
           rowData.dateTo
         )}&schedule_id=${rowData.scheduleId}`
       : null,
-    fetcherEMS
+    fetcherEMS,
+    {}
   );
 
   // useSWR for schedule details
@@ -136,7 +137,7 @@ const ViewOfficeSsModal: FunctionComponent<ViewOfficeSsModalProps> = ({
     data: swrSchedule,
     isLoading: swrScheduleIsLoading,
     error: swrScheduleError,
-  } = useSWR(!isEmpty(rowData.scheduleId) && modalState ? `/schedules/${rowData.scheduleId}` : null, fetcherEMS);
+  } = useSWR(!isEmpty(rowData.scheduleId) && modalState ? `/schedules/${rowData.scheduleId}` : null, fetcherEMS, {});
 
   // set default values
   const setDefaultValues = (rowData: CurrentScheduleSheet) => {

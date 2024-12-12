@@ -82,7 +82,7 @@ export const SelectProvince: React.FC<MySelectProvinceProps> = ({
   ...props
 }): JSX.Element => {
   // initialize fetcher using useSWR
-  const { data, error } = useSWR(process.env.NEXT_PUBLIC_PROVINCES, fetcher);
+  const { data, error } = useSWR(process.env.NEXT_PUBLIC_PROVINCES, fetcher, {});
   const [provinces, setProvinces] = useState<Array<Province>>([]);
 
   /**
@@ -138,7 +138,7 @@ export const SelectProvince: React.FC<MySelectProvinceProps> = ({
   return (
     <>
       <div
-        className={`${className} ${muted ? `cursor-not-allowed focus-within:ring-0` : ``} 
+        className={`${className} ${muted ? `cursor-not-allowed focus-within:ring-0` : ``}
 
         ${props.hidden ? 'hidden' : ''} transition-all`}
       >
@@ -150,7 +150,7 @@ export const SelectProvince: React.FC<MySelectProvinceProps> = ({
             disabled={muted}
             className={`w-full ${
               muted ? 'cursor-not-allowed' : 'cursor-pointer'
-            } cursor-pointer py-[1.1rem] pl-[1.12rem] pr-4 font-normal text-gray-600 
+            } cursor-pointer py-[1.1rem] pl-[1.12rem] pr-4 font-normal text-gray-600
           ${border[variant]} ${background[variant]} ${focus[variant]} ${focusWithin[variant]}
           `}
           >
@@ -163,7 +163,7 @@ export const SelectProvince: React.FC<MySelectProvinceProps> = ({
           </select>
           <label
             htmlFor={id}
-            className={`peer-focus:font-sm peer-focus:-pt-1 absolute -top-6 left-0 mx-4  mt-4 h-fit 
+            className={`peer-focus:font-sm peer-focus:-pt-1 absolute -top-6 left-0 mx-4  mt-4 h-fit
           cursor-text text-xs font-normal text-gray-400 transition-all peer-placeholder-shown:-inset-y-[0.85rem] peer-placeholder-shown:left-0 peer-placeholder-shown:text-base  ${
             muted ? 'peer-placeholder-shown:text-gray-400' : 'peer-placeholder-shown:text-gray-600'
           }  bg-white peer-focus:bg-white peer-focus:text-xs peer-focus:text-gray-400`}

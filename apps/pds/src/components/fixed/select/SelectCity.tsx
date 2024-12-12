@@ -12,20 +12,10 @@ type City = {
   region_desc: string;
 };
 
-type MyVariant =
-  | 'default'
-  | 'primary'
-  | 'secondary'
-  | 'warning'
-  | 'danger'
-  | 'light'
-  | 'simple';
+type MyVariant = 'default' | 'primary' | 'secondary' | 'warning' | 'danger' | 'light' | 'simple';
 
 interface MySelectCityProps
-  extends React.DetailedHTMLProps<
-    React.SelectHTMLAttributes<HTMLSelectElement>,
-    HTMLSelectElement
-  > {
+  extends React.DetailedHTMLProps<React.SelectHTMLAttributes<HTMLSelectElement>, HTMLSelectElement> {
   id: string;
   codeVariable: Address;
   rfRegister?: any;
@@ -68,18 +58,12 @@ const focus = {
 };
 
 const focusWithin = {
-  default:
-    'focus-within:ring-1 focus-within:border focus-within:border-gray-500 focus-within:ring-gray-100',
-  primary:
-    'focus-within:ring-1  focus-within:border focus-within:border-indigo-700 focus-within:ring-indigo-100',
-  secondary:
-    'focus-within:ring-1 focus-within:border focus-within:border-emerald-600 focus-within:ring-green-100',
-  warning:
-    'focus-within:ring-1 focus-within:border focus-within:border-orange-500 focus-within:ring-orange-100',
-  danger:
-    'focus-within:ring-1 focus-within:border focus-within:border-rose-600 focus-within:ring-rose-100',
-  light:
-    'focus-within:ring-0 focus-within:border focus-within:border-indigo-500 focus-within:ring-indigo-100',
+  default: 'focus-within:ring-1 focus-within:border focus-within:border-gray-500 focus-within:ring-gray-100',
+  primary: 'focus-within:ring-1  focus-within:border focus-within:border-indigo-700 focus-within:ring-indigo-100',
+  secondary: 'focus-within:ring-1 focus-within:border focus-within:border-emerald-600 focus-within:ring-green-100',
+  warning: 'focus-within:ring-1 focus-within:border focus-within:border-orange-500 focus-within:ring-orange-100',
+  danger: 'focus-within:ring-1 focus-within:border focus-within:border-rose-600 focus-within:ring-rose-100',
+  light: 'focus-within:ring-0 focus-within:border focus-within:border-indigo-500 focus-within:ring-indigo-100',
   simple: 'focus-within:ring-0',
 };
 
@@ -96,7 +80,7 @@ export const SelectCity: React.FC<MySelectCityProps> = ({
   ...props
 }) => {
   // initialize fetcher using useSWR
-  const { data, error } = useSWR(process.env.NEXT_PUBLIC_CITIES, fetcher);
+  const { data, error } = useSWR(process.env.NEXT_PUBLIC_CITIES, fetcher, {});
   const [cities, setCities] = useState<Array<City>>([]);
 
   /**
@@ -108,18 +92,11 @@ export const SelectCity: React.FC<MySelectCityProps> = ({
   useEffect(() => {
     if (!isEmpty(data)) {
       // filter
-      const filteredCities = data.filter(
-        (city: City) => city.province_code === codeVariable.provCode
-      );
+      const filteredCities = data.filter((city: City) => city.province_code === codeVariable.provCode);
 
       // sort
-      const sortedCities = filteredCities.sort(
-        (firstItem: City, secondItem: City) =>
-          firstItem.city_name > secondItem.city_name
-            ? 1
-            : secondItem.city_name > firstItem.city_name
-            ? -1
-            : 0
+      const sortedCities = filteredCities.sort((firstItem: City, secondItem: City) =>
+        firstItem.city_name > secondItem.city_name ? 1 : secondItem.city_name > firstItem.city_name ? -1 : 0
       );
 
       setCities(sortedCities);
@@ -153,9 +130,7 @@ export const SelectCity: React.FC<MySelectCityProps> = ({
   return (
     <>
       <div
-        className={`${className} ${
-          muted ? `cursor-not-allowed focus-within:ring-0` : ``
-        } 
+        className={`${className} ${muted ? `cursor-not-allowed focus-within:ring-0` : ``}
 
         ${props.hidden ? 'hidden' : ''} transition-all`}
       >
@@ -167,10 +142,8 @@ export const SelectCity: React.FC<MySelectCityProps> = ({
             disabled={muted}
             className={`w-full ${
               muted ? 'cursor-not-allowed' : 'cursor-pointer'
-            } cursor-pointer py-[1.1rem] pl-[1.13rem] pr-4 font-normal text-gray-600 
-          ${border[variant]} ${background[variant]} ${focus[variant]} ${
-              focusWithin[variant]
-            }
+            } cursor-pointer py-[1.1rem] pl-[1.13rem] pr-4 font-normal text-gray-600
+          ${border[variant]} ${background[variant]} ${focus[variant]} ${focusWithin[variant]}
           `}
           >
             <option value="">Select...</option>
@@ -182,11 +155,9 @@ export const SelectCity: React.FC<MySelectCityProps> = ({
           </select>
           <label
             htmlFor={id}
-            className={`peer-focus:font-sm peer-focus:-pt-1 absolute -top-6 left-0 mx-4  mt-4 h-fit 
+            className={`peer-focus:font-sm peer-focus:-pt-1 absolute -top-6 left-0 mx-4  mt-4 h-fit
           cursor-text text-xs font-normal text-gray-400 transition-all peer-placeholder-shown:-inset-y-[0.85rem] peer-placeholder-shown:left-0 peer-placeholder-shown:text-base  ${
-            muted
-              ? 'peer-placeholder-shown:text-gray-400'
-              : 'peer-placeholder-shown:text-gray-600'
+            muted ? 'peer-placeholder-shown:text-gray-400' : 'peer-placeholder-shown:text-gray-600'
           }  bg-white peer-focus:bg-white peer-focus:text-xs peer-focus:text-gray-400`}
           >
             <div className="flex px-1">

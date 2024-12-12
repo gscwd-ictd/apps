@@ -30,7 +30,7 @@ export const WesDocumentView: FunctionComponent<WesDocumentViewProps> = ({ appli
   const [localWorkExperiencesSheet, setLocalWorkExperiencesSheet] = useState<Array<WorkExperienceSheet>>([]);
   const [applicantData, setApplicantData] = useState({} as Applicant);
 
-  const { data } = useSWR(`${process.env.NEXT_PUBLIC_HRIS_DOMAIN}/external-applicants/name`, axiosFetcher);
+  const { data } = useSWR(`${process.env.NEXT_PUBLIC_HRIS_DOMAIN}/external-applicants/name`, axiosFetcher, {});
 
   const formatDate = (assignedDate: string) => {
     if (!isEmpty(assignedDate)) {

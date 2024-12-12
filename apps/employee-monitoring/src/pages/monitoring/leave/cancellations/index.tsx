@@ -26,7 +26,7 @@ const Index = () => {
     error: swrError,
     isLoading: swrIsLoading,
     mutate: mutateLeaveApplications,
-  } = useSWR('/leave-application-dates/for-cancellation', fetcherEMS);
+  } = useSWR('/leave-application-dates/for-cancellation', fetcherEMS, {});
 
   // Zustand initialization
   const {

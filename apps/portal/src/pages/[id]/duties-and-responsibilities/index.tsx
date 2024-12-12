@@ -41,7 +41,8 @@ export default function DutiesResponsibilities({
     error: swrUnfilledError,
   } = useSWR(
     `/occupational-group-duties-responsibilities/${employeeDetails.employmentDetails.assignment.positionId}/pending`,
-    fetcherHRIS
+    fetcherHRIS,
+    {}
   );
 
   const {
@@ -50,7 +51,8 @@ export default function DutiesResponsibilities({
     error: swrFilledError,
   } = useSWR(
     `/occupational-group-duties-responsibilities/${employeeDetails.employmentDetails.assignment.positionId}/finished`,
-    fetcherHRIS
+    fetcherHRIS,
+    {}
   );
 
   // use position store

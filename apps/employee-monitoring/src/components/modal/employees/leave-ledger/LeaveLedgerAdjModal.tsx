@@ -49,7 +49,7 @@ const LeaveLedgerAdjModal: FunctionComponent<LeaveLedgerAdjModalProps> = ({
     data: swrLeaveBenefits,
     isLoading: isLoadingLeaveBenefits,
     error: errorLeaveBenefits,
-  } = useSWR(modalState ? '/leave-benefits' : null, fetcherEMS);
+  } = useSWR(modalState ? '/leave-benefits' : null, fetcherEMS, {});
 
   // zustand store initialization
   const { GetLeaveBenefitsSuccess, GetLeaveBenefitsFail } = useLeaveBenefitStore((state) => ({

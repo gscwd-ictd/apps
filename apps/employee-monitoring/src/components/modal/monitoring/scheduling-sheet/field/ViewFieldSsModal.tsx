@@ -128,7 +128,8 @@ const ViewFieldSsModal: FunctionComponent<ViewFieldSsModalProps> = ({
           rowData.dateTo
         )}&schedule_id=${selectedScheduleId}`
       : null,
-    fetcherEMS
+    fetcherEMS,
+    {}
   );
 
   // useSWR for schedule details
@@ -136,7 +137,7 @@ const ViewFieldSsModal: FunctionComponent<ViewFieldSsModalProps> = ({
     data: swrSchedule,
     isLoading: swrScheduleIsLoading,
     error: swrScheduleError,
-  } = useSWR(!isEmpty(selectedScheduleId) && modalState ? `/schedules/${selectedScheduleId}` : null, fetcherEMS);
+  } = useSWR(!isEmpty(selectedScheduleId) && modalState ? `/schedules/${selectedScheduleId}` : null, fetcherEMS, {});
 
   // set default values
   const setDefaultValues = (rowData: CurrentScheduleSheet) => {

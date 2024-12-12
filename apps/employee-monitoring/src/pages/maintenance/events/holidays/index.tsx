@@ -1,3 +1,4 @@
+/* eslint-disable @nx/enforce-module-boundaries */
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useState } from 'react';
 import fetcherEMS from '../../../../../src/utils/fetcher/FetcherEMS';
@@ -8,12 +9,7 @@ import { useHolidaysStore } from '../../../../../src/store/holidays.store';
 import { Holiday } from '../../../../utils/types/holiday.type';
 
 import { createColumnHelper } from '@tanstack/react-table';
-import {
-  DataTable,
-  useDataTable,
-  LoadingSpinner,
-  ToastNotification,
-} from '@gscwd-apps/oneui';
+import { DataTable, useDataTable, LoadingSpinner, ToastNotification } from '@gscwd-apps/oneui';
 import { Card } from '../../../../components/cards/Card';
 import { BreadCrumbs } from '../../../../components/navigations/BreadCrumbs';
 import AddHolidayModal from '../../../../components/modal/maintenance/events/holidays/AddHolidayModal';
@@ -59,16 +55,10 @@ const Index = () => {
   // Render badge pill design
   const renderHolidayType = (holidayType: string) => {
     if (holidayType === 'regular') {
-      return (
-        <span className="bg-red-200 text-red-800 text-xs font-mono px-1 py-0.5 rounded text-center">
-          Regular
-        </span>
-      );
+      return <span className="bg-red-200 text-red-800 text-xs font-mono px-1 py-0.5 rounded text-center">Regular</span>;
     } else if (holidayType === 'special') {
       return (
-        <span className="bg-blue-200 text-blue-800 text-xs font-mono px-1 py-0.5 rounded text-center">
-          Special
-        </span>
+        <span className="bg-blue-200 text-blue-800 text-xs font-mono px-1 py-0.5 rounded text-center">Special</span>
       );
     } else {
       return;
@@ -184,11 +174,7 @@ const Index = () => {
 
   // Reset responses from all modal actions
   useEffect(() => {
-    if (
-      !isEmpty(PostHolidayResponse) ||
-      !isEmpty(UpdateHolidayResponse) ||
-      !isEmpty(DeleteHolidayResponse)
-    ) {
+    if (!isEmpty(PostHolidayResponse) || !isEmpty(UpdateHolidayResponse) || !isEmpty(DeleteHolidayResponse)) {
       mutateHolidays();
 
       setTimeout(() => {
@@ -202,31 +188,18 @@ const Index = () => {
       <BreadCrumbs title="Holidays" />
 
       {/* Error Notifications */}
-      {!isEmpty(ErrorHolidays) ? (
-        <ToastNotification toastType="error" notifMessage={ErrorHolidays} />
-      ) : null}
-      {!isEmpty(ErrorHoliday) ? (
-        <ToastNotification toastType="error" notifMessage={ErrorHoliday} />
-      ) : null}
+      {!isEmpty(ErrorHolidays) ? <ToastNotification toastType="error" notifMessage={ErrorHolidays} /> : null}
+      {!isEmpty(ErrorHoliday) ? <ToastNotification toastType="error" notifMessage={ErrorHoliday} /> : null}
 
       {/* Success Notifications */}
       {!isEmpty(PostHolidayResponse) ? (
-        <ToastNotification
-          toastType="success"
-          notifMessage="Holiday added successfully"
-        />
+        <ToastNotification toastType="success" notifMessage="Holiday added successfully" />
       ) : null}
       {!isEmpty(UpdateHolidayResponse) ? (
-        <ToastNotification
-          toastType="success"
-          notifMessage="Holiday updated successfully"
-        />
+        <ToastNotification toastType="success" notifMessage="Holiday updated successfully" />
       ) : null}
       {!isEmpty(DeleteHolidayResponse) ? (
-        <ToastNotification
-          toastType="success"
-          notifMessage="Holiday deleted successfully"
-        />
+        <ToastNotification toastType="success" notifMessage="Holiday deleted successfully" />
       ) : null}
 
       <div className="sm:px-2 md:px-2 lg:px-5">
@@ -245,12 +218,7 @@ const Index = () => {
                 </button>
               </div>
 
-              <DataTable
-                model={table}
-                showGlobalFilter={true}
-                showColumnFilter={true}
-                paginate={true}
-              />
+              <DataTable model={table} showGlobalFilter={true} showColumnFilter={true} paginate={true} />
             </div>
           )}
         </Card>
