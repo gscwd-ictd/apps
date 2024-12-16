@@ -23,6 +23,17 @@ import { OvertimeTabWindow } from 'apps/portal/src/components/fixed/overtime/Ove
 import { useRouter } from 'next/router';
 import { OvertimeSummaryModal } from 'apps/portal/src/components/fixed/overtime/OvertimeSummaryModal';
 import { UserRole } from 'apps/portal/src/utils/enums/userRoles';
+import { DataTablePortal, fuzzySort, useDataTable } from 'libs/oneui/src/components/Tables/DataTablePortal';
+import { EmployeeOvertimeDetail, OvertimeDetails, OvertimeList } from 'libs/utils/src/lib/types/overtime.type';
+import { createColumnHelper } from '@tanstack/react-table';
+import { ApprovalType } from 'libs/utils/src/lib/enums/approval-type.enum';
+import RenderOvertimePendingAccomplishmentStatus from 'apps/portal/src/utils/functions/RenderOvertimePendingAccomplishmentStatus';
+import dayjs from 'dayjs';
+import UseRenderOvertimeStatus from 'apps/portal/src/utils/functions/RenderOvertimeStatus';
+import { TextSize } from 'libs/utils/src/lib/enums/text-size.enum';
+import Image from 'next/image';
+import TempPhotoProfile from '../.../../../../../public/profile.jpg';
+import { OvertimeStatus } from 'libs/utils/src/lib/enums/overtime.enum';
 
 export default function Overtime({ employeeDetails }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const {
@@ -37,6 +48,7 @@ export default function Overtime({ employeeDetails }: InferGetServerSidePropsTyp
     errorAuthorizationReport,
     errorAccomplishmentReport,
     errorOvertimeSummaryReport,
+    overtimeDetails,
     setOvertimeSummaryModalIsOpen,
     setPendingOvertimeModalIsOpen,
     setCompletedOvertimeModalIsOpen,
@@ -52,6 +64,7 @@ export default function Overtime({ employeeDetails }: InferGetServerSidePropsTyp
     setSelectedYear,
     setSelectedPeriod,
     setSelectedEmployeeType,
+    setOvertimeDetails,
   } = useOvertimeStore((state) => ({
     tab: state.tab,
     applyOvertimeModalIsOpen: state.applyOvertimeModalIsOpen,
@@ -64,6 +77,7 @@ export default function Overtime({ employeeDetails }: InferGetServerSidePropsTyp
     errorAuthorizationReport: state.error.errorAuthorizationReport,
     errorAccomplishmentReport: state.error.errorAccomplishmentReport,
     errorOvertimeSummaryReport: state.error.errorOvertimeSummaryReport,
+    overtimeDetails: state.overtimeDetails,
     setOvertimeSummaryModalIsOpen: state.setOvertimeSummaryModalIsOpen,
     setPendingOvertimeModalIsOpen: state.setPendingOvertimeModalIsOpen,
     setCompletedOvertimeModalIsOpen: state.setCompletedOvertimeModalIsOpen,
@@ -79,6 +93,7 @@ export default function Overtime({ employeeDetails }: InferGetServerSidePropsTyp
     setSelectedYear: state.setSelectedYear,
     setSelectedPeriod: state.setSelectedPeriod,
     setSelectedEmployeeType: state.setSelectedEmployeeType,
+    setOvertimeDetails: state.setOvertimeDetails,
   }));
 
   const router = useRouter();
@@ -196,6 +211,104 @@ export default function Overtime({ employeeDetails }: InferGetServerSidePropsTyp
       }, 3000);
     }
   }, [responseApply, cancelResponse]);
+
+  // // Rendering of leave dates in row
+  const renderRowEmployeeAvatar = (employee: Array<EmployeeOvertimeDetail>) => {
+    if (employee.length <= 4) {
+      return (
+        <div className="flex flex-row gap-1 justify-start items-center">
+          {employee.map((employees: EmployeeOvertimeDetail, idx: number) => (
+            <Image
+              key={idx}
+              width={20}
+              height={20}
+              className="rounded-full border w-10"
+              src={
+                employees.avatarUrl ? process.env.NEXT_PUBLIC_IMAGE_SERVER_URL + employees?.avatarUrl : TempPhotoProfile
+              }
+              alt={'photo'}
+            />
+          ))}
+        </div>
+      );
+    } else {
+      return (
+        <div className="flex flex-row gap-1 justify-start items-center">
+          <Image
+            width={20}
+            height={20}
+            className="rounded-full border w-8"
+            src={
+              employee[0]?.avatarUrl
+                ? process.env.NEXT_PUBLIC_IMAGE_SERVER_URL + employee[0]?.avatarUrl
+                : TempPhotoProfile
+            }
+            alt={'photo'}
+          />
+
+          <label>{`+ ${employee.length - 1} more...`}</label>
+        </div>
+      );
+    }
+  };
+
+  // Render row actions in the table component
+  const renderRowActions = (rowData: OvertimeDetails) => {
+    setOvertimeDetails(rowData);
+    if (rowData.status != OvertimeStatus.PENDING) {
+      if (!completedOvertimeModalIsOpen) {
+        setCompletedOvertimeModalIsOpen(true);
+      }
+    } else {
+      // PENDING APPROVAL
+      if (!pendingOvertimeModalIsOpen) {
+        setPendingOvertimeModalIsOpen(true);
+      }
+    }
+  };
+
+  // Define table columns
+  const columnHelper = createColumnHelper<OvertimeDetails>();
+  const columns = [
+    columnHelper.accessor('id', {
+      cell: (info) => info.getValue(),
+    }),
+    columnHelper.accessor('plannedDate', {
+      header: 'Planned Date',
+      // filterFn: 'equalsString',
+      cell: (info) => dayjs(info.getValue()).format('MMMM DD, YYYY'),
+    }),
+    columnHelper.accessor('immediateSupervisorName', {
+      header: 'Requested By',
+      filterFn: 'fuzzy',
+      sortingFn: fuzzySort,
+      cell: (info) => info.getValue(),
+    }),
+    columnHelper.display({
+      header: 'Employees',
+      enableColumnFilter: true,
+      cell: (props) => renderRowEmployeeAvatar(props.row.original.employees),
+    }),
+    columnHelper.accessor('status', {
+      header: 'Status',
+      cell: (info) => UseRenderOvertimeStatus(info.getValue(), TextSize.TEXT_SM),
+    }),
+    columnHelper.accessor('employees', {
+      header: 'Accomplishments',
+      enableColumnFilter: false,
+      cell: (props) => RenderOvertimePendingAccomplishmentStatus(props.row.original.employees, TextSize.TEXT_SM),
+    }),
+  ];
+
+  // React Table initialization
+  const { table } = useDataTable(
+    {
+      columns: columns,
+      data: overtimeDetails,
+      columnVisibility: { id: false, employeeId: false },
+    },
+    ApprovalType.OVERTIME
+  );
 
   return (
     <>
@@ -329,7 +442,7 @@ export default function Overtime({ employeeDetails }: InferGetServerSidePropsTyp
               </div>
             ) : (
               <ContentBody>
-                <>
+                {/* <>
                   <div className={`w-full flex lg:flex-row flex-col`}>
                     <div className={`lg:w-[58rem] w-full`}>
                       <OvertimeTabs tab={tab} />
@@ -338,7 +451,17 @@ export default function Overtime({ employeeDetails }: InferGetServerSidePropsTyp
                       <OvertimeTabWindow />
                     </div>
                   </div>
-                </>
+                </> */}
+                <div className="pb-10">
+                  <DataTablePortal
+                    onRowClick={(row) => renderRowActions(row.original as OvertimeDetails)}
+                    textSize={'text-lg'}
+                    model={table}
+                    showGlobalFilter={true}
+                    showColumnFilter={true}
+                    paginate={true}
+                  />
+                </div>
               </ContentBody>
             )}
           </div>
