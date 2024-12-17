@@ -1,5 +1,5 @@
 /* eslint-disable @nx/enforce-module-boundaries */
-import { Button, LoadingSpinner, Modal } from '@gscwd-apps/oneui';
+import { LoadingSpinner, Modal } from '@gscwd-apps/oneui';
 import { LabelValue } from 'apps/employee-monitoring/src/components/labels/LabelValue';
 import { MutatedSsSelectOption, useScheduleSheetStore } from 'apps/employee-monitoring/src/store/schedule-sheet.store';
 import { useScheduleStore } from 'apps/employee-monitoring/src/store/schedule.store';
@@ -8,7 +8,6 @@ import { UseCapitalizer } from 'apps/employee-monitoring/src/utils/functions/Cap
 import dayjs from 'dayjs';
 import { ScheduleShifts } from 'libs/utils/src/lib/enums/schedule.enum';
 import { Schedule } from 'libs/utils/src/lib/types/schedule.type';
-import { SelectOption } from 'libs/utils/src/lib/types/select.type';
 import { isEmpty } from 'lodash';
 import { Dispatch, FunctionComponent, SetStateAction, useEffect, useState } from 'react';
 import Select from 'react-select';
@@ -144,7 +143,7 @@ const SelectFieldSchedSsModal: FunctionComponent<SelectSchedSsModalProps> = ({
               <Select
                 id="customReactSchedule"
                 name="schedules"
-                styles={{ menuPortal: (base) => ({ ...base, zIndex: 9999 }) }}
+                // styles={{ menuPortal: (base) => ({ ...base, zIndex: 9999 }) }}
                 options={transformedScheds}
                 className="z-50 w-full basic-multi-select"
                 classNamePrefix="select2-selection"

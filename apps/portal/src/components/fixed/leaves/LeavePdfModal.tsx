@@ -1,5 +1,5 @@
 /* eslint-disable @nx/enforce-module-boundaries */
-import { Button, Modal } from '@gscwd-apps/oneui';
+import { Button, LoadingSpinner, Modal } from '@gscwd-apps/oneui';
 import { useLeaveStore } from 'apps/portal/src/store/leave.store';
 import LeavePdf from './LeavePdf';
 import { useEmployeeStore } from 'apps/portal/src/store/employee.store';
@@ -7,7 +7,6 @@ import { HiX } from 'react-icons/hi';
 import { useLeaveLedgerStore } from 'apps/portal/src/store/leave-ledger.store';
 import { isEmpty } from 'lodash';
 import { PDFDownloadLink, PDFViewer } from '@react-pdf/renderer';
-import { SpinnerDotted } from 'spinners-react';
 
 type ConfirmationModalProps = {
   modalState: boolean;
@@ -69,14 +68,15 @@ export const LeavePdfModal = ({ modalState, setModalState, closeModalAction, tit
               </PDFViewer>
             </div>
           ) : (
-            <div className="w-full h-[90%]  static flex flex-col justify-items-center items-center place-items-center">
-              <SpinnerDotted
+            <div className="w-full h-[90%]  static flex flex-col justify-center items-center place-items-center">
+              <LoadingSpinner size={'lg'} />
+              {/* <SpinnerDotted
                 speed={70}
                 thickness={70}
                 className="w-full flex h-full transition-all "
                 color="slateblue"
                 size={100}
-              />
+              /> */}
             </div>
           )}
         </Modal.Body>

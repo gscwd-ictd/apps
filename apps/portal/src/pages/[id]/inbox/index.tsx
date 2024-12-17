@@ -10,8 +10,7 @@ import { employee } from '../../../utils/constants/data';
 import { GetServerSideProps, GetServerSidePropsContext, InferGetServerSidePropsType } from 'next/types';
 import { useEmployeeStore } from '../../../store/employee.store';
 import useSWR from 'swr';
-import { SpinnerDotted } from 'spinners-react';
-import { ToastNotification } from '@gscwd-apps/oneui';
+import { LoadingSpinner, ToastNotification } from '@gscwd-apps/oneui';
 import React from 'react';
 import 'react-toastify/dist/ReactToastify.css';
 import { isEmpty, isEqual } from 'lodash';
@@ -295,14 +294,15 @@ export default function PassSlip({ employeeDetails }: InferGetServerSidePropsTyp
             ></ContentHeader>
 
             {loadingPsbMessages && loadingOvertimeMessages && loadingTrainingMessages ? (
-              <div className="w-full h-96 static flex flex-col justify-items-center items-center place-items-center">
-                <SpinnerDotted
+              <div className="w-full h-96 static flex flex-col justify-center items-center place-items-center">
+                <LoadingSpinner size={'lg'} />
+                {/* <SpinnerDotted
                   speed={70}
                   thickness={70}
                   className="flex w-full h-full transition-all "
                   color="slateblue"
                   size={100}
-                />
+                /> */}
               </div>
             ) : (
               <ContentBody>

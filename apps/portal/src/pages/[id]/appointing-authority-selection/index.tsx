@@ -1,10 +1,9 @@
 /* eslint-disable @nx/enforce-module-boundaries */
-import { Button, ToastNotification } from '@gscwd-apps/oneui';
+import { Button, LoadingSpinner, ToastNotification } from '@gscwd-apps/oneui';
 import Head from 'next/head';
 import { GetServerSideProps, GetServerSidePropsContext, InferGetServerSidePropsType } from 'next/types';
 import { useEffect, useState } from 'react';
 import { HiSearch } from 'react-icons/hi';
-import { SpinnerDotted } from 'spinners-react';
 import { getUserDetails, withCookieSession } from '../../../utils/helpers/session';
 import SideNav from '../../../components/fixed/nav/SideNav';
 import { AppSelectionTabs } from '../../../components/fixed/selection/AppSelectionTabs';
@@ -230,14 +229,15 @@ export default function AppPosAppointment({ employeeDetails }: InferGetServerSid
           </ContentHeader>
 
           {loadingPendingPublicationList && loadingFulfilledPublicationList ? (
-            <div className="w-full h-96  static flex flex-col justify-items-center items-center place-items-center">
-              <SpinnerDotted
+            <div className="w-full h-96  static flex flex-col justify-center items-center place-items-center">
+              <LoadingSpinner size={'lg'} />
+              {/* <SpinnerDotted
                 speed={70}
                 thickness={70}
                 className="flex w-full h-full transition-all "
                 color="slateblue"
                 size={100}
-              />
+              /> */}
             </div>
           ) : (
             <ContentBody>

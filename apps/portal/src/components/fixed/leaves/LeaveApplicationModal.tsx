@@ -718,9 +718,9 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
         // Use different placeholders depending on the node type:
         placeholder: ({ node }) => {
           if (node.type.name === 'heading') {
-            return 'Dear HR, I am writing this letter to inform you that... Sincerely, ...';
+            return 'Dear Sir/Maam, I am writing this letter to inform you that... Sincerely, ...';
           }
-          return 'Dear HR, I am writing this letter to inform you that... Sincerely, ...';
+          return 'Dear Sir/Maam, I am writing this letter to inform you that... Sincerely, ...';
         },
       }),
     ],

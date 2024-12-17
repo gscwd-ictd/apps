@@ -10,10 +10,9 @@ import { employee } from '../../../utils/constants/data';
 import { GetServerSideProps, GetServerSidePropsContext, InferGetServerSidePropsType } from 'next/types';
 import { getUserDetails, withCookieSession } from '../../../utils/helpers/session';
 import { useEmployeeStore } from '../../../store/employee.store';
-import { SpinnerDotted } from 'spinners-react';
 import { LeavesTabs } from '../../../components/fixed/leaves/LeavesTabs';
 import { LeavesTabWindow } from '../../../components/fixed/leaves/LeavesTabWindow';
-import { Button, ToastNotification } from '@gscwd-apps/oneui';
+import { Button, LoadingSpinner, ToastNotification } from '@gscwd-apps/oneui';
 import { useLeaveStore } from '../../../store/leave.store';
 import { fetchWithToken } from '../../../utils/hoc/fetcher';
 import useSWR from 'swr';
@@ -178,14 +177,6 @@ export default function Leaves({ employeeDetails }: InferGetServerSidePropsType<
       <>
         {/* Individual Leave Details Load Failed Error COMPLETED MODAL */}
         {!isEmpty(errorLeaveDetails) && completedLeaveModalIsOpen ? (
-          <ToastNotification
-            toastType="error"
-            notifMessage={`${errorUnavailableDates}: Failed to load Leave Details.`}
-          />
-        ) : null}
-
-        {/* Individual Leave Details Load Failed Error COMPLETED MODAL */}
-        {!isEmpty(errorLeaveDetails) && completedLeaveModalIsOpen ? (
           <ToastNotification toastType="error" notifMessage={`${errorLeaveDetails}: Failed to load Leave Details.`} />
         ) : null}
 
@@ -301,14 +292,15 @@ export default function Leaves({ employeeDetails }: InferGetServerSidePropsType<
               </div>
             </ContentHeader>
             {swrIsLoading ? (
-              <div className="w-full h-96 static flex flex-col justify-items-center items-center place-items-center">
-                <SpinnerDotted
+              <div className="w-full h-96 static flex flex-col justify-center items-center place-items-center">
+                <LoadingSpinner size={'lg'} />
+                {/* <SpinnerDotted
                   speed={70}
                   thickness={70}
                   className="flex w-full h-full transition-all "
                   color="slateblue"
                   size={100}
-                />
+                /> */}
               </div>
             ) : (
               <ContentBody>

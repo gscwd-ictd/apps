@@ -1,11 +1,10 @@
 /* eslint-disable @nx/enforce-module-boundaries */
-import { Button, Modal } from '@gscwd-apps/oneui';
+import { Button, LoadingSpinner, Modal } from '@gscwd-apps/oneui';
 import { useLeaveStore } from 'apps/portal/src/store/leave.store';
 import { useEmployeeStore } from 'apps/portal/src/store/employee.store';
 import { HiX } from 'react-icons/hi';
 import { isEmpty } from 'lodash';
 import { PDFDownloadLink, PDFViewer } from '@react-pdf/renderer';
-import { SpinnerDotted } from 'spinners-react';
 import JustificationLetterPdf from './JustificationLetterPdf';
 import { useApprovalStore } from 'apps/portal/src/store/approvals.store';
 
@@ -59,14 +58,15 @@ export const JustificationLetterPdfModal = ({
               </PDFViewer>
             </div>
           ) : (
-            <div className="w-full h-[90%]  static flex flex-col justify-items-center items-center place-items-center">
-              <SpinnerDotted
+            <div className="w-full h-[90%]  static flex flex-col justify-center items-center place-items-center">
+              <LoadingSpinner size={'lg'} />
+              {/* <SpinnerDotted
                 speed={70}
                 thickness={70}
                 className="w-full flex h-full transition-all "
                 color="slateblue"
                 size={100}
-              />
+              /> */}
             </div>
           )}
         </Modal.Body>

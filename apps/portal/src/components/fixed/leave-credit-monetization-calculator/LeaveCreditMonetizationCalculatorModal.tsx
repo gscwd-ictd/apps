@@ -1,7 +1,6 @@
 /* eslint-disable @nx/enforce-module-boundaries */
-import { Button, Modal } from '@gscwd-apps/oneui';
+import { Button, LoadingSpinner, Modal } from '@gscwd-apps/oneui';
 import { HiX } from 'react-icons/hi';
-import { SpinnerDotted } from 'spinners-react';
 import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
 import { useEffect, useState } from 'react';
 import { useLeaveMonetizationCalculatorStore } from 'apps/portal/src/store/leave-monetization-calculator.store';
@@ -92,17 +91,16 @@ export const LeaveCreditMonetizationCalculatorModal = ({
         </Modal.Header>
         <Modal.Body>
           {!vacationLeave && !sickLeave && !sgAmount && !sgIncrement ? (
-            <>
-              <div className="w-full h-[90%]  static flex flex-col justify-items-center items-center place-items-center">
-                <SpinnerDotted
+            <div className="w-full h-[90%]  static flex flex-col justify-center items-center place-items-center">
+              <LoadingSpinner size={'lg'} />
+              {/* <SpinnerDotted
                   speed={70}
                   thickness={70}
                   className="w-full flex h-full transition-all "
                   color="slateblue"
                   size={100}
-                />
-              </div>
-            </>
+                /> */}
+            </div>
           ) : (
             <div className="w-full h-full flex flex-col  ">
               <div className="w-full h-full flex flex-col gap-2 ">
