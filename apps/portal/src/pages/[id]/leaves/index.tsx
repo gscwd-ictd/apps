@@ -177,14 +177,6 @@ export default function Leaves({ employeeDetails }: InferGetServerSidePropsType<
       <>
         {/* Individual Leave Details Load Failed Error COMPLETED MODAL */}
         {!isEmpty(errorLeaveDetails) && completedLeaveModalIsOpen ? (
-          <ToastNotification
-            toastType="error"
-            notifMessage={`${errorUnavailableDates}: Failed to load Leave Details.`}
-          />
-        ) : null}
-
-        {/* Individual Leave Details Load Failed Error COMPLETED MODAL */}
-        {!isEmpty(errorLeaveDetails) && completedLeaveModalIsOpen ? (
           <ToastNotification toastType="error" notifMessage={`${errorLeaveDetails}: Failed to load Leave Details.`} />
         ) : null}
 

@@ -3,7 +3,7 @@ import { HiX } from 'react-icons/hi';
 import { useApprovalStore } from '../../../store/approvals.store';
 import { Modal } from 'libs/oneui/src/components/Modal';
 import { Button } from 'libs/oneui/src/components/Button';
-import { AlertNotification, CaptchaModal, LoadingSpinner, OtpModal } from '@gscwd-apps/oneui';
+import { AlertNotification, CaptchaModal, LoadingSpinner, OtpModal, ToastNotification } from '@gscwd-apps/oneui';
 import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
 import { SelectOption } from 'libs/utils/src/lib/types/select.type';
 import { SubmitHandler, useForm } from 'react-hook-form';
@@ -200,6 +200,14 @@ export const ApprovalsPendingLeaveModal = ({
 
   return (
     <>
+      {/* Leave Ledger Load Failed Error */}
+      {!isEmpty(swrLeaveLedgerError) ? (
+        <ToastNotification
+          toastType="error"
+          notifMessage={`${swrLeaveLedgerError.message}: Failed to load Leave Ledger.`}
+        />
+      ) : null}
+
       <Modal size={windowWidth > 1024 ? 'sm' : 'full'} open={modalState} setOpen={setModalState}>
         <Modal.Header>
           <h3 className="font-semibold text-gray-700">

@@ -1,7 +1,7 @@
 import { HiX } from 'react-icons/hi';
 import { Modal } from 'libs/oneui/src/components/Modal';
 import { Button } from 'libs/oneui/src/components/Button';
-import { AlertNotification, LoadingSpinner } from '@gscwd-apps/oneui';
+import { AlertNotification, LoadingSpinner, ToastNotification } from '@gscwd-apps/oneui';
 import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
 import { LeaveName, LeaveStatus, MonetizationType } from 'libs/utils/src/lib/enums/leave.enum';
 import { useFinalLeaveApprovalStore } from 'apps/portal/src/store/final-leave-approvals.store';
@@ -59,7 +59,7 @@ export const ApprovalsCompletedLeaveModal = ({
     getLeaveLedgerFail: state.getLeaveLedgerFail,
   }));
 
-  const leaveLedgerUrl = `${process.env.NEXT_PUBLIC_EMPLOYEE_MONITORING_URL}/v1/leave/ledger/${leaveIndividualDetail?.employee?.employeeId}/${leaveIndividualDetail?.employee?.companyId}`;
+  const leaveLedgerUrl = `${process.env.NEXT_PUBLIC_EMPLOYEE_MONITORING_URL}/v1/leave/ledger/sdfsdf/fsdfsd/${leaveIndividualDetail?.employee?.employeeId}/${leaveIndividualDetail?.employee?.companyId}`;
 
   const {
     data: swrLeaveLedger,
@@ -103,6 +103,14 @@ export const ApprovalsCompletedLeaveModal = ({
 
   return (
     <>
+      {/* Leave Ledger Load Failed Error */}
+      {!isEmpty(swrLeaveLedgerError) ? (
+        <ToastNotification
+          toastType="error"
+          notifMessage={`${swrLeaveLedgerError.message}: Failed to load Leave Ledger.`}
+        />
+      ) : null}
+
       <Modal size={windowWidth > 1024 ? 'sm' : 'full'} open={modalState} setOpen={setModalState}>
         <Modal.Header>
           <h3 className="font-semibold text-gray-700">
