@@ -5,14 +5,13 @@ import Image from 'next/image';
 import GscwdLogo from 'apps/employee-monitoring/public/gscwd-logo.png';
 import iso_logo from 'apps/employee-monitoring/public/socotec-logo.jpg';
 import { StyleSheet } from '@react-pdf/renderer';
-import { Button, Modal, ToastNotification } from '@gscwd-apps/oneui';
+import { Button, LoadingSpinner, Modal, ToastNotification } from '@gscwd-apps/oneui';
 import { Tiptap } from '../tiptap/view/Tiptap';
 import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
 import { HiX } from 'react-icons/hi';
 import useSWR from 'swr';
 import { fetchWithToken } from 'apps/portal/src/utils/hoc/fetcher';
 import { isEmpty } from 'lodash';
-import { SpinnerDotted } from 'spinners-react';
 
 type ModalProps = {
   modalState: boolean;
@@ -227,13 +226,14 @@ export const TrainingDesignModal: FunctionComponent<ModalProps> = ({
               <div className="w-[8.5in] px-8 py-10 bg-white text-sm">
                 {!swrTrainingDesign ? (
                   <div className="flex justify-center w-full h-full">
-                    <SpinnerDotted
+                    <LoadingSpinner size={'lg'} />
+                    {/* <SpinnerDotted
                       speed={70}
                       thickness={70}
                       className="flex w-full h-full transition-all "
                       color="slateblue"
                       size={100}
-                    />
+                    /> */}
                   </div>
                 ) : (
                   <div ref={trainingDesignToPrintRef}>

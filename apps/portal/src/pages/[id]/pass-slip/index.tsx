@@ -11,8 +11,7 @@ import { employee } from '../../../utils/constants/data';
 import { GetServerSideProps, GetServerSidePropsContext, InferGetServerSidePropsType } from 'next/types';
 import { useEmployeeStore } from '../../../store/employee.store';
 import useSWR from 'swr';
-import { SpinnerDotted } from 'spinners-react';
-import { Button, ToastNotification } from '@gscwd-apps/oneui';
+import { Button, LoadingSpinner, ToastNotification } from '@gscwd-apps/oneui';
 import { PassSlipTabs } from '../../../components/fixed/passslip/PassSlipTabs';
 import { PassSlipTabWindow } from '../../../components/fixed/passslip/PassSlipTabWindow';
 import { usePassSlipStore } from '../../../store/passslip.store';
@@ -302,14 +301,15 @@ export default function PassSlip({ employeeDetails }: InferGetServerSidePropsTyp
             </ContentHeader>
 
             {swrIsLoading ? (
-              <div className="w-full h-96 static flex flex-col justify-items-center items-center place-items-center">
-                <SpinnerDotted
+              <div className="w-full h-96 static flex flex-col justify-center items-center place-items-center">
+                <LoadingSpinner size={'lg'} />
+                {/* <SpinnerDotted
                   speed={70}
                   thickness={70}
                   className="flex w-full h-full transition-all "
                   color="slateblue"
                   size={100}
-                />
+                /> */}
               </div>
             ) : (
               <ContentBody>

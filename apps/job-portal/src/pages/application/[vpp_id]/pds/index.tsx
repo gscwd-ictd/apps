@@ -1,24 +1,14 @@
-import {
-  GetServerSideProps,
-  GetServerSidePropsContext,
-  InferGetServerSidePropsType,
-} from 'next';
+import { GetServerSideProps, GetServerSidePropsContext, InferGetServerSidePropsType } from 'next';
 import { useEffect, useState } from 'react';
 import { NavTab } from '../../../../components/fixed/tabs/NavTab';
 import { Pds, usePdsStore } from '../../../../store/pds.store';
 import { isEmpty, isEqual } from 'lodash';
 import axios from 'axios';
-import {
-  getPdsDetails,
-  getUserDetails,
-} from '../../../../../utils/helpers/session';
-import { SpinnerDotted } from 'spinners-react';
-import { fetchWithSession } from '../../../../../utils/hoc/fetcher';
-import { StyledButton } from '../../../../components/modular/buttons/StyledButton';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import { useApplicantStore } from '../../../../store/applicant.store';
 import { usePublicationStore } from '../../../../store/publication.store';
+import { LoadingSpinner } from '@gscwd-apps/oneui';
 
 type DashboardProps = {
   vppId: string;
@@ -325,32 +315,24 @@ type DashboardProps = {
 //   },
 // }
 
-export default function Dashboard({
-  vppId,
-  pdsDetails,
-  externalApplicantId,
-}: DashboardProps) {
+export default function Dashboard({ vppId, pdsDetails, externalApplicantId }: DashboardProps) {
   dayjs.extend(utc);
 
   const publication = usePublicationStore((state) => state.publication);
   const setPublication = usePublicationStore((state) => state.setPublication);
   const initialPdsState = usePdsStore((state) => state.initialPdsState);
   const setInitialPdsState = usePdsStore((state) => state.setInitialPdsState);
-  const [isLoadedInitialState, setIsLoadedInitialState] =
-    useState<boolean>(false);
+  const [isLoadedInitialState, setIsLoadedInitialState] = useState<boolean>(false);
   const externalApplicant = useApplicantStore((state) => state.applicant);
   const setExternalApplicant = useApplicantStore((state) => state.setApplicant);
   const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [isLoadingApplicantData, setIsLoadingApplicantData] =
-    useState<boolean>(false);
+  const [isLoadingApplicantData, setIsLoadingApplicantData] = useState<boolean>(false);
   const [isLoadingPdsData, setIsLoadingPdsData] = useState<boolean>(false);
 
-  const { isExistingApplicant, setIsExistingApplicant } = useApplicantStore(
-    (state) => ({
-      isExistingApplicant: state.isExistingApplicant,
-      setIsExistingApplicant: state.setIsExistingApplicant,
-    })
-  );
+  const { isExistingApplicant, setIsExistingApplicant } = useApplicantStore((state) => ({
+    isExistingApplicant: state.isExistingApplicant,
+    setIsExistingApplicant: state.setIsExistingApplicant,
+  }));
 
   const {
     personalInfo,
@@ -445,8 +427,7 @@ export default function Dashboard({
 
   useEffect(() => {
     if (isLoadingApplicantData && isExistingApplicant) setPdsDetailsOnLoad();
-    else if (isLoadingApplicantData && isExistingApplicant === false)
-      setApplicantInfo();
+    else if (isLoadingApplicantData && isExistingApplicant === false) setApplicantInfo();
     setTimeout(() => {
       setIsLoading(false);
     }, 1000);
@@ -483,16 +464,9 @@ export default function Dashboard({
       ...personalInfo,
       lastName: applicant.personalInfo.lastName,
       firstName: applicant.personalInfo.firstName!,
-      middleName: isEmpty(applicant.personalInfo.middleName)
-        ? 'N/A'
-        : applicant.personalInfo.middleName,
-      nameExtension: isEmpty(applicant.personalInfo.nameExtension)
-        ? 'N/A'
-        : applicant.personalInfo.nameExtension!,
-      birthDate: dayjs
-        .utc(applicant.personalInfo.birthDate)
-        .format('YYYY-MM-DD')
-        .toString(),
+      middleName: isEmpty(applicant.personalInfo.middleName) ? 'N/A' : applicant.personalInfo.middleName,
+      nameExtension: isEmpty(applicant.personalInfo.nameExtension) ? 'N/A' : applicant.personalInfo.nameExtension!,
+      birthDate: dayjs.utc(applicant.personalInfo.birthDate).format('YYYY-MM-DD').toString(),
       sex: applicant.personalInfo.sex,
       birthPlace: applicant.personalInfo.birthPlace,
       civilStatus: applicant.personalInfo.civilStatus,
@@ -501,10 +475,7 @@ export default function Dashboard({
       bloodType: applicant.personalInfo.bloodType,
       citizenship: applicant.personalInfo.citizenship,
       citizenshipType: applicant.personalInfo.citizenshipType,
-      country:
-        applicant.personalInfo.citizenship === 'Filipino'
-          ? 'Philippines'
-          : applicant.personalInfo.country,
+      country: applicant.personalInfo.citizenship === 'Filipino' ? 'Philippines' : applicant.personalInfo.country,
       telephoneNumber: applicant.personalInfo.telephoneNumber,
       mobileNumber: applicant.personalInfo.mobileNumber,
       email: applicant.personalInfo.email,
@@ -627,10 +598,7 @@ export default function Dashboard({
     setGovernmentIssuedId({
       ...governmentIssuedId,
       idNumber: applicant.governmentIssuedId.idNumber,
-      issueDate: dayjs
-        .utc(applicant.governmentIssuedId.issueDate)
-        .format('YYYY-MM-DD')
-        .toString(),
+      issueDate: dayjs.utc(applicant.governmentIssuedId.issueDate).format('YYYY-MM-DD').toString(),
       issuedId: applicant.governmentIssuedId.issuedId,
       issuePlace: applicant.governmentIssuedId.issuePlace,
     });
@@ -670,13 +638,14 @@ export default function Dashboard({
           {isLoading ? (
             <>
               <div className="flex items-center justify-center w-full h-screen">
-                <SpinnerDotted
+                <LoadingSpinner size={'lg'} />
+                {/* <SpinnerDotted
                   speed={150}
                   thickness={120}
                   color="indigo"
                   size={100}
                   className="flex w-full h-full transition-all animate-pulse "
-                />
+                /> */}
               </div>
             </>
           ) : (
@@ -690,17 +659,12 @@ export default function Dashboard({
   );
 }
 
-export const getServerSideProps: GetServerSideProps = async (
-  context: GetServerSidePropsContext
-) => {
+export const getServerSideProps: GetServerSideProps = async (context: GetServerSidePropsContext) => {
   try {
-    const { data } = await axios.get(
-      `${process.env.NEXT_PUBLIC_HRIS_DOMAIN}/external-applicants/pds`,
-      {
-        withCredentials: true,
-        headers: { Cookie: `${context.req.headers.cookie}` },
-      }
-    );
+    const { data } = await axios.get(`${process.env.NEXT_PUBLIC_HRIS_DOMAIN}/external-applicants/pds`, {
+      withCredentials: true,
+      headers: { Cookie: `${context.req.headers.cookie}` },
+    });
 
     return {
       props: {

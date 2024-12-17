@@ -15,7 +15,7 @@ import {
 } from '../../../utils/helpers/http-requests/applicants-requests';
 import { getUserDetails, withCookieSession } from '../../../utils/helpers/session';
 import { isEmpty, isEqual } from 'lodash';
-import { AlertNotification, Button, CaptchaModal, Modal, ToastNotification } from '@gscwd-apps/oneui';
+import { AlertNotification, Button, CaptchaModal, LoadingSpinner, Modal, ToastNotification } from '@gscwd-apps/oneui';
 import { JobDetailsPanel } from '../../../components/fixed/vacancies/JobDetailsPanel';
 import { VacancyModalController } from '../../../components/fixed/vacancies/VacancyModalController';
 import { WorkExperiencePds } from '../../../types/workexp.type';
@@ -24,10 +24,8 @@ import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
 import { UserRole } from 'apps/portal/src/utils/enums/userRoles';
 import { useRouter } from 'next/router';
 import { JobApplicationCaptcha } from 'apps/portal/src/components/fixed/vacancies/JobApplicationCaptcha';
-import { SpinnerDotted } from 'spinners-react';
 import { ContentBody } from 'apps/portal/src/components/modular/custom/containers/ContentBody';
 import { ContentHeader } from 'apps/portal/src/components/modular/custom/containers/ContentHeader';
-import { Roles } from 'apps/portal/src/utils/constants/user-roles';
 import useSWR from 'swr';
 import { useVacanciesStore } from 'apps/portal/src/store/vacancies.store';
 import { fetchWithToken } from 'apps/portal/src/utils/hoc/fetcher';
@@ -358,14 +356,15 @@ export default function Vacancies({ employeeDetails }: InferGetServerSidePropsTy
             ></ContentHeader>
 
             {swrVacanciesIsLoading ? (
-              <div className="w-full h-96 static flex flex-col justify-items-center items-center place-items-center">
-                <SpinnerDotted
+              <div className="w-full h-96 static flex flex-col justify-center items-center place-items-center">
+                <LoadingSpinner size={'lg'} />
+                {/* <SpinnerDotted
                   speed={70}
                   thickness={70}
                   className="flex w-full h-full transition-all "
                   color="slateblue"
                   size={100}
-                />
+                /> */}
               </div>
             ) : (
               <ContentBody>

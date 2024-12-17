@@ -5,9 +5,9 @@ import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 import { useState } from 'react';
 import { HiCheckCircle, HiShieldExclamation } from 'react-icons/hi';
-import { SpinnerDotted } from 'spinners-react';
 import { fetchWithToken } from '../../../../utils/hoc/fetcher';
 import { CardContainer } from '../../../components/modular/cards/CardContainer';
+import { LoadingSpinner } from '@gscwd-apps/oneui';
 
 type Loading = {
   state: boolean;
@@ -95,16 +95,17 @@ export default function CreateSession({ token }: CreateSessionProps) {
           <div className="h-[44rem] w-full">
             <div className="flex flex-col items-center justify-center w-full h-full text-3xl">
               <CardContainer bgColor={'bg-slate-50'} title={''} remarks={''} subtitle={''} className="">
-                <div className="flex h-full w-full p-10 flex-col place-items-center items-center justify-items-center rounded shadow transition-all">
+                <div className="flex h-full w-full p-10 flex-col place-items-center items-center justify-center rounded shadow transition-all">
                   {isLoading.level <= 2 ? (
                     <>
-                      <SpinnerDotted
+                      <LoadingSpinner size={'lg'} />
+                      {/* <SpinnerDotted
                         speed={150}
                         thickness={120}
                         className="flex w-full h-full transition-all animate-pulse "
                         color={isLoading.level === 1 ? 'slateblue' : isLoading.level === 2 ? 'indigo' : 'green'}
                         size={100}
-                      />
+                      /> */}
                     </>
                   ) : (
                     <>

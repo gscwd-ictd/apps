@@ -1,8 +1,7 @@
 import { HiX } from 'react-icons/hi';
 import { Modal } from 'libs/oneui/src/components/Modal';
 import { Button } from 'libs/oneui/src/components/Button';
-import { SpinnerDotted } from 'spinners-react';
-import { AlertNotification } from '@gscwd-apps/oneui';
+import { AlertNotification, LoadingSpinner, ToastNotification } from '@gscwd-apps/oneui';
 import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
 import { LeaveName, LeaveStatus, MonetizationType } from 'libs/utils/src/lib/enums/leave.enum';
 import { useFinalLeaveApprovalStore } from 'apps/portal/src/store/final-leave-approvals.store';
@@ -104,6 +103,14 @@ export const ApprovalsCompletedLeaveModal = ({
 
   return (
     <>
+      {/* Leave Ledger Load Failed Error */}
+      {!isEmpty(swrLeaveLedgerError) ? (
+        <ToastNotification
+          toastType="error"
+          notifMessage={`${swrLeaveLedgerError.message}: Failed to load Leave Ledger.`}
+        />
+      ) : null}
+
       <Modal size={windowWidth > 1024 ? 'sm' : 'full'} open={modalState} setOpen={setModalState}>
         <Modal.Header>
           <h3 className="font-semibold text-gray-700">
@@ -128,17 +135,16 @@ export const ApprovalsCompletedLeaveModal = ({
           />
 
           {!leaveIndividualDetail ? (
-            <>
-              <div className="w-full h-[90%]  static flex flex-col justify-items-center items-center place-items-center">
-                <SpinnerDotted
+            <div className="w-full h-[90%]  static flex flex-col justify-center items-center place-items-center">
+              <LoadingSpinner size={'lg'} />
+              {/* <SpinnerDotted
                   speed={70}
                   thickness={70}
                   className="w-full flex h-full transition-all "
                   color="slateblue"
                   size={100}
-                />
-              </div>
-            </>
+                /> */}
+            </div>
           ) : (
             <div className="w-full h-full flex flex-col  ">
               <div className="w-full h-full flex flex-col gap-2 ">

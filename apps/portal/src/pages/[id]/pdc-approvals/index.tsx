@@ -10,14 +10,13 @@ import { employee } from '../../../utils/constants/data';
 import { GetServerSideProps, GetServerSidePropsContext, InferGetServerSidePropsType } from 'next/types';
 import { useEmployeeStore } from '../../../store/employee.store';
 import useSWR from 'swr';
-import { SpinnerDotted } from 'spinners-react';
 import React from 'react';
 import 'react-toastify/dist/ReactToastify.css';
 import { getUserDetails, withCookieSession } from '../../../utils/helpers/session';
 import { fetchWithToken } from 'apps/portal/src/utils/hoc/fetcher';
 import { isEmpty } from 'lodash';
 import { usePdcApprovalsStore } from 'apps/portal/src/store/pdc-approvals.store';
-import { ToastNotification, fuzzySort } from '@gscwd-apps/oneui';
+import { LoadingSpinner, ToastNotification, fuzzySort } from '@gscwd-apps/oneui';
 import { useRouter } from 'next/router';
 import { DataTablePortal, useDataTable } from 'libs/oneui/src/components/Tables/DataTablePortal';
 import { Training } from 'libs/utils/src/lib/types/training.type';
@@ -212,14 +211,15 @@ export default function PdcApprovals({ userDetails }: InferGetServerSidePropsTyp
             ></ContentHeader>
 
             {swrTrainingListIsLoading ? (
-              <div className="w-full h-96 static flex flex-col justify-items-center items-center place-items-center">
-                <SpinnerDotted
+              <div className="w-full h-96 static flex flex-col justify-center items-center place-items-center">
+                <LoadingSpinner size={'lg'} />
+                {/* <SpinnerDotted
                   speed={70}
                   thickness={70}
                   className="w-full flex h-full transition-all "
                   color="slateblue"
                   size={100}
-                />
+                /> */}
               </div>
             ) : (
               <ContentBody>
