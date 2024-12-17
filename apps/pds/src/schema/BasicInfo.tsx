@@ -1,3 +1,4 @@
+/* eslint-disable no-useless-escape */
 import dayjs from 'dayjs';
 import * as yup from 'yup';
 
@@ -12,7 +13,7 @@ const schema = yup.object().shape({
     .label('Birthdate')
     .typeError('Please enter a valid value')
     .test('Date', 'Please enter a valid birthday', (value) => {
-      return dayjs().diff(dayjs(value, 'YYYY-MM-DD' || 'YYYY/MM/DD'), 'hours') >= 0;
+      return dayjs().diff(dayjs(value, value === 'YYYY-MM-DD' ? 'YYYY-MM-DD' : 'YYYY/MM/DD'), 'hours') >= 0;
     }),
   sex: yup.string().required('Please select from the list').label('Sex'),
   birthPlace: yup.string().required('Please provide your place of birth').trim().label('Birthplace'),
@@ -38,7 +39,10 @@ const schema = yup.object().shape({
     .string()
     .notRequired()
     .label('Citizenship type')
-    .when('citizenship', { is: 'Dual Citizenship', then: yup.string().required('Please select from the list').label('Citizenship type') }),
+    .when('citizenship', {
+      is: 'Dual Citizenship',
+      then: yup.string().required('Please select from the list').label('Citizenship type'),
+    }),
   country: yup.string().required('Please select a country from the list').label('Country'),
   telephoneNumber: yup
     .string()
@@ -77,7 +81,10 @@ const schema = yup.object().shape({
   pagibigNumber: yup
     .string()
     // .max(12)
-    .matches(/^([0-9]{4}[\-][0-9]{4}[\-][0-9]{4})$|^([0-9]{12})$|^N\/A$/, 'Write your 12-digit PAG-IBIG MID Number or N/A')
+    .matches(
+      /^([0-9]{4}[\-][0-9]{4}[\-][0-9]{4})$|^([0-9]{12})$|^N\/A$/,
+      'Write your 12-digit PAG-IBIG MID Number or N/A'
+    )
     .required()
     .trim()
     .label('PAG-IBIG MID Number'),
@@ -86,7 +93,10 @@ const schema = yup.object().shape({
     // .max(12)
     .trim()
     // .matches(/^([0-9]{12})$|^N\/A$/, 'Write a valid PhilHealth Number or N/A')
-    .matches(/^([0-9]{2}[\-][0-9]{9}[\-][0-9]{1})$|^([0-9]{12})$|^N\/A$/, 'Write a PhilHealth Number with or without dashes(-) or N/A')
+    .matches(
+      /^([0-9]{2}[\-][0-9]{9}[\-][0-9]{1})$|^([0-9]{12})$|^N\/A$/,
+      'Write a PhilHealth Number with or without dashes(-) or N/A'
+    )
     .required()
     .label('PhilHealth Number'),
   sssNumber: yup
@@ -94,7 +104,10 @@ const schema = yup.object().shape({
     // .max(10)
     .trim()
     // .matches(/^([0-9]{10})$|^([0-9]{9})$|^N\/A$/, 'Write a valid SSS Number or N/A')
-    .matches(/^([0-9]{2}[\-][0-9]{7}[\-][0-9]{1})$|^([0-9]{10})$|^N\/A$/, 'Write your SSS Number with or without dashes(-) or N/A')
+    .matches(
+      /^([0-9]{2}[\-][0-9]{7}[\-][0-9]{1})$|^([0-9]{10})$|^N\/A$/,
+      'Write your SSS Number with or without dashes(-) or N/A'
+    )
     .required()
     .label('SSS Number'),
   tinNumber: yup
