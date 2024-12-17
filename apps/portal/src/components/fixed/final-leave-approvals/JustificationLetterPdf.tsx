@@ -56,9 +56,9 @@ export const JustificationLetterPdf = ({ leaveDetails }: JustificationLetterPdfP
      },
   </style>
     ${
-      leaveDetails?.lateFilingJustification != null &&
-      leaveDetails?.lateFilingJustification != '' &&
-      leaveDetails?.lateFilingJustification != '<p></p>'
+      leaveDetails?.lateFilingJustification !== null &&
+      leaveDetails?.lateFilingJustification !== '' &&
+      leaveDetails?.lateFilingJustification !== '<p></p>'
         ? leaveDetails?.lateFilingJustification
         : '<p>No Letter Found</p>'
     }
