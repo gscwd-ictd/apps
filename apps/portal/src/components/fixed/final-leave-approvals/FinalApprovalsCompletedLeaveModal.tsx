@@ -59,7 +59,7 @@ export const ApprovalsCompletedLeaveModal = ({
     getLeaveLedgerFail: state.getLeaveLedgerFail,
   }));
 
-  const leaveLedgerUrl = `${process.env.NEXT_PUBLIC_EMPLOYEE_MONITORING_URL}/v1/leave/ledger/sdfsdf/fsdfsd/${leaveIndividualDetail?.employee?.employeeId}/${leaveIndividualDetail?.employee?.companyId}`;
+  const leaveLedgerUrl = `${process.env.NEXT_PUBLIC_EMPLOYEE_MONITORING_URL}/v1/leave/ledger/${leaveIndividualDetail?.employee?.employeeId}/${leaveIndividualDetail?.employee?.companyId}`;
 
   const {
     data: swrLeaveLedger,
