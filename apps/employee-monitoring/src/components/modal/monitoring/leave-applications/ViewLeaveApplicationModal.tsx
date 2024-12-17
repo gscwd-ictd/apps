@@ -1,6 +1,5 @@
 /* eslint-disable @nx/enforce-module-boundaries */
-import { Alert, AlertNotification, Modal, PageContentContext } from '@gscwd-apps/oneui';
-import dayjs from 'dayjs';
+import { AlertNotification, Button, Modal, PageContentContext } from '@gscwd-apps/oneui';
 import { LeaveName, LeaveStatus, MonetizationType } from 'libs/utils/src/lib/enums/leave.enum';
 import { EmployeeLeaveDetails, MonitoringLeave } from 'libs/utils/src/lib/types/leave-application.type';
 import React, { FunctionComponent, useContext, useEffect, useState } from 'react';
@@ -17,13 +16,13 @@ import Skeleton from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css';
 import UseRenderLeaveStatus from 'apps/employee-monitoring/src/utils/functions/RenderLeaveStatus';
 import { LeaveType } from 'libs/utils/src/lib/types/leave-benefits.type';
-import UseRenderBadgePill from 'apps/employee-monitoring/src/utils/functions/RenderBadgePill';
 import LeaveApplicationConfirmModal from './LeaveApplicationConfirmModal';
 import { patchEmpMonitoring } from 'apps/employee-monitoring/src/utils/helper/employee-monitoring-axios-helper';
 import { useLeaveLedgerStore } from 'apps/employee-monitoring/src/store/leave-ledger.store';
 import { DateTimeFormatter } from 'libs/utils/src/lib/functions/DateTimeFormatter';
 import { DateFormatter } from 'libs/utils/src/lib/functions/DateFormatter';
 import { TextSize } from 'libs/utils/src/lib/enums/text-size.enum';
+import { JustificationLetterPdfModal } from './JustificationLetterPdfModal';
 
 type ViewLeaveApplicationModalProps = {
   rowData: MonitoringLeave;
@@ -197,15 +196,10 @@ const ViewLeaveApplicationModal: FunctionComponent<ViewLeaveApplicationModalProp
     reset();
   };
 
-  const firstAndLastDate = (dates: Array<string>) => {
-    const sortedDates = dates.sort((date1, date2) =>
-      dayjs(date1).format('YYYY/MM/DD') > dayjs(date2).format('YYYY/MM/DD')
-        ? 1
-        : dayjs(date1).format('YYYY/MM/DD') > dayjs(date2).format('YYYY/MM/DD')
-        ? -1
-        : 0
-    );
-    return { start: sortedDates[0], end: sortedDates[sortedDates.length - 1] };
+  // View justification letter modal function
+  const [jlDocModalIsOpen, setJlDocModalIsOpen] = useState<boolean>(false);
+  const closeJlDocActionModal = () => {
+    setJlDocModalIsOpen(false);
   };
 
   // is loading
@@ -249,11 +243,20 @@ const ViewLeaveApplicationModal: FunctionComponent<ViewLeaveApplicationModalProp
 
   return (
     <>
+      {/* Confirmation Modal */}
       <LeaveApplicationConfirmModal
         modalState={confirmModalIsOpen}
         setModalState={setConfirmModalIsOpen}
         closeModalAction={closeConfirmModal}
         action={confirmAction}
+      />
+
+      {/* Justification Letter PDF Modal */}
+      <JustificationLetterPdfModal
+        leaveDetails={leaveApplicationDetails}
+        modalState={jlDocModalIsOpen}
+        setModalState={setJlDocModalIsOpen}
+        closeModalAction={closeJlDocActionModal}
       />
 
       <Modal
@@ -853,6 +856,12 @@ const ViewLeaveApplicationModal: FunctionComponent<ViewLeaveApplicationModalProp
         {leaveApplicationDetails.leaveApplicationBasicInfo?.leaveType === LeaveType.SPECIAL ? (
           <Modal.Footer>
             <div className="flex justify-end w-full gap-2">
+              {leaveApplicationDetails?.leaveApplicationBasicInfo?.isLateFiling === 'true' ? (
+                <Button variant={'primary'} size={'md'} loading={false} onClick={(e) => setJlDocModalIsOpen(true)}>
+                  Justification
+                </Button>
+              ) : null}
+
               <button
                 className="px-3 w-[5rem] py-2 text-sm text-gray-700 bg-gray-50 border rounded"
                 onClick={closeModal}
@@ -876,6 +885,12 @@ const ViewLeaveApplicationModal: FunctionComponent<ViewLeaveApplicationModalProp
         ) : (
           <Modal.Footer>
             <div className="flex justify-end w-full gap-2">
+              {leaveApplicationDetails?.leaveApplicationBasicInfo?.isLateFiling === 'true' ? (
+                <Button variant={'primary'} size={'md'} loading={false} onClick={(e) => setJlDocModalIsOpen(true)}>
+                  Justification
+                </Button>
+              ) : null}
+
               <button
                 className="px-3 w-[5rem] py-2 text-sm text-gray-700 bg-gray-50 border rounded"
                 onClick={closeModal}
