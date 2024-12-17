@@ -1,5 +1,5 @@
 /* eslint-disable @nx/enforce-module-boundaries */
-import { Button, Modal } from '@gscwd-apps/oneui';
+import { Button, LoadingSpinner, Modal } from '@gscwd-apps/oneui';
 import { HiX } from 'react-icons/hi';
 import { useEmployeeStore } from '../../../store/employee.store';
 import { useEffect } from 'react';
@@ -9,7 +9,6 @@ import { isEmpty } from 'lodash';
 import { useOvertimeStore } from 'apps/portal/src/store/overtime.store';
 import { PDFViewer, PDFDownloadLink } from '@react-pdf/renderer';
 import OvertimeAuthorizationPdf from './OvertimeAuthorizationPdf';
-import { SpinnerDotted } from 'spinners-react';
 
 type ModalProps = {
   modalState: boolean;
@@ -102,14 +101,15 @@ export const OvertimeAuthorizationModal = ({ modalState, setModalState, closeMod
               </PDFViewer>
             </div>
           ) : (
-            <div className="w-full h-[90%]  static flex flex-col justify-items-center items-center place-items-center">
-              <SpinnerDotted
+            <div className="w-full h-[90%]  static flex flex-col justify-center items-center place-items-center">
+              <LoadingSpinner size={'lg'} />
+              {/* <SpinnerDotted
                 speed={70}
                 thickness={70}
                 className="w-full flex h-full transition-all "
                 color="slateblue"
                 size={100}
-              />
+              /> */}
             </div>
           )}
         </Modal.Body>

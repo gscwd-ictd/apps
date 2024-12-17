@@ -1,7 +1,6 @@
 /* eslint-disable @nx/enforce-module-boundaries */
-import { AlertNotification, Button, Modal, ToastNotification } from '@gscwd-apps/oneui';
+import { AlertNotification, Button, LoadingSpinner, Modal, ToastNotification } from '@gscwd-apps/oneui';
 import { HiX } from 'react-icons/hi';
-import { SpinnerDotted } from 'spinners-react';
 import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
 import { ConfirmationOvertimeAccomplishmentModal } from './ConfirmationOvertimeAccomplishmentModal';
 import { useOvertimeAccomplishmentStore } from 'apps/portal/src/store/overtime-accomplishment.store';
@@ -239,17 +238,16 @@ export const OvertimeAccomplishmentModal = ({ modalState, setModalState, closeMo
             closeModalAction={closeConfirmOvertimeAccomplishmentModal}
           />
           {!overtimeAccomplishmentDetails ? (
-            <>
-              <div className="w-full h-[90%]  static flex flex-col justify-items-center items-center place-items-center">
-                <SpinnerDotted
+            <div className="w-full h-[90%]  static flex flex-col justify-center items-center place-items-center">
+              <LoadingSpinner size={'lg'} />
+              {/* <SpinnerDotted
                   speed={70}
                   thickness={70}
                   className="w-full flex h-full transition-all "
                   color="slateblue"
                   size={100}
-                />
-              </div>
-            </>
+                /> */}
+            </div>
           ) : (
             <form id="SubmitAccomplishmentForm" onSubmit={handleSubmit(onSubmit)}>
               <div className="w-full h-full flex flex-col  ">

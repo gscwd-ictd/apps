@@ -9,7 +9,6 @@ import { employee } from '../../../utils/constants/data';
 import { GetServerSideProps, GetServerSidePropsContext, InferGetServerSidePropsType } from 'next/types';
 import { getUserDetails, withCookieSession } from '../../../utils/helpers/session';
 import { useEmployeeStore } from '../../../store/employee.store';
-import { SpinnerDotted } from 'spinners-react';
 import React from 'react';
 import useSWR from 'swr';
 import { fetchWithToken } from '../../../utils/hoc/fetcher';
@@ -23,7 +22,7 @@ import dayjs from 'dayjs';
 import { createColumnHelper } from '@tanstack/react-table';
 import { LeaveStatus } from 'libs/utils/src/lib/enums/leave.enum';
 import { useRouter } from 'next/router';
-import { ToastNotification, fuzzySort } from '@gscwd-apps/oneui';
+import { LoadingSpinner, ToastNotification, fuzzySort } from '@gscwd-apps/oneui';
 import { DataTablePortal, useDataTable } from 'libs/oneui/src/components/Tables/DataTablePortal';
 import UseRenderLeaveStatus from 'apps/portal/src/utils/functions/RenderLeaveStatus';
 import { ApprovalType } from 'libs/utils/src/lib/enums/approval-type.enum';
@@ -292,14 +291,15 @@ export default function FinalLeaveApprovals({
                 {/* <ApprovalTypeSelect /> */}
               </ContentHeader>
               {swrLeaveIsLoading ? (
-                <div className="w-full h-96  static flex flex-col justify-items-center items-center place-items-center">
-                  <SpinnerDotted
+                <div className="w-full h-96 static flex flex-col justify-center items-center place-items-center">
+                  <LoadingSpinner size={'lg'} />
+                  {/* <SpinnerDotted
                     speed={70}
                     thickness={70}
                     className="w-full flex h-full transition-all "
                     color="slateblue"
                     size={100}
-                  />
+                  /> */}
                 </div>
               ) : (
                 <ContentBody>

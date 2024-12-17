@@ -1,5 +1,5 @@
 /* eslint-disable @nx/enforce-module-boundaries */
-import { Button, Modal, OtpModal, ToastNotification } from '@gscwd-apps/oneui';
+import { Button, LoadingSpinner, Modal, OtpModal, ToastNotification } from '@gscwd-apps/oneui';
 import { HiX } from 'react-icons/hi';
 import { useRouter } from 'next/router';
 import { usePrfStore } from 'apps/portal/src/store/prf.store';
@@ -12,7 +12,6 @@ import { PageTitle } from '../../../modular/html/PageTitle';
 import { patchPrfRequest } from '../../../../utils/helpers/prf.requests';
 import { Position, PrfStatus } from '../../../../types/prf.types';
 import { useEmployeeStore } from 'apps/portal/src/store/employee.store';
-import { SpinnerDotted } from 'spinners-react';
 import { PrfOtpContents } from '../prfOtp/PrfOtpContents';
 import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
 import { DateFormatter } from 'libs/utils/src/lib/functions/DateFormatter';
@@ -154,17 +153,16 @@ export const ForApprovalPrfModal = ({ modalState, setModalState, closeModalActio
         <Modal.Body>
           <>
             {swrPrfIsLoading ? (
-              <>
-                <div className="w-full h-[90%] static flex flex-col justify-items-center items-center place-items-center">
-                  <SpinnerDotted
+              <div className="w-full h-[90%] static flex flex-col justify-center items-center place-items-center">
+                <LoadingSpinner size={'lg'} />
+                {/* <SpinnerDotted
                     speed={70}
                     thickness={70}
                     className="flex w-full h-full transition-all "
                     color="slateblue"
                     size={100}
-                  />
-                </div>
-              </>
+                  /> */}
+              </div>
             ) : (
               <>
                 {/* Load PRF Failed Error */}

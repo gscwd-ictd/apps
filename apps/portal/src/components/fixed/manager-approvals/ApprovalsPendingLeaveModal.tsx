@@ -3,8 +3,7 @@ import { HiX } from 'react-icons/hi';
 import { useApprovalStore } from '../../../store/approvals.store';
 import { Modal } from 'libs/oneui/src/components/Modal';
 import { Button } from 'libs/oneui/src/components/Button';
-import { SpinnerDotted } from 'spinners-react';
-import { AlertNotification, CaptchaModal, OtpModal } from '@gscwd-apps/oneui';
+import { AlertNotification, CaptchaModal, LoadingSpinner, OtpModal } from '@gscwd-apps/oneui';
 import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
 import { SelectOption } from 'libs/utils/src/lib/types/select.type';
 import { SubmitHandler, useForm } from 'react-hook-form';
@@ -225,17 +224,16 @@ export const ApprovalsPendingLeaveModal = ({
           />
 
           {!leaveIndividualDetail ? (
-            <>
-              <div className="w-full h-[90%]  static flex flex-col justify-items-center items-center place-items-center">
-                <SpinnerDotted
+            <div className="w-full h-[90%]  static flex flex-col justify-center items-center place-items-center">
+              <LoadingSpinner size={'lg'} />
+              {/* <SpinnerDotted
                   speed={70}
                   thickness={70}
                   className="flex w-full h-full transition-all "
                   color="slateblue"
                   size={100}
-                />
-              </div>
-            </>
+                /> */}
+            </div>
           ) : (
             <div className="flex flex-col w-full h-full ">
               <div className="flex flex-col w-full h-full gap-2 ">

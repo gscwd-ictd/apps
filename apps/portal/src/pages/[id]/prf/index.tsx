@@ -19,12 +19,11 @@ import SideNav from '../../../components/fixed/nav/SideNav';
 import { MainContainer } from '../../../components/modular/custom/containers/MainContainer';
 import { ContentHeader } from '../../../components/modular/custom/containers/ContentHeader';
 import { ContentBody } from '../../../components/modular/custom/containers/ContentBody';
-import { SpinnerDotted } from 'spinners-react';
 import { getUserDetails, withCookieSession } from '../../../utils/helpers/session';
 import { useEmployeeStore } from '../../../store/employee.store';
 import { PageTitle } from '../../../components/modular/html/PageTitle';
 import { Modal } from '../../../components/modular/overlays/Modal';
-import { Button, ToastNotification } from '@gscwd-apps/oneui';
+import { Button, LoadingSpinner, ToastNotification } from '@gscwd-apps/oneui';
 import { HiDocumentAdd } from 'react-icons/hi';
 import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
 import { NavButtonDetails } from 'apps/portal/src/types/nav.type';
@@ -472,14 +471,15 @@ export default function Prf({ user, employee }: PrfPageProps) {
           swrDisapprovedPrfListIsLoading &&
           swrPendingPrfListIsLoading &&
           swrCancelledPrfListIsLoading ? (
-            <div className="static flex flex-col items-center w-full h-96 justify-items-center place-items-center">
-              <SpinnerDotted
+            <div className="static flex flex-col items-center w-full h-96 justify-center place-items-center">
+              <LoadingSpinner size={'lg'} />
+              {/* <SpinnerDotted
                 speed={70}
                 thickness={70}
                 className="flex w-full h-full transition-all "
                 color="slateblue"
                 size={100}
-              />
+              /> */}
             </div>
           ) : (
             <ContentBody>

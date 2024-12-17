@@ -1,5 +1,5 @@
 /* eslint-disable @nx/enforce-module-boundaries */
-import { Button } from '@gscwd-apps/oneui';
+import { Button, LoadingSpinner } from '@gscwd-apps/oneui';
 import { EmployeeDetails } from '../../../../src/types/employee.type';
 import { useDtrStore } from '../../../store/dtr.store';
 import { UseLateChecker } from 'libs/utils/src/lib/functions/LateChecker';
@@ -10,7 +10,6 @@ import { HiPencilAlt } from 'react-icons/hi';
 import { EmployeeDtrWithSchedule } from 'libs/utils/src/lib/types/dtr.type';
 import { useState } from 'react';
 import UpdateTimeLogModal from './UpdateTimeLogModal';
-import { SpinnerDotted } from 'spinners-react';
 import { HolidayTypes } from 'libs/utils/src/lib/enums/holiday-types.enum';
 import { DateFormatter } from 'libs/utils/src/lib/functions/DateFormatter';
 import { UseLateLunchInChecker } from 'libs/utils/src/lib/functions/LateLunchInChecker';
@@ -62,14 +61,15 @@ export const DtrTable = ({ employeeDetails }: DtrTableProps) => {
       />
 
       {dtrIsLoading ? (
-        <div className="w-full h-[90%] static flex flex-col justify-items-center items-center place-items-center">
-          <SpinnerDotted
+        <div className="w-full h-[90%] static flex flex-col justify-center items-center place-items-center">
+          <LoadingSpinner size={'lg'} />
+          {/* <SpinnerDotted
             speed={70}
             thickness={70}
             className="flex w-full h-full transition-all "
             color="slateblue"
             size={100}
-          />
+          /> */}
         </div>
       ) : !dtrIsLoading && employeeDtr?.dtrDays?.length > 0 ? (
         <>

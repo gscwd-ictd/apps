@@ -1,10 +1,9 @@
 /* eslint-disable @nx/enforce-module-boundaries */
-import { AlertNotification, Button, Modal } from '@gscwd-apps/oneui';
+import { AlertNotification, Button, LoadingSpinner, Modal } from '@gscwd-apps/oneui';
 import { useLeaveStore } from '../../../../src/store/leave.store';
 import { HiX } from 'react-icons/hi';
 import { isEmpty } from 'lodash';
 import { useEffect, useState } from 'react';
-import { SpinnerDotted } from 'spinners-react';
 import { useEmployeeStore } from '../../../../src/store/employee.store';
 import axios from 'axios';
 import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
@@ -151,17 +150,16 @@ export const LeaveCompletedModal = ({ modalState, setModalState, closeModalActio
           />
 
           {loadingLeaveDetails || errorLeaveDetails ? (
-            <>
-              <div className="w-full h-[90%]  static flex flex-col justify-items-center items-center place-items-center">
-                <SpinnerDotted
+            <div className="w-full h-[90%]  static flex flex-col justify-center items-center place-items-center">
+              <LoadingSpinner size={'lg'} />
+              {/* <SpinnerDotted
                   speed={70}
                   thickness={70}
                   className="w-full flex h-full transition-all "
                   color="slateblue"
                   size={100}
-                />
-              </div>
-            </>
+                /> */}
+            </div>
           ) : (
             <div className="w-full h-full flex flex-col  ">
               <div className="w-full h-full flex flex-col gap-2 ">
