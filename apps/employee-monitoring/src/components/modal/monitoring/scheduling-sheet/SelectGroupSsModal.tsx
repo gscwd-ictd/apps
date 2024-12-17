@@ -222,7 +222,7 @@ const SelectGroupSsModal: FunctionComponent<SelectGroupSsModalProps> = ({
             <Select
               id="customReactGroups"
               name="groups"
-              styles={{ menuPortal: (base) => ({ ...base, zIndex: 9999 }) }}
+              // styles={{ menuPortal: (base) => ({ ...base, zIndex: 9999 }) }}
               options={transformedGroups ?? []}
               className="z-50 w-full basic-multi-select"
               classNamePrefix="select2-selection"
