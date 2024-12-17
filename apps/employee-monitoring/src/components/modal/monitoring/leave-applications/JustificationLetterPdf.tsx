@@ -2,12 +2,8 @@
 /* eslint-disable react/no-unescaped-entities */
 /* eslint-disable jsx-a11y/alt-text */
 import { Page, Text, Document, StyleSheet, View, Image, Font } from '@react-pdf/renderer';
+import { EmployeeLeaveDetails } from 'libs/utils/src/lib/types/leave-application.type';
 import React from 'react';
-import { EmployeeDetails } from '../../../types/employee.type';
-import {
-  EmployeeLeaveDetails,
-  SupervisorLeaveDetails,
-} from '../../../../../../libs/utils/src/lib/types/leave-application.type';
 import Html from 'react-pdf-html';
 
 const styles = StyleSheet.create({
@@ -41,7 +37,7 @@ const styles = StyleSheet.create({
 });
 
 type JustificationLetterPdfProps = {
-  leaveDetails: SupervisorLeaveDetails;
+  leaveDetails: EmployeeLeaveDetails;
 };
 
 export const JustificationLetterPdf = ({ leaveDetails }: JustificationLetterPdfProps): JSX.Element => {
@@ -56,10 +52,10 @@ export const JustificationLetterPdf = ({ leaveDetails }: JustificationLetterPdfP
      },
   </style>
     ${
-      leaveDetails?.lateFilingJustification !== null &&
-      leaveDetails?.lateFilingJustification !== '' &&
-      leaveDetails?.lateFilingJustification !== '<p></p>'
-        ? leaveDetails?.lateFilingJustification
+      leaveDetails?.leaveApplicationBasicInfo?.lateFilingJustification !== null &&
+      leaveDetails?.leaveApplicationBasicInfo?.lateFilingJustification !== '' &&
+      leaveDetails?.leaveApplicationBasicInfo?.lateFilingJustification !== '<p></p>'
+        ? leaveDetails?.leaveApplicationBasicInfo?.lateFilingJustification
         : '<p>No Letter Found</p>'
     }
   </body>
@@ -115,14 +111,16 @@ export const JustificationLetterPdf = ({ leaveDetails }: JustificationLetterPdfP
                     marginLeft: 0,
                   }}
                   src={
-                    process.env.NEXT_PUBLIC_IMAGE_SERVER_URL + leaveDetails?.employee?.signatureUrl
-                      ? process.env.NEXT_PUBLIC_IMAGE_SERVER_URL + leaveDetails?.employee?.signatureUrl
+                    process.env.NEXT_PUBLIC_IMAGE_SERVER_URL +
+                    leaveDetails?.leaveApplicationBasicInfo?.employeeSignature
+                      ? process.env.NEXT_PUBLIC_IMAGE_SERVER_URL +
+                        leaveDetails?.leaveApplicationBasicInfo?.employeeSignature
                       : '/'
                   }
                 />
                 <Text style={{ paddingTop: 0, textAlign: 'center', fontSize: 14 }}>
                   {' '}
-                  {leaveDetails.employee.employeeName}
+                  {leaveDetails?.leaveApplicationBasicInfo?.employeeName}
                 </Text>
                 <Text style={{ marginTop: -12, textAlign: 'center' }}>_____________</Text>
                 <Text
