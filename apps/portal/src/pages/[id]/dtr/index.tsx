@@ -24,6 +24,7 @@ import { fetchWithToken } from 'apps/portal/src/utils/hoc/fetcher';
 export default function DailyTimeRecord({ employeeDetails }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const {
     isErrorDtr,
+    isErrorDtrPdf,
     isLoadingDtr,
     errorUpdateEmployeeDtr,
     responseUpdateDtr,
@@ -35,6 +36,7 @@ export default function DailyTimeRecord({ employeeDetails }: InferGetServerSideP
     emptyResponseAndError,
   } = useDtrStore((state) => ({
     isErrorDtr: state.error.errorDtr,
+    isErrorDtrPdf: state.error.errorDtrPdf,
     isLoadingDtr: state.loading.loadingDtr,
     errorUpdateEmployeeDtr: state.error.errorUpdateEmployeeDtr,
     responseUpdateDtr: state.response.employeeDailyRecord,
@@ -121,9 +123,14 @@ export default function DailyTimeRecord({ employeeDetails }: InferGetServerSideP
   return (
     <>
       <>
-        {/* DTR Fetch Error */}
+        {/* DTR Full Period (web view and pdf) Fetch Error */}
         {!isEmpty(isErrorDtr) ? (
           <ToastNotification toastType="error" notifMessage={`${isErrorDtr}: Failed to load DTR.`} />
+        ) : null}
+
+        {/* DTR PDF (1st/2nd period only) Fetch Error */}
+        {!isEmpty(isErrorDtrPdf) ? (
+          <ToastNotification toastType="error" notifMessage={`${isErrorDtrPdf}: Failed to load DTR.`} />
         ) : null}
 
         {!isEmpty(errorUpdateEmployeeDtr) ? (
