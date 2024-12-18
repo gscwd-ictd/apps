@@ -18,19 +18,25 @@ export type EmployeeDtr = {
 
 export type DtrState = {
   employeeDtr: EmployeeDtrWithScheduleAndSummary;
+  employeeDtrPdf: EmployeeDtrWithScheduleAndSummary;
 
   response: {
     employeeDailyRecord: DtrCorrectionForm; // for response
   };
   loading: {
+    loadingDtrPdf: boolean;
     loadingDtr: boolean;
     loadingUpdateEmployeeDtr: boolean;
   };
 
   error: {
+    errorDtrPdf: string;
     errorDtr: string;
     errorUpdateEmployeeDtr: string;
   };
+
+  selectedPeriod: string;
+  setSelectedPeriod: (value: string) => void;
 
   selectedYear: string;
   setSelectedYear: (value: string) => void;
@@ -44,6 +50,10 @@ export type DtrState = {
   getEmployeeDtr: (loading: boolean) => void;
   getEmployeeDtrSuccess: (loading: boolean, response) => void;
   getEmployeeDtrFail: (loading: boolean, error: string) => void;
+
+  getEmployeeDtrPdf: (loading: boolean) => void;
+  getEmployeeDtrPdfSuccess: (loading: boolean, response) => void;
+  getEmployeeDtrPdfFail: (loading: boolean, error: string) => void;
 
   emptyResponseAndError: () => void;
 
@@ -64,18 +74,23 @@ export type DtrState = {
 export const useDtrStore = create<DtrState>()(
   devtools((set) => ({
     employeeDtr: {} as EmployeeDtrWithScheduleAndSummary,
+    employeeDtrPdf: {} as EmployeeDtrWithScheduleAndSummary,
+
     response: {
       employeeDailyRecord: {} as DtrCorrectionForm,
     },
     loading: {
+      loadingDtrPdf: false,
       loadingDtr: false,
       loadingUpdateEmployeeDtr: false,
     },
 
     error: {
+      errorDtrPdf: '',
       errorDtr: '',
       errorUpdateEmployeeDtr: '',
     },
+    selectedPeriod: '',
     selectedYear: '',
     selectedMonth: '',
     date: '01-0001',
@@ -95,6 +110,10 @@ export const useDtrStore = create<DtrState>()(
       set((state) => ({ ...state, confirmUpdateModalIsOpen }));
     },
 
+    setSelectedPeriod: (selectedPeriod: string) => {
+      set((state) => ({ ...state, selectedPeriod }));
+    },
+
     setSelectedYear: (selectedYear: string) => {
       set((state) => ({ ...state, selectedYear }));
     },
@@ -105,7 +124,7 @@ export const useDtrStore = create<DtrState>()(
       set((state) => ({ ...state, date }));
     },
 
-    //GET DTR ACTIONS
+    //GET DTR ACTIONS WEB VIEW/FULL
     getEmployeeDtr: (loading: boolean) => {
       set((state) => ({
         ...state,
@@ -129,11 +148,35 @@ export const useDtrStore = create<DtrState>()(
       }));
     },
 
+    //GET DTR ACTIONS PDF VIEW
+    getEmployeeDtrPdf: (loading: boolean) => {
+      set((state) => ({
+        ...state,
+        employeeDtrPdf: {} as EmployeeDtrWithScheduleAndSummary,
+        loading: { ...state.loading, loadingDtrPdf: loading },
+        error: { ...state.error, errorDtrPdf: '' },
+      }));
+    },
+    getEmployeeDtrPdfSuccess: (loading: boolean, response: EmployeeDtrWithScheduleAndSummary) => {
+      set((state) => ({
+        ...state,
+        employeeDtrPdf: response,
+        loading: { ...state.loading, loadingDtrPdf: loading },
+      }));
+    },
+    getEmployeeDtrPdfFail: (loading: boolean, error: string) => {
+      set((state) => ({
+        ...state,
+        loading: { ...state.loading, loadingDtrPdf: loading },
+        error: { ...state.error, errorDtrPdf: error },
+      }));
+    },
+
     emptyResponseAndError: () => {
       set((state) => ({
         ...state,
         response: { ...state.response, employeeDailyRecord: {} as DtrCorrectionForm },
-        error: { ...state.error, errorDtr: '' },
+        error: { ...state.error, errorDtr: '', errorDtrPdf: '' },
       }));
     },
 

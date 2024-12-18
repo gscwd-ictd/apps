@@ -15,10 +15,22 @@ type ModalProps = {
 };
 
 export const DtrPdfModal = ({ modalState, setModalState, closeModalAction, title }: ModalProps) => {
-  const { employeeDtr, setDtrPdfModalIsOpen, setDtrModalIsOpen } = useDtrStore((state) => ({
+  const {
+    employeeDtr,
+    employeeDtrPdf,
+    selectedPeriod,
+    loadingDtrPdf,
+    loadingDtr,
+    setDtrPdfModalIsOpen,
+    setDtrModalIsOpen,
+  } = useDtrStore((state) => ({
     employeeDtr: state.employeeDtr,
+    employeeDtrPdf: state.employeeDtrPdf,
+    loadingDtrPdf: state.loading.loadingDtrPdf,
+    loadingDtr: state.loading.loadingDtr,
     setDtrPdfModalIsOpen: state.setDtrPdfModalIsOpen,
     setDtrModalIsOpen: state.setDtrModalIsOpen,
+    selectedPeriod: state.selectedPeriod,
   }));
 
   const employeeDetails = useEmployeeStore((state) => state.employeeDetails);
@@ -50,20 +62,25 @@ export const DtrPdfModal = ({ modalState, setModalState, closeModalAction, title
                 {({ loading }) => (loading ? 'Loading document...' : 'Download PDF')}
               </PDFDownloadLink> */}
 
-              <PDFViewer width={'100%'} height={1400} className="hidden md:block ">
-                <DtrPdf employeeData={employeeDetails} employeeDtr={employeeDtr} />
-              </PDFViewer>
+              {(selectedPeriod === 'first' || selectedPeriod === 'second') && employeeDtrPdf && !loadingDtrPdf ? (
+                <PDFViewer width={'100%'} height={1400} className="hidden md:block ">
+                  <DtrPdf employeeData={employeeDetails} employeeDtr={employeeDtrPdf} />
+                </PDFViewer>
+              ) : (selectedPeriod === 'first' || selectedPeriod === 'second') && loadingDtrPdf ? (
+                <LoadingSpinner size={'lg'} />
+              ) : null}
+
+              {selectedPeriod === '' && employeeDtr && !loadingDtr ? (
+                <PDFViewer width={'100%'} height={1400} className="hidden md:block ">
+                  <DtrPdf employeeData={employeeDetails} employeeDtr={employeeDtr} />
+                </PDFViewer>
+              ) : selectedPeriod === '' && loadingDtr ? (
+                <LoadingSpinner size={'lg'} />
+              ) : null}
             </div>
           ) : (
             <div className="w-full h-[90%]  static flex flex-col justify-center items-center place-items-center">
               <LoadingSpinner size={'lg'} />
-              {/* <SpinnerDotted
-                speed={70}
-                thickness={70}
-                className="w-full flex h-full transition-all "
-                color="slateblue"
-                size={100}
-              /> */}
             </div>
           )}
         </Modal.Body>

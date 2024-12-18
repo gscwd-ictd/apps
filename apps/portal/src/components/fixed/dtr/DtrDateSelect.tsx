@@ -32,6 +32,11 @@ export const DtrDateSelect = ({ employeeDetails }: DtrDateSelectProps) => {
   const emptyResponseAndError = useDtrStore((state) => state.emptyResponseAndError);
   const setDtrPdfModalIsOpen = useDtrStore((state) => state.setDtrPdfModalIsOpen);
 
+  const getEmployeeDtrPdf = useDtrStore((state) => state.getEmployeeDtrPdf);
+  const getEmployeeDtrPdfSuccess = useDtrStore((state) => state.getEmployeeDtrPdfSuccess);
+  const getEmployeeDtrPdfFail = useDtrStore((state) => state.getEmployeeDtrPdfFail);
+  const setSelectedPeriod = useDtrStore((state) => state.setSelectedPeriod);
+
   const monthNow = format(new Date(), 'M');
   const yearNow = format(new Date(), 'yyyy');
 
@@ -85,6 +90,31 @@ export const DtrDateSelect = ({ employeeDetails }: DtrDateSelectProps) => {
     setSelectedMonth(format(new Date(), 'M'));
   }, []);
 
+  const handlePdfModal = async (period: string) => {
+    setSelectedPeriod(period);
+    if (period != '') {
+      getEmployeeDtrPdf(true);
+      setDtrPdfModalIsOpen(true);
+      if (employeeDetails.employmentDetails.companyId && selectedYear && selectedMonth) {
+        try {
+          const { data } = await axios.get(
+            `${process.env.NEXT_PUBLIC_EMPLOYEE_MONITORING_URL}/v1/daily-time-record/employees/${employeeDetails.employmentDetails.companyId}/${selectedYear}/${selectedMonth}?half=${period}`
+          );
+
+          if (!isEmpty(data)) {
+            getEmployeeDtrPdfSuccess(false, data);
+          }
+        } catch (error) {
+          getEmployeeDtrPdfFail(false, error.message);
+        }
+
+        setDate(`${selectedMonth ? selectedMonth : monthNow}-01-${selectedYear ? selectedYear : yearNow}`);
+      }
+    } else {
+      setDtrPdfModalIsOpen(true);
+    }
+  };
+
   const searchDtr = async () => {
     getEmployeeDtr(true);
 
@@ -126,8 +156,14 @@ export const DtrDateSelect = ({ employeeDetails }: DtrDateSelectProps) => {
           <HiOutlineSearch className="w-6 h-6 md:w-5 md:h-5" />
         </div>
       </Button>
-      <Button variant={'primary'} size={'md'} loading={false} type="button" onClick={() => setDtrPdfModalIsOpen(true)}>
-        View PDF
+      <Button variant={'primary'} size={'md'} loading={false} type="button" onClick={() => handlePdfModal('first')}>
+        1st Period
+      </Button>
+      <Button variant={'primary'} size={'md'} loading={false} type="button" onClick={() => handlePdfModal('second')}>
+        2nd Period
+      </Button>
+      <Button variant={'primary'} size={'md'} loading={false} type="button" onClick={() => handlePdfModal('')}>
+        Full DTR
       </Button>
     </form>
   );

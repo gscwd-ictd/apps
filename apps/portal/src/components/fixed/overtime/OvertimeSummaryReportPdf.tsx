@@ -315,12 +315,17 @@ export const OvertimeSummaryReportPdf = ({
                             {
                               height: 20,
                               borderBottomWidth: 0,
-                              backgroundColor: `${overtime.overtimes[0].hoursRendered > 0 ? 'cyan' : ''}`,
+                              backgroundColor: `${
+                                overtime.overtimes[0].hoursRendered >= 0 &&
+                                overtime.overtimes[0]?.hoursRendered !== null
+                                  ? 'cyan'
+                                  : ''
+                              }`,
                             },
                           ]}
                         >
                           <Text style={styles.tableCell_dates}>
-                            {overtime.overtimes[0].hoursRendered > 0 ? '' : ''}
+                            {overtime.overtimes[0].hoursRendered > 0 ? overtime.overtimes[0].hoursRendered : ''}
                           </Text>
                         </View>
                         <View
@@ -329,12 +334,17 @@ export const OvertimeSummaryReportPdf = ({
                             {
                               height: 20,
                               borderBottomWidth: 0,
-                              backgroundColor: `${overtime.overtimes[1].hoursRendered > 0 ? 'cyan' : ''}`,
+                              backgroundColor: `${
+                                overtime.overtimes[1].hoursRendered >= 0 &&
+                                overtime.overtimes[1]?.hoursRendered !== null
+                                  ? 'cyan'
+                                  : ''
+                              }`,
                             },
                           ]}
                         >
                           <Text style={styles.tableCell_dates}>
-                            {overtime.overtimes[1].hoursRendered > 0 ? '' : ''}
+                            {overtime.overtimes[1].hoursRendered > 0 ? overtime.overtimes[1].hoursRendered : ''}
                           </Text>
                         </View>
                         <View
@@ -343,12 +353,17 @@ export const OvertimeSummaryReportPdf = ({
                             {
                               height: 20,
                               borderBottomWidth: 0,
-                              backgroundColor: `${overtime.overtimes[2].hoursRendered > 0 ? 'cyan' : ''}`,
+                              backgroundColor: `${
+                                overtime.overtimes[2].hoursRendered >= 0 &&
+                                overtime.overtimes[2]?.hoursRendered !== null
+                                  ? 'cyan'
+                                  : ''
+                              }`,
                             },
                           ]}
                         >
                           <Text style={styles.tableCell_dates}>
-                            {overtime.overtimes[2].hoursRendered > 0 ? '' : ''}
+                            {overtime.overtimes[2].hoursRendered > 0 ? overtime.overtimes[2].hoursRendered : ''}
                           </Text>
                         </View>
                         <View
@@ -357,12 +372,17 @@ export const OvertimeSummaryReportPdf = ({
                             {
                               height: 20,
                               borderBottomWidth: 0,
-                              backgroundColor: `${overtime.overtimes[3].hoursRendered > 0 ? 'cyan' : ''}`,
+                              backgroundColor: `${
+                                overtime.overtimes[3].hoursRendered >= 0 &&
+                                overtime.overtimes[3]?.hoursRendered !== null
+                                  ? 'cyan'
+                                  : ''
+                              }`,
                             },
                           ]}
                         >
                           <Text style={styles.tableCell_dates}>
-                            {overtime.overtimes[3].hoursRendered > 0 ? '' : ''}
+                            {overtime.overtimes[3].hoursRendered > 0 ? overtime.overtimes[3].hoursRendered : ''}
                           </Text>
                         </View>
                         <View
@@ -371,12 +391,17 @@ export const OvertimeSummaryReportPdf = ({
                             {
                               height: 20,
                               borderBottomWidth: 0,
-                              backgroundColor: `${overtime.overtimes[4].hoursRendered > 0 ? 'cyan' : ''}`,
+                              backgroundColor: `${
+                                overtime.overtimes[4].hoursRendered >= 0 &&
+                                overtime.overtimes[4]?.hoursRendered !== null
+                                  ? 'cyan'
+                                  : ''
+                              }`,
                             },
                           ]}
                         >
                           <Text style={styles.tableCell_dates}>
-                            {overtime.overtimes[4].hoursRendered > 0 ? '' : ''}
+                            {overtime.overtimes[4].hoursRendered > 0 ? overtime.overtimes[4].hoursRendered : ''}
                           </Text>
                         </View>
                         <View
@@ -385,13 +410,18 @@ export const OvertimeSummaryReportPdf = ({
                             {
                               height: 20,
                               borderBottomWidth: 0,
-                              backgroundColor: `${overtime.overtimes[5].hoursRendered > 0 ? 'cyan' : ''}`,
+                              backgroundColor: `${
+                                overtime.overtimes[5].hoursRendered >= 0 &&
+                                overtime.overtimes[5]?.hoursRendered !== null
+                                  ? 'cyan'
+                                  : ''
+                              }`,
                             },
                           ]}
                         >
                           <Text style={styles.tableCell_dates}>
                             {' '}
-                            {overtime.overtimes[5].hoursRendered > 0 ? '' : ''}
+                            {overtime.overtimes[5].hoursRendered > 0 ? overtime.overtimes[5].hoursRendered : ''}
                           </Text>
                         </View>
                         <View
@@ -400,13 +430,18 @@ export const OvertimeSummaryReportPdf = ({
                             {
                               height: 20,
                               borderBottomWidth: 0,
-                              backgroundColor: `${overtime.overtimes[6].hoursRendered > 0 ? 'cyan' : ''}`,
+                              backgroundColor: `${
+                                overtime.overtimes[6].hoursRendered >= 0 &&
+                                overtime.overtimes[6]?.hoursRendered !== null
+                                  ? 'cyan'
+                                  : ''
+                              }`,
                             },
                           ]}
                         >
                           <Text style={styles.tableCell_dates}>
                             {' '}
-                            {overtime.overtimes[6].hoursRendered > 0 ? '' : ''}
+                            {overtime.overtimes[6].hoursRendered > 0 ? overtime.overtimes[6].hoursRendered : ''}
                           </Text>
                         </View>
                         <View
@@ -415,13 +450,18 @@ export const OvertimeSummaryReportPdf = ({
                             {
                               height: 20,
                               borderBottomWidth: 0,
-                              backgroundColor: `${overtime.overtimes[7].hoursRendered > 0 ? 'cyan' : ''}`,
+                              backgroundColor: `${
+                                overtime.overtimes[7].hoursRendered >= 0 &&
+                                overtime.overtimes[7]?.hoursRendered !== null
+                                  ? 'cyan'
+                                  : ''
+                              }`,
                             },
                           ]}
                         >
                           <Text style={styles.tableCell_dates}>
                             {' '}
-                            {overtime.overtimes[7].hoursRendered > 0 ? '' : ''}
+                            {overtime.overtimes[7].hoursRendered > 0 ? overtime.overtimes[7].hoursRendered : ''}
                           </Text>
                         </View>
                         <View
@@ -430,13 +470,18 @@ export const OvertimeSummaryReportPdf = ({
                             {
                               height: 20,
                               borderBottomWidth: 0,
-                              backgroundColor: `${overtime.overtimes[8].hoursRendered > 0 ? 'cyan' : ''}`,
+                              backgroundColor: `${
+                                overtime.overtimes[8].hoursRendered >= 0 &&
+                                overtime.overtimes[8]?.hoursRendered !== null
+                                  ? 'cyan'
+                                  : ''
+                              }`,
                             },
                           ]}
                         >
                           <Text style={styles.tableCell_dates}>
                             {' '}
-                            {overtime.overtimes[8].hoursRendered > 0 ? '' : ''}
+                            {overtime.overtimes[8].hoursRendered > 0 ? overtime.overtimes[8].hoursRendered : ''}
                           </Text>
                         </View>
                         <View
@@ -445,13 +490,18 @@ export const OvertimeSummaryReportPdf = ({
                             {
                               height: 20,
                               borderBottomWidth: 0,
-                              backgroundColor: `${overtime.overtimes[9].hoursRendered > 0 ? 'cyan' : ''}`,
+                              backgroundColor: `${
+                                overtime.overtimes[9].hoursRendered >= 0 &&
+                                overtime.overtimes[9]?.hoursRendered !== null
+                                  ? 'cyan'
+                                  : ''
+                              }`,
                             },
                           ]}
                         >
                           <Text style={styles.tableCell_dates}>
                             {' '}
-                            {overtime.overtimes[9].hoursRendered > 0 ? '' : ''}
+                            {overtime.overtimes[9].hoursRendered > 0 ? overtime.overtimes[9].hoursRendered : ''}
                           </Text>
                         </View>
                         <View
@@ -460,13 +510,18 @@ export const OvertimeSummaryReportPdf = ({
                             {
                               height: 20,
                               borderBottomWidth: 0,
-                              backgroundColor: `${overtime.overtimes[10].hoursRendered > 0 ? 'cyan' : ''}`,
+                              backgroundColor: `${
+                                overtime.overtimes[10].hoursRendered >= 0 &&
+                                overtime.overtimes[10]?.hoursRendered !== null
+                                  ? 'cyan'
+                                  : ''
+                              }`,
                             },
                           ]}
                         >
                           <Text style={styles.tableCell_dates}>
                             {' '}
-                            {overtime.overtimes[10].hoursRendered > 0 ? '' : ''}
+                            {overtime.overtimes[10].hoursRendered > 0 ? overtime.overtimes[10].hoursRendered : ''}
                           </Text>
                         </View>
                         <View
@@ -475,13 +530,18 @@ export const OvertimeSummaryReportPdf = ({
                             {
                               height: 20,
                               borderBottomWidth: 0,
-                              backgroundColor: `${overtime.overtimes[11].hoursRendered > 0 ? 'cyan' : ''}`,
+                              backgroundColor: `${
+                                overtime.overtimes[11].hoursRendered >= 0 &&
+                                overtime.overtimes[11]?.hoursRendered !== null
+                                  ? 'cyan'
+                                  : ''
+                              }`,
                             },
                           ]}
                         >
                           <Text style={styles.tableCell_dates}>
                             {' '}
-                            {overtime.overtimes[11].hoursRendered > 0 ? '' : ''}
+                            {overtime.overtimes[11].hoursRendered > 0 ? overtime.overtimes[11].hoursRendered : ''}
                           </Text>
                         </View>
                         <View
@@ -490,13 +550,18 @@ export const OvertimeSummaryReportPdf = ({
                             {
                               height: 20,
                               borderBottomWidth: 0,
-                              backgroundColor: `${overtime.overtimes[12].hoursRendered > 0 ? 'cyan' : ''}`,
+                              backgroundColor: `${
+                                overtime.overtimes[12].hoursRendered >= 0 &&
+                                overtime.overtimes[12]?.hoursRendered !== null
+                                  ? 'cyan'
+                                  : ''
+                              }`,
                             },
                           ]}
                         >
                           <Text style={styles.tableCell_dates}>
                             {' '}
-                            {overtime.overtimes[12].hoursRendered > 0 ? '' : ''}
+                            {overtime.overtimes[12].hoursRendered > 0 ? overtime.overtimes[12].hoursRendered : ''}
                           </Text>
                         </View>
                         <View
@@ -505,13 +570,18 @@ export const OvertimeSummaryReportPdf = ({
                             {
                               height: 20,
                               borderBottomWidth: 0,
-                              backgroundColor: `${overtime.overtimes[13].hoursRendered > 0 ? 'cyan' : ''}`,
+                              backgroundColor: `${
+                                overtime.overtimes[13].hoursRendered >= 0 &&
+                                overtime.overtimes[13]?.hoursRendered !== null
+                                  ? 'cyan'
+                                  : ''
+                              }`,
                             },
                           ]}
                         >
                           <Text style={styles.tableCell_dates}>
                             {' '}
-                            {overtime.overtimes[13].hoursRendered > 0 ? '' : ''}
+                            {overtime.overtimes[13].hoursRendered > 0 ? overtime.overtimes[13].hoursRendered : ''}
                           </Text>
                         </View>
                         <View
@@ -520,13 +590,18 @@ export const OvertimeSummaryReportPdf = ({
                             {
                               height: 20,
                               borderBottomWidth: 0,
-                              backgroundColor: `${overtime.overtimes[14].hoursRendered > 0 ? 'cyan' : ''}`,
+                              backgroundColor: `${
+                                overtime.overtimes[14].hoursRendered >= 0 &&
+                                overtime.overtimes[14]?.hoursRendered !== null
+                                  ? 'cyan'
+                                  : ''
+                              }`,
                             },
                           ]}
                         >
                           <Text style={styles.tableCell_dates}>
                             {' '}
-                            {overtime.overtimes[14].hoursRendered > 0 ? '' : ''}
+                            {overtime.overtimes[14].hoursRendered > 0 ? overtime.overtimes[14].hoursRendered : ''}
                           </Text>
                         </View>
                         <View
@@ -535,13 +610,18 @@ export const OvertimeSummaryReportPdf = ({
                             {
                               height: 20,
                               borderBottomWidth: 0,
-                              backgroundColor: `${overtime.overtimes[15]?.hoursRendered > 0 ? 'cyan' : ''}`,
+                              backgroundColor: `${
+                                overtime.overtimes[15]?.hoursRendered >= 0 &&
+                                overtime.overtimes[15]?.hoursRendered !== null
+                                  ? 'cyan'
+                                  : ''
+                              }`,
                             },
                           ]}
                         >
                           <Text style={styles.tableCell_dates}>
                             {' '}
-                            {overtime.overtimes[15]?.hoursRendered > 0 ? '' : ''}
+                            {overtime.overtimes[15]?.hoursRendered > 0 ? overtime.overtimes[15].hoursRendered : ''}
                           </Text>
                         </View>
                       </View>
