@@ -778,6 +778,17 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
             <div className="w-full h-full flex flex-col gap-2 ">
               <div className="w-full flex flex-col gap-2 px-4 rounded">
                 <div className="w-full flex flex-col gap-0">
+                  {Number(vacationLeaveBalance) - Number(pendingVacationLeaveDateCount) > 0.5 &&
+                  Number(sickLeaveBalance) - Number(pendingSickLeaveDateCount) > 0.5 &&
+                  watch('typeOfLeaveDetails.leaveName') === LeaveName.LEAVE_WITHOUT_PAY ? (
+                    <AlertNotification
+                      alertType="warning"
+                      notifMessage="Unable to apply for Leave Without Pay if Vacation or Sick Leave credits are not exhausted."
+                      dismissible={false}
+                      className="mb-1"
+                    />
+                  ) : null}
+
                   {(watch('lateFilingJustification') === '' ||
                     watch('lateFilingJustification') === null ||
                     watch('lateFilingJustification') === '<p></p>') &&
@@ -1867,11 +1878,15 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
                 form="ApplyLeaveForm"
                 type="submit"
                 disabled={
-                  //if late filing and justification letter is empty
-                  (watch('lateFilingJustification') === '' ||
-                    watch('lateFilingJustification') === null ||
-                    watch('lateFilingJustification') === '<p></p>') &&
-                  lateFiling
+                  Number(vacationLeaveBalance) - Number(pendingVacationLeaveDateCount) > 0.5 &&
+                  Number(sickLeaveBalance) - Number(pendingSickLeaveDateCount) > 0.5 &&
+                  watch('typeOfLeaveDetails.leaveName') === LeaveName.LEAVE_WITHOUT_PAY
+                    ? true
+                    : //if late filing and justification letter is empty
+                    (watch('lateFilingJustification') === '' ||
+                        watch('lateFilingJustification') === null ||
+                        watch('lateFilingJustification') === '<p></p>') &&
+                      lateFiling
                     ? true
                     : //disabled if applying for force leave and is December
                     monthNow === '12' && watch('typeOfLeaveDetails.leaveName') === LeaveName.FORCED
