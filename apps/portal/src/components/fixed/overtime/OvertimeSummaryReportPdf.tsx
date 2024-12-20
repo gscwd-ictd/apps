@@ -9,8 +9,6 @@ const styles = StyleSheet.create({
   page: {
     marginLeft: 20,
     marginRight: 20,
-    marginTop: 5,
-    marginBottom: 5,
     display: 'flex',
     flexDirection: 'column',
   },
@@ -38,7 +36,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: 0,
   },
   tableRow: {
-    margin: 'auto',
+    margin: 0,
     flexDirection: 'row',
   },
   tableCol: {
@@ -125,7 +123,14 @@ export const OvertimeSummaryReportPdf = ({
     <>
       {/* <PDFViewer width={'100%'} height={1000} showToolbar> */}
       <Document title="Overtime Accomplishment Report Summary">
-        <Page size={'FOLIO'} orientation="landscape">
+        <Page
+          size={'FOLIO'}
+          orientation="landscape"
+          style={{
+            paddingBottom: 25,
+            paddingTop: 25,
+          }}
+        >
           <View style={styles.page}>
             <View style={styles.controlNumber}>{/* <Text>NO. 1</Text> */}</View>
             <PdfHeader />
@@ -289,7 +294,7 @@ export const OvertimeSummaryReportPdf = ({
               {/* EMPLOYEE DETAILS */}
               {overtimeSummaryReport?.summary?.length > 0 &&
                 overtimeSummaryReport?.summary?.map((overtime: OvertimeSummaryEmployee, idx: number) => (
-                  <View style={styles.tableRow} key={idx}>
+                  <View style={[styles.tableRow, { borderTop: '1px solid #000' }]} key={idx} wrap={false}>
                     <View style={[styles.tableCol, { width: 20 }]}>
                       <Text style={styles.tableCell}>{idx + 1}</Text>
                     </View>
@@ -666,7 +671,7 @@ export const OvertimeSummaryReportPdf = ({
                   </View>
                 ))}
               {/* TOTALS */}
-              <View style={styles.tableRow}>
+              <View style={[styles.tableRow, { borderTop: '1px solid #000' }]} wrap={false}>
                 {/* <View style={[styles.tableCol, { width: 20 }]}>
                           <Text style={styles.tableCell}>1</Text>
                         </View> */}
@@ -740,166 +745,170 @@ export const OvertimeSummaryReportPdf = ({
             </View>
 
             {/* SIGNATORIES */}
-            <View
-              style={{
-                display: 'flex',
-                flexDirection: 'row',
-                justifyContent: 'space-between',
-                fontSize: 9,
-                paddingTop: 40,
-                paddingLeft: 35,
-                paddingRight: 35,
-              }}
-            >
-              <Text>Prepared by:</Text>
-              <Text
-                style={{
-                  marginRight: 0,
-                }}
-              >
-                Noted by:
-              </Text>
-
-              <Text
-                style={{
-                  marginRight: 155,
-                }}
-              >
-                Approved by:
-              </Text>
-            </View>
-            {/* SIGNATURES */}
-            <View
-              style={{
-                display: 'flex',
-                flexDirection: 'row',
-                justifyContent: 'space-between',
-                fontSize: 9,
-                paddingTop: 10,
-                paddingLeft: 35,
-                paddingRight: 35,
-              }}
-            >
+            <View wrap={false}>
               <View
                 style={{
-                  width: 200,
                   display: 'flex',
-                  flexDirection: 'column',
-                  justifyContent: 'flex-end',
-                  alignItems: 'center',
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
                   fontSize: 9,
-                  gap: 0,
+                  paddingTop: 40,
+                  paddingLeft: 35,
+                  paddingRight: 35,
                 }}
               >
-                <Image
-                  style={{ width: 40, marginBottom: 2 }}
-                  src={
-                    process.env.NEXT_PUBLIC_IMAGE_SERVER_URL + overtimeSummaryReport?.signatories?.preparedBy?.signature
-                      ? process.env.NEXT_PUBLIC_IMAGE_SERVER_URL +
-                        overtimeSummaryReport?.signatories?.preparedBy?.signature
-                      : '/'
-                  }
-                />
+                <Text>Prepared by:</Text>
+                <Text
+                  style={{
+                    marginRight: 0,
+                  }}
+                >
+                  Noted by:
+                </Text>
 
                 <Text
                   style={{
-                    marginBottom: -8,
-                    width: 165,
-                    textAlign: 'center',
+                    marginRight: 155,
                   }}
                 >
-                  {overtimeSummaryReport?.signatories?.preparedBy?.name}
-                </Text>
-                <Text>_______________________________</Text>
-                <Text
-                  style={{
-                    marginTop: 2,
-                    textAlign: 'center',
-                  }}
-                >
-                  {overtimeSummaryReport?.signatories?.preparedBy?.position}
+                  Approved by:
                 </Text>
               </View>
-
+              {/* SIGNATURES */}
               <View
                 style={{
-                  width: 200,
                   display: 'flex',
-                  flexDirection: 'column',
-                  justifyContent: 'flex-end',
-                  alignItems: 'center',
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
                   fontSize: 9,
-                  gap: 0,
+                  paddingTop: 10,
+                  paddingLeft: 35,
+                  paddingRight: 35,
                 }}
               >
-                <Image
-                  style={{ width: 40, marginBottom: 2 }}
-                  src={
-                    process.env.NEXT_PUBLIC_IMAGE_SERVER_URL + overtimeSummaryReport?.signatories?.notedBy?.signature
-                      ? process.env.NEXT_PUBLIC_IMAGE_SERVER_URL +
-                        overtimeSummaryReport?.signatories?.notedBy?.signature
-                      : '/'
-                  }
-                />
+                <View
+                  style={{
+                    width: 200,
+                    display: 'flex',
+                    flexDirection: 'column',
+                    justifyContent: 'flex-end',
+                    alignItems: 'center',
+                    fontSize: 9,
+                    gap: 0,
+                  }}
+                >
+                  <Image
+                    style={{ width: 40, marginBottom: 2 }}
+                    src={
+                      process.env.NEXT_PUBLIC_IMAGE_SERVER_URL +
+                      overtimeSummaryReport?.signatories?.preparedBy?.signature
+                        ? process.env.NEXT_PUBLIC_IMAGE_SERVER_URL +
+                          overtimeSummaryReport?.signatories?.preparedBy?.signature
+                        : '/'
+                    }
+                  />
 
-                <Text
-                  style={{
-                    marginBottom: -8,
-                    width: 165,
-                    textAlign: 'center',
-                  }}
-                >
-                  {overtimeSummaryReport?.signatories?.notedBy?.name}
-                </Text>
-                <Text>_______________________________</Text>
-                <Text
-                  style={{
-                    marginTop: 2,
-                    textAlign: 'center',
-                  }}
-                >
-                  {overtimeSummaryReport?.signatories?.notedBy?.position}
-                </Text>
-              </View>
-              <View
-                style={{
-                  width: 200,
-                  display: 'flex',
-                  flexDirection: 'column',
-                  justifyContent: 'flex-end',
-                  alignItems: 'center',
-                  fontSize: 9,
-                  gap: 0,
-                }}
-              >
-                <Image
-                  style={{ width: 40, marginBottom: 2 }}
-                  src={
-                    process.env.NEXT_PUBLIC_IMAGE_SERVER_URL + overtimeSummaryReport?.signatories?.approvedBy?.signature
-                      ? process.env.NEXT_PUBLIC_IMAGE_SERVER_URL +
-                        overtimeSummaryReport?.signatories?.approvedBy?.signature
-                      : '/'
-                  }
-                />
+                  <Text
+                    style={{
+                      marginBottom: -8,
+                      width: 165,
+                      textAlign: 'center',
+                    }}
+                  >
+                    {overtimeSummaryReport?.signatories?.preparedBy?.name}
+                  </Text>
+                  <Text>_______________________________</Text>
+                  <Text
+                    style={{
+                      marginTop: 2,
+                      textAlign: 'center',
+                    }}
+                  >
+                    {overtimeSummaryReport?.signatories?.preparedBy?.position}
+                  </Text>
+                </View>
 
-                <Text
+                <View
                   style={{
-                    marginBottom: -8,
-                    width: 165,
-                    textAlign: 'center',
+                    width: 200,
+                    display: 'flex',
+                    flexDirection: 'column',
+                    justifyContent: 'flex-end',
+                    alignItems: 'center',
+                    fontSize: 9,
+                    gap: 0,
                   }}
                 >
-                  {overtimeSummaryReport?.signatories?.approvedBy?.name}
-                </Text>
-                <Text>_______________________________</Text>
-                <Text
+                  <Image
+                    style={{ width: 40, marginBottom: 2 }}
+                    src={
+                      process.env.NEXT_PUBLIC_IMAGE_SERVER_URL + overtimeSummaryReport?.signatories?.notedBy?.signature
+                        ? process.env.NEXT_PUBLIC_IMAGE_SERVER_URL +
+                          overtimeSummaryReport?.signatories?.notedBy?.signature
+                        : '/'
+                    }
+                  />
+
+                  <Text
+                    style={{
+                      marginBottom: -8,
+                      width: 165,
+                      textAlign: 'center',
+                    }}
+                  >
+                    {overtimeSummaryReport?.signatories?.notedBy?.name}
+                  </Text>
+                  <Text>_______________________________</Text>
+                  <Text
+                    style={{
+                      marginTop: 2,
+                      textAlign: 'center',
+                    }}
+                  >
+                    {overtimeSummaryReport?.signatories?.notedBy?.position}
+                  </Text>
+                </View>
+                <View
                   style={{
-                    marginTop: 2,
-                    textAlign: 'center',
+                    width: 200,
+                    display: 'flex',
+                    flexDirection: 'column',
+                    justifyContent: 'flex-end',
+                    alignItems: 'center',
+                    fontSize: 9,
+                    gap: 0,
                   }}
                 >
-                  {overtimeSummaryReport?.signatories?.approvedBy?.position}
-                </Text>
+                  <Image
+                    style={{ width: 40, marginBottom: 2 }}
+                    src={
+                      process.env.NEXT_PUBLIC_IMAGE_SERVER_URL +
+                      overtimeSummaryReport?.signatories?.approvedBy?.signature
+                        ? process.env.NEXT_PUBLIC_IMAGE_SERVER_URL +
+                          overtimeSummaryReport?.signatories?.approvedBy?.signature
+                        : '/'
+                    }
+                  />
+
+                  <Text
+                    style={{
+                      marginBottom: -8,
+                      width: 165,
+                      textAlign: 'center',
+                    }}
+                  >
+                    {overtimeSummaryReport?.signatories?.approvedBy?.name}
+                  </Text>
+                  <Text>_______________________________</Text>
+                  <Text
+                    style={{
+                      marginTop: 2,
+                      textAlign: 'center',
+                    }}
+                  >
+                    {overtimeSummaryReport?.signatories?.approvedBy?.position}
+                  </Text>
+                </View>
               </View>
             </View>
           </View>
