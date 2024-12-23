@@ -223,3 +223,42 @@ export type OvertimeDayDetails = {
   day: number;
   hoursRendered: number | null;
 };
+
+//used in combined OT authorization and accomplishment pdf
+export type OvertimeAccomplishmentSummary = {
+  companyId: string;
+  employeeName: string;
+  assignment: string;
+  applicationDate: string;
+  plannedDate: string;
+  purpose: string;
+  accomplishments: string | null;
+  estimatedHours: string;
+  actualHours: string | null;
+  otStatus: OvertimeStatus;
+  accomplishmentStatus: OvertimeAccomplishmentStatus;
+};
+
+//used in combined OT authorization and accomplishment pdf
+export type OvertimeAuthorizationAccomplishment = {
+  orgName: string;
+  periodCovered: string;
+  summary: Array<OvertimeAccomplishmentSummary>;
+  signatories: {
+    preparedBy: {
+      name: string;
+      signature: string;
+      position: string;
+    };
+    notedBy: {
+      name: string;
+      signature: string;
+      position: string;
+    };
+    approvedBy: {
+      name: string;
+      signature: string;
+      position: string;
+    };
+  };
+};

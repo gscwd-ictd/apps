@@ -6,6 +6,8 @@ import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
 import { useOvertimeStore } from 'apps/portal/src/store/overtime.store';
 import { format } from 'date-fns';
 import OvertimeSummaryReportModal from './OvertimeSummaryReportModal';
+import { useEffect, useState } from 'react';
+import OvertimeAuthorizationAccomplishmentModal from './OvertimeAuthorizationAccomplishmentModal';
 
 type ModalProps = {
   modalState: boolean;
@@ -62,6 +64,8 @@ export const OvertimeSummaryModal = ({ modalState, setModalState, closeModalActi
     setSelectedEmployeeType,
     pdfOvertimeSummaryModalIsOpen,
     setPdfOvertimeSummaryModalIsOpen,
+    pdfOvertimeAuthorizationAccomplishmentModalIsOpen,
+    setPdfOvertimeAuthorizationAccomplishmentModalIsOpen,
   } = useOvertimeStore((state) => ({
     selectedMonth: state.selectedMonth,
     selectedPeriod: state.selectedPeriod,
@@ -73,7 +77,11 @@ export const OvertimeSummaryModal = ({ modalState, setModalState, closeModalActi
     setSelectedEmployeeType: state.setSelectedEmployeeType,
     pdfOvertimeSummaryModalIsOpen: state.pdfOvertimeSummaryModalIsOpen,
     setPdfOvertimeSummaryModalIsOpen: state.setPdfOvertimeSummaryModalIsOpen,
+    pdfOvertimeAuthorizationAccomplishmentModalIsOpen: state.pdfOvertimeAuthorizationAccomplishmentModalIsOpen,
+    setPdfOvertimeAuthorizationAccomplishmentModalIsOpen: state.setPdfOvertimeAuthorizationAccomplishmentModalIsOpen,
   }));
+
+  const [summaryType, setSummaryType] = useState<string>(null);
 
   const onChangeMonth = (month: number) => {
     setSelectedMonth(month);
@@ -91,11 +99,24 @@ export const OvertimeSummaryModal = ({ modalState, setModalState, closeModalActi
     setSelectedEmployeeType(type);
   };
 
-  const closePdfOvertimeSummaryModal = async () => {
+  const closePdfOvertimeSummaryModal = () => {
     setPdfOvertimeSummaryModalIsOpen(false);
+    setPdfOvertimeAuthorizationAccomplishmentModalIsOpen(false);
+  };
+
+  const handleOvertimeModal = () => {
+    if (summaryType === 'overtimeAuthorizationAccomplishment') {
+      setPdfOvertimeAuthorizationAccomplishmentModalIsOpen(true);
+    } else {
+      setPdfOvertimeSummaryModalIsOpen(true);
+    }
   };
 
   const { windowWidth } = UseWindowDimensions();
+
+  useEffect(() => {
+    setSummaryType(null);
+  }, [modalState]);
 
   return (
     <>
@@ -116,6 +137,24 @@ export const OvertimeSummaryModal = ({ modalState, setModalState, closeModalActi
         <Modal.Body>
           <div className="w-full h-full flex flex-col gap-2 ">
             <div className="w-full flex flex-col gap-2 px-4 rounded">
+              <div className={`md:flex-row md:items-center flex-col items-start flex gap-0 md:gap-3 justify-between`}>
+                <label className="text-slate-500 text-md font-medium whitespace-nowrap">Summary Type:</label>
+                <div className="w-full md:w-80">
+                  <select
+                    className="text-slate-500 h-12 w-full md:w-80 rounded text-md border-slate-300"
+                    required
+                    onChange={(e) => setSummaryType(e.target.value)}
+                    defaultValue={''}
+                  >
+                    <option value={''} disabled>
+                      Selected Type
+                    </option>
+                    <option value={'overtimeSummary'}>Overtime Summary</option>
+                    <option value={'overtimeAuthorizationAccomplishment'}>Accomplishment Summary</option>
+                  </select>
+                </div>
+              </div>
+
               <div className={`md:flex-row md:items-center flex-col items-start flex gap-0 md:gap-3 justify-between`}>
                 <label className="text-slate-500 text-md font-medium whitespace-nowrap">Employee Type:</label>
                 <div className="w-full md:w-80">
@@ -207,17 +246,26 @@ export const OvertimeSummaryModal = ({ modalState, setModalState, closeModalActi
             setModalState={setPdfOvertimeSummaryModalIsOpen}
             closeModalAction={closePdfOvertimeSummaryModal}
           />
+
+          {/* Overtime Authorization-Accomplishment Summary Modal */}
+          <OvertimeAuthorizationAccomplishmentModal
+            modalState={pdfOvertimeAuthorizationAccomplishmentModalIsOpen}
+            setModalState={setPdfOvertimeAuthorizationAccomplishmentModalIsOpen}
+            closeModalAction={closePdfOvertimeSummaryModal}
+          />
         </Modal.Body>
         <Modal.Footer>
           <div className="flex justify-end gap-2 px-4">
             <div className="min-w-[6rem] max-w-auto">
               <Button
-                disabled={selectedMonth && selectedPeriod && selectedYear && selectedEmployeeType ? false : true}
+                disabled={
+                  selectedMonth && selectedPeriod && selectedYear && selectedEmployeeType && summaryType ? false : true
+                }
                 variant={'primary'}
                 size={'md'}
                 loading={false}
                 type="submit"
-                onClick={(e) => setPdfOvertimeSummaryModalIsOpen(true)}
+                onClick={(e) => handleOvertimeModal()}
               >
                 Generate Summary
               </Button>

@@ -4,6 +4,7 @@ import {
   OvertimeAccomplishment,
   OvertimeAccomplishmentReport,
   OvertimeAuthorization,
+  OvertimeAuthorizationAccomplishment,
   OvertimeDetails,
   OvertimeForm,
   OvertimeList,
@@ -31,6 +32,7 @@ export type OvertimeState = {
     loadingAuthorizationReport: boolean;
     loadingAccomplishmentReport: boolean;
     loadingOvertimeSummaryReport: boolean;
+    loadingOvertimeAuthorizationAccomplishmentReport: boolean;
   };
   error: {
     errorOvertime: string;
@@ -40,6 +42,7 @@ export type OvertimeState = {
     errorAuthorizationReport: string;
     errorAccomplishmentReport: string;
     errorOvertimeSummaryReport: string;
+    errorOvertimeAuthorizationAccomplishmentReport: string;
   };
 
   overtimeAccomplishmentEmployeeId: string;
@@ -65,6 +68,7 @@ export type OvertimeState = {
   pdfAccomplishmentReportModalIsOpen: boolean;
   pdfOvertimeAuthorizationModalIsOpen: boolean;
   pdfOvertimeSummaryModalIsOpen: boolean;
+  pdfOvertimeAuthorizationAccomplishmentModalIsOpen: boolean;
   tab: number;
 
   //for selecting month, year and Period for OT summary PDF generation
@@ -101,6 +105,12 @@ export type OvertimeState = {
   getOvertimeAuthorizationReportSuccess: (loading: boolean, response) => void;
   getOvertimeAuthorizationReportFail: (loading: boolean, error: string) => void;
 
+  //for getting overtime accomplishment summary report in PDF - combined authorization and accomplishment
+  overtimeAuthorizationAccomplishmentReport: OvertimeAuthorizationAccomplishment;
+  getOvertimeAuthorizationAccomplishmentReport: (loading: boolean) => void;
+  getOvertimeAuthorizationAccomplishmentReportSuccess: (loading: boolean, response) => void;
+  getOvertimeAuthorizationAccomplishmentReportFail: (loading: boolean, error: string) => void;
+
   //get list of overtime (for approval/completed)
   getOvertimeList: (loading: boolean) => void;
   getOvertimeListSuccess: (loading: boolean, response) => void;
@@ -124,6 +134,9 @@ export type OvertimeState = {
   setPdfAccomplishmentReportModalIsOpen: (pdfAccomplishmentReportModalIsOpen: boolean) => void;
   setPdfOvertimeAuthorizationModalIsOpen: (pdfOvertimeAuthorizationModalIsOpen: boolean) => void;
   setPdfOvertimeSummaryModalIsOpen: (pdfOvertimeSummaryModalIsOpen: boolean) => void;
+  setPdfOvertimeAuthorizationAccomplishmentModalIsOpen: (
+    pdfOvertimeAuthorizationAccomplishmentModalIsOpen: boolean
+  ) => void;
 
   //getting overtime details inside MODAL
   setOvertimeDetails: (overtimeDetails: OvertimeDetails) => void;
@@ -153,6 +166,7 @@ export const useOvertimeStore = create<OvertimeState>()(
       loadingAuthorizationReport: false,
       loadingAccomplishmentReport: false,
       loadingOvertimeSummaryReport: false,
+      loadingOvertimeAuthorizationAccomplishmentReport: false,
     },
     error: {
       errorOvertime: '',
@@ -162,6 +176,7 @@ export const useOvertimeStore = create<OvertimeState>()(
       errorAuthorizationReport: '',
       errorAccomplishmentReport: '',
       errorOvertimeSummaryReport: '',
+      errorOvertimeAuthorizationAccomplishmentReport: '',
     },
 
     overtimeDetails: {} as OvertimeDetails,
@@ -170,6 +185,7 @@ export const useOvertimeStore = create<OvertimeState>()(
 
     overtimeAuthorizationReport: {} as OvertimeAuthorization,
     overtimeAccomplishmentReport: {} as OvertimeAccomplishmentReport,
+    overtimeAuthorizationAccomplishmentReport: {} as OvertimeAuthorizationAccomplishment,
 
     overtimeSummaryModalIsOpen: false,
     applyOvertimeModalIsOpen: false,
@@ -180,6 +196,7 @@ export const useOvertimeStore = create<OvertimeState>()(
     pdfAccomplishmentReportModalIsOpen: false,
     pdfOvertimeAuthorizationModalIsOpen: false,
     pdfOvertimeSummaryModalIsOpen: false,
+    pdfOvertimeAuthorizationAccomplishmentModalIsOpen: false,
     tab: 1,
 
     selectedMonth: null,
@@ -238,6 +255,12 @@ export const useOvertimeStore = create<OvertimeState>()(
 
     setCompletedOvertimeModalIsOpen: (completedOvertimeModalIsOpen: boolean) => {
       set((state) => ({ ...state, completedOvertimeModalIsOpen }));
+    },
+
+    setPdfOvertimeAuthorizationAccomplishmentModalIsOpen: (
+      pdfOvertimeAuthorizationAccomplishmentModalIsOpen: boolean
+    ) => {
+      set((state) => ({ ...state, pdfOvertimeAuthorizationAccomplishmentModalIsOpen }));
     },
 
     setOvertimeDetails: (overtimeDetails: OvertimeDetails) => {
@@ -420,6 +443,53 @@ export const useOvertimeStore = create<OvertimeState>()(
         error: {
           ...state.error,
           errorOvertimeSummaryReport: error,
+        },
+      }));
+    },
+
+    //GET OVERTIME AUTHORIZATION-ACCOMPLISHMENT REPORT FOR PDF
+    getOvertimeAuthorizationAccomplishmentReport: (loading: boolean) => {
+      set((state) => ({
+        ...state,
+        overtimeAuthorizationAccomplishmentReport: {} as OvertimeAuthorizationAccomplishment,
+        loading: {
+          ...state.loading,
+          loadingOvertimeAuthorizationAccomplishmentReport: loading,
+        },
+        error: {
+          ...state.error,
+          errorOvertimeAuthorizationAccomplishmentReport: '',
+        },
+      }));
+    },
+
+    getOvertimeAuthorizationAccomplishmentReportSuccess: (
+      loading: boolean,
+      response: OvertimeAuthorizationAccomplishment
+    ) => {
+      set((state) => ({
+        ...state,
+        overtimeAuthorizationAccomplishmentReport: response,
+        loading: {
+          ...state.loading,
+          loadingOvertimeAuthorizationAccomplishmentReport: loading,
+        },
+        error: {
+          ...state.error,
+          errorOvertimeAuthorizationAccomplishmentReport: '',
+        },
+      }));
+    },
+    getOvertimeAuthorizationAccomplishmentReportFail: (loading: boolean, error: string) => {
+      set((state) => ({
+        ...state,
+        loading: {
+          ...state.loading,
+          loadingOvertimeAuthorizationAccomplishmentReport: loading,
+        },
+        error: {
+          ...state.error,
+          errorOvertimeAuthorizationAccomplishmentReport: error,
         },
       }));
     },
