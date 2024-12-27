@@ -605,7 +605,7 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
     }
   };
 
-  const [leaveCreditMultiplier, setLeaveCreditMultiplier] = useState<number>(0.0481927);
+  const leaveCreditMultiplier = Number(process.env.NEXT_PUBLIC_MONETIZATION_CONSTANT);
   const [maxMonetizationAmount, setMaxMonetizationAmount] = useState<number>(0);
   const [leaveBalanceInput, setLeaveBalanceInput] = useState<number>(0);
   // const [sickLeaveInput, setSickLeaveInput] = useState<number>(0);
@@ -630,20 +630,20 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
     const totalVlFlBalance = Number(vacationLeaveBalance); //removed forcedLeaveBalance
 
     setLeaveBalanceInput(credits);
-    //start deduct in VL/FL if initial total credits is greater than 5
-    if (totalVlFlBalance > 5) {
-      if (totalVlFlBalance - credits >= 5) {
+    //start deduct in VL/FL if initial total credits is greater than 10
+    if (totalVlFlBalance > 10) {
+      if (totalVlFlBalance - credits >= 10) {
         setLessVlFL(credits);
         setLessSl(0);
-      } else if (totalVlFlBalance - credits < 5) {
-        setLessVlFL(totalVlFlBalance - 5);
-        //if VL/FL is exhausted with 5 credits left minimum, switch deduction to SL
-        setLessSl(credits - (totalVlFlBalance - 5));
+      } else if (totalVlFlBalance - credits < 10) {
+        setLessVlFL(totalVlFlBalance - 10);
+        //if VL/FL is exhausted with 10 credits left minimum, switch deduction to SL
+        setLessSl(credits - (totalVlFlBalance - 10));
       }
-      //VL is already less than 5, go directly to SL deduction
+      //VL is already less than 10, go directly to SL deduction
     } else {
       setLessVlFL(0);
-      //if VL/FL is exhausted with 5 or less credits left, switch deduction to SL
+      //if VL/FL is exhausted with 10 or less credits left, switch deduction to SL
       setLessSl(credits);
     }
   };
@@ -778,8 +778,9 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
             <div className="w-full h-full flex flex-col gap-2 ">
               <div className="w-full flex flex-col gap-2 px-4 rounded">
                 <div className="w-full flex flex-col gap-0">
-                  {Number(vacationLeaveBalance) - Number(pendingVacationLeaveDateCount) > 0.5 &&
-                  Number(sickLeaveBalance) - Number(pendingSickLeaveDateCount) > 0.5 &&
+                  {/* If applying for LWOP but VL/FL is not exhausted */}
+                  {Number(vacationLeaveBalance) - Number(pendingVacationLeaveDateCount) >= 0.5 &&
+                  Number(sickLeaveBalance) - Number(pendingSickLeaveDateCount) >= 0.5 &&
                   watch('typeOfLeaveDetails.leaveName') === LeaveName.LEAVE_WITHOUT_PAY ? (
                     <AlertNotification
                       alertType="warning"
@@ -789,6 +790,7 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
                     />
                   ) : null}
 
+                  {/* If Justification letter is empty */}
                   {(watch('lateFilingJustification') === '' ||
                     watch('lateFilingJustification') === null ||
                     watch('lateFilingJustification') === '<p></p>') &&
@@ -890,7 +892,7 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
                       className="mb-1"
                     />
                   ) : null}
-                  {/* Notifications */}
+                  {/* Empty date of leaves */}
                   {leaveDateTo < leaveDateFrom &&
                   (watch('typeOfLeaveDetails.leaveName') == LeaveName.MATERNITY ||
                     watch('typeOfLeaveDetails.leaveName') == LeaveName.STUDY ||
@@ -970,24 +972,24 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
                   ) : null}
 
                   {/* Monetization Notif for insufficient VL/FL */}
-                  {finalVacationAndForcedLeaveBalance < 5 &&
-                  Number(vacationLeaveBalance) + Number(forcedLeaveBalance) > 5 &&
+                  {finalVacationAndForcedLeaveBalance < 10 &&
+                  Number(vacationLeaveBalance) + Number(forcedLeaveBalance) > 10 &&
                   watch('typeOfLeaveDetails.leaveName') === LeaveName.MONETIZATION ? (
                     <AlertNotification
                       alertType="warning"
-                      notifMessage="Retaining a minimum of 5 Vacation/Forced Leave Credit Balance is required for its monetization."
+                      notifMessage="Retaining a minimum of 10 Vacation/Forced Leave Credit Balance is required for its monetization."
                       dismissible={false}
                       className="mb-1"
                     />
                   ) : null}
 
                   {/* Monetization Notif for insufficient Sick Leave */}
-                  {finalSickLeaveBalance < 10 &&
+                  {finalSickLeaveBalance < 15 &&
                   lessSl > 0 &&
                   watch('typeOfLeaveDetails.leaveName') === LeaveName.MONETIZATION ? (
                     <AlertNotification
                       alertType="warning"
-                      notifMessage="Retaining a minimum 10 Sick Leave Credit Balance is required for its monetization."
+                      notifMessage="Retaining a minimum 15 Sick Leave Credit Balance is required for its monetization."
                       dismissible={false}
                       className="mb-1"
                     />
@@ -1878,8 +1880,8 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
                 form="ApplyLeaveForm"
                 type="submit"
                 disabled={
-                  Number(vacationLeaveBalance) - Number(pendingVacationLeaveDateCount) > 0.5 &&
-                  Number(sickLeaveBalance) - Number(pendingSickLeaveDateCount) > 0.5 &&
+                  Number(vacationLeaveBalance) - Number(pendingVacationLeaveDateCount) >= 0.5 &&
+                  Number(sickLeaveBalance) - Number(pendingSickLeaveDateCount) >= 0.5 &&
                   watch('typeOfLeaveDetails.leaveName') === LeaveName.LEAVE_WITHOUT_PAY
                     ? true
                     : //if late filing and justification letter is empty
@@ -1943,14 +1945,7 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
                     : employeeDetails.profile.sex === 'Female' &&
                       watch('typeOfLeaveDetails.leaveName') === LeaveName.PATERNITY
                     ? true
-                    : // : //VLFL balance is 5 or less, and SL balance is less than 10
-                    // leaveBalanceInput > 0 &&
-                    //   vacationLeaveBalance > 0 &&
-                    //   finalVacationAndForcedLeaveBalance <= 5 &&
-                    //   finalSickLeaveBalance < 10 &&
-                    //   watch('typeOfLeaveDetails.leaveName') === LeaveName.MONETIZATION
-                    // ? true
-                    //monetization type is max 20 leave credits and exceeded the 20 credits
+                    : //monetization type is max 20 leave credits and exceeded the 20 credits
                     selectedLeaveMonetizationType === MonetizationType.MAX20 &&
                       leaveBalanceInput > 20 &&
                       watch('typeOfLeaveDetails.leaveName') === LeaveName.MONETIZATION
@@ -1960,16 +1955,10 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
                       estimatedAmount > Number(maxMonetizationAmount) / 2
                     ? true
                     : leaveBalanceInput > 0 &&
-                      finalSickLeaveBalance < 10 &&
+                      finalSickLeaveBalance < 15 &&
                       watch('typeOfLeaveDetails.leaveName') === LeaveName.MONETIZATION
                     ? true
-                    : // : //both fields have input and VL is less than 5 while SL is less than 10 - disabled
-                    // finalVacationAndForcedLeaveBalance < 5 &&
-                    //   leaveBalanceInput > 0 &&
-                    //   finalSickLeaveBalance < 10 &&
-                    //   watch('typeOfLeaveDetails.leaveName') === LeaveName.MONETIZATION
-                    // ? true
-                    //leave balance to convert input is blank
+                    : //leave balance to convert input is blank
                     leaveBalanceInput <= 0 && watch('typeOfLeaveDetails.leaveName') === LeaveName.MONETIZATION
                     ? true
                     : Number(leaveDates.length > Math.round(vacationLeaveBalance) - pendingVacationLeaveDateCount) &&
@@ -1978,9 +1967,7 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
                     : (estimatedAmount <= 0 || !leaveDateFrom) &&
                       watch('typeOfLeaveDetails.leaveName') === LeaveName.TERMINAL
                     ? true
-                    : // watch('typeOfLeaveDetails.leaveName') === LeaveName.TERMINAL
-                      // ? true
-                      false
+                    : false
                 }
               >
                 {watch('typeOfLeaveDetails.leaveName') === LeaveName.MONETIZATION
