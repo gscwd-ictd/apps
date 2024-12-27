@@ -53,8 +53,9 @@ export type OvertimeForm = {
 
 //for supervisor get overtime application list
 export type OvertimeList = {
-  forApproval: Array<OvertimeDetails>;
-  completed: Array<OvertimeDetails>;
+  // forApproval: Array<OvertimeDetails>;
+  // completed: Array<OvertimeDetails>;
+  overtimes: Array<OvertimeDetails>;
   supervisorName: string;
 };
 
