@@ -15,9 +15,13 @@ import { devtools } from 'zustand/middleware';
 
 export type OvertimeState = {
   employeeList: Array<SelectOption>;
+  // overtime: {
+  //   forApproval: Array<OvertimeDetails>;
+  //   completed: Array<OvertimeDetails>;
+  //   supervisorName: string;
+  // };
   overtime: {
-    forApproval: Array<OvertimeDetails>;
-    completed: Array<OvertimeDetails>;
+    overtimes: Array<OvertimeDetails>;
     supervisorName: string;
   };
   response: {
@@ -149,9 +153,13 @@ export const useOvertimeStore = create<OvertimeState>()(
   devtools((set) => ({
     employeeList: [],
 
+    // overtime: {
+    //   forApproval: [],
+    //   completed: [],
+    //   supervisorName: '',
+    // },
     overtime: {
-      forApproval: [],
-      completed: [],
+      overtimes: [],
       supervisorName: '',
     },
     response: {
@@ -539,8 +547,10 @@ export const useOvertimeStore = create<OvertimeState>()(
         ...state,
         overtime: {
           ...state.overtime,
-          forApproval: [],
-          completed: [],
+          // forApproval: [],
+          // completed: [],
+          overtimes: [],
+          supervisorName: '',
         },
         loading: {
           ...state.loading,
@@ -557,13 +567,18 @@ export const useOvertimeStore = create<OvertimeState>()(
         ...state,
         overtime: {
           ...state.overtime,
-          forApproval: response.forApproval,
-          completed: response.completed,
+          // forApproval: response.forApproval,
+          // completed: response.completed,
+          overtimes: response.overtimes,
           supervisorName: response.supervisorName,
         },
         loading: {
           ...state.loading,
           loadingOvertime: loading,
+        },
+        error: {
+          ...state.error,
+          errorOvertime: '',
         },
       }));
     },

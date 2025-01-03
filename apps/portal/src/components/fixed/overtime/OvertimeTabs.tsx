@@ -8,17 +8,17 @@ type TabsProps = {
 
 export const OvertimeTabs = ({ tab }: TabsProps) => {
   //zustand initialization to access leave store
-  const { OvertimeForApproval, overtimeCompleted, setTab } = useOvertimeStore((state) => ({
-    OvertimeForApproval: state.overtime.forApproval,
-    overtimeCompleted: state.overtime.completed,
-    setTab: state.setTab,
-  }));
+  // const { OvertimeForApproval, overtimeCompleted, setTab } = useOvertimeStore((state) => ({
+  //   OvertimeForApproval: state.overtime.forApproval,
+  //   overtimeCompleted: state.overtime.completed,
+  //   setTab: state.setTab,
+  // }));
 
   return (
     <>
       <div className={`lg:h-auto lg:pt-0 lg:pb-10 h-full py-4 w-full px-5 overflow-y-auto`}>
         <ul className="flex flex-col md:flex-row lg:flex-col text-gray-500">
-          <TabHeader
+          {/* <TabHeader
             tab={tab}
             tabIndex={1}
             onClick={() => {
@@ -41,7 +41,7 @@ export const OvertimeTabs = ({ tab }: TabsProps) => {
             subtitle="Show all fulfilled Overtime applications"
             notificationCount={overtimeCompleted ? overtimeCompleted.length : 0}
             className="bg-gray-500"
-          />
+          /> */}
         </ul>
       </div>
     </>
