@@ -6,6 +6,8 @@ import dayjs from 'dayjs';
 export const DateFormatter = (date: string | null | Date, dateFormat: string) => {
   if (dateFormat === 'MM-DD-YYYY' || dateFormat === 'MMMM DD, YYYY') {
     // do nothing
+  } else if (dateFormat === 'YYYY-MM-DD') {
+    dateFormat = 'YYYY-MM-DD';
   } else {
     dateFormat = 'MM-DD-YYYY';
   }
