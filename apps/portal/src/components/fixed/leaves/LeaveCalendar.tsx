@@ -23,7 +23,7 @@ import { LeaveName } from 'libs/utils/src/lib/enums/leave.enum';
 import axios from 'axios';
 import { EmployeeDtrWithSchedule } from 'libs/utils/src/lib/types/dtr.type';
 import { DateFormatter } from 'libs/utils/src/lib/functions/DateFormatter';
-import { ToastNotification } from '@gscwd-apps/oneui';
+import { LoadingSpinner, ToastNotification } from '@gscwd-apps/oneui';
 
 function classNames(...classes: any) {
   return classes.filter(Boolean).join(' ');
@@ -42,6 +42,7 @@ export default function Calendar({
   leaveName,
   isLateFiling = false,
 }: CalendarProps) {
+  const [isSearchingForLastDay, setIsSearchingForLastDay] = useState<boolean>(false);
   const today = startOfToday();
   const [selectedDay, setSelectedDay] = useState(today);
   const [currentMonth, setCurrentMonth] = useState(format(today, 'MMM-yyyy'));
@@ -243,7 +244,7 @@ export default function Calendar({
             (leaveName === LeaveName.SPECIAL_PRIVILEGE ||
               leaveName === LeaveName.SICK ||
               leaveName === LeaveName.SOLO_PARENT) &&
-            DateFormatter(specifiedDate, 'MM-DD-YYYY') > DateFormatter(lastDateOfDuty, 'MM-DD-YYYY') &&
+            DateFormatter(specifiedDate, 'YYYY-MM-DD') > DateFormatter(lastDateOfDuty, 'YYYY-MM-DD') &&
             dayjs(`${specifiedDate}`).diff(`${today}`, 'day') <= 10 &&
             !isLateFiling
           ) {
@@ -355,6 +356,7 @@ export default function Calendar({
     let isDateFound = false;
     let dateToSearch = add(date, { days: -1 });
     while (!isDateFound && applyLeaveModalIsOpen) {
+      setIsSearchingForLastDay(true);
       try {
         const data = await axios.get(
           `${process.env.NEXT_PUBLIC_EMPLOYEE_MONITORING_URL}/v1/daily-time-record/employees/${
@@ -365,17 +367,21 @@ export default function Calendar({
           if (!isEmpty(data.data.dtr.timeIn) || !isEmpty(data.data.dtr.timeOut)) {
             isDateFound = true;
             setLastDateOfDuty(data.data.date);
+            setIsSearchingForLastDay(false);
           } else {
             isDateFound = false;
             dateToSearch = add(dateToSearch, { days: -1 });
+            setIsSearchingForLastDay(false);
           }
         } else {
           setErrorAllowableSpl('Error');
           isDateFound = true;
+          setIsSearchingForLastDay(false);
         }
       } catch (error: any) {
         setErrorAllowableSpl(error);
         isDateFound = true;
+        setIsSearchingForLastDay(false);
       }
     }
   }
@@ -443,158 +449,168 @@ export default function Calendar({
         </div>
       ) : (
         <div className="relative">
-          <div className="">
-            <div className="md:grid md:grid-cols-1 md:divide-x md:divide-gray-200 ">
-              <div className="w-full">
-                <div className="flex items-center">
-                  <button
-                    type="button"
-                    onClick={previousMonth}
-                    className="-my-1.5 flex flex-none items-center justify-center p-1.5 text-gray-400 hover:text-gray-500"
-                  >
-                    <span className="sr-only">Previous month</span>
-                    <HiOutlineChevronLeft className="w-5 h-5" aria-hidden="true" />
-                  </button>
-                  <h2 className="flex-auto font-semibold text-gray-900 text-center">
-                    {format(firstDayCurrentMonth, 'MMMM yyyy')}
-                  </h2>
-
-                  <button
-                    onClick={nextMonth}
-                    type="button"
-                    className="-my-1.5 -mr-1.5 ml-2 flex flex-none items-center justify-center p-1.5 text-gray-400 hover:text-gray-500"
-                  >
-                    <span className="sr-only">Next month</span>
-                    <HiOutlineChevronRight className="w-5 h-5" aria-hidden="true" />
-                  </button>
-                </div>
-                <div className="grid grid-cols-7 mt-3 text-xs leading-6 text-center text-gray-500">
-                  <div className="text-red-600">SUN</div>
-                  <div>MON</div>
-                  <div>TUE</div>
-                  <div>WED</div>
-                  <div>THU</div>
-                  <div>FRI</div>
-                  <div>SAT</div>
-                </div>
-                <div className="grid grid-cols-7 mt-2 text-sm">
-                  {days.map((day, dayIdx) => (
-                    <div
-                      key={day.toString()}
-                      className={classNames(dayIdx === 0 && colStartClasses[getDay(day)], 'py-1.5')}
+          {isSearchingForLastDay ? (
+            <div className="flex-col justify-center items-center w-full">
+              <LoadingSpinner size={'lg'} />
+              <div className="pt-3 text-center text-xs font-medium text-slate-500 w-full">
+                Searching for last date you rendered work...
+              </div>
+            </div>
+          ) : (
+            <div className="">
+              <div className="md:grid md:grid-cols-1 md:divide-x md:divide-gray-200 ">
+                <div className="w-full">
+                  <div className="flex items-center">
+                    <button
+                      type="button"
+                      onClick={previousMonth}
+                      className="-my-1.5 flex flex-none items-center justify-center p-1.5 text-gray-400 hover:text-gray-500"
                     >
-                      <button
-                        type="button"
-                        onClick={() => viewDateActivities(day)}
-                        className={classNames(
-                          isEqual(day, selectedDay) && 'text-gray-900 font-semibold',
+                      <span className="sr-only">Previous month</span>
+                      <HiOutlineChevronLeft className="w-5 h-5" aria-hidden="true" />
+                    </button>
+                    <h2 className="flex-auto font-semibold text-gray-900 text-center">
+                      {format(firstDayCurrentMonth, 'MMMM yyyy')}
+                    </h2>
 
-                          //disable date selection for past dates from current day for VL/FL
-                          (leaveName === LeaveName.VACATION || leaveName === LeaveName.FORCED) &&
-                            dayjs(`${day}`).diff(`${today}`, 'day') < 0 &&
-                            isLateFiling === false &&
-                            'text-slate-300',
-                          //disable date selection starting from 10th day from current day for Vl/FL/SOLO/SPL if late filing
-                          // (leaveName === LeaveName.VACATION ||
-                          //   leaveName === LeaveName.FORCED ||
-                          //   leaveName === LeaveName.SPECIAL_PRIVILEGE ||
-                          //   leaveName === LeaveName.SICK ||
-                          //   leaveName === LeaveName.SOLO_PARENT) &&
-                          //   dayjs(`${day}`).diff(`${today}`, 'day') > 10 &&
-                          //   isLateFiling === true &&
-                          //   'text-slate-300',
-                          //disable date selection starting from 10th day from current day for FL/SOLO/SPL - added allow all dates if a date with the 10 days is selected
-                          (leaveName === LeaveName.FORCED ||
-                            leaveName === LeaveName.SPECIAL_PRIVILEGE ||
-                            leaveName === LeaveName.SICK ||
-                            leaveName === LeaveName.SOLO_PARENT) &&
-                            dayjs(`${day}`).diff(`${today}`, 'day') > 10 &&
-                            futureLeaveCount <= 0 &&
-                            selectedDates.filter(
-                              (dates) =>
-                                dayjs(`${dates}`).diff(`${today}`, 'day') >= 0 &&
-                                dayjs(`${dates}`).diff(`${today}`, 'day') <= 10
-                            ).length <= 0 &&
-                            'text-slate-300',
-                          //disable date selection starting from 10th day from current day for VL ONLY - added allow all dates if a date with the 10 days is selected
-                          leaveName === LeaveName.VACATION &&
-                            dayjs(`${day}`).diff(`${today}`, 'day') > 10 &&
-                            futureLeaveCount <= 0 &&
-                            selectedDates.filter(
-                              (dates) =>
-                                dayjs(`${dates}`).diff(`${today}`, 'day') >= 0 &&
-                                dayjs(`${dates}`).diff(`${today}`, 'day') <= 10
-                            ).length <= 0 &&
-                            'text-slate-300',
-                          //disable date selection for past dates from last day of duty for SPL/SICK ONLY
-                          (leaveName === LeaveName.SPECIAL_PRIVILEGE ||
-                            leaveName === LeaveName.SICK ||
-                            leaveName === LeaveName.SOLO_PARENT) &&
-                            DateFormatter(day, 'MM-DD-YYYY') <= DateFormatter(lastDateOfDuty, 'MM-DD-YYYY') &&
-                            isLateFiling === false &&
-                            'text-slate-300',
-                          //disable date selection from 3rd day beyond in the past if previous day is SUN from current day for SL
-                          // leaveName === LeaveName.SICK &&
-                          //   dayjs(`${today}`).diff(`${day}`, 'day') > 3 &&
-                          //   today.getDay() == 1 &&
-                          //   'text-slate-300',
-                          // leaveName === LeaveName.SICK &&
-                          //   today.getDay() >= 2 &&
-                          //   today.getDay() <= 5 &&
-                          //   dayjs(`${today}`).diff(`${day}`, 'day') <= 1 &&
-                          //   dayjs(`${day}`).diff(`${today}`, 'day') <= 10 &&
-                          //   'text-slate-300',
-                          //disable date selection for more than 10 days from current day for SL - added allow all dates if a date with the 10 days is selected
-                          leaveName === LeaveName.SICK &&
-                            dayjs(`${day}`).diff(`${today}`, 'day') > 10 &&
-                            futureLeaveCount <= 0 &&
-                            selectedDates.filter(
-                              (dates) =>
-                                dayjs(`${dates}`).diff(`${today}`, 'day') >= 0 &&
-                                dayjs(`${dates}`).diff(`${today}`, 'day') <= 10
-                            ).length <= 0 &&
-                            'text-slate-300',
-                          isToday(day) && 'text-red-500',
-                          swrUnavailableDates &&
-                            swrUnavailableDates.some(
-                              (item) => item.date === format(day, 'yyyy-MM-dd') && item.type === 'Holiday'
-                            ) &&
-                            'text-red-600 bg-red-300 rounded-full',
-                          swrUnavailableDates &&
-                            swrUnavailableDates.some(
-                              (item) => item.date === format(day, 'yyyy-MM-dd') && item.type === 'Leave'
-                            ) &&
-                            swrUnavailableDates &&
-                            !swrUnavailableDates.some(
-                              (item) => item.date === format(day, 'yyyy-MM-dd') && item.type === 'Holiday'
-                            ) &&
-                            'text-green-600 bg-green-200 rounded-full',
-                          !isEqual(day, selectedDay) &&
-                            !isToday(day) &&
-                            isSameMonth(day, firstDayCurrentMonth) &&
-                            'text-gray-900 font-semibold',
-                          !isEqual(day, selectedDay) &&
-                            !isToday(day) &&
-                            !isSameMonth(day, firstDayCurrentMonth) &&
-                            'text-gray-900 font-semibold',
-                          isEqual(day, selectedDay) && isToday(day) && '',
-                          isEqual(day, selectedDay) && !isToday(day) && '',
-                          !isEqual(day, selectedDay) && 'hover:bg-blue-200',
-                          (isEqual(day, selectedDay) || isToday(day)) && 'font-semibold',
-                          'mx-auto flex h-8 w-8 items-center justify-center rounded-full',
-                          selectedDates.includes(format(day, 'yyyy-MM-dd'))
-                            ? 'bg-indigo-200 rounded-full text-gray-900'
-                            : ''
-                        )}
+                    <button
+                      onClick={nextMonth}
+                      type="button"
+                      className="-my-1.5 -mr-1.5 ml-2 flex flex-none items-center justify-center p-1.5 text-gray-400 hover:text-gray-500"
+                    >
+                      <span className="sr-only">Next month</span>
+                      <HiOutlineChevronRight className="w-5 h-5" aria-hidden="true" />
+                    </button>
+                  </div>
+                  <div className="grid grid-cols-7 mt-3 text-xs leading-6 text-center text-gray-500">
+                    <div className="text-red-600">SUN</div>
+                    <div>MON</div>
+                    <div>TUE</div>
+                    <div>WED</div>
+                    <div>THU</div>
+                    <div>FRI</div>
+                    <div>SAT</div>
+                  </div>
+                  <div className="grid grid-cols-7 mt-2 text-sm">
+                    {days.map((day, dayIdx) => (
+                      <div
+                        key={day.toString()}
+                        className={classNames(dayIdx === 0 && colStartClasses[getDay(day)], 'py-1.5')}
                       >
-                        <time dateTime={format(day, 'yyyy-MM-dd')}>{format(day, 'd')}</time>
-                      </button>
-                    </div>
-                  ))}
+                        <button
+                          type="button"
+                          onClick={() => viewDateActivities(day)}
+                          className={classNames(
+                            isEqual(day, selectedDay) && 'text-gray-900 font-semibold',
+
+                            //disable date selection for past dates from current day for VL/FL
+                            (leaveName === LeaveName.VACATION || leaveName === LeaveName.FORCED) &&
+                              dayjs(`${day}`).diff(`${today}`, 'day') < 0 &&
+                              isLateFiling === false &&
+                              'text-slate-300',
+                            //disable date selection starting from 10th day from current day for Vl/FL/SOLO/SPL if late filing
+                            // (leaveName === LeaveName.VACATION ||
+                            //   leaveName === LeaveName.FORCED ||
+                            //   leaveName === LeaveName.SPECIAL_PRIVILEGE ||
+                            //   leaveName === LeaveName.SICK ||
+                            //   leaveName === LeaveName.SOLO_PARENT) &&
+                            //   dayjs(`${day}`).diff(`${today}`, 'day') > 10 &&
+                            //   isLateFiling === true &&
+                            //   'text-slate-300',
+                            //disable date selection starting from 10th day from current day for FL/SOLO/SPL - added allow all dates if a date with the 10 days is selected
+                            (leaveName === LeaveName.FORCED ||
+                              leaveName === LeaveName.SPECIAL_PRIVILEGE ||
+                              leaveName === LeaveName.SICK ||
+                              leaveName === LeaveName.SOLO_PARENT) &&
+                              dayjs(`${day}`).diff(`${today}`, 'day') > 10 &&
+                              futureLeaveCount <= 0 &&
+                              selectedDates.filter(
+                                (dates) =>
+                                  dayjs(`${dates}`).diff(`${today}`, 'day') >= 0 &&
+                                  dayjs(`${dates}`).diff(`${today}`, 'day') <= 10
+                              ).length <= 0 &&
+                              'text-slate-300',
+                            //disable date selection starting from 10th day from current day for VL ONLY - added allow all dates if a date with the 10 days is selected
+                            leaveName === LeaveName.VACATION &&
+                              dayjs(`${day}`).diff(`${today}`, 'day') > 10 &&
+                              futureLeaveCount <= 0 &&
+                              selectedDates.filter(
+                                (dates) =>
+                                  dayjs(`${dates}`).diff(`${today}`, 'day') >= 0 &&
+                                  dayjs(`${dates}`).diff(`${today}`, 'day') <= 10
+                              ).length <= 0 &&
+                              'text-slate-300',
+
+                            //disable date selection for past dates from last day of duty for SPL/SICK ONLY
+                            (leaveName === LeaveName.SPECIAL_PRIVILEGE ||
+                              leaveName === LeaveName.SICK ||
+                              leaveName === LeaveName.SOLO_PARENT) &&
+                              DateFormatter(day, 'YYYY-MM-DD') <= DateFormatter(lastDateOfDuty, 'YYYY-MM-DD') &&
+                              isLateFiling === false &&
+                              'text-slate-300',
+                            //disable date selection from 3rd day beyond in the past if previous day is SUN from current day for SL
+                            // leaveName === LeaveName.SICK &&
+                            //   dayjs(`${today}`).diff(`${day}`, 'day') > 3 &&
+                            //   today.getDay() == 1 &&
+                            //   'text-slate-300',
+                            // leaveName === LeaveName.SICK &&
+                            //   today.getDay() >= 2 &&
+                            //   today.getDay() <= 5 &&
+                            //   dayjs(`${today}`).diff(`${day}`, 'day') <= 1 &&
+                            //   dayjs(`${day}`).diff(`${today}`, 'day') <= 10 &&
+                            //   'text-slate-300',
+                            //disable date selection for more than 10 days from current day for SL - added allow all dates if a date with the 10 days is selected
+                            leaveName === LeaveName.SICK &&
+                              dayjs(`${day}`).diff(`${today}`, 'day') > 10 &&
+                              futureLeaveCount <= 0 &&
+                              selectedDates.filter(
+                                (dates) =>
+                                  dayjs(`${dates}`).diff(`${today}`, 'day') >= 0 &&
+                                  dayjs(`${dates}`).diff(`${today}`, 'day') <= 10
+                              ).length <= 0 &&
+                              'text-slate-300',
+                            isToday(day) && 'text-red-500',
+                            swrUnavailableDates &&
+                              swrUnavailableDates.some(
+                                (item) => item.date === format(day, 'yyyy-MM-dd') && item.type === 'Holiday'
+                              ) &&
+                              'text-red-600 bg-red-300 rounded-full',
+                            swrUnavailableDates &&
+                              swrUnavailableDates.some(
+                                (item) => item.date === format(day, 'yyyy-MM-dd') && item.type === 'Leave'
+                              ) &&
+                              swrUnavailableDates &&
+                              !swrUnavailableDates.some(
+                                (item) => item.date === format(day, 'yyyy-MM-dd') && item.type === 'Holiday'
+                              ) &&
+                              'text-green-600 bg-green-200 rounded-full',
+                            !isEqual(day, selectedDay) &&
+                              !isToday(day) &&
+                              isSameMonth(day, firstDayCurrentMonth) &&
+                              'text-gray-900 font-semibold',
+                            !isEqual(day, selectedDay) &&
+                              !isToday(day) &&
+                              !isSameMonth(day, firstDayCurrentMonth) &&
+                              'text-gray-900 font-semibold',
+                            isEqual(day, selectedDay) && isToday(day) && '',
+                            isEqual(day, selectedDay) && !isToday(day) && '',
+                            !isEqual(day, selectedDay) && 'hover:bg-blue-200',
+                            (isEqual(day, selectedDay) || isToday(day)) && 'font-semibold',
+                            'mx-auto flex h-8 w-8 items-center justify-center rounded-full',
+                            selectedDates.includes(format(day, 'yyyy-MM-dd'))
+                              ? 'bg-indigo-200 rounded-full text-gray-900'
+                              : ''
+                          )}
+                        >
+                          <time dateTime={format(day, 'yyyy-MM-dd')}>{format(day, 'd')}</time>
+                        </button>
+                      </div>
+                    ))}
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
+          )}
         </div>
       )}
     </>
