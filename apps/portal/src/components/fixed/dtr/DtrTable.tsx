@@ -240,8 +240,8 @@ export const DtrTable = ({ employeeDetails }: DtrTableProps) => {
                           >
                             <Button
                               variant={
-                                DateFormatter(logs.day, 'MM-DD-YYYY') <
-                                dayjs(dayjs().toDate().toDateString()).format('MM-DD-YYYY')
+                                DateFormatter(logs.day, 'YYYY-MM-DD') <
+                                dayjs(dayjs().toDate().toDateString()).format('YYYY-MM-DD')
                                   ? 'primary'
                                   : 'danger'
                               }
@@ -249,8 +249,8 @@ export const DtrTable = ({ employeeDetails }: DtrTableProps) => {
                               loading={false}
                               onClick={() => openEditActionModal(logs)}
                               disabled={
-                                DateFormatter(logs.day, 'MM-DD-YYYY') <
-                                dayjs(dayjs().toDate().toDateString()).format('MM-DD-YYYY')
+                                DateFormatter(logs.day, 'YYYY-MM-DD') <
+                                dayjs(dayjs().toDate().toDateString()).format('YYYY-MM-DD')
                                   ? false
                                   : true
                               }
