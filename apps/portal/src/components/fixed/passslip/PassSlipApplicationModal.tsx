@@ -52,7 +52,7 @@ export const PassSlipApplicationModal = ({
   //get current date for dateOfApplication
   const today = new Date();
   const dateToday = format(today, 'yyyy-MM-dd');
-
+  const yearNow = format(new Date(), 'yyyy');
   //zustand initialization to access employee store
   const { employeeDetails } = useEmployeeStore((state) => ({
     employeeDetails: state.employeeDetails,
@@ -121,7 +121,7 @@ export const PassSlipApplicationModal = ({
   };
 
   //fetch employee leave ledger to check leave balances
-  const leaveLedgerUrl = `${process.env.NEXT_PUBLIC_EMPLOYEE_MONITORING_URL}/v1/leave/ledger/${employeeDetails.user._id}/${employeeDetails.profile.companyId}`;
+  const leaveLedgerUrl = `${process.env.NEXT_PUBLIC_EMPLOYEE_MONITORING_URL}/v1/leave/ledger/${employeeDetails.user._id}/${employeeDetails.profile.companyId}/${yearNow}`;
 
   const {
     data: swrLeaveLedger,

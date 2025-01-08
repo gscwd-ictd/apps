@@ -13,6 +13,7 @@ import { fetchWithToken } from 'apps/portal/src/utils/hoc/fetcher';
 import { isEmpty } from 'lodash';
 import { useFinalLeaveApprovalLeaveLedgerStore } from 'apps/portal/src/store/final-leave-approvals-leave-ledger.store';
 import { JustificationLetterPdfModal } from './JustificationLetterPdfModal';
+import { format } from 'date-fns';
 
 type ApprovalsCompletedLeaveModalProps = {
   modalState: boolean;
@@ -58,8 +59,8 @@ export const ApprovalsCompletedLeaveModal = ({
     getLeaveLedgerSuccess: state.getLeaveLedgerSuccess,
     getLeaveLedgerFail: state.getLeaveLedgerFail,
   }));
-
-  const leaveLedgerUrl = `${process.env.NEXT_PUBLIC_EMPLOYEE_MONITORING_URL}/v1/leave/ledger/${leaveIndividualDetail?.employee?.employeeId}/${leaveIndividualDetail?.employee?.companyId}`;
+  const yearNow = format(new Date(), 'yyyy');
+  const leaveLedgerUrl = `${process.env.NEXT_PUBLIC_EMPLOYEE_MONITORING_URL}/v1/leave/ledger/${leaveIndividualDetail?.employee?.employeeId}/${leaveIndividualDetail?.employee?.companyId}/${yearNow}`;
 
   const {
     data: swrLeaveLedger,

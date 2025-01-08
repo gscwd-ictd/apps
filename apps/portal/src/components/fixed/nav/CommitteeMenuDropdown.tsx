@@ -95,7 +95,13 @@ export const CommitteeMenuDropdown = ({
                 {/* show overtime application link if OT immediate supervisor or is a manager*/}
                 {employeeDetails.employmentDetails.overtimeImmediateSupervisorId !== null ||
                 employeeDetails.employmentDetails.overtimeImmediateSupervisorId ||
-                (!isEqual(employeeDetails.employmentDetails.userRole, UserRole.RANK_AND_FILE) &&
+                (!isEqual(employeeDetails.employmentDetails.userRole, UserRole.GENERAL_MANAGER) &&
+                  !isEqual(employeeDetails.employmentDetails.userRole, UserRole.OIC_GENERAL_MANAGER) &&
+                  !isEqual(employeeDetails.employmentDetails.userRole, UserRole.ASSISTANT_GENERAL_MANAGER) &&
+                  !isEqual(employeeDetails.employmentDetails.userRole, UserRole.OIC_ASSISTANT_GENERAL_MANAGER) &&
+                  !isEqual(employeeDetails.employmentDetails.userRole, UserRole.DEPARTMENT_MANAGER) &&
+                  !isEqual(employeeDetails.employmentDetails.userRole, UserRole.OIC_DEPARTMENT_MANAGER) &&
+                  !isEqual(employeeDetails.employmentDetails.userRole, UserRole.RANK_AND_FILE) &&
                   !isEqual(employeeDetails.employmentDetails.userRole, UserRole.JOB_ORDER)) ? (
                   <Menu.Item>
                     {({ active }) => (

@@ -558,7 +558,7 @@ export const ProfileMenuDropdown = ({
                                 router.push(`/${router.query.id}/pdc-approvals`, undefined, { shallow: true })
                               }
                             >
-                              <HiAcademicCap className="w-5 h-5 text-rose-600" />
+                              <HiAcademicCap className="w-5 h-5 text-slate-600" />
                               <div className="flex w-full items-end justify-between">
                                 <span className="text-sm tracking-tight text-slate-500 text-left">PDC Approvals</span>
                               </div>
@@ -575,7 +575,13 @@ export const ProfileMenuDropdown = ({
                       ) : null}
 
                       {employeeDetails.employmentDetails.overtimeImmediateSupervisorId != null ||
-                      (!isEqual(employeeDetails.employmentDetails.userRole, UserRole.RANK_AND_FILE) &&
+                      (!isEqual(employeeDetails.employmentDetails.userRole, UserRole.GENERAL_MANAGER) &&
+                        !isEqual(employeeDetails.employmentDetails.userRole, UserRole.OIC_GENERAL_MANAGER) &&
+                        !isEqual(employeeDetails.employmentDetails.userRole, UserRole.ASSISTANT_GENERAL_MANAGER) &&
+                        !isEqual(employeeDetails.employmentDetails.userRole, UserRole.OIC_ASSISTANT_GENERAL_MANAGER) &&
+                        !isEqual(employeeDetails.employmentDetails.userRole, UserRole.DEPARTMENT_MANAGER) &&
+                        !isEqual(employeeDetails.employmentDetails.userRole, UserRole.OIC_DEPARTMENT_MANAGER) &&
+                        !isEqual(employeeDetails.employmentDetails.userRole, UserRole.RANK_AND_FILE) &&
                         !isEqual(employeeDetails.employmentDetails.userRole, UserRole.JOB_ORDER)) ? (
                         <Menu.Item>
                           {({ active }) => (

@@ -22,6 +22,7 @@ import { useSupervisorLeaveApprovalLeaveLedgerStore } from 'apps/portal/src/stor
 import { LeaveLedgerEntry } from 'libs/utils/src/lib/types/leave-ledger-entry.type';
 import { ApprovalCaptcha } from './ApprovalOtp/ApprovalCaptcha';
 import { JustificationLetterPdfModal } from './JustificationLetterPdfModal';
+import { format } from 'date-fns';
 
 type ApprovalsPendingLeaveModalProps = {
   modalState: boolean;
@@ -153,8 +154,8 @@ export const ApprovalsPendingLeaveModal = ({
     setSickLeaveBalance(lastIndexValue.sickLeaveBalance ?? 0);
     setSpecialPrivilegeLeaveBalance(lastIndexValue.specialPrivilegeLeaveBalance ?? 0);
   };
-
-  const leaveLedgerUrl = `${process.env.NEXT_PUBLIC_EMPLOYEE_MONITORING_URL}/v1/leave/ledger/${leaveIndividualDetail?.employee?.employeeId}/${leaveIndividualDetail?.employee?.companyId}`;
+  const yearNow = format(new Date(), 'yyyy');
+  const leaveLedgerUrl = `${process.env.NEXT_PUBLIC_EMPLOYEE_MONITORING_URL}/v1/leave/ledger/${leaveIndividualDetail?.employee?.employeeId}/${leaveIndividualDetail?.employee?.companyId}/${yearNow}`;
 
   const {
     data: swrLeaveLedger,

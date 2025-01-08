@@ -481,15 +481,16 @@ export const getServerSideProps: GetServerSideProps = withCookieSession(async (c
 
   // check if user role is not ot supervisor = kick out
   if (
-    employeeDetails.employmentDetails.overtimeImmediateSupervisorId == null && // GENERAL MANAGER
-    !isEqual(employeeDetails.employmentDetails.userRole, UserRole.OIC_GENERAL_MANAGER) &&
-    !isEqual(employeeDetails.employmentDetails.userRole, UserRole.GENERAL_MANAGER) &&
+    employeeDetails.employmentDetails.overtimeImmediateSupervisorId == null &&
+    // GENERAL MANAGER
+    // !isEqual(employeeDetails.employmentDetails.userRole, UserRole.OIC_GENERAL_MANAGER) &&
+    // !isEqual(employeeDetails.employmentDetails.userRole, UserRole.GENERAL_MANAGER) &&
     /* ASSISTANT GENERAL MANAGER */
-    !isEqual(employeeDetails.employmentDetails.userRole, UserRole.ASSISTANT_GENERAL_MANAGER) &&
-    !isEqual(employeeDetails.employmentDetails.userRole, UserRole.OIC_ASSISTANT_GENERAL_MANAGER) &&
+    // !isEqual(employeeDetails.employmentDetails.userRole, UserRole.ASSISTANT_GENERAL_MANAGER) &&
+    // !isEqual(employeeDetails.employmentDetails.userRole, UserRole.OIC_ASSISTANT_GENERAL_MANAGER) &&
     /* DEPARTMENT MANAGER */
-    !isEqual(employeeDetails.employmentDetails.userRole, UserRole.DEPARTMENT_MANAGER) &&
-    !isEqual(employeeDetails.employmentDetails.userRole, UserRole.OIC_DEPARTMENT_MANAGER) &&
+    // !isEqual(employeeDetails.employmentDetails.userRole, UserRole.DEPARTMENT_MANAGER) &&
+    // !isEqual(employeeDetails.employmentDetails.userRole, UserRole.OIC_DEPARTMENT_MANAGER) &&
     /* DIVISION MANAGER */
     !isEqual(employeeDetails.employmentDetails.userRole, UserRole.DIVISION_MANAGER) &&
     !isEqual(employeeDetails.employmentDetails.userRole, UserRole.OIC_DIVISION_MANAGER)
