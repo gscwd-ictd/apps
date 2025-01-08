@@ -22,6 +22,7 @@ dayjs.extend(duration);
 
 type LeaveLedgerTableProps = {
   employeeData: EmployeeWithDetails;
+  selectedYear: string;
 };
 
 type RemarksAndLeaveDates = {
@@ -29,7 +30,7 @@ type RemarksAndLeaveDates = {
   remarks: string;
 };
 
-export const LeaveLedgerTable: FunctionComponent<LeaveLedgerTableProps> = ({ employeeData }) => {
+export const LeaveLedgerTable: FunctionComponent<LeaveLedgerTableProps> = ({ employeeData, selectedYear }) => {
   const { getLeaveLedgerFail, getLeaveLedgerSuccess, leaveLedger } = useLeaveLedgerStore((state) => ({
     leaveLedger: state.leaveLedger,
     getLeaveLedgerSuccess: state.getLeaveLedgerSuccess,
@@ -67,7 +68,7 @@ export const LeaveLedgerTable: FunctionComponent<LeaveLedgerTableProps> = ({ emp
     isLoading: swrIsLoading,
     error: swrError,
     mutate: mutateLeaveLedger,
-  } = useSWR(`leave/ledger/${employeeData.userId}/${employeeData.companyId}`, fetcherEMS, {
+  } = useSWR(`leave/ledger/${employeeData.userId}/${employeeData.companyId}/${selectedYear}`, fetcherEMS, {
     shouldRetryOnError: false,
     revalidateOnFocus: false,
   });
@@ -154,6 +155,13 @@ export const LeaveLedgerTable: FunctionComponent<LeaveLedgerTableProps> = ({ emp
       mutateLeaveLedger();
     }
   }, [PostLeaveAdjustment]);
+
+  // Refetch if data is updated
+  useEffect(() => {
+    if (!isEmpty(selectedYear)) {
+      mutateLeaveLedger();
+    }
+  }, [selectedYear]);
 
   if (swrIsLoading)
     return (

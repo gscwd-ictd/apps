@@ -3,18 +3,20 @@
 /* eslint-disable @nx/enforce-module-boundaries */
 import { Card } from 'apps/employee-monitoring/src/components/cards/Card';
 import { BreadCrumbs } from 'apps/employee-monitoring/src/components/navigations/BreadCrumbs';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { GetServerSideProps, GetServerSidePropsContext, InferGetServerSidePropsType } from 'next/types';
 import axios from 'axios';
 import { isEmpty } from 'lodash';
 import { PrintButton } from 'apps/employee-monitoring/src/components/buttons/PrintButton';
-import DailyTimeRecordPdfModal from 'apps/employee-monitoring/src/components/modal/employees/DailyTimeRecordPdfModal';
-import { ToastNotification } from '@gscwd-apps/oneui';
+import { Select, ToastNotification, ListDef } from '@gscwd-apps/oneui';
 import { LeaveLedgerTable } from 'apps/employee-monitoring/src/components/tables/LeaveLedgerTable';
 import LeaveLedgerAdjModal from 'apps/employee-monitoring/src/components/modal/employees/leave-ledger/LeaveLedgerAdjModal';
 import { useLeaveBenefitStore } from 'apps/employee-monitoring/src/store/leave-benefits.store';
 import { useLeaveLedgerStore } from 'apps/employee-monitoring/src/store/leave-ledger.store';
 import LeaveLedgerPdfModal from 'apps/employee-monitoring/src/components/modal/employees/leave-ledger/LeaveLedgerPdfModal';
+import dayjs from 'dayjs';
+
+type Year = { year: string };
 
 export default function Index({ employeeData }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   // Print modal function
@@ -22,6 +24,26 @@ export default function Index({ employeeData }: InferGetServerSidePropsType<type
 
   // adjustment modal function
   const [adjustmentModalIsOpen, setAdjustmentModalIsOpen] = useState<boolean>(false);
+
+  // selected year
+  const yearNow = dayjs().format('YYYY');
+  const [selectedYear, setSelectedYear] = useState<string>(yearNow);
+
+  const years = [{ year: `${yearNow}` }, { year: `${Number(yearNow) - 1}` }] as Year[];
+
+  //year select
+  const yearList: ListDef<Year> = {
+    key: 'year',
+    render: (info, state) => (
+      <div className={`${state.active ? 'bg-indigo-200' : state.selected ? 'bg-slate-200 ' : ''} pl-4 cursor-pointer`}>
+        {info.year}
+      </div>
+    ),
+  };
+  // set value for year
+  const onChangeYear = (year: string) => {
+    setSelectedYear(year);
+  };
 
   // zustand store init
   const { ErrorLeaveBenefits } = useLeaveBenefitStore((state) => ({
@@ -141,6 +163,15 @@ export default function Index({ employeeData }: InferGetServerSidePropsType<type
                   </div>
 
                   <div className="w-fit flex gap-2">
+                    <Select
+                      className="w-28"
+                      data={years}
+                      textSize="sm"
+                      initial={{ year: yearNow }}
+                      listDef={yearList}
+                      onSelect={(selectedItem) => onChangeYear(selectedItem.year)}
+                    />
+
                     <button
                       type="button"
                       className="text-white bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-blue-300 font-medium rounded-md text-xs p-2.5 text-center inline-flex items-center  dark:bg-blue-400 dark:hover:bg-blue-500 dark:focus:ring-blue-600"
@@ -155,7 +186,7 @@ export default function Index({ employeeData }: InferGetServerSidePropsType<type
               </div>
 
               {/* LEAVE LEDGER TABLE */}
-              <LeaveLedgerTable employeeData={employeeData} />
+              <LeaveLedgerTable employeeData={employeeData} selectedYear={selectedYear} />
             </div>
           </Card>
         </div>

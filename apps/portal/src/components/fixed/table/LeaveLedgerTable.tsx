@@ -17,6 +17,7 @@ import RemarksAndLeaveDatesModal from '../leaves/RemarksAndLeaveDatesModal';
 import { EmployeeDetails } from 'apps/portal/src/types/employee.type';
 import { useLeaveStore } from '../../../../src/store/leave.store';
 import { useLeaveLedgerStore } from 'apps/portal/src/store/leave-ledger.store';
+import { format } from 'date-fns';
 
 dayjs.extend(localizedFormat);
 dayjs.extend(customParseFormat);
@@ -69,8 +70,8 @@ export const LeaveLedgerTable: FunctionComponent<LeaveLedgerTableProps> = ({ emp
 
   // leave dates and remarks modal
   const [modalRemarksIsOpen, setModalRemarksIsOpen] = useState<boolean>(false);
-
-  const leaveLedgerUrl = `${process.env.NEXT_PUBLIC_EMPLOYEE_MONITORING_URL}/v1/leave/ledger/${employeeData.user._id}/${employeeData.employmentDetails.companyId}`;
+  const yearNow = format(new Date(), 'yyyy');
+  const leaveLedgerUrl = `${process.env.NEXT_PUBLIC_EMPLOYEE_MONITORING_URL}/v1/leave/ledger/${employeeData.user._id}/${employeeData.employmentDetails.companyId}/${yearNow}`;
 
   const {
     data: swrLeaveLedger,

@@ -56,6 +56,9 @@ export default function Dashboard({ userDetails }: InferGetServerSidePropsType<t
   const [leaveCredits, setLeaveCredits] = useState<number>(0);
   const [estimatedAmount, setEstimatedAmount] = useState<number>(0);
 
+  const monthNow = format(new Date(), 'M');
+  const yearNow = format(new Date(), 'yyyy');
+
   const { errorAnnouncements } = useAnnouncementsStore((state) => ({
     errorAnnouncements: state.error.errorAnnouncements,
   }));
@@ -164,7 +167,7 @@ export default function Dashboard({ userDetails }: InferGetServerSidePropsType<t
   }, [swrLeaveMonetization, swrLeaveMonetizationError]);
 
   //fetch employee leave ledger
-  const leaveLedgerUrl = `${process.env.NEXT_PUBLIC_EMPLOYEE_MONITORING_URL}/v1/leave/ledger/${userDetails.user._id}/${userDetails.profile.companyId}`;
+  const leaveLedgerUrl = `${process.env.NEXT_PUBLIC_EMPLOYEE_MONITORING_URL}/v1/leave/ledger/${userDetails.user._id}/${userDetails.profile.companyId}/${yearNow}`;
 
   const {
     data: swrLeaveLedger,
@@ -226,9 +229,6 @@ export default function Dashboard({ userDetails }: InferGetServerSidePropsType<t
       getTimeLogsFail(swrFaceScanIsLoading, swrFaceScanError.message);
     }
   }, [swrFaceScan, swrFaceScanError]);
-
-  const monthNow = format(new Date(), 'M');
-  const yearNow = format(new Date(), 'yyyy');
 
   const dtrUrl = `${process.env.NEXT_PUBLIC_EMPLOYEE_MONITORING_URL}/v1/daily-time-record/employees/${userDetails.employmentDetails.companyId}/${yearNow}/${monthNow}`;
   // use useSWR, provide the URL and fetchWithSession function as a parameter

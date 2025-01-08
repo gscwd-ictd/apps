@@ -93,6 +93,7 @@ const leaveCommutation: Array<SelectOption> = [
 export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAction }: LeaveApplicationModalProps) => {
   //get month now (1 = January, 2 = Feb...)
   const monthNow = format(new Date(), 'M');
+  const yearNow = format(new Date(), 'yyyy');
 
   //zustand initialization to access Leave store
   const {
@@ -224,7 +225,7 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
   };
 
   //fetch employee leave ledger
-  const leaveLedgerUrl = `${process.env.NEXT_PUBLIC_EMPLOYEE_MONITORING_URL}/v1/leave/ledger/${employeeDetails.user._id}/${employeeDetails.profile.companyId}`;
+  const leaveLedgerUrl = `${process.env.NEXT_PUBLIC_EMPLOYEE_MONITORING_URL}/v1/leave/ledger/${employeeDetails.user._id}/${employeeDetails.profile.companyId}/${yearNow}`;
 
   const {
     data: swrLeaveLedger,
