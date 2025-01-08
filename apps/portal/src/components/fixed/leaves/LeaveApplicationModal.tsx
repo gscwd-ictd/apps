@@ -608,7 +608,7 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
 
   const leaveCreditMultiplier = Number(process.env.NEXT_PUBLIC_MONETIZATION_CONSTANT);
   const [maxMonetizationAmount, setMaxMonetizationAmount] = useState<number>(0);
-  const [leaveBalanceInput, setLeaveBalanceInput] = useState<number>(0);
+  const [leaveBalanceInput, setLeaveBalanceInput] = useState<number>();
   // const [sickLeaveInput, setSickLeaveInput] = useState<number>(0);
   const [estimatedAmount, setEstimatedAmount] = useState<number>(0);
 
@@ -1280,10 +1280,10 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
                                         : '20'
                                     }
                                     className="border-slate-300 text-slate-500 h-12 text-md w-full rounded-md"
-                                    placeholder="Leave Balance to Monetize"
+                                    placeholder="Enter Number of Credits"
                                     onChange={(e: any) => getLeaveBalanceInput(e.target.value)}
                                     required
-                                    value={leaveBalanceInput}
+                                    value={null}
                                   />
                                 </div>
                               </div>
