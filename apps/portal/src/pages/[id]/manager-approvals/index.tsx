@@ -16,6 +16,7 @@ import { TabHeader } from 'apps/portal/src/components/fixed/tab/TabHeader';
 import { HiCalendar, HiClipboard, HiClock, HiDocumentText } from 'react-icons/hi';
 import { useRouter } from 'next/router';
 import { SalaryGradeConverter } from 'libs/utils/src/lib/functions/SalaryGradeConverter';
+import { isEqual } from 'lodash';
 
 export default function Approvals({
   employeeDetails,
@@ -99,59 +100,71 @@ export default function Approvals({
                   />
                 ) : null}
 
-                {/* show other links if user is not Rank and File */}
-                {(employeeDetails.employmentDetails.userRole !== UserRole.RANK_AND_FILE &&
-                  employeeDetails.employmentDetails.userRole !== UserRole.JOB_ORDER) ||
-                employeeDetails.employmentDetails.userRole !== UserRole.COS ||
-                employeeDetails.employmentDetails.userRole !== UserRole.COS_JO ? (
-                  <>
-                    <TabHeader
-                      tab={0}
-                      tabIndex={2}
-                      title="Leave Requests"
-                      icon={<HiCalendar size={26} />}
-                      subtitle="Show all Leave requests"
-                      notificationCount={
-                        pendingApprovalsCount.pendingLeavesCount != null ? pendingApprovalsCount.pendingLeavesCount : 0
-                      }
-                      className="bg-indigo-500"
-                      onClick={() => router.push(`/${router.query.id}/manager-approvals/leaves`)}
-                    />
-                    <TabHeader
-                      tab={0}
-                      tabIndex={3}
-                      title="Overtime Requests"
-                      icon={<HiClipboard size={26} />}
-                      subtitle="Show all Overtime requests"
-                      // notificationCount={finalOvertimeApprovals ?? 0}
-                      notificationCount={
-                        (pendingApprovalsCount.pendingOvertimesCount != null
-                          ? pendingApprovalsCount.pendingOvertimesCount
-                          : 0) +
-                        (pendingApprovalsCount.pendingOvertimeAccomplishmentsApprovalCount != null
-                          ? pendingApprovalsCount.pendingOvertimeAccomplishmentsApprovalCount
-                          : 0)
-                      }
-                      className="bg-indigo-500"
-                      onClick={() => router.push(`/${router.query.id}/manager-approvals/overtimes`)}
-                    />
+                {/* show other links if user is a manager and up */}
+                {
+                  // GENERAL MANAGER
+                  isEqual(employeeDetails.employmentDetails.userRole, UserRole.OIC_GENERAL_MANAGER) ||
+                  isEqual(employeeDetails.employmentDetails.userRole, UserRole.GENERAL_MANAGER) ||
+                  /* ASSISTANT GENERAL MANAGER */
+                  isEqual(employeeDetails.employmentDetails.userRole, UserRole.ASSISTANT_GENERAL_MANAGER) ||
+                  isEqual(employeeDetails.employmentDetails.userRole, UserRole.OIC_ASSISTANT_GENERAL_MANAGER) ||
+                  /* DEPARTMENT MANAGER */
+                  isEqual(employeeDetails.employmentDetails.userRole, UserRole.DEPARTMENT_MANAGER) ||
+                  isEqual(employeeDetails.employmentDetails.userRole, UserRole.OIC_DEPARTMENT_MANAGER) ||
+                  /* DIVISION MANAGER */
+                  isEqual(employeeDetails.employmentDetails.userRole, UserRole.DIVISION_MANAGER) ||
+                  isEqual(employeeDetails.employmentDetails.userRole, UserRole.OIC_DIVISION_MANAGER) ? (
+                    <>
+                      <TabHeader
+                        tab={0}
+                        tabIndex={2}
+                        title="Leave Requests"
+                        icon={<HiCalendar size={26} />}
+                        subtitle="Show all Leave requests"
+                        notificationCount={
+                          pendingApprovalsCount.pendingLeavesCount != null
+                            ? pendingApprovalsCount.pendingLeavesCount
+                            : 0
+                        }
+                        className="bg-indigo-500"
+                        onClick={() => router.push(`/${router.query.id}/manager-approvals/leaves`)}
+                      />
+                      <TabHeader
+                        tab={0}
+                        tabIndex={3}
+                        title="Overtime Requests"
+                        icon={<HiClipboard size={26} />}
+                        subtitle="Show all Overtime requests"
+                        // notificationCount={finalOvertimeApprovals ?? 0}
+                        notificationCount={
+                          (pendingApprovalsCount.pendingOvertimesCount != null
+                            ? pendingApprovalsCount.pendingOvertimesCount
+                            : 0) +
+                          (pendingApprovalsCount.pendingOvertimeAccomplishmentsApprovalCount != null
+                            ? pendingApprovalsCount.pendingOvertimeAccomplishmentsApprovalCount
+                            : 0)
+                        }
+                        className="bg-indigo-500"
+                        onClick={() => router.push(`/${router.query.id}/manager-approvals/overtimes`)}
+                      />
 
-                    <TabHeader
-                      tab={0}
-                      tabIndex={4}
-                      title="Time Log Requests"
-                      icon={<HiClock size={26} />}
-                      subtitle="Show all Time Log Correction requests"
-                      notificationCount={
-                        pendingApprovalsCount.pendingDtrCorrectionsApprovals != null
-                          ? pendingApprovalsCount.pendingDtrCorrectionsApprovals
-                          : 0
-                      }
-                      className="bg-indigo-500"
-                      onClick={() => router.push(`/${router.query.id}/manager-approvals/timelogs`)}
-                    />
-                  </>
-                ) : null}
+                      <TabHeader
+                        tab={0}
+                        tabIndex={4}
+                        title="Time Log Requests"
+                        icon={<HiClock size={26} />}
+                        subtitle="Show all Time Log Correction requests"
+                        notificationCount={
+                          pendingApprovalsCount.pendingDtrCorrectionsApprovals != null
+                            ? pendingApprovalsCount.pendingDtrCorrectionsApprovals
+                            : 0
+                        }
+                        className="bg-indigo-500"
+                        onClick={() => router.push(`/${router.query.id}/manager-approvals/timelogs`)}
+                      />
+                    </>
+                  ) : null
+                }
               </ul>
             </ContentBody>
           </div>
