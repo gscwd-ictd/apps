@@ -315,7 +315,7 @@ export default function Dashboard({ userDetails }: InferGetServerSidePropsType<t
   //compute max leave credits
   useEffect(() => {
     if (leaveCredits && monetizationConstant) {
-      setEstimatedAmount(sgAmount * leaveCredits * monetizationConstant);
+      setEstimatedAmount(Math.round(Number(monetizationConstant * sgAmount * leaveCredits) * 100) / 100);
     } else {
       setEstimatedAmount(0);
     }

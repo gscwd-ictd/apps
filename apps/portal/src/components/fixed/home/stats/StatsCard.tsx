@@ -42,7 +42,7 @@ export const StatsCard: React.FC<Props> = ({
                   count?.toLocaleString().length >= 17 ? 'xl:text-4xl' : 'xl:text-5xl'
                 }  text-gray-700`}
               >
-                {count ? count.toLocaleString() : '0'}
+                {count ? count.toFixed(3).toLocaleString() : '0'}
               </div>
             ) : (
               <div

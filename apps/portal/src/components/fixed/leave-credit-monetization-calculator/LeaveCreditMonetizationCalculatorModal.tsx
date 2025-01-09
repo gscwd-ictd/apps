@@ -45,14 +45,17 @@ export const LeaveCreditMonetizationCalculatorModal = ({
     if (credits) {
       if (credits <= leaveCredits) {
         setLeaveCreditsToCompute(credits);
-        setEstimatedAmount(salaryGrade * credits * monetizationConstant);
+        // setEstimatedAmount(Math.round(salaryGrade * credits * monetizationConstant));
+        setEstimatedAmount(Math.round(Number(monetizationConstant * salaryGrade * credits) * 100) / 100);
       } else {
         setLeaveCreditsToCompute(leaveCredits);
-        setEstimatedAmount(salaryGrade * leaveCredits * monetizationConstant);
+        // setEstimatedAmount(salaryGrade * leaveCredits * monetizationConstant);
+        setEstimatedAmount(Math.round(Number(monetizationConstant * salaryGrade * leaveCredits) * 100) / 100);
       }
     } else {
       setLeaveCreditsToCompute(null);
-      setEstimatedAmount(salaryGrade * 0 * monetizationConstant);
+      // setEstimatedAmount(salaryGrade * 0 * monetizationConstant);
+      setEstimatedAmount(Math.round(Number(monetizationConstant * salaryGrade * 0) * 100) / 100);
     }
   };
 
@@ -60,7 +63,8 @@ export const LeaveCreditMonetizationCalculatorModal = ({
     setLeaveCredits(Number(vacationLeave) + Number(sickLeave));
     setLeaveCreditsToCompute(Number(vacationLeave) + Number(sickLeave));
     setSalaryGrade(sgAmount);
-    setEstimatedAmount(salaryGrade * leaveCredits * monetizationConstant);
+    // setEstimatedAmount(salaryGrade * leaveCredits * monetizationConstant);
+    setEstimatedAmount(Math.round(Number(monetizationConstant * salaryGrade * leaveCredits) * 100) / 100);
   };
 
   useEffect(() => {
