@@ -662,9 +662,9 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
     if (watch('typeOfLeaveDetails.leaveName') === LeaveName.TERMINAL) {
       const computedUnearnedCredits =
         Number(format(new Date(leaveDateFrom), 'd')) * Number(process.env.NEXT_PUBLIC_UNEARNED_CREDIT_MULTIPLIER) * 2;
-
+      //this was previously Math.trunc, but was changed to Math.round - 1/9/2025
       setEstimatedAmount(
-        Math.trunc(
+        Math.round(
           Number(
             leaveCreditMultiplier *
               employeeDetails.employmentDetails.salaryGradeAmount *
@@ -673,8 +673,9 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
         ) / 100
       );
     } else {
+      //this was previously Math.trunc, but was changed to Math.round - 1/9/2025
       setEstimatedAmount(
-        Math.trunc(
+        Math.round(
           Number(
             employeeDetails.employmentDetails.salaryGradeAmount *
               (Number(lessVlFl) + Number(lessSl)) *
@@ -1324,7 +1325,7 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
                                     placeholder="Amount"
                                     disabled
                                     required
-                                    value={Number(estimatedAmount).toLocaleString()}
+                                    value={Number(estimatedAmount).toFixed(3).toLocaleString()}
                                   />
                                 </div>
                               </div>
@@ -1437,7 +1438,7 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
                                 placeholder="Amount"
                                 disabled
                                 required
-                                value={Number(estimatedAmount).toLocaleString()}
+                                value={Number(estimatedAmount).toFixed(3).toLocaleString()}
                               />
                             </div>
                           </div>
