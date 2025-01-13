@@ -221,7 +221,7 @@ export const LeaveCreditMonetizationCalculatorModal = ({
                           id="monetization"
                           className="border-slate-100 text-slate-500 h-12 text-md w-full rounded"
                           placeholder="Estimated Monetization"
-                          value={Number(estimatedAmount).toFixed(3).toLocaleString()}
+                          value={Number(estimatedAmount).toLocaleString()}
                         />
                       </div>
                     </div>

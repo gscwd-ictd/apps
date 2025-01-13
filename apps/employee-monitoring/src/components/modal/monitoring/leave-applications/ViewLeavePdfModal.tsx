@@ -8,6 +8,9 @@ import { MonitoringLeave } from 'libs/utils/src/lib/types/leave-application.type
 import { isEmpty } from 'lodash';
 import { useLeaveApplicationStore } from 'apps/employee-monitoring/src/store/leave-application.store';
 import { useLeaveLedgerStore } from 'apps/employee-monitoring/src/store/leave-ledger.store';
+import dayjs from 'dayjs';
+import { LeaveLedgerEntry } from 'libs/utils/src/lib/types/leave-ledger-entry.type';
+import { LeaveName } from 'libs/utils/src/lib/enums/leave.enum';
 
 type ViewLeavePdfModalProps = {
   rowData: MonitoringLeave;
@@ -22,6 +25,10 @@ const ViewLeavePdfModal: FunctionComponent<ViewLeavePdfModalProps> = ({
   closeModalAction,
   setModalState,
 }) => {
+  // Monetization Entry
+  const [vlEntry, setVlEntry] = useState<LeaveLedgerEntry>();
+  const [slEntry, setSlEntry] = useState<LeaveLedgerEntry>();
+
   // leave application store
   const {
     leaveIndividualDetail,
@@ -55,10 +62,13 @@ const ViewLeavePdfModal: FunctionComponent<ViewLeavePdfModalProps> = ({
     }
   );
 
+  // Get the year from the Date of Filing
+  const yearFromDateOfFiling = dayjs(leaveIndividualDetail.leaveApplicationBasicInfo?.dateOfFiling).format('YYYY');
+
   // fetch leave ledger
   const { data: swrLeaveLedger, error: swrLedgerError } = useSWR(
     modalState && !isEmpty(leaveIndividualDetail)
-      ? `/leave/ledger/${rowData.employee.employeeId}/${leaveIndividualDetail.employeeDetails?.companyId}`
+      ? `/leave/ledger/${rowData.employee.employeeId}/${leaveIndividualDetail.employeeDetails?.companyId}/${yearFromDateOfFiling}`
       : null,
     fetcherEMS,
     {
@@ -66,6 +76,17 @@ const ViewLeavePdfModal: FunctionComponent<ViewLeavePdfModalProps> = ({
       revalidateOnFocus: false,
     }
   );
+
+  // Search for monetization entries
+  const searchMonetizationEntry = (ledger: Array<LeaveLedgerEntry>, refNo: string) => {
+    const debitEntries = ledger.filter((ledger) => ledger.remarks.includes(refNo));
+
+    const debitVl = debitEntries.filter((entries) => entries.remarks.includes('VL'));
+    setVlEntry(debitVl[0]);
+
+    const debitSl = debitEntries.filter((entries) => entries.remarks.includes('SL'));
+    setSlEntry(debitSl[0]);
+  };
 
   // Initial zustand state update
   useEffect(() => {
@@ -89,6 +110,10 @@ const ViewLeavePdfModal: FunctionComponent<ViewLeavePdfModalProps> = ({
   useEffect(() => {
     if (!isEmpty(swrLeaveLedger)) {
       setSelectedLeaveLedger(swrLeaveLedger.data, rowData.id);
+
+      if (rowData.leaveName === LeaveName.MONETIZATION) {
+        searchMonetizationEntry(swrLeaveLedger.data, rowData.referenceNo);
+      }
     }
   }, [swrLeaveLedger]);
 
@@ -119,7 +144,12 @@ const ViewLeavePdfModal: FunctionComponent<ViewLeavePdfModalProps> = ({
             <LoadingSpinner size="lg" />
           ) : (
             <>
-              <LeavePdf leaveDetails={leaveIndividualDetail} selectedLeaveLedger={selectedLeaveLedger} />
+              <LeavePdf
+                leaveDetails={leaveIndividualDetail}
+                selectedLeaveLedger={selectedLeaveLedger}
+                vlEntry={vlEntry}
+                slEntry={slEntry}
+              />
             </>
           )}
         </Modal.Body>

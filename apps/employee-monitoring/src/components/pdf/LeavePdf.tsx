@@ -154,9 +154,11 @@ const styles = StyleSheet.create({
 type LeavePdfProps = {
   leaveDetails: EmployeeLeaveDetails;
   selectedLeaveLedger: Array<LeaveLedgerEntry>;
+  vlEntry: LeaveLedgerEntry;
+  slEntry: LeaveLedgerEntry;
 };
 
-export const LeavePdf = ({ leaveDetails, selectedLeaveLedger }: LeavePdfProps): JSX.Element => {
+export const LeavePdf = ({ leaveDetails, selectedLeaveLedger, vlEntry, slEntry }: LeavePdfProps): JSX.Element => {
   const [isClient, setIsClient] = useState<boolean>(false);
 
   useEffect(() => {
@@ -734,7 +736,21 @@ export const LeavePdf = ({ leaveDetails, selectedLeaveLedger }: LeavePdfProps): 
                             textIndent: 5,
                           }}
                         >
-                          {leaveDetails.leaveApplicationBasicInfo.leaveDates.length} DAY/S
+                          {leaveDetails.leaveApplicationBasicInfo.leaveName == LeaveName.MONETIZATION
+                            ? `P${leaveDetails.employeeDetails.assignment.salary.substring(1)} x ${
+                                Number(leaveDetails.leaveApplicationDetails.convertedVl) +
+                                Number(leaveDetails.leaveApplicationDetails.convertedSl)
+                              } day(s) x ${
+                                process.env.NEXT_PUBLIC_MONETIZATION_CONSTANT
+                              } = P${leaveDetails.leaveApplicationDetails.monetizedAmount.substring(1)} `
+                            : leaveDetails.leaveApplicationBasicInfo.leaveName == LeaveName.TERMINAL
+                            ? `P${leaveDetails.employeeDetails.assignment.salary.substring(1)} x ${
+                                Number(leaveDetails.leaveApplicationDetails.vlBalance.afterTerminalLeave) +
+                                Number(leaveDetails.leaveApplicationDetails.slBalance.afterTerminalLeave)
+                              } day(s) x ${
+                                process.env.NEXT_PUBLIC_MONETIZATION_CONSTANT
+                              } = P${leaveDetails.leaveApplicationDetails.monetizedAmount.substring(1)} `
+                            : leaveDetails.leaveApplicationBasicInfo.leaveDates.length}
                         </Text>
                         <Text style={{ padding: 5 }}>_____________________________________________________</Text>
                       </View>
@@ -916,29 +932,39 @@ export const LeavePdf = ({ leaveDetails, selectedLeaveLedger }: LeavePdfProps): 
                               <Text>Total Earned</Text>
                             </View>
                             <View style={styles.containerTableRow}>
-                              {/* <Text>
-                                {(
-                                  parseFloat(`${selectedLeaveLedger[0]?.vacationLeaveBalance}`) +
-                                  parseFloat(`${selectedLeaveLedger[0]?.vacationLeave}`) * -1
-                                )
-                                  +
-                                  parseFloat(`${selectedLeaveLedger[0]?.forcedLeaveBalance}`) +
-                                  parseFloat(`${selectedLeaveLedger[0]?.forcedLeave}`) * -1
-                                  .toFixed(3)}
-                              </Text> */}
                               <Text>
-                                {(
-                                  parseFloat(`${selectedLeaveLedger[0]?.vacationLeaveBalance}`) +
-                                  parseFloat(`${selectedLeaveLedger[0]?.vacationLeave}`) * -1
-                                ).toFixed(3)}
+                                {leaveDetails.leaveApplicationBasicInfo?.leaveName === LeaveName.MONETIZATION
+                                  ? Number(
+                                      parseFloat(`${vlEntry?.vacationLeaveBalance}`) +
+                                        parseFloat(`${leaveDetails.leaveApplicationDetails?.convertedVl}`)
+                                    ).toFixed(3)
+                                  : leaveDetails.leaveApplicationBasicInfo?.leaveName === LeaveName.TERMINAL
+                                  ? (
+                                      parseFloat(`${selectedLeaveLedger[0]?.vacationLeaveBalance}`) +
+                                      parseFloat(`${selectedLeaveLedger[0]?.vacationLeave}`) * -1
+                                    ).toFixed(3)
+                                  : (
+                                      parseFloat(`${selectedLeaveLedger[0]?.vacationLeaveBalance}`) +
+                                      parseFloat(`${selectedLeaveLedger[0]?.vacationLeave}`) * -1
+                                    ).toFixed(3)}
                               </Text>
                             </View>
                             <View style={styles.containerTableRow2}>
                               <Text>
-                                {(
-                                  parseFloat(`${selectedLeaveLedger[0]?.sickLeaveBalance}`) +
-                                  parseFloat(`${selectedLeaveLedger[0]?.sickLeave}`) * -1
-                                ).toFixed(3)}
+                                {leaveDetails.leaveApplicationBasicInfo?.leaveName === LeaveName.MONETIZATION
+                                  ? Number(
+                                      parseFloat(`${slEntry?.sickLeaveBalance}`) +
+                                        parseFloat(`${leaveDetails.leaveApplicationDetails?.convertedSl}`)
+                                    ).toFixed(3)
+                                  : leaveDetails.leaveApplicationBasicInfo?.leaveName === LeaveName.TERMINAL
+                                  ? (
+                                      parseFloat(`${selectedLeaveLedger[0]?.sickLeaveBalance}`) +
+                                      parseFloat(`${selectedLeaveLedger[0]?.sickLeave}`) * -1
+                                    ).toFixed(3)
+                                  : (
+                                      parseFloat(`${selectedLeaveLedger[0]?.sickLeaveBalance}`) +
+                                      parseFloat(`${selectedLeaveLedger[0]?.sickLeave}`) * -1
+                                    ).toFixed(3)}
                               </Text>
                             </View>
                           </View>
@@ -953,14 +979,17 @@ export const LeavePdf = ({ leaveDetails, selectedLeaveLedger }: LeavePdfProps): 
                                 {leaveDetails.leaveApplicationBasicInfo?.leaveName === LeaveName.VACATION ||
                                 leaveDetails.leaveApplicationBasicInfo?.leaveName === LeaveName.FORCED
                                   ? leaveDetails?.leaveApplicationBasicInfo?.leaveDates?.length.toFixed(3)
+                                  : leaveDetails.leaveApplicationBasicInfo?.leaveName === LeaveName.MONETIZATION
+                                  ? leaveDetails.leaveApplicationDetails?.convertedVl
                                   : '0.000'}
                               </Text>
                             </View>
                             <View style={styles.containerTableRow2}>
                               <Text>
-                                {' '}
                                 {leaveDetails.leaveApplicationBasicInfo?.leaveName === LeaveName.SICK
                                   ? leaveDetails?.leaveApplicationBasicInfo?.leaveDates?.length.toFixed(3)
+                                  : leaveDetails.leaveApplicationBasicInfo?.leaveName === LeaveName.MONETIZATION
+                                  ? leaveDetails.leaveApplicationDetails?.convertedSl
                                   : '0.000'}
                               </Text>
                             </View>
@@ -978,11 +1007,17 @@ export const LeavePdf = ({ leaveDetails, selectedLeaveLedger }: LeavePdfProps): 
                                       parseFloat(`${selectedLeaveLedger[0]?.vacationLeaveBalance}`) -
                                       parseFloat(`${leaveDetails?.leaveApplicationBasicInfo?.leaveDates?.length}`)
                                     ).toFixed(3)
+                                  : leaveDetails.leaveApplicationBasicInfo?.leaveName === LeaveName.MONETIZATION
+                                  ? vlEntry?.vacationLeaveBalance
                                   : parseFloat(`${selectedLeaveLedger[0]?.vacationLeaveBalance}`).toFixed(3)}
                               </Text>
                             </View>
                             <View style={styles.containerTableRow2}>
-                              <Text>{parseFloat(`${selectedLeaveLedger[0]?.sickLeaveBalance}`).toFixed(3)}</Text>
+                              <Text>
+                                {leaveDetails.leaveApplicationBasicInfo?.leaveName === LeaveName.MONETIZATION
+                                  ? slEntry?.sickLeaveBalance
+                                  : parseFloat(`${selectedLeaveLedger[0]?.sickLeaveBalance}`).toFixed(3)}
+                              </Text>
                             </View>
                           </View>
                         </View>
