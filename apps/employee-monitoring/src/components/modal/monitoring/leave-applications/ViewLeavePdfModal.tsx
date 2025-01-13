@@ -80,7 +80,7 @@ const ViewLeavePdfModal: FunctionComponent<ViewLeavePdfModalProps> = ({
   // Search for monetization entries
   const searchMonetizationEntry = (ledger: Array<LeaveLedgerEntry>, refNo: string) => {
     const debitEntries = ledger.filter((ledger) => ledger.remarks.includes(refNo));
-    console.log(debitEntries);
+
     const debitVl = debitEntries.filter((entries) => entries.remarks.includes('VL'));
     setVlEntry(debitVl[0]);
 
