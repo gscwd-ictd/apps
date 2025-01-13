@@ -18,12 +18,10 @@ import UseRenderLeaveType from 'apps/employee-monitoring/src/utils/functions/Ren
 import { LeaveStatus } from 'libs/utils/src/lib/enums/leave.enum';
 import ViewLeavePdfModal from 'apps/employee-monitoring/src/components/modal/monitoring/leave-applications/ViewLeavePdfModal';
 import { LabelInput } from 'apps/employee-monitoring/src/components/inputs/LabelInput';
-import { HiOutlineSearch } from 'react-icons/hi';
+
 import * as yup from 'yup';
-import { SubmitHandler, useForm } from 'react-hook-form';
-import ConvertToYearMonth from 'apps/employee-monitoring/src/utils/functions/ConvertToYearMonth';
+import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-import axios from 'axios';
 
 type Filter = {
   monthYear: string;

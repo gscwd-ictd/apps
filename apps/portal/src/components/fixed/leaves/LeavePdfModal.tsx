@@ -7,15 +7,18 @@ import { HiX } from 'react-icons/hi';
 import { useLeaveLedgerStore } from 'apps/portal/src/store/leave-ledger.store';
 import { isEmpty } from 'lodash';
 import { PDFDownloadLink, PDFViewer } from '@react-pdf/renderer';
+import { LeaveLedgerEntry } from 'libs/utils/src/lib/types/leave-ledger-entry.type';
 
-type ConfirmationModalProps = {
+type ModalProps = {
   modalState: boolean;
   setModalState: React.Dispatch<React.SetStateAction<boolean>>;
   closeModalAction: () => void;
   title: string;
+  vlEntry: LeaveLedgerEntry;
+  slEntry: LeaveLedgerEntry;
 };
 
-export const LeavePdfModal = ({ modalState, setModalState, closeModalAction, title }: ConfirmationModalProps) => {
+export const LeavePdfModal = ({ modalState, setModalState, closeModalAction, title, vlEntry, slEntry }: ModalProps) => {
   const { leaveIndividualDetail } = useLeaveStore((state) => ({
     leaveIndividualDetail: state.leaveIndividualDetail,
   }));
@@ -64,6 +67,8 @@ export const LeavePdfModal = ({ modalState, setModalState, closeModalAction, tit
                   employeeDetails={employeeDetails}
                   leaveDetails={leaveIndividualDetail}
                   selectedLeaveLedger={selectedLeaveLedger}
+                  vlEntry={vlEntry}
+                  slEntry={slEntry}
                 />
               </PDFViewer>
             </div>

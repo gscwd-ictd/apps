@@ -512,7 +512,7 @@ export const OvertimeAuthorizationAccomplishmentPdf = ({
                   }}
                 >
                   <Image
-                    style={{ width: 40, marginBottom: 2 }}
+                    style={{ width: 80, marginBottom: -10 }}
                     src={
                       process.env.NEXT_PUBLIC_IMAGE_SERVER_URL +
                       overtimeAuthorizationAccomplishmentReport?.signatories?.preparedBy?.signature
@@ -554,7 +554,7 @@ export const OvertimeAuthorizationAccomplishmentPdf = ({
                   }}
                 >
                   <Image
-                    style={{ width: 40, marginBottom: 2 }}
+                    style={{ width: 80, marginBottom: -10 }}
                     src={
                       process.env.NEXT_PUBLIC_IMAGE_SERVER_URL +
                       overtimeAuthorizationAccomplishmentReport?.signatories?.notedBy?.signature
@@ -595,7 +595,7 @@ export const OvertimeAuthorizationAccomplishmentPdf = ({
                   }}
                 >
                   <Image
-                    style={{ width: 40, marginBottom: 2 }}
+                    style={{ width: 80, marginBottom: -10 }}
                     src={
                       process.env.NEXT_PUBLIC_IMAGE_SERVER_URL +
                       overtimeAuthorizationAccomplishmentReport?.signatories?.approvedBy?.signature

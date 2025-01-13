@@ -1,4 +1,4 @@
-import React from 'react'
+import React from 'react';
 
 const size = {
   xs: 'text-xs',
@@ -6,38 +6,38 @@ const size = {
   md: 'text-md',
   lg: 'text-lg',
   xl: 'text-xl',
-}
+};
 
 type TableProps = {
-  tableHeader: React.ReactNode
-  tableBody: React.ReactNode
-  className?: string
-}
+  tableHeader: React.ReactNode;
+  tableBody: React.ReactNode;
+  className?: string;
+};
 
 type TableHeaderProps = {
-  label: string
-  headerWidth: string
-  className?: string
-  alignment?: 'left' | 'right' | 'center'
-  textSize?: 'xs' | 'sm' | 'md' | 'lg' | 'xl'
-}
+  label: string;
+  headerWidth: string;
+  className?: string;
+  alignment?: 'left' | 'right' | 'center';
+  textSize?: 'xs' | 'sm' | 'md' | 'lg' | 'xl';
+};
 
 type TableDimensionProps = {
-  label?: string | any
-  isText: boolean
-  tableDimension?: React.ReactChild | React.ReactChildren
-  className?: string
-  isPeriod?: boolean
-  periodLabel1?: any
-  periodLabel2?: any
-  textSize?: 'xs' | 'sm' | 'md' | 'lg' | 'xl'
-}
+  label?: string | any;
+  isText: boolean;
+  tableDimension?: React.ReactChild | React.ReactChildren;
+  className?: string;
+  isPeriod?: boolean;
+  periodLabel1?: any;
+  periodLabel2?: any;
+  textSize?: 'xs' | 'sm' | 'md' | 'lg' | 'xl';
+};
 
 type TableBodyProps = {
-  children: React.ReactChild | React.ReactChildren
-  mapKey: any
-  className?: string
-}
+  children: React.ReactChild | React.ReactChildren;
+  mapKey: any;
+  className?: string;
+};
 
 export const TableHeader = ({
   label = 'TH Label',
@@ -55,8 +55,8 @@ export const TableHeader = ({
         {label}
       </th>
     </>
-  )
-}
+  );
+};
 
 export const TableDimension = ({
   label = 'TD Label',
@@ -71,7 +71,7 @@ export const TableDimension = ({
   return (
     <td className={`${className} py-4 text-gray-500  `}>
       {isText === false ? (
-        <>{tableDimension}</>
+        <>{tableDimension.toString()}</>
       ) : isText === true && isPeriod === false ? (
         <div className={`${size[textSize]} max-w-fit break-words text-gray-900 `}>{label}</div>
       ) : isPeriod === true && isText === true ? (
@@ -92,14 +92,18 @@ export const TableDimension = ({
         <></>
       )}
     </td>
-  )
-}
+  );
+};
 
 export const TableBody = ({ children = 'BODY HERE', className = '', mapKey }: TableBodyProps): JSX.Element => {
-  return <>{children}</>
-}
+  return <>{children.toString()}</>;
+};
 
-export const Table = ({ tableBody = 'BODY HERE', tableHeader = 'HEADER HERE', className = '' }: TableProps): JSX.Element => {
+export const Table = ({
+  tableBody = 'BODY HERE',
+  tableHeader = 'HEADER HERE',
+  className = '',
+}: TableProps): JSX.Element => {
   return (
     <div className="mt-5 ">
       <div className="flex flex-col">
@@ -117,5 +121,5 @@ export const Table = ({ tableBody = 'BODY HERE', tableHeader = 'HEADER HERE', cl
         </div>
       </div>
     </div>
-  )
-}
+  );
+};

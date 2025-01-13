@@ -323,7 +323,7 @@ export const OvertimeAuthorizationPdf = ({ overtimeAuthorizationReport }: PdfPro
                 }}
               >
                 <Image
-                  style={{ width: 50, marginBottom: 2 }}
+                  style={{ width: 80, marginBottom: -10 }}
                   src={
                     process.env.NEXT_PUBLIC_IMAGE_SERVER_URL +
                     overtimeAuthorizationReport?.signatories?.employeeSignature
@@ -395,7 +395,7 @@ export const OvertimeAuthorizationPdf = ({ overtimeAuthorizationReport }: PdfPro
                 }}
               >
                 <Image
-                  style={{ width: 50, marginBottom: 2 }}
+                  style={{ width: 80, marginBottom: -10 }}
                   src={
                     process.env.NEXT_PUBLIC_IMAGE_SERVER_URL +
                     overtimeAuthorizationReport?.signatories?.supervisorSignature
