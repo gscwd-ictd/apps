@@ -17,7 +17,7 @@ import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
 import { LeaveName, MonetizationType } from 'libs/utils/src/lib/enums/leave.enum';
 import { useLeaveLedgerStore } from 'apps/portal/src/store/leave-ledger.store';
 import { LeaveLedgerEntry } from 'libs/utils/src/lib/types/leave-ledger-entry.type';
-import { format } from 'date-fns';
+import { addMonths, format } from 'date-fns';
 import { EditorContent, useEditor } from '@tiptap/react';
 import { RichTextMenuBar } from '../../../../../../libs/oneui/src/components/RichTextMenuBar';
 import StarterKit from '@tiptap/starter-kit';
@@ -94,6 +94,7 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
   //get month now (1 = January, 2 = Feb...)
   const monthNow = format(new Date(), 'M');
   const yearNow = format(new Date(), 'yyyy');
+  const terminalMaxDate = format(new Date().valueOf() - 86400000, 'yyyy-MM-dd');
 
   //zustand initialization to access Leave store
   const {
@@ -231,11 +232,15 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
     data: swrLeaveLedger,
     isLoading: swrLeaveLedgerLoading,
     error: swrLeaveLedgerError,
-  } = useSWR(employeeDetails.user._id && employeeDetails.profile.companyId ? leaveLedgerUrl : null, fetchWithToken, {
-    shouldRetryOnError: true,
-    revalidateOnFocus: true,
-    errorRetryInterval: 3000,
-  });
+  } = useSWR(
+    modalState && employeeDetails.user._id && employeeDetails.profile.companyId ? leaveLedgerUrl : null,
+    fetchWithToken,
+    {
+      shouldRetryOnError: true,
+      revalidateOnFocus: true,
+      errorRetryInterval: 3000,
+    }
+  );
 
   // Initial zustand state update
   useEffect(() => {
@@ -1325,7 +1330,7 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
                                     placeholder="Amount"
                                     disabled
                                     required
-                                    value={Number(estimatedAmount).toFixed(3).toLocaleString()}
+                                    value={Number(estimatedAmount).toLocaleString()}
                                   />
                                 </div>
                               </div>
@@ -1350,6 +1355,7 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
                                 value={leaveDateFrom ? leaveDateFrom : ''}
                                 className="text-slate-500 text-md border-slate-300 rounded w-full h-12"
                                 onChange={(e) => setLeaveDateFrom(e.target.value as unknown as string)}
+                                max={terminalMaxDate}
                               />
                             </div>
                           </div>
@@ -1438,7 +1444,7 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
                                 placeholder="Amount"
                                 disabled
                                 required
-                                value={Number(estimatedAmount).toFixed(3).toLocaleString()}
+                                value={Number(estimatedAmount).toLocaleString()}
                               />
                             </div>
                           </div>

@@ -3,7 +3,7 @@ import { HiX } from 'react-icons/hi';
 import { useApprovalStore } from '../../../store/approvals.store';
 import { Modal } from 'libs/oneui/src/components/Modal';
 import { Button } from 'libs/oneui/src/components/Button';
-import { AlertNotification, CaptchaModal, LoadingSpinner, OtpModal, ToastNotification } from '@gscwd-apps/oneui';
+import { AlertNotification, LoadingSpinner, ToastNotification } from '@gscwd-apps/oneui';
 import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
 import { SelectOption } from 'libs/utils/src/lib/types/select.type';
 import { SubmitHandler, useForm } from 'react-hook-form';
@@ -11,7 +11,6 @@ import { leaveAction } from 'apps/portal/src/types/approvals.type';
 import { LeaveName, LeaveStatus, MonetizationType } from 'libs/utils/src/lib/enums/leave.enum';
 import { useEmployeeStore } from 'apps/portal/src/store/employee.store';
 import { ManagerConfirmationApproval, ManagerOtpApproval } from 'libs/utils/src/lib/enums/approval.enum';
-import { ApprovalOtpContents } from './ApprovalOtp/ApprovalOtpContents';
 import { ConfirmationApprovalModal } from './ApprovalOtp/ConfirmationApprovalModal';
 import { DateFormatter } from 'libs/utils/src/lib/functions/DateFormatter';
 import { DateTimeFormatter } from 'libs/utils/src/lib/functions/DateTimeFormatter';
@@ -20,9 +19,8 @@ import { fetchWithToken } from 'apps/portal/src/utils/hoc/fetcher';
 import useSWR from 'swr';
 import { useSupervisorLeaveApprovalLeaveLedgerStore } from 'apps/portal/src/store/supervisor-leave-approvals-leave-ledger.store';
 import { LeaveLedgerEntry } from 'libs/utils/src/lib/types/leave-ledger-entry.type';
-import { ApprovalCaptcha } from './ApprovalOtp/ApprovalCaptcha';
 import { JustificationLetterPdfModal } from './JustificationLetterPdfModal';
-import { format } from 'date-fns';
+import dayjs from 'dayjs';
 
 type ApprovalsPendingLeaveModalProps = {
   modalState: boolean;
@@ -154,8 +152,10 @@ export const ApprovalsPendingLeaveModal = ({
     setSickLeaveBalance(lastIndexValue.sickLeaveBalance ?? 0);
     setSpecialPrivilegeLeaveBalance(lastIndexValue.specialPrivilegeLeaveBalance ?? 0);
   };
-  const yearNow = format(new Date(), 'yyyy');
-  const leaveLedgerUrl = `${process.env.NEXT_PUBLIC_EMPLOYEE_MONITORING_URL}/v1/leave/ledger/${leaveIndividualDetail?.employee?.employeeId}/${leaveIndividualDetail?.employee?.companyId}/${yearNow}`;
+
+  const leaveLedgerUrl = `${process.env.NEXT_PUBLIC_EMPLOYEE_MONITORING_URL}/v1/leave/ledger/${
+    leaveIndividualDetail?.employee?.employeeId
+  }/${leaveIndividualDetail?.employee?.companyId}/${dayjs(leaveIndividualDetail?.dateOfFiling).year()}`;
 
   const {
     data: swrLeaveLedger,
@@ -235,13 +235,6 @@ export const ApprovalsPendingLeaveModal = ({
           {!leaveIndividualDetail ? (
             <div className="w-full h-[90%]  static flex flex-col justify-center items-center place-items-center">
               <LoadingSpinner size={'lg'} />
-              {/* <SpinnerDotted
-                  speed={70}
-                  thickness={70}
-                  className="flex w-full h-full transition-all "
-                  color="slateblue"
-                  size={100}
-                /> */}
             </div>
           ) : (
             <div className="flex flex-col w-full h-full ">
@@ -647,9 +640,7 @@ export const ApprovalsPendingLeaveModal = ({
                               <td className="border border-slate-400 text-center">
                                 {leaveIndividualDetail?.leaveName === LeaveName.VACATION ||
                                 leaveIndividualDetail?.leaveName === LeaveName.FORCED
-                                  ? parseFloat(`${vacationLeaveBalance}`)
-                                      // + parseFloat(`${forcedLeaveBalance}`)
-                                      .toFixed(3)
+                                  ? parseFloat(`${vacationLeaveBalance}`).toFixed(3)
                                   : leaveIndividualDetail?.leaveName === LeaveName.SICK
                                   ? sickLeaveBalance
                                   : leaveIndividualDetail?.leaveName === LeaveName.SPECIAL_PRIVILEGE
@@ -663,10 +654,7 @@ export const ApprovalsPendingLeaveModal = ({
                                 {leaveIndividualDetail?.leaveName === LeaveName.VACATION ||
                                 leaveIndividualDetail?.leaveName === LeaveName.FORCED
                                   ? (
-                                      parseFloat(`${vacationLeaveBalance}`) -
-                                      // +
-                                      // parseFloat(`${forcedLeaveBalance}`)
-                                      leaveIndividualDetail?.leaveDates?.length
+                                      parseFloat(`${vacationLeaveBalance}`) - leaveIndividualDetail?.leaveDates?.length
                                     ).toFixed(3)
                                   : leaveIndividualDetail?.leaveName === LeaveName.SICK
                                   ? (
@@ -678,6 +666,46 @@ export const ApprovalsPendingLeaveModal = ({
                                       leaveIndividualDetail?.leaveDates?.length
                                     ).toFixed(3)
                                   : 'N/A'}
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    ) : leaveIndividualDetail?.leaveName === LeaveName.MONETIZATION ? (
+                      <div className="w-full pb-4 mt-2">
+                        <span className="text-slate-500 text-md">
+                          Employee's Leave Credits at the time of this application:
+                        </span>
+                        <table className="mt-2 bg-slate-50 text-slate-600 border-collapse border-spacing-0 border border-slate-400 w-full ">
+                          <tbody className="rounded-md border">
+                            <tr>
+                              <td className="border border-slate-400 text-center">Leave Type</td>
+                              <td className="border border-slate-400 text-center">Total Earned</td>
+                              <td className="border border-slate-400 text-center">Less</td>
+                              <td className="border border-slate-400 text-center bg-green-100">Balance</td>
+                            </tr>
+                            {/* VL BALANCE */}
+                            <tr className="border-slate-400">
+                              <td className="border border-slate-400 text-center">Vacation</td>
+                              <td className="border border-slate-400 text-center">{vacationLeaveBalance}</td>
+                              <td className="border border-slate-400 text-center">
+                                {leaveIndividualDetail?.convertedVl}
+                              </td>
+                              <td className="border border-slate-400 text-center bg-green-100">
+                                {(parseFloat(`${vacationLeaveBalance}`) - leaveIndividualDetail?.convertedVl).toFixed(
+                                  3
+                                )}
+                              </td>
+                            </tr>
+                            {/* SL BALANCE */}
+                            <tr className="border-slate-400">
+                              <td className="border border-slate-400 text-center">Sick</td>
+                              <td className="border border-slate-400 text-center">{sickLeaveBalance}</td>
+                              <td className="border border-slate-400 text-center">
+                                {leaveIndividualDetail?.convertedSl}
+                              </td>
+                              <td className="border border-slate-400 text-center bg-green-100">
+                                {(parseFloat(`${sickLeaveBalance}`) - leaveIndividualDetail?.convertedSl).toFixed(3)}
                               </td>
                             </tr>
                           </tbody>
@@ -724,32 +752,6 @@ export const ApprovalsPendingLeaveModal = ({
             </div>
           )}
 
-          {/* <CaptchaModal
-            modalState={otpLeaveModalIsOpen}
-            setModalState={setOtpLeaveModalIsOpen}
-            title={'LEAVE APPROVAL CAPTCHA'}
-          >
-            <ApprovalCaptcha
-              employeeId={employeeDetails.user._id}
-              actionLeave={watch('status')}
-              tokenId={leaveIndividualDetail.id}
-              captchaName={ManagerConfirmationApproval.LEAVE}
-            />
-          </CaptchaModal> */}
-
-          {/* <OtpModal
-            modalState={otpLeaveModalIsOpen}
-            setModalState={setOtpLeaveModalIsOpen}
-            title={'LEAVE APPROVAL OTP'}
-          >
-            <ApprovalOtpContents
-              mobile={employeeDetails.profile.mobileNumber}
-              employeeId={employeeDetails.user._id}
-              actionLeave={watch('status')}
-              tokenId={leaveIndividualDetail.id}
-              otpName={ManagerOtpApproval.LEAVE}
-            />
-          </OtpModal> */}
           <ConfirmationApprovalModal
             modalState={confirmApplicationModalIsOpen}
             setModalState={setConfirmApplicationModalIsOpen}

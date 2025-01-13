@@ -23,6 +23,8 @@ import { DateTimeFormatter } from 'libs/utils/src/lib/functions/DateTimeFormatte
 import { DateFormatter } from 'libs/utils/src/lib/functions/DateFormatter';
 import { TextSize } from 'libs/utils/src/lib/enums/text-size.enum';
 import { JustificationLetterPdfModal } from './JustificationLetterPdfModal';
+import dayjs from 'dayjs';
+import { LeaveLedgerEntry } from 'libs/utils/src/lib/types/leave-ledger-entry.type';
 
 type ViewLeaveApplicationModalProps = {
   rowData: MonitoringLeave;
@@ -52,7 +54,12 @@ const ViewLeaveApplicationModal: FunctionComponent<ViewLeaveApplicationModalProp
   closeModalAction,
   setModalState,
 }) => {
-  const [moreLeaveDates, setMoreLeaveDates] = useState<boolean>(false); //expand leave dates list
+  // expand leave dates list
+  const [moreLeaveDates, setMoreLeaveDates] = useState<boolean>(false);
+
+  // Monetization Entry
+  const [vlEntry, setVlEntry] = useState<LeaveLedgerEntry>();
+  const [slEntry, setSlEntry] = useState<LeaveLedgerEntry>();
 
   // use context
   const {
@@ -108,10 +115,13 @@ const ViewLeaveApplicationModal: FunctionComponent<ViewLeaveApplicationModalProp
     }
   );
 
+  // Get the year from the Date of Filing
+  const yearFromDateOfFiling = dayjs(leaveApplicationDetails.leaveApplicationBasicInfo?.dateOfFiling).format('YYYY');
+
   // fetch leave ledger
   const { data: swrLeaveLedger, error: swrLedgerError } = useSWR(
     modalState && !isEmpty(leaveApplicationDetails)
-      ? `/leave/ledger/${rowData.employee?.employeeId}/${leaveApplicationDetails.employeeDetails?.companyId}`
+      ? `/leave/ledger/${rowData.employee?.employeeId}/${leaveApplicationDetails.employeeDetails?.companyId}/${yearFromDateOfFiling}`
       : null,
     fetcherEMS,
     {
@@ -202,6 +212,17 @@ const ViewLeaveApplicationModal: FunctionComponent<ViewLeaveApplicationModalProp
     setJlDocModalIsOpen(false);
   };
 
+  // Search for monetization entries
+  const searchMonetizationEntry = (ledger: Array<LeaveLedgerEntry>, refNo: string) => {
+    const debitEntries = ledger.filter((ledger) => ledger.remarks.includes(refNo));
+
+    const debitVl = debitEntries.filter((entries) => entries.remarks.includes('VL'));
+    setVlEntry(debitVl[0]);
+
+    const debitSl = debitEntries.filter((entries) => entries.remarks.includes('SL'));
+    setSlEntry(debitSl[0]);
+  };
+
   // is loading
   useEffect(() => {
     if (swrIsLoading) {
@@ -226,6 +247,10 @@ const ViewLeaveApplicationModal: FunctionComponent<ViewLeaveApplicationModalProp
       setSelectedLeaveLedger(swrLeaveLedger.data, rowData.id);
 
       setLeaveLedger(swrLeaveLedger.data);
+
+      if (rowData.leaveName === LeaveName.MONETIZATION) {
+        searchMonetizationEntry(swrLeaveLedger.data, rowData.referenceNo);
+      }
     }
   }, [swrLeaveLedger]);
 
@@ -334,7 +359,7 @@ const ViewLeaveApplicationModal: FunctionComponent<ViewLeaveApplicationModalProp
 
                   <hr />
 
-                  <div className="grid grid-cols-2 grid-rows-1 px-3 sm:gap-2 md:gap:2 lg:gap-0">
+                  <div className="grid grid-cols-2 grid-rows-1 px-3 gap-3">
                     <LabelValue label="Leave Type" direction="top-to-bottom" textSize="md" value={rowData.leaveName} />
 
                     <LabelValue
@@ -343,116 +368,113 @@ const ViewLeaveApplicationModal: FunctionComponent<ViewLeaveApplicationModalProp
                       textSize="md"
                       value={rowData.status ? UseRenderLeaveStatus(rowData.status, TextSize.TEXT_SM) : ''}
                     />
-                  </div>
 
-                  {/* Leave Dates and Number of Days */}
-                  {rowData.leaveName !== LeaveName.MONETIZATION && rowData.leaveName !== LeaveName.TERMINAL ? (
-                    <div className="grid grid-cols-2 grid-rows-1 px-3 sm:gap-2 md:gap:2 lg:gap-0">
-                      <LabelValue
-                        label="Applied Leave Dates"
-                        direction="top-to-bottom"
-                        textSize="md"
-                        value={
-                          rowData.leaveName === LeaveName.MATERNITY ||
-                          rowData.leaveName === LeaveName.STUDY ||
-                          rowData.leaveName === LeaveName.REHABILITATION ||
-                          rowData.leaveName === LeaveName.SPECIAL_LEAVE_BENEFITS_FOR_WOMEN ||
-                          rowData.leaveName === LeaveName.ADOPTION ? (
-                            // show first and last date (array) only if SBL (maternity, study, rehab...)
-                            `${DateFormatter(rowData.leaveDates[0], 'MM-DD-YYYY')} - ${DateFormatter(
-                              rowData.leaveDates[rowData.leaveDates?.length - 1],
-                              'MM-DD-YYYY'
-                            )}`
-                          ) : (
-                            // show all dates if not SBL (maternity, study, rehab...)
-                            <>
-                              <ul>
-                                {rowData.leaveDates?.map((dates: string, index: number) => {
-                                  if (moreLeaveDates) {
-                                    return <li key={index}>{DateFormatter(dates, 'MM-DD-YYYY')}</li>;
-                                  } else {
-                                    if (index <= 1) return <li key={index}>{DateFormatter(dates, 'MM-DD-YYYY')}</li>;
-                                  }
-                                })}
-                              </ul>
-                              {rowData.leaveDates?.length > 2 ? (
-                                <label
-                                  className="cursor-pointer text-sm text-indigo-500 hover:text-indigo-600"
-                                  onClick={(e) => setMoreLeaveDates(!moreLeaveDates)}
-                                >
-                                  {moreLeaveDates ? 'Less...' : 'More...'}
-                                </label>
-                              ) : null}
-                            </>
-                          )
-                        }
-                      />
+                    {/* Leave Dates and Number of Days */}
+                    {rowData.leaveName !== LeaveName.MONETIZATION && rowData.leaveName !== LeaveName.TERMINAL ? (
+                      <>
+                        <LabelValue
+                          label="Applied Leave Dates"
+                          direction="top-to-bottom"
+                          textSize="md"
+                          value={
+                            rowData.leaveName === LeaveName.MATERNITY ||
+                            rowData.leaveName === LeaveName.STUDY ||
+                            rowData.leaveName === LeaveName.REHABILITATION ||
+                            rowData.leaveName === LeaveName.SPECIAL_LEAVE_BENEFITS_FOR_WOMEN ||
+                            rowData.leaveName === LeaveName.ADOPTION ? (
+                              // show first and last date (array) only if SBL (maternity, study, rehab...)
+                              `${DateFormatter(rowData.leaveDates[0], 'MM-DD-YYYY')} - ${DateFormatter(
+                                rowData.leaveDates[rowData.leaveDates?.length - 1],
+                                'MM-DD-YYYY'
+                              )}`
+                            ) : (
+                              // show all dates if not SBL (maternity, study, rehab...)
+                              <>
+                                <ul>
+                                  {rowData.leaveDates?.map((dates: string, index: number) => {
+                                    if (moreLeaveDates) {
+                                      return <li key={index}>{DateFormatter(dates, 'MM-DD-YYYY')}</li>;
+                                    } else {
+                                      if (index <= 1) return <li key={index}>{DateFormatter(dates, 'MM-DD-YYYY')}</li>;
+                                    }
+                                  })}
+                                </ul>
+                                {rowData.leaveDates?.length > 2 ? (
+                                  <label
+                                    className="cursor-pointer text-sm text-indigo-500 hover:text-indigo-600"
+                                    onClick={(e) => setMoreLeaveDates(!moreLeaveDates)}
+                                  >
+                                    {moreLeaveDates ? 'Less...' : 'More...'}
+                                  </label>
+                                ) : null}
+                              </>
+                            )
+                          }
+                        />
 
-                      <LabelValue
-                        label="Applied Number of Days"
-                        direction="top-to-bottom"
-                        textSize="md"
-                        value={
-                          !isEmpty(leaveApplicationDetails.leaveApplicationBasicInfo?.leaveDates)
-                            ? leaveApplicationDetails.leaveApplicationBasicInfo?.leaveDates.length
-                            : 0
-                        }
-                      />
-                    </div>
-                  ) : null}
+                        <LabelValue
+                          label="Applied Number of Days"
+                          direction="top-to-bottom"
+                          textSize="md"
+                          value={
+                            !isEmpty(leaveApplicationDetails.leaveApplicationBasicInfo?.leaveDates)
+                              ? leaveApplicationDetails.leaveApplicationBasicInfo?.leaveDates.length
+                              : 0
+                          }
+                        />
+                      </>
+                    ) : null}
 
-                  {/* MONETIZATION - Converted Credits and Amount */}
-                  {leaveApplicationDetails?.leaveApplicationBasicInfo?.leaveName === LeaveName.MONETIZATION ? (
-                    <div className="grid grid-cols-2 grid-rows-1 px-3 sm:gap-2 md:gap:2 lg:gap-0">
-                      <LabelValue
-                        label="Type"
-                        direction="top-to-bottom"
-                        textSize="md"
-                        value={
-                          !isEmpty(
-                            leaveApplicationDetails.leaveApplicationDetails.monetizationType == MonetizationType.MAX20
+                    {/* MONETIZATION - Converted Credits and Amount */}
+                    {leaveApplicationDetails?.leaveApplicationBasicInfo?.leaveName === LeaveName.MONETIZATION ? (
+                      <>
+                        <LabelValue
+                          label="Type"
+                          direction="top-to-bottom"
+                          textSize="md"
+                          value={
+                            leaveApplicationDetails?.leaveApplicationDetails?.monetizationType ===
+                            MonetizationType.MAX20
                               ? 'Max 20 Credits'
                               : 'Max 50% of Credits'
-                          )
-                        }
-                      />
+                          }
+                        />
 
-                      <LabelValue
-                        label="Converted Credits"
-                        direction="top-to-bottom"
-                        textSize="md"
-                        value={` VL: ${leaveApplicationDetails?.leaveApplicationDetails?.convertedVl} / SL: ${leaveApplicationDetails?.leaveApplicationDetails?.convertedSl}`}
-                      />
+                        <LabelValue
+                          label="Converted Credits"
+                          direction="top-to-bottom"
+                          textSize="md"
+                          value={` VL: ${leaveApplicationDetails?.leaveApplicationDetails?.convertedVl} / SL: ${leaveApplicationDetails?.leaveApplicationDetails?.convertedSl}`}
+                        />
 
-                      <LabelValue
-                        label="Amount"
-                        direction="top-to-bottom"
-                        textSize="md"
-                        value={leaveApplicationDetails?.leaveApplicationDetails?.monetizedAmount}
-                      />
-                    </div>
-                  ) : null}
+                        <LabelValue
+                          label="Amount"
+                          direction="top-to-bottom"
+                          textSize="md"
+                          value={leaveApplicationDetails?.leaveApplicationDetails?.monetizedAmount}
+                        />
+                      </>
+                    ) : null}
 
-                  {/* TERMINAL LEAVE - Converted Credits and Amount */}
-                  {leaveApplicationDetails?.leaveApplicationBasicInfo?.leaveName === LeaveName.TERMINAL ? (
-                    <div className="grid grid-cols-2 grid-rows-1 px-3 sm:gap-2 md:gap:2 lg:gap-0">
-                      <LabelValue
-                        label="Converted Credits"
-                        direction="top-to-bottom"
-                        textSize="md"
-                        value={` VL: ${leaveApplicationDetails?.leaveApplicationDetails?.vlBalance.afterTerminalLeave} / SL: ${leaveApplicationDetails?.leaveApplicationDetails?.slBalance.afterTerminalLeave}`}
-                      />
+                    {/* TERMINAL LEAVE - Converted Credits and Amount */}
+                    {leaveApplicationDetails?.leaveApplicationBasicInfo?.leaveName === LeaveName.TERMINAL ? (
+                      <>
+                        <LabelValue
+                          label="Converted Credits"
+                          direction="top-to-bottom"
+                          textSize="md"
+                          value={` VL: ${leaveApplicationDetails?.leaveApplicationDetails?.vlBalance.afterTerminalLeave} / SL: ${leaveApplicationDetails?.leaveApplicationDetails?.slBalance.afterTerminalLeave}`}
+                        />
 
-                      <LabelValue
-                        label="Amount"
-                        direction="top-to-bottom"
-                        textSize="md"
-                        value={leaveApplicationDetails?.leaveApplicationDetails?.monetizedAmount}
-                      />
-                    </div>
-                  ) : null}
+                        <LabelValue
+                          label="Amount"
+                          direction="top-to-bottom"
+                          textSize="md"
+                          value={leaveApplicationDetails?.leaveApplicationDetails?.monetizedAmount}
+                        />
+                      </>
+                    ) : null}
 
-                  <div className="grid grid-cols-2 grid-rows-1 px-3 sm:gap-2 md:gap:2 lg:gap-0">
                     {/* VACATION LEAVE */}
                     {!isEmpty(leaveApplicationDetails.leaveApplicationDetails?.inPhilippinesOrAbroad) ? (
                       <>
@@ -529,6 +551,7 @@ const ViewLeaveApplicationModal: FunctionComponent<ViewLeaveApplicationModalProp
 
                   <hr />
 
+                  {/* SUPERVISOR AND ASSIGNMENT */}
                   <div className="grid grid-cols-2 grid-rows-1 px-3 sm:gap-2 md:gap:2 lg:gap-0">
                     <LabelValue
                       label="Supervisor Name"
@@ -545,6 +568,7 @@ const ViewLeaveApplicationModal: FunctionComponent<ViewLeaveApplicationModalProp
                   </div>
                 </div>
 
+                {/* ANY SPECIAL LEAVE BENEFIT TYPE OF LEAVE AND IS ON PENDING */}
                 <div className="grid grid-cols-2 grid-rows-1 px-3 sm:gap-2 md:gap:2 lg:gap-0">
                   {leaveApplicationDetails.leaveApplicationBasicInfo?.leaveType === LeaveType.SPECIAL &&
                     leaveApplicationDetails.leaveApplicationBasicInfo.status ===
@@ -560,7 +584,6 @@ const ViewLeaveApplicationModal: FunctionComponent<ViewLeaveApplicationModalProp
                         />
                       </div>
                     )}
-
                   {leaveApplicationDetails.leaveApplicationBasicInfo?.leaveType === LeaveType.SPECIAL &&
                     leaveApplicationDetails.leaveApplicationBasicInfo.status ===
                       LeaveStatus.FOR_HRMO_CREDIT_CERTIFICATION && (
@@ -580,7 +603,7 @@ const ViewLeaveApplicationModal: FunctionComponent<ViewLeaveApplicationModalProp
 
                 <hr />
 
-                {/* TRAIL */}
+                {/* TRAIL OF APPROVAL */}
                 <div className="grid grid-cols-1 grid-rows-1 px-7 sm:gap-2 md:gap:2 lg:gap-0">
                   <LabelValue
                     label="Date of Filing: "
@@ -714,56 +737,6 @@ const ViewLeaveApplicationModal: FunctionComponent<ViewLeaveApplicationModalProp
                               </tr>
                             ) : null}
 
-                            {/* {rowData.leaveName === LeaveName.VACATION
-                              ? parseFloat(`${selectedLeaveLedger[0]?.vacationLeaveBalance}`).toFixed(3)
-                              : rowData.leaveName === LeaveName.FORCED
-                              ? (
-                                  parseFloat(`${selectedLeaveLedger[0]?.vacationLeaveBalance}`) -
-                                  rowData.leaveDates?.length
-                                ).toFixed(3)
-                              : rowData.leaveName === LeaveName.SICK
-                              ? selectedLeaveLedger[0]?.sickLeaveBalance
-                              : rowData.leaveName === LeaveName.SPECIAL_PRIVILEGE
-                              ? selectedLeaveLedger[0]?.specialPrivilegeLeaveBalance
-                              : 'N/A'} */}
-
-                            {/* {rowData.leaveName === LeaveName.VACATION || rowData.leaveName === LeaveName.FORCED ? (
-                              <tr className="border border-slate-400">
-                                <td className="border border-slate-400 text-center">
-                                  {rowData.status === LeaveStatus.FOR_HRMO_CREDIT_CERTIFICATION ||
-                                  rowData.status === LeaveStatus.FOR_SUPERVISOR_APPROVAL ||
-                                  rowData.status === LeaveStatus.FOR_HRDM_APPROVAL
-                                    ? (
-                                        parseFloat(`${leaveLedger[leaveLedger.length - 1]?.vacationLeaveBalance}`) +
-                                        parseFloat(`${leaveLedger[leaveLedger.length - 1]?.forcedLeaveBalance}`)
-                                      ).toFixed(3)
-                                    : (
-                                        parseFloat(`${selectedLeaveLedger[0]?.vacationLeaveBalance}`) +
-                                        parseFloat(`${selectedLeaveLedger[0]?.vacationLeave}`) * -1 +
-                                        parseFloat(`${selectedLeaveLedger[0]?.forcedLeaveBalance}`) +
-                                        parseFloat(`${selectedLeaveLedger[0]?.forcedLeave}`) * -1
-                                      ).toFixed(3)}
-                                </td>
-                                <td className="border border-slate-400 text-center">
-                                  {rowData.leaveDates?.length.toFixed(3)}
-                                </td>
-                                <td className="border border-slate-400 text-center bg-green-100">
-                                  {rowData.status === LeaveStatus.FOR_HRMO_CREDIT_CERTIFICATION ||
-                                  rowData.status === LeaveStatus.FOR_SUPERVISOR_APPROVAL ||
-                                  rowData.status === LeaveStatus.FOR_HRDM_APPROVAL
-                                    ? (
-                                        parseFloat(`${leaveLedger[leaveLedger.length - 1]?.vacationLeaveBalance}`) +
-                                        parseFloat(`${leaveLedger[leaveLedger.length - 1]?.forcedLeaveBalance}`) -
-                                        parseFloat(`${rowData.leaveDates?.length}`)
-                                      ).toFixed(3)
-                                    : (
-                                        parseFloat(`${selectedLeaveLedger[0]?.vacationLeaveBalance}`) +
-                                        parseFloat(`${selectedLeaveLedger[0]?.forcedLeaveBalance}`)
-                                      ).toFixed(3)}
-                                </td>
-                              </tr>
-                            ) : null} */}
-
                             {/* SICK */}
                             {rowData.leaveName === LeaveName.SICK ? (
                               <tr className="border border-slate-400">
@@ -842,6 +815,168 @@ const ViewLeaveApplicationModal: FunctionComponent<ViewLeaveApplicationModalProp
                                 </td>
                               </tr>
                             ) : null}
+                          </tbody>
+                        </table>
+                      </div>
+                    ) : rowData.leaveName === LeaveName.MONETIZATION ? (
+                      // MONETIZATION
+                      <div className="w-full pb-4">
+                        <span className="text-slate-500 text-md">
+                          Your {rowData.leaveName} Credits at the time of this application:
+                        </span>
+                        <table className="mt-2 bg-slate-50 text-slate-600 border-collapse border-spacing-0 border border-slate-400 w-full rounded-md">
+                          <tbody>
+                            <tr className="border border-slate-400">
+                              <td className="border border-slate-400 text-center">Leave Type</td>
+                              <td className="border border-slate-400 text-center">Total Earned</td>
+                              <td className="border border-slate-400 text-center">Less this app.</td>
+                              <td className="border border-slate-400 text-center bg-green-100">Balance</td>
+                            </tr>
+
+                            {/* VL */}
+                            <tr className="border border-slate-400">
+                              <td className="border border-slate-400 text-center">Vacation Leave</td>
+
+                              <td className="border border-slate-400 text-center">
+                                {rowData.status === LeaveStatus.FOR_HRMO_CREDIT_CERTIFICATION ||
+                                rowData.status === LeaveStatus.FOR_SUPERVISOR_APPROVAL ||
+                                rowData.status === LeaveStatus.FOR_HRDM_APPROVAL
+                                  ? Number(
+                                      parseFloat(`${leaveLedger[leaveLedger.length - 1]?.vacationLeaveBalance}`)
+                                    ).toFixed(3)
+                                  : (
+                                      Number(parseFloat(`${vlEntry?.vacationLeaveBalance}`)) +
+                                      parseFloat(`${rowData.convertedVl}`)
+                                    ).toFixed(3)}
+                              </td>
+
+                              <td className="border border-slate-400 text-center">{rowData.convertedVl}</td>
+
+                              <td className="border border-slate-400 text-center bg-green-100">
+                                {rowData.status === LeaveStatus.FOR_HRMO_CREDIT_CERTIFICATION ||
+                                rowData.status === LeaveStatus.FOR_SUPERVISOR_APPROVAL ||
+                                rowData.status === LeaveStatus.FOR_HRDM_APPROVAL
+                                  ? Number(
+                                      parseFloat(`${leaveLedger[leaveLedger.length - 1]?.vacationLeaveBalance}`) -
+                                        parseFloat(`${rowData.convertedVl}`)
+                                    ).toFixed(3)
+                                  : vlEntry?.vacationLeaveBalance}
+                              </td>
+                            </tr>
+
+                            {/* SL */}
+                            <tr className="border border-slate-400">
+                              <td className="border border-slate-400 text-center">Sick Leave</td>
+
+                              <td className="border border-slate-400 text-center">
+                                {rowData.status === LeaveStatus.FOR_HRMO_CREDIT_CERTIFICATION ||
+                                rowData.status === LeaveStatus.FOR_SUPERVISOR_APPROVAL ||
+                                rowData.status === LeaveStatus.FOR_HRDM_APPROVAL
+                                  ? Number(
+                                      parseFloat(`${leaveLedger[leaveLedger.length - 1]?.sickLeaveBalance}`)
+                                    ).toFixed(3)
+                                  : Number(
+                                      parseFloat(`${slEntry?.sickLeaveBalance}`) + parseFloat(`${rowData.convertedSl}`)
+                                    ).toFixed(3)}
+                              </td>
+                              <td className="border border-slate-400 text-center">{rowData.convertedSl}</td>
+
+                              <td className="border border-slate-400 text-center bg-green-100">
+                                {rowData.status === LeaveStatus.FOR_HRMO_CREDIT_CERTIFICATION ||
+                                rowData.status === LeaveStatus.FOR_SUPERVISOR_APPROVAL ||
+                                rowData.status === LeaveStatus.FOR_HRDM_APPROVAL
+                                  ? Number(
+                                      parseFloat(`${leaveLedger[leaveLedger.length - 1]?.sickLeaveBalance}`) -
+                                        parseFloat(`${rowData.convertedSl}`)
+                                    ).toFixed(3)
+                                  : slEntry?.sickLeaveBalance}
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    ) : rowData.leaveName === LeaveName.TERMINAL ? (
+                      // TERMINAL
+                      <div className="w-full pb-4">
+                        <span className="text-slate-500 text-md">Your {rowData.leaveName} Credits breakdown:</span>
+                        <table className="mt-2 bg-slate-50 text-slate-600 border-collapse border-spacing-0 border border-slate-400 w-full rounded-md">
+                          <tbody>
+                            <tr className="border border-slate-400">
+                              <td className="border border-slate-400 text-center">Leave Type</td>
+                              <td className="border border-slate-400 text-center">Current Credits</td>
+                              <td className="border border-slate-400 text-center">Unearned Credits</td>
+                              <td className="border border-slate-400 text-center bg-green-100">Total Credits</td>
+                            </tr>
+
+                            {/* VL */}
+                            <tr className="border border-slate-400">
+                              <td className="border border-slate-400 text-center">Vacation Leave</td>
+
+                              <td className="border border-slate-400 text-center">
+                                {rowData.status === LeaveStatus.FOR_HRMO_CREDIT_CERTIFICATION ||
+                                rowData.status === LeaveStatus.FOR_SUPERVISOR_APPROVAL ||
+                                rowData.status === LeaveStatus.FOR_HRDM_APPROVAL
+                                  ? Number(
+                                      parseFloat(`${leaveLedger[leaveLedger.length - 1]?.vacationLeaveBalance}`)
+                                    ).toFixed(3)
+                                  : Number(
+                                      parseFloat(
+                                        `${leaveApplicationDetails.leaveApplicationDetails?.vlBalance?.beforeTerminalLeave}`
+                                      )
+                                    ).toFixed(3)}
+                              </td>
+
+                              <td className="border border-slate-400 text-center">
+                                {Number(
+                                  parseFloat(
+                                    `${leaveApplicationDetails.leaveApplicationDetails?.vlBalance?.afterTerminalLeave}`
+                                  ) - parseFloat(`${leaveLedger[leaveLedger.length - 1]?.vacationLeaveBalance}`)
+                                ).toFixed(3)}
+                              </td>
+
+                              <td className="border border-slate-400 text-center bg-green-100">
+                                {Number(
+                                  parseFloat(
+                                    `${leaveApplicationDetails.leaveApplicationDetails?.vlBalance?.afterTerminalLeave}`
+                                  )
+                                ).toFixed(3)}
+                              </td>
+                            </tr>
+
+                            {/* SL */}
+                            <tr className="border border-slate-400">
+                              <td className="border border-slate-400 text-center">Sick Leave</td>
+
+                              <td className="border border-slate-400 text-center">
+                                {rowData.status === LeaveStatus.FOR_HRMO_CREDIT_CERTIFICATION ||
+                                rowData.status === LeaveStatus.FOR_SUPERVISOR_APPROVAL ||
+                                rowData.status === LeaveStatus.FOR_HRDM_APPROVAL
+                                  ? Number(
+                                      parseFloat(`${leaveLedger[leaveLedger.length - 1]?.sickLeaveBalance}`)
+                                    ).toFixed(3)
+                                  : Number(
+                                      parseFloat(
+                                        `${leaveApplicationDetails.leaveApplicationDetails?.slBalance?.beforeTerminalLeave}`
+                                      )
+                                    ).toFixed(3)}
+                              </td>
+
+                              <td className="border border-slate-400 text-center">
+                                {Number(
+                                  parseFloat(
+                                    `${leaveApplicationDetails.leaveApplicationDetails?.slBalance?.afterTerminalLeave}`
+                                  ) - parseFloat(`${leaveLedger[leaveLedger.length - 1]?.sickLeaveBalance}`)
+                                ).toFixed(3)}
+                              </td>
+
+                              <td className="border border-slate-400 text-center bg-green-100">
+                                {Number(
+                                  parseFloat(
+                                    `${leaveApplicationDetails.leaveApplicationDetails?.slBalance?.afterTerminalLeave}`
+                                  )
+                                ).toFixed(3)}
+                              </td>
+                            </tr>
                           </tbody>
                         </table>
                       </div>

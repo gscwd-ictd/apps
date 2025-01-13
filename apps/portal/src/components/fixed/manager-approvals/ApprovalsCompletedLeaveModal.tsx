@@ -13,7 +13,8 @@ import { useSupervisorLeaveApprovalLeaveLedgerStore } from 'apps/portal/src/stor
 import useSWR from 'swr';
 import { isEmpty } from 'lodash';
 import { JustificationLetterPdfModal } from './JustificationLetterPdfModal';
-import { format } from 'date-fns';
+import dayjs from 'dayjs';
+import { LeaveLedgerEntry } from 'libs/utils/src/lib/types/leave-ledger-entry.type';
 
 type ApprovalsCompletedLeaveModalProps = {
   modalState: boolean;
@@ -34,7 +35,21 @@ export const ApprovalsCompletedLeaveModal = ({
     }));
 
   const [moreLeaveDates, setMoreLeaveDates] = useState<boolean>(false);
+  // Monetization Entry
+  const [vlEntry, setVlEntry] = useState<LeaveLedgerEntry>();
+  const [slEntry, setSlEntry] = useState<LeaveLedgerEntry>();
   const { windowWidth } = UseWindowDimensions();
+
+  // Search for monetization entries
+  const searchMonetizationEntry = (ledger: Array<LeaveLedgerEntry>, refNo: string) => {
+    let debitEntries = ledger?.filter((ledger) => ledger.remarks.includes(refNo));
+
+    const debitVl = debitEntries?.filter((entries) => entries.remarks.includes('VL'));
+    setVlEntry(debitVl[0]);
+
+    const debitSl = debitEntries?.filter((entries) => entries.remarks.includes('SL'));
+    setSlEntry(debitSl[0]);
+  };
 
   useEffect(() => {
     setMoreLeaveDates(false);
@@ -56,8 +71,10 @@ export const ApprovalsCompletedLeaveModal = ({
     getLeaveLedgerSuccess: state.getLeaveLedgerSuccess,
     getLeaveLedgerFail: state.getLeaveLedgerFail,
   }));
-  const yearNow = format(new Date(), 'yyyy');
-  const leaveLedgerUrl = `${process.env.NEXT_PUBLIC_EMPLOYEE_MONITORING_URL}/v1/leave/ledger/${leaveIndividualDetail?.employee?.employeeId}/${leaveIndividualDetail?.employee?.companyId}/${yearNow}`;
+
+  const leaveLedgerUrl = `${process.env.NEXT_PUBLIC_EMPLOYEE_MONITORING_URL}/v1/leave/ledger/${
+    leaveIndividualDetail?.employee?.employeeId
+  }/${leaveIndividualDetail?.employee?.companyId}/${dayjs(leaveIndividualDetail?.dateOfFiling).year()}`;
 
   const {
     data: swrLeaveLedger,
@@ -87,8 +104,13 @@ export const ApprovalsCompletedLeaveModal = ({
       setSelectedLeaveLedger(swrLeaveLedger, leaveIndividualDetail.id);
       getLeaveLedgerSuccess(swrLeaveLedgerLoading, swrLeaveLedger);
       // getLatestBalance(swrLeaveLedger);
+      if (
+        leaveIndividualDetail?.leaveName === LeaveName.MONETIZATION &&
+        leaveIndividualDetail?.status === LeaveStatus.APPROVED
+      ) {
+        searchMonetizationEntry(swrLeaveLedger, leaveIndividualDetail?.referenceNo);
+      }
     }
-
     if (!isEmpty(swrLeaveLedgerError)) {
       getLeaveLedgerFail(swrLeaveLedgerLoading, swrLeaveLedgerError.message);
     }
@@ -135,13 +157,6 @@ export const ApprovalsCompletedLeaveModal = ({
           {!leaveIndividualDetail ? (
             <div className="w-full h-[90%]  static flex flex-col justify-center items-center place-items-center">
               <LoadingSpinner size={'lg'} />
-              {/* <SpinnerDotted
-                  speed={70}
-                  thickness={70}
-                  className="w-full flex h-full transition-all "
-                  color="slateblue"
-                  size={100}
-                /> */}
             </div>
           ) : (
             <div className="w-full h-full flex flex-col  ">
@@ -586,6 +601,55 @@ export const ApprovalsCompletedLeaveModal = ({
                                   : leaveIndividualDetail?.leaveName === LeaveName.SPECIAL_PRIVILEGE
                                   ? selectedLeaveLedger[0]?.specialPrivilegeLeaveBalance
                                   : 'N/A'}
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    ) : leaveIndividualDetail?.leaveName === LeaveName.MONETIZATION &&
+                      leaveIndividualDetail?.status === LeaveStatus.APPROVED ? (
+                      <div className="w-full pb-4">
+                        <span className="text-slate-500 text-md">
+                          Employee's Leave Credits at the time of this application:
+                        </span>
+                        <table className="mt-2 bg-slate-50 text-slate-600 border-collapse border-spacing-0 border border-slate-400 w-full rounded-md">
+                          <tbody>
+                            <tr className="border border-slate-400">
+                              <td className="border border-slate-400 text-center">Leave Type</td>
+                              <td className="border border-slate-400 text-center">Total Earned</td>
+                              <td className="border border-slate-400 text-center">Less</td>
+                              <td className="border border-slate-400 text-center bg-green-100">Balance</td>
+                            </tr>
+                            {/* VL BALANCE */}
+                            <tr className="border border-slate-400">
+                              <td className="border border-slate-400 text-center">Vacation</td>
+                              <td className="border border-slate-400 text-center">
+                                {(
+                                  parseFloat(`${vlEntry?.vacationLeaveBalance}`) +
+                                  parseFloat(`${leaveIndividualDetail?.convertedVl}`)
+                                ).toFixed(3)}
+                              </td>
+                              <td className="border border-slate-400 text-center">
+                                {leaveIndividualDetail?.convertedVl}
+                              </td>
+                              <td className="border border-slate-400 text-center bg-green-100">
+                                {vlEntry?.vacationLeaveBalance}
+                              </td>
+                            </tr>
+                            {/* SL BALANCE */}
+                            <tr className="border border-slate-400">
+                              <td className="border border-slate-400 text-center">Sick</td>
+                              <td className="border border-slate-400 text-center">
+                                {(
+                                  parseFloat(`${slEntry?.sickLeaveBalance}`) +
+                                  parseFloat(`${leaveIndividualDetail?.convertedSl}`)
+                                ).toFixed(3)}
+                              </td>
+                              <td className="border border-slate-400 text-center">
+                                {leaveIndividualDetail?.convertedSl}
+                              </td>
+                              <td className="border border-slate-400 text-center bg-green-100">
+                                {slEntry?.sickLeaveBalance}
                               </td>
                             </tr>
                           </tbody>

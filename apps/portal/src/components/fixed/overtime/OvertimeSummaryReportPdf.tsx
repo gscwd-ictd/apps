@@ -787,7 +787,7 @@ export const OvertimeSummaryReportPdf = ({
                   }}
                 >
                   <Image
-                    style={{ width: 40, marginBottom: 2 }}
+                    style={{ width: 80, marginBottom: -10 }}
                     src={
                       process.env.NEXT_PUBLIC_IMAGE_SERVER_URL +
                       overtimeSummaryReport?.signatories?.preparedBy?.signature
@@ -829,7 +829,7 @@ export const OvertimeSummaryReportPdf = ({
                   }}
                 >
                   <Image
-                    style={{ width: 40, marginBottom: 2 }}
+                    style={{ width: 80, marginBottom: -10 }}
                     src={
                       process.env.NEXT_PUBLIC_IMAGE_SERVER_URL + overtimeSummaryReport?.signatories?.notedBy?.signature
                         ? process.env.NEXT_PUBLIC_IMAGE_SERVER_URL +
@@ -869,7 +869,7 @@ export const OvertimeSummaryReportPdf = ({
                   }}
                 >
                   <Image
-                    style={{ width: 40, marginBottom: 2 }}
+                    style={{ width: 80, marginBottom: -10 }}
                     src={
                       process.env.NEXT_PUBLIC_IMAGE_SERVER_URL +
                       overtimeSummaryReport?.signatories?.approvedBy?.signature
