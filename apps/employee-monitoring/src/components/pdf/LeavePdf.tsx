@@ -556,7 +556,6 @@ export const LeavePdf = ({ leaveDetails, selectedLeaveLedger, vlEntry, slEntry }
                             : null}
                         </Text>
                         <Text style={styles.leaveLabel}>Abroad (Specify)</Text>
-                        {/* <Text style={{ fontSize: 6, paddingLeft: 45 }}>_______________________________</Text> */}
                         <Text
                           style={{
                             fontSize: 7.5,
@@ -586,7 +585,6 @@ export const LeavePdf = ({ leaveDetails, selectedLeaveLedger, vlEntry, slEntry }
                             : null}
                         </Text>
                         <Text style={styles.leaveLabel}>In Hospital (Specify Illness)</Text>
-                        {/* <Text style={{ fontSize: 6, paddingLeft: 5 }}>_______________________________</Text> */}
                         <Text
                           style={{
                             fontSize: 7.5,
@@ -614,7 +612,6 @@ export const LeavePdf = ({ leaveDetails, selectedLeaveLedger, vlEntry, slEntry }
                             : null}
                         </Text>
                         <Text style={styles.leaveLabel}>Out Patient (Specify Illness)</Text>
-                        {/* <Text style={{ fontSize: 6, paddingLeft: 3 }}>_______________________________</Text> */}
                         <Text
                           style={{
                             fontSize: 7.5,
@@ -635,9 +632,7 @@ export const LeavePdf = ({ leaveDetails, selectedLeaveLedger, vlEntry, slEntry }
                       <Text style={styles.inCase}>In case of Special Leave Benefit for Women:</Text>
                       <View style={styles.leaveLabelContainer2}>
                         <Text style={styles.leaveLabel}>(Specify Illness):</Text>
-                        {/* <Text style={{ fontSize: 6, paddingLeft: 5 }}>
-                          ________________________________________________
-                        </Text> */}
+
                         <Text
                           style={{
                             fontSize: 7.5,
@@ -737,20 +732,16 @@ export const LeavePdf = ({ leaveDetails, selectedLeaveLedger, vlEntry, slEntry }
                           }}
                         >
                           {leaveDetails.leaveApplicationBasicInfo.leaveName == LeaveName.MONETIZATION
-                            ? `P${leaveDetails.employeeDetails.assignment.salary.substring(1)} x ${
+                            ? `${
                                 Number(leaveDetails.leaveApplicationDetails.convertedVl) +
                                 Number(leaveDetails.leaveApplicationDetails.convertedSl)
-                              } day(s) x ${
-                                process.env.NEXT_PUBLIC_MONETIZATION_CONSTANT
-                              } = P${leaveDetails.leaveApplicationDetails.monetizedAmount.substring(1)} `
+                              } day(s)`
                             : leaveDetails.leaveApplicationBasicInfo.leaveName == LeaveName.TERMINAL
-                            ? `P${leaveDetails.employeeDetails.assignment.salary.substring(1)} x ${
+                            ? `${
                                 Number(leaveDetails.leaveApplicationDetails.vlBalance.afterTerminalLeave) +
                                 Number(leaveDetails.leaveApplicationDetails.slBalance.afterTerminalLeave)
-                              } day(s) x ${
-                                process.env.NEXT_PUBLIC_MONETIZATION_CONSTANT
-                              } = P${leaveDetails.leaveApplicationDetails.monetizedAmount.substring(1)} `
-                            : leaveDetails.leaveApplicationBasicInfo.leaveDates.length}
+                              } day(s)`
+                            : `${leaveDetails.leaveApplicationBasicInfo.leaveDates.length} day(s)`}
                         </Text>
                         <Text style={{ padding: 5 }}>_____________________________________________________</Text>
                       </View>
@@ -779,8 +770,22 @@ export const LeavePdf = ({ leaveDetails, selectedLeaveLedger, vlEntry, slEntry }
                             textIndent: 5,
                           }}
                         >
-                          {leaveDetails.leaveApplicationBasicInfo.leaveDates
-                            ? leaveDetails.leaveApplicationBasicInfo.leaveDates.length > 5
+                          {leaveDetails.leaveApplicationBasicInfo.leaveName == LeaveName.MONETIZATION // Monetized
+                            ? `	P${leaveDetails.employeeDetails.assignment.salary.substring(1)} x ${
+                                Number(leaveDetails.leaveApplicationDetails.convertedVl) +
+                                Number(leaveDetails.leaveApplicationDetails.convertedSl)
+                              } day(s) x ${
+                                process.env.NEXT_PUBLIC_MONETIZATION_CONSTANT
+                              } = P${leaveDetails.leaveApplicationDetails.monetizedAmount.substring(1)} `
+                            : leaveDetails.leaveApplicationBasicInfo.leaveName == LeaveName.TERMINAL // Terminal
+                            ? `P${leaveDetails.employeeDetails.assignment.salary.substring(1)} x ${
+                                Number(leaveDetails.leaveApplicationDetails.vlBalance.afterTerminalLeave) +
+                                Number(leaveDetails.leaveApplicationDetails.slBalance.afterTerminalLeave)
+                              } day(s) x ${
+                                process.env.NEXT_PUBLIC_MONETIZATION_CONSTANT
+                              } = P${leaveDetails.leaveApplicationDetails.monetizedAmount.substring(1)} `
+                            : !isEmpty(leaveDetails.leaveApplicationBasicInfo.leaveDates) // Other types of leave
+                            ? leaveDetails.leaveApplicationBasicInfo.leaveDates.length > 5 // if greater than 5 days
                               ? `From ${leaveDetails.leaveApplicationBasicInfo.leaveDates[0]} To ${
                                   leaveDetails.leaveApplicationBasicInfo.leaveDates[
                                     leaveDetails.leaveApplicationBasicInfo.leaveDates.length - 1
@@ -791,29 +796,6 @@ export const LeavePdf = ({ leaveDetails, selectedLeaveLedger, vlEntry, slEntry }
                         </Text>
                         <Text style={{ padding: 5 }}>_____________________________________________________</Text>
                       </View>
-
-                      {/* <Text>6.C NUMBER OF WORKING DAYS APPLIED FOR</Text>
-                      <Text
-                        style={{
-                          fontSize: 8,
-                          position: 'absolute',
-                          padding: 6,
-                          marginTop: 10,
-                          lineHeight: 2.1,
-                        }}
-                      >
-                        {leaveDetails.leaveApplicationBasicInfo?.leaveDates
-                          ? leaveDetails.leaveApplicationBasicInfo?.leaveDates.length > 18
-                            ? `From ${leaveDetails.leaveApplicationBasicInfo?.leaveDates[0]} To ${
-                                leaveDetails.leaveApplicationBasicInfo?.leaveDates[
-                                  leaveDetails.leaveApplicationBasicInfo?.leaveDates.length - 1
-                                ]
-                              }`
-                            : leaveDetails.leaveApplicationBasicInfo?.leaveDates.join(', ')
-                          : null}
-                      </Text>
-                      <Text style={{ padding: 5 }}>_____________________________________________________</Text>
-                      <Text style={{ padding: 5 }}>_____________________________________________________</Text> */}
                     </View>
 
                     {/* 6.D */}
@@ -1162,9 +1144,19 @@ export const LeavePdf = ({ leaveDetails, selectedLeaveLedger, vlEntry, slEntry }
                           marginLeft: 13,
                         }}
                       >
-                        {leaveDetails.leaveApplicationBasicInfo?.leaveName != LeaveName.LEAVE_WITHOUT_PAY
-                          ? leaveDetails?.leaveApplicationBasicInfo?.leaveDates?.length
-                          : 0}
+                        {leaveDetails.leaveApplicationBasicInfo?.leaveName === LeaveName.LEAVE_WITHOUT_PAY
+                          ? `0`
+                          : leaveDetails.leaveApplicationBasicInfo.leaveName === LeaveName.MONETIZATION
+                          ? `${
+                              Number(leaveDetails.leaveApplicationDetails.convertedVl) +
+                              Number(leaveDetails.leaveApplicationDetails.convertedSl)
+                            }`
+                          : leaveDetails.leaveApplicationBasicInfo.leaveName === LeaveName.TERMINAL
+                          ? `${
+                              Number(leaveDetails.leaveApplicationDetails.vlBalance.afterTerminalLeave) +
+                              Number(leaveDetails.leaveApplicationDetails.slBalance.afterTerminalLeave)
+                            }`
+                          : `${leaveDetails?.leaveApplicationBasicInfo?.leaveDates?.length}`}
                       </Text>
                       <Text>_______ days with pay</Text>
                       <Text
