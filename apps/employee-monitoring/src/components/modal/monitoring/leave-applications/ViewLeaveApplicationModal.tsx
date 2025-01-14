@@ -646,6 +646,17 @@ const ViewLeaveApplicationModal: FunctionComponent<ViewLeaveApplicationModalProp
 
                 <hr />
 
+                {!isEmpty(leaveApplicationDetails.leaveApplicationBasicInfo?.supervisorDisapprovalRemarks) ? (
+                  <div className="grid grid-cols-1 grid-rows-1 px-7 sm:gap-2 md:gap:2 lg:gap-0">
+                    <LabelValue
+                      label="Supervisor Remarks:"
+                      textSize="md"
+                      value={leaveApplicationDetails.leaveApplicationBasicInfo?.supervisorDisapprovalRemarks ?? ''}
+                      direction="top-to-bottom"
+                    />
+                  </div>
+                ) : null}
+
                 {/* LEAVE LEDGER TABLE */}
                 <div className="grid grid-cols-1 grid-rows-1 px-7 sm:gap-2 md:gap:2 lg:gap-0">
                   {rowData.status !== LeaveStatus.DISAPPROVED_BY_SUPERVISOR &&
