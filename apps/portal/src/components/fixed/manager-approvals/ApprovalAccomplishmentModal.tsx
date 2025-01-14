@@ -388,7 +388,7 @@ export const ApprovalAccomplishmentModal = ({ modalState, setModalState, closeMo
                           required
                           defaultValue={0}
                           max={watch('status') === OvertimeAccomplishmentStatus.DISAPPROVED ? '0' : '24'}
-                          step={0.1}
+                          step={0.01}
                           min={watch('status') === OvertimeAccomplishmentStatus.DISAPPROVED ? '0' : '0.1'}
                           {...register('actualHrs')}
                         />

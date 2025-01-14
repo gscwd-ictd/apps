@@ -553,7 +553,7 @@ export const OvertimeModal = ({ modalState, setModalState, closeModalAction }: M
                         required
                         value={actualHours}
                         max="24"
-                        step={0.1}
+                        step={0.01}
                         min="0"
                         onChange={(e) => setActualHours(e.target.value as unknown as number)}
                       />
