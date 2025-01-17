@@ -1,7 +1,14 @@
 import { ArrowCircleUpSVG } from '../../src/components/fixed/svg/ArrowCircleUp';
 
+export type Tabs = {
+  id: string;
+  title: string;
+  tabIndex: number;
+  nodeText: string | JSX.Element;
+};
+
 // tab array
-export const tabs = [
+export const tabs: Array<Tabs> = [
   { id: 'basicInfo', title: 'Basic Information', tabIndex: 1, nodeText: '1' },
   { id: 'familyInfo', title: 'Family Information', tabIndex: 2, nodeText: '2' },
   { id: 'educInfo', title: 'Education', tabIndex: 3, nodeText: '3' },
@@ -20,7 +27,7 @@ export const tabs = [
   },
 ];
 
-export const tabsHasPds = [
+export const tabsHasPds: Array<Tabs> = [
   { id: 'basic', title: 'Basic Information', tabIndex: 1, nodeText: '1' },
   { id: 'familyInfo', title: 'Family Information', tabIndex: 2, nodeText: '2' },
   { id: 'educInfo', title: 'Education', tabIndex: 3, nodeText: '3' },

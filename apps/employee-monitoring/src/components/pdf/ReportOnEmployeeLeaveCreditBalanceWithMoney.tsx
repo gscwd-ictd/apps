@@ -218,7 +218,7 @@ export const ReportOnEmployeeLeaveCreditBalanceWithMoneyPdf: FunctionComponent<
                 </View>
 
                 {/* SIGNATORY */}
-                <View style={[styles.rowContainer, styles.signatoryContainer]}>
+                <View style={[styles.rowContainer, styles.signatoryContainer]} wrap={false}>
                   {/* LEFT */}
                   <View style={[styles.w33_33]}>
                     <Text style={[{ padding: '29 0 30 0' }]}>Prepared by:</Text>

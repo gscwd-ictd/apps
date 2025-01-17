@@ -13,7 +13,7 @@ import { RefErrorProvider } from '../../../context/RefErrorContext';
 import DarkNav from '../navigation/DarkNav';
 import { ErrorProvider } from '../../../context/ErrorContext';
 import { useTabStore } from '../../../store/tab.store';
-import { tabs, tabsHasPds } from '../../../../utils/constants/tabs';
+import { Tabs, tabs, tabsHasPds } from '../../../../utils/constants/tabs';
 import { useEffect, useState } from 'react';
 import { NotificationController, useNotification } from '../../../../../../libs/oneui/src/components/Notification';
 import { NotificationContext } from 'apps/pds/src/context/NotificationContext';
@@ -23,7 +23,7 @@ export const NavTab = (): JSX.Element => {
   // get selected tab from tab store
   const selectedTab = useTabStore((state) => state.selectedTab);
   const hasPds = useEmployeeStore((state) => state.hasPds);
-  const [allTabs, setAllTabs] = useState<any>([] as any);
+  const [allTabs, setAllTabs] = useState<Tabs[]>([]);
   const { notifRef, notify } = useNotification();
 
   useEffect(() => {
@@ -32,9 +32,6 @@ export const NavTab = (): JSX.Element => {
   }, [hasPds]);
 
   // set notification controller
-
-  const firstName = 'Mikhail Anthony';
-  const lastName = 'Dela Cruz';
 
   return (
     <>
