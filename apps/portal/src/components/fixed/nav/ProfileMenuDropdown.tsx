@@ -671,13 +671,40 @@ export const ProfileMenuDropdown = ({
                             rel="noreferrer"
                             className={`${
                               active ? 'bg-slate-100' : 'text-gray-900'
-                            } group flex w-full items-center gap-3 px-3 py-3 text-sm`}
+                            } group flex w-full items-center gap-3 px-3 py-2 text-sm`}
                           >
                             <HiOutlineQuestionMarkCircle className="h-5 w-5 text-gray-600" />
                             <span className="text-sm tracking-tight text-slate-500">User Manual</span>
                           </a>
                         )}
                       </Menu.Item>
+                      {isEqual(employeeDetails.employmentDetails.userRole, UserRole.OIC_GENERAL_MANAGER) ||
+                      isEqual(employeeDetails.employmentDetails.userRole, UserRole.GENERAL_MANAGER) ||
+                      isEqual(employeeDetails.employmentDetails.userRole, UserRole.ASSISTANT_GENERAL_MANAGER) ||
+                      isEqual(employeeDetails.employmentDetails.userRole, UserRole.OIC_ASSISTANT_GENERAL_MANAGER) ||
+                      isEqual(employeeDetails.employmentDetails.userRole, UserRole.DEPARTMENT_MANAGER) ||
+                      isEqual(employeeDetails.employmentDetails.userRole, UserRole.OIC_DEPARTMENT_MANAGER) ||
+                      isEqual(employeeDetails.employmentDetails.userRole, UserRole.DIVISION_MANAGER) ||
+                      isEqual(employeeDetails.employmentDetails.userRole, UserRole.OIC_DIVISION_MANAGER) ||
+                      // Officer of the Day OR SG16+
+                      employeeDetails.employmentDetails.officerOfTheDay.length > 0 ||
+                      employeeSalaryGrade >= 16 ? (
+                        <Menu.Item>
+                          {({ active }) => (
+                            <a
+                              href={`${process.env.NEXT_PUBLIC_PORTAL_MANAGER_ACTIONS_MANUAL}`}
+                              target="_blank"
+                              rel="noreferrer"
+                              className={`${
+                                active ? 'bg-slate-100' : 'text-gray-900'
+                              } group flex w-full items-center gap-3 px-3 py-2 text-sm`}
+                            >
+                              <HiOutlineQuestionMarkCircle className="h-5 w-5 text-gray-600" />
+                              <span className="text-sm tracking-tight text-slate-500">Manager Actions User Manual</span>
+                            </a>
+                          )}
+                        </Menu.Item>
+                      ) : null}
                     </div>
                   ) : null}
 

@@ -336,7 +336,7 @@ export const ApprovalAccomplishmentModal = ({ modalState, setModalState, closeMo
                         </label>
                         <label className="text-md font-medium">
                           Total Hours:
-                          {` ${accomplishmentDetails?.computedEncodedHours} Hour(s)`}
+                          {` ${accomplishmentDetails?.computedEncodedHours?.toFixed(2)} Hour(s)`}
                         </label>
                       </div>
                     </div>
