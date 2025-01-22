@@ -7,7 +7,7 @@ import { isEmpty } from 'lodash';
 import { FunctionComponent, useEffect, useState } from 'react';
 import useSWR from 'swr';
 import { Can } from '../../context/casl/Can';
-import { EmployeeWithSchedule, useScheduleSheetStore } from '../../store/schedule-sheet.store';
+import { EmployeeSchedule, useScheduleSheetStore } from '../../store/schedule-sheet.store';
 import fetcherEMS from '../../utils/fetcher/FetcherEMS';
 import UseConvertRestDaysToString from '../../utils/functions/ConvertRestDaysToString';
 import UseRenderRestDays from '../../utils/functions/RenderRestDays';
@@ -35,7 +35,7 @@ type CardEmployeeSchedulesProps = {
 };
 
 const CardEmployeeSchedules: FunctionComponent<CardEmployeeSchedulesProps> = ({ employeeData }) => {
-  const [currentRowData, setCurrentRowData] = useState<EmployeeWithSchedule>({} as EmployeeWithSchedule);
+  const [currentRowData, setCurrentRowData] = useState<EmployeeSchedule>({} as EmployeeSchedule);
 
   // use swr
   const {
@@ -96,7 +96,7 @@ const CardEmployeeSchedules: FunctionComponent<CardEmployeeSchedulesProps> = ({ 
   };
 
   const [deleteSchedModalIsOpen, setDeleteSchedModalIsOpen] = useState<boolean>(false);
-  const openDeleteSchedModal = (rowData: EmployeeWithSchedule, employeeData: any) => {
+  const openDeleteSchedModal = (rowData: EmployeeSchedule, employeeData: any) => {
     setCurrentRowData({
       ...rowData,
       employeeId: employeeData.userId,
@@ -105,7 +105,7 @@ const CardEmployeeSchedules: FunctionComponent<CardEmployeeSchedulesProps> = ({ 
     setDeleteSchedModalIsOpen(true);
   };
   const closeDeleteSchedModal = () => {
-    setCurrentRowData({} as EmployeeWithSchedule);
+    setCurrentRowData({} as EmployeeSchedule);
     mutateEs();
     setTimeout(() => {
       emptyResponseAndErrors();
@@ -114,7 +114,7 @@ const CardEmployeeSchedules: FunctionComponent<CardEmployeeSchedulesProps> = ({ 
   };
 
   // Render row actions in the table component
-  const renderRowActions = (rowData: EmployeeWithSchedule) => {
+  const renderRowActions = (rowData: EmployeeSchedule) => {
     return (
       <>
         <button
@@ -129,7 +129,7 @@ const CardEmployeeSchedules: FunctionComponent<CardEmployeeSchedulesProps> = ({ 
   };
 
   // define table columns
-  const columnHelper = createColumnHelper<EmployeeWithSchedule>();
+  const columnHelper = createColumnHelper<EmployeeSchedule>();
 
   const columns = [
     columnHelper.accessor('id', {

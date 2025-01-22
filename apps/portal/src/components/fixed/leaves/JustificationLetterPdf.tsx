@@ -108,7 +108,7 @@ export const JustificationLetterPdf = ({ leaveDetails }: JustificationLetterPdfP
                 <Image
                   style={{
                     paddingTop: 20,
-                    width: '25%',
+                    width: '35%',
                     marginLeft: 0,
                   }}
                   src={

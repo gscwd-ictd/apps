@@ -926,6 +926,93 @@ export const LeaveCompletedModal = ({ modalState, setModalState, closeModalActio
                           </tbody>
                         </table>
                       </div>
+                    ) : leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.TERMINAL ? (
+                      <div className="w-full pb-4 mt-2">
+                        <span className="text-slate-500 text-md">
+                          Employee's Leave Credits at the time of this application:
+                        </span>
+                        <table className="mt-2 bg-slate-50 text-slate-600 border-collapse border-spacing-0 border border-slate-400 w-full ">
+                          <tbody className="rounded-md border">
+                            <tr>
+                              <td className="border border-slate-400 text-center">Leave Type</td>
+                              <td className="border border-slate-400 text-center">Total Earned</td>
+                              <td className="border border-slate-400 text-center">Unearned Credits</td>
+                              <td className="border border-slate-400 text-center bg-green-100">Balance</td>
+                            </tr>
+                            {/* VL BALANCE */}
+                            <tr className="border-slate-400">
+                              <td className="border border-slate-400 text-center">Vacation</td>
+                              <td className="border border-slate-400 text-center">
+                                {leaveIndividualDetail?.leaveApplicationBasicInfo?.status ===
+                                  LeaveStatus.FOR_HRMO_CREDIT_CERTIFICATION ||
+                                leaveIndividualDetail?.leaveApplicationBasicInfo?.status ===
+                                  LeaveStatus.FOR_SUPERVISOR_APPROVAL ||
+                                leaveIndividualDetail?.leaveApplicationBasicInfo?.status ===
+                                  LeaveStatus.FOR_HRDM_APPROVAL
+                                  ? Number(parseFloat(`${vlEntry?.vacationLeaveBalance}`)).toFixed(3)
+                                  : Number(
+                                      parseFloat(
+                                        `${leaveIndividualDetail?.leaveApplicationDetails?.vlBalance?.beforeTerminalLeave}`
+                                      )
+                                    ).toFixed(3)}
+                              </td>
+                              <td className="border border-slate-400 text-center">
+                                {Number(
+                                  parseFloat(
+                                    `${leaveIndividualDetail?.leaveApplicationDetails?.vlBalance?.afterTerminalLeave}`
+                                  ) -
+                                    parseFloat(
+                                      `${leaveIndividualDetail?.leaveApplicationDetails?.vlBalance?.beforeTerminalLeave}`
+                                    )
+                                ).toFixed(3)}
+                              </td>
+                              <td className="border border-slate-400 text-center bg-green-100">
+                                {Number(
+                                  parseFloat(
+                                    `${leaveIndividualDetail?.leaveApplicationDetails?.vlBalance?.afterTerminalLeave}`
+                                  )
+                                ).toFixed(3)}
+                              </td>
+                            </tr>
+                            {/* SL BALANCE */}
+                            <tr className="border-slate-400">
+                              <td className="border border-slate-400 text-center">Sick</td>
+                              <td className="border border-slate-400 text-center">
+                                {leaveIndividualDetail?.leaveApplicationBasicInfo?.status ===
+                                  LeaveStatus.FOR_HRMO_CREDIT_CERTIFICATION ||
+                                leaveIndividualDetail?.leaveApplicationBasicInfo?.status ===
+                                  LeaveStatus.FOR_SUPERVISOR_APPROVAL ||
+                                leaveIndividualDetail?.leaveApplicationBasicInfo?.status ===
+                                  LeaveStatus.FOR_HRDM_APPROVAL
+                                  ? Number(parseFloat(`${slEntry?.sickLeaveBalance}`)).toFixed(3)
+                                  : Number(
+                                      parseFloat(
+                                        `${leaveIndividualDetail?.leaveApplicationDetails?.slBalance?.beforeTerminalLeave}`
+                                      )
+                                    ).toFixed(3)}
+                              </td>
+
+                              <td className="border border-slate-400 text-center">
+                                {Number(
+                                  parseFloat(
+                                    `${leaveIndividualDetail?.leaveApplicationDetails?.slBalance?.afterTerminalLeave}`
+                                  ) -
+                                    parseFloat(
+                                      `${leaveIndividualDetail?.leaveApplicationDetails?.slBalance?.beforeTerminalLeave}`
+                                    )
+                                ).toFixed(3)}
+                              </td>
+                              <td className="border border-slate-400 text-center bg-green-100">
+                                {Number(
+                                  parseFloat(
+                                    `${leaveIndividualDetail?.leaveApplicationDetails?.slBalance?.afterTerminalLeave}`
+                                  )
+                                ).toFixed(3)}
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
                     ) : null
                   ) : null}
                 </div>
