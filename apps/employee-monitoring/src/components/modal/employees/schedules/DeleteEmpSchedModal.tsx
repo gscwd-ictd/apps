@@ -3,23 +3,15 @@ import { FunctionComponent } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { deleteEmpMonitoring } from 'apps/employee-monitoring/src/utils/helper/employee-monitoring-axios-helper';
 
-import {
-  AlertNotification,
-  LoadingSpinner,
-  Modal,
-  ToastNotification,
-} from '@gscwd-apps/oneui';
-import {
-  EmployeeWithSchedule,
-  useScheduleSheetStore,
-} from 'apps/employee-monitoring/src/store/schedule-sheet.store';
+import { AlertNotification, LoadingSpinner, Modal, ToastNotification } from '@gscwd-apps/oneui';
+import { EmployeeSchedule, useScheduleSheetStore } from 'apps/employee-monitoring/src/store/schedule-sheet.store';
 import { isEmpty } from 'lodash';
 
 type DeleteModalProps = {
   modalState: boolean;
   setModalState: React.Dispatch<React.SetStateAction<boolean>>;
   closeModalAction: () => void;
-  rowData: EmployeeWithSchedule;
+  rowData: EmployeeSchedule;
 };
 
 const DeleteEmpSchedModal: FunctionComponent<DeleteModalProps> = ({
@@ -44,9 +36,9 @@ const DeleteEmpSchedModal: FunctionComponent<DeleteModalProps> = ({
     errorEmployeeSchedule: state.error.errorEmployeeSchedule,
   }));
 
-  const { handleSubmit } = useForm<EmployeeWithSchedule>();
+  const { handleSubmit } = useForm<EmployeeSchedule>();
 
-  const onSubmit: SubmitHandler<EmployeeWithSchedule> = () => {
+  const onSubmit: SubmitHandler<EmployeeSchedule> = () => {
     if (!isEmpty(rowData.id)) {
       deleteEmployeeSchedule();
 
@@ -58,7 +50,7 @@ const DeleteEmpSchedModal: FunctionComponent<DeleteModalProps> = ({
     closeModalAction();
   };
 
-  const handleDeleteResult = async (rowData: EmployeeWithSchedule) => {
+  const handleDeleteResult = async (rowData: EmployeeSchedule) => {
     const { error, result } = await deleteEmpMonitoring('/employee-schedule/', {
       data: {
         employeeId: rowData.employeeId,

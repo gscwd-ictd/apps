@@ -1,7 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
 import { AlertNotification, LoadingSpinner, Modal, ToastNotification } from '@gscwd-apps/oneui';
 import { LabelInput } from 'apps/employee-monitoring/src/components/inputs/LabelInput';
-import { EmployeeWithSchedule, useScheduleSheetStore } from 'apps/employee-monitoring/src/store/schedule-sheet.store';
+import { EmployeeScheduleForm, useScheduleSheetStore } from 'apps/employee-monitoring/src/store/schedule-sheet.store';
 import { Dispatch, FunctionComponent, SetStateAction, useEffect, useState } from 'react';
 import useSWR from 'swr';
 import fetcherEMS from 'apps/employee-monitoring/src/utils/fetcher/FetcherEMS';
@@ -15,6 +15,8 @@ import { listOfRestDays } from 'libs/utils/src/lib/constants/rest-days.const';
 import { SelectOption } from 'libs/utils/src/lib/types/select.type';
 import UseRestDaysOptionToNumberArray from 'apps/employee-monitoring/src/utils/functions/ConvertRestDaysOptionToNumberArray';
 import { Notification } from 'libs/oneui/src/components/Notification/Notification';
+import Toggle from '../../../switch/Toggle';
+import DailyTimeRecordCalendar from '../DailyTimeRecordCalendar';
 
 type AddEmpSchedModalProps = {
   modalState: boolean;
@@ -29,6 +31,9 @@ const AddEmpSchedModal: FunctionComponent<AddEmpSchedModalProps> = ({
   setModalState,
   employeeData,
 }) => {
+  // state for usage of date picker
+  const [datePicker, setDatePicker] = useState<boolean>(false);
+
   // react hook form
   const {
     watch,
@@ -38,15 +43,7 @@ const AddEmpSchedModal: FunctionComponent<AddEmpSchedModalProps> = ({
     handleSubmit,
     reset,
     formState: { errors },
-  } = useForm<EmployeeWithSchedule>();
-
-  // on close sheet
-  const onCloseScheduleSheet = () => {
-    reset();
-    setSelectedRestDays([]);
-    setSelectedScheduleId('');
-    closeModalAction();
-  };
+  } = useForm<EmployeeScheduleForm>();
 
   // time only with AM or PM
   const formatTime = (date: string | null) => {
@@ -111,7 +108,7 @@ const AddEmpSchedModal: FunctionComponent<AddEmpSchedModalProps> = ({
   });
 
   // on submit
-  const onSubmit = async (data: EmployeeWithSchedule) => {
+  const onSubmit = async (data: EmployeeScheduleForm) => {
     //append the restDays to employeewithschedule object
     data.restDays = UseRestDaysOptionToNumberArray(selectedRestDays);
 
@@ -137,7 +134,7 @@ const AddEmpSchedModal: FunctionComponent<AddEmpSchedModalProps> = ({
   };
 
   // function for posting the schedule sheet
-  const handlePostScheduling = async (data: Partial<EmployeeWithSchedule>) => {
+  const handlePostScheduling = async (data: Partial<EmployeeScheduleForm>) => {
     const { error, result } = await postEmpMonitoring(`/employee-schedule/`, data);
 
     if (!error) {
@@ -151,6 +148,24 @@ const AddEmpSchedModal: FunctionComponent<AddEmpSchedModalProps> = ({
       postEmployeeScheduleFail(result);
     }
   };
+
+  // function for selecting dates from picker
+  const handleDateSelect = (dates: string[]) => {
+    setValue('dtrDates', dates);
+  };
+
+  // on close sheet
+  const onCloseScheduleSheet = () => {
+    reset();
+    setSelectedRestDays([]);
+    setSelectedScheduleId('');
+    closeModalAction();
+  };
+
+  // set value of selected dates to form value
+  // useEffect(() => {
+  //   setValue('dtrDates', selectedDates);
+  // }, [selectedDates, setValue]);
 
   // set schedule id loading to true
   useEffect(() => {
@@ -188,6 +203,8 @@ const AddEmpSchedModal: FunctionComponent<AddEmpSchedModalProps> = ({
     if (modalState) {
       register('scheduleId', { required: true });
       setValue('employeeId', employeeData.userId);
+    } else {
+      setDatePicker(false);
     }
   }, [modalState]);
 
@@ -254,31 +271,64 @@ const AddEmpSchedModal: FunctionComponent<AddEmpSchedModalProps> = ({
                 {/* Effectivity */}
                 <div className="flex flex-col justify-center w-full pb-6">
                   <p className="flex items-center justify-start w-full font-light text-gray-400">Effectivity Date</p>
+
                   <hr className="h-1 mt-2 mb-4 bg-gray-200 border-0 rounded" />
-                  <div className="grid gap-2 sm:grid-cols-1 md:grid-cols-1 lg:grid-cols-2">
-                    <LabelInput
-                      id="stationSsStartDate"
-                      name="dateFrom"
-                      type="date"
-                      label="Start Date"
-                      controller={{
-                        ...register('dateFrom'),
-                      }}
-                      isError={errors.dateFrom ? true : false}
-                      errorMessage={errors.dateFrom?.message}
+
+                  <div className="flex gap-2 text-start pb-2">
+                    <Toggle
+                      labelPosition="top"
+                      enabled={datePicker}
+                      setEnabled={setDatePicker}
+                      label={'Use Date Picker:'}
                     />
-                    <LabelInput
-                      id="stationSsEndDate"
-                      name="dateTo"
-                      type="date"
-                      label="End Date"
-                      controller={{
-                        ...register('dateTo'),
-                      }}
-                      isError={errors.dateTo ? true : false}
-                      errorMessage={errors.dateTo?.message}
-                    />
+                    <div className={`text-xs ${datePicker ? 'text-blue-400' : 'text-gray-400'}`}>
+                      {datePicker ? (
+                        <button onClick={() => setDatePicker((prev) => !prev)} className="underline" type="button">
+                          <span>Yes</span>
+                        </button>
+                      ) : (
+                        <button onClick={() => setDatePicker((prev) => !prev)} className="underline" type="button">
+                          <span>No</span>
+                        </button>
+                      )}
+                    </div>
                   </div>
+
+                  {/* Input for date picker */}
+                  {datePicker === true ? (
+                    <div className="grid gap-2 grid-cols-1">
+                      <label className="text-md font-medium text-gray-900">Select Dates</label>
+                      <DailyTimeRecordCalendar id="dtr-calendar" onDateSelect={handleDateSelect} />
+                    </div>
+                  ) : null}
+
+                  {/* Input for date range */}
+                  {datePicker === false ? (
+                    <div className="grid gap-2 sm:grid-cols-1 md:grid-cols-1 lg:grid-cols-2">
+                      <LabelInput
+                        id="stationSsStartDate"
+                        name="dtrDates.dateFrom"
+                        type="date"
+                        label="Start Date"
+                        controller={{
+                          ...register('dtrDates.dateFrom'),
+                        }}
+                        // isError={errors.dtrDates?.dateFrom ? true : false}
+                        // errorMessage={errors.dtrDates?.dateFrom?.message}
+                      />
+                      <LabelInput
+                        id="stationSsEndDate"
+                        name="dtrDates.dateTo"
+                        type="date"
+                        label="End Date"
+                        controller={{
+                          ...register('dtrDates.dateTo'),
+                        }}
+                        // isError={errors.dtrDates?.dateTo ? true : false}
+                        // errorMessage={errors.dtrDates?.dateTo?.message}
+                      />
+                    </div>
+                  ) : null}
                 </div>
 
                 <div className="flex flex-col justify-between w-full h-full pb-2">

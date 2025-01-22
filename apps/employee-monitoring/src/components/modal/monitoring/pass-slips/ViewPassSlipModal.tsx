@@ -380,6 +380,17 @@ const ViewPassSlipModal: FunctionComponent<ViewPassSlipModalProps> = ({
                   </div>
                 )}
 
+                {!isEmpty(rowData.disputeRemarks) ? (
+                  <div className="grid grid-cols-1 grid-rows-1 px-5 sm:gap-2 md:gap:2 lg:gap-0">
+                    <LabelValue
+                      label="Dispute Remarks"
+                      direction="top-to-bottom"
+                      textSize="md"
+                      value={rowData.disputeRemarks ? rowData.disputeRemarks : 'N/A'}
+                    />
+                  </div>
+                ) : null}
+
                 {rowData.isMedical === true && rowData.status === PassSlipStatus.AWAITING_MEDICAL_CERTIFICATE ? (
                   //  && rowData.timeOut !== null
                   <div className="px-5">

@@ -938,11 +938,22 @@ const ViewLeaveApplicationModal: FunctionComponent<ViewLeaveApplicationModalProp
                               </td>
 
                               <td className="border border-slate-400 text-center">
-                                {Number(
-                                  parseFloat(
-                                    `${leaveApplicationDetails.leaveApplicationDetails?.vlBalance?.afterTerminalLeave}`
-                                  ) - parseFloat(`${leaveLedger[leaveLedger.length - 1]?.vacationLeaveBalance}`)
-                                ).toFixed(3)}
+                                {rowData.status === LeaveStatus.FOR_HRMO_CREDIT_CERTIFICATION ||
+                                rowData.status === LeaveStatus.FOR_SUPERVISOR_APPROVAL ||
+                                rowData.status === LeaveStatus.FOR_HRDM_APPROVAL
+                                  ? Number(
+                                      parseFloat(
+                                        `${leaveApplicationDetails.leaveApplicationDetails?.vlBalance?.afterTerminalLeave}`
+                                      ) - parseFloat(`${leaveLedger[leaveLedger.length - 1]?.vacationLeaveBalance}`)
+                                    ).toFixed(3)
+                                  : Number(
+                                      parseFloat(
+                                        `${leaveApplicationDetails.leaveApplicationDetails?.vlBalance?.afterTerminalLeave}`
+                                      ) -
+                                        parseFloat(
+                                          `${leaveApplicationDetails.leaveApplicationDetails?.vlBalance?.beforeTerminalLeave}`
+                                        )
+                                    ).toFixed(3)}
                               </td>
 
                               <td className="border border-slate-400 text-center bg-green-100">
@@ -973,11 +984,22 @@ const ViewLeaveApplicationModal: FunctionComponent<ViewLeaveApplicationModalProp
                               </td>
 
                               <td className="border border-slate-400 text-center">
-                                {Number(
-                                  parseFloat(
-                                    `${leaveApplicationDetails.leaveApplicationDetails?.slBalance?.afterTerminalLeave}`
-                                  ) - parseFloat(`${leaveLedger[leaveLedger.length - 1]?.sickLeaveBalance}`)
-                                ).toFixed(3)}
+                                {rowData.status === LeaveStatus.FOR_HRMO_CREDIT_CERTIFICATION ||
+                                rowData.status === LeaveStatus.FOR_SUPERVISOR_APPROVAL ||
+                                rowData.status === LeaveStatus.FOR_HRDM_APPROVAL
+                                  ? Number(
+                                      parseFloat(
+                                        `${leaveApplicationDetails.leaveApplicationDetails?.slBalance?.afterTerminalLeave}`
+                                      ) - parseFloat(`${leaveLedger[leaveLedger.length - 1]?.sickLeaveBalance}`)
+                                    ).toFixed(3)
+                                  : Number(
+                                      parseFloat(
+                                        `${leaveApplicationDetails.leaveApplicationDetails?.slBalance?.afterTerminalLeave}`
+                                      ) -
+                                        parseFloat(
+                                          `${leaveApplicationDetails.leaveApplicationDetails?.slBalance?.beforeTerminalLeave}`
+                                        )
+                                    ).toFixed(3)}
                               </td>
 
                               <td className="border border-slate-400 text-center bg-green-100">

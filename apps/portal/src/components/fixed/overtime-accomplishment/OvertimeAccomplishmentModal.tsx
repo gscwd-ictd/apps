@@ -623,7 +623,7 @@ export const OvertimeAccomplishmentModal = ({ modalState, setModalState, closeMo
                                     disabled
                                     value={`${
                                       overtimeAccomplishmentDetails?.computedEncodedHours
-                                        ? overtimeAccomplishmentDetails?.computedEncodedHours
+                                        ? overtimeAccomplishmentDetails?.computedEncodedHours?.toFixed(2)
                                         : isNaN(finalEncodedHours)
                                         ? 0
                                         : finalEncodedHours

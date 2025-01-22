@@ -22,8 +22,8 @@ type LoadingScheduleSheet = {
 type ScheduleSheetId = Pick<ScheduleSheet, 'id'>;
 
 type ResponseEmployeeSchedule = {
-  postResponse: EmployeeWithSchedule;
-  deleteResponse: EmployeeWithSchedule;
+  postResponse: EmployeeSchedule;
+  deleteResponse: EmployeeSchedule;
 };
 
 type ErrorScheduleSheet = {
@@ -56,7 +56,7 @@ export type CurrentScheduleSheet = {
   scheduleName: string;
 };
 
-export type EmployeeWithSchedule = {
+export type EmployeeSchedule = {
   id: string; // schedule id
   employeeId: string;
   dateFrom: string;
@@ -66,9 +66,23 @@ export type EmployeeWithSchedule = {
   restDays: Array<number>;
 } & Omit<Schedule, 'name' | 'id'>;
 
+export type EmployeeScheduleForm = {
+  id: string; // schedule id
+  employeeId: string;
+  dtrDates: DateRange | Array<string>;
+  scheduleName: string;
+  scheduleId: string;
+  restDays: Array<number>;
+} & Omit<Schedule, 'name' | 'id'>;
+
+export type DateRange = {
+  dateFrom: string;
+  dateTo: string;
+};
+
 export type ScheduleSheetState = {
   currentScheduleSheet: ScheduleSheet;
-  currentEmployeeSchedule: EmployeeWithSchedule;
+  currentEmployeeSchedule: EmployeeSchedule;
 
   postScheduleSheetResponse: ScheduleSheet;
   deleteScheduleSheetResponse: ScheduleSheetId;
@@ -77,12 +91,12 @@ export type ScheduleSheetState = {
   // group: CustomGroupWithMembers;
   schedule: Schedule;
   scheduleSheets: Array<ScheduleSheet>;
-  employeeSchedules: Array<EmployeeWithSchedule>;
+  employeeSchedules: Array<EmployeeSchedule>;
   employeeSchedule: ResponseEmployeeSchedule;
   clearScheduleSheet: () => void;
 
   getEmployeeSchedules: () => void;
-  getEmployeeSchedulesSuccess: (response: Array<EmployeeWithSchedule>) => void;
+  getEmployeeSchedulesSuccess: (response: Array<EmployeeSchedule>) => void;
   getEmployeeSchedulesFail: (error: string) => void;
 
   deleteScheduleSheet: () => void;
@@ -90,7 +104,7 @@ export type ScheduleSheetState = {
   deleteScheduleSheetFail: (error: string) => void;
 
   deleteEmployeeSchedule: () => void;
-  deleteEmployeeScheduleSuccess: (response: EmployeeWithSchedule) => void;
+  deleteEmployeeScheduleSuccess: (response: EmployeeSchedule) => void;
   deleteEmployeeScheduleFail: (error: string) => void;
 
   getScheduleSheets: () => void;
@@ -98,14 +112,14 @@ export type ScheduleSheetState = {
   getScheduleSheetsFail: (error: string) => void;
 
   setCurrentScheduleSheet: (currentScheduleSheet: ScheduleSheet) => void;
-  setCurrentEmployeeSchedule: (currentEmployeeSchedule: EmployeeWithSchedule) => void;
+  setCurrentEmployeeSchedule: (currentEmployeeSchedule: EmployeeSchedule) => void;
 
   postScheduleSheet: () => void;
   postScheduleSheetSuccess: (response: ScheduleSheet) => void;
   postScheduleSheetFail: (error: string) => void;
 
   postEmployeeSchedule: () => void;
-  postEmployeeScheduleSuccess: (response: EmployeeWithSchedule) => void;
+  postEmployeeScheduleSuccess: (response: EmployeeSchedule) => void;
   postEmployeeScheduleFail: (error: string) => void;
 
   getScheduleById: () => void;
@@ -173,11 +187,11 @@ export const useScheduleSheetStore = create<ScheduleSheetState>()(
       errorEmployeeSchedules: '',
       errorEmployeeSchedule: '',
     },
-    currentEmployeeSchedule: {} as EmployeeWithSchedule,
+    currentEmployeeSchedule: {} as EmployeeSchedule,
     employeeSchedules: [],
     employeeSchedule: {
-      postResponse: {} as EmployeeWithSchedule,
-      deleteResponse: {} as EmployeeWithSchedule,
+      postResponse: {} as EmployeeSchedule,
+      deleteResponse: {} as EmployeeSchedule,
     },
 
     getEmployeeSchedules: () =>
@@ -187,7 +201,7 @@ export const useScheduleSheetStore = create<ScheduleSheetState>()(
         error: { ...state.error, errorEmployeeSchedules: '' },
         employeeSchedules: [],
       })),
-    getEmployeeSchedulesSuccess: (response: Array<EmployeeWithSchedule>) =>
+    getEmployeeSchedulesSuccess: (response: Array<EmployeeSchedule>) =>
       set((state) => ({
         ...state,
         loading: { ...state.loading, loadingEmployeeSchedules: false },
@@ -206,11 +220,11 @@ export const useScheduleSheetStore = create<ScheduleSheetState>()(
         loading: { ...state.loading, loadingEmployeeSchedule: true },
         employeeSchedule: {
           ...state.employeeSchedule,
-          postResponse: {} as EmployeeWithSchedule,
+          postResponse: {} as EmployeeSchedule,
         },
         error: { ...state.error, errorEmployeeSchedule: '' },
       })),
-    postEmployeeScheduleSuccess: (response: EmployeeWithSchedule) =>
+    postEmployeeScheduleSuccess: (response: EmployeeSchedule) =>
       set((state) => ({
         ...state,
         loading: { ...state.loading, loadingEmployeeSchedule: false },
@@ -229,11 +243,11 @@ export const useScheduleSheetStore = create<ScheduleSheetState>()(
         loading: { ...state.loading, loadingEmployeeSchedule: true },
         employeeSchedule: {
           ...state.employeeSchedule,
-          deleteResponse: {} as EmployeeWithSchedule,
+          deleteResponse: {} as EmployeeSchedule,
         },
         error: { ...state.error, errorEmployeeSchedule: '' },
       })),
-    deleteEmployeeScheduleSuccess: (response: EmployeeWithSchedule) =>
+    deleteEmployeeScheduleSuccess: (response: EmployeeSchedule) =>
       set((state) => ({
         ...state,
         loading: { ...state.loading, loadingEmployeeSchedule: false },
@@ -249,7 +263,7 @@ export const useScheduleSheetStore = create<ScheduleSheetState>()(
         error: { ...state.error, errorEmployeeSchedule: error },
       })),
 
-    setCurrentEmployeeSchedule: (currentEmployeeSchedule: EmployeeWithSchedule) =>
+    setCurrentEmployeeSchedule: (currentEmployeeSchedule: EmployeeSchedule) =>
       set((state) => ({ ...state, currentEmployeeSchedule })),
 
     getScheduleSheets: () =>
@@ -399,8 +413,8 @@ export const useScheduleSheetStore = create<ScheduleSheetState>()(
         deleteScheduleSheetResponse: {} as ScheduleSheet,
         getScheduleSheetResponse: {} as CustomGroupWithMembers,
         employeeSchedule: {
-          postResponse: {} as EmployeeWithSchedule,
-          deleteResponse: {} as EmployeeWithSchedule,
+          postResponse: {} as EmployeeSchedule,
+          deleteResponse: {} as EmployeeSchedule,
         },
       })),
     emptyResponseAndErrors: () =>
@@ -412,8 +426,8 @@ export const useScheduleSheetStore = create<ScheduleSheetState>()(
         getScheduleSheetResponse: {} as CustomGroupWithMembers,
 
         employeeSchedule: {
-          postResponse: {} as EmployeeWithSchedule,
-          deleteResponse: {} as EmployeeWithSchedule,
+          postResponse: {} as EmployeeSchedule,
+          deleteResponse: {} as EmployeeSchedule,
         },
         error: {
           ...state.error,
@@ -445,7 +459,7 @@ export const useScheduleSheetStore = create<ScheduleSheetState>()(
           employees: [],
         } as ScheduleSheet,
         loading: { ...state.loading, loadingSchedule: false },
-        currentEmployeeSchedule: {} as EmployeeWithSchedule,
+        currentEmployeeSchedule: {} as EmployeeSchedule,
       }));
       get().emptyResponseAndErrors();
     },

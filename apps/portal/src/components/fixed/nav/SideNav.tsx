@@ -25,6 +25,7 @@ import { useInboxStore } from '../../../store/inbox.store';
 import { NomineeStatus } from 'libs/utils/src/lib/enums/training.enum';
 import { usePdcApprovalsStore } from 'apps/portal/src/store/pdc-approvals.store';
 import { useTrainingSelectionStore } from 'apps/portal/src/store/training-selection.store';
+import { ManualMenuDropdown } from './ManualMenuDropDown';
 
 export type EmployeeLocalStorage = {
   employeeId: string;
@@ -398,12 +399,9 @@ export const SideNav = ({ employeeDetails }: NavDetails) => {
                 </div>
               ) : null}
               {/* USER MANUAL  */}
-              <a href={`${process.env.NEXT_PUBLIC_PORTAL_USER_MANUAL}`} target="_blank" rel="noreferrer">
-                <SideNavLink
-                  icon={<HiOutlineQuestionMarkCircle className="w-6 h-6 text-indigo-500" />}
-                  destination={'/'}
-                />
-              </a>
+              <li className="ml-10 lg:ml-0">
+                <ManualMenuDropdown right />
+              </li>
             </>
           ) : null}
         </ul>

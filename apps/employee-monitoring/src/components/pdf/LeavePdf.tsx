@@ -732,15 +732,15 @@ export const LeavePdf = ({ leaveDetails, selectedLeaveLedger, vlEntry, slEntry }
                           }}
                         >
                           {leaveDetails.leaveApplicationBasicInfo.leaveName == LeaveName.MONETIZATION
-                            ? `${
+                            ? `${(
                                 Number(leaveDetails.leaveApplicationDetails.convertedVl) +
                                 Number(leaveDetails.leaveApplicationDetails.convertedSl)
-                              } day(s)`
+                              ).toFixed(3)} day(s)`
                             : leaveDetails.leaveApplicationBasicInfo.leaveName == LeaveName.TERMINAL
-                            ? `${
+                            ? `${(
                                 Number(leaveDetails.leaveApplicationDetails.vlBalance.afterTerminalLeave) +
                                 Number(leaveDetails.leaveApplicationDetails.slBalance.afterTerminalLeave)
-                              } day(s)`
+                              ).toFixed(3)} day(s)`
                             : `${leaveDetails.leaveApplicationBasicInfo.leaveDates.length} day(s)`}
                         </Text>
                         <Text style={{ padding: 5 }}>_____________________________________________________</Text>
@@ -771,17 +771,17 @@ export const LeavePdf = ({ leaveDetails, selectedLeaveLedger, vlEntry, slEntry }
                           }}
                         >
                           {leaveDetails.leaveApplicationBasicInfo.leaveName == LeaveName.MONETIZATION // Monetized
-                            ? `	P${leaveDetails.employeeDetails.assignment.salary.substring(1)} x ${
+                            ? `	P${leaveDetails.employeeDetails.assignment.salary.substring(1)} x ${(
                                 Number(leaveDetails.leaveApplicationDetails.convertedVl) +
                                 Number(leaveDetails.leaveApplicationDetails.convertedSl)
-                              } day(s) x ${
+                              ).toFixed(3)} day(s) x ${
                                 process.env.NEXT_PUBLIC_MONETIZATION_CONSTANT
                               } = P${leaveDetails.leaveApplicationDetails.monetizedAmount.substring(1)} `
                             : leaveDetails.leaveApplicationBasicInfo.leaveName == LeaveName.TERMINAL // Terminal
-                            ? `P${leaveDetails.employeeDetails.assignment.salary.substring(1)} x ${
+                            ? `P${leaveDetails.employeeDetails.assignment.salary.substring(1)} x ${(
                                 Number(leaveDetails.leaveApplicationDetails.vlBalance.afterTerminalLeave) +
                                 Number(leaveDetails.leaveApplicationDetails.slBalance.afterTerminalLeave)
-                              } day(s) x ${
+                              ).toFixed(3)} day(s) x ${
                                 process.env.NEXT_PUBLIC_MONETIZATION_CONSTANT
                               } = P${leaveDetails.leaveApplicationDetails.monetizedAmount.substring(1)} `
                             : !isEmpty(leaveDetails.leaveApplicationBasicInfo.leaveDates) // Other types of leave
@@ -921,9 +921,10 @@ export const LeavePdf = ({ leaveDetails, selectedLeaveLedger, vlEntry, slEntry }
                                         parseFloat(`${leaveDetails.leaveApplicationDetails?.convertedVl}`)
                                     ).toFixed(3)
                                   : leaveDetails.leaveApplicationBasicInfo?.leaveName === LeaveName.TERMINAL
-                                  ? (
-                                      parseFloat(`${selectedLeaveLedger[0]?.vacationLeaveBalance}`) +
-                                      parseFloat(`${selectedLeaveLedger[0]?.vacationLeave}`) * -1
+                                  ? Number(
+                                      parseFloat(
+                                        `${leaveDetails.leaveApplicationDetails?.vlBalance?.afterTerminalLeave}`
+                                      )
                                     ).toFixed(3)
                                   : (
                                       parseFloat(`${selectedLeaveLedger[0]?.vacationLeaveBalance}`) +
@@ -939,9 +940,10 @@ export const LeavePdf = ({ leaveDetails, selectedLeaveLedger, vlEntry, slEntry }
                                         parseFloat(`${leaveDetails.leaveApplicationDetails?.convertedSl}`)
                                     ).toFixed(3)
                                   : leaveDetails.leaveApplicationBasicInfo?.leaveName === LeaveName.TERMINAL
-                                  ? (
-                                      parseFloat(`${selectedLeaveLedger[0]?.sickLeaveBalance}`) +
-                                      parseFloat(`${selectedLeaveLedger[0]?.sickLeave}`) * -1
+                                  ? Number(
+                                      parseFloat(
+                                        `${leaveDetails.leaveApplicationDetails?.slBalance?.afterTerminalLeave}`
+                                      )
                                     ).toFixed(3)
                                   : (
                                       parseFloat(`${selectedLeaveLedger[0]?.sickLeaveBalance}`) +
@@ -963,6 +965,12 @@ export const LeavePdf = ({ leaveDetails, selectedLeaveLedger, vlEntry, slEntry }
                                   ? leaveDetails?.leaveApplicationBasicInfo?.leaveDates?.length.toFixed(3)
                                   : leaveDetails.leaveApplicationBasicInfo?.leaveName === LeaveName.MONETIZATION
                                   ? leaveDetails.leaveApplicationDetails?.convertedVl
+                                  : leaveDetails.leaveApplicationBasicInfo.leaveName === LeaveName.TERMINAL
+                                  ? Number(
+                                      parseFloat(
+                                        `${leaveDetails.leaveApplicationDetails?.vlBalance?.afterTerminalLeave}`
+                                      )
+                                    ).toFixed(3)
                                   : '0.000'}
                               </Text>
                             </View>
@@ -972,6 +980,12 @@ export const LeavePdf = ({ leaveDetails, selectedLeaveLedger, vlEntry, slEntry }
                                   ? leaveDetails?.leaveApplicationBasicInfo?.leaveDates?.length.toFixed(3)
                                   : leaveDetails.leaveApplicationBasicInfo?.leaveName === LeaveName.MONETIZATION
                                   ? leaveDetails.leaveApplicationDetails?.convertedSl
+                                  : leaveDetails.leaveApplicationBasicInfo.leaveName === LeaveName.TERMINAL
+                                  ? Number(
+                                      parseFloat(
+                                        `${leaveDetails.leaveApplicationDetails?.slBalance?.afterTerminalLeave}`
+                                      )
+                                    ).toFixed(3)
                                   : '0.000'}
                               </Text>
                             </View>
@@ -991,6 +1005,8 @@ export const LeavePdf = ({ leaveDetails, selectedLeaveLedger, vlEntry, slEntry }
                                     ).toFixed(3)
                                   : leaveDetails.leaveApplicationBasicInfo?.leaveName === LeaveName.MONETIZATION
                                   ? vlEntry?.vacationLeaveBalance
+                                  : leaveDetails.leaveApplicationBasicInfo.leaveName === LeaveName.TERMINAL
+                                  ? '0.000'
                                   : parseFloat(`${selectedLeaveLedger[0]?.vacationLeaveBalance}`).toFixed(3)}
                               </Text>
                             </View>
@@ -998,6 +1014,8 @@ export const LeavePdf = ({ leaveDetails, selectedLeaveLedger, vlEntry, slEntry }
                               <Text>
                                 {leaveDetails.leaveApplicationBasicInfo?.leaveName === LeaveName.MONETIZATION
                                   ? slEntry?.sickLeaveBalance
+                                  : leaveDetails.leaveApplicationBasicInfo.leaveName === LeaveName.TERMINAL
+                                  ? '0.000'
                                   : parseFloat(`${selectedLeaveLedger[0]?.sickLeaveBalance}`).toFixed(3)}
                               </Text>
                             </View>
@@ -1141,21 +1159,21 @@ export const LeavePdf = ({ leaveDetails, selectedLeaveLedger, vlEntry, slEntry }
                         style={{
                           position: 'absolute',
                           marginTop: 13,
-                          marginLeft: 13,
+                          marginLeft: 10,
                         }}
                       >
                         {leaveDetails.leaveApplicationBasicInfo?.leaveName === LeaveName.LEAVE_WITHOUT_PAY
                           ? `0`
                           : leaveDetails.leaveApplicationBasicInfo.leaveName === LeaveName.MONETIZATION
-                          ? `${
+                          ? `${(
                               Number(leaveDetails.leaveApplicationDetails.convertedVl) +
                               Number(leaveDetails.leaveApplicationDetails.convertedSl)
-                            }`
+                            ).toFixed(3)}`
                           : leaveDetails.leaveApplicationBasicInfo.leaveName === LeaveName.TERMINAL
-                          ? `${
+                          ? `${(
                               Number(leaveDetails.leaveApplicationDetails.vlBalance.afterTerminalLeave) +
                               Number(leaveDetails.leaveApplicationDetails.slBalance.afterTerminalLeave)
-                            }`
+                            ).toFixed(3)}`
                           : `${leaveDetails?.leaveApplicationBasicInfo?.leaveDates?.length}`}
                       </Text>
                       <Text>_______ days with pay</Text>

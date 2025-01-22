@@ -1278,7 +1278,7 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
                                 <div className="w-full">
                                   <input
                                     type="number"
-                                    step={'.001'}
+                                    step={'0'}
                                     min={1}
                                     max={
                                       selectedLeaveMonetizationType === MonetizationType.MAX50PERCENT
@@ -1375,9 +1375,9 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
                                 type="number"
                                 step={'.001'}
                                 className="border-slate-300 text-slate-500 h-12 text-md w-full rounded-md"
-                                placeholder="Leave Balance to Monetize"
+                                placeholder="Leave Balance to Convert"
                                 required
-                                value={leaveBalanceInput}
+                                value={leaveBalanceInput?.toFixed(3)}
                               />
                             </div>
                           </div>

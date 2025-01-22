@@ -155,7 +155,7 @@ export function MySelectList({ multiple, value, onChange, id, label, disabled = 
         </Popover.Trigger>
 
         <Popover.Content sideOffset={5} avoidCollisions={true} style={{ width: 'var(--radix-popover-trigger-width)' }}>
-          <ul className="border  rounded  max-h-[11em] bg-white z-50 overflow-y-auto w-full">
+          <ul className="border  rounded  max-h-[12.5em] bg-white z-50 overflow-y-auto w-full">
             {options.map((option, index) => (
               <li
                 onClick={(e) => {

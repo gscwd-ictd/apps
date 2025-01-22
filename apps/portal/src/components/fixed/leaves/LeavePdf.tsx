@@ -717,20 +717,14 @@ export const LeavePdf = ({
                         width: 250,
                       }}
                     >
-                      {leaveDetails.leaveApplicationBasicInfo.leaveName == LeaveName.MONETIZATION
-                        ? `P${leaveDetails.employeeDetails.assignment.salary.substring(1)} x ${
-                            Number(leaveDetails.leaveApplicationDetails.convertedVl) +
-                            Number(leaveDetails.leaveApplicationDetails.convertedSl)
-                          } day(s) x ${
-                            process.env.NEXT_PUBLIC_MONETIZATION_CONSTANT
-                          } = P${leaveDetails.leaveApplicationDetails.monetizedAmount.substring(1)} `
-                        : leaveDetails.leaveApplicationBasicInfo.leaveName == LeaveName.TERMINAL
-                        ? `P${leaveDetails.employeeDetails.assignment.salary.substring(1)} x ${
+                      {leaveDetails.leaveApplicationBasicInfo.leaveName === LeaveName.MONETIZATION
+                        ? Number(leaveDetails.leaveApplicationDetails.convertedVl) +
+                          Number(leaveDetails.leaveApplicationDetails.convertedSl)
+                        : leaveDetails.leaveApplicationBasicInfo.leaveName === LeaveName.TERMINAL
+                        ? (
                             Number(leaveDetails.leaveApplicationDetails.vlBalance.afterTerminalLeave) +
                             Number(leaveDetails.leaveApplicationDetails.slBalance.afterTerminalLeave)
-                          } day(s) x ${
-                            process.env.NEXT_PUBLIC_MONETIZATION_CONSTANT
-                          } = P${leaveDetails.leaveApplicationDetails.monetizedAmount.substring(1)} `
+                          ).toFixed(3)
                         : leaveDetails.leaveApplicationBasicInfo.leaveDates.length}
                     </Text>
                     <Text style={{ padding: 5 }}>_____________________________________________________</Text>
@@ -758,9 +752,23 @@ export const LeavePdf = ({
                         textIndent: 5,
                       }}
                     >
-                      {leaveDetails.leaveApplicationBasicInfo.leaveName != LeaveName.MONETIZATION &&
-                      leaveDetails.leaveApplicationBasicInfo.leaveName != LeaveName.TERMINAL &&
-                      leaveDetails.leaveApplicationBasicInfo.leaveDates
+                      {leaveDetails.leaveApplicationBasicInfo.leaveName === LeaveName.MONETIZATION
+                        ? `P${leaveDetails.employeeDetails.assignment.salary.substring(1)} x ${
+                            Number(leaveDetails.leaveApplicationDetails.convertedVl) +
+                            Number(leaveDetails.leaveApplicationDetails.convertedSl)
+                          } day(s) x ${
+                            process.env.NEXT_PUBLIC_MONETIZATION_CONSTANT
+                          } = P${leaveDetails.leaveApplicationDetails.monetizedAmount.substring(1)} `
+                        : leaveDetails.leaveApplicationBasicInfo.leaveName === LeaveName.TERMINAL
+                        ? `P${leaveDetails.employeeDetails.assignment.salary.substring(1)} x ${
+                            Number(leaveDetails.leaveApplicationDetails.vlBalance.afterTerminalLeave) +
+                            Number(leaveDetails.leaveApplicationDetails.slBalance.afterTerminalLeave)
+                          } day(s) x ${
+                            process.env.NEXT_PUBLIC_MONETIZATION_CONSTANT
+                          } = P${leaveDetails.leaveApplicationDetails.monetizedAmount.substring(1)} `
+                        : leaveDetails.leaveApplicationBasicInfo.leaveName !== LeaveName.MONETIZATION &&
+                          leaveDetails.leaveApplicationBasicInfo.leaveName !== LeaveName.TERMINAL &&
+                          leaveDetails.leaveApplicationBasicInfo.leaveDates
                         ? leaveDetails.leaveApplicationBasicInfo.leaveDates.length > 5
                           ? `From ${leaveDetails.leaveApplicationBasicInfo.leaveDates[0]} To ${
                               leaveDetails.leaveApplicationBasicInfo.leaveDates[
@@ -1147,13 +1155,31 @@ export const LeavePdf = ({
                       style={{
                         position: 'absolute',
                         marginTop: 0,
-                        marginLeft: 13,
+                        marginLeft: 8,
                       }}
                     >
-                      {leaveDetails.leaveApplicationBasicInfo.leaveName != LeaveName.LEAVE_WITHOUT_PAY &&
-                      leaveDetails.leaveApplicationBasicInfo.leaveName != LeaveName.MONETIZATION &&
-                      leaveDetails.leaveApplicationBasicInfo.leaveName != LeaveName.TERMINAL
+                      {leaveDetails.leaveApplicationBasicInfo.leaveName === LeaveName.ADOPTION ||
+                      leaveDetails.leaveApplicationBasicInfo.leaveName === LeaveName.FORCED ||
+                      leaveDetails.leaveApplicationBasicInfo.leaveName === LeaveName.MATERNITY ||
+                      leaveDetails.leaveApplicationBasicInfo.leaveName === LeaveName.PATERNITY ||
+                      leaveDetails.leaveApplicationBasicInfo.leaveName === LeaveName.REHABILITATION ||
+                      leaveDetails.leaveApplicationBasicInfo.leaveName === LeaveName.SICK ||
+                      leaveDetails.leaveApplicationBasicInfo.leaveName === LeaveName.SOLO_PARENT ||
+                      leaveDetails.leaveApplicationBasicInfo.leaveName === LeaveName.SPECIAL_EMERGENCY_CALAMITY ||
+                      leaveDetails.leaveApplicationBasicInfo.leaveName === LeaveName.SPECIAL_LEAVE_BENEFITS_FOR_WOMEN ||
+                      leaveDetails.leaveApplicationBasicInfo.leaveName === LeaveName.SPECIAL_PRIVILEGE ||
+                      leaveDetails.leaveApplicationBasicInfo.leaveName === LeaveName.STUDY ||
+                      leaveDetails.leaveApplicationBasicInfo.leaveName === LeaveName.VACATION ||
+                      leaveDetails.leaveApplicationBasicInfo.leaveName === LeaveName.VAWC
                         ? leaveDetails?.leaveApplicationBasicInfo?.leaveDates?.length
+                        : leaveDetails.leaveApplicationBasicInfo.leaveName === LeaveName.MONETIZATION
+                        ? Number(leaveDetails.leaveApplicationDetails.convertedVl) +
+                          Number(leaveDetails.leaveApplicationDetails.convertedSl)
+                        : leaveDetails.leaveApplicationBasicInfo.leaveName === LeaveName.TERMINAL
+                        ? (
+                            Number(leaveDetails.leaveApplicationDetails.vlBalance.afterTerminalLeave) +
+                            Number(leaveDetails.leaveApplicationDetails.slBalance.afterTerminalLeave)
+                          ).toFixed(3)
                         : 0}
                     </Text>
                     <Text>_______ days with pay</Text>
@@ -1169,7 +1195,7 @@ export const LeavePdf = ({
                       style={{
                         position: 'absolute',
                         marginTop: 0,
-                        marginLeft: 13,
+                        marginLeft: 8,
                       }}
                     >
                       {leaveDetails.leaveApplicationBasicInfo.leaveName === LeaveName.LEAVE_WITHOUT_PAY
@@ -1189,7 +1215,7 @@ export const LeavePdf = ({
                       style={{
                         position: 'absolute',
                         marginTop: 0,
-                        marginLeft: 13,
+                        marginLeft: 8,
                       }}
                     >
                       {0}
