@@ -229,7 +229,7 @@ export default function Calendar({
           }
 
           //for VL within 10 days from today and not late filing
-          if (
+          else if (
             leaveName === LeaveName.VACATION &&
             dayjs(`${specifiedDate}`).diff(`${today}`, 'day') >= 0 &&
             dayjs(`${specifiedDate}`).diff(`${today}`, 'day') <= 10 &&
@@ -238,7 +238,7 @@ export default function Calendar({
             setSelectedDates((selectedDates) => [...selectedDates, specifiedDate]);
           }
           //for FL/SOLO PARENT within 10 days from today and not late filing
-          if (
+          else if (
             (leaveName === LeaveName.FORCED || leaveName === LeaveName.SOLO_PARENT) &&
             dayjs(`${specifiedDate}`).diff(`${today}`, 'day') >= 0 &&
             dayjs(`${specifiedDate}`).diff(`${today}`, 'day') <= 10 &&
@@ -247,7 +247,7 @@ export default function Calendar({
             setSelectedDates((selectedDates) => [...selectedDates, specifiedDate]);
           }
           //for SPL/SICK/SOLO PARENT, between last duty date and today and not late filing
-          if (
+          else if (
             (leaveName === LeaveName.SPECIAL_PRIVILEGE ||
               leaveName === LeaveName.SICK ||
               leaveName === LeaveName.SOLO_PARENT) &&
@@ -258,7 +258,7 @@ export default function Calendar({
             setSelectedDates((selectedDates) => [...selectedDates, specifiedDate]);
           }
           // SPL/SICK and late filing
-          if (
+          else if (
             (leaveName === LeaveName.SPECIAL_PRIVILEGE || leaveName === LeaveName.SICK) &&
             dayjs(`${specifiedDate}`).diff(`${today}`, 'day') <= 10 &&
             isLateFiling
@@ -266,7 +266,7 @@ export default function Calendar({
             setSelectedDates((selectedDates) => [...selectedDates, specifiedDate]);
           }
           //for VL, FL, Solo Parent, SPL, within 10 days from today and the past days and is late filing
-          if (
+          else if (
             (leaveName === LeaveName.VACATION ||
               leaveName === LeaveName.FORCED ||
               leaveName === LeaveName.SOLO_PARENT) &&
