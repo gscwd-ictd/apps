@@ -69,7 +69,9 @@ export type EmployeeSchedule = {
 export type EmployeeScheduleForm = {
   id: string; // schedule id
   employeeId: string;
-  dtrDates: DateRange | Array<string>;
+  dateFrom: string;
+  dateTo: string;
+  // dtrDates: DateRange | Array<string>;
   scheduleName: string;
   scheduleId: string;
   restDays: Array<number>;
