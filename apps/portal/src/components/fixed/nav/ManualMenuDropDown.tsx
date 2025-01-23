@@ -36,7 +36,7 @@ export const ManualMenuDropdown = ({
 
   return (
     <>
-      <Menu as="div" className={`z-10 -mt-10 -ml-6 fixed lg:relative lg:-mt-0 lg:ml-0 inline-block text-left`}>
+      <Menu as="div" className={`z-0 -mt-10 -ml-6 fixed lg:relative lg:-mt-0 lg:ml-0 inline-block text-left`}>
         <div>
           <Menu.Button
             className={`${className} h-10 w-10 rounded flex justify-center items-center bg-white outline-none transition-colors ease-in-out hover:bg-slate-200 hover:text-slate-500 `}
