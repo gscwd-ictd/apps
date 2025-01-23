@@ -191,8 +191,15 @@ export default function Calendar({
     if (clickableDate) {
       setSelectedDay(day);
       const specifiedDate = format(day, 'yyyy-MM-dd');
+
+      if (DateFormatter(day, 'YYYY-MM-DD') === '2025-01-27') {
+        //do nothing
+        //will not add date to array
+        //Muslim holiday
+        //8hr work suspension only / not considered as holiday in the office
+      }
       //check if selected date exist in array - returns true/false
-      if (selectedDates.includes(specifiedDate)) {
+      else if (selectedDates.includes(specifiedDate)) {
         //removes date
         setSelectedDates(
           selectedDates.filter(function (e) {
@@ -502,6 +509,9 @@ export default function Calendar({
                           onClick={() => viewDateActivities(day)}
                           className={classNames(
                             isEqual(day, selectedDay) && 'text-gray-900 font-semibold',
+
+                            //disable date selection for January 27, 2025 - 8hr work suspension/not a holiday
+                            DateFormatter(day, 'YYYY-MM-DD') === '2025-01-27' && 'text-red-600 bg-red-300 rounded-full',
 
                             //disable date selection for past dates from current day for VL/FL
                             (leaveName === LeaveName.VACATION || leaveName === LeaveName.FORCED) &&
