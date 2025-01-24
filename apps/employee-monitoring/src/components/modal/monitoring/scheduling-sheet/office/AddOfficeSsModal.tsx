@@ -29,6 +29,7 @@ const AddOfficeSsModal: FunctionComponent<AddOfficeSsModalProps> = ({
   closeModalAction,
   setModalState,
 }) => {
+  // state for checking if restday is empty
   const [employeeRestDayIsEmpty, setEmployeeRestDayIsEmpty] = useState<boolean>(true);
 
   // react hook form
@@ -337,7 +338,9 @@ const AddOfficeSsModal: FunctionComponent<AddOfficeSsModalProps> = ({
                 <section className="flex flex-col w-full h-full gap-2 px-5 py-4 rounded-xl">
                   <div className="flex flex-col justify-center w-full pb-2">
                     <p className="flex items-center justify-start w-full font-light">Effectivity Date</p>
+
                     <hr className="h-1 mt-2 mb-4 bg-gray-200 border-0 rounded" />
+
                     <div className="grid gap-2 sm:grid-cols-1 md:grid-cols-1 lg:grid-cols-2">
                       <LabelInput
                         id="officesStartDate"

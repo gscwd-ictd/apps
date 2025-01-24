@@ -263,8 +263,8 @@ export const OvertimeSummaryReportPdf = ({
                         styles.tableCol,
                         {
                           borderBottomWidth: 0,
-                          width: 40,
-                          height: 35,
+                          width: 41,
+                          height: 36,
                           textAlign: 'center',
                         },
                       ]}
