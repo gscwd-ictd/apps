@@ -74,7 +74,7 @@ export const OvertimeAccomplishmentModal = ({ modalState, setModalState, closeMo
     defaultValues: {
       employeeId: overtimeAccomplishmentDetails.employeeId,
       overtimeApplicationId: overtimeAccomplishmentDetails.overtimeApplicationId,
-      encodedTimeIn: overtimeAccomplishmentDetails.encodedTimeIn,
+      encodedTmieIn: overtimeAccomplishmentDetails.encodedTimeIn,
       encodedTimeOut: overtimeAccomplishmentDetails.encodedTimeOut,
       accomplishments: overtimeAccomplishmentDetails.remarks,
     },
@@ -240,13 +240,6 @@ export const OvertimeAccomplishmentModal = ({ modalState, setModalState, closeMo
           {!overtimeAccomplishmentDetails ? (
             <div className="w-full h-[90%]  static flex flex-col justify-center items-center place-items-center">
               <LoadingSpinner size={'lg'} />
-              {/* <SpinnerDotted
-                  speed={70}
-                  thickness={70}
-                  className="w-full flex h-full transition-all "
-                  color="slateblue"
-                  size={100}
-                /> */}
             </div>
           ) : (
             <form id="SubmitAccomplishmentForm" onSubmit={handleSubmit(onSubmit)}>
@@ -359,17 +352,6 @@ export const OvertimeAccomplishmentModal = ({ modalState, setModalState, closeMo
                               `${dayjs().format('YYYY-MM-DD HH:mm:ss')}`
                             ).days
                           } day(s) left before deadline of submission.`}
-                          dismissible={false}
-                        />
-                      ) : null}
-
-                      {/* Emergency OT and Encoded TimeIn/Out is empty - for Field, Pumping Only */}
-                      {(overtimeAccomplishmentDetails.status === OvertimeAccomplishmentStatus.PENDING &&
-                        finalEncodedHours <= 0) ||
-                      isNaN(finalEncodedHours) ? (
-                        <AlertNotification
-                          alertType="error"
-                          notifMessage={'Encoded Time In and Time Out fields are empty.'}
                           dismissible={false}
                         />
                       ) : null}
@@ -631,6 +613,25 @@ export const OvertimeAccomplishmentModal = ({ modalState, setModalState, closeMo
                                   />
                                 </div>
                               </div>
+                              {/* Emergency OT and Encoded TimeIn/Out is empty - for Field, Pumping Only */}
+                              {(overtimeAccomplishmentDetails.status === OvertimeAccomplishmentStatus.PENDING &&
+                                finalEncodedHours <= 0) ||
+                              isNaN(finalEncodedHours) ? (
+                                <div className={`flex flex-col justify-start items-start w-full px-0.5 pt-1`}>
+                                  <div className="flex flex-col gap-1 w-full  text-sm ">
+                                    <span className="text-red-500">Total rendered over time cannot be zero.</span>
+                                  </div>
+                                </div>
+                              ) : null}
+
+                              {dayjs(watch('encodedTimeIn')).format('YYYY-MM-DDThh:mm') >
+                              dayjs(watch('encodedTimeOut')).format('YYYY-MM-DDThh:mm') ? (
+                                <div className={`flex flex-col justify-start items-start w-full px-0.5 pt-1`}>
+                                  <div className="flex flex-col gap-1 w-full  text-sm ">
+                                    <span className="text-red-500">Time In cannot be more than the Time Out.</span>
+                                  </div>
+                                </div>
+                              ) : null}
                             </div>
                           )}
                         </div>
@@ -736,7 +737,9 @@ export const OvertimeAccomplishmentModal = ({ modalState, setModalState, closeMo
                       !dtr.timeIn &&
                       !dtr.timeOut &&
                       !dtr.lunchIn &&
-                      !dtr.lunchOut)
+                      !dtr.lunchOut) ||
+                    dayjs(watch('encodedTimeIn')).format('YYYY-MM-DDThh:mm') >
+                      dayjs(watch('encodedTimeOut')).format('YYYY-MM-DDThh:mm')
                       ? true
                       : false
                   }
