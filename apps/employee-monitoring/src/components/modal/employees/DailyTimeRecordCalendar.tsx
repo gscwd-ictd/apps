@@ -106,7 +106,9 @@ export default function DailyTimeRecordCalendar({
                       className={classNames(
                         'mx-auto flex h-8 w-8 items-center justify-center rounded-full',
                         dtrDates.includes(format(day, 'yyyy-MM-dd')) && 'bg-green-500 text-white',
-                        currentDate === format(day, 'yyyy-MM-dd') && 'bg-blue-500 text-white'
+                        currentDate === format(day, 'yyyy-MM-dd') &&
+                          !dtrDates.includes(currentDate) &&
+                          'bg-blue-500 text-white'
                       )}
                       {...controller}
                       id={id}

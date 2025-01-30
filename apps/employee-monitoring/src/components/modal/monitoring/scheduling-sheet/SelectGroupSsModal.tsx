@@ -1,5 +1,5 @@
 /* eslint-disable @nx/enforce-module-boundaries */
-import { DataTable, Modal, useDataTable } from '@gscwd-apps/oneui';
+import { AlertNotification, DataTable, Modal, useDataTable } from '@gscwd-apps/oneui';
 import { createColumnHelper } from '@tanstack/react-table';
 import { LabelValue } from 'apps/employee-monitoring/src/components/labels/LabelValue';
 import { useCustomGroupStore } from 'apps/employee-monitoring/src/store/custom-group.store';
@@ -103,9 +103,10 @@ const SelectGroupSsModal: FunctionComponent<SelectGroupSsModalProps> = ({
     setSelectedGroupId(localSelectedGroupId);
 
     // map the selected group and assign an empty array to rest days
-    const membersWithRestDays = groupWithMembers.members.map((member) => {
-      return { ...member };
-    });
+    // const membersWithRestDays = groupWithMembers.members.map((member) => {
+    //   return { ...member };
+    // }); UNCOMMENT LATER
+    const membersWithRestDays = [];
 
     //! Replaced with groupWithMembers later if rest days are available
     setCurrentScheduleSheet({
@@ -218,11 +219,18 @@ const SelectGroupSsModal: FunctionComponent<SelectGroupSsModalProps> = ({
         </Modal.Header>
 
         <Modal.Body>
-          <>
+          {isEmpty(groupWithMembers.members) ? (
+            <AlertNotification
+              alertType="warning"
+              notifMessage="Selecting a group with zero(0) members is not allowed."
+              dismissible={false}
+            />
+          ) : null}
+
+          <div>
             <Select
               id="customReactGroups"
               name="groups"
-              // styles={{ menuPortal: (base) => ({ ...base, zIndex: 9999 }) }}
               options={transformedGroups ?? []}
               className="z-50 w-full basic-multi-select"
               classNamePrefix="select2-selection"
@@ -236,28 +244,29 @@ const SelectGroupSsModal: FunctionComponent<SelectGroupSsModalProps> = ({
                 setLocalSelectedGroupId(newValue.value.toString());
               }}
             />
-            {!isEmpty(localSelectedGroupId) && !isEmpty(groupWithMembers) ? (
-              <div className="px-2 py-4 mt-2 border border-dashed rounded bg-gray-100/50">
-                <div className="grid grid-cols-2 grid-rows-3">
-                  <LabelValue
-                    label="Group Name: "
-                    direction="left-to-right"
-                    textSize="sm"
-                    value={groupWithMembers.customGroupDetails.name}
-                  />
-                  <LabelValue
-                    label="Description: "
-                    direction="left-to-right"
-                    textSize="sm"
-                    value={groupWithMembers.customGroupDetails.description}
-                  />
-                </div>
-                <DataTable model={table} paginate={!isEmpty(groupWithMembers.members) ? true : false} />
+          </div>
+
+          {!isEmpty(localSelectedGroupId) && !isEmpty(groupWithMembers) ? (
+            <div className="px-2 py-4 mt-2 border border-dashed rounded bg-gray-100/50">
+              <div className="grid grid-cols-2 grid-rows-3">
+                <LabelValue
+                  label="Group Name: "
+                  direction="left-to-right"
+                  textSize="sm"
+                  value={groupWithMembers.customGroupDetails.name}
+                />
+                <LabelValue
+                  label="Description: "
+                  direction="left-to-right"
+                  textSize="sm"
+                  value={groupWithMembers.customGroupDetails.description}
+                />
               </div>
-            ) : (
-              <div className="flex justify-center w-full mt-2 text-gray-400">--No selected group--</div>
-            )}
-          </>
+              <DataTable model={table} paginate={!isEmpty(groupWithMembers.members) ? true : false} />
+            </div>
+          ) : (
+            <div className="flex justify-center w-full mt-2 text-gray-400">--No selected group--</div>
+          )}
         </Modal.Body>
 
         <Modal.Footer>
@@ -273,7 +282,7 @@ const SelectGroupSsModal: FunctionComponent<SelectGroupSsModalProps> = ({
                 className="px-3 py-2 text-sm text-white bg-red-500 rounded disabled:cursor-not-allowed hover:bg-red-400"
                 type="button"
                 onClick={onSubmit}
-                disabled={isEmpty(groupWithMembers.members) ? true : false}
+                // disabled={isEmpty(groupWithMembers.members) ? true : false} UNCOMMENT LATER
               >
                 Submit
               </button>

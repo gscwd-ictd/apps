@@ -113,14 +113,20 @@ const Index = () => {
     if (leaveDates) {
       if (leaveDates.length > 4) {
         return (
-          <span className="bg-gray-300 text-gray-700 text-xs font-mono px-1 py-0.5 ml-1 rounded text-center">
-            {leaveDates[0]} to {leaveDates.slice(-1)}
+          <span className="inline-flex items-center">
+            <span className="inline-flex items-center bg-indigo-200 text-indigo-700 text-xs font-mono px-1 py-0.5 mx-1 rounded text-center">
+              {leaveDates[0]}
+            </span>
+            to
+            <span className="inline-flex items-center bg-indigo-200 text-indigo-700 text-xs font-mono px-1 py-0.5 ml-1 mt-1 rounded text-center">
+              {leaveDates.slice(-1)}
+            </span>
           </span>
         );
       } else {
         return leaveDates.map((leaveDate: string, index: number) => (
           <span
-            className="bg-gray-300 text-gray-700 text-xs font-mono px-1 py-0.5 ml-1 rounded text-center"
+            className="inline-flex items-center bg-indigo-200 text-indigo-700 text-xs font-mono px-1 py-0.5 ml-1 mt-1 rounded text-center"
             key={index}
           >
             {leaveDate}
@@ -163,7 +169,7 @@ const Index = () => {
       cell: (info) => info.getValue(),
     }),
     columnHelper.accessor('referenceNo', {
-      header: 'Reference No.',
+      header: 'Ref No.',
       enableColumnFilter: false,
       cell: (info) => info.getValue(),
     }),
@@ -212,7 +218,7 @@ const Index = () => {
   const { table } = useDataTable({
     columns: columns,
     data: LeaveApplications,
-    columnVisibility: { id: false, leaveDates: false, employeeId: false },
+    columnVisibility: { id: false, employeeId: false, isLateFiling: false },
   });
 
   // Initial zustand state update
