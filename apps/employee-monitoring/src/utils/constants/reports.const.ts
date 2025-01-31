@@ -1,4 +1,7 @@
-export const Reports = [
+/* eslint-disable @nx/enforce-module-boundaries */
+import { SelectOption } from 'libs/utils/src/lib/types/select.type';
+
+export const Reports: Array<SelectOption> = [
   // 0
   {
     label: 'Report on Attendance',
@@ -58,5 +61,10 @@ export const Reports = [
   {
     label: 'Detailed Report on Personal Business Pass Slip (COS-JO)',
     value: 'detailed report on personal business pass slip (cos-jo)',
+  },
+  // 12
+  {
+    label: 'Report on Unused Pass Slip',
+    value: 'report on unused pass slip',
   },
 ];
