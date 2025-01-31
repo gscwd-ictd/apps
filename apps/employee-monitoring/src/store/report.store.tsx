@@ -14,6 +14,7 @@ import {
   ReportOnEmpSickLeaveCredits,
   ReportOnEmpRehabLeaveCredits,
   DetailedReportOnPbPassSlipCosJo,
+  ReportOnUnusedPassSlip,
 } from '../utils/types/report.type';
 
 export type ReportsState = {
@@ -96,6 +97,12 @@ export type ReportsState = {
 
   errorDetailedReportOnPbPassSlipCosJoDoc: string;
   setErrorDetailedReportOnPbPassSlipCosJoDoc: (errorDetailedReportOnPbPassSlipCosJoDoc: string) => void;
+
+  reportOnUnusedPassSlipDoc: ReportOnUnusedPassSlip;
+  setReportOnUnusedPassSlipDoc: (reportOnUnusedPassSlipDoc: ReportOnUnusedPassSlip) => void;
+
+  errorReportOnUnusedPassSlipDoc: string;
+  setErrorReportOnUnusedPassSlipDoc: (errorReportOnUnusedPassSlipDoc: string) => void;
 
   emptyResponse: () => void;
 };
@@ -201,6 +208,12 @@ export const useReportsStore = create<ReportsState>()(
     setErrorDetailedReportOnPbPassSlipCosJoDoc: (errorDetailedReportOnPbPassSlipCosJoDoc) =>
       set({ errorDetailedReportOnPbPassSlipCosJoDoc }),
 
+    reportOnUnusedPassSlipDoc: {} as ReportOnUnusedPassSlip,
+    setReportOnUnusedPassSlipDoc: (reportOnUnusedPassSlipDoc) => set({ reportOnUnusedPassSlipDoc }),
+
+    errorReportOnUnusedPassSlipDoc: '',
+    setErrorReportOnUnusedPassSlipDoc: (errorReportOnUnusedPassSlipDoc) => set({ errorReportOnUnusedPassSlipDoc }),
+
     emptyResponse: () =>
       set({
         errorReportOnAttendanceDoc: '',
@@ -213,6 +226,7 @@ export const useReportsStore = create<ReportsState>()(
         errorReportOnEmpLeaveCreditsBalanceWMoneyDoc: '',
         errorReportOnSummaryLeaveWithoutPayDoc: '',
         errorDetailedReportOnPbPassSlipCosJoDoc: '',
+        errorReportOnUnusedPassSlipDoc: '',
       }),
   }))
 );

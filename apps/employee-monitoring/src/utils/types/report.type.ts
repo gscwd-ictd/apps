@@ -5,6 +5,7 @@ export type Report = {
   dateTo?: string;
   monthYear?: string;
   employeeId?: string;
+  passSlipType?: string;
 };
 
 export type EmployeeSignatory = {
@@ -184,5 +185,20 @@ export type EmployeeDroPbPsCJ = {
 };
 export type DetailedReportOnPbPassSlipCosJo = {
   report: Array<EmployeeDroPbPsCJ>;
+  signatory: ReportSignatories;
+};
+
+// Report on Unused Pass Slip = RoUPs
+export type EmployeeRoUPs = {
+  employeeId: string;
+  name: string;
+  dateApplied: string;
+  approvedBy: string;
+  dateApproved: string;
+  natureOfBusiness: string;
+  purpose: string;
+};
+export type ReportOnUnusedPassSlip = {
+  report: Array<EmployeeRoUPs>;
   signatory: ReportSignatories;
 };

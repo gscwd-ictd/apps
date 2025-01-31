@@ -1,7 +1,7 @@
 import { Can } from 'apps/employee-monitoring/src/context/casl/Can';
 import { Navigate } from '../../components/router/navigate';
 import { SubmitHandler, useForm } from 'react-hook-form';
-import { Reports } from '../../utils/enum/reports.enum';
+import { Reports } from '../../utils/constants/reports.const';
 import { Report } from 'apps/employee-monitoring/src/utils/types/report.type';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
@@ -17,6 +17,7 @@ import fetcherHRMS from 'apps/employee-monitoring/src/utils/fetcher/FetcherHRMS'
 import useSWR from 'swr';
 import { useEmployeeStore } from 'apps/employee-monitoring/src/store/employee.store';
 import { isEmpty } from 'lodash';
+import { natureOfBusiness } from '../../utils/constants/pass-slip.const';
 
 // yup error handling initialization
 const yupSchema = yup.object().shape({
@@ -172,6 +173,7 @@ export default function Index() {
       dateTo: null,
       monthYear: null,
       employeeId: null,
+      passSlipType: null,
     },
     resolver: yupResolver(yupSchema),
   });
@@ -182,14 +184,26 @@ export default function Index() {
   const onSubmit: SubmitHandler<Report> = (data: Report) => {
     const url = `${window.location}/${replaceSpaceToDash(data.reportName)}?reportName=${data.reportName}`;
 
+    // from and to fields
     const paramToFrom = `&date_from=${ConvertFullMonthNameToDigit(data.dateFrom)}&date_to=${ConvertFullMonthNameToDigit(
       data.dateTo
     )}`;
+
+    // month-year fields
     const paramMonthYear = `&month_year=${ConvertToYearMonth(data.monthYear)}`;
+
+    // from-to and employee fields
     const paramToFromWithEmployee = `&date_from=${ConvertFullMonthNameToDigit(
       data.dateFrom
     )}&date_to=${ConvertFullMonthNameToDigit(data.dateTo)}&employee_id=${
       !isEmpty(data.employeeId) ? data.employeeId : ''
+    }`;
+
+    // from-to and type of pass slip fields
+    const paramToFromUnusedPS = `&date_from=${ConvertFullMonthNameToDigit(
+      data.dateFrom
+    )}&date_to=${ConvertFullMonthNameToDigit(data.dateTo)}&pass_slip=${
+      !isEmpty(data.passSlipType) ? data.passSlipType : ''
     }`;
 
     // condition if param needs to be month & year OR date to & date from
@@ -208,6 +222,12 @@ export default function Index() {
       data.reportName === Reports[10].value
     ) {
       window.open(url + paramToFromWithEmployee, '_blank', 'noopener,noreferrer');
+      reset();
+    } else if (
+      // conditions if param need from, to, and pass slip type
+      data.reportName === Reports[12].value
+    ) {
+      window.open(url + paramToFromUnusedPS, '_blank', 'noopener,noreferrer');
       reset();
     } else {
       window.open(url + paramToFrom, '_blank', 'noopener,noreferrer');
@@ -235,6 +255,7 @@ export default function Index() {
       unregister('dateFrom');
       unregister('dateTo');
       unregister('employeeId');
+      unregister('passSlipType');
     } else if (
       watchReportName === Reports[4].value ||
       watchReportName === Reports[9].value ||
@@ -245,12 +266,21 @@ export default function Index() {
       register('employeeId');
 
       unregister('monthYear');
+      unregister('passSlipType');
+    } else if (watchReportName === Reports[12].value) {
+      register('dateFrom');
+      register('dateTo');
+      register('passSlipType');
+
+      unregister('employeeId');
+      unregister('monthYear');
     } else {
       register('dateFrom');
       register('dateTo');
 
       unregister('monthYear');
       unregister('employeeId');
+      unregister('passSlipType');
     }
   }, [register, unregister, watchReportName]);
 
@@ -358,6 +388,48 @@ export default function Index() {
                             errorMessage={errors.employeeId?.message}
                             disabled={employeesLoading}
                             isLoading={employeesLoading}
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  ) : watchReportName === Reports[12].value ? (
+                    <div>
+                      <div className="grid grid-cols-2 gap-2">
+                        {/* Date From input */}
+                        <div>
+                          <LabelInput
+                            id="dateFrom"
+                            label={'Date From'}
+                            type="date"
+                            controller={{ ...register('dateFrom') }}
+                            isError={errors.dateFrom ? true : false}
+                            errorMessage={errors.dateFrom?.message}
+                          />
+                        </div>
+
+                        {/* Date To input */}
+                        <div>
+                          <LabelInput
+                            id="dateTo"
+                            label={'Date To'}
+                            type="date"
+                            controller={{ ...register('dateTo') }}
+                            isError={errors.dateTo ? true : false}
+                            errorMessage={errors.dateTo?.message}
+                          />
+                        </div>
+
+                        {/* pass slip type */}
+                        <div>
+                          <SelectListRF
+                            id="passSlipType"
+                            selectList={natureOfBusiness}
+                            controller={{
+                              ...register('passSlipType'),
+                            }}
+                            label="Nature of Business"
+                            isError={errors.passSlipType ? true : false}
+                            errorMessage={errors.passSlipType?.message}
                           />
                         </div>
                       </div>
