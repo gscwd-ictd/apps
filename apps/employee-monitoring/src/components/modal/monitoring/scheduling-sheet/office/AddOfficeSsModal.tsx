@@ -10,7 +10,6 @@ import { useForm } from 'react-hook-form';
 import SelectGroupSsModal from '../SelectGroupSsModal';
 import SelectOfficeSchedSsModal from './SelectOfficeSchedSsModal';
 import SelectedEmployeesSsTable from '../SelectedEmployeesSsTable';
-import { EmployeeAsOptionWithRestDays } from 'libs/utils/src/lib/types/employee.type';
 import { postEmpMonitoring } from 'apps/employee-monitoring/src/utils/helper/employee-monitoring-axios-helper';
 import { useCustomGroupStore } from 'apps/employee-monitoring/src/store/custom-group.store';
 
@@ -406,7 +405,11 @@ const AddOfficeSsModal: FunctionComponent<AddOfficeSsModalProps> = ({
                       className="w-full px-2 py-2 text-white rounded disabled:cursor-not-allowed bg-slate-700 hover:bg-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
                       onClick={openSelectGroupModal}
                       type="button"
-                      disabled={!isEmpty(getValues('dtrDates.dateFrom')) && !isEmpty(getValues('dtrDates.dateTo'))}
+                      disabled={
+                        !isEmpty(getValues('dtrDates.dateFrom')) && !isEmpty(getValues('dtrDates.dateTo'))
+                          ? false
+                          : true
+                      }
                     >
                       <span className="text-xs ">Select Group</span>
                     </button>
