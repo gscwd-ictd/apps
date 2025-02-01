@@ -47,6 +47,16 @@ export type ScheduleSheet = {
   employees?: Array<EmployeeAsOptionWithRestDays>;
 };
 
+export type ScheduleSheetForm = {
+  id: string;
+  scheduleId: string;
+  scheduleName?: string;
+  customGroupId: string;
+  customGroupName?: string;
+  dtrDates: DateRange;
+  employees?: Array<EmployeeAsOptionWithRestDays>;
+};
+
 export type CurrentScheduleSheet = {
   customGroupId: string;
   customGroupName: string;
@@ -81,7 +91,7 @@ export type DateRange = {
 };
 
 export type ScheduleSheetState = {
-  currentScheduleSheet: ScheduleSheet;
+  currentScheduleSheet: ScheduleSheetForm;
   currentEmployeeSchedule: EmployeeSchedule;
 
   postScheduleSheetResponse: ScheduleSheet;
@@ -111,7 +121,7 @@ export type ScheduleSheetState = {
   getScheduleSheetsSuccess: (response: Array<ScheduleSheet>) => void;
   getScheduleSheetsFail: (error: string) => void;
 
-  setCurrentScheduleSheet: (currentScheduleSheet: ScheduleSheet) => void;
+  setCurrentScheduleSheet: (currentScheduleSheet: ScheduleSheetForm) => void;
   setCurrentEmployeeSchedule: (currentEmployeeSchedule: EmployeeSchedule) => void;
 
   postScheduleSheet: () => void;
@@ -153,13 +163,15 @@ export const useScheduleSheetStore = create<ScheduleSheetState>()(
     currentScheduleSheet: {
       id: '',
       scheduleId: '',
-      dateFrom: '',
-      dateTo: '',
+      dtrDates: {
+        dateFrom: '',
+        dateTo: '',
+      },
       customGroupId: '',
       scheduleName: '',
       scheduleSheetGroupName: '',
       employees: [],
-    } as ScheduleSheet,
+    } as ScheduleSheetForm,
     schedule: {} as Schedule,
 
     postScheduleSheetResponse: {} as ScheduleSheet,
@@ -348,7 +360,7 @@ export const useScheduleSheetStore = create<ScheduleSheetState>()(
         error: { ...state.error, errorScheduleSheet: error },
       })),
 
-    setCurrentScheduleSheet: (currentScheduleSheet: ScheduleSheet) =>
+    setCurrentScheduleSheet: (currentScheduleSheet: ScheduleSheetForm) =>
       set((state) => ({ ...state, currentScheduleSheet })),
 
     setSelectedScheduleId: (selectedScheduleId: string) => set((state) => ({ ...state, selectedScheduleId })),
@@ -451,13 +463,15 @@ export const useScheduleSheetStore = create<ScheduleSheetState>()(
         selectedScheduleId: '',
         currentScheduleSheet: {
           customGroupId: '',
-          dateFrom: '',
-          dateTo: '',
+          dtrDates: {
+            dateFrom: '',
+            dateTo: '',
+          },
           scheduleId: '',
           customGroupName: '',
           scheduleName: '',
           employees: [],
-        } as ScheduleSheet,
+        } as ScheduleSheetForm,
         loading: { ...state.loading, loadingSchedule: false },
         currentEmployeeSchedule: {} as EmployeeSchedule,
       }));

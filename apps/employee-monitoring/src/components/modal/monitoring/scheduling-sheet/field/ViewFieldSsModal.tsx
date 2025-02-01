@@ -156,8 +156,10 @@ const ViewFieldSsModal: FunctionComponent<ViewFieldSsModalProps> = ({
       scheduleName: rowData.scheduleName,
       customGroupId: rowData.customGroupId,
       customGroupName: rowData.customGroupName,
-      dateFrom: dayjs(rowData.dateFrom).format('MM-DD-YYYY'),
-      dateTo: dayjs(rowData.dateTo).format('MM-DD-YYYY'),
+      dtrDates: {
+        dateFrom: dayjs(rowData.dateFrom).format('MM-DD-YYYY'),
+        dateTo: dayjs(rowData.dateTo).format('MM-DD-YYYY'),
+      },
     });
   };
 
@@ -256,7 +258,10 @@ const ViewFieldSsModal: FunctionComponent<ViewFieldSsModalProps> = ({
                           onChange: (e) =>
                             setCurrentScheduleSheet({
                               ...currentScheduleSheet,
-                              dateFrom: e.target.value,
+                              dtrDates: {
+                                ...currentScheduleSheet.dtrDates,
+                                dateFrom: e.target.value,
+                              },
                             }),
                         }),
                       }}
@@ -273,7 +278,10 @@ const ViewFieldSsModal: FunctionComponent<ViewFieldSsModalProps> = ({
                           onChange: (e) =>
                             setCurrentScheduleSheet({
                               ...currentScheduleSheet,
-                              dateTo: e.target.value,
+                              dtrDates: {
+                                ...currentScheduleSheet.dtrDates,
+                                dateTo: e.target.value,
+                              },
                             }),
                         }),
                       }}
