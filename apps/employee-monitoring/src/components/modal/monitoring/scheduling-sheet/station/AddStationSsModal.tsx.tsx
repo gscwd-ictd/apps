@@ -1,6 +1,6 @@
 import { Button, LoadingSpinner, Modal } from '@gscwd-apps/oneui';
 import { LabelInput } from 'apps/employee-monitoring/src/components/inputs/LabelInput';
-import { ScheduleSheet, useScheduleSheetStore } from 'apps/employee-monitoring/src/store/schedule-sheet.store';
+import { ScheduleSheetForm, useScheduleSheetStore } from 'apps/employee-monitoring/src/store/schedule-sheet.store';
 import { Dispatch, FunctionComponent, SetStateAction, useEffect, useState } from 'react';
 import useSWR from 'swr';
 import fetcherEMS from 'apps/employee-monitoring/src/utils/fetcher/FetcherEMS';
@@ -18,10 +18,6 @@ type AddStationSsModalProps = {
   modalState: boolean;
   setModalState: Dispatch<SetStateAction<boolean>>;
   closeModalAction: () => void;
-};
-
-type ScheduleSheetForm = ScheduleSheet & {
-  employees: Array<EmployeeAsOptionWithRestDays>;
 };
 
 const AddStationSsModal: FunctionComponent<AddStationSsModalProps> = ({
@@ -45,8 +41,10 @@ const AddStationSsModal: FunctionComponent<AddStationSsModalProps> = ({
       scheduleId: '',
       employees: [],
       scheduleName: '',
-      dateFrom: '',
-      dateTo: '',
+      dtrDates: {
+        dateFrom: '',
+        dateTo: '',
+      },
     },
   });
 
@@ -57,9 +55,11 @@ const AddStationSsModal: FunctionComponent<AddStationSsModalProps> = ({
       id: '',
       scheduleId: '',
       customGroupId: '',
-      dateFrom: '',
-      dateTo: '',
-    }) as unknown as ScheduleSheet;
+      dtrDates: {
+        dateFrom: '',
+        dateTo: '',
+      },
+    }) as unknown as ScheduleSheetForm;
     setSelectedGroupId('');
     setSelectedScheduleId('');
     closeModalAction();
@@ -339,38 +339,38 @@ const AddStationSsModal: FunctionComponent<AddStationSsModalProps> = ({
                     <hr className="h-1 mt-2 mb-4 bg-gray-200 border-0 rounded" />
                     <div className="grid gap-2 sm:grid-cols-1 md:grid-cols-1 lg:grid-cols-2">
                       <LabelInput
-                        id="stationSsStartDate"
-                        name="dateFrom"
+                        id="fieldsStartDate"
+                        name="dtrDates.dateFrom"
                         type="date"
                         label="Start Date"
                         controller={{
-                          ...register('dateFrom', {
+                          ...register('dtrDates.dateFrom', {
                             onChange: (e) =>
                               setCurrentScheduleSheet({
                                 ...currentScheduleSheet,
-                                dateFrom: e.target.value,
+                                dtrDates: { ...currentScheduleSheet.dtrDates, dateFrom: e.target.value },
                               }),
                           }),
                         }}
-                        isError={errors.dateFrom ? true : false}
-                        errorMessage={errors.dateFrom?.message}
+                        isError={errors.dtrDates?.dateFrom ? true : false}
+                        errorMessage={errors.dtrDates?.dateFrom.message}
                       />
                       <LabelInput
-                        id="stationSsEndDate"
-                        name="dateTo"
+                        id="fieldSsEndDate"
+                        name="dtrDates.dateTo"
                         type="date"
                         label="End Date"
                         controller={{
-                          ...register('dateTo', {
+                          ...register('dtrDates.dateTo', {
                             onChange: (e) =>
                               setCurrentScheduleSheet({
                                 ...currentScheduleSheet,
-                                dateTo: e.target.value,
+                                dtrDates: { ...currentScheduleSheet.dtrDates, dateTo: e.target.value },
                               }),
                           }),
                         }}
-                        isError={errors.dateTo ? true : false}
-                        errorMessage={errors.dateTo?.message}
+                        isError={errors.dtrDates?.dateTo ? true : false}
+                        errorMessage={errors.dtrDates?.dateTo?.message}
                       />
                     </div>
                   </div>
@@ -390,8 +390,8 @@ const AddStationSsModal: FunctionComponent<AddStationSsModalProps> = ({
                         value={
                           !isEmpty(scheduleSheet.customGroupDetails) ? scheduleSheet.customGroupDetails.name : '--'
                         }
-                        isError={errors.dateFrom ? true : false}
-                        errorMessage={errors.dateFrom?.message}
+                        isError={errors.dtrDates?.dateFrom ? true : false}
+                        errorMessage={errors.dtrDates?.dateFrom.message}
                         disabled
                       />
                     )}
@@ -402,7 +402,7 @@ const AddStationSsModal: FunctionComponent<AddStationSsModalProps> = ({
                       className="w-full px-2 py-2 text-white rounded disabled:cursor-not-allowed bg-slate-700 hover:bg-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
                       onClick={openSelectGroupModal}
                       type="button"
-                      disabled={!isEmpty(getValues('dateFrom')) && !isEmpty(getValues('dateTo')) ? false : true}
+                      disabled={!isEmpty(getValues('dtrDates.dateFrom')) && !isEmpty(getValues('dtrDates.dateTo'))}
                     >
                       <span className="text-xs ">Select Group</span>
                     </button>

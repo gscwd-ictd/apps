@@ -17,10 +17,10 @@ const ViewEmployeesSsTable = () => {
 
   // listens to date from and date to, if both are filled-out then set the state to true
   useEffect(() => {
-    if (!isEmpty(currentScheduleSheet.dateFrom) && !isEmpty(currentScheduleSheet.dateTo)) {
+    if (!isEmpty(currentScheduleSheet.dtrDates?.dateFrom) && !isEmpty(currentScheduleSheet.dtrDates?.dateTo)) {
       setIsDateRangeFilled(true);
     }
-  }, [currentScheduleSheet.dateFrom, currentScheduleSheet.dateTo]);
+  }, [currentScheduleSheet.dtrDates?.dateFrom, currentScheduleSheet.dtrDates?.dateTo]);
 
   // Define table columns
   const columnHelper = createColumnHelper<EmployeeAsOptionWithRestDays>();
