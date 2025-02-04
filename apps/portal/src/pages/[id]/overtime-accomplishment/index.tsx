@@ -53,10 +53,11 @@ export default function OvertimeAccomplishment({
     getOvertimeAccomplishmentListFail: state.getOvertimeAccomplishmentListFail,
   }));
 
-  const { getTimeLogs, getTimeLogsSuccess, getTimeLogsFail } = useTimeLogStore((state) => ({
+  const { getTimeLogs, getTimeLogsSuccess, getTimeLogsFail, errorTimeLogs } = useTimeLogStore((state) => ({
     getTimeLogs: state.getTimeLogs,
     getTimeLogsSuccess: state.getTimeLogsSuccess,
     getTimeLogsFail: state.getTimeLogsFail,
+    errorTimeLogs: state.error.errorTimeLogs,
   }));
 
   const router = useRouter();
@@ -79,35 +80,35 @@ export default function OvertimeAccomplishment({
     setEmployeeDetails(employeeDetails);
   }, [employeeDetails]);
 
-  const faceScanUrl = `${process.env.NEXT_PUBLIC_EMPLOYEE_MONITORING_URL}/v1/daily-time-record/employees/${
-    employeeDetails.employmentDetails.companyId
-  }/${format(new Date(), 'yyyy-MM-dd')}`;
-  // use useSWR, provide the URL and fetchWithSession function as a parameter
+  // const faceScanUrl = `${process.env.NEXT_PUBLIC_EMPLOYEE_MONITORING_URL}/v1/daily-time-record/employees/${
+  //   employeeDetails.employmentDetails.companyId
+  // }/${format(new Date(), 'yyyy-MM-dd')}`;
+  // // use useSWR, provide the URL and fetchWithSession function as a parameter
 
-  const {
-    data: swrFaceScan,
-    isLoading: swrFaceScanIsLoading,
-    error: swrFaceScanError,
-    mutate: mutateFaceScanUrl,
-  } = useSWR(employeeDetails.employmentDetails.companyId ? faceScanUrl : null, fetchWithToken, {});
+  // const {
+  //   data: swrFaceScan,
+  //   isLoading: swrFaceScanIsLoading,
+  //   error: swrFaceScanError,
+  //   mutate: mutateFaceScanUrl,
+  // } = useSWR(employeeDetails.employmentDetails.companyId ? faceScanUrl : null, fetchWithToken, {});
 
-  // Initial zustand state update
-  useEffect(() => {
-    if (swrFaceScanIsLoading) {
-      getTimeLogs(swrFaceScanIsLoading);
-    }
-  }, [swrFaceScanIsLoading]);
+  // // Initial zustand state update
+  // useEffect(() => {
+  //   if (swrFaceScanIsLoading) {
+  //     getTimeLogs(swrFaceScanIsLoading);
+  //   }
+  // }, [swrFaceScanIsLoading]);
 
-  // Upon success/fail of swr request, zustand state will be updated
-  useEffect(() => {
-    if (!isEmpty(swrFaceScan)) {
-      getTimeLogsSuccess(swrFaceScanIsLoading, swrFaceScan);
-    }
+  // // Upon success/fail of swr request, zustand state will be updated
+  // useEffect(() => {
+  //   if (!isEmpty(swrFaceScan)) {
+  //     getTimeLogsSuccess(swrFaceScanIsLoading, swrFaceScan);
+  //   }
 
-    if (!isEmpty(swrFaceScanError)) {
-      getTimeLogsFail(swrFaceScanIsLoading, swrFaceScanError.message);
-    }
-  }, [swrFaceScan, swrFaceScanError]);
+  //   if (!isEmpty(swrFaceScanError)) {
+  //     getTimeLogsFail(swrFaceScanIsLoading, swrFaceScanError.message);
+  //   }
+  // }, [swrFaceScan, swrFaceScanError]);
 
   const overtimeAccomplishmentUrl = `${process.env.NEXT_PUBLIC_EMPLOYEE_MONITORING_URL}/v1/overtime/employees/${employeeDetails.employmentDetails.userId}/accomplishments/`;
 
@@ -149,8 +150,8 @@ export default function OvertimeAccomplishment({
 
   return (
     <>
-      {!isEmpty(swrFaceScanError) ? (
-        <ToastNotification toastType="error" notifMessage={`Face Scans: ${swrFaceScanError.message}.`} />
+      {!isEmpty(errorTimeLogs) ? (
+        <ToastNotification toastType="error" notifMessage={`Face Scans: ${errorTimeLogs}.`} />
       ) : null}
 
       {/* Overtime Accomplishment List Load Faled */}
@@ -202,13 +203,6 @@ export default function OvertimeAccomplishment({
             {swrOvertimeAccomplishmentListIsLoading ? (
               <div className="w-full h-96 static flex flex-col justify-center items-center place-items-center">
                 <LoadingSpinner size={'lg'} />
-                {/* <SpinnerDotted
-                  speed={70}
-                  thickness={70}
-                  className="flex w-full h-full transition-all "
-                  color="slateblue"
-                  size={100}
-                /> */}
               </div>
             ) : (
               <ContentBody>
@@ -235,20 +229,4 @@ export const getServerSideProps: GetServerSideProps = withCookieSession(async (c
   const employeeDetails = getUserDetails();
 
   return { props: { employeeDetails } };
-
-  // check if user role is COS/COS_JO
-  // if (
-  //   employeeDetails.employmentDetails.userRole === UserRole.COS ||
-  //   employeeDetails.employmentDetails.userRole === UserRole.COS_JO
-  // ) {
-  //   // if true, the employee is not allowed to access this page
-  //   return {
-  //     redirect: {
-  //       permanent: false,
-  //       destination: `/${employeeDetails.user._id}`,
-  //     },
-  //   };
-  // } else {
-  //   return { props: { employeeDetails } };
-  // }
 });

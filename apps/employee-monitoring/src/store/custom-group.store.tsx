@@ -8,7 +8,10 @@ import {
   CustomGroupId,
   CustomGroupMembers,
 } from '../utils/types/custom-group.type';
-import { EmployeeAsOptionWithPosition } from 'libs/utils/src/lib/types/employee.type';
+import {
+  EmployeeAsOptionLabelWithPosition,
+  EmployeeAsOptionWithPosition,
+} from 'libs/utils/src/lib/types/employee.type';
 
 type ResponseCustomGroup = {
   postResponse: CustomGroup;
@@ -47,7 +50,7 @@ export type CustomGroupState = {
   toAssignMembers: Array<string>;
   toUnassignMembers: Array<string>;
   assignedMembers: Array<EmployeeAsOptionWithPosition>;
-  unassignedMembers: Array<EmployeeAsOptionWithPosition>;
+  unassignedMembers: Array<EmployeeAsOptionLabelWithPosition>;
   members: ResponseMember;
 
   isRowsSelected: boolean;
@@ -76,15 +79,11 @@ export type CustomGroupState = {
   deleteCustomGroupFail: (error: string) => void;
 
   getAssignedMembers: () => void;
-  getAssignedMembersSuccess: (
-    response: Array<EmployeeAsOptionWithPosition>
-  ) => void;
+  getAssignedMembersSuccess: (response: Array<EmployeeAsOptionWithPosition>) => void;
   getAssignedMembersFail: (error: string) => void;
 
   getUnassignedMembers: () => void;
-  getUnassignedMembersSuccess: (
-    response: Array<EmployeeAsOptionWithPosition>
-  ) => void;
+  getUnassignedMembersSuccess: (response: Array<EmployeeAsOptionLabelWithPosition>) => void;
   getUnassignedMembersFail: (error: string) => void;
 
   assignMember: (employeeIds: Array<string>) => void;
@@ -104,9 +103,7 @@ export type CustomGroupState = {
   emptyResponse: () => void;
 
   selectedCustomGroupWithMembers: CustomGroupWithMembers;
-  setSelectedCustomGroupWithMembers: (
-    selectedCustomGroupWithMembers: CustomGroupWithMembers
-  ) => void;
+  setSelectedCustomGroupWithMembers: (selectedCustomGroupWithMembers: CustomGroupWithMembers) => void;
 };
 
 export const useCustomGroupStore = create<CustomGroupState>()(
@@ -269,9 +266,7 @@ export const useCustomGroupStore = create<CustomGroupState>()(
         loading: { ...state.loading, loadingAssignedMembers: true },
         error: { ...state.error, errorAssignedMembers: '' },
       })),
-    getAssignedMembersSuccess: (
-      response: Array<EmployeeAsOptionWithPosition>
-    ) =>
+    getAssignedMembersSuccess: (response: Array<EmployeeAsOptionWithPosition>) =>
       set((state) => ({
         ...state,
         assignedMembers: response,
@@ -292,9 +287,7 @@ export const useCustomGroupStore = create<CustomGroupState>()(
         loading: { ...state.loading, loadingUnassignedMembers: true },
         error: { ...state.error, errorUnassignedMembers: '' },
       })),
-    getUnassignedMembersSuccess: (
-      response: Array<EmployeeAsOptionWithPosition>
-    ) =>
+    getUnassignedMembersSuccess: (response: Array<EmployeeAsOptionLabelWithPosition>) =>
       set((state) => ({
         ...state,
         unassignedMembers: response,
@@ -418,8 +411,7 @@ export const useCustomGroupStore = create<CustomGroupState>()(
     } as CustomGroupWithMembers,
 
     // set local selected custom group
-    setSelectedCustomGroupWithMembers: (
-      selectedCustomGroupWithMembers: CustomGroupWithMembers
-    ) => set((state) => ({ ...state, selectedCustomGroupWithMembers })),
+    setSelectedCustomGroupWithMembers: (selectedCustomGroupWithMembers: CustomGroupWithMembers) =>
+      set((state) => ({ ...state, selectedCustomGroupWithMembers })),
   }))
 );

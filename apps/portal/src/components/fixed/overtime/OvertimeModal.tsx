@@ -190,22 +190,31 @@ export const OvertimeModal = ({ modalState, setModalState, closeModalAction }: M
                       </div>
                     </div>
 
+                    <div className="flex flex-col sm:flex-col justify-start items-start w-full sm:w-1/2 px-0.5 pb-3 ">
+                      <label className="text-slate-500 text-md whitespace-nowrap pb-0.5 ">Supervisor:</label>
+
+                      <div className="w-auto ml-5">
+                        <label className=" text-md font-medium">{overtimeSupervisorName}</label>
+                      </div>
+                    </div>
+                    <div className="flex flex-col sm:flex-col justify-start items-start w-full sm:w-1/2 px-0.5 pb-3 ">
+                      <label className="text-slate-500 text-md whitespace-nowrap pb-0.5 ">
+                        {overtimeDetails.status === OvertimeStatus.DISAPPROVED ? 'Disapproved By:' : 'Approved By:'}
+                      </label>
+
+                      <div className="w-auto ml-5">
+                        <label className=" text-md font-medium">{overtimeDetails.approvedBy}</label>
+                      </div>
+                    </div>
+
                     <div
-                      className={`flex flex-col justify-start items-start w-full sm:w-1/2
+                      className={`flex flex-col justify-start items-start w-full 
                       px-0.5 pb-3`}
                     >
                       <label className="text-slate-500 text-md whitespace-nowrap pb-0.5">Purpose:</label>
 
                       <div className="w-auto ml-5 mr-5">
                         <label className="text-md font-medium">{overtimeDetails.purpose}</label>
-                      </div>
-                    </div>
-
-                    <div className="flex flex-col sm:flex-col justify-start items-start w-full sm:w-1/2 px-0.5 pb-3 ">
-                      <label className="text-slate-500 text-md whitespace-nowrap pb-0.5 ">Supervisor:</label>
-
-                      <div className="w-auto ml-5">
-                        <label className=" text-md font-medium">{overtimeSupervisorName}</label>
                       </div>
                     </div>
 
