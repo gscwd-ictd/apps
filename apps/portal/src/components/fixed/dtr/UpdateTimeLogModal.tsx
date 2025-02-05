@@ -14,6 +14,7 @@ import { EmployeeDtr, useDtrStore } from 'apps/portal/src/store/dtr.store';
 import { DateFormatter } from 'libs/utils/src/lib/functions/DateFormatter';
 import { ConfirmationUpdateTimeLogModal } from './ConfirmationModal';
 import { DtrCorrectionStatus } from 'libs/utils/src/lib/enums/dtr.enum';
+import { useEmployeeStore } from 'apps/portal/src/store/employee.store';
 
 type EditDailySchedModalProps = {
   modalState: boolean;
@@ -46,6 +47,8 @@ const UpdateTimeLogModal: FunctionComponent<EditDailySchedModalProps> = ({
     mode: 'onChange',
     reValidateMode: 'onBlur',
   });
+
+  const employeeDetails = useEmployeeStore((state) => state.employeeDetails);
 
   // default values
   const [defaultDtrValues, setDefaultDtrValues] = useState<EmployeeDtr & TimeLogRemarks>(
@@ -100,7 +103,7 @@ const UpdateTimeLogModal: FunctionComponent<EditDailySchedModalProps> = ({
     });
 
     setValue('dtrId', rowData?.dtr?.id);
-    setValue('companyId', rowData?.companyId);
+    setValue('companyId', employeeDetails?.employmentDetails?.companyId);
     setValue('dtrDate', rowData?.day);
     setValue('timeIn', removeSeconds(rowData?.dtr?.timeIn));
     setValue('timeOut', removeSeconds(rowData?.dtr?.timeOut));
@@ -130,6 +133,8 @@ const UpdateTimeLogModal: FunctionComponent<EditDailySchedModalProps> = ({
         setModalState={setConfirmUpdateModalIsOpen}
         closeModalAction={closeConfirmationModal}
         dataToSubmit={{
+          dtrDate: watch('dtrDate'),
+          companyId: watch('companyId'),
           dtrId: watch('dtrId'),
           timeIn: watch('timeIn'),
           timeOut: watch('timeOut'),
@@ -172,7 +177,7 @@ const UpdateTimeLogModal: FunctionComponent<EditDailySchedModalProps> = ({
                   />
                 ) : null}
 
-                {!rowData?.dtr?.timeIn && !rowData?.dtr?.timeOut ? (
+                {/* {!rowData?.dtr?.timeIn && !rowData?.dtr?.timeOut ? (
                   <AlertNotification
                     alertType={'info'}
                     notifMessage={
@@ -180,7 +185,7 @@ const UpdateTimeLogModal: FunctionComponent<EditDailySchedModalProps> = ({
                     }
                     dismissible={false}
                   />
-                ) : null}
+                ) : null} */}
 
                 {rowData?.hasPendingDtrCorrection ? (
                   <AlertNotification
@@ -523,7 +528,7 @@ const UpdateTimeLogModal: FunctionComponent<EditDailySchedModalProps> = ({
                     !watch('remarks') ||
                     !watch('timeIn') ||
                     !watch('timeOut') ||
-                    (!rowData?.dtr?.timeIn && !rowData?.dtr?.timeOut) ||
+                    // (!rowData?.dtr?.timeIn && !rowData?.dtr?.timeOut) ||
                     (watch('timeIn') === removeSeconds(rowData?.dtr?.timeIn) &&
                       watch('timeOut') === removeSeconds(rowData?.dtr?.timeOut) &&
                       watch('lunchOut') === removeSeconds(rowData?.dtr?.lunchOut) &&

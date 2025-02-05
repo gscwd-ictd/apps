@@ -123,7 +123,7 @@ export const DtrTable = ({ employeeDetails }: DtrTableProps) => {
                                 ? 'bg-red-200'
                                 : logs.holidayType === HolidayTypes.SPECIAL
                                 ? 'bg-blue-300'
-                                : logs.dtr.remarks === 'Rest Day'
+                                : logs.dtr.remarks === 'Rest Day' && !logs.dtrCorrection
                                 ? 'bg-gray-200'
                                 : logs.dtrCorrection
                                 ? 'bg-amber-200'

@@ -9,8 +9,6 @@ import UseConvertRestDaysToArray from 'apps/employee-monitoring/src/utils/functi
 import { isEmpty } from 'lodash';
 import { useScheduleSheetStore } from 'apps/employee-monitoring/src/store/schedule-sheet.store';
 import UseRestDaysOptionToNumberArray from 'apps/employee-monitoring/src/utils/functions/ConvertRestDaysOptionToNumberArray';
-import Image from 'next/image';
-import userphoto from '../../../../../public/user-photo.jpg';
 
 type SelectRdByNModalProps = {
   modalState: boolean;

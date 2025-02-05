@@ -3,10 +3,12 @@ import dayjs from 'dayjs';
 
 export const UseUndertimeChecker = (timeOutLog: string, scheduledTimeOut: string) => {
   const now = dayjs().toDate().toDateString();
-  const timeOut = dayjs(now + ' ' + timeOutLog).format('hh:mm A');
-  const schedule = dayjs(now + ' ' + scheduledTimeOut).format('hh:mm A');
+  const timeOut = dayjs(now + ' ' + timeOutLog);
+  const schedule = dayjs(now + ' ' + scheduledTimeOut);
+  // const timeOut = dayjs(now + ' ' + timeOutLog).format('hh:mm A');
+  // const schedule = dayjs(now + ' ' + scheduledTimeOut).format('hh:mm A');
 
-  if (timeOut < schedule) {
+  if (timeOut.isBefore(schedule)) {
     return true;
   } else {
     return false;
