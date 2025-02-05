@@ -67,4 +67,9 @@ export const Reports: Array<SelectOption> = [
     label: 'Report on Unused Pass Slip',
     value: 'report on unused pass slip',
   },
+  // 13
+  {
+    label: 'Report on Leave Application (Late Filing)',
+    value: 'report on leave application late filing',
+  },
 ];

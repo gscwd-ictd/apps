@@ -223,7 +223,8 @@ export default function OvertimeApprovals({ employeeDetails }: InferGetServerSid
     }),
     columnHelper.accessor('plannedDate', {
       header: 'Planned Date',
-      // filterFn: 'equalsString',
+      filterFn: 'fuzzy',
+      sortingFn: fuzzySort,
       cell: (info) => dayjs(info.getValue()).format('MMMM DD, YYYY'),
     }),
     columnHelper.accessor('immediateSupervisorName', {
