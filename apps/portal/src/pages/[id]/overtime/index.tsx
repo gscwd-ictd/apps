@@ -10,8 +10,7 @@ import { employee } from '../../../utils/constants/data';
 import { GetServerSideProps, GetServerSidePropsContext, InferGetServerSidePropsType } from 'next/types';
 import { getUserDetails, withCookieSession } from '../../../utils/helpers/session';
 import { useEmployeeStore } from '../../../store/employee.store';
-import { SpinnerDotted } from 'spinners-react';
-import { Button, ToastNotification } from '@gscwd-apps/oneui';
+import { Button, LoadingSpinner, ToastNotification } from '@gscwd-apps/oneui';
 import { fetchWithToken } from '../../../utils/hoc/fetcher';
 import useSWR from 'swr';
 import { isEmpty, isEqual } from 'lodash';
@@ -272,7 +271,8 @@ export default function Overtime({ employeeDetails }: InferGetServerSidePropsTyp
     }),
     columnHelper.accessor('plannedDate', {
       header: 'Planned Date',
-      // filterFn: 'equalsString',
+      filterFn: 'fuzzy',
+      sortingFn: fuzzySort,
       cell: (info) => dayjs(info.getValue()).format('MMMM DD, YYYY'),
     }),
 
@@ -317,65 +317,57 @@ export default function Overtime({ employeeDetails }: InferGetServerSidePropsTyp
 
   return (
     <>
-      <>
-        {/* Employee List Load Failed */}
-        {!isEmpty(swrEmployeeListError) ? (
-          <ToastNotification
-            toastType="error"
-            notifMessage={`${swrEmployeeListError}: Failed to load Employee List.`}
-          />
-        ) : null}
+      {/* Employee List Load Failed */}
+      {!isEmpty(swrEmployeeListError) ? (
+        <ToastNotification toastType="error" notifMessage={`${swrEmployeeListError}: Failed to load Employee List.`} />
+      ) : null}
 
-        {/* Post/Submit Overtime Application Success*/}
-        {!isEmpty(responseApply) ? (
-          <ToastNotification toastType="success" notifMessage="Overtime Application Successful!" />
-        ) : null}
+      {/* Post/Submit Overtime Application Success*/}
+      {!isEmpty(responseApply) ? (
+        <ToastNotification toastType="success" notifMessage="Overtime Application Successful!" />
+      ) : null}
 
-        {/* Cancel Overtime Application Success*/}
-        {!isEmpty(cancelResponse) ? (
-          <ToastNotification toastType="success" notifMessage="Overtime Application Cancellation Successful!" />
-        ) : null}
+      {/* Cancel Overtime Application Success*/}
+      {!isEmpty(cancelResponse) ? (
+        <ToastNotification toastType="success" notifMessage="Overtime Application Cancellation Successful!" />
+      ) : null}
 
-        {/* Employee Individual Accomplishment Error*/}
-        {!isEmpty(errorAccomplishment) ? (
-          <ToastNotification
-            toastType="error"
-            notifMessage={`${errorAccomplishment}: Failed to load Overtime Accomplishment.`}
-          />
-        ) : null}
+      {/* Employee Individual Accomplishment Error*/}
+      {!isEmpty(errorAccomplishment) ? (
+        <ToastNotification
+          toastType="error"
+          notifMessage={`${errorAccomplishment}: Failed to load Overtime Accomplishment.`}
+        />
+      ) : null}
 
-        {/* Employee Individual Accomplishment PDF Report Error*/}
-        {!isEmpty(errorAccomplishmentReport) ? (
-          <ToastNotification
-            toastType="error"
-            notifMessage={`${errorAccomplishmentReport}: Failed to load Overtime Accomplishment Report.`}
-          />
-        ) : null}
+      {/* Employee Individual Accomplishment PDF Report Error*/}
+      {!isEmpty(errorAccomplishmentReport) ? (
+        <ToastNotification
+          toastType="error"
+          notifMessage={`${errorAccomplishmentReport}: Failed to load Overtime Accomplishment Report.`}
+        />
+      ) : null}
 
-        {/* Employee OT Authorization PDF Report Error*/}
-        {!isEmpty(errorAuthorizationReport) ? (
-          <ToastNotification
-            toastType="error"
-            notifMessage={`${errorAuthorizationReport}: Failed to load Overtime Authorization Report.`}
-          />
-        ) : null}
+      {/* Employee OT Authorization PDF Report Error*/}
+      {!isEmpty(errorAuthorizationReport) ? (
+        <ToastNotification
+          toastType="error"
+          notifMessage={`${errorAuthorizationReport}: Failed to load Overtime Authorization Report.`}
+        />
+      ) : null}
 
-        {/* Employee OT Summary PDF Report Error*/}
-        {!isEmpty(errorOvertimeSummaryReport) ? (
-          <ToastNotification
-            toastType="error"
-            notifMessage={`${errorOvertimeSummaryReport}: Failed to load Overtime Summary Report.`}
-          />
-        ) : null}
+      {/* Employee OT Summary PDF Report Error*/}
+      {!isEmpty(errorOvertimeSummaryReport) ? (
+        <ToastNotification
+          toastType="error"
+          notifMessage={`${errorOvertimeSummaryReport}: Failed to load Overtime Summary Report.`}
+        />
+      ) : null}
 
-        {/* List of Overtime Load Failed */}
-        {!isEmpty(swrOvertimeListError) ? (
-          <ToastNotification
-            toastType="error"
-            notifMessage={`${swrOvertimeListError}: Failed to load Overtime List.`}
-          />
-        ) : null}
-      </>
+      {/* List of Overtime Load Failed */}
+      {!isEmpty(swrOvertimeListError) ? (
+        <ToastNotification toastType="error" notifMessage={`${swrOvertimeListError}: Failed to load Overtime List.`} />
+      ) : null}
 
       <EmployeeProvider employeeData={employee}>
         <Head>
@@ -436,27 +428,11 @@ export default function Overtime({ employeeDetails }: InferGetServerSidePropsTyp
               </div>
             </ContentHeader>
             {swrOvertimeListIsLoading ? (
-              <div className="w-full h-96 static flex flex-col justify-items-center items-center place-items-center">
-                <SpinnerDotted
-                  speed={70}
-                  thickness={70}
-                  className="flex w-full h-full transition-all "
-                  color="slateblue"
-                  size={100}
-                />
+              <div className="w-full h-96 static flex flex-col justify-center items-center place-items-center">
+                <LoadingSpinner size={'lg'} />
               </div>
             ) : (
               <ContentBody>
-                {/* <>
-                  <div className={`w-full flex lg:flex-row flex-col`}>
-                    <div className={`lg:w-[58rem] w-full`}>
-                      <OvertimeTabs tab={tab} />
-                    </div>
-                    <div className="w-full">
-                      <OvertimeTabWindow />
-                    </div>
-                  </div>
-                </> */}
                 <div className="pb-10">
                   <DataTablePortal
                     onRowClick={(row) => renderRowActions(row.original as OvertimeDetails)}
