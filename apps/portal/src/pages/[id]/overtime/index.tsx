@@ -11,7 +11,7 @@ import { GetServerSideProps, GetServerSidePropsContext, InferGetServerSidePropsT
 import { getUserDetails, withCookieSession } from '../../../utils/helpers/session';
 import { useEmployeeStore } from '../../../store/employee.store';
 import { SpinnerDotted } from 'spinners-react';
-import { Button, ToastNotification } from '@gscwd-apps/oneui';
+import { Button, LoadingSpinner, ToastNotification } from '@gscwd-apps/oneui';
 import { fetchWithToken } from '../../../utils/hoc/fetcher';
 import useSWR from 'swr';
 import { isEmpty, isEqual } from 'lodash';
@@ -436,14 +436,8 @@ export default function Overtime({ employeeDetails }: InferGetServerSidePropsTyp
               </div>
             </ContentHeader>
             {swrOvertimeListIsLoading ? (
-              <div className="w-full h-96 static flex flex-col justify-items-center items-center place-items-center">
-                <SpinnerDotted
-                  speed={70}
-                  thickness={70}
-                  className="flex w-full h-full transition-all "
-                  color="slateblue"
-                  size={100}
-                />
+              <div className="w-full h-96 static flex flex-col justify-center items-center place-items-center">
+                <LoadingSpinner size={'lg'} />
               </div>
             ) : (
               <ContentBody>
