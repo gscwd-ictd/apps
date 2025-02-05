@@ -324,6 +324,7 @@ export default function Index() {
                       label="Report name"
                       isError={errors.reportName ? true : false}
                       errorMessage={errors.reportName?.message}
+                      required
                     />
                   </div>
 
@@ -446,6 +447,7 @@ export default function Index() {
                             controller={{ ...register('dateFrom') }}
                             isError={errors.dateFrom ? true : false}
                             errorMessage={errors.dateFrom?.message}
+                            required
                           />
                         </div>
 
@@ -458,6 +460,7 @@ export default function Index() {
                             controller={{ ...register('dateTo') }}
                             isError={errors.dateTo ? true : false}
                             errorMessage={errors.dateTo?.message}
+                            required
                           />
                         </div>
                       </div>
@@ -471,7 +474,6 @@ export default function Index() {
                     type="submit"
                     form="submitReportForm"
                     className="ml-1 text-gray-400 disabled:cursor-not-allowed"
-                    // disabled={postFormLoading ? true : false}
                   >
                     <span className="text-xs font-normal">Submit</span>
                   </Button>

@@ -202,3 +202,17 @@ export type ReportOnUnusedPassSlip = {
   report: Array<EmployeeRoUPs>;
   signatory: ReportSignatories;
 };
+
+// Report on Leave Application Late Filing = RoLaLf
+export type EmployeeRoLaLf = {
+  employeeId: string;
+  name: string;
+  dateOfFiling: string;
+  leaveName: string;
+  leaveDates: string;
+  justification: string;
+};
+export type ReportOnLeaveApplicationLateFiling = {
+  report: Array<EmployeeRoLaLf>;
+  signatory: ReportSignatories;
+};

@@ -16,7 +16,7 @@ import { getUserDetails, withCookieSession } from '../../../utils/helpers/sessio
 import { fetchWithToken } from 'apps/portal/src/utils/hoc/fetcher';
 import { isEmpty, isEqual } from 'lodash';
 import { useTrainingSelectionStore } from 'apps/portal/src/store/training-selection.store';
-import { LoadingSpinner, ToastNotification } from '@gscwd-apps/oneui';
+import { fuzzySort, LoadingSpinner, ToastNotification } from '@gscwd-apps/oneui';
 import TrainingDetailsModal from 'apps/portal/src/components/fixed/training-selection/TrainingDetailsModal';
 import { useRouter } from 'next/router';
 import { DataTablePortal, useDataTable } from 'libs/oneui/src/components/Tables/DataTablePortal';
@@ -157,13 +157,13 @@ export default function TrainingSelection({ employeeDetails }: InferGetServerSid
     }),
     columnHelper.accessor('trainingStart', {
       header: 'Start',
-      // filterFn: 'equalsString',
+      filterFn: 'fuzzy',
+      sortingFn: fuzzySort,
       cell: (info) => dayjs(info.getValue()).format('MMMM DD, YYYY'),
     }),
     columnHelper.accessor('trainingEnd', {
       header: 'End',
       enableColumnFilter: false,
-      // filterFn: 'equalsString',
       cell: (info) => dayjs(info.getValue()).format('MMMM DD, YYYY'),
     }),
     columnHelper.accessor('numberOfSlots', {

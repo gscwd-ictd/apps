@@ -271,7 +271,8 @@ export default function Overtime({ employeeDetails }: InferGetServerSidePropsTyp
     }),
     columnHelper.accessor('plannedDate', {
       header: 'Planned Date',
-      // filterFn: 'equalsString',
+      filterFn: 'fuzzy',
+      sortingFn: fuzzySort,
       cell: (info) => dayjs(info.getValue()).format('MMMM DD, YYYY'),
     }),
 
@@ -316,65 +317,57 @@ export default function Overtime({ employeeDetails }: InferGetServerSidePropsTyp
 
   return (
     <>
-      <>
-        {/* Employee List Load Failed */}
-        {!isEmpty(swrEmployeeListError) ? (
-          <ToastNotification
-            toastType="error"
-            notifMessage={`${swrEmployeeListError}: Failed to load Employee List.`}
-          />
-        ) : null}
+      {/* Employee List Load Failed */}
+      {!isEmpty(swrEmployeeListError) ? (
+        <ToastNotification toastType="error" notifMessage={`${swrEmployeeListError}: Failed to load Employee List.`} />
+      ) : null}
 
-        {/* Post/Submit Overtime Application Success*/}
-        {!isEmpty(responseApply) ? (
-          <ToastNotification toastType="success" notifMessage="Overtime Application Successful!" />
-        ) : null}
+      {/* Post/Submit Overtime Application Success*/}
+      {!isEmpty(responseApply) ? (
+        <ToastNotification toastType="success" notifMessage="Overtime Application Successful!" />
+      ) : null}
 
-        {/* Cancel Overtime Application Success*/}
-        {!isEmpty(cancelResponse) ? (
-          <ToastNotification toastType="success" notifMessage="Overtime Application Cancellation Successful!" />
-        ) : null}
+      {/* Cancel Overtime Application Success*/}
+      {!isEmpty(cancelResponse) ? (
+        <ToastNotification toastType="success" notifMessage="Overtime Application Cancellation Successful!" />
+      ) : null}
 
-        {/* Employee Individual Accomplishment Error*/}
-        {!isEmpty(errorAccomplishment) ? (
-          <ToastNotification
-            toastType="error"
-            notifMessage={`${errorAccomplishment}: Failed to load Overtime Accomplishment.`}
-          />
-        ) : null}
+      {/* Employee Individual Accomplishment Error*/}
+      {!isEmpty(errorAccomplishment) ? (
+        <ToastNotification
+          toastType="error"
+          notifMessage={`${errorAccomplishment}: Failed to load Overtime Accomplishment.`}
+        />
+      ) : null}
 
-        {/* Employee Individual Accomplishment PDF Report Error*/}
-        {!isEmpty(errorAccomplishmentReport) ? (
-          <ToastNotification
-            toastType="error"
-            notifMessage={`${errorAccomplishmentReport}: Failed to load Overtime Accomplishment Report.`}
-          />
-        ) : null}
+      {/* Employee Individual Accomplishment PDF Report Error*/}
+      {!isEmpty(errorAccomplishmentReport) ? (
+        <ToastNotification
+          toastType="error"
+          notifMessage={`${errorAccomplishmentReport}: Failed to load Overtime Accomplishment Report.`}
+        />
+      ) : null}
 
-        {/* Employee OT Authorization PDF Report Error*/}
-        {!isEmpty(errorAuthorizationReport) ? (
-          <ToastNotification
-            toastType="error"
-            notifMessage={`${errorAuthorizationReport}: Failed to load Overtime Authorization Report.`}
-          />
-        ) : null}
+      {/* Employee OT Authorization PDF Report Error*/}
+      {!isEmpty(errorAuthorizationReport) ? (
+        <ToastNotification
+          toastType="error"
+          notifMessage={`${errorAuthorizationReport}: Failed to load Overtime Authorization Report.`}
+        />
+      ) : null}
 
-        {/* Employee OT Summary PDF Report Error*/}
-        {!isEmpty(errorOvertimeSummaryReport) ? (
-          <ToastNotification
-            toastType="error"
-            notifMessage={`${errorOvertimeSummaryReport}: Failed to load Overtime Summary Report.`}
-          />
-        ) : null}
+      {/* Employee OT Summary PDF Report Error*/}
+      {!isEmpty(errorOvertimeSummaryReport) ? (
+        <ToastNotification
+          toastType="error"
+          notifMessage={`${errorOvertimeSummaryReport}: Failed to load Overtime Summary Report.`}
+        />
+      ) : null}
 
-        {/* List of Overtime Load Failed */}
-        {!isEmpty(swrOvertimeListError) ? (
-          <ToastNotification
-            toastType="error"
-            notifMessage={`${swrOvertimeListError}: Failed to load Overtime List.`}
-          />
-        ) : null}
-      </>
+      {/* List of Overtime Load Failed */}
+      {!isEmpty(swrOvertimeListError) ? (
+        <ToastNotification toastType="error" notifMessage={`${swrOvertimeListError}: Failed to load Overtime List.`} />
+      ) : null}
 
       <EmployeeProvider employeeData={employee}>
         <Head>
