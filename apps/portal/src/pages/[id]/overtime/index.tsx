@@ -10,7 +10,6 @@ import { employee } from '../../../utils/constants/data';
 import { GetServerSideProps, GetServerSidePropsContext, InferGetServerSidePropsType } from 'next/types';
 import { getUserDetails, withCookieSession } from '../../../utils/helpers/session';
 import { useEmployeeStore } from '../../../store/employee.store';
-import { SpinnerDotted } from 'spinners-react';
 import { Button, LoadingSpinner, ToastNotification } from '@gscwd-apps/oneui';
 import { fetchWithToken } from '../../../utils/hoc/fetcher';
 import useSWR from 'swr';
@@ -441,16 +440,6 @@ export default function Overtime({ employeeDetails }: InferGetServerSidePropsTyp
               </div>
             ) : (
               <ContentBody>
-                {/* <>
-                  <div className={`w-full flex lg:flex-row flex-col`}>
-                    <div className={`lg:w-[58rem] w-full`}>
-                      <OvertimeTabs tab={tab} />
-                    </div>
-                    <div className="w-full">
-                      <OvertimeTabWindow />
-                    </div>
-                  </div>
-                </> */}
                 <div className="pb-10">
                   <DataTablePortal
                     onRowClick={(row) => renderRowActions(row.original as OvertimeDetails)}
