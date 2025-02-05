@@ -1,13 +1,15 @@
 import { isEmpty } from 'lodash';
 import { useEffect, useState } from 'react';
-import { NoGroupSelectedVisual } from './NoGroupSelected';
 import { createColumnHelper } from '@tanstack/react-table';
 import { DataTable, useDataTable } from '@gscwd-apps/oneui';
 import Select from 'react-select';
 import useSWR from 'swr';
 import fetcherEMS from 'apps/employee-monitoring/src/utils/fetcher/FetcherEMS';
 
-import { EmployeeAsOptionWithRestDays } from 'libs/utils/src/lib/types/employee.type';
+import {
+  EmployeeAsOptionLabelWithPosition,
+  EmployeeAsOptionWithRestDays,
+} from 'libs/utils/src/lib/types/employee.type';
 import { useScheduleSheetStore } from 'apps/employee-monitoring/src/store/schedule-sheet.store';
 import { useCustomGroupStore } from 'apps/employee-monitoring/src/store/custom-group.store';
 
@@ -15,10 +17,16 @@ import SelectRdByNModal from './SelectRdByNModal';
 import UseConvertRestDaysToString from 'apps/employee-monitoring/src/utils/functions/ConvertRestDaysToString';
 import UseRenderRestDays from 'apps/employee-monitoring/src/utils/functions/RenderRestDays';
 import { floatReactSelectOptionsStyles } from 'apps/employee-monitoring/styles/float-select-options';
+import { MySelectList } from '../../../inputs/SelectList';
+import { listOfRestDays } from 'libs/utils/src/lib/constants/rest-days.const';
+import { SelectOption } from 'libs/utils/src/lib/types/select.type';
+import UseRestDaysOptionToNumberArray from 'apps/employee-monitoring/src/utils/functions/ConvertRestDaysOptionToNumberArray';
 
 const SelectedEmployeesSsTable = () => {
   const [selectedOptions, setSelectedOptions] = useState<Array<any>>([]);
   const [isDateRangeFilled, setIsDateRangeFilled] = useState<boolean>(false);
+  const [selectedRestDays, setSelectedRestDays] = useState<Array<SelectOption>>([]);
+  const [freeUnassignedMembers, setFreeUnassignedMembers] = useState<Array<EmployeeAsOptionLabelWithPosition>>([]);
 
   const [currentRowData, setCurrentRowData] = useState<EmployeeAsOptionWithRestDays>(
     {} as EmployeeAsOptionWithRestDays
@@ -55,7 +63,7 @@ const SelectedEmployeesSsTable = () => {
     EmptyResponseCG: state.emptyResponse,
   }));
 
-  // useSWR for assigned employees
+  // useSWR for unassigned employees
   const {
     data: swrUnassignedEmployees,
     isLoading: swrUnassignedEmployeesIsLoading,
@@ -68,6 +76,8 @@ const SelectedEmployeesSsTable = () => {
     {
       shouldRetryOnError: false,
       revalidateOnFocus: false,
+      //   revalidateOnMount: false,
+      //   revalidateOnReconnect: false,
     }
   );
 
@@ -125,6 +135,23 @@ const SelectedEmployeesSsTable = () => {
     });
   };
 
+  // Assign all employees in the current schedule sheet with rest days
+  const handleAssignRestDays = () => {
+    const membersWithAssignedRestDays = [
+      ...currentScheduleSheet.employees.map((employee) => {
+        employee.restDays = UseRestDaysOptionToNumberArray(selectedRestDays);
+
+        return employee;
+      }),
+    ];
+
+    setCurrentScheduleSheet({
+      ...currentScheduleSheet,
+      employees: membersWithAssignedRestDays,
+    });
+    setSelectedRestDays([]);
+  };
+
   // Render row actions in the table component
   const renderRowActions = (rowData: EmployeeAsOptionWithRestDays) => {
     return (
@@ -134,7 +161,7 @@ const SelectedEmployeesSsTable = () => {
           className="text-white bg-green-400 hover:bg-green-500 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm p-2.5 text-center inline-flex items-center mr-2 "
           onClick={() => openRestDaysModal(rowData)}
         >
-          <i className="text-md bx bxs-sleepy"></i>
+          <i className="text-md bx bx-bed"></i>
         </button>
 
         {isEmpty(rowData.restDays) ? (
@@ -211,6 +238,20 @@ const SelectedEmployeesSsTable = () => {
     }
   }, [swrUnassignedEmployees, swrUnassignedEmployeesError]);
 
+  // Remove JO employee if assigned to the current list
+  useEffect(() => {
+    if (!isEmpty(UnassignedMembers) && !isEmpty(currentScheduleSheet?.employees)) {
+      const currentEmployees = currentScheduleSheet.employees;
+      const currentEmployeesIds = new Set(currentEmployees.map((ce) => ce.employeeId));
+
+      const unassignedEmployeesFiltered = UnassignedMembers.filter(
+        (um) => !currentEmployeesIds.has(um.value?.employeeId)
+      );
+
+      setFreeUnassignedMembers(unassignedEmployeesFiltered);
+    }
+  }, [UnassignedMembers, currentScheduleSheet]);
+
   return (
     <>
       {currentScheduleSheet && isDateRangeFilled && !isEmpty(currentScheduleSheet.customGroupId) ? (
@@ -228,30 +269,61 @@ const SelectedEmployeesSsTable = () => {
           <hr className="h-1 mt-2 mb-5 bg-gray-200 border-0 rounded" />
 
           <div className="flex flex-row flex-wrap">
-            <div className="flex justify-end order-2 w-1/2 table-actions-wrapper">
-              <Select
-                id="customReactSelectEmployees"
-                name="employees"
-                options={UnassignedMembers}
-                className="z-50 w-2/3 text-xs font-normal basic-multi-select"
-                classNamePrefix="select2-selection"
-                onChange={(e: Array<any>) => {
-                  handleMultiSelect(e);
-                }}
-                value={selectedOptions}
-                isMulti
-                menuPosition={'fixed'}
-                styles={floatReactSelectOptionsStyles}
-                isLoading={LoadingUnassignedMembers ? true : false}
-              />
+            {/* flex-col justify-items-end  */}
+            <div className="grid grid-cols-2 gap-4 order-2 w-full table-actions-wrapper">
+              {/* Rest days dropdown input */}
+              <div className="grid grid-cols-3 gap-2">
+                <MySelectList
+                  id="scheduleRestDays"
+                  multiple
+                  options={listOfRestDays}
+                  onChange={(o) => setSelectedRestDays(o)}
+                  value={selectedRestDays}
+                  className="col-span-2"
+                />
 
-              <button
-                type="button"
-                className="text-white bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-blue-300 font-medium rounded-md text-xs p-2.5 ml-2 text-center inline-flex items-center dark:bg-blue-400 dark:hover:bg-blue-500 dark:focus:ring-blue-600"
-                onClick={handleAssignMembers}
-              >
-                <i className="bx bxs-plus-square"></i>&nbsp; Assign
-              </button>
+                <button
+                  type="button"
+                  className="text-white bg-green-700 hover:bg-green-800 focus:outline-none focus:ring-green-300 font-medium rounded-md text-xs p-2.5 text-center inline-flex items-center dark:bg-blue-400 dark:hover:bg-blue-500 dark:focus:ring-blue-600 col-span-1"
+                  onClick={handleAssignRestDays}
+                  disabled={isEmpty(selectedRestDays) ? true : false}
+                >
+                  <span className="w-full text-center">
+                    <i className="bx bxs-plus-square"></i>&nbsp; Set Rest Days
+                  </span>
+                </button>
+              </div>
+
+              {/* Job order employees dropdown input */}
+              <div className="grid grid-cols-3 gap-2">
+                <Select
+                  id="customReactSelectEmployees"
+                  name="employees"
+                  options={freeUnassignedMembers}
+                  className="z-50 w-full text-xs font-normal basic-multi-select col-span-2"
+                  classNamePrefix="select2-selection"
+                  onChange={(e: Array<any>) => {
+                    handleMultiSelect(e);
+                  }}
+                  value={selectedOptions}
+                  isMulti
+                  menuPosition={'fixed'}
+                  styles={floatReactSelectOptionsStyles}
+                  isLoading={LoadingUnassignedMembers ? true : false}
+                  getOptionLabel={(option) => `${option.label} | ${option.value.assignment}`}
+                />
+
+                <button
+                  type="button"
+                  className="text-white bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-blue-300 font-medium rounded-md text-xs p-2.5 text-center inline-flex items-center dark:bg-blue-400 dark:hover:bg-blue-500 dark:focus:ring-blue-600 disabled:cursor-not-allowed col-span-1"
+                  onClick={handleAssignMembers}
+                  disabled={isEmpty(selectedOptions) ? true : false}
+                >
+                  <span className="w-full text-center">
+                    <i className="bx bxs-plus-square"></i>&nbsp; Assign JO
+                  </span>
+                </button>
+              </div>
             </div>
 
             <DataTable model={table} paginate={!isEmpty(currentScheduleSheet.employees) ? true : false} />

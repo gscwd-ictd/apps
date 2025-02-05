@@ -2,6 +2,7 @@
 import { ChevronDownIcon } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import * as Popover from '@radix-ui/react-popover';
+import { isEmpty } from 'lodash';
 
 type SelectOption = {
   label: string;
@@ -22,12 +23,22 @@ type SingleSelectProps = {
 
 type SelectProps = {
   options: SelectOption[];
-  label: string;
+  label?: string;
   id: string;
   disabled?: boolean;
+  className?: string;
 } & (SingleSelectProps | MultipleSelectProps);
 
-export function MySelectList({ multiple, value, onChange, id, label, disabled = false, options }: SelectProps) {
+export function MySelectList({
+  multiple,
+  value,
+  onChange,
+  id,
+  label,
+  disabled = false,
+  options,
+  className,
+}: SelectProps) {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [highlightedIndex, setHighlightedIndex] = useState<number>(0);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -95,10 +106,12 @@ export function MySelectList({ multiple, value, onChange, id, label, disabled = 
   }, [isOpen, highlightedIndex, options]);
 
   return (
-    <div className="flex flex-col w-full">
-      <label htmlFor={id} className="block mb-1 text-xs font-medium text-gray-900 dark:text-gray-800">
-        {label}
-      </label>
+    <div className={`flex flex-col w-full ${className}`}>
+      {!isEmpty(label) ? (
+        <label htmlFor={id} className="block mb-1 text-xs font-medium text-gray-900 dark:text-gray-800">
+          {label}
+        </label>
+      ) : null}
 
       <Popover.Root>
         <Popover.Trigger>
@@ -106,7 +119,7 @@ export function MySelectList({ multiple, value, onChange, id, label, disabled = 
             id={id}
             ref={containerRef}
             tabIndex={0}
-            className="flex relative w-full bg-gray-50 border border-gray-300/90 rounded-lg h-[2.5rem] justify-between items-center gap-2 p-2 outline-none focus:border focus:border-blue-600"
+            className="flex relative w-full bg-gray-50 border border-gray-300/90 rounded-lg h-[2.5rem] justify-between items-center gap-2 p-2 outline-none focus:border focus:border-blue-600 "
           >
             <span className="flex text-xs text-left text-gray-700 ">
               {multiple

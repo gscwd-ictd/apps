@@ -3,10 +3,10 @@ import dayjs from 'dayjs';
 
 export const UseLateChecker = (timeInLog: string, scheduledTimeIn: string) => {
   const now = dayjs().toDate().toDateString();
-  const timeIn = dayjs(now + ' ' + timeInLog).format('hh:mm A');
-  const schedule = dayjs(now + ' ' + scheduledTimeIn).format('hh:mm A');
+  const timeIn = dayjs(now + ' ' + timeInLog);
+  const schedule = dayjs(now + ' ' + scheduledTimeIn);
 
-  if (timeIn > schedule) {
+  if (timeIn.isAfter(schedule)) {
     return true;
   } else {
     return false;

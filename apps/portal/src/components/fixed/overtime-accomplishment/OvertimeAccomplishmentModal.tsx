@@ -33,6 +33,7 @@ export const OvertimeAccomplishmentModal = ({ modalState, setModalState, closeMo
     confirmOvertimeAccomplishmentModalIsOpen,
     pendingOvertimeAccomplishmentModalIsOpen,
     completedOvertimeAccomplishmentModalIsOpen,
+    errorOvertimeAccomplishment,
     setConfirmOvertimeAccomplishmentModalIsOpen,
     setOvertimeAccomplishmentPatchDetails,
   } = useOvertimeAccomplishmentStore((state) => ({
@@ -40,18 +41,21 @@ export const OvertimeAccomplishmentModal = ({ modalState, setModalState, closeMo
     confirmOvertimeAccomplishmentModalIsOpen: state.confirmOvertimeAccomplishmentModalIsOpen,
     pendingOvertimeAccomplishmentModalIsOpen: state.pendingOvertimeAccomplishmentModalIsOpen,
     completedOvertimeAccomplishmentModalIsOpen: state.completedOvertimeAccomplishmentModalIsOpen,
+    errorOvertimeAccomplishment: state.error.errorOvertimeAccomplishment,
     setConfirmOvertimeAccomplishmentModalIsOpen: state.setConfirmOvertimeAccomplishmentModalIsOpen,
     setOvertimeAccomplishmentPatchDetails: state.setOvertimeAccomplishmentPatchDetails,
   }));
 
-  const { dtr, isHoliday, isRestday, getTimeLogs, getTimeLogsSuccess, getTimeLogsFail } = useTimeLogStore((state) => ({
-    dtr: state.dtr,
-    isHoliday: state.isHoliday,
-    isRestday: state.isRestDay,
-    getTimeLogs: state.getTimeLogs,
-    getTimeLogsSuccess: state.getTimeLogsSuccess,
-    getTimeLogsFail: state.getTimeLogsFail,
-  }));
+  const { dtr, isHoliday, isRestday, getTimeLogs, getTimeLogsSuccess, getTimeLogsFail, errorTimeLogs } =
+    useTimeLogStore((state) => ({
+      dtr: state.dtr,
+      isHoliday: state.isHoliday,
+      isRestday: state.isRestDay,
+      getTimeLogs: state.getTimeLogs,
+      getTimeLogsSuccess: state.getTimeLogsSuccess,
+      getTimeLogsFail: state.getTimeLogsFail,
+      errorTimeLogs: state.error.errorTimeLogs,
+    }));
 
   const employeeDetails = useEmployeeStore((state) => state.employeeDetails);
 
@@ -70,7 +74,7 @@ export const OvertimeAccomplishmentModal = ({ modalState, setModalState, closeMo
     defaultValues: {
       employeeId: overtimeAccomplishmentDetails.employeeId,
       overtimeApplicationId: overtimeAccomplishmentDetails.overtimeApplicationId,
-      encodedTmieIn: overtimeAccomplishmentDetails.encodedTimeIn,
+      encodedTimeIn: overtimeAccomplishmentDetails.encodedTimeIn,
       encodedTimeOut: overtimeAccomplishmentDetails.encodedTimeOut,
       accomplishments: overtimeAccomplishmentDetails.remarks,
     },
@@ -149,8 +153,6 @@ export const OvertimeAccomplishmentModal = ({ modalState, setModalState, closeMo
     //if holiday or rest day
     if (isHoliday || isRestday) {
       //if scheduled OT
-      // if (overtimeAccomplishmentDetails.plannedDate > overtimeAccomplishmentDetails.dateOfOTApproval)
-      //   {
 
       //8-1 rule - is Holiday or Rest Day
       if (encodedHours > 4 && encodedHours < 10) {
@@ -171,8 +173,6 @@ export const OvertimeAccomplishmentModal = ({ modalState, setModalState, closeMo
     //if regular work day - 3-1 rule only
     else {
       //if scheduled OT
-      // if (overtimeAccomplishmentDetails.plannedDate > overtimeAccomplishmentDetails.dateOfOTApproval) {
-
       if (encodedHours >= 4) {
         numberOfBreaks = Number((encodedHours / 4).toFixed(2)); // for 3-1 rule
         let temporaryHours = Number(encodedHours - Math.floor(numberOfBreaks));
@@ -207,13 +207,15 @@ export const OvertimeAccomplishmentModal = ({ modalState, setModalState, closeMo
     isLoading: swrFaceScanIsLoading,
     error: swrFaceScanError,
   } = useSWR(
-    (pendingOvertimeAccomplishmentModalIsOpen || completedOvertimeAccomplishmentModalIsOpen) &&
-      employeeDetails.employmentDetails.companyId &&
-      overtimeAccomplishmentDetails.plannedDate
+    modalState && employeeDetails.employmentDetails.companyId && overtimeAccomplishmentDetails.plannedDate
       ? faceScanUrl
       : null,
     fetchWithToken,
-    {}
+    {
+      shouldRetryOnError: true,
+      revalidateOnFocus: true,
+      errorRetryInterval: 3000,
+    }
   );
 
   // Initial zustand state update
@@ -233,6 +235,13 @@ export const OvertimeAccomplishmentModal = ({ modalState, setModalState, closeMo
       getTimeLogsFail(swrFaceScanIsLoading, swrFaceScanError.message);
     }
   }, [swrFaceScan, swrFaceScanError]);
+
+  // Initial zustand state update
+  useEffect(() => {
+    if (swrFaceScanIsLoading) {
+      getTimeLogs(swrFaceScanIsLoading);
+    }
+  }, [swrFaceScanIsLoading]);
 
   return (
     <>
@@ -528,7 +537,14 @@ export const OvertimeAccomplishmentModal = ({ modalState, setModalState, closeMo
                         </div>
                       ) : null}
 
-                      {
+                      {!swrFaceScan ? (
+                        <div className="flex-col justify-center items-center w-full">
+                          <LoadingSpinner size={'lg'} />
+                          <div className="pt-3 text-center text-xs font-medium text-slate-500 w-full">
+                            Loading Date Details...
+                          </div>
+                        </div>
+                      ) : (
                         <div
                           className={`flex flex-col justify-start items-start ${
                             overtimeAccomplishmentDetails?.accomplishments ? 'w-full' : 'w-full'
@@ -660,7 +676,7 @@ export const OvertimeAccomplishmentModal = ({ modalState, setModalState, closeMo
                             </div>
                           )}
                         </div>
-                      }
+                      )}
 
                       <hr className="bg-slate-50 h-0.5 w-full mt-3 mb-4"></hr>
 
@@ -695,10 +711,16 @@ export const OvertimeAccomplishmentModal = ({ modalState, setModalState, closeMo
                       ) : null}
 
                       <div className="flex flex-col sm:flex-col justify-start items-start w-full sm:w-1/2 px-0.5 pb-3 ">
-                        <label className="text-slate-500 text-md whitespace-nowrap pb-0.5 ">Supervisor:</label>
+                        <label className="text-slate-500 text-md whitespace-nowrap pb-0.5 ">
+                          {overtimeAccomplishmentDetails.status === OvertimeAccomplishmentStatus.DISAPPROVED
+                            ? 'Disapproved By:'
+                            : 'Approved By:'}
+                        </label>
 
                         <div className="w-auto ml-5">
-                          <label className=" text-md font-medium">{overtimeAccomplishmentDetails.supervisorName}</label>
+                          <label className=" text-md font-medium">
+                            {overtimeAccomplishmentDetails.approvedBy ?? '---'}
+                          </label>
                         </div>
                       </div>
 
@@ -753,6 +775,8 @@ export const OvertimeAccomplishmentModal = ({ modalState, setModalState, closeMo
               ) : (
                 <Button
                   disabled={
+                    errorOvertimeAccomplishment ||
+                    errorTimeLogs ||
                     !watch('accomplishments') ||
                     finalEncodedHours <= 0 ||
                     isNaN(finalEncodedHours) ||

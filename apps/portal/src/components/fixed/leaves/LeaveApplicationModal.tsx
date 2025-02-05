@@ -122,6 +122,8 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
     setLeaveDates,
     setLeaveDateFrom,
     setLeaveDateTo,
+
+    emptyResponseAndError,
   } = useLeaveStore((state) => ({
     pendingleavesList: state.leaves.onGoing,
     loadingResponse: state.loading.loadingResponse,
@@ -148,6 +150,8 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
 
     setLeaveDateFrom: state.setLeaveDateFrom,
     setLeaveDateTo: state.setLeaveDateTo,
+
+    emptyResponseAndError: state.emptyResponseAndError,
   }));
 
   const {
@@ -593,14 +597,141 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
       (watch('typeOfLeaveDetails.leaveName') === LeaveName.MONETIZATION && estimatedAmount > 0) ||
       (watch('typeOfLeaveDetails.leaveName') === LeaveName.TERMINAL && estimatedAmount > 0)
     ) {
-      handlePostResult(dataToSend);
-      postLeave();
+      postLeave(); //initialize POST request
+      if (
+        Number(vacationLeaveBalance) - Number(pendingVacationLeaveDateCount) >= 0.5 &&
+        Number(sickLeaveBalance) - Number(pendingSickLeaveDateCount) >= 0.5 &&
+        watch('typeOfLeaveDetails.leaveName') === LeaveName.LEAVE_WITHOUT_PAY
+      ) {
+        handlePostError('Unable to apply for Leave Without Pay if Vacation or Sick Leave credits are not exhausted.');
+      } else if (
+        (watch('lateFilingJustification') === '' ||
+          watch('lateFilingJustification') === null ||
+          watch('lateFilingJustification') === '<p></p>') &&
+        lateFiling
+      ) {
+        //if late filing and justification letter is empty
+        handlePostError('Justification Letter for Late Filing is empty.');
+      } else if (monthNow === '12' && watch('typeOfLeaveDetails.leaveName') === LeaveName.FORCED) {
+        //disabled if applying for force leave and is December
+        handlePostError('Forced Leaves cannot be applied during December.');
+      } else if (
+        !isEmpty(errorLeaveList) ||
+        !isEmpty(errorUnavailableDates) ||
+        !isEmpty(errorLeaveLedger) ||
+        !isEmpty(errorLeaveTypes)
+      ) {
+        //disabled if there are errors in SWR fetches
+        handlePostError('Failed to submit due to server errors.');
+      } else if (
+        Number(roundedFinalVacationLeaveBalance) - Number(pendingVacationLeaveDateCount) < 0 &&
+        watch('typeOfLeaveDetails.leaveName') === LeaveName.VACATION
+      ) {
+        handlePostError('Insufficient Vacation Leave Credits.');
+      } else if (
+        (Number(vacationLeaveBalance) - Number(pendingVacationLeaveDateCount) < 0.5 ||
+          Number(roundedFinalForcedLeaveBalance) < 0) &&
+        watch('typeOfLeaveDetails.leaveName') === LeaveName.FORCED
+      ) {
+        handlePostError('Must have at least 0.5 Vacation Leave Balance to apply for Forced Leave.');
+      } else if (roundedFinalSickLeaveBalance < 0 && watch('typeOfLeaveDetails.leaveName') === LeaveName.SICK) {
+        handlePostError('Insufficient Sick Leave Credits.');
+      } else if (
+        finalSpecialPrivilegekBalance < 0 &&
+        watch('typeOfLeaveDetails.leaveName') === LeaveName.SPECIAL_PRIVILEGE
+      ) {
+        handlePostError('Insufficient Special Privilege Leave Credits.');
+      } else if (
+        overlappingLeaveCount > 0 &&
+        (watch('typeOfLeaveDetails.leaveName') === LeaveName.MATERNITY ||
+          watch('typeOfLeaveDetails.leaveName') === LeaveName.STUDY ||
+          watch('typeOfLeaveDetails.leaveName') === LeaveName.REHABILITATION ||
+          watch('typeOfLeaveDetails.leaveName') === LeaveName.SPECIAL_LEAVE_BENEFITS_FOR_WOMEN ||
+          watch('typeOfLeaveDetails.leaveName') === LeaveName.ADOPTION)
+      ) {
+        handlePostError('There are overlapping Leaves in your application.');
+      } else if (
+        leaveDates.length <= 0 &&
+        watch('typeOfLeaveDetails.leaveName') !== LeaveName.MATERNITY &&
+        watch('typeOfLeaveDetails.leaveName') !== LeaveName.STUDY &&
+        watch('typeOfLeaveDetails.leaveName') !== LeaveName.REHABILITATION &&
+        watch('typeOfLeaveDetails.leaveName') !== LeaveName.SPECIAL_LEAVE_BENEFITS_FOR_WOMEN &&
+        watch('typeOfLeaveDetails.leaveName') !== LeaveName.ADOPTION &&
+        watch('typeOfLeaveDetails.leaveName') !== LeaveName.MONETIZATION &&
+        watch('typeOfLeaveDetails.leaveName') !== LeaveName.TERMINAL
+      ) {
+        handlePostError('Please select a date of Leave.');
+      } else if (
+        leaveDateTo < leaveDateFrom &&
+        (watch('typeOfLeaveDetails.leaveName') == LeaveName.MATERNITY ||
+          watch('typeOfLeaveDetails.leaveName') == LeaveName.STUDY ||
+          watch('typeOfLeaveDetails.leaveName') == LeaveName.REHABILITATION ||
+          watch('typeOfLeaveDetails.leaveName') == LeaveName.SPECIAL_LEAVE_BENEFITS_FOR_WOMEN ||
+          watch('typeOfLeaveDetails.leaveName') == LeaveName.ADOPTION)
+      ) {
+        handlePostError('Please select an acceptable date of Leave.');
+      } else if (hasPendingLeave) {
+        handlePostError('You have a pending Leave application conflict.');
+      } else if (
+        employeeDetails.profile.sex === 'Male' &&
+        (watch('typeOfLeaveDetails.leaveName') === LeaveName.MATERNITY ||
+          watch('typeOfLeaveDetails.leaveName') === LeaveName.VAWC ||
+          watch('typeOfLeaveDetails.leaveName') === LeaveName.SPECIAL_LEAVE_BENEFITS_FOR_WOMEN)
+      ) {
+        //disabled if employee is male and is applying for women only leave benefits
+        handlePostError('You are not allowed to file this type of Leave.');
+      } else if (
+        employeeDetails.profile.sex === 'Female' &&
+        watch('typeOfLeaveDetails.leaveName') === LeaveName.PATERNITY
+      ) {
+        handlePostError('You are not allowed to file this type of Leave.');
+      } else if (
+        selectedLeaveMonetizationType === MonetizationType.MAX20 &&
+        leaveBalanceInput > 20 &&
+        watch('typeOfLeaveDetails.leaveName') === LeaveName.MONETIZATION
+      ) {
+        //monetization type is max 20 leave credits and exceeded the 20 credits
+        handlePostError('Invalid number of Leave Credits.');
+      } else if (
+        selectedLeaveMonetizationType === MonetizationType.MAX50PERCENT &&
+        watch('typeOfLeaveDetails.leaveName') === LeaveName.MONETIZATION &&
+        estimatedAmount > Number(maxMonetizationAmount) / 2
+      ) {
+        handlePostError('Invalid number of Leave Credits.');
+      } else if (
+        leaveBalanceInput > 0 &&
+        finalSickLeaveBalance < 15 &&
+        watch('typeOfLeaveDetails.leaveName') === LeaveName.MONETIZATION
+      ) {
+        handlePostError('Retaining a minimum 15 Sick Leave Credit Balance is required for its monetization.');
+      } else if (leaveBalanceInput <= 0 && watch('typeOfLeaveDetails.leaveName') === LeaveName.MONETIZATION) {
+        //leave balance to convert input is blank
+        handlePostError('Invalid number of Leave Credits.');
+      } else if (
+        Number(leaveDates.length > Math.round(vacationLeaveBalance) - pendingVacationLeaveDateCount) &&
+        watch('typeOfLeaveDetails.leaveName') === LeaveName.FORCED
+      ) {
+        handlePostError('Insufficient Leave Credits.');
+      } else if (
+        (estimatedAmount <= 0 || !leaveDateFrom) &&
+        watch('typeOfLeaveDetails.leaveName') === LeaveName.TERMINAL
+      ) {
+        handlePostError('Failed to submit.');
+      } else {
+        handlePostResult(dataToSend);
+      }
     }
+  };
+
+  const handlePostError = async (data: string) => {
+    postLeaveFail(data);
+    setTimeout(() => {
+      emptyResponseAndError();
+    }, 3000);
   };
 
   const handlePostResult = async (data: LeaveApplicationForm) => {
     const { error, result } = await postPortal('/v1/leave-application', data);
-
     if (error) {
       postLeaveFail(result);
     } else {
@@ -865,7 +996,7 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
                     watch('typeOfLeaveDetails.leaveName') === LeaveName.SPECIAL_LEAVE_BENEFITS_FOR_WOMEN) ? (
                     <AlertNotification
                       alertType="warning"
-                      notifMessage="You are not allowed to file this type of leave."
+                      notifMessage="You are not allowed to file this type of Leave."
                       dismissible={false}
                       className="mb-1"
                     />
@@ -876,7 +1007,7 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
                   watch('typeOfLeaveDetails.leaveName') === LeaveName.PATERNITY ? (
                     <AlertNotification
                       alertType="warning"
-                      notifMessage="You are not allowed to file this type of leave."
+                      notifMessage="You are not allowed to file this type of Leave."
                       dismissible={false}
                       className="mb-1"
                     />
@@ -894,7 +1025,7 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
                   watch('typeOfLeaveDetails.leaveName') !== LeaveName.TERMINAL ? (
                     <AlertNotification
                       alertType="warning"
-                      notifMessage="Please select date of leave."
+                      notifMessage="Please select date of Leave."
                       dismissible={false}
                       className="mb-1"
                     />
@@ -908,7 +1039,7 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
                     watch('typeOfLeaveDetails.leaveName') == LeaveName.ADOPTION) ? (
                     <AlertNotification
                       alertType="warning"
-                      notifMessage="Please select an acceptable date of leave."
+                      notifMessage="Please select an acceptable date of Leave."
                       dismissible={false}
                       className="mb-1"
                     />

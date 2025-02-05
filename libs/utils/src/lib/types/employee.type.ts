@@ -54,6 +54,11 @@ export type EmployeeAsOption = Pick<EmploymentDetails, 'employeeId'> & Pick<Pers
 export type EmployeeAsOptionWithPosition = Pick<EmploymentDetails, 'employeeId' | 'companyId' | 'positionTitle'> &
   Pick<PersonalDetails, 'fullName'> & { assignment: string };
 
+export type EmployeeAsOptionWithPosition2 = Pick<EmploymentDetails, 'employeeId' | 'companyId' | 'positionTitle'> & {
+  assignment: string;
+};
+export type EmployeeAsOptionLabelWithPosition = { label: string } & { value: EmployeeAsOptionWithPosition2 };
+
 // The as EmployeeAsOptionWithPosition but with restDays
 // export type EmployeeAsOptionWithRestDays = Pick<EmploymentDetails, 'employeeId' | 'companyId' | 'positionTitle'> &
 //   Pick<PersonalDetails, 'fullName'> & {

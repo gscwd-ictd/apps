@@ -185,6 +185,18 @@ export const OvertimeSupervisorAccomplishmentModal = ({ modalState, setModalStat
                       </div>
                     </div>
 
+                    <div className="flex flex-col justify-start items-start w-full px-0.5 pb-3  ">
+                      <label className="text-slate-500 text-md whitespace-nowrap pb-0.5">
+                        {accomplishmentDetails.status === OvertimeAccomplishmentStatus.DISAPPROVED
+                          ? 'Disapproved By:'
+                          : 'Approved By:'}
+                      </label>
+
+                      <div className="w-auto ml-5">
+                        <label className="text-md font-medium">{accomplishmentDetails?.approvedBy ?? '---'}</label>
+                      </div>
+                    </div>
+
                     {accomplishmentDetails.status === OvertimeAccomplishmentStatus.DISAPPROVED ? (
                       <div className="flex flex-col justify-start items-start w-full px-0.5 pb-3  ">
                         <label className="text-slate-500 text-md whitespace-nowrap pb-0.5">Remarks:</label>

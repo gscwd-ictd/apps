@@ -89,12 +89,14 @@ export type DtrCorrectionApprovalPatch = {
 
 // Time Log Update/Correction application form
 export type DtrCorrectionForm = {
-  dtrId: string;
-  timeIn: string;
-  timeOut: string;
-  lunchIn: string;
-  lunchOut: string;
+  dtrId: string | null;
+  timeIn: string | null;
+  timeOut: string | null;
+  lunchIn: string | null;
+  lunchOut: string | null;
   remarks: string;
+  companyId: string;
+  dtrDate: string;
 };
 
 // for adding remarks for selected dates in DTR
