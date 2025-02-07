@@ -101,13 +101,6 @@ export const OvertimeSupervisorAccomplishmentModal = ({ modalState, setModalStat
           {isEmpty(swrOvertimeAccomplishment) ? (
             <div className="w-full h-[90%]  static flex flex-col justify-center items-center place-items-center">
               <LoadingSpinner size={'lg'} />
-              {/* <SpinnerDotted
-                speed={70}
-                thickness={70}
-                className="w-full flex h-full transition-all "
-                color="slateblue"
-                size={100}
-              /> */}
             </div>
           ) : (
             <div className="w-full h-full flex flex-col  ">
@@ -154,7 +147,9 @@ export const OvertimeSupervisorAccomplishmentModal = ({ modalState, setModalStat
                       <label className="text-slate-500 text-md whitespace-nowrap pb-0.5">Approved Hours:</label>
 
                       <div className="w-auto ml-5">
-                        <label className="text-md font-medium">{accomplishmentDetails.actualHrs ?? '---'}</label>
+                        <label className="text-md font-medium">
+                          {accomplishmentDetails.actualHrs ? Number(accomplishmentDetails.actualHrs).toFixed(2) : '---'}
+                        </label>
                       </div>
                     </div>
 

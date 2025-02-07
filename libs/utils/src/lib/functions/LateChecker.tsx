@@ -5,10 +5,9 @@ export const UseLateChecker = (timeInLog: string, scheduledTimeIn: string) => {
   const now = dayjs().toDate().toDateString();
   const timeIn = dayjs(now + ' ' + timeInLog);
   const schedule = dayjs(now + ' ' + scheduledTimeIn);
-
-  if (timeIn.isAfter(schedule)) {
-    return true;
-  } else {
+  if (timeIn.isBefore(schedule, 'm') || timeIn.isSame(schedule, 'm')) {
     return false;
+  } else {
+    return true;
   }
 };

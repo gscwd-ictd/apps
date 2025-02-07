@@ -100,9 +100,9 @@ const styles = StyleSheet.create({
   tableCell_dates: {
     margin: 'auto',
     textAlign: 'center',
-    fontSize: 8,
-    width: 10,
-    padding: 1,
+    fontSize: 7,
+    width: '100%',
+    padding: 0,
   },
 });
 
@@ -168,52 +168,52 @@ export const OvertimeSummaryReportPdf = ({
                     </Text>
                   </View>
                   <View style={styles.tableRow}>
-                    <View style={[styles.tableCol, { height: 20, borderBottomWidth: 0 }]}>
+                    <View style={[styles.tableCol, { height: 20, width: 20, borderBottomWidth: 0 }]}>
                       <Text style={styles.tableCell_dates}>{selectedPeriod === 'first' ? '1' : '16'}</Text>
                     </View>
-                    <View style={[styles.tableCol, { height: 20, borderBottomWidth: 0 }]}>
+                    <View style={[styles.tableCol, { height: 20, width: 20, borderBottomWidth: 0 }]}>
                       <Text style={styles.tableCell_dates}>{selectedPeriod === 'first' ? '2' : '17'}</Text>
                     </View>
-                    <View style={[styles.tableCol, { height: 20, borderBottomWidth: 0 }]}>
+                    <View style={[styles.tableCol, { height: 20, width: 20, borderBottomWidth: 0 }]}>
                       <Text style={styles.tableCell_dates}>{selectedPeriod === 'first' ? '3' : '18'}</Text>
                     </View>
-                    <View style={[styles.tableCol, { height: 20, borderBottomWidth: 0 }]}>
+                    <View style={[styles.tableCol, { height: 20, width: 20, borderBottomWidth: 0 }]}>
                       <Text style={styles.tableCell_dates}>{selectedPeriod === 'first' ? '4' : '19'}</Text>
                     </View>
-                    <View style={[styles.tableCol, { height: 20, borderBottomWidth: 0 }]}>
+                    <View style={[styles.tableCol, { height: 20, width: 20, borderBottomWidth: 0 }]}>
                       <Text style={styles.tableCell_dates}>{selectedPeriod === 'first' ? '5' : '20'}</Text>
                     </View>
-                    <View style={[styles.tableCol, { height: 20, borderBottomWidth: 0 }]}>
+                    <View style={[styles.tableCol, { height: 20, width: 20, borderBottomWidth: 0 }]}>
                       <Text style={styles.tableCell_dates}>{selectedPeriod === 'first' ? '6' : '21'}</Text>
                     </View>
-                    <View style={[styles.tableCol, { height: 20, borderBottomWidth: 0 }]}>
+                    <View style={[styles.tableCol, { height: 20, width: 20, borderBottomWidth: 0 }]}>
                       <Text style={styles.tableCell_dates}>{selectedPeriod === 'first' ? '7' : '22'}</Text>
                     </View>
-                    <View style={[styles.tableCol, { height: 20, borderBottomWidth: 0 }]}>
+                    <View style={[styles.tableCol, { height: 20, width: 20, borderBottomWidth: 0 }]}>
                       <Text style={styles.tableCell_dates}>{selectedPeriod === 'first' ? '8' : '23'}</Text>
                     </View>
-                    <View style={[styles.tableCol, { height: 20, borderBottomWidth: 0 }]}>
+                    <View style={[styles.tableCol, { height: 20, width: 20, borderBottomWidth: 0 }]}>
                       <Text style={styles.tableCell_dates}>{selectedPeriod === 'first' ? '9' : '24'}</Text>
                     </View>
-                    <View style={[styles.tableCol, { height: 20, borderBottomWidth: 0 }]}>
+                    <View style={[styles.tableCol, { height: 20, width: 20, borderBottomWidth: 0 }]}>
                       <Text style={styles.tableCell_dates}>{selectedPeriod === 'first' ? '10' : '25'}</Text>
                     </View>
-                    <View style={[styles.tableCol, { height: 20, borderBottomWidth: 0 }]}>
+                    <View style={[styles.tableCol, { height: 20, width: 20, borderBottomWidth: 0 }]}>
                       <Text style={styles.tableCell_dates}>{selectedPeriod === 'first' ? '11' : '26'}</Text>
                     </View>
-                    <View style={[styles.tableCol, { height: 20, borderBottomWidth: 0 }]}>
+                    <View style={[styles.tableCol, { height: 20, width: 20, borderBottomWidth: 0 }]}>
                       <Text style={styles.tableCell_dates}>{selectedPeriod === 'first' ? '12' : '27'}</Text>
                     </View>
-                    <View style={[styles.tableCol, { height: 20, borderBottomWidth: 0 }]}>
+                    <View style={[styles.tableCol, { height: 20, width: 20, borderBottomWidth: 0 }]}>
                       <Text style={styles.tableCell_dates}>{selectedPeriod === 'first' ? '13' : '28'}</Text>
                     </View>
-                    <View style={[styles.tableCol, { height: 20, borderBottomWidth: 0 }]}>
+                    <View style={[styles.tableCol, { height: 20, width: 20, borderBottomWidth: 0 }]}>
                       <Text style={styles.tableCell_dates}>{selectedPeriod === 'first' ? '14' : '29'}</Text>
                     </View>
-                    <View style={[styles.tableCol, { height: 20, borderBottomWidth: 0 }]}>
+                    <View style={[styles.tableCol, { height: 20, width: 20, borderBottomWidth: 0 }]}>
                       <Text style={styles.tableCell_dates}>{selectedPeriod === 'first' ? '15' : '30'}</Text>
                     </View>
-                    <View style={[styles.tableCol_dates, { height: 20, borderBottomWidth: 0 }]}>
+                    <View style={[styles.tableCol_dates, { height: 20, width: 20, borderBottomWidth: 0 }]}>
                       <Text style={styles.tableCell_dates}>{selectedPeriod === 'first' ? '' : '31'}</Text>
                     </View>
                   </View>
@@ -253,7 +253,18 @@ export const OvertimeSummaryReportPdf = ({
 
                 <View style={styles.tableCol_dates_main}>
                   <View style={styles.tableCol_dates}>
-                    <Text style={[styles.tableCell, { paddingTop: 2, paddingBottom: 2, width: '80' }]}>
+                    <Text
+                      style={[
+                        styles.tableCell,
+                        {
+                          paddingTop: 2,
+                          paddingBottom: 2,
+                          width: '70',
+                          fontSize: 6,
+                          textAlign: 'center',
+                        },
+                      ]}
+                    >
                       NIGHT DIFFERENTIAL
                     </Text>
                   </View>
@@ -319,6 +330,7 @@ export const OvertimeSummaryReportPdf = ({
                             styles.tableCol,
                             {
                               height: 20,
+                              width: 20,
                               borderBottomWidth: 0,
                               backgroundColor: `${
                                 overtime?.overtimes[0]?.hoursRendered >= 0 &&
@@ -338,6 +350,7 @@ export const OvertimeSummaryReportPdf = ({
                             styles.tableCol,
                             {
                               height: 20,
+                              width: 20,
                               borderBottomWidth: 0,
                               backgroundColor: `${
                                 overtime?.overtimes[1]?.hoursRendered >= 0 &&
@@ -357,6 +370,7 @@ export const OvertimeSummaryReportPdf = ({
                             styles.tableCol,
                             {
                               height: 20,
+                              width: 20,
                               borderBottomWidth: 0,
                               backgroundColor: `${
                                 overtime?.overtimes[2]?.hoursRendered >= 0 &&
@@ -376,6 +390,7 @@ export const OvertimeSummaryReportPdf = ({
                             styles.tableCol,
                             {
                               height: 20,
+                              width: 20,
                               borderBottomWidth: 0,
                               backgroundColor: `${
                                 overtime?.overtimes[3]?.hoursRendered >= 0 &&
@@ -395,6 +410,7 @@ export const OvertimeSummaryReportPdf = ({
                             styles.tableCol,
                             {
                               height: 20,
+                              width: 20,
                               borderBottomWidth: 0,
                               backgroundColor: `${
                                 overtime?.overtimes[4]?.hoursRendered >= 0 &&
@@ -414,6 +430,7 @@ export const OvertimeSummaryReportPdf = ({
                             styles.tableCol,
                             {
                               height: 20,
+                              width: 20,
                               borderBottomWidth: 0,
                               backgroundColor: `${
                                 overtime?.overtimes[5]?.hoursRendered >= 0 &&
@@ -433,6 +450,7 @@ export const OvertimeSummaryReportPdf = ({
                             styles.tableCol,
                             {
                               height: 20,
+                              width: 20,
                               borderBottomWidth: 0,
                               backgroundColor: `${
                                 overtime?.overtimes[6]?.hoursRendered >= 0 &&
@@ -452,6 +470,7 @@ export const OvertimeSummaryReportPdf = ({
                             styles.tableCol,
                             {
                               height: 20,
+                              width: 20,
                               borderBottomWidth: 0,
                               backgroundColor: `${
                                 overtime?.overtimes[7]?.hoursRendered >= 0 &&
@@ -471,6 +490,7 @@ export const OvertimeSummaryReportPdf = ({
                             styles.tableCol,
                             {
                               height: 20,
+                              width: 20,
                               borderBottomWidth: 0,
                               backgroundColor: `${
                                 overtime?.overtimes[8]?.hoursRendered >= 0 &&
@@ -490,6 +510,7 @@ export const OvertimeSummaryReportPdf = ({
                             styles.tableCol,
                             {
                               height: 20,
+                              width: 20,
                               borderBottomWidth: 0,
                               backgroundColor: `${
                                 overtime?.overtimes[9]?.hoursRendered >= 0 &&
@@ -509,6 +530,7 @@ export const OvertimeSummaryReportPdf = ({
                             styles.tableCol,
                             {
                               height: 20,
+                              width: 20,
                               borderBottomWidth: 0,
                               backgroundColor: `${
                                 overtime?.overtimes[10]?.hoursRendered >= 0 &&
@@ -528,6 +550,7 @@ export const OvertimeSummaryReportPdf = ({
                             styles.tableCol,
                             {
                               height: 20,
+                              width: 20,
                               borderBottomWidth: 0,
                               backgroundColor: `${
                                 overtime?.overtimes[11]?.hoursRendered >= 0 &&
@@ -547,6 +570,7 @@ export const OvertimeSummaryReportPdf = ({
                             styles.tableCol,
                             {
                               height: 20,
+                              width: 20,
                               borderBottomWidth: 0,
                               backgroundColor: `${
                                 overtime?.overtimes[12]?.hoursRendered >= 0 &&
@@ -566,6 +590,7 @@ export const OvertimeSummaryReportPdf = ({
                             styles.tableCol,
                             {
                               height: 20,
+                              width: 20,
                               borderBottomWidth: 0,
                               backgroundColor: `${
                                 overtime?.overtimes[13]?.hoursRendered >= 0 &&
@@ -585,6 +610,7 @@ export const OvertimeSummaryReportPdf = ({
                             styles.tableCol,
                             {
                               height: 20,
+                              width: 20,
                               borderBottomWidth: 0,
                               backgroundColor: `${
                                 overtime?.overtimes[14]?.hoursRendered >= 0 &&
@@ -604,6 +630,7 @@ export const OvertimeSummaryReportPdf = ({
                             styles.tableCol_dates,
                             {
                               height: 20,
+                              width: 20,
                               borderBottomWidth: 0,
                               backgroundColor: `${
                                 overtime?.overtimes[15]?.hoursRendered >= 0 &&
@@ -622,11 +649,11 @@ export const OvertimeSummaryReportPdf = ({
                     </View>
 
                     <View style={[styles.tableCol, { width: 35 }]}>
-                      <Text style={styles.tableCell}>{overtime?.totalOTHoursRendered}</Text>
+                      <Text style={styles.tableCell}>{overtime?.totalOTHoursRendered.toFixed(2)}</Text>
                     </View>
 
                     <View style={[styles.tableCol, { width: 40 }]}>
-                      <Text style={styles.tableCell}>{overtime?.totalRegularOTHoursRendered}</Text>
+                      <Text style={styles.tableCell}>{overtime?.totalRegularOTHoursRendered.toFixed(2)}</Text>
                     </View>
 
                     <View style={[styles.tableCol, { width: 40 }]}>
@@ -634,20 +661,20 @@ export const OvertimeSummaryReportPdf = ({
                     </View>
 
                     <View style={[styles.tableCol, { width: 50 }]}>
-                      <Text style={styles.tableCell}>{overtime?.totalOffOTHoursRendered}</Text>
+                      <Text style={styles.tableCell}>{overtime?.totalOffOTHoursRendered.toFixed(2)}</Text>
                     </View>
 
                     <View style={[styles.tableCol, { width: 40 }]}>
                       <Text style={styles.tableCell}>{overtime?.offOTAmount.toLocaleString()}</Text>
                     </View>
                     <View style={[styles.tableCol, { width: 45 }]}>
-                      <Text style={styles.tableCell}>{overtime?.substituteDutyOTHours}</Text>
+                      <Text style={styles.tableCell}>{overtime?.substituteDutyOTHours.toFixed(2)}</Text>
                     </View>
                     <View style={[styles.tableCol, { width: 45 }]}>
                       <Text style={styles.tableCell}>{overtime?.substituteAmount.toLocaleString()}</Text>
                     </View>
                     <View style={[styles.tableCol, { width: 41 }]}>
-                      <Text style={styles.tableCell}>{overtime?.nightDifferentialHrs}</Text>
+                      <Text style={styles.tableCell}>{overtime?.nightDifferentialHrs.toFixed(2)}</Text>
                     </View>
                     <View style={[styles.tableCol, { width: 42 }]}>
                       <Text style={[styles.tableCell, { padding: 1 }]}>
@@ -681,7 +708,7 @@ export const OvertimeSummaryReportPdf = ({
                 <View style={styles.tableCol_dates_main}>
                   <View style={styles.tableRow}>
                     <View
-                      style={[styles.tableCol, { height: 20, borderBottomWidth: 0, borderRightWidth: 0, width: 207 }]}
+                      style={[styles.tableCol, { height: 20, borderBottomWidth: 0, borderRightWidth: 0, width: 320 }]}
                     >
                       <Text style={styles.tableCell_dates}></Text>
                     </View>
