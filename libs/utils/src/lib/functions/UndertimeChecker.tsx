@@ -8,7 +8,7 @@ export const UseUndertimeChecker = (timeOutLog: string, scheduledTimeOut: string
   // const timeOut = dayjs(now + ' ' + timeOutLog).format('hh:mm A');
   // const schedule = dayjs(now + ' ' + scheduledTimeOut).format('hh:mm A');
 
-  if (timeOut.isBefore(schedule)) {
+  if (timeOut.isBefore(schedule, 'm')) {
     return true;
   } else {
     return false;

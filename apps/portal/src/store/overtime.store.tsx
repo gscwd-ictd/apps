@@ -27,6 +27,7 @@ export type OvertimeState = {
   response: {
     postResponseApply: any;
     cancelResponse: any;
+    removeEmployeeResponse: any;
   };
   loading: {
     loadingOvertime: boolean;
@@ -37,6 +38,7 @@ export type OvertimeState = {
     loadingAccomplishmentReport: boolean;
     loadingOvertimeSummaryReport: boolean;
     loadingOvertimeAuthorizationAccomplishmentReport: boolean;
+    loadingRemoveEmployee: boolean;
   };
   error: {
     errorOvertime: string;
@@ -47,6 +49,7 @@ export type OvertimeState = {
     errorAccomplishmentReport: string;
     errorOvertimeSummaryReport: string;
     errorOvertimeAuthorizationAccomplishmentReport: string;
+    errorRemoveEmployee: string;
   };
 
   overtimeAccomplishmentEmployeeId: string;
@@ -63,6 +66,7 @@ export type OvertimeState = {
   getEmployeeListFail: (loading: boolean, error: string) => void;
 
   overtimeDetails: OvertimeDetails;
+  removeEmployeeModalIsOpen: boolean;
   overtimeSummaryModalIsOpen: boolean;
   cancelOvertimeModalIsOpen: boolean;
   applyOvertimeModalIsOpen: boolean;
@@ -124,10 +128,15 @@ export type OvertimeState = {
   cancelOvertimeSuccess: (response) => void;
   cancelOvertimeFail: (error: string) => void;
 
+  removeEmployee: () => void;
+  removeEmployeeSuccess: (response) => void;
+  removeEmployeeFail: (error: string) => void;
+
   postOvertime: () => void;
   postOvertimeSuccess: (response: OvertimeForm) => void;
   postOvertimeFail: (error: string) => void;
 
+  setRemoveEmployeeModalIsOpen: (removeEmployeeModalIsOpen: boolean) => void;
   setOvertimeSummaryModalIsOpen: (overtimeSummaryModalIsOpen: boolean) => void;
   setCancelOvertimeModalIsOpen: (cancelOvertimeModalIsOpen: boolean) => void;
   setApplyOvertimeModalIsOpen: (applyOvertimeModalIsOpen: boolean) => void;
@@ -153,11 +162,6 @@ export const useOvertimeStore = create<OvertimeState>()(
   devtools((set) => ({
     employeeList: [],
 
-    // overtime: {
-    //   forApproval: [],
-    //   completed: [],
-    //   supervisorName: '',
-    // },
     overtime: {
       overtimes: [],
       supervisorName: '',
@@ -165,6 +169,7 @@ export const useOvertimeStore = create<OvertimeState>()(
     response: {
       postResponseApply: {},
       cancelResponse: {} as OvertimeDetails,
+      removeEmployeeResponse: {},
     },
     loading: {
       loadingOvertime: false,
@@ -175,6 +180,7 @@ export const useOvertimeStore = create<OvertimeState>()(
       loadingAccomplishmentReport: false,
       loadingOvertimeSummaryReport: false,
       loadingOvertimeAuthorizationAccomplishmentReport: false,
+      loadingRemoveEmployee: false,
     },
     error: {
       errorOvertime: '',
@@ -185,6 +191,7 @@ export const useOvertimeStore = create<OvertimeState>()(
       errorAccomplishmentReport: '',
       errorOvertimeSummaryReport: '',
       errorOvertimeAuthorizationAccomplishmentReport: '',
+      errorRemoveEmployee: '',
     },
 
     overtimeDetails: {} as OvertimeDetails,
@@ -195,6 +202,7 @@ export const useOvertimeStore = create<OvertimeState>()(
     overtimeAccomplishmentReport: {} as OvertimeAccomplishmentReport,
     overtimeAuthorizationAccomplishmentReport: {} as OvertimeAuthorizationAccomplishment,
 
+    removeEmployeeModalIsOpen: false,
     overtimeSummaryModalIsOpen: false,
     applyOvertimeModalIsOpen: false,
     pendingOvertimeModalIsOpen: false,
@@ -227,6 +235,10 @@ export const useOvertimeStore = create<OvertimeState>()(
 
     setTab: (tab: number) => {
       set((state) => ({ ...state, tab }));
+    },
+
+    setRemoveEmployeeModalIsOpen: (removeEmployeeModalIsOpen: boolean) => {
+      set((state) => ({ ...state, removeEmployeeModalIsOpen }));
     },
 
     setOvertimeSummaryModalIsOpen: (overtimeSummaryModalIsOpen: boolean) => {
@@ -686,6 +698,51 @@ export const useOvertimeStore = create<OvertimeState>()(
       }));
     },
 
+    //REMOVE EMPLOYEE FROM OVERTIME
+    removeEmployee: () => {
+      set((state) => ({
+        ...state,
+        response: {
+          ...state.response,
+          removeEmployeeResponse: {},
+        },
+        loading: {
+          ...state.loading,
+          loadingRemoveEmployee: true,
+        },
+        error: {
+          ...state.error,
+          errorRemoveEmployee: '',
+        },
+      }));
+    },
+    removeEmployeeSuccess: (response) => {
+      set((state) => ({
+        ...state,
+        response: {
+          ...state.response,
+          removeEmployeeResponse: response,
+        },
+        loading: {
+          ...state.loading,
+          loadingRemoveEmployee: false,
+        },
+      }));
+    },
+    removeEmployeeFail: (error: string) => {
+      set((state) => ({
+        ...state,
+        loading: {
+          ...state.loading,
+          loadingRemoveEmployee: false,
+        },
+        error: {
+          ...state.error,
+          errorRemoveEmployee: error,
+        },
+      }));
+    },
+
     emptyResponseAndError: () => {
       set((state) => ({
         ...state,
@@ -693,6 +750,7 @@ export const useOvertimeStore = create<OvertimeState>()(
           ...state.response,
           postResponseApply: {},
           cancelResponse: {},
+          removeEmployeeResponse: {},
         },
         error: {
           ...state.error,
@@ -701,6 +759,7 @@ export const useOvertimeStore = create<OvertimeState>()(
           errorEmployeeList: '',
           errorOvertimeSummary: '',
           errorOvertime: '',
+          errorRemoveEmployee: '',
         },
       }));
     },

@@ -69,10 +69,8 @@ export default function Index({ employeeData }: InferGetServerSidePropsType<type
   }));
 
   // scheduling store
-  const { postResponse, deleteResponse, emptyResponseAndErrors } = useScheduleSheetStore((state) => ({
+  const { postResponse } = useScheduleSheetStore((state) => ({
     postResponse: state.employeeSchedule.postResponse,
-    deleteResponse: state.employeeSchedule.deleteResponse,
-    emptyResponseAndErrors: state.emptyResponseAndErrors,
   }));
 
   useEffect(() => {

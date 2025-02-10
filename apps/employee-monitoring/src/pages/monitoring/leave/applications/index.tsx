@@ -175,7 +175,6 @@ const Index = () => {
     }),
     columnHelper.accessor('dateOfFiling', {
       header: 'Date of Filing',
-      // filterFn: 'equalsString',
       cell: (info) => dayjs(info.getValue()).format('MMMM DD, YYYY'),
     }),
     columnHelper.accessor('employee.employeeName', {
@@ -188,12 +187,20 @@ const Index = () => {
       header: 'Leave Benefit',
       cell: (info) => UseRenderLeaveType(info.getValue()),
     }),
-    columnHelper.display({
-      id: 'leaveDates',
+    columnHelper.accessor('leaveDates', {
       header: 'Leave Dates',
-      enableColumnFilter: false,
+      filterFn: 'fuzzy',
+      // filterFn: 'arrIncludesSome',
+      enableSorting: false,
+      enableGlobalFilter: false,
       cell: (props) => renderRowLeaveDates(props.row.original.leaveDates),
     }),
+    // columnHelper.display({
+    //   id: 'leaveDates',
+    //   header: 'Leave Dates',
+    //   filterFn: 'fuzzy',
+    //   cell: (props) => renderRowLeaveDates(props.row.original.leaveDates),
+    // }),
     columnHelper.accessor('status', {
       header: 'Status',
       cell: (info) => UseRenderLeaveStatus(info.getValue()),

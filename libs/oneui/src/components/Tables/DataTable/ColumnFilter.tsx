@@ -57,7 +57,7 @@ export const ColumnFilter = ({
         value={(columnFilterValue ?? '') as string}
         onChange={(value) => column.setFilterValue(value)}
         placeholder={`${placeholder}... (${column.getFacetedUniqueValues().size})`}
-        className="px-4 py-2 text-xs font-medium text-gray-500 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus-visible:outline-none w-80 column-filter-input"
+        className="px-4 py-2 text-xs font-medium text-gray-500 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus-visible:outline-none w-60 column-filter-input"
         list={column.id + 'list'}
       />
       <div className="h-1" />

@@ -184,13 +184,6 @@ export const ApprovalAccomplishmentModal = ({ modalState, setModalState, closeMo
           {!accomplishmentDetails || swrOvertimeAccomplishmentIsLoading ? (
             <div className="w-full h-[90%]  static flex flex-col justify-center items-center place-items-center">
               <LoadingSpinner size={'lg'} />
-              {/* <SpinnerDotted
-                  speed={70}
-                  thickness={70}
-                  className="w-full flex h-full transition-all "
-                  color="slateblue"
-                  size={100}
-                /> */}
             </div>
           ) : (
             <div className="w-full h-full flex flex-col  ">

@@ -5,55 +5,66 @@ import { useState } from 'react';
 import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
 import { patchPortal } from 'apps/portal/src/utils/helpers/portal-axios-helper';
 import { useOvertimeStore } from 'apps/portal/src/store/overtime.store';
-import { OvertimeStatus } from 'libs/utils/src/lib/enums/overtime.enum';
+import { OvertimeAccomplishmentStatus, OvertimeStatus } from 'libs/utils/src/lib/enums/overtime.enum';
+import { OvertimeAccomplishmentTabs } from '../overtime-accomplishment/OvertimeAccomplishmentTabs';
 
 type ModalProps = {
   modalState: boolean;
+  name: string;
+  overtimeId: string;
+  employeeId: string;
   setModalState: React.Dispatch<React.SetStateAction<boolean>>;
   closeModalAction: () => void;
 };
 
-export const CancelOvertimeModal = ({ modalState, setModalState, closeModalAction }: ModalProps) => {
+export const RemoveEmployeeModal = ({
+  modalState,
+  name,
+  overtimeId,
+  employeeId,
+  setModalState,
+  closeModalAction,
+}: ModalProps) => {
   const {
     setPendingOvertimeModalIsOpen,
     setCompletedOvertimeModalIsOpen,
     overtimeDetails,
-    cancelOvertime,
-    cancelOvertimeSuccess,
-    cancelOvertimeFail,
+    removeEmployee,
+    removeEmployeeSuccess,
+    removeEmployeeFail,
   } = useOvertimeStore((state) => ({
     overtimeDetails: state.overtimeDetails,
     setOvertimeDetails: state.setOvertimeDetails,
     setPendingOvertimeModalIsOpen: state.setPendingOvertimeModalIsOpen,
     setCompletedOvertimeModalIsOpen: state.setCompletedOvertimeModalIsOpen,
-    cancelOvertime: state.cancelOvertime,
-    cancelOvertimeSuccess: state.cancelOvertimeSuccess,
-    cancelOvertimeFail: state.cancelOvertimeFail,
+    removeEmployee: state.removeEmployee,
+    removeEmployeeSuccess: state.removeEmployeeSuccess,
+    removeEmployeeFail: state.removeEmployeeFail,
   }));
 
   const [remarks, setRemarks] = useState<string>('');
 
   const handleCancel = async () => {
     const data = {
+      employeeId: employeeId,
       overtimeApplicationId: overtimeDetails.id,
-      remarks: remarks,
-      status: OvertimeStatus.CANCELLED,
+      status: OvertimeAccomplishmentStatus.DISAPPROVED,
     };
-    cancelOvertime();
-    const { error, result } = await patchPortal(
-      `/v1/overtime/immediate-supervisor/${data.overtimeApplicationId}/cancel`,
-      null
-    );
-    if (error) {
-      cancelOvertimeFail(result);
-    } else {
-      cancelOvertimeSuccess(result);
-      closeModalAction();
-      setTimeout(() => {
-        setPendingOvertimeModalIsOpen(false);
-        setCompletedOvertimeModalIsOpen(false);
-      }, 200);
-    }
+    // removeEmployee();
+    // const { error, result } = await patchPortal(
+    //   `/v1/overtime/immediate-supervisor/${data.overtimeApplicationId}/cancel`,
+    //   null
+    // );
+    // if (error) {
+    //   removeEmployeeFail(result);
+    // } else {
+    //   removeEmployeeSuccess(result);
+    //   closeModalAction();
+    //   setTimeout(() => {
+    //     setPendingOvertimeModalIsOpen(false);
+    //     setCompletedOvertimeModalIsOpen(false);
+    //   }, 200);
+    // }
   };
 
   const { windowWidth } = UseWindowDimensions();
@@ -63,7 +74,7 @@ export const CancelOvertimeModal = ({ modalState, setModalState, closeModalActio
         <Modal.Header>
           <h3 className="text-xl font-semibold text-gray-700">
             <div className="flex justify-between px-2">
-              <span>Cancel Overtime Application</span>
+              <span>Remove Employee</span>
               <button
                 className="hover:bg-slate-100 outline-slate-100 outline-8 px-2 rounded-full"
                 onClick={closeModalAction}
@@ -74,8 +85,9 @@ export const CancelOvertimeModal = ({ modalState, setModalState, closeModalActio
           </h3>
         </Modal.Header>
         <Modal.Body>
-          <div className="w-full h-full flex flex-col gap-2 text-lg text-center px-4">
-            {`Are you sure you want to cancel this application?`}
+          <div className="w-full h-full flex flex-col gap-0 text-lg text-center px-4">
+            <label>Are you sure you want to remove</label>
+            {name} from this Overtime application?
           </div>
         </Modal.Body>
         <Modal.Footer>
@@ -95,4 +107,4 @@ export const CancelOvertimeModal = ({ modalState, setModalState, closeModalActio
   );
 };
 
-export default CancelOvertimeModal;
+export default RemoveEmployeeModal;

@@ -5,7 +5,7 @@ import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
 import { useOvertimeStore } from 'apps/portal/src/store/overtime.store';
 import CancelOvertimeModal from './CancelOvertimeModal';
 import { EmployeeOvertimeDetail } from 'libs/utils/src/lib/types/overtime.type';
-import { OvertimeStatus } from 'libs/utils/src/lib/enums/overtime.enum';
+import { OvertimeAccomplishmentStatus, OvertimeStatus } from 'libs/utils/src/lib/enums/overtime.enum';
 import OvertimeSupervisorAccomplishmentModal from './OvertimeSupervisorAccomplishmentModal';
 import { DateFormatter } from 'libs/utils/src/lib/functions/DateFormatter';
 import UseRenderAccomplishmentSubmitted from 'apps/portal/src/utils/functions/RenderAccomplishmentSubmitted';
@@ -14,6 +14,7 @@ import { TextSize } from 'libs/utils/src/lib/enums/text-size.enum';
 import OvertimeAuthorizationModal from './OvertimeAuthorizationModal';
 import { DateTimeFormatter } from 'libs/utils/src/lib/functions/DateTimeFormatter';
 import { isEmpty } from 'lodash';
+import RemoveEmployeeModal from './RemoveEmployeeModal';
 
 type ModalProps = {
   modalState: boolean;
@@ -28,6 +29,12 @@ export const OvertimeModal = ({ modalState, setModalState, closeModalAction }: M
     accomplishmentOvertimeModalIsOpen,
     pdfOvertimeAuthorizationModalIsOpen,
     overtimeSupervisorName,
+    overtimeAccomplishmentEmployeeId,
+    overtimeAccomplishmentApplicationId,
+    overtimeAccomplishmentEmployeeName,
+
+    removeEmployeeModalIsOpen,
+    setRemoveEmployeeModalIsOpen,
     setCancelOvertimeModalIsOpen,
     setAccomplishmentOvertimeModalIsOpen,
     setOvertimeAccomplishmentEmployeeId,
@@ -40,6 +47,11 @@ export const OvertimeModal = ({ modalState, setModalState, closeModalAction }: M
     accomplishmentOvertimeModalIsOpen: state.accomplishmentOvertimeModalIsOpen,
     pdfOvertimeAuthorizationModalIsOpen: state.pdfOvertimeAuthorizationModalIsOpen,
     overtimeSupervisorName: state.overtime.supervisorName,
+    overtimeAccomplishmentEmployeeId: state.overtimeAccomplishmentEmployeeId,
+    overtimeAccomplishmentApplicationId: state.overtimeAccomplishmentApplicationId,
+    overtimeAccomplishmentEmployeeName: state.overtimeAccomplishmentEmployeeName,
+    removeEmployeeModalIsOpen: state.removeEmployeeModalIsOpen,
+    setRemoveEmployeeModalIsOpen: state.setRemoveEmployeeModalIsOpen,
     setCancelOvertimeModalIsOpen: state.setCancelOvertimeModalIsOpen,
     setAccomplishmentOvertimeModalIsOpen: state.setAccomplishmentOvertimeModalIsOpen,
     setOvertimeAccomplishmentEmployeeId: state.setOvertimeAccomplishmentEmployeeId,
@@ -50,23 +62,31 @@ export const OvertimeModal = ({ modalState, setModalState, closeModalAction }: M
 
   const { windowWidth } = UseWindowDimensions();
 
-  const closeCancelOvertimeModal = async () => {
+  const closeCancelOvertimeModal = () => {
     setCancelOvertimeModalIsOpen(false);
+    setRemoveEmployeeModalIsOpen(false);
   };
 
-  const closeOvertimeAccomplishmentModal = async () => {
+  const closeOvertimeAccomplishmentModal = () => {
     setAccomplishmentOvertimeModalIsOpen(false);
   };
 
-  const closePdfOvertimeAuthorizationModal = async () => {
+  const closePdfOvertimeAuthorizationModal = () => {
     setPdfOvertimeAuthorizationModalIsOpen(false);
   };
 
-  const handleEmployeeAccomplishment = async (employeeId: string, employeeName: string) => {
+  const handleEmployeeAccomplishment = (employeeId: string, employeeName: string) => {
     setOvertimeAccomplishmentEmployeeId(employeeId);
     setOvertimeAccomplishmentEmployeeName(employeeName);
     setOvertimeAccomplishmentApplicationId(overtimeDetails.id);
     setAccomplishmentOvertimeModalIsOpen(true);
+  };
+
+  const handleRemoveEmployee = (employeeId: string, employeeName: string) => {
+    setOvertimeAccomplishmentEmployeeId(employeeId);
+    setOvertimeAccomplishmentEmployeeName(employeeName);
+    setOvertimeAccomplishmentApplicationId(overtimeDetails.id);
+    setRemoveEmployeeModalIsOpen(true);
   };
 
   return (
@@ -91,6 +111,16 @@ export const OvertimeModal = ({ modalState, setModalState, closeModalAction }: M
           </h3>
         </Modal.Header>
         <Modal.Body>
+          {/* Remove Employee in OT Modal */}
+          <RemoveEmployeeModal
+            modalState={removeEmployeeModalIsOpen}
+            name={overtimeAccomplishmentEmployeeName}
+            overtimeId={overtimeAccomplishmentApplicationId}
+            employeeId={overtimeAccomplishmentEmployeeId}
+            setModalState={setRemoveEmployeeModalIsOpen}
+            closeModalAction={closeCancelOvertimeModal}
+          />
+
           {/* Cancel Overtime Application Modal */}
           <CancelOvertimeModal
             modalState={cancelOvertimeModalIsOpen}
@@ -106,13 +136,6 @@ export const OvertimeModal = ({ modalState, setModalState, closeModalAction }: M
           {isEmpty(overtimeDetails) ? (
             <div className="w-full h-[90%]  static flex flex-col justify-center items-center place-items-center">
               <LoadingSpinner size={'lg'} />
-              {/* <SpinnerDotted
-                speed={70}
-                thickness={70}
-                className="w-full flex h-full transition-all "
-                color="slateblue"
-                size={100}
-              /> */}
             </div>
           ) : (
             <div className="w-full h-full flex flex-col  ">
@@ -254,7 +277,7 @@ export const OvertimeModal = ({ modalState, setModalState, closeModalAction }: M
                                 ></img>
                                 <div className="w-full flex flex-col md:flex-row justify-between items-start md:items-center gap-2 md:gap-4 text-sm md:text-md">
                                   <label className="w-full">{employee.fullName}</label>
-                                  <label className="w-full">{employee.assignment}</label>
+                                  {/* <label className="w-full">{employee.assignment}</label> */}
                                   {/* <label className="w-full">{employee.positionTitle}</label> */}
                                   {overtimeDetails.status === OvertimeStatus.APPROVED ? (
                                     <div className="flex flex-col gap-2">
@@ -287,6 +310,34 @@ export const OvertimeModal = ({ modalState, setModalState, closeModalAction }: M
                                       Accomplishment
                                     </Button>
                                   ) : null}
+
+                                  {/* {overtimeDetails.status !== OvertimeStatus.CANCELLED ? (
+                                    employee.accomplishmentStatus === OvertimeAccomplishmentStatus.APPROVED ? (
+                                      <Button
+                                        variant={'default'}
+                                        size={'sm'}
+                                        loading={true}
+                                        type="button"
+                                        className="opacity-0 cursor-default"
+                                      >
+                                        X
+                                      </Button>
+                                    ) : (
+                                      <Button
+                                        variant={'danger'}
+                                        size={'sm'}
+                                        loading={true}
+                                        onClick={(e) =>
+                                          overtimeDetails?.employees.length === 1
+                                            ? setCancelOvertimeModalIsOpen(true)
+                                            : handleRemoveEmployee(employee.employeeId, employee.fullName)
+                                        }
+                                        type="button"
+                                      >
+                                        X
+                                      </Button>
+                                    )
+                                  ) : null} */}
                                 </div>
                               </div>
                             );

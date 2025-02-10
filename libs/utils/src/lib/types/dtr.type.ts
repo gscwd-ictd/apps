@@ -14,6 +14,7 @@ export type EmployeeTimeLog = {
   lunchIn: string | null;
   timeOut: string | null;
   remarks: string;
+  baseRemarks: string;
 };
 export type EmployeeRestDay = {
   restDaysNames: string;

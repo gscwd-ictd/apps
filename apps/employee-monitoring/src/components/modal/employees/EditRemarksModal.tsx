@@ -36,12 +36,13 @@ const EditRemarksModal: FunctionComponent<EditRemarksModalProps> = ({
     })
   );
 
-  const yupSchema = yup
-    .object()
-    .shape({
-      remarks: yup.string().required('Remarks is required'),
-    })
-    .required();
+  // Set the remarks field to required
+  // const yupSchema = yup
+  //   .object()
+  //   .shape({
+  //     remarks: yup.string().required('Remarks is required'),
+  //   })
+  //   .required();
 
   const {
     reset,
@@ -52,7 +53,7 @@ const EditRemarksModal: FunctionComponent<EditRemarksModalProps> = ({
   } = useForm<DtrRemarks>({
     mode: 'onSubmit',
     reValidateMode: 'onChange',
-    resolver: yupResolver(yupSchema),
+    // resolver: yupResolver(yupSchema),
     defaultValues: { remarks: '' },
   });
 
@@ -77,13 +78,14 @@ const EditRemarksModal: FunctionComponent<EditRemarksModalProps> = ({
   // set default values in the form
   useEffect(() => {
     if (!isEmpty(rowData) && rowData.dtr) {
-      setValue('remarks', rowData.dtr.remarks || '');
+      setValue('remarks', rowData.dtr.baseRemarks || '');
     }
   }, [rowData, setValue]);
 
+  // reset to empty if modal is closed
   useEffect(() => {
     if (!modalState) {
-      reset({ remarks: rowData.dtr?.remarks });
+      reset({ remarks: rowData.dtr?.baseRemarks });
     }
   }, [modalState, reset]);
 
