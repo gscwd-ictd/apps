@@ -62,6 +62,46 @@ export const DataTable: FunctionComponent<DataTableProps> = ({
           <thead className="text-sm text-gray-600 border-b">
             {model?.getHeaderGroups().map((headerGroup) => (
               <tr key={headerGroup.id} className={'header_level_' + headerGroup.id}>
+                {/* 
+                TEST
+                
+                {headerGroup.headers.map((header) => {
+                  return (
+                    <th
+                      key={header.id}
+                      scope="col"
+                      className="px-5 py-3 break-words text-xs font-semibold text-left text-black align-middle border-l-0 border-r-0 bg-blueGray-50 text-blueGray-500 border-blueGray-100"
+                      colSpan={header.colSpan}
+                    >
+                      {header.isPlaceholder ? null : (
+                        <>
+                          <div
+                            {...{
+                              className: `${
+                                header.column.getCanSort() ? 'cursor-pointer' : 'cursor-default'
+                              } select-none flex items-center gap-2`,
+                              onClick: header.column.getToggleSortingHandler(),
+                            }}
+                          >
+                            {flexRender(header.column.columnDef.header, header.getContext())}
+
+                            {header.column.getCanSort() && <SortableColumn />}
+                          </div>
+                          {header.column.getCanFilter() ? (
+                            <div>
+                              <ColumnFilter
+                                column={header.column}
+                                model={model}
+                                placeholder={header.column.columnDef.header}
+                              />
+                            </div>
+                          ) : null}
+                        </>
+                      )}
+                    </th>
+                  );
+                })} */}
+
                 {headerGroup.headers.map((header) => (
                   <th
                     key={header.id}
