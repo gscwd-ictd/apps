@@ -1,10 +1,11 @@
+/* eslint-disable react/jsx-no-undef */
 import { isEmpty } from 'lodash';
 import { FunctionComponent } from 'react';
 
 import { useDtrStore } from '../../store/dtr.store';
 
-import { Button } from '@gscwd-apps/oneui';
 import { FiPrinter } from 'react-icons/fi';
+import { Button } from 'libs/oneui/src/components/Button';
 
 type PrintButtonProps = {
   onClick: () => void;

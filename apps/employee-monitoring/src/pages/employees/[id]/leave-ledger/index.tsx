@@ -6,7 +6,7 @@ import { BreadCrumbs } from 'apps/employee-monitoring/src/components/navigations
 import { useState } from 'react';
 import { GetServerSideProps, GetServerSidePropsContext, InferGetServerSidePropsType } from 'next/types';
 import axios from 'axios';
-import { isEmpty } from 'lodash';
+import { isEmpty, upperCase } from 'lodash';
 import { PrintButton } from 'apps/employee-monitoring/src/components/buttons/PrintButton';
 import { Select, ToastNotification, ListDef } from '@gscwd-apps/oneui';
 import { LeaveLedgerTable } from 'apps/employee-monitoring/src/components/tables/LeaveLedgerTable';
@@ -15,6 +15,8 @@ import { useLeaveBenefitStore } from 'apps/employee-monitoring/src/store/leave-b
 import { useLeaveLedgerStore } from 'apps/employee-monitoring/src/store/leave-ledger.store';
 import LeaveLedgerPdfModal from 'apps/employee-monitoring/src/components/modal/employees/leave-ledger/LeaveLedgerPdfModal';
 import dayjs from 'dayjs';
+import * as XLSX from 'xlsx';
+import { ExcelButton } from 'apps/employee-monitoring/src/components/buttons/ExcelButton';
 
 type Year = { year: string };
 
@@ -40,17 +42,20 @@ export default function Index({ employeeData }: InferGetServerSidePropsType<type
       </div>
     ),
   };
+
   // set value for year
   const onChangeYear = (year: string) => {
     setSelectedYear(year);
   };
 
-  // zustand store init
+  // zustand store
   const { ErrorLeaveBenefits } = useLeaveBenefitStore((state) => ({
     ErrorLeaveBenefits: state.error.errorLeaveBenefits,
   }));
 
-  const { ErrorLeaveAdjustment } = useLeaveLedgerStore((state) => ({
+  // zustand store
+  const { ErrorLeaveAdjustment, LeaveLedger } = useLeaveLedgerStore((state) => ({
+    LeaveLedger: state.leaveLedger,
     ErrorLeaveAdjustment: state.errorLeaveAdjustment,
   }));
 
@@ -64,6 +69,372 @@ export default function Index({ employeeData }: InferGetServerSidePropsType<type
   // close
   const closeAdjustmentModalAction = () => {
     setAdjustmentModalIsOpen(false);
+  };
+
+  // Generate excel document for leave ledger
+  const exportToExcel = () => {
+    const XLSX = require('sheetjs-style');
+
+    const filteredLeaveLedger = LeaveLedger.map(
+      ({
+        period,
+        particulars,
+        forcedLeave,
+        forcedLeaveBalance,
+        vacationLeave,
+        vacationLeaveBalance,
+        sickLeave,
+        sickLeaveBalance,
+        specialPrivilegeLeave,
+        specialPrivilegeLeaveBalance,
+        specialLeaveBenefit,
+        specialLeaveBenefitBalance,
+        remarks,
+      }) => ({
+        Period: dayjs(period).format('MM/DD/YYYY'),
+        Particulars: particulars,
+        ForcedLeave: forcedLeave,
+        ForcedLeaveBalance: forcedLeaveBalance,
+        VacationLeave: vacationLeave,
+        VacationLeaveBalance: vacationLeaveBalance,
+        SickLeave: sickLeave,
+        SickLeaveBalance: sickLeaveBalance,
+        SpecialPrivilegeLeave: specialPrivilegeLeave,
+        SpecialPrivilegeLeaveBalance: specialPrivilegeLeaveBalance,
+        SpecialLeaveBenefit: specialLeaveBenefit,
+        SpecialLeaveBenefitBalance: specialLeaveBenefitBalance,
+        Remarks: remarks,
+      })
+    );
+
+    const wb = XLSX.utils.book_new(); // create new book
+    const ws = XLSX.utils.json_to_sheet([]); // create empty sheet
+
+    // add header
+    XLSX.utils.sheet_add_aoa(
+      ws,
+      [
+        [],
+        // [, , , , , , , , , , , ,],
+        ['GENERAL SANTOS CITY WATER DISTRICT', , , , , , , , , , , ,],
+        ['E. Ferdnandez St., Lagao General Santos City', , , , , , , , , , , ,],
+        ['LEAVE LEDGER', , , , , , , , , , , ,],
+      ],
+      { origin: 'A1' }
+    );
+
+    // add employee details
+    XLSX.utils.sheet_add_aoa(
+      ws,
+      [
+        ['NAME', `${employeeData.fullName.toUpperCase() || ''}`, , , , , , , , , , ,],
+        ['DESIGNATION', `${employeeData.assignment.positionTitle.toUpperCase() || ''}`, , , , , , , , , , ,],
+        ['OFFICE', `${employeeData.assignment.officeName || ''}`, , , , , , , , , , ,],
+        ['DEPARTMENT', `${employeeData.assignment.departmentName || ''}`, , , , , , , , , , ,],
+        ['DIVISION', `${employeeData.assignment.divisionName || ''}`, , , , , , , , , , ,],
+      ],
+      { origin: 'A7' }
+    );
+
+    // add ledger data to empty sheet
+    XLSX.utils.sheet_add_json(ws, filteredLeaveLedger, { origin: 'A13' });
+    // replace key name to proper header name
+    XLSX.utils.sheet_add_aoa(
+      ws,
+      [
+        [
+          'PERIOD',
+          'PARTICULARS',
+          'FORCED LEAVE',
+          'FORCED LEAVE BALANCE',
+          'VACATION LEAVE',
+          'VACATION LEAVE BALANCE',
+          'SICK LEAVE',
+          'SICK LEAVE BALANCE',
+          'SPECIAL PRIVILEGE LEAVE',
+          'SPECIAL PRIVILEGE LEAVE BALANCE',
+          'SPECIAL LEAVE BENEFIT',
+          'SPECIAL LEAVE BENEFIT BALANCE',
+          'REMARKS',
+        ],
+      ],
+      { origin: 'A13' }
+    );
+
+    // column width
+    var wscols = [
+      { wch: 13.2 }, // A
+      { wch: 23.5 }, // B wrapped text
+      { wch: 9 }, // C
+      { wch: 9 }, // D
+      { wch: 9 }, // E
+      { wch: 9 }, // F
+      { wch: 9 }, // G
+      { wch: 9 }, // H
+      { wch: 9 }, // I
+      { wch: 9 }, // J
+      { wch: 9 }, // K
+      { wch: 9 }, // L
+      { wch: 25 }, // M wrapped text
+    ];
+    ws['!cols'] = wscols;
+
+    // STYLING
+    const columnLetterArray = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M'];
+
+    // document header
+    ws['A2'].s = {
+      font: {
+        sz: 13,
+        bold: true,
+      },
+      alignment: { horizontal: 'center', vertical: 'center' },
+    };
+    ws['A3'].s = {
+      font: {
+        sz: 12,
+      },
+      alignment: { horizontal: 'center', vertical: 'center' },
+    };
+    ws['A4'].s = {
+      font: {
+        sz: 13,
+        bold: true,
+      },
+      alignment: { horizontal: 'center', vertical: 'center' },
+    };
+
+    // employee details
+    ws['B7'].s = {
+      font: {
+        bold: true,
+      },
+    };
+    ws['B8'].s = {
+      font: {
+        upperCase: true,
+      },
+    };
+
+    // table border styling
+    const positionCount = filteredLeaveLedger.length + 13; // 13th row is the start of table generation
+    for (let x = 13; x <= positionCount; x++) {
+      columnLetterArray.map((letter) => {
+        if (x === 13) {
+          // table header styling
+          ws[`${letter + x}`].s = {
+            font: {
+              sz: 11,
+              bold: true,
+            },
+            alignment: {
+              horizontal: 'center',
+              vertical: 'center',
+              wrapText: true,
+            },
+            border: {
+              top: { style: 'thin', color: { rgb: '000000' } },
+              bottom: { style: 'thin', color: { rgb: '000000' } },
+              left: { style: 'thin', color: { rgb: '000000' } },
+              right: { style: 'thin', color: { rgb: '000000' } },
+            },
+          };
+        } else {
+          ws[`${letter + x}`].s = {
+            font: {
+              sz: 11,
+            },
+            alignment: {
+              horizontal: 'center',
+              vertical: 'center',
+              wrapText: true,
+            },
+            border: {
+              top: { style: 'thin', color: { rgb: '000000' } },
+              bottom: { style: 'thin', color: { rgb: '000000' } },
+              left: { style: 'thin', color: { rgb: '000000' } },
+              right: { style: 'thin', color: { rgb: '000000' } },
+            },
+          };
+        }
+      });
+    }
+
+    // LAST ROW OF TABLE - TOTAL AGGREGATES
+    //number of ledger entries + 13 as start of table + 1 as last row
+    const lastRowIndex = filteredLeaveLedger.length + 13 + 1;
+
+    // last value of ledger entries
+    const lastIndexValue = LeaveLedger[LeaveLedger.length - 1];
+
+    // add to sheet
+    XLSX.utils.sheet_add_aoa(
+      ws,
+      [
+        [
+          'TOTAL',
+          '',
+          '',
+          `${lastIndexValue.forcedLeaveBalance}`,
+          '',
+          `${lastIndexValue.vacationLeaveBalance ?? 0}`,
+          '',
+          `${lastIndexValue.sickLeaveBalance ?? 0}`,
+          '',
+          `${lastIndexValue.specialPrivilegeLeaveBalance ?? 0}`,
+          '',
+          `${lastIndexValue.specialLeaveBenefit ?? 0}`,
+          '',
+        ],
+      ],
+      {
+        origin: `A${lastRowIndex}`,
+      }
+    );
+
+    // table border
+    columnLetterArray.map((letter) => {
+      if (letter === 'A') {
+        ws[`${letter + lastRowIndex}`].s = {
+          font: {
+            sz: 11,
+            bold: true,
+          },
+          alignment: { horizontal: 'center', vertical: 'center' },
+          border: {
+            top: { style: 'thin', color: { rgb: '000000' } },
+            bottom: { style: 'thin', color: { rgb: '000000' } },
+            left: { style: 'thin', color: { rgb: '000000' } },
+            right: { style: 'thin', color: { rgb: '000000' } },
+          },
+        };
+      } else if (letter === 'D') {
+        // forced leave balance
+        ws[`${letter + lastRowIndex}`].s = {
+          font: {
+            sz: 11,
+            bold: true,
+          },
+          alignment: { horizontal: 'center', vertical: 'center' },
+          border: {
+            top: { style: 'thin', color: { rgb: '000000' } },
+            bottom: { style: 'thin', color: { rgb: '000000' } },
+            left: { style: 'thin', color: { rgb: '000000' } },
+            right: { style: 'thin', color: { rgb: '000000' } },
+          },
+          fill: {
+            patternType: 'solid',
+            fgColor: { rgb: 'FFFECACA' },
+          },
+        };
+      } else if (letter === 'F') {
+        // vacantion leave balance
+        ws[`${letter + lastRowIndex}`].s = {
+          font: {
+            sz: 11,
+            bold: true,
+          },
+          alignment: { horizontal: 'center', vertical: 'center' },
+          border: {
+            top: { style: 'thin', color: { rgb: '000000' } },
+            bottom: { style: 'thin', color: { rgb: '000000' } },
+            left: { style: 'thin', color: { rgb: '000000' } },
+            right: { style: 'thin', color: { rgb: '000000' } },
+          },
+          fill: {
+            patternType: 'solid',
+            fgColor: { rgb: 'FFBBF7D0' },
+          },
+        };
+      } else if (letter === 'H') {
+        // sick leave balance
+        ws[`${letter + lastRowIndex}`].s = {
+          font: {
+            sz: 11,
+            bold: true,
+          },
+          alignment: { horizontal: 'center', vertical: 'center' },
+          border: {
+            top: { style: 'thin', color: { rgb: '000000' } },
+            bottom: { style: 'thin', color: { rgb: '000000' } },
+            left: { style: 'thin', color: { rgb: '000000' } },
+            right: { style: 'thin', color: { rgb: '000000' } },
+          },
+          fill: {
+            patternType: 'solid',
+            fgColor: { rgb: 'FFFED7AA' },
+          },
+        };
+      } else if (letter === 'J') {
+        // special privilage leave balance
+        ws[`${letter + lastRowIndex}`].s = {
+          font: {
+            sz: 11,
+            bold: true,
+          },
+          alignment: { horizontal: 'center', vertical: 'center' },
+          border: {
+            top: { style: 'thin', color: { rgb: '000000' } },
+            bottom: { style: 'thin', color: { rgb: '000000' } },
+            left: { style: 'thin', color: { rgb: '000000' } },
+            right: { style: 'thin', color: { rgb: '000000' } },
+          },
+          fill: {
+            patternType: 'solid',
+            fgColor: { rgb: 'FFA5F3FC' },
+          },
+        };
+      } else if (letter === 'L') {
+        // special benefit leave balance
+        ws[`${letter + lastRowIndex}`].s = {
+          font: {
+            sz: 11,
+            bold: true,
+          },
+          alignment: { horizontal: 'center', vertical: 'center' },
+          border: {
+            top: { style: 'thin', color: { rgb: '000000' } },
+            bottom: { style: 'thin', color: { rgb: '000000' } },
+            left: { style: 'thin', color: { rgb: '000000' } },
+            right: { style: 'thin', color: { rgb: '000000' } },
+          },
+          fill: {
+            patternType: 'solid',
+            fgColor: { rgb: 'FFBFDBFE' },
+          },
+        };
+      } else {
+        ws[`${letter + lastRowIndex}`].s = {
+          border: {
+            top: { style: 'thin', color: { rgb: '000000' } },
+            bottom: { style: 'thin', color: { rgb: '000000' } },
+            left: { style: 'thin', color: { rgb: '000000' } },
+            right: { style: 'thin', color: { rgb: '000000' } },
+          },
+        };
+      }
+    });
+
+    // merged columns
+    const merge = [
+      // Center document header
+      { s: { c: 0, r: 1 }, e: { c: 12, r: 1 } },
+      { s: { c: 0, r: 2 }, e: { c: 12, r: 2 } },
+      { s: { c: 0, r: 3 }, e: { c: 12, r: 3 } },
+
+      // Employee details
+      { s: { c: 1, r: 6 }, e: { c: 4, r: 6 } }, // Name
+      { s: { c: 1, r: 7 }, e: { c: 4, r: 7 } }, // Designation
+      { s: { c: 1, r: 8 }, e: { c: 4, r: 8 } }, // Office
+      { s: { c: 1, r: 9 }, e: { c: 4, r: 9 } }, // Department
+      { s: { c: 1, r: 10 }, e: { c: 4, r: 10 } }, // Division
+
+      { s: { c: 0, r: positionCount }, e: { c: 1, r: positionCount } }, // TOTAL
+    ];
+    ws['!merges'] = merge;
+
+    XLSX.utils.book_append_sheet(wb, ws, 'Leave Ledger');
+    XLSX.writeFile(wb, `leave_ledger_${employeeData.fullName}_${selectedYear}.xlsx`);
   };
 
   return (
@@ -181,6 +552,8 @@ export default function Index({ employeeData }: InferGetServerSidePropsType<type
                     </button>
 
                     <PrintButton onClick={toggle} />
+
+                    <ExcelButton onClick={exportToExcel} />
                   </div>
                 </section>
               </div>
