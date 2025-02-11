@@ -73,14 +73,7 @@ const LeaveLedgerPdfModal: FunctionComponent<LeaveLedgerPdfModalProps> = ({
         </Modal.Header>
         <Modal.Body>
           <div>
-            <LeaveLedgerPdf
-              employeeData={employeeData}
-              leaveLedger={leaveLedger}
-              // forcedLeaveBalance={forcedLeaveBalance}
-              // vacationLeaveBalance={vacationLeaveBalance}
-              // sickLeaveBalance={sickLeaveBalance}
-              // specialPrivilegeLeaveBalance={specialPrivilegeLeaveBalance}
-            />
+            <LeaveLedgerPdf employeeData={employeeData} leaveLedger={leaveLedger} />
           </div>
         </Modal.Body>
         <Modal.Footer>
