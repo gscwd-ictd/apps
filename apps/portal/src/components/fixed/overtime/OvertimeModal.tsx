@@ -115,7 +115,6 @@ export const OvertimeModal = ({ modalState, setModalState, closeModalAction }: M
           <RemoveEmployeeModal
             modalState={removeEmployeeModalIsOpen}
             name={overtimeAccomplishmentEmployeeName}
-            overtimeId={overtimeAccomplishmentApplicationId}
             employeeId={overtimeAccomplishmentEmployeeId}
             setModalState={setRemoveEmployeeModalIsOpen}
             closeModalAction={closeCancelOvertimeModal}
@@ -311,7 +310,7 @@ export const OvertimeModal = ({ modalState, setModalState, closeModalAction }: M
                                     </Button>
                                   ) : null}
 
-                                  {/* {overtimeDetails.status !== OvertimeStatus.CANCELLED ? (
+                                  {overtimeDetails.status !== OvertimeStatus.CANCELLED ? (
                                     employee.accomplishmentStatus === OvertimeAccomplishmentStatus.APPROVED ? (
                                       <Button
                                         variant={'default'}
@@ -337,7 +336,7 @@ export const OvertimeModal = ({ modalState, setModalState, closeModalAction }: M
                                         X
                                       </Button>
                                     )
-                                  ) : null} */}
+                                  ) : null}
                                 </div>
                               </div>
                             );

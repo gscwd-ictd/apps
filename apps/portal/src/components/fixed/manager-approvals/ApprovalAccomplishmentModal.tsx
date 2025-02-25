@@ -201,6 +201,9 @@ export const ApprovalAccomplishmentModal = ({ modalState, setModalState, closeMo
                         : accomplishmentDetails.status === OvertimeAccomplishmentStatus.DISAPPROVED &&
                           !loadingAccomplishmentResponse
                         ? 'error'
+                        : accomplishmentDetails.status === OvertimeAccomplishmentStatus.REMOVED_BY_MANAGER &&
+                          !loadingAccomplishmentResponse
+                        ? 'info'
                         : 'info'
                     }
                     notifMessage={
@@ -215,6 +218,9 @@ export const ApprovalAccomplishmentModal = ({ modalState, setModalState, closeMo
                         : accomplishmentDetails.status === OvertimeAccomplishmentStatus.DISAPPROVED &&
                           !loadingAccomplishmentResponse
                         ? 'Disapproved'
+                        : accomplishmentDetails.status === OvertimeAccomplishmentStatus.REMOVED_BY_MANAGER &&
+                          !loadingAccomplishmentResponse
+                        ? 'Removed'
                         : 'Processing'
                     }
                     dismissible={false}
