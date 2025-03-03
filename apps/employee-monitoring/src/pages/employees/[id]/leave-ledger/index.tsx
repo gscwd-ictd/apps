@@ -6,7 +6,7 @@ import { BreadCrumbs } from 'apps/employee-monitoring/src/components/navigations
 import { useState } from 'react';
 import { GetServerSideProps, GetServerSidePropsContext, InferGetServerSidePropsType } from 'next/types';
 import axios from 'axios';
-import { isEmpty, upperCase } from 'lodash';
+import { isEmpty } from 'lodash';
 import { PrintButton } from 'apps/employee-monitoring/src/components/buttons/PrintButton';
 import { Select, ToastNotification, ListDef } from '@gscwd-apps/oneui';
 import { LeaveLedgerTable } from 'apps/employee-monitoring/src/components/tables/LeaveLedgerTable';
@@ -15,7 +15,6 @@ import { useLeaveBenefitStore } from 'apps/employee-monitoring/src/store/leave-b
 import { useLeaveLedgerStore } from 'apps/employee-monitoring/src/store/leave-ledger.store';
 import LeaveLedgerPdfModal from 'apps/employee-monitoring/src/components/modal/employees/leave-ledger/LeaveLedgerPdfModal';
 import dayjs from 'dayjs';
-import * as XLSX from 'xlsx';
 import { ExcelButton } from 'apps/employee-monitoring/src/components/buttons/ExcelButton';
 
 type Year = { year: string };

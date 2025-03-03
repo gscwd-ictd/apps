@@ -115,7 +115,6 @@ export const OvertimeModal = ({ modalState, setModalState, closeModalAction }: M
           <RemoveEmployeeModal
             modalState={removeEmployeeModalIsOpen}
             name={overtimeAccomplishmentEmployeeName}
-            overtimeId={overtimeAccomplishmentApplicationId}
             employeeId={overtimeAccomplishmentEmployeeId}
             setModalState={setRemoveEmployeeModalIsOpen}
             closeModalAction={closeCancelOvertimeModal}
@@ -262,8 +261,10 @@ export const OvertimeModal = ({ modalState, setModalState, closeModalAction }: M
                             return (
                               <div
                                 key={index}
-                                className={`${
-                                  index != 0 ? 'border-t border-slate-200' : ''
+                                className={`${index != 0 ? 'border-t border-slate-200' : ''} ${
+                                  employee.accomplishmentStatus === OvertimeAccomplishmentStatus.REMOVED_BY_MANAGER
+                                    ? 'opacity-40'
+                                    : ''
                                 } p-2 md:p-4 flex flex-row justify-between items-center gap-8 `}
                               >
                                 <img
@@ -311,8 +312,10 @@ export const OvertimeModal = ({ modalState, setModalState, closeModalAction }: M
                                     </Button>
                                   ) : null}
 
-                                  {/* {overtimeDetails.status !== OvertimeStatus.CANCELLED ? (
-                                    employee.accomplishmentStatus === OvertimeAccomplishmentStatus.APPROVED ? (
+                                  {overtimeDetails.status !== OvertimeStatus.CANCELLED ? (
+                                    employee.accomplishmentStatus === OvertimeAccomplishmentStatus.APPROVED ||
+                                    employee.accomplishmentStatus ===
+                                      OvertimeAccomplishmentStatus.REMOVED_BY_MANAGER ? (
                                       <Button
                                         variant={'default'}
                                         size={'sm'}
@@ -337,7 +340,7 @@ export const OvertimeModal = ({ modalState, setModalState, closeModalAction }: M
                                         X
                                       </Button>
                                     )
-                                  ) : null} */}
+                                  ) : null}
                                 </div>
                               </div>
                             );

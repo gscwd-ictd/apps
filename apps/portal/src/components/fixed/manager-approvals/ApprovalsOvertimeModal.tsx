@@ -11,7 +11,6 @@ import { SelectOption } from 'libs/utils/src/lib/types/select.type';
 import { overtimeAction } from 'apps/portal/src/types/approvals.type';
 import { useEffect, useState } from 'react';
 import { ManagerConfirmationApproval, ManagerOtpApproval } from 'libs/utils/src/lib/enums/approval.enum';
-import { ApprovalOtpContents } from './ApprovalOtp/ApprovalOtpContents';
 import { ConfirmationApprovalModal } from './ApprovalOtp/ConfirmationApprovalModal';
 import { DateFormatter } from 'libs/utils/src/lib/functions/DateFormatter';
 import ApprovalAccomplishmentModal from './ApprovalAccomplishmentModal';
@@ -21,8 +20,8 @@ import useSWR from 'swr';
 import { fetchWithToken } from 'apps/portal/src/utils/hoc/fetcher';
 import { isEmpty } from 'lodash';
 import { TextSize } from 'libs/utils/src/lib/enums/text-size.enum';
-import { ApprovalCaptcha } from './ApprovalOtp/ApprovalCaptcha';
 import { DateTimeFormatter } from 'libs/utils/src/lib/functions/DateTimeFormatter';
+import { RemoveEmployeeModal } from './RemoveEmployeeModal';
 
 type ModalProps = {
   modalState: boolean;
@@ -41,8 +40,7 @@ export const OvertimeModal = ({ modalState, setModalState, closeModalAction }: M
     disapprovedOvertimeModalIsOpen,
     pendingOvertimeModalIsOpen,
     overtimeDetails,
-    otpOvertimeModalIsOpen,
-    setOtpOvertimeModalIsOpen,
+
     confirmApplicationModalIsOpen,
     setConfirmApplicationModalIsOpen,
     overtimeAccomplishmentModalIsOpen,
@@ -60,15 +58,14 @@ export const OvertimeModal = ({ modalState, setModalState, closeModalAction }: M
     patchResponseAccomplishment,
     approveAllAccomplishmentModalIsOpen,
     setApproveAllAccomplishmentModalIsOpen,
-    captchaModalIsOpen,
-    setCaptchaModalIsOpen,
+    overtimeAccomplishmentEmployeeName,
+    removeEmployeeModalIsOpen,
+    setRemoveEmployeeModalIsOpen,
   } = useApprovalStore((state) => ({
     overtimeDetails: state.overtimeDetails,
     approvedOvertimeModalIsOpen: state.approvedOvertimeModalIsOpen,
     disapprovedOvertimeModalIsOpen: state.disapprovedOvertimeModalIsOpen,
     pendingOvertimeModalIsOpen: state.pendingOvertimeModalIsOpen,
-    otpOvertimeModalIsOpen: state.otpOvertimeModalIsOpen,
-    setOtpOvertimeModalIsOpen: state.setOtpOvertimeModalIsOpen,
     confirmApplicationModalIsOpen: state.confirmApplicationModalIsOpen,
     setConfirmApplicationModalIsOpen: state.setConfirmApplicationModalIsOpen,
     overtimeAccomplishmentModalIsOpen: state.overtimeAccomplishmentModalIsOpen,
@@ -86,14 +83,16 @@ export const OvertimeModal = ({ modalState, setModalState, closeModalAction }: M
     patchResponseAccomplishment: state.response.patchResponseAccomplishment,
     approveAllAccomplishmentModalIsOpen: state.approveAllAccomplishmentModalIsOpen,
     setApproveAllAccomplishmentModalIsOpen: state.setApproveAllAccomplishmentModalIsOpen,
-    captchaModalIsOpen: state.captchaModalIsOpen,
-    setCaptchaModalIsOpen: state.setCaptchaModalIsOpen,
+    overtimeAccomplishmentEmployeeName: state.overtimeAccomplishmentEmployeeName,
+    removeEmployeeModalIsOpen: state.removeEmployeeModalIsOpen,
+    setRemoveEmployeeModalIsOpen: state.setRemoveEmployeeModalIsOpen,
   }));
   const employeeDetails = useEmployeeStore((state) => state.employeeDetails);
   const [reason, setReason] = useState<string>('');
   const [approveAllAccomplishmentData, setApproveAllAccomplishmentData] =
     useState<OvertimeAccomplishmentApprovalPatch>();
   const [pendingAccomplishmentEmployees, setPendingAccomplishmentEmployees] = useState<Array<string>>([]);
+  const [canStillRemoveEmployee, setCanStillRemoveEmployee] = useState<boolean>(true);
   const [actualHours, setActualHours] = useState<number>(0);
   const [finalEmployeeList, setFinalEmployeeList] = useState<Array<EmployeeOvertimeDetail>>([]);
 
@@ -117,6 +116,20 @@ export const OvertimeModal = ({ modalState, setModalState, closeModalAction }: M
     }
   );
 
+  //check if OT is cancellable
+  const checkIfCancellable = (employees: Array<EmployeeOvertimeDetail>) => {
+    const tempEmployees = employees?.filter(
+      (employee) =>
+        employee.accomplishmentStatus === OvertimeAccomplishmentStatus.PENDING ||
+        employee.accomplishmentStatus === OvertimeAccomplishmentStatus.APPROVED
+    );
+    if (tempEmployees?.length >= 2) {
+      setCanStillRemoveEmployee(true);
+    } else {
+      setCanStillRemoveEmployee(false);
+    }
+  };
+
   // Initial zustand state update
   useEffect(() => {
     if (overtimeDetails) {
@@ -132,6 +145,8 @@ export const OvertimeModal = ({ modalState, setModalState, closeModalAction }: M
       }
       setPendingAccomplishmentEmployees(employeeIdList);
     }
+
+    checkIfCancellable(overtimeDetails.employees);
   }, [overtimeDetails]);
 
   useEffect(() => {
@@ -201,6 +216,7 @@ export const OvertimeModal = ({ modalState, setModalState, closeModalAction }: M
   const closeConfirmModal = async () => {
     setConfirmApplicationModalIsOpen(false);
     setApproveAllAccomplishmentModalIsOpen(false);
+    setRemoveEmployeeModalIsOpen(false);
   };
 
   const closeAccomplishmentModal = async () => {
@@ -226,12 +242,18 @@ export const OvertimeModal = ({ modalState, setModalState, closeModalAction }: M
     reset();
   }, [pendingOvertimeModalIsOpen]);
 
-  const { windowWidth } = UseWindowDimensions();
+  const handleRemoveEmployee = (employeeId: string, employeeName: string) => {
+    setOvertimeAccomplishmentEmployeeId(employeeId);
+    setOvertimeAccomplishmentEmployeeName(employeeName);
+    setOvertimeAccomplishmentApplicationId(overtimeDetails.id);
+    setRemoveEmployeeModalIsOpen(true);
+  };
 
+  const { windowWidth } = UseWindowDimensions();
   return (
     <>
       <Modal
-        size={`${windowWidth > 1330 ? 'md' : windowWidth > 1024 ? 'lg' : 'full'}`}
+        size={`${windowWidth > 1330 ? 'lg' : windowWidth > 1024 ? 'lg' : 'full'}`}
         open={modalState}
         setOpen={setModalState}
       >
@@ -249,6 +271,15 @@ export const OvertimeModal = ({ modalState, setModalState, closeModalAction }: M
           </h3>
         </Modal.Header>
         <Modal.Body>
+          {/* Remove Employee in OT Modal */}
+          <RemoveEmployeeModal
+            modalState={removeEmployeeModalIsOpen}
+            name={overtimeAccomplishmentEmployeeName}
+            employeeId={overtimeAccomplishmentEmployeeId}
+            setModalState={setRemoveEmployeeModalIsOpen}
+            closeModalAction={closeConfirmModal}
+          />
+
           {!swrOvertimeDetails ? (
             <div className="w-full h-[90%]  static flex flex-col justify-center items-center place-items-center">
               <LoadingSpinner size={'lg'} />
@@ -404,8 +435,10 @@ export const OvertimeModal = ({ modalState, setModalState, closeModalAction }: M
                           return (
                             <div
                               key={employee.companyId}
-                              className={`${
-                                index != 0 ? 'border-t border-slate-200' : ''
+                              className={`${index != 0 ? 'border-t border-slate-200' : ''} ${
+                                employee.accomplishmentStatus === OvertimeAccomplishmentStatus.REMOVED_BY_MANAGER
+                                  ? 'opacity-40'
+                                  : ''
                               } px-2 py-4 md:px-4 md:py-4 flex flex-row justify-between items-center gap-8 `}
                             >
                               <img
@@ -461,6 +494,20 @@ export const OvertimeModal = ({ modalState, setModalState, closeModalAction }: M
                                   </div>
                                 ) : null}
 
+                                {employee.encodedHours ? (
+                                  <div className="flex flex-col">
+                                    <label className={`w-full`}>
+                                      {Math.trunc(employee.encodedHours * 100) / 100} Hours
+                                    </label>
+                                    <label className={`w-full`}>Rendered</label>
+                                  </div>
+                                ) : (
+                                  <div className="flex flex-col">
+                                    <label className={`w-full`}>0 Hours</label>
+                                    <label className={`w-full`}>Rendered</label>
+                                  </div>
+                                )}
+
                                 {overtimeDetails.status === OvertimeStatus.APPROVED ? (
                                   <Button
                                     disabled={employee.isAccomplishmentSubmitted == true ? false : true}
@@ -475,18 +522,37 @@ export const OvertimeModal = ({ modalState, setModalState, closeModalAction }: M
                                   </Button>
                                 ) : null}
 
-                                {/* {overtimeDetails.status === OvertimeStatus.PENDING ? (
-                                  <Checkbox
-                                    // checked={lateFiling}
-                                    label="Add/Remove"
-                                    // className={
-                                    //   watch('isLateFiling') === true
-                                    //     ? 'cursor-not-allowed italic'
-                                    //     : 'hover:text-indigo-800 italic'
-                                    // }
-                                    onChange={() => handleEmployeeList(employee)}
-                                  />
-                                ) : null} */}
+                                {canStillRemoveEmployee ? (
+                                  overtimeDetails.status !== OvertimeStatus.CANCELLED ? (
+                                    employee.accomplishmentStatus === OvertimeAccomplishmentStatus.APPROVED ||
+                                    employee.accomplishmentStatus ===
+                                      OvertimeAccomplishmentStatus.REMOVED_BY_MANAGER ? (
+                                      <Button
+                                        variant={'default'}
+                                        size={'sm'}
+                                        loading={true}
+                                        type="button"
+                                        className="opacity-0 cursor-default"
+                                      >
+                                        X
+                                      </Button>
+                                    ) : (
+                                      <Button
+                                        variant={'danger'}
+                                        size={'sm'}
+                                        loading={true}
+                                        onClick={(e) =>
+                                          overtimeDetails?.employees.length === 1
+                                            ? setRemoveEmployeeModalIsOpen(true)
+                                            : handleRemoveEmployee(employee.employeeId, employee.fullName)
+                                        }
+                                        type="button"
+                                      >
+                                        X
+                                      </Button>
+                                    )
+                                  ) : null
+                                ) : null}
                               </div>
                             </div>
                           );
@@ -551,34 +617,6 @@ export const OvertimeModal = ({ modalState, setModalState, closeModalAction }: M
             </div>
           )}
 
-          {/* <CaptchaModal
-            modalState={otpOvertimeModalIsOpen}
-            setModalState={setOtpOvertimeModalIsOpen}
-            title={'OVERTIME APPROVAL CAPTCHA'}
-          >
-            <ApprovalCaptcha
-              employeeId={employeeDetails.employmentDetails.userId}
-              actionOvertime={watch('status')}
-              tokenId={overtimeDetails.id}
-              captchaName={ManagerConfirmationApproval.OVERTIME}
-            />
-          </CaptchaModal> */}
-
-          {/* <OtpModal
-            modalState={otpOvertimeModalIsOpen}
-            setModalState={setOtpOvertimeModalIsOpen}
-            title={'OVERTIME APPROVAL OTP'}
-          >
-
-            <ApprovalOtpContents
-              mobile={employeeDetails.profile.mobileNumber}
-              employeeId={employeeDetails.user._id}
-              actionOvertime={watch('status')}
-              tokenId={overtimeDetails.id}
-              otpName={ManagerOtpApproval.OVERTIME}
-            />
-          </OtpModal> */}
-
           <ConfirmationApprovalModal
             modalState={confirmApplicationModalIsOpen}
             setModalState={setConfirmApplicationModalIsOpen}
@@ -595,6 +633,7 @@ export const OvertimeModal = ({ modalState, setModalState, closeModalAction }: M
             setModalState={setApproveAllAccomplishmentModalIsOpen}
             closeModalAction={closeConfirmModal}
             dataToSubmitApproveAllAccomplishment={approveAllAccomplishmentData}
+            employeeListForApproveAllAccomplishment={overtimeDetails.employees}
             tokenId={overtimeDetails.id}
             confirmName={ManagerConfirmationApproval.ALL_OVERTIME_ACCOMPLISHMENT}
             employeeId={employeeDetails.user._id}
@@ -605,18 +644,6 @@ export const OvertimeModal = ({ modalState, setModalState, closeModalAction }: M
             setModalState={setOvertimeAccomplishmentModalIsOpen}
             closeModalAction={closeAccomplishmentModal}
           />
-
-          {/* <CaptchaModal
-            modalState={approveAllAccomplishmentModalIsOpen}
-            setModalState={setApproveAllAccomplishmentModalIsOpen}
-            title={'APPROVE ALL ACCOMPLISHMENT CAPTCHA'}
-          >
-            <ApprovalCaptcha
-              dataToSubmitApproveAllAccomplishment={approveAllAccomplishmentData}
-              tokenId={overtimeDetails.id}
-              captchaName={ManagerConfirmationApproval.ALL_OVERTIME_ACCOMPLISHMENT}
-            />
-          </CaptchaModal> */}
         </Modal.Body>
         <Modal.Footer>
           <div className="flex justify-end gap-2 px-4">

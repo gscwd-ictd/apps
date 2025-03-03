@@ -39,7 +39,9 @@ export default function Overtime({ employeeDetails }: InferGetServerSidePropsTyp
     completedOvertimeModalIsOpen,
     responseApply,
     cancelResponse,
+    removeEmployeeResponse,
     overtimeSummaryModalIsOpen,
+    errorRemoveEmployee,
     errorAccomplishment,
     errorAuthorizationReport,
     errorAccomplishmentReport,
@@ -62,6 +64,8 @@ export default function Overtime({ employeeDetails }: InferGetServerSidePropsTyp
     setSelectedEmployeeType,
     setOvertimeDetails,
   } = useOvertimeStore((state) => ({
+    removeEmployeeResponse: state.response.removeEmployeeResponse,
+    errorRemoveEmployee: state.error.errorRemoveEmployee,
     tab: state.tab,
     applyOvertimeModalIsOpen: state.applyOvertimeModalIsOpen,
     pendingOvertimeModalIsOpen: state.pendingOvertimeModalIsOpen,
@@ -200,13 +204,13 @@ export default function Overtime({ employeeDetails }: InferGetServerSidePropsTyp
   }, [swrOvertimeList, swrOvertimeListError]);
 
   useEffect(() => {
-    if (!isEmpty(responseApply) || !isEmpty(cancelResponse)) {
+    if (!isEmpty(responseApply) || !isEmpty(cancelResponse) || !isEmpty(removeEmployeeResponse)) {
       mutateOvertimeList();
       setTimeout(() => {
         emptyResponseAndError();
       }, 3000);
     }
-  }, [responseApply, cancelResponse]);
+  }, [responseApply, cancelResponse, removeEmployeeResponse]);
 
   // // Rendering of leave dates in row
   const renderRowEmployeeAvatar = (employee: Array<EmployeeOvertimeDetail>) => {
@@ -317,6 +321,19 @@ export default function Overtime({ employeeDetails }: InferGetServerSidePropsTyp
 
   return (
     <>
+      {/* Remove Employee from OT */}
+      {!isEmpty(removeEmployeeResponse) ? (
+        <ToastNotification toastType="success" notifMessage={`Employee removal from Overtime Successful!`} />
+      ) : null}
+
+      {/* Remove Employee from OT */}
+      {!isEmpty(errorRemoveEmployee) ? (
+        <ToastNotification
+          toastType="error"
+          notifMessage={`${errorRemoveEmployee}: Failed to remove of Employee from Overtime!`}
+        />
+      ) : null}
+
       {/* Employee List Load Failed */}
       {!isEmpty(swrEmployeeListError) ? (
         <ToastNotification toastType="error" notifMessage={`${swrEmployeeListError}: Failed to load Employee List.`} />

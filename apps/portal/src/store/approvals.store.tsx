@@ -6,6 +6,7 @@ import { SupervisorLeaveDetails } from '../../../../libs/utils/src/lib/types/lea
 import { PassSlip } from '../../../../libs/utils/src/lib/types/pass-slip.type';
 import { devtools } from 'zustand/middleware';
 import {
+  EmployeeOvertimeDetail,
   OvertimeAccomplishment,
   OvertimeAccomplishmentApprovalPatch,
   OvertimeApprovalPatch,
@@ -13,6 +14,7 @@ import {
 } from 'libs/utils/src/lib/types/overtime.type';
 import { PendingApprovalsCount } from '../types/approvals.type';
 import { DtrCorrection, DtrCorrectionApprovalPatch } from 'libs/utils/src/lib/types/dtr.type';
+import { OvertimeAccomplishmentStatus } from 'libs/utils/src/lib/enums/overtime.enum';
 
 export type ApprovalState = {
   alert: AlertState;
@@ -35,6 +37,7 @@ export type ApprovalState = {
     patchResponseOvertime: OvertimeApprovalPatch;
     patchResponseAccomplishment: OvertimeAccomplishmentApprovalPatch;
     patchResponseDtrCorrection: DtrCorrectionApprovalPatch;
+    removeEmployeeResponse: any;
   };
   loading: {
     loadingLeaves: boolean;
@@ -55,6 +58,7 @@ export type ApprovalState = {
     loadingDtrCorrectionResponse: boolean;
 
     loadingPendingApprovalsCount: boolean;
+    loadingRemoveEmployee: boolean;
   };
   error: {
     errorLeaves: string;
@@ -75,6 +79,7 @@ export type ApprovalState = {
     errorDtrCorrectionResponse: string;
 
     errorPendingApprovalsCount: string;
+    errorRemoveEmployee: string;
   };
 
   pendingApprovalsCount: PendingApprovalsCount;
@@ -236,6 +241,15 @@ export type ApprovalState = {
   patchDtrCorrectionSuccess: (response) => void;
   patchDtrCorrectionFail: (error: string) => void;
 
+  removeEmployee: () => void;
+  removeEmployeeSuccess: (response) => void;
+  removeEmployeeFail: (error: string) => void;
+
+  removeEmployeeModalIsOpen: boolean;
+  setRemoveEmployeeModalIsOpen: (removeEmployeeModalIsOpen: boolean) => void;
+
+  removeEmployeeFromOvertime: (employeeId: string, employees: Array<EmployeeOvertimeDetail>) => void;
+
   emptyResponseAndError: () => void;
 };
 
@@ -273,6 +287,7 @@ export const useApprovalStore = create<ApprovalState>()(
       patchResponseOvertime: {} as OvertimeApprovalPatch,
       patchResponseAccomplishment: {} as OvertimeAccomplishmentApprovalPatch,
       patchResponseDtrCorrection: {} as DtrCorrection,
+      removeEmployeeResponse: {},
     },
 
     loading: {
@@ -294,6 +309,7 @@ export const useApprovalStore = create<ApprovalState>()(
       loadingDtrCorrectionResponse: false,
 
       loadingPendingApprovalsCount: false,
+      loadingRemoveEmployee: false,
     },
     error: {
       errorLeaves: '',
@@ -314,35 +330,30 @@ export const useApprovalStore = create<ApprovalState>()(
       errorDtrCorrectionResponse: '',
 
       errorPendingApprovalsCount: '',
+      errorRemoveEmployee: '',
     },
 
     otpDtrCorrectionModalIsOpen: false,
     otpPassSlipModalIsOpen: false,
     otpLeaveModalIsOpen: false,
     otpOvertimeModalIsOpen: false,
-
     confirmApplicationModalIsOpen: false,
-
+    removeEmployeeModalIsOpen: false,
     pendingLeaveModalIsOpen: false,
     approvedLeaveModalIsOpen: false,
     disapprovedLeaveModalIsOpen: false,
     cancelledLeaveModalIsOpen: false,
-
     pendingPassSlipModalIsOpen: false,
     approvedPassSlipModalIsOpen: false,
     disapprovedPassSlipModalIsOpen: false,
     cancelledPassSlipModalIsOpen: false,
     disputedPassSlipModalIsOpen: false,
-
     pendingOvertimeModalIsOpen: false,
     approvedOvertimeModalIsOpen: false,
     disapprovedOvertimeModalIsOpen: false,
     cancelledOvertimeModalIsOpen: false,
-
     overtimeAccomplishmentModalIsOpen: false,
-
     dtrCorrectionModalIsOpen: false,
-
     captchaModalIsOpen: false,
     disputeConfirmModalIsOpen: false,
     approveAllAccomplishmentModalIsOpen: false,
@@ -411,6 +422,10 @@ export const useApprovalStore = create<ApprovalState>()(
 
     setTab: (tab: number) => {
       set((state) => ({ ...state, tab }));
+    },
+
+    setRemoveEmployeeModalIsOpen: (removeEmployeeModalIsOpen: boolean) => {
+      set((state) => ({ ...state, removeEmployeeModalIsOpen }));
     },
 
     setDisputeConfirmModalIsOpen: (disputeConfirmModalIsOpen: boolean) => {
@@ -1041,6 +1056,67 @@ export const useApprovalStore = create<ApprovalState>()(
       }));
     },
 
+    //REMOVE EMPLOYEE FROM OVERTIME
+    removeEmployee: () => {
+      set((state) => ({
+        ...state,
+        response: {
+          ...state.response,
+          removeEmployeeResponse: {},
+        },
+        loading: {
+          ...state.loading,
+          loadingRemoveEmployee: true,
+        },
+        error: {
+          ...state.error,
+          errorRemoveEmployee: '',
+        },
+      }));
+    },
+    removeEmployeeSuccess: (response) => {
+      set((state) => ({
+        ...state,
+        response: {
+          ...state.response,
+          removeEmployeeResponse: response,
+        },
+        loading: {
+          ...state.loading,
+          loadingRemoveEmployee: false,
+        },
+      }));
+    },
+    removeEmployeeFail: (error: string) => {
+      set((state) => ({
+        ...state,
+        loading: {
+          ...state.loading,
+          loadingRemoveEmployee: false,
+        },
+        error: {
+          ...state.error,
+          errorRemoveEmployee: error,
+        },
+      }));
+    },
+
+    //same as overtime store but only change the status to REMOVED BY MANAGER
+    removeEmployeeFromOvertime: (employeeId: string, employees: Array<EmployeeOvertimeDetail>) => {
+      const tempEmployees = employees.map((item) =>
+        item.employeeId !== employeeId
+          ? item
+          : { ...item, accomplishmentStatus: OvertimeAccomplishmentStatus.REMOVED_BY_MANAGER }
+      );
+      set((state) => ({
+        ...state,
+        overtimeDetails: {
+          ...state.overtimeDetails,
+          employees: tempEmployees,
+        },
+      }));
+    },
+
     emptyResponseAndError: () => {
       set((state) => ({
         ...state,
@@ -1051,6 +1127,7 @@ export const useApprovalStore = create<ApprovalState>()(
           patchResponseOvertime: {} as OvertimeApprovalPatch,
           patchResponseAccomplishment: {} as OvertimeAccomplishmentApprovalPatch,
           patchResponseDtrCorrection: {} as DtrCorrection,
+          removeEmployeeResponse: {},
         },
         error: {
           ...state.error,
@@ -1059,6 +1136,7 @@ export const useApprovalStore = create<ApprovalState>()(
           errorOvertimeResponse: '',
           errorAccomplishmentResponse: '',
           errorDtrCorrectionResponse: '',
+          errorRemoveEmployee: '',
         },
       }));
     },

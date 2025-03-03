@@ -36,7 +36,6 @@ export default function OvertimeApprovals({ employeeDetails }: InferGetServerSid
     pendingOvertimeModalIsOpen,
     approvedOvertimeModalIsOpen,
     disapprovedOvertimeModalIsOpen,
-
     patchResponseOvertime,
     patchResponseAccomplishment,
     errorOvertime,
@@ -44,6 +43,8 @@ export default function OvertimeApprovals({ employeeDetails }: InferGetServerSid
     errorAccomplishment,
     errorAccomplishmentResponse,
     overtimeApplications,
+    removeEmployeeResponse,
+    errorRemoveEmployee,
 
     setPendingOvertimeModalIsOpen,
     setApprovedOvertimeModalIsOpen,
@@ -52,19 +53,18 @@ export default function OvertimeApprovals({ employeeDetails }: InferGetServerSid
     getOvertimeApplicationsList,
     getOvertimeApplicationsListSuccess,
     getOvertimeApplicationsListFail,
-
     setSelectedOvertimeId,
 
     emptyResponseAndError,
   } = useApprovalStore((state) => ({
+    removeEmployeeResponse: state.response.removeEmployeeResponse,
+    errorRemoveEmployee: state.error.errorRemoveEmployee,
     tab: state.tab,
     pendingOvertimeModalIsOpen: state.pendingOvertimeModalIsOpen,
     approvedOvertimeModalIsOpen: state.approvedOvertimeModalIsOpen,
     disapprovedOvertimeModalIsOpen: state.disapprovedOvertimeModalIsOpen,
-
     patchResponseOvertime: state.response.patchResponseOvertime,
     patchResponseAccomplishment: state.response.patchResponseAccomplishment,
-
     errorOvertime: state.error.errorOvertime,
     errorOvertimeResponse: state.error.errorOvertimeResponse,
     errorAccomplishment: state.error.errorAccomplishment,
@@ -79,7 +79,6 @@ export default function OvertimeApprovals({ employeeDetails }: InferGetServerSid
     getOvertimeApplicationsListSuccess: state.getOvertimeApplicationsListSuccess,
     getOvertimeApplicationsListFail: state.getOvertimeApplicationsListFail,
     emptyResponseAndError: state.emptyResponseAndError,
-
     setSelectedOvertimeId: state.setSelectedOvertimeId,
   }));
 
@@ -138,13 +137,13 @@ export default function OvertimeApprovals({ employeeDetails }: InferGetServerSid
   }, [swrOvertimeList, swrOvertimeListError]);
 
   useEffect(() => {
-    if (!isEmpty(patchResponseOvertime) || !isEmpty(patchResponseAccomplishment)) {
+    if (!isEmpty(patchResponseOvertime) || !isEmpty(patchResponseAccomplishment) || !isEmpty(removeEmployeeResponse)) {
       mutateOvertime();
       setTimeout(() => {
         emptyResponseAndError();
       }, 5000);
     }
-  }, [patchResponseOvertime, patchResponseAccomplishment]);
+  }, [patchResponseOvertime, patchResponseAccomplishment, removeEmployeeResponse]);
 
   useEffect(() => {
     if (!pendingOvertimeModalIsOpen) {
@@ -261,6 +260,19 @@ export default function OvertimeApprovals({ employeeDetails }: InferGetServerSid
 
   return (
     <>
+      {/* Remove Employee from OT */}
+      {!isEmpty(removeEmployeeResponse) ? (
+        <ToastNotification toastType="success" notifMessage={`Employee removal from Overtime Successful!`} />
+      ) : null}
+
+      {/* Remove Employee from OT */}
+      {!isEmpty(errorRemoveEmployee) ? (
+        <ToastNotification
+          toastType="error"
+          notifMessage={`${errorRemoveEmployee}: Failed to remove of Employee from Overtime!`}
+        />
+      ) : null}
+
       {/* Overtime Approval Patch Success */}
       {!isEmpty(patchResponseOvertime) ? (
         <ToastNotification toastType="success" notifMessage={`Overtime Application action submitted.`} />

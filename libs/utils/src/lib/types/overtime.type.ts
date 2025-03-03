@@ -75,6 +75,7 @@ export type OvertimeDetails = {
 
 export type EmployeeOvertimeDetail = {
   employeeId: string;
+  encodedHours: number | null;
   companyId: string;
   fullName: string;
   scheduleBase?: string;
