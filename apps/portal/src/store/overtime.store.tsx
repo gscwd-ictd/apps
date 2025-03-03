@@ -1,6 +1,7 @@
 /* eslint-disable @nx/enforce-module-boundaries */
 import { SelectOption } from 'libs/utils/src/lib/types/select.type';
 import {
+  EmployeeOvertimeDetail,
   OvertimeAccomplishment,
   OvertimeAccomplishmentReport,
   OvertimeAuthorization,
@@ -131,6 +132,8 @@ export type OvertimeState = {
   removeEmployee: () => void;
   removeEmployeeSuccess: (response) => void;
   removeEmployeeFail: (error: string) => void;
+
+  removeEmployeeFromOvertime: (employeeId: string, employees: Array<EmployeeOvertimeDetail>) => void;
 
   postOvertime: () => void;
   postOvertimeSuccess: (response: OvertimeForm) => void;
@@ -739,6 +742,17 @@ export const useOvertimeStore = create<OvertimeState>()(
         error: {
           ...state.error,
           errorRemoveEmployee: error,
+        },
+      }));
+    },
+
+    removeEmployeeFromOvertime: (employeeId: string, employees: Array<EmployeeOvertimeDetail>) => {
+      const tempEmployees = employees.filter((employee) => employee.employeeId !== employeeId);
+      set((state) => ({
+        ...state,
+        overtimeDetails: {
+          ...state.overtimeDetails,
+          employees: tempEmployees,
         },
       }));
     },

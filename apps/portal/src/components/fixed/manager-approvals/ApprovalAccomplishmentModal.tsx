@@ -1,5 +1,5 @@
 /* eslint-disable @nx/enforce-module-boundaries */
-import { AlertNotification, Button, CaptchaModal, LoadingSpinner, Modal } from '@gscwd-apps/oneui';
+import { AlertNotification, Button, CaptchaModal, LoadingSpinner, Modal, ToastNotification } from '@gscwd-apps/oneui';
 import { HiX } from 'react-icons/hi';
 import { useEmployeeStore } from '../../../store/employee.store';
 import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
@@ -65,27 +65,28 @@ export const ApprovalAccomplishmentModal = ({ modalState, setModalState, closeMo
 
   const employeeDetails = useEmployeeStore((state) => state.employeeDetails);
   const { windowWidth } = UseWindowDimensions();
-  const [pwdArray, setPwdArray] = useState<string[]>();
-  const [password, setPassword] = useState<string>('');
-  const [captchaPassword, setCaptchaPassword] = useState<string>('');
-  const [isCaptchaError, setIsCaptchaError] = useState<boolean>(false);
+  const [isBeyondActualHours, setIsBeyondActualHours] = useState<boolean>(false);
+  // const [pwdArray, setPwdArray] = useState<string[]>();
+  // const [password, setPassword] = useState<string>('');
+  // const [captchaPassword, setCaptchaPassword] = useState<string>('');
+  // const [isCaptchaError, setIsCaptchaError] = useState<boolean>(false);
 
   // generate captcha
-  const getCaptcha = () => {
-    setPassword('');
-    const data = GenerateCaptcha();
-    if (data) {
-      setCaptchaPassword(data.pwd);
-      setPwdArray([
-        `${data.captcha[0]}`,
-        `${data.captcha[1]}`,
-        `${data.captcha[2]}`,
-        `${data.captcha[3]}`,
-        `${data.captcha[4]}`,
-        `${data.captcha[5]}`,
-      ]);
-    }
-  };
+  // const getCaptcha = () => {
+  //   setPassword('');
+  //   const data = GenerateCaptcha();
+  //   if (data) {
+  //     setCaptchaPassword(data.pwd);
+  //     setPwdArray([
+  //       `${data.captcha[0]}`,
+  //       `${data.captcha[1]}`,
+  //       `${data.captcha[2]}`,
+  //       `${data.captcha[3]}`,
+  //       `${data.captcha[4]}`,
+  //       `${data.captcha[5]}`,
+  //     ]);
+  //   }
+  // };
 
   // React hook form
   const { reset, register, handleSubmit, watch, setValue } = useForm<OvertimeAccomplishmentApprovalPatch>({
@@ -106,9 +107,9 @@ export const ApprovalAccomplishmentModal = ({ modalState, setModalState, closeMo
 
   useEffect(() => {
     reset();
-    setIsCaptchaError(false);
-    setPassword('');
-    setPwdArray([]);
+    // setIsCaptchaError(false);
+    // setPassword('');
+    // setPwdArray([]);
   }, [overtimeAccomplishmentModalIsOpen]);
 
   const overtimeAccomplishmentUrl = `${process.env.NEXT_PUBLIC_EMPLOYEE_MONITORING_URL}/v1/overtime/${overtimeAccomplishmentEmployeeId}/${overtimeAccomplishmentApplicationId}/details`;
@@ -150,6 +151,10 @@ export const ApprovalAccomplishmentModal = ({ modalState, setModalState, closeMo
     }
   }, [patchResponseAccomplishment]);
 
+  useEffect(() => {
+    setIsBeyondActualHours(false);
+  }, []);
+
   // close Confirm Application Modal
   const closeConfirmModal = async () => {
     setConfirmApplicationModalIsOpen(false);
@@ -160,12 +165,26 @@ export const ApprovalAccomplishmentModal = ({ modalState, setModalState, closeMo
   const onSubmit: SubmitHandler<OvertimeAccomplishmentApprovalPatch> = async (
     data: OvertimeAccomplishmentApprovalPatch
   ) => {
-    setDataToSubmit(data);
-    setConfirmApplicationModalIsOpen(true);
+    if (data.actualHrs > Number(accomplishmentDetails?.computedEncodedHours?.toFixed(2))) {
+      setIsBeyondActualHours(true);
+      setTimeout(() => {
+        setIsBeyondActualHours(false);
+      }, 3000);
+    } else {
+      setIsBeyondActualHours(false);
+      setDataToSubmit(data);
+      setConfirmApplicationModalIsOpen(true);
+    }
   };
 
   return (
     <>
+      {isBeyondActualHours ? (
+        <ToastNotification
+          toastType="error"
+          notifMessage={`Approved hours cannot be more than employee's actual hours.`}
+        />
+      ) : null}
       <Modal size={`${windowWidth > 1024 ? 'md' : 'full'}`} open={modalState} setOpen={setModalState}>
         <Modal.Header>
           <h3 className="font-semibold text-gray-700">
@@ -201,6 +220,9 @@ export const ApprovalAccomplishmentModal = ({ modalState, setModalState, closeMo
                         : accomplishmentDetails.status === OvertimeAccomplishmentStatus.DISAPPROVED &&
                           !loadingAccomplishmentResponse
                         ? 'error'
+                        : accomplishmentDetails.status === OvertimeAccomplishmentStatus.REMOVED_BY_MANAGER &&
+                          !loadingAccomplishmentResponse
+                        ? 'info'
                         : 'info'
                     }
                     notifMessage={
@@ -215,6 +237,9 @@ export const ApprovalAccomplishmentModal = ({ modalState, setModalState, closeMo
                         : accomplishmentDetails.status === OvertimeAccomplishmentStatus.DISAPPROVED &&
                           !loadingAccomplishmentResponse
                         ? 'Disapproved'
+                        : accomplishmentDetails.status === OvertimeAccomplishmentStatus.REMOVED_BY_MANAGER &&
+                          !loadingAccomplishmentResponse
+                        ? 'Removed'
                         : 'Processing'
                     }
                     dismissible={false}
@@ -380,7 +405,11 @@ export const ApprovalAccomplishmentModal = ({ modalState, setModalState, closeMo
                           placeholder="Number of hours"
                           required
                           defaultValue={0}
-                          max={watch('status') === OvertimeAccomplishmentStatus.DISAPPROVED ? '0' : '24'}
+                          max={
+                            watch('status') === OvertimeAccomplishmentStatus.DISAPPROVED
+                              ? '0'
+                              : accomplishmentDetails?.computedEncodedHours?.toFixed(2)
+                          }
                           step={0.01}
                           min={watch('status') === OvertimeAccomplishmentStatus.DISAPPROVED ? '0' : '0.1'}
                           {...register('actualHrs')}

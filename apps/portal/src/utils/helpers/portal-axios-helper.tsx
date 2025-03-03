@@ -90,9 +90,9 @@ export const patchPortalUrl = async (url: string, data: any, config = {}) =>
     });
 
 // DELETE
-export const deletePortal = async (url: string, config = {}) =>
-  await axiosApi
-    .delete(url, { ...config })
+export const deletePortal = async (url: string, data: any, config = {}) =>
+  await axiosApiPortal
+    .delete(url, { data, ...config })
     .then((response) => {
       return { error: false, result: response.data };
     })

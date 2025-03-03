@@ -16,6 +16,8 @@ function UseRenderOvertimeAccomplishmentStatus(status: OvertimeAccomplishmentSta
           ? 'error'
           : status === OvertimeAccomplishmentStatus.PENDING
           ? 'warning'
+          : status === OvertimeAccomplishmentStatus.REMOVED_BY_MANAGER
+          ? 'default'
           : 'default'
       }
       label={
@@ -25,6 +27,8 @@ function UseRenderOvertimeAccomplishmentStatus(status: OvertimeAccomplishmentSta
           ? 'Disapproved'
           : status === OvertimeAccomplishmentStatus.PENDING
           ? 'Pending'
+          : status === OvertimeAccomplishmentStatus.REMOVED_BY_MANAGER
+          ? 'Removed'
           : status
       }
     />

@@ -7,9 +7,14 @@ import { LeaveStatus } from 'libs/utils/src/lib/enums/leave.enum';
 import { OvertimeAccomplishmentStatus, OvertimeStatus } from 'libs/utils/src/lib/enums/overtime.enum';
 import { PassSlipStatus } from 'libs/utils/src/lib/enums/pass-slip.enum';
 import { ManagerConfirmationApproval } from 'libs/utils/src/lib/enums/approval.enum';
-import { OvertimeAccomplishmentApprovalPatch, OvertimeDetails } from 'libs/utils/src/lib/types/overtime.type';
+import {
+  EmployeeOvertimeDetail,
+  OvertimeAccomplishmentApprovalPatch,
+  OvertimeDetails,
+} from 'libs/utils/src/lib/types/overtime.type';
 import { DtrCorrectionStatus } from 'libs/utils/src/lib/enums/dtr.enum';
 import { passSlipAction } from 'apps/portal/src/types/approvals.type';
+import { useEffect, useState } from 'react';
 
 type ConfirmationModalProps = {
   modalState: boolean;
@@ -21,6 +26,7 @@ type ConfirmationModalProps = {
   dataToSubmitOvertimeAccomplishment?: OvertimeAccomplishmentApprovalPatch;
   dataToSubmitPassSlipDispute?: passSlipAction;
   dataToSubmitApproveAllAccomplishment?: OvertimeAccomplishmentApprovalPatch;
+  employeeListForApproveAllAccomplishment?: Array<EmployeeOvertimeDetail>;
 
   actionOvertime?: OvertimeStatus; // approve or disapprove for overtime
   actionLeave?: LeaveStatus; // approve or disapprove for leave
@@ -37,6 +43,7 @@ export const ConfirmationApprovalModal = ({
   dataToSubmitOvertimeAccomplishment,
   dataToSubmitPassSlipDispute,
   dataToSubmitApproveAllAccomplishment,
+  employeeListForApproveAllAccomplishment,
 
   actionOvertime,
   actionLeave,
@@ -265,7 +272,29 @@ export const ConfirmationApprovalModal = ({
       }
     }
   };
+  const [isBeyondActualHours, setIsBeyondActualHours] = useState<boolean>(false);
+  const [finalPendingEmployees, setFinalPendingEmployees] = useState<Array<EmployeeOvertimeDetail>>();
 
+  useEffect(() => {
+    const tempFinalPendingEmployees = employeeListForApproveAllAccomplishment?.filter(
+      (employee) =>
+        employee.accomplishmentStatus === OvertimeAccomplishmentStatus.PENDING &&
+        employee.isAccomplishmentSubmitted == true
+    );
+
+    const tempEmployees = employeeListForApproveAllAccomplishment?.filter(
+      (employee) =>
+        employee.encodedHours < dataToSubmitApproveAllAccomplishment?.actualHrs &&
+        employee.accomplishmentStatus === OvertimeAccomplishmentStatus.PENDING &&
+        employee.isAccomplishmentSubmitted == true
+    );
+    if (tempEmployees?.length >= 1 && dataToSubmitApproveAllAccomplishment) {
+      setIsBeyondActualHours(true);
+    } else {
+      setIsBeyondActualHours(false);
+    }
+    setFinalPendingEmployees(tempFinalPendingEmployees);
+  }, [modalState]);
   const { windowWidth } = UseWindowDimensions();
 
   return (
@@ -365,15 +394,70 @@ export const ConfirmationApprovalModal = ({
             {/* ALL OT ACCOMPLISHMENT APPLICATION APPROVAL MESSAGE */}
             {confirmName === ManagerConfirmationApproval.ALL_OVERTIME_ACCOMPLISHMENT &&
             dataToSubmitApproveAllAccomplishment ? (
-              <label>
-                Are you sure you want to{' '}
-                {dataToSubmitApproveAllAccomplishment.status == OvertimeAccomplishmentStatus.APPROVED ? (
-                  'approve'
+              <>
+                <div className="bg-slate-100 py-2 rounded">
+                  {finalPendingEmployees?.map((employee: EmployeeOvertimeDetail, index: number) => {
+                    return (
+                      <div
+                        key={employee.companyId}
+                        className={`${index != 0 ? 'border-t border-slate-200' : ''} ${
+                          employee.accomplishmentStatus === OvertimeAccomplishmentStatus.REMOVED_BY_MANAGER
+                            ? 'opacity-40'
+                            : employee.encodedHours < dataToSubmitApproveAllAccomplishment.actualHrs &&
+                              employee.accomplishmentStatus === OvertimeAccomplishmentStatus.PENDING &&
+                              employee.isAccomplishmentSubmitted == true
+                            ? 'bg-red-300'
+                            : ''
+                        } px-2 py-2 md:px-4 flex flex-row justify-between items-center gap-4 `}
+                      >
+                        <div className="w-full flex justify-between items-start  gap-2 md:gap-4 text-sm md:text-md">
+                          <label className={`w-full`}>{employee.fullName}</label>
+
+                          {employee.encodedHours ? (
+                            <div className="flex flex-col">
+                              <label className={`w-full`}>{employee.encodedHours} Hours</label>
+                              <label className={`w-full`}>Rendered</label>
+                            </div>
+                          ) : (
+                            <div className="flex flex-col">
+                              <label className={`w-full`}>0 Hours</label>
+                              <label className={`w-full`}>Rendered</label>
+                            </div>
+                          )}
+
+                          {employee.encodedHours < dataToSubmitApproveAllAccomplishment.actualHrs ? (
+                            <label className={`w-full`}>
+                              Approved {dataToSubmitApproveAllAccomplishment.actualHrs} Hour(s) is more than Rendered
+                              Hours
+                            </label>
+                          ) : (
+                            <label className={`w-full`}>
+                              Approved {dataToSubmitApproveAllAccomplishment.actualHrs} Hour(s) is less than or equal
+                              Rendered Hours
+                            </label>
+                          )}
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+                {isBeyondActualHours && dataToSubmitApproveAllAccomplishment ? (
+                  <label className="text-sm text-red-600">
+                    There are currently employees whose rendered hours are less than the approved hours that was set.
+                    Please approve them individually to avoid incorrect Overtime hours.
+                  </label>
                 ) : (
-                  <label className="text-red-600">disapprove</label>
-                )}{' '}
-                all the pending Accomplishment Reports for this Overtime?
-              </label>
+                  <label>
+                    Are you sure you want to{' '}
+                    {dataToSubmitApproveAllAccomplishment.status == OvertimeAccomplishmentStatus.APPROVED ? (
+                      'approve'
+                    ) : (
+                      <label className="text-red-600">disapprove</label>
+                    )}{' '}
+                    all the pending Accomplishment Reports for this Overtime?
+                  </label>
+                )}
+              </>
             ) : null}
 
             {/* OT ACCOMPLISHMENT APPLICATION APPROVAL MESSAGE */}
@@ -405,13 +489,21 @@ export const ConfirmationApprovalModal = ({
         </Modal.Body>
         <Modal.Footer>
           <div className="flex justify-end gap-2 px-4">
-            <div className="min-w-[6rem] max-w-auto flex gap-4">
-              <Button variant={'primary'} size={'md'} loading={false} onClick={(e) => handleSubmit()}>
-                Yes
-              </Button>
-              <Button variant={'danger'} size={'md'} loading={false} onClick={closeModalAction}>
-                No
-              </Button>
+            <div className="max-w-auto flex gap-4">
+              {isBeyondActualHours && dataToSubmitApproveAllAccomplishment ? (
+                <Button variant={'default'} size={'md'} loading={false} onClick={(e) => closeModalAction()}>
+                  Close
+                </Button>
+              ) : (
+                <>
+                  <Button variant={'primary'} size={'md'} loading={false} onClick={(e) => handleSubmit()}>
+                    Yes
+                  </Button>
+                  <Button variant={'danger'} size={'md'} loading={false} onClick={closeModalAction}>
+                    No
+                  </Button>
+                </>
+              )}
             </div>
           </div>
         </Modal.Footer>

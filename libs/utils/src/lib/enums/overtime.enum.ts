@@ -9,4 +9,5 @@ export enum OvertimeAccomplishmentStatus {
   APPROVED = 'approved',
   DISAPPROVED = 'disapproved',
   PENDING = 'pending',
+  REMOVED_BY_MANAGER = 'removed by manager',
 }

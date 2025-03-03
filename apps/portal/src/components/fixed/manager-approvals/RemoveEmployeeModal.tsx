@@ -4,6 +4,7 @@ import { HiX } from 'react-icons/hi';
 import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
 import { deletePortal } from 'apps/portal/src/utils/helpers/portal-axios-helper';
 import { useOvertimeStore } from 'apps/portal/src/store/overtime.store';
+import { useApprovalStore } from 'apps/portal/src/store/approvals.store';
 
 type ModalProps = {
   modalState: boolean;
@@ -15,7 +16,7 @@ type ModalProps = {
 
 export const RemoveEmployeeModal = ({ modalState, name, employeeId, setModalState, closeModalAction }: ModalProps) => {
   const { overtimeDetails, removeEmployee, removeEmployeeSuccess, removeEmployeeFail, removeEmployeeFromOvertime } =
-    useOvertimeStore((state) => ({
+    useApprovalStore((state) => ({
       overtimeDetails: state.overtimeDetails,
       setOvertimeDetails: state.setOvertimeDetails,
       removeEmployee: state.removeEmployee,
@@ -30,13 +31,17 @@ export const RemoveEmployeeModal = ({ modalState, name, employeeId, setModalStat
       overtimeApplicationId: overtimeDetails.id,
     };
     removeEmployee();
-    const { error, result } = await deletePortal(`/overtime-applications/employee/immediate-supervisor`, data);
+    const { error, result } = await deletePortal(`/overtime-applications/employee/manager`, data);
     if (error) {
       removeEmployeeFail(result);
     } else {
       removeEmployeeSuccess(result);
       removeEmployeeFromOvertime(result?.employeeId, overtimeDetails.employees);
       closeModalAction();
+      setTimeout(() => {
+        // setPendingOvertimeModalIsOpen(true);
+        // setCompletedOvertimeModalIsOpen(false);
+      }, 200);
     }
   };
 
@@ -62,9 +67,7 @@ export const RemoveEmployeeModal = ({ modalState, name, employeeId, setModalStat
             <label>Are you sure you want to remove</label>
             <label className="text-red-600 font-bold">{name}</label>
             <label>from this Overtime application?</label>
-            <label className="text-sm text-red-600 pt-4">
-              Note: Removal can only be done if application is still pending.
-            </label>
+            <label className="text-sm text-red-600 pt-4">Note: This action is final and cannot be undone.</label>
           </div>
         </Modal.Body>
         <Modal.Footer>

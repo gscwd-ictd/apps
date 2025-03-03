@@ -57,7 +57,7 @@ export const AllPassSlipListTab = ({ passslips, tab }: AllPassSlipListTabProps) 
                     Date Applied: {DateFormatter(item.dateOfApplication, 'MMMM DD, YYYY')}
                   </p>
                   <p className="text-sm text-gray-500">Estimated Hours: {item.estimateHours}</p>
-                  <p className="text-sm text-gray-500 break-words w-96">Purpose: {item.purposeDestination}</p>
+                  <p className="text-sm text-gray-500 break-words w-auto">Purpose: {item.purposeDestination}</p>
                   <p className="text-sm text-indigo-500">
                     Status:{' '}
                     {item.status === PassSlipStatus.ONGOING
