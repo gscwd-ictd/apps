@@ -250,11 +250,10 @@ export const OvertimeModal = ({ modalState, setModalState, closeModalAction }: M
   };
 
   const { windowWidth } = UseWindowDimensions();
-
   return (
     <>
       <Modal
-        size={`${windowWidth > 1330 ? 'md' : windowWidth > 1024 ? 'lg' : 'full'}`}
+        size={`${windowWidth > 1330 ? 'lg' : windowWidth > 1024 ? 'lg' : 'full'}`}
         open={modalState}
         setOpen={setModalState}
       >
@@ -495,6 +494,20 @@ export const OvertimeModal = ({ modalState, setModalState, closeModalAction }: M
                                   </div>
                                 ) : null}
 
+                                {employee.encodedHours ? (
+                                  <div className="flex flex-col">
+                                    <label className={`w-full`}>
+                                      {Math.trunc(employee.encodedHours * 100) / 100} Hours
+                                    </label>
+                                    <label className={`w-full`}>Rendered</label>
+                                  </div>
+                                ) : (
+                                  <div className="flex flex-col">
+                                    <label className={`w-full`}>0 Hours</label>
+                                    <label className={`w-full`}>Rendered</label>
+                                  </div>
+                                )}
+
                                 {overtimeDetails.status === OvertimeStatus.APPROVED ? (
                                   <Button
                                     disabled={employee.isAccomplishmentSubmitted == true ? false : true}
@@ -604,34 +617,6 @@ export const OvertimeModal = ({ modalState, setModalState, closeModalAction }: M
             </div>
           )}
 
-          {/* <CaptchaModal
-            modalState={otpOvertimeModalIsOpen}
-            setModalState={setOtpOvertimeModalIsOpen}
-            title={'OVERTIME APPROVAL CAPTCHA'}
-          >
-            <ApprovalCaptcha
-              employeeId={employeeDetails.employmentDetails.userId}
-              actionOvertime={watch('status')}
-              tokenId={overtimeDetails.id}
-              captchaName={ManagerConfirmationApproval.OVERTIME}
-            />
-          </CaptchaModal> */}
-
-          {/* <OtpModal
-            modalState={otpOvertimeModalIsOpen}
-            setModalState={setOtpOvertimeModalIsOpen}
-            title={'OVERTIME APPROVAL OTP'}
-          >
-
-            <ApprovalOtpContents
-              mobile={employeeDetails.profile.mobileNumber}
-              employeeId={employeeDetails.user._id}
-              actionOvertime={watch('status')}
-              tokenId={overtimeDetails.id}
-              otpName={ManagerOtpApproval.OVERTIME}
-            />
-          </OtpModal> */}
-
           <ConfirmationApprovalModal
             modalState={confirmApplicationModalIsOpen}
             setModalState={setConfirmApplicationModalIsOpen}
@@ -648,6 +633,7 @@ export const OvertimeModal = ({ modalState, setModalState, closeModalAction }: M
             setModalState={setApproveAllAccomplishmentModalIsOpen}
             closeModalAction={closeConfirmModal}
             dataToSubmitApproveAllAccomplishment={approveAllAccomplishmentData}
+            employeeListForApproveAllAccomplishment={overtimeDetails.employees}
             tokenId={overtimeDetails.id}
             confirmName={ManagerConfirmationApproval.ALL_OVERTIME_ACCOMPLISHMENT}
             employeeId={employeeDetails.user._id}
@@ -658,18 +644,6 @@ export const OvertimeModal = ({ modalState, setModalState, closeModalAction }: M
             setModalState={setOvertimeAccomplishmentModalIsOpen}
             closeModalAction={closeAccomplishmentModal}
           />
-
-          {/* <CaptchaModal
-            modalState={approveAllAccomplishmentModalIsOpen}
-            setModalState={setApproveAllAccomplishmentModalIsOpen}
-            title={'APPROVE ALL ACCOMPLISHMENT CAPTCHA'}
-          >
-            <ApprovalCaptcha
-              dataToSubmitApproveAllAccomplishment={approveAllAccomplishmentData}
-              tokenId={overtimeDetails.id}
-              captchaName={ManagerConfirmationApproval.ALL_OVERTIME_ACCOMPLISHMENT}
-            />
-          </CaptchaModal> */}
         </Modal.Body>
         <Modal.Footer>
           <div className="flex justify-end gap-2 px-4">
