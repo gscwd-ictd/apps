@@ -11,6 +11,7 @@ import { useEffect } from 'react';
 import { isEmpty } from 'lodash';
 import dayjs from 'dayjs';
 import OvertimeSummaryReportPdf from './OvertimeSummaryReportPdf';
+import { UseCapitalizer } from 'apps/employee-monitoring/src/utils/functions/Capitalizer';
 
 type ModalProps = {
   modalState: boolean;
@@ -98,7 +99,7 @@ export const OvertimeSummaryReportModal = ({ modalState, setModalState, closeMod
         <Modal.Body>
           {!isEmpty(swrOvertimeSummary) && !isEmpty(overtimeSummaryReport) ? (
             <div className="text-center">
-              {/* <PDFDownloadLink
+              <PDFDownloadLink
                 document={
                   <OvertimeSummaryReportPdf
                     selectedMonth={selectedMonth}
@@ -113,7 +114,7 @@ export const OvertimeSummaryReportModal = ({ modalState, setModalState, closeMod
                 className="md:hidden text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
               >
                 {({ loading }) => (loading ? 'Loading document...' : 'Download PDF')}
-              </PDFDownloadLink> */}
+              </PDFDownloadLink>
 
               <PDFViewer width={'100%'} height={1000} showToolbar className="hidden md:block ">
                 <OvertimeSummaryReportPdf

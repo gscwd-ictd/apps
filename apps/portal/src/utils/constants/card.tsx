@@ -28,7 +28,7 @@ export const Modules: Array<Card> = [
   {
     icon: <HiDocumentText className="w-6 h-6 text-green-600" />,
     color: 'green',
-    title: 'Pass Slip',
+    title: 'Pass Slips',
     description: 'Apply for Pass Slip',
     destination: 'pass-slip',
     linkType: 'router',
@@ -47,8 +47,8 @@ export const Modules: Array<Card> = [
   {
     icon: <HiClipboard className="w-6 h-6 text-rose-600" />,
     color: 'rose',
-    title: 'Overtime Report',
-    description: 'Overtime Accomplishment Reports',
+    title: 'Overtime Accomplishments',
+    description: 'Submit Overtime Accomplishments',
     destination: 'overtime-accomplishment',
     linkType: 'router',
     state: true,

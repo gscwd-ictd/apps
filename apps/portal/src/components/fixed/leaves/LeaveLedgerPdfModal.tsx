@@ -45,13 +45,13 @@ const LeaveLedgerPdfModal: FunctionComponent<LeaveLedgerPdfModalProps> = ({
         <Modal.Body>
           {!isEmpty(employeeData) && !isEmpty(leaveLedger) ? (
             <div className="text-center">
-              {/* <PDFDownloadLink
+              <PDFDownloadLink
                 document={<LeaveLedgerPdf employeeData={employeeData} leaveLedger={leaveLedger} />}
                 fileName={`${employeeData.employmentDetails.employeeFullName} Leave Ledger.pdf`}
                 className="md:hidden text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
               >
                 {({ loading }) => (loading ? 'Loading document...' : 'Download PDF')}
-              </PDFDownloadLink> */}
+              </PDFDownloadLink>
 
               <PDFViewer width={'100%'} height={1400} showToolbar className="hidden md:block ">
                 <LeaveLedgerPdf employeeData={employeeData} leaveLedger={leaveLedger} />

@@ -88,13 +88,13 @@ export const OvertimeAuthorizationModal = ({ modalState, setModalState, closeMod
         <Modal.Body>
           {!isEmpty(swrOvertimeAuthorizationReport) && !isEmpty(overtimeAuthorizationReport) ? (
             <div className="text-center">
-              {/* <PDFDownloadLink
+              <PDFDownloadLink
                 document={<OvertimeAuthorizationPdf overtimeAuthorizationReport={overtimeAuthorizationReport} />}
                 fileName={`${overtimeAuthorizationReport.plannedDate} Overtime Authorization.pdf`}
                 className="md:hidden text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
               >
                 {({ loading }) => (loading ? 'Loading document...' : 'Download PDF')}
-              </PDFDownloadLink> */}
+              </PDFDownloadLink>
 
               <PDFViewer width={'100%'} height={1000} showToolbar className="hidden md:block ">
                 <OvertimeAuthorizationPdf overtimeAuthorizationReport={overtimeAuthorizationReport} />
@@ -103,13 +103,6 @@ export const OvertimeAuthorizationModal = ({ modalState, setModalState, closeMod
           ) : (
             <div className="w-full h-[90%]  static flex flex-col justify-center items-center place-items-center">
               <LoadingSpinner size={'lg'} />
-              {/* <SpinnerDotted
-                speed={70}
-                thickness={70}
-                className="w-full flex h-full transition-all "
-                color="slateblue"
-                size={100}
-              /> */}
             </div>
           )}
         </Modal.Body>
