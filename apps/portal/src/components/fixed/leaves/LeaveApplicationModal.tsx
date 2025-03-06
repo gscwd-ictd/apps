@@ -865,7 +865,7 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
 
     editorProps: {
       attributes: {
-        class: 'border-none outline-none h-30',
+        class: 'text-md border-none outline-none mb-4',
       },
     },
     onUpdate: ({ editor }) => {
@@ -2023,10 +2023,11 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
                   Number(sickLeaveBalance) - Number(pendingSickLeaveDateCount) >= 0.5 &&
                   watch('typeOfLeaveDetails.leaveName') === LeaveName.LEAVE_WITHOUT_PAY
                     ? true
-                    : //if late filing and justification letter is empty
+                    : //if late filing and justification letter is empty, added minimum character requirement
                     (watch('lateFilingJustification') === '' ||
                         watch('lateFilingJustification') === null ||
-                        watch('lateFilingJustification') === '<p></p>') &&
+                        watch('lateFilingJustification') === '<p></p>' ||
+                        watch('lateFilingJustification')?.length < 40) &&
                       lateFiling
                     ? true
                     : //disabled if applying for force leave and is December

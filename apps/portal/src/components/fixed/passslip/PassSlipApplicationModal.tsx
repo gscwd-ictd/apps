@@ -268,6 +268,12 @@ export const PassSlipApplicationModal = ({
                   />
                 ) : null}
 
+                <AlertNotification
+                  alertType="info"
+                  notifMessage={`Current Vacation Leave Credits: ${vacationLeaveBalance}`}
+                  dismissible={false}
+                />
+
                 {!allowedToApplyForNew || passSlipsForApproval.length >= 1 ? (
                   <AlertNotification
                     alertType="warning"
@@ -306,8 +312,8 @@ export const PassSlipApplicationModal = ({
                   watch('natureOfBusiness') === NatureOfBusiness.UNDERTIME) &&
                 (watch('isMedical') === '0' || watch('isMedical') === null) ? (
                   <AlertNotification
-                    alertType="warning"
-                    notifMessage="This Pass Slip will be deducted directly to your pay as you currently have 0 or less Vacation Leave balance."
+                    alertType="error"
+                    notifMessage="You have incurred a negative Vacation Leave Balance. Please minimize the use of Half-Day, Undertime, and Personal Business Pass Slips to improve your Vacation Leave Credits."
                     dismissible={false}
                   />
                 ) : null}

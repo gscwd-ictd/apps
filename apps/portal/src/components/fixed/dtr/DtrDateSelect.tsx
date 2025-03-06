@@ -6,9 +6,11 @@ import axios from 'axios';
 import { isEmpty } from 'lodash';
 import { EmployeeDetails } from 'apps/portal/src/types/employee.type';
 import { useEffect } from 'react';
+import { UseCapitalizer } from 'apps/employee-monitoring/src/utils/functions/Capitalizer';
 
 type Month = { month: string; code: string };
 type Year = { year: string };
+type Period = { period: string };
 
 type DtrDateSelectProps = {
   employeeDetails: EmployeeDetails;
@@ -55,6 +57,8 @@ export const DtrDateSelect = ({ employeeDetails }: DtrDateSelectProps) => {
     { month: 'December', code: '12' },
   ] as Month[];
 
+  const dtrPeriod = [{ period: 'First Period PDF' }, { period: 'Second Period PDF' }, { period: 'Whole Month PDF' }];
+
   const years = [{ year: `${yearNow}` }, { year: `${Number(yearNow) - 1}` }] as Year[];
 
   //month select
@@ -77,6 +81,16 @@ export const DtrDateSelect = ({ employeeDetails }: DtrDateSelectProps) => {
     ),
   };
 
+  //period select
+  const periodDtrList: ListDef<Period> = {
+    key: 'period',
+    render: (info, state) => (
+      <div className={`${state.active ? 'bg-indigo-200' : state.selected ? 'bg-slate-200 ' : ''} pl-4 cursor-pointer`}>
+        {info.period}
+      </div>
+    ),
+  };
+
   const onChangeMonth = (month: string) => {
     setSelectedMonth(month);
   };
@@ -90,7 +104,16 @@ export const DtrDateSelect = ({ employeeDetails }: DtrDateSelectProps) => {
     setSelectedMonth(format(new Date(), 'M'));
   }, []);
 
-  const handlePdfModal = async (period: string) => {
+  const handlePdfModal = async (selectedPeriod: string) => {
+    let period = '';
+    //mutate search
+    if (selectedPeriod === 'First Period PDF') {
+      period = 'first';
+    } else if (selectedPeriod === 'Second Period PDF') {
+      period = 'second';
+    } else {
+      period = '';
+    }
     setSelectedPeriod(period);
     if (period != '') {
       getEmployeeDtrPdf(true);
@@ -151,12 +174,21 @@ export const DtrDateSelect = ({ employeeDetails }: DtrDateSelectProps) => {
         listDef={yearList}
         onSelect={(selectedItem) => onChangeYear(selectedItem.year)}
       />
-      <Button variant={'primary'} size={'sm'} loading={false} onClick={() => searchDtr()} type="button">
+      {/* <Button variant={'primary'} size={'sm'} loading={false} onClick={() => searchDtr()} type="button">
         <div className="flex justify-center">
           <HiOutlineSearch className="w-6 h-6 md:w-5 md:h-5" />
         </div>
-      </Button>
-      <Button variant={'primary'} size={'md'} loading={false} type="button" onClick={() => handlePdfModal('first')}>
+      </Button> */}
+
+      <Select
+        className="w-36 md:w-56"
+        data={dtrPeriod}
+        initial={dtrPeriod[0]}
+        listDef={periodDtrList}
+        onSelect={(selectedItem) => handlePdfModal(selectedItem.period)}
+      />
+
+      {/* <Button variant={'primary'} size={'md'} loading={false} type="button" onClick={() => handlePdfModal('first')}>
         1st Period
       </Button>
       <Button variant={'primary'} size={'md'} loading={false} type="button" onClick={() => handlePdfModal('second')}>
@@ -164,7 +196,7 @@ export const DtrDateSelect = ({ employeeDetails }: DtrDateSelectProps) => {
       </Button>
       <Button variant={'primary'} size={'md'} loading={false} type="button" onClick={() => handlePdfModal('')}>
         Full DTR
-      </Button>
+      </Button> */}
     </form>
   );
 };

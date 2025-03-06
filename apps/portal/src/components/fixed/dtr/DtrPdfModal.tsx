@@ -54,28 +54,42 @@ export const DtrPdfModal = ({ modalState, setModalState, closeModalAction, title
         <Modal.Body>
           {!isEmpty(employeeDtr) && !isEmpty(employeeDetails) ? (
             <div className="text-center">
-              {/* <PDFDownloadLink
-                document={<DtrPdf employeeData={employeeDetails} employeeDtr={employeeDtr} />}
-                fileName={`${employeeDetails.employmentDetails.employeeFullName} DTR.pdf`}
-                className="md:hidden text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
-              >
-                {({ loading }) => (loading ? 'Loading document...' : 'Download PDF')}
-              </PDFDownloadLink> */}
+              {(selectedPeriod === 'first' || selectedPeriod === 'second') && employeeDtrPdf ? (
+                // DOWNLOAD BUTTON FOR 1ST OR 2ND HALF
+                <PDFDownloadLink
+                  document={<DtrPdf employeeData={employeeDetails} employeeDtr={employeeDtrPdf} />}
+                  fileName={`${employeeDetails.employmentDetails.employeeFullName} DTR.pdf`}
+                  className="md:hidden text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
+                >
+                  {({ loading }) => (loading ? 'Loading document...' : 'Download PDF')}
+                </PDFDownloadLink>
+              ) : (
+                // DOWNLOAD BUTTON FOR WHOLE MONTH
+                <PDFDownloadLink
+                  document={<DtrPdf employeeData={employeeDetails} employeeDtr={employeeDtr} />}
+                  fileName={`${employeeDetails.employmentDetails.employeeFullName} DTR.pdf`}
+                  className="md:hidden text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
+                >
+                  {({ loading }) => (loading ? 'Loading document...' : 'Download PDF')}
+                </PDFDownloadLink>
+              )}
 
+              {/* FOR 1ST OR 2ND HALF */}
               {(selectedPeriod === 'first' || selectedPeriod === 'second') && employeeDtrPdf && !loadingDtrPdf ? (
                 <PDFViewer width={'100%'} height={1400} className="hidden md:block ">
                   <DtrPdf employeeData={employeeDetails} employeeDtr={employeeDtrPdf} />
                 </PDFViewer>
               ) : (selectedPeriod === 'first' || selectedPeriod === 'second') && loadingDtrPdf ? (
-                <LoadingSpinner size={'lg'} />
+                <LoadingSpinner size={'lg'} className="hidden md:block " />
               ) : null}
 
+              {/* FOR WHOLE MONTH */}
               {selectedPeriod === '' && employeeDtr && !loadingDtr ? (
                 <PDFViewer width={'100%'} height={1400} className="hidden md:block ">
                   <DtrPdf employeeData={employeeDetails} employeeDtr={employeeDtr} />
                 </PDFViewer>
               ) : selectedPeriod === '' && loadingDtr ? (
-                <LoadingSpinner size={'lg'} />
+                <LoadingSpinner size={'lg'} className="hidden md:block " />
               ) : null}
             </div>
           ) : (
