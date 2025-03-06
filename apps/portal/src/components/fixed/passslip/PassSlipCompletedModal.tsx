@@ -148,7 +148,12 @@ export const PassSlipCompletedModal = ({
                 employeeDetails.employmentDetails.userRole != UserRole.COS &&
                 employeeDetails.employmentDetails.userRole != UserRole.COS_JO &&
                 passSlip.isDeductibleToPay ? (
-                  <AlertNotification alertType={`warning`} notifMessage={`Deductible to Pay`} dismissible={false} />
+                  // <AlertNotification alertType={`warning`} notifMessage={`Deductible to Pay`} dismissible={false} />
+                  <AlertNotification
+                    alertType="warning"
+                    notifMessage="You have incurred a negative Vacation Leave Balance. Please minimize the use of Half-Day, Undertime, and Personal Business Pass Slips to improve your Vacation Leave Credits."
+                    dismissible={false}
+                  />
                 ) : null}
 
                 {employeeDetails.employmentDetails.userRole != UserRole.JOB_ORDER &&

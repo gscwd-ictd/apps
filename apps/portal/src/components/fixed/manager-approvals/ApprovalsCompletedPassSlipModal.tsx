@@ -106,8 +106,16 @@ export const ApprovalsCompletedPassSlipModal = ({
                   dismissible={false}
                 />
 
-                {passSlip.isDeductibleToPay ? (
+                {/* {passSlip.isDeductibleToPay ? (
                   <AlertNotification alertType={`warning`} notifMessage={`Deductible to Pay`} dismissible={false} />
+                ) : null} */}
+
+                {!passSlip.isDeductibleToPay ? (
+                  <AlertNotification
+                    alertType={`warning`}
+                    notifMessage={`Notice: This employee has incurred a negative Vacation Leave Balance.`}
+                    dismissible={false}
+                  />
                 ) : null}
 
                 {passSlip.disputeRemarks && passSlip.isDisputeApproved != null ? (

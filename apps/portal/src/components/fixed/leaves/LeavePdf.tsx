@@ -475,6 +475,29 @@ export const LeavePdf = ({
                     </Text>
                     <Text style={styles.leaveLabel}>Others:</Text>
                   </View>
+                  <View
+                    style={{
+                      display: 'flex',
+                      flexDirection: 'column',
+                    }}
+                  >
+                    <Text
+                      style={{
+                        fontSize: 9,
+                        position: 'absolute',
+                        padding: 6,
+                        marginTop: -2,
+                        lineHeight: 2.1,
+                        textIndent: 5,
+                        width: 200,
+                      }}
+                    >
+                      {leaveDetails.leaveApplicationBasicInfo.leaveName === LeaveName.LEAVE_WITHOUT_PAY
+                        ? 'Leave Without Pay'
+                        : null}
+                    </Text>
+                    <Text style={{ padding: 5 }}>__________________________________</Text>
+                  </View>
                 </View>
                 {/* 6.B DETAILS OF LEAVE CHECKBOXES */}
                 <View
