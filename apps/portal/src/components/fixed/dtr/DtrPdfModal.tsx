@@ -58,19 +58,21 @@ export const DtrPdfModal = ({ modalState, setModalState, closeModalAction, title
                 // DOWNLOAD BUTTON FOR 1ST OR 2ND HALF
                 <PDFDownloadLink
                   document={<DtrPdf employeeData={employeeDetails} employeeDtr={employeeDtrPdf} />}
-                  fileName={`${employeeDetails.employmentDetails.employeeFullName} DTR.pdf`}
+                  fileName={`${employeeDetails?.employmentDetails?.employeeFullName} DTR.pdf`}
                   className="md:hidden text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
                 >
-                  {({ loading }) => (loading ? 'Loading document...' : 'Download PDF')}
+                  {employeeDetails && employeeDtrPdf ? 'Download PDF' : 'Loading...'}
+                  {/* {({ loading }) => (loading ? 'Loading document...' : 'Download PDF')} */}
                 </PDFDownloadLink>
               ) : (
                 // DOWNLOAD BUTTON FOR WHOLE MONTH
                 <PDFDownloadLink
                   document={<DtrPdf employeeData={employeeDetails} employeeDtr={employeeDtr} />}
-                  fileName={`${employeeDetails.employmentDetails.employeeFullName} DTR.pdf`}
+                  fileName={`${employeeDetails?.employmentDetails?.employeeFullName} DTR.pdf`}
                   className="md:hidden text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
                 >
-                  {({ loading }) => (loading ? 'Loading document...' : 'Download PDF')}
+                  {employeeDetails && employeeDtr ? 'Download PDF' : 'Loading...'}
+                  {/* {({ loading }) => (loading ? 'Loading document...' : 'Download PDF')} */}
                 </PDFDownloadLink>
               )}
 

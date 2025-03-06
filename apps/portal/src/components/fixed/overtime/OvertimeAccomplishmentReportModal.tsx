@@ -90,11 +90,12 @@ export const OvertimeAccomplishmentReportModal = ({ modalState, setModalState, c
                 document={
                   <OvertimeAccomplishmentReportPdf overtimeAccomplishmentReport={overtimeAccomplishmentReport} />
                 }
-                fileName={`${overtimeAccomplishmentReport.employeeName} ${overtimeAccomplishmentReport.date} Overtime Accomplishment.pdf`}
+                fileName={`${overtimeAccomplishmentReport?.employeeName} ${overtimeAccomplishmentReport?.date} Overtime Accomplishment.pdf`}
                 className="md:hidden text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg
                 text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
               >
-                {({ loading }) => (loading ? 'Loading document...' : 'Download PDF')}
+                {overtimeAccomplishmentReport ? 'Download PDF' : 'Loading...'}
+                {/* {({ loading }) => (loading ? 'Loading document...' : 'Download PDF')} */}
               </PDFDownloadLink>
 
               <PDFViewer width={'100%'} height={1000} showToolbar className="hidden md:block ">
