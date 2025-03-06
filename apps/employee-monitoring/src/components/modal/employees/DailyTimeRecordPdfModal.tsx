@@ -41,13 +41,14 @@ const DailyTimeRecordPdfModal: FunctionComponent<DailyTimeRecordPdfModalProps> =
           <div className="text-center">
             {!isEmpty(employeeDtr) ? (
               <>
-                {/* <PDFDownloadLink
+                <PDFDownloadLink
                   document={<DtrPdf employeeData={employeeData} employeeDtr={employeeDtr} />}
-                  fileName={`${employeeData.fullName}DTR.pdf`}
+                  fileName={`${employeeData.fullName} DTR.pdf`}
                   className="md:hidden text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
                 >
-                  {({ loading }) => (loading ? 'Loading document...' : 'Download PDF')}
-                </PDFDownloadLink> */}
+                  {employeeData && employeeDtr ? 'Download PDF' : 'Loading...'}
+                  {/* {({ loading }) => (loading ? 'Loading document...' : 'Download PDF')} */}
+                </PDFDownloadLink>
 
                 <PDFViewer width={'100%'} height={1400} className="hidden md:block ">
                   <DtrPdf employeeData={employeeData} employeeDtr={employeeDtr} />

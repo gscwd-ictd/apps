@@ -36,13 +36,14 @@ export const JustificationLetterPdfModal = ({
         </Modal.Header>
         <Modal.Body>
           <div className="text-center">
-            {/* <PDFDownloadLink
-                document={<JustificationLetterPdf leaveDetails={leaveIndividualDetail} />}
-                fileName={`${employeeDetails.employmentDetails.employeeFullName} Justification Letter.pdf`}
-                className="md:hidden text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
-              >
-                {({ loading }) => (loading ? 'Loading document...' : 'Download PDF')}
-              </PDFDownloadLink> */}
+            <PDFDownloadLink
+              document={<JustificationLetterPdf leaveDetails={leaveDetails} />}
+              fileName={`${leaveDetails.employeeDetails.firstName} ${leaveDetails.employeeDetails.lastName} Justification Letter.pdf`}
+              className="md:hidden text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
+            >
+              {leaveDetails ? 'Download PDF' : 'Loading...'}
+              {/* {({ loading }) => (loading ? 'Loading document...' : 'Download PDF')} */}
+            </PDFDownloadLink>
 
             <PDFViewer width={'100%'} height={2800} showToolbar className="hidden md:block ">
               <JustificationLetterPdf leaveDetails={leaveDetails} />
