@@ -437,6 +437,12 @@ export default function Overtime({ employeeDetails }: InferGetServerSidePropsTyp
                   </div>
                 </Button>
 
+                <Button onClick={openOvertimeSummaryModal} className="block lg:hidden" size={`lg`}>
+                  <div className="flex items-center w-full gap-2">
+                    <HiNewspaper />
+                  </div>
+                </Button>
+
                 <Button onClick={openApplyOvertimeModal} className="block lg:hidden" size={`lg`}>
                   <div className="flex items-center w-full gap-2">
                     <HiDocumentAdd />
