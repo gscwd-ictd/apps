@@ -1,14 +1,12 @@
-import { Button, ListDef, Select } from '@gscwd-apps/oneui';
+import { ListDef, Select } from '@gscwd-apps/oneui';
 import { format } from 'date-fns';
-import { HiOutlineSearch } from 'react-icons/hi';
 import { useDtrStore } from '../../../../src/store/dtr.store';
 import axios from 'axios';
 import { isEmpty } from 'lodash';
 import { EmployeeDetails } from 'apps/portal/src/types/employee.type';
-import { useEffect, useState } from 'react';
-import { UseCapitalizer } from 'apps/employee-monitoring/src/utils/functions/Capitalizer';
-import { Menu } from '@headlessui/react';
-import { ChevronDownIcon } from 'lucide-react';
+import { Fragment, useEffect, useState } from 'react';
+import { Menu, Transition } from '@headlessui/react';
+import { ChevronDownIcon } from '@heroicons/react/20/solid';
 
 type Month = { month: string; code: string };
 type Year = { year: string };
@@ -18,7 +16,7 @@ type DtrDateSelectProps = {
   employeeDetails: EmployeeDetails;
 };
 
-export const DtrDateSelect = ({ employeeDetails }: DtrDateSelectProps) => {
+export const DtrDateSelect = ({ employeeDetails }: DtrDateSelectProps): JSX.Element => {
   const { responseUpdateDtr, setDtrModalIsOpen } = useDtrStore((state) => ({
     responseUpdateDtr: state.response.employeeDailyRecord,
     setDtrModalIsOpen: state.setDtrModalIsOpen,
@@ -161,85 +159,79 @@ export const DtrDateSelect = ({ employeeDetails }: DtrDateSelectProps) => {
   };
 
   return (
-    <form className="flex flex-col justify-end gap-2 md:flex-row">
-      <Select
-        className="w-36 md:w-40"
-        data={months}
-        initial={months[Number(monthNow) - 1]}
-        listDef={list}
-        onSelect={(selectedItem) => onChangeMonth(selectedItem.code)}
-      />
-      <Select
-        className="w-36 md:w-28"
-        data={years}
-        initial={years[0]}
-        listDef={yearList}
-        onSelect={(selectedItem) => onChangeYear(selectedItem.year)}
-      />
-      {/* <Button variant={'primary'} size={'sm'} loading={false} onClick={() => searchDtr()} type="button">
+    <>
+      <form className="flex flex-col justify-end gap-2 md:flex-row">
+        <Select
+          className="w-36 md:w-40"
+          data={months}
+          initial={months[Number(monthNow) - 1]}
+          listDef={list}
+          onSelect={(selectedItem) => onChangeMonth(selectedItem.code)}
+        />
+        <Select
+          className="w-36 md:w-28"
+          data={years}
+          initial={years[0]}
+          listDef={yearList}
+          onSelect={(selectedItem) => onChangeYear(selectedItem.year)}
+        />
+        {/* <Button variant={'primary'} size={'sm'} loading={false} onClick={() => searchDtr()} type="button">
         <div className="flex justify-center">
           <HiOutlineSearch className="w-6 h-6 md:w-5 md:h-5" />
         </div>
       </Button> */}
 
-      <Menu as="div" className="relative inline-block text-left">
-        {({ open }) => (
-          <>
-            <div>
-              <Menu.Button
-                onClick={() => {
-                  setDtrMenuIsOpen(!dtrMenuIsOpen);
-                }}
-                className="w-36 md:w-40 inline-flex justify-between items-center gap-x-1.5 rounded bg-white px-3 py-2 text-md  text-gray-900 ring-1  ring-gray-200 ring-inset"
-              >
-                Print DTR
-                <ChevronDownIcon
-                  aria-hidden="true"
-                  className={`w-5 text-gray-900 transition-all ${open ? 'rotate-180' : ''}`}
-                />
-              </Menu.Button>
-            </div>
-
-            <Menu.Items className="absolute right-0 z-10 mt-3 w-56 origin-top-right rounded-md bg-white ring-1 shadow-lg ring-black/5 transition focus:outline-hidden data-closed:scale-95 data-closed:transform data-closed:opacity-0 data-enter:duration-100 data-enter:ease-out data-leave:duration-75 data-leave:ease-in">
-              <div className="py-1">
-                <Menu.Item>
-                  <a
-                    onClick={() => {
-                      handlePdfModal('First Period PDF');
-                    }}
-                    href="#"
-                    className="hover:bg-indigo-200 block px-4 py-2 text-md text-gray-900 data-focus:bg-gray-100 data-focus:text-gray-900 data-focus:outline-hidden"
-                  >
-                    First Period
-                  </a>
-                </Menu.Item>
-                <Menu.Item>
-                  <a
-                    onClick={() => {
-                      handlePdfModal('Second Period PDF');
-                    }}
-                    href="#"
-                    className="hover:bg-indigo-200 block px-4 py-2 text-md text-gray-900 data-focus:bg-gray-100 data-focus:text-gray-900 data-focus:outline-hidden"
-                  >
-                    Second Period
-                  </a>
-                </Menu.Item>
-                <Menu.Item>
-                  <a
-                    onClick={() => {
-                      handlePdfModal('Whole Month PDF');
-                    }}
-                    href="#"
-                    className="hover:bg-indigo-200 block px-4 py-2 text-md text-gray-900 data-focus:bg-gray-100 data-focus:text-gray-900 data-focus:outline-hidden"
-                  >
-                    Whole Month
-                  </a>
-                </Menu.Item>
+        <Menu as="div" className="relative inline-block text-left">
+          {({ open }) => (
+            <>
+              <div>
+                <Menu.Button className="w-36 md:w-40 inline-flex justify-between items-center gap-x-1.5 rounded bg-white px-3 py-2 text-md  text-gray-900 ring-1  ring-gray-200 ring-inset">
+                  Print DTR
+                  <ChevronDownIcon
+                    aria-hidden="true"
+                    className={`w-5 text-gray-900 transition-all ${open ? 'rotate-180' : 'rotate-0'}`}
+                  />
+                </Menu.Button>
               </div>
-            </Menu.Items>
-          </>
-        )}
-      </Menu>
-    </form>
+
+              <Menu.Items className="absolute right-0 z-10 mt-3 w-56 origin-top-right rounded-md bg-white ring-1 shadow-lg ring-black/5 transition focus:outline-hidden data-closed:scale-95 data-closed:transform data-closed:opacity-0 data-enter:duration-100 data-enter:ease-out data-leave:duration-75 data-leave:ease-in">
+                <div className="py-1">
+                  <Menu.Item>
+                    <a
+                      onClick={() => {
+                        handlePdfModal('First Period PDF');
+                      }}
+                      className="hover:bg-indigo-200 block px-4 py-2 text-md text-gray-900 data-focus:bg-gray-100 data-focus:text-gray-900 data-focus:outline-hidden cursor-pointer"
+                    >
+                      First Period
+                    </a>
+                  </Menu.Item>
+                  <Menu.Item>
+                    <a
+                      onClick={() => {
+                        handlePdfModal('Second Period PDF');
+                      }}
+                      className="hover:bg-indigo-200 block px-4 py-2 text-md text-gray-900 data-focus:bg-gray-100 data-focus:text-gray-900 data-focus:outline-hidden cursor-pointer"
+                    >
+                      Second Period
+                    </a>
+                  </Menu.Item>
+                  <Menu.Item>
+                    <a
+                      onClick={() => {
+                        handlePdfModal('Whole Month PDF');
+                      }}
+                      className="hover:bg-indigo-200 block px-4 py-2 text-md text-gray-900 data-focus:bg-gray-100 data-focus:text-gray-900 data-focus:outline-hidden cursor-pointer"
+                    >
+                      Whole Month
+                    </a>
+                  </Menu.Item>
+                </div>
+              </Menu.Items>
+            </>
+          )}
+        </Menu>
+      </form>
+    </>
   );
 };

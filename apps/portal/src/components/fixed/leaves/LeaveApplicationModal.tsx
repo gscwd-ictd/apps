@@ -1515,10 +1515,11 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
                         </div>
 
                         <div className="flex flex-row justify-between items-center w-full">
-                          <div className="flex flex-row justify-between items-center w-full">
-                            <label className="pt-2 pr-2 text-slate-500 text-md font-medium">
+                          <div className="flex flex-col justify-between items-start w-full">
+                            <div className="pt-2 pr-2 text-slate-500 text-md font-medium">
                               Unearned Credits for the Month:
-                            </label>
+                            </div>
+                            <div className="pr-2 text-slate-500 text-xs font-medium">Vacation Leave + Sick Leave</div>
                           </div>
 
                           <div className="flex gap-2 w-full items-center">
