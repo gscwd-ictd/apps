@@ -469,25 +469,25 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
       data.typeOfLeaveDetails.leaveName === LeaveName.FORCED ||
       data.typeOfLeaveDetails.leaveName === LeaveName.SPECIAL_PRIVILEGE
     ) {
-      if (data.inPhilippinesOrAbroad === 'Philippines') {
-        dataToSend = {
-          leaveBenefitsId: data.typeOfLeaveDetails.id,
-          employeeId: data.employeeId,
-          inPhilippines: data.location,
-          leaveApplicationDates: data.leaveApplicationDates,
-          isLateFiling: data.isLateFiling,
-          lateFilingJustification: data.lateFilingJustification,
-        };
-      } else {
-        dataToSend = {
-          leaveBenefitsId: data.typeOfLeaveDetails.id,
-          employeeId: data.employeeId,
-          abroad: data.location,
-          leaveApplicationDates: data.leaveApplicationDates,
-          isLateFiling: data.isLateFiling,
-          lateFilingJustification: data.lateFilingJustification,
-        };
-      }
+      // if (data.inPhilippinesOrAbroad === 'Philippines') {
+      //   dataToSend = {
+      //     leaveBenefitsId: data.typeOfLeaveDetails.id,
+      //     employeeId: data.employeeId,
+      //     inPhilippines: data.location,
+      //     leaveApplicationDates: data.leaveApplicationDates,
+      //     isLateFiling: data.isLateFiling,
+      //     lateFilingJustification: data.lateFilingJustification,
+      //   };
+      // } else {
+      dataToSend = {
+        leaveBenefitsId: data.typeOfLeaveDetails.id,
+        employeeId: data.employeeId,
+        abroad: data.location,
+        leaveApplicationDates: data.leaveApplicationDates,
+        isLateFiling: data.isLateFiling,
+        lateFilingJustification: data.lateFilingJustification,
+      };
+      // }
     } else if (data.typeOfLeaveDetails.leaveName === LeaveName.SICK) {
       if (data.hospital === 'inHospital') {
         dataToSend = {
