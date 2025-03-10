@@ -177,6 +177,19 @@ export const ApprovalAccomplishmentModal = ({ modalState, setModalState, closeMo
     }
   };
 
+  const numberInputOnWheelPreventChange = (e) => {
+    // Prevent the input value change
+    e.target.blur();
+
+    // Prevent the page/container scrolling
+    e.stopPropagation();
+
+    // Refocus immediately, on the next tick (after the current function is done)
+    setTimeout(() => {
+      e.target.focus();
+    }, 0);
+  };
+
   return (
     <>
       {isBeyondActualHours ? (
@@ -401,6 +414,7 @@ export const ApprovalAccomplishmentModal = ({ modalState, setModalState, closeMo
 
                         <input
                           type="number"
+                          onWheel={numberInputOnWheelPreventChange}
                           className="border-slate-300 text-slate-500 h-12 text-md w-full md:w-44 rounded-lg"
                           placeholder="Number of hours"
                           required

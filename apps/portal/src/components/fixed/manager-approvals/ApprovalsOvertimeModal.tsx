@@ -249,6 +249,20 @@ export const OvertimeModal = ({ modalState, setModalState, closeModalAction }: M
     setRemoveEmployeeModalIsOpen(true);
   };
 
+  // Prevent value inside input from changing on mouse scroll
+  const numberInputOnWheelPreventChange = (e) => {
+    // Prevent the input value change
+    e.target.blur();
+
+    // Prevent the page/container scrolling
+    e.stopPropagation();
+
+    // Refocus immediately, on the next tick (after the current function is done)
+    setTimeout(() => {
+      e.target.focus();
+    }, 0);
+  };
+
   const { windowWidth } = UseWindowDimensions();
   return (
     <>
@@ -601,6 +615,7 @@ export const OvertimeModal = ({ modalState, setModalState, closeModalAction }: M
 
                       <input
                         type="number"
+                        onWheel={numberInputOnWheelPreventChange}
                         className="border-slate-300 text-slate-500 h-12 text-md w-full md:w-44 rounded-lg"
                         placeholder="Enter number of hours"
                         required
