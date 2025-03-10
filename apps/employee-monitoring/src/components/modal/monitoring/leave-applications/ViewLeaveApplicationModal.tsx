@@ -756,13 +756,11 @@ const ViewLeaveApplicationModal: FunctionComponent<ViewLeaveApplicationModalProp
                                   rowData.status === LeaveStatus.FOR_SUPERVISOR_APPROVAL ||
                                   rowData.status === LeaveStatus.FOR_HRDM_APPROVAL
                                     ? Number(
-                                        parseFloat(`${leaveLedger[leaveLedger.length - 1]?.sickLeaveBalance}`).toFixed(
-                                          3
-                                        )
+                                        parseFloat(`${leaveLedger[leaveLedger.length - 1]?.sickLeaveBalance}`)
                                       ).toFixed(3)
-                                    : (
-                                        Number(parseFloat(`${selectedLeaveLedger[0]?.sickLeaveBalance}`).toFixed(3)) +
-                                        Number(parseFloat(`${selectedLeaveLedger[0]?.sickLeave}`).toFixed(3)) * -1
+                                    : Number(
+                                        parseFloat(`${selectedLeaveLedger[0]?.sickLeaveBalance}`).toFixed(3) +
+                                          parseFloat(`${selectedLeaveLedger[0]?.sickLeave}`) * -1
                                       ).toFixed(3)}
                                 </td>
 
