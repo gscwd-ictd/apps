@@ -1,81 +1,79 @@
-// /* eslint-disable @nx/enforce-module-boundaries */
+/* eslint-disable @nx/enforce-module-boundaries */
+// import { LeaveName } from 'libs/utils/src/lib/enums/leave.enum';
 // import { LeaveType } from 'libs/utils/src/lib/types/leave-benefits.type';
-// import * as yup from 'yup';
-// const LeaveApplicationSchema = yup.object().shape({
-//   employeeId: yup.string().required(),
-//   dateOfFiling: yup.string().required(),
-//   typeOfLeaveDetails:  yup.object().shape({  id: yup.string().required(), }),
+import * as yup from 'yup';
+const LeaveApplicationSchema = yup.object().shape({
+  //   employeeId: yup.string().required(),
+  //   dateOfFiling: yup.string().required(),
+  typeOfLeaveDetails: yup.object().shape({ id: yup.string().required(), leaveName: yup.string().required() }),
 
-//   leaveApplicationDates: Array<string>;
-//   leaveApplicationDatesRange: LeaveDateRange;
+  lateFilingJustification: yup
+    .string()
+    .label('Justification Letter')
+    .when('isLateFiling', {
+      is: true,
+      then: yup.string().nullable().required(),
+      otherwise: yup.string().nullable().notRequired().typeError('Justification Letter is blank'),
+    }),
 
-//   inPhilippinesOrAbroad?: string; //withinThePhilippines or abroad
-//   location?: string;
-//   hospital?: string; //inHospital or outPatient
-//   illness?: string | null;
-//   specialLeaveWomenIllness?: string | null;
+  //   leaveApplicationDates: yup.array().of(yup.string()),
+  //   leaveApplicationDatesRange: yup.array().of(yup.string()),
 
-//   forMastersCompletion?: boolean;
-//   forBarBoardReview?: boolean;
-//   studyLeaveOther?: string | null; //applicable for Study Other only
+  //   inPhilippinesOrAbroad: yup.string(),
+  //   location: yup.string(),
+  //   hospital: yup.string(),
+  //   illness: yup.string(),
+  //   specialLeaveWomenIllness: yup.string(),
 
-//   other?: string | null; //monetization, terminal leave
+  //   forMastersCompletion: yup.boolean(),
+  //   forBarBoardReview: yup.boolean(),
+  //   studyLeaveOther: yup.boolean(),
 
-//   commutation?: string | null;
-//   forMonetization?: boolean;
-//   totalNumberOfDays: number; //number of days of leave
+  //   other: yup.string(),
 
-//   isLateFiling: boolean;
+  //   commutation: yup.string(),
+  //   forMonetization: yup.boolean(),
+  //   totalNumberOfDays: yup.number(),
 
-//   leaveMonetization?: LeaveMonetizationDetail;
-
-//   lateFilingJustification?: string | null;
-
-//   id: yup.string().notRequired().trim(),
-//   leaveName: yup.string().required().trim().label('Leave name'),
-//   leaveType: yup.string().required().trim().label('Leave type'),
-//   creditDistribution: yup
-//     .string()
-//     .nullable()
-//     .label('Distribution')
-//     .when('leaveType', {
-//       is: LeaveType.SPECIAL,
-//       then: yup.string().notRequired().nullable(true),
-//       otherwise: yup.string().nullable().notRequired(),
-//     }),
-//   accumulatedCredits: yup
-//     .number()
-//     .label('Credits')
-//     .when('leaveType', {
-//       is: LeaveType.SPECIAL,
-//       then: yup.number().notRequired().nullable().label('Credits'),
-//       otherwise: yup
-//         .number()
-//         .required()
-//         .nullable(false)
-//         .typeError('Credits must be a number')
-//         .transform((v, o) => (o === '' ? null : v))
-//         .label('Credits'),
-//     }),
-//   maximumCredits: yup
-//     .number()
-//     .label('Credit ceiling')
-//     .when('leaveType', {
-//       is: LeaveType.SPECIAL,
-//       then: yup
-//         .number()
-//         .positive()
-//         .required()
-//         .nullable(false)
-//         .typeError('Please enter a valid value')
-//         .transform((v, o) => (o === '' ? null : v))
-//         .label('Credit ceiling'),
-//       otherwise: yup
-//         .number()
-//         .notRequired()
-//         .nullable()
-//         .typeError('Please enter a valid value or empty')
-//         .label('Credit ceiling'),
-//     }),
-// });
-// export default LeaveApplicationSchema;
+  //   isLateFiling: yup
+  //     .boolean()
+  //     .required()
+  //     .when('typeOfLeaveDetails.leaveName', {
+  //       is: !LeaveName.TERMINAL && !LeaveName.MONETIZATION,
+  //       then: yup.boolean().required().typeError('Late Filing is not set'),
+  //       otherwise: yup.boolean().notRequired(),
+  //     }),
+  // .when('typeOfLeaveDetails.leaveName', {
+  //   is: LeaveName.MONETIZATION,
+  //   then: yup.boolean().notRequired(),
+  //   otherwise: yup.boolean().required().typeError('Late Filing is not set'),
+  // }),
+  //   leaveMonetization: yup
+  //     .object()
+  //     .shape({
+  //       convertedSl: yup.string().required(),
+  //       convertedVl: yup.string().required(),
+  //       monetizationType: yup.string().required(),
+  //       monetizedAmount: yup.number().required(),
+  //     })
+  //     .when('leaveType', {
+  //       is: LeaveName.MONETIZATION,
+  //       then: yup
+  //         .object()
+  //         .shape({
+  //           convertedSl: yup.string().required(),
+  //           convertedVl: yup.string().required(),
+  //           monetizationType: yup.string().required(),
+  //           monetizedAmount: yup.number().required(),
+  //         }),
+  //       otherwise: yup
+  //         .object()
+  //         .shape({
+  //           convertedSl: yup.string().notRequired(),
+  //           convertedVl: yup.string().notRequired(),
+  //           monetizationType: yup.string().notRequired(),
+  //           monetizedAmount: yup.number().notRequired(),
+  //         }),
+  //     }),
+});
+export default LeaveApplicationSchema;
