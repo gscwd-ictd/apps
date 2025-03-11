@@ -454,7 +454,10 @@ export const ConfirmationApprovalModal = ({
                     ) : (
                       <label className="text-red-600">disapprove</label>
                     )}{' '}
-                    all the pending Accomplishment Reports for this Overtime?
+                    <label className="bg-yellow-300 px-1">
+                      {dataToSubmitApproveAllAccomplishment.actualHrs} hours(s)
+                    </label>{' '}
+                    to all the pending Accomplishment Reports for this Overtime?
                   </label>
                 )}
               </>
@@ -470,6 +473,7 @@ export const ConfirmationApprovalModal = ({
                 ) : (
                   <label className="text-red-600">disapprove</label>
                 )}{' '}
+                <label className="bg-yellow-300 px-1">{dataToSubmitOvertimeAccomplishment.actualHrs} hours(s)</label> to
                 this Accomplishment Report?
               </label>
             ) : null}
