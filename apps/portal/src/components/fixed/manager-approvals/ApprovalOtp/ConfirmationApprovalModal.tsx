@@ -469,12 +469,18 @@ export const ConfirmationApprovalModal = ({
               <label>
                 Are you sure you want to{' '}
                 {dataToSubmitOvertimeAccomplishment.status == OvertimeAccomplishmentStatus.APPROVED ? (
-                  'approve'
+                  <>
+                    approve{' '}
+                    <label className="bg-yellow-300 px-1">
+                      {dataToSubmitOvertimeAccomplishment.actualHrs} hours(s)
+                    </label>{' '}
+                    to this Accomplishment Report?
+                  </>
                 ) : (
-                  <label className="text-red-600">disapprove</label>
-                )}{' '}
-                <label className="bg-yellow-300 px-1">{dataToSubmitOvertimeAccomplishment.actualHrs} hours(s)</label> to
-                this Accomplishment Report?
+                  <>
+                    <label className="text-red-600">disapprove</label> this Accomplishment Report?
+                  </>
+                )}
               </label>
             ) : null}
 
