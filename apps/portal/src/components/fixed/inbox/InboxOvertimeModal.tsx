@@ -92,7 +92,11 @@ export const InboxOvertimeModal = ({ modalState, setModalState, closeModalAction
                         >
                           <img
                             className="rounded-full border border-stone-100 shadow w-14"
-                            src={employee?.avatarUrl ?? ''}
+                            src={
+                              process.env.NEXT_PUBLIC_IMAGE_SERVER_URL + employee?.avatarUrl
+                                ? process.env.NEXT_PUBLIC_IMAGE_SERVER_URL + employee?.avatarUrl
+                                : '/'
+                            }
                             alt={'photo'}
                           ></img>
                           <div className="w-full flex flex-col md:flex-row justify-between items-start md:items-center gap-4 ">
