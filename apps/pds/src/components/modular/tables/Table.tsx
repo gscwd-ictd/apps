@@ -78,16 +78,10 @@ export const TableDimension = ({
       {isText === false ? (
         <>{tableDimension}</>
       ) : isText === true && isPeriod === false ? (
-        <div
-          className={`${size[textSize]} max-w-fit break-words text-gray-900 `}
-        >
-          {label}
-        </div>
+        <div className={`${size[textSize]} max-w-fit break-words text-gray-900 `}>{label}</div>
       ) : isPeriod === true && isText === true ? (
         <>
-          <div
-            className={`${size[textSize]} max-w-fit place-content-center break-words text-gray-900 `}
-          >
+          <div className={`${size[textSize]} max-w-fit place-content-center break-words text-gray-900 `}>
             {periodLabel1}
             {showPeriodIfNull ? (
               periodLabel2 === null ? (
@@ -116,11 +110,7 @@ export const TableDimension = ({
   );
 };
 
-export const TableBody = ({
-  children = 'BODY HERE',
-  className = '',
-  mapKey,
-}: TableBodyProps): JSX.Element => {
+export const TableBody = ({ children = 'BODY HERE', className = '', mapKey }: TableBodyProps): JSX.Element => {
   return <>{children}</>;
 };
 
@@ -136,8 +126,8 @@ export const Table = ({
           <div className="inline-block w-full py-2 align-middle sm:px-6 lg:px-8">
             <div className="overflow-x-auto rounded-sm">
               <table className="min-w-full divide-y divide-slate-50 px-2 ">
-                <thead className="bg-gray-200/70 ">
-                  <tr className="h-[4rem]">{tableHeader}</tr>
+                <thead className="bg-slate-200/70  ">
+                  <tr className="h-[3rem]">{tableHeader}</tr>
                 </thead>
                 {tableBody}
               </table>
