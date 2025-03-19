@@ -9,6 +9,7 @@ import {
   EmployeeLeaveCredits,
   LeaveId,
   LeaveApplicationResponse,
+  UnavailableDates,
 } from '../../../../libs/utils/src/lib/types/leave-application.type';
 import { devtools } from 'zustand/middleware';
 import axios, { AxiosResponse } from 'axios';
@@ -21,7 +22,7 @@ export type LeavesState = {
 
   leaveId: string;
   leaveIndividualDetail: EmployeeLeaveDetails;
-  unavailableDates: Array<CalendarDate>;
+  unavailableDates: UnavailableDates;
   response: {
     postResponseApply: LeaveApplicationResponse;
     patchResponseCancel: any;
@@ -111,7 +112,7 @@ export const useLeaveStore = create<LeavesState>()(
 
     leaveId: '',
     leaveIndividualDetail: {} as EmployeeLeaveDetails,
-    unavailableDates: [] as Array<CalendarDate>,
+    unavailableDates: {} as UnavailableDates,
 
     response: {
       postResponseApply: {} as LeaveApplicationResponse,
@@ -397,10 +398,7 @@ export const useLeaveStore = create<LeavesState>()(
     getUnavailableDates: (loading: boolean) => {
       set((state) => ({
         ...state,
-        unavailableDates: {
-          ...state.unavailableDates,
-          unavailableDates: [],
-        },
+        unavailableDates: {} as UnavailableDates,
         loading: {
           ...state.loading,
           loadingUnavailableDates: loading,
@@ -411,13 +409,10 @@ export const useLeaveStore = create<LeavesState>()(
         },
       }));
     },
-    getUnavailableSuccess: (loading: boolean, response: Array<CalendarDate>) => {
+    getUnavailableSuccess: (loading: boolean, response: UnavailableDates) => {
       set((state) => ({
         ...state,
-        unavailableDates: {
-          ...state.unavailableDates,
-          unavailableDates: response,
-        },
+        unavailableDates: response,
         loading: {
           ...state.loading,
           loadingUnavailableDates: loading,

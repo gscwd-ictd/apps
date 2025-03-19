@@ -4,11 +4,7 @@ import { Button } from '../../../modular/buttons/Button';
 import { Card } from '../../../modular/cards/Card';
 import { InputReactForm } from '../../../modular/inputs/InputReactForm';
 import { Modal } from '../../../modular/modals/Modal';
-import {
-  Table,
-  TableDimension,
-  TableHeader,
-} from '../../../modular/tables/Table';
+import { Table, TableDimension, TableHeader } from '../../../modular/tables/Table';
 import { NoDataVisual } from '../../visuals/NoDataVisual';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
@@ -41,12 +37,8 @@ export const ChildrenInfo = (): JSX.Element => {
   const [removedChild, setRemovedChild] = useState<Child>({} as Child);
   const [childForEdit, setChildForEdit] = useState<Child>({} as Child);
   const [childIndexForEdit, setChildIndexForEdit] = useState<number>(-1);
-  const allowDeleteChildren = useUpdatePdsStore(
-    (state) => state.allowDeleteChildren
-  );
-  const allowEditChildren = useUpdatePdsStore(
-    (state) => state.allowEditChildren
-  );
+  const allowDeleteChildren = useUpdatePdsStore((state) => state.allowDeleteChildren);
+  const allowEditChildren = useUpdatePdsStore((state) => state.allowEditChildren);
   const setChildren = usePdsStore((state) => state.setChildren);
 
   // yup validation schema
@@ -90,11 +82,7 @@ export const ChildrenInfo = (): JSX.Element => {
       newChildren.push(child);
       // sort
       const sortedNewChildren = [...newChildren].sort((firstItem, secondItem) =>
-        firstItem.birthDate > secondItem.birthDate
-          ? 1
-          : secondItem.birthDate > firstItem.birthDate
-          ? -1
-          : 0
+        firstItem.birthDate > secondItem.birthDate ? 1 : secondItem.birthDate > firstItem.birthDate ? -1 : 0
       );
       setChildren(sortedNewChildren);
       reset();
@@ -105,28 +93,21 @@ export const ChildrenInfo = (): JSX.Element => {
     else if (action === 'update') {
       e.preventDefault();
       const updatedChildren = [...children];
-      const newUpdatedChildren = updatedChildren.map(
-        (previousChild: Child, childIdx: number) => {
-          if (childIdx === childIndexForEdit) {
-            return {
-              ...previousChild,
-              _id: child._id,
-              birthDate: child.birthDate,
-              childName: child.childName,
-              employeeId: child.employeeId,
-            };
-          }
-          return previousChild;
+      const newUpdatedChildren = updatedChildren.map((previousChild: Child, childIdx: number) => {
+        if (childIdx === childIndexForEdit) {
+          return {
+            ...previousChild,
+            _id: child._id,
+            birthDate: child.birthDate,
+            childName: child.childName,
+            employeeId: child.employeeId,
+          };
         }
-      );
+        return previousChild;
+      });
 
-      const sortedUpdatedChildren = [...newUpdatedChildren].sort(
-        (firstItem, secondItem) =>
-          firstItem.birthDate > secondItem.birthDate
-            ? -1
-            : secondItem.birthDate > firstItem.birthDate
-            ? 1
-            : 0
+      const sortedUpdatedChildren = [...newUpdatedChildren].sort((firstItem, secondItem) =>
+        firstItem.birthDate > secondItem.birthDate ? -1 : secondItem.birthDate > firstItem.birthDate ? 1 : 0
       );
       setChildren(sortedUpdatedChildren);
       setChildForEdit({} as Child);
@@ -222,24 +203,17 @@ export const ChildrenInfo = (): JSX.Element => {
             title={`Child's Information`}
             subtitle={
               <>
-                Please fill-out all required fields ({' '}
-                <span className="text-red-700">*</span> )
+                Please fill-out all required fields ( <span className="text-red-700">*</span> )
               </>
             }
             isOpen={addChildIsOpen}
             setIsOpen={setAddChildIsOpen}
             withCancelBtn
-            modalSize="xl"
+            modalSize="lg"
             isStatic={true}
             action={onSubmit}
             onClose={closeModal}
-            actionLabel={
-              action === 'create'
-                ? 'Submit'
-                : action === 'update'
-                ? 'Update'
-                : ''
-            }
+            actionLabel={action === 'create' ? 'Submit' : action === 'update' ? 'Update' : ''}
             cancelLabel="Cancel"
             verticalCenter
             modalChildren={
@@ -260,11 +234,7 @@ export const ChildrenInfo = (): JSX.Element => {
                       controller={{
                         ...register('childName', { required: true }),
                       }}
-                      isError={
-                        errors.childName && errors.childName.message
-                          ? true
-                          : false
-                      }
+                      isError={errors.childName && errors.childName.message ? true : false}
                       errorMessage={errors.childName?.message}
                     />
                   </div>
@@ -305,10 +275,7 @@ export const ChildrenInfo = (): JSX.Element => {
                     No
                   </Button>
                 </div>
-                <Button
-                  variant="danger"
-                  onClick={() => handleRemoveChild(childToRemove)}
-                >
+                <Button variant="danger" onClick={() => handleRemoveChild(childToRemove)}>
                   Yes
                 </Button>
               </div>
@@ -322,21 +289,9 @@ export const ChildrenInfo = (): JSX.Element => {
               <Table
                 tableHeader={
                   <>
-                    <TableHeader
-                      label="Full Name"
-                      headerWidth="w-[45%]"
-                      className="select-none pl-14"
-                    />
-                    <TableHeader
-                      label="Birthday"
-                      headerWidth="w-[40%]"
-                      alignment="left"
-                    />
-                    <TableHeader
-                      label="Actions"
-                      headerWidth="w-[15%]"
-                      alignment="center"
-                    />
+                    <TableHeader label="Full Name" headerWidth="w-[45%]" className="select-none pl-14" />
+                    <TableHeader label="Birthday" headerWidth="w-[40%]" alignment="left" />
+                    <TableHeader label="Actions" headerWidth="w-[15%]" alignment="center" />
                   </>
                 }
                 tableBody={
@@ -363,11 +318,7 @@ export const ChildrenInfo = (): JSX.Element => {
                             }
                           />
 
-                          <TableDimension
-                            isText={true}
-                            label={birthDate}
-                            className="text-left select-none "
-                          />
+                          <TableDimension isText={true} label={birthDate} className="text-left select-none " />
                           <TableDimension
                             isText={false}
                             className="px-2 text-center select-none"
@@ -379,9 +330,7 @@ export const ChildrenInfo = (): JSX.Element => {
                                       {allowEditChildren ? (
                                         <div className="w-8">
                                           <EditButton
-                                            action={() =>
-                                              onEdit(child, childIdx)
-                                            }
+                                            action={() => onEdit(child, childIdx)}
                                             disabled={
                                               hasPds && childrenOnEdit
                                                 ? false
@@ -395,12 +344,7 @@ export const ChildrenInfo = (): JSX.Element => {
                                       {allowDeleteChildren ? (
                                         <div className="w-8">
                                           <DeleteButton
-                                            action={() =>
-                                              openRemoveActionModal(
-                                                childIdx,
-                                                child
-                                              )
-                                            }
+                                            action={() => openRemoveActionModal(childIdx, child)}
                                             muted={
                                               hasPds && childrenOnEdit
                                                 ? false
@@ -412,11 +356,8 @@ export const ChildrenInfo = (): JSX.Element => {
                                         </div>
                                       ) : null}
 
-                                      {!allowEditChildren &&
-                                      !allowDeleteChildren ? (
-                                        <div className="flex justify-center w-full">
-                                          -
-                                        </div>
+                                      {!allowEditChildren && !allowDeleteChildren ? (
+                                        <div className="flex justify-center w-full">-</div>
                                       ) : null}
                                     </div>
                                   </>
@@ -424,20 +365,11 @@ export const ChildrenInfo = (): JSX.Element => {
                                   <>
                                     <div className="flex justify-center gap-4 ">
                                       <div className="w-8">
-                                        <EditButton
-                                          action={() => onEdit(child, childIdx)}
-                                        />
+                                        <EditButton action={() => onEdit(child, childIdx)} />
                                       </div>
 
                                       <div className="w-8">
-                                        <DeleteButton
-                                          action={() =>
-                                            openRemoveActionModal(
-                                              childIdx,
-                                              child
-                                            )
-                                          }
-                                        />
+                                        <DeleteButton action={() => openRemoveActionModal(childIdx, child)} />
                                       </div>
                                     </div>
                                   </>

@@ -13,7 +13,7 @@ import {
   parse,
   startOfToday,
 } from 'date-fns';
-import { Fragment, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { HiOutlineChevronLeft, HiOutlineChevronRight } from 'react-icons/hi';
 import { useEmployeeStore } from '../../../store/employee.store';
 import { fetchWithToken } from '../../../utils/hoc/fetcher';
@@ -21,7 +21,6 @@ import { isEmpty } from 'lodash';
 import dayjs from 'dayjs';
 import { LeaveName } from 'libs/utils/src/lib/enums/leave.enum';
 import axios from 'axios';
-import { EmployeeDtrWithSchedule } from 'libs/utils/src/lib/types/dtr.type';
 import { DateFormatter } from 'libs/utils/src/lib/functions/DateFormatter';
 import { LoadingSpinner, ToastNotification } from '@gscwd-apps/oneui';
 
@@ -43,12 +42,13 @@ export default function Calendar({
   isLateFiling = false,
 }: CalendarProps) {
   const [isSearchingForLastDay, setIsSearchingForLastDay] = useState<boolean>(false);
-  const today = startOfToday();
-  const [selectedDay, setSelectedDay] = useState(today);
-  const [currentMonth, setCurrentMonth] = useState(format(today, 'MMM-yyyy'));
+  const tempToday = startOfToday(); //date now based on machine time
+  const [today, setToday] = useState(startOfToday()); //will be replaced by server time once fetch is complete
+  const [selectedDay, setSelectedDay] = useState(tempToday);
+  const [currentMonth, setCurrentMonth] = useState(format(tempToday, 'MMM-yyyy'));
   const firstDayCurrentMonth = parse(currentMonth, 'MMM-yyyy', new Date());
   const [selectedDates, setSelectedDates] = useState<string[]>([]);
-  const [lastDateOfDuty, setLastDateOfDuty] = useState(today);
+  const [lastDateOfDuty, setLastDateOfDuty] = useState();
   const [errorAllowableSpl, setErrorAllowableSpl] = useState<string>(null);
   const [futureLeaveCount, setFutureLeaveCount] = useState<number>(0);
   // set state for employee store
@@ -112,11 +112,14 @@ export default function Calendar({
       getUnavailableSuccess(swrIsLoading, swrUnavailableDates);
 
       //get count of future pending/approved leaves from today
-      const futureLeaves = swrUnavailableDates?.filter(
+      const futureLeaves = swrUnavailableDates?.unavailableDates?.filter(
         (unavailableDate) =>
-          unavailableDate.type === 'Leave' && unavailableDate.date >= dayjs(today).format('YYYY-MM-DD')
+          unavailableDate.type === 'Leave' &&
+          unavailableDate.date >= dayjs(swrUnavailableDates?.dateTimeNow).format('YYYY-MM-DD')
       ).length;
       setFutureLeaveCount(futureLeaves);
+      setToday(swrUnavailableDates?.dateTimeNow);
+      setCurrentMonth(dayjs(swrUnavailableDates?.dateTimeNow).format('MMM-YYYY'));
     }
 
     if (!isEmpty(swrError)) {
@@ -209,7 +212,7 @@ export default function Calendar({
       } else {
         //adds date to array
         //if selected date is not found in unavailable dates array
-        if (!swrUnavailableDates?.some((item) => item.date === specifiedDate)) {
+        if (!swrUnavailableDates?.unavailableDates?.some((item) => item.date === specifiedDate)) {
           //for all leaves with credits with future dates from today and has future approved/pending leaves - allow future dates till infinity
           if (
             (leaveName === LeaveName.VACATION ||
@@ -310,7 +313,7 @@ export default function Calendar({
   }
 
   function getHolidayCount() {
-    const holiday = swrUnavailableDates?.filter(
+    const holiday = swrUnavailableDates?.unavailableDates?.filter(
       (unavailableDate) =>
         unavailableDate.type === 'Holiday' &&
         unavailableDate.date >= leaveDateFrom &&
@@ -320,7 +323,7 @@ export default function Calendar({
   }
 
   function getOverlappingLeaveCount() {
-    const leave = swrUnavailableDates?.filter(
+    const leave = swrUnavailableDates?.unavailableDates?.filter(
       (unavailableDate) =>
         unavailableDate.type === 'Leave' && unavailableDate.date >= leaveDateFrom && unavailableDate.date <= leaveDateTo
     ).length;
@@ -361,7 +364,7 @@ export default function Calendar({
   //search for last date of duty from today
   async function isLastDutyDate(date: Date) {
     let isDateFound = false;
-    let dateToSearch = add(date, { days: -1 });
+    let dateToSearch = dayjs(date).subtract(1, 'day');
     while (!isDateFound && applyLeaveModalIsOpen) {
       setIsSearchingForLastDay(true);
       try {
@@ -377,7 +380,7 @@ export default function Calendar({
             setIsSearchingForLastDay(false);
           } else {
             isDateFound = false;
-            dateToSearch = add(dateToSearch, { days: -1 });
+            dateToSearch = dayjs(dateToSearch).subtract(1, 'day');
             setIsSearchingForLastDay(false);
           }
         } else {
@@ -400,11 +403,12 @@ export default function Calendar({
       (leaveName === LeaveName.SPECIAL_PRIVILEGE ||
         leaveName === LeaveName.SICK ||
         leaveName === LeaveName.SOLO_PARENT) &&
-      applyLeaveModalIsOpen
+      applyLeaveModalIsOpen &&
+      swrUnavailableDates
     ) {
-      isLastDutyDate(today);
+      isLastDutyDate(swrUnavailableDates?.dateTimeNow);
     }
-  }, [leaveName, applyLeaveModalIsOpen]);
+  }, [leaveName, applyLeaveModalIsOpen, swrUnavailableDates]);
 
   return (
     <>
@@ -456,7 +460,7 @@ export default function Calendar({
         </div>
       ) : (
         <div className="relative">
-          {isSearchingForLastDay ? (
+          {isSearchingForLastDay || !swrUnavailableDates ? (
             <div className="flex-col justify-center items-center w-full">
               <LoadingSpinner size={'lg'} />
               <div className="pt-3 text-center text-xs font-medium text-slate-500 w-full">
@@ -465,6 +469,9 @@ export default function Calendar({
             </div>
           ) : (
             <div className="">
+              <div className="flex justify-center items-center text-red-600 mb-3">
+                {`Server Date: ${dayjs(today).format('MM-DD-YYYY')}`}
+              </div>
               <div className="md:grid md:grid-cols-1 md:divide-x md:divide-gray-200 ">
                 <div className="w-full">
                   <div className="flex items-center">
@@ -579,18 +586,18 @@ export default function Calendar({
                                   dayjs(`${dates}`).diff(`${today}`, 'day') <= 10
                               ).length <= 0 &&
                               'text-slate-300',
-                            isToday(day) && 'text-red-500',
-                            swrUnavailableDates &&
-                              swrUnavailableDates.some(
+                            swrUnavailableDates?.dateTimeNow === format(day, 'yyyy-MM-dd') && 'text-red-500',
+                            swrUnavailableDates?.unavailableDates &&
+                              swrUnavailableDates?.unavailableDates?.some(
                                 (item) => item.date === format(day, 'yyyy-MM-dd') && item.type === 'Holiday'
                               ) &&
                               'text-red-600 bg-red-300 rounded-full',
-                            swrUnavailableDates &&
-                              swrUnavailableDates.some(
+                            swrUnavailableDates?.unavailableDates &&
+                              swrUnavailableDates?.unavailableDates?.some(
                                 (item) => item.date === format(day, 'yyyy-MM-dd') && item.type === 'Leave'
                               ) &&
-                              swrUnavailableDates &&
-                              !swrUnavailableDates.some(
+                              swrUnavailableDates?.unavailableDates &&
+                              !swrUnavailableDates?.unavailableDates?.some(
                                 (item) => item.date === format(day, 'yyyy-MM-dd') && item.type === 'Holiday'
                               ) &&
                               'text-green-600 bg-green-200 rounded-full',

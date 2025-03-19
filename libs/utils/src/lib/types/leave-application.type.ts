@@ -183,6 +183,11 @@ export type CalendarDate = {
   type: string;
 };
 
+export type UnavailableDates = {
+  unavailableDates: Array<CalendarDate>;
+  dateTimeNow: string;
+};
+
 // Individual leave id
 export type LeaveId = Pick<EmployeeLeave, 'id'>;
 
