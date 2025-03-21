@@ -128,9 +128,7 @@ const ViewEmployeeOvertimeAccomplishmentModal: FunctionComponent<OvertimeAccompl
                     </div>
                   </section>
                 </div>
-
                 <hr />
-
                 <div className="grid px-5 sm:grid-rows-2 sm:grid-cols-1 md:grid-rows-2 md:grid-cols-1 lg:grid-rows-1 lg:grid-cols-2 sm:gap-2 md:gap:2 lg:gap-0">
                   <LabelValue
                     label="Planned Date"
@@ -150,7 +148,6 @@ const ViewEmployeeOvertimeAccomplishmentModal: FunctionComponent<OvertimeAccompl
                     }
                   />
                 </div>
-
                 <div className="grid px-5 sm:grid-rows-2 sm:grid-cols-1 md:grid-rows-2 md:grid-cols-1 lg:grid-rows-1 lg:grid-cols-2 sm:gap-2 md:gap:2 lg:gap-0">
                   <LabelValue
                     label="Estimated Hours"
@@ -159,9 +156,25 @@ const ViewEmployeeOvertimeAccomplishmentModal: FunctionComponent<OvertimeAccompl
                     value={OvertimeAccomplishment.estimatedHours ? OvertimeAccomplishment.estimatedHours : '--'}
                   />
                 </div>
+                {OvertimeAccomplishment.status === OvertimeAccomplishmentStatus.APPROVED ? (
+                  <div className="grid px-5 sm:grid-rows-2 sm:grid-cols-1 md:grid-rows-2 md:grid-cols-1 lg:grid-rows-1 lg:grid-cols-2 sm:gap-2 md:gap:2 lg:gap-0">
+                    <LabelValue
+                      label="Approved By"
+                      direction="top-to-bottom"
+                      textSize="md"
+                      value={OvertimeAccomplishment.approvedBy ? OvertimeAccomplishment.approvedBy : '--'}
+                    />
+
+                    <LabelValue
+                      label="Approved Hours"
+                      direction="top-to-bottom"
+                      textSize="md"
+                      value={OvertimeAccomplishment.actualHrs ? OvertimeAccomplishment.actualHrs : '--'}
+                    />
+                  </div>
+                ) : null}
 
                 <hr />
-
                 <div className="grid px-5 sm:grid-rows-2 sm:grid-cols-1 md:grid-rows-2 md:grid-cols-1 lg:grid-rows-1 lg:grid-cols-2 sm:gap-2 md:gap:2 lg:gap-0">
                   <div className="grid  grid-cols-1 gap-0">
                     <label className="font-normal text-gray-500">IVMS Entries:</label>
@@ -179,7 +192,7 @@ const ViewEmployeeOvertimeAccomplishmentModal: FunctionComponent<OvertimeAccompl
                     )}
                   </div>
 
-                  <div className="grid px-5 grid-rows-2 grid-cols-1 gap-2">
+                  <div className="grid px-5 grid-rows-1 grid-cols-1 gap-2">
                     <LabelValue
                       label="Encoded Time In"
                       direction="top-to-bottom"
@@ -201,11 +214,18 @@ const ViewEmployeeOvertimeAccomplishmentModal: FunctionComponent<OvertimeAccompl
                           : '--'
                       }
                     />
+
+                    <LabelValue
+                      label="Encoded Time Out"
+                      direction="top-to-bottom"
+                      textSize="md"
+                      value={
+                        OvertimeAccomplishment.computedEncodedHours ? OvertimeAccomplishment.computedEncodedHours : '--'
+                      }
+                    />
                   </div>
                 </div>
-
                 <hr />
-
                 {/* If there is accomplishment filled up */}
                 {OvertimeAccomplishment?.accomplishments ? (
                   <div className="grid px-5 grid-cols-1">
@@ -221,7 +241,6 @@ const ViewEmployeeOvertimeAccomplishmentModal: FunctionComponent<OvertimeAccompl
                     />
                   </div>
                 ) : null}
-
                 {/* If status is declined */}
                 {OvertimeAccomplishment.status === OvertimeAccomplishmentStatus.DISAPPROVED ? (
                   <div className="grid px-5 sm:grid-rows-2 sm:grid-cols-1 md:grid-rows-2 md:grid-cols-1 lg:grid-rows-1 lg:grid-cols-2 sm:gap-2 md:gap:2 lg:gap-0">
@@ -233,7 +252,6 @@ const ViewEmployeeOvertimeAccomplishmentModal: FunctionComponent<OvertimeAccompl
                     />
                   </div>
                 ) : null}
-
                 <hr />
               </div>
             </div>
