@@ -1,17 +1,17 @@
 /* eslint-disable @nx/enforce-module-boundaries */
-import { AlertNotification, LoadingSpinner, Modal, ToastNotification } from '@gscwd-apps/oneui';
+import { Modal, ToastNotification } from '@gscwd-apps/oneui';
 import useSWR from 'swr';
 import Image from 'next/image';
-import React, { FunctionComponent, useEffect } from 'react';
+import React, { FunctionComponent, useEffect, useState } from 'react';
 import { LabelValue } from '../../../labels/LabelValue';
 import { EmployeeOvertimeDetails } from 'libs/utils/src/lib/types/employee.type';
 import fetcherEMS from 'apps/employee-monitoring/src/utils/fetcher/FetcherEMS';
 import { isEmpty } from 'lodash';
 import { useOvertimeStore } from 'apps/employee-monitoring/src/store/overtime.store';
-import { ScheduleBases } from 'libs/utils/src/lib/enums/schedule.enum';
 import UseRenderOvertimeAccomplishmentStatus from 'apps/employee-monitoring/src/utils/functions/RenderOvertimeAccomplishmentStatus';
 import { DateTimeFormatter } from 'libs/utils/src/lib/functions/DateTimeFormatter';
 import { OvertimeAccomplishmentStatus } from 'libs/utils/src/lib/enums/overtime.enum';
+import UseFormatHour from 'apps/employee-monitoring/src/utils/functions/FormatHour';
 
 type EmployeeRowDetails = {
   overtimeId: string;
@@ -31,6 +31,9 @@ const ViewEmployeeOvertimeAccomplishmentModal: FunctionComponent<OvertimeAccompl
   closeModalAction,
   setModalState,
 }) => {
+  // expand leave dates list
+  const [moreIvmsLogs, setMoreIvmsLogs] = useState<boolean>(false);
+
   // Zustand initialization
   const {
     OvertimeAccomplishment,
@@ -72,6 +75,13 @@ const ViewEmployeeOvertimeAccomplishmentModal: FunctionComponent<OvertimeAccompl
       SetErrorOvertimeAccomplishment(overtimeAccomplishmentError.message);
     }
   }, [overtimeAccomplishment, overtimeAccomplishmentError]);
+
+  // Reset more logs button
+  useEffect(() => {
+    if (!modalState) {
+      setMoreIvmsLogs(false);
+    }
+  }, [modalState]);
 
   return (
     <>
@@ -128,9 +138,7 @@ const ViewEmployeeOvertimeAccomplishmentModal: FunctionComponent<OvertimeAccompl
                     </div>
                   </section>
                 </div>
-
                 <hr />
-
                 <div className="grid px-5 sm:grid-rows-2 sm:grid-cols-1 md:grid-rows-2 md:grid-cols-1 lg:grid-rows-1 lg:grid-cols-2 sm:gap-2 md:gap:2 lg:gap-0">
                   <LabelValue
                     label="Planned Date"
@@ -150,36 +158,76 @@ const ViewEmployeeOvertimeAccomplishmentModal: FunctionComponent<OvertimeAccompl
                     }
                   />
                 </div>
-
                 <div className="grid px-5 sm:grid-rows-2 sm:grid-cols-1 md:grid-rows-2 md:grid-cols-1 lg:grid-rows-1 lg:grid-cols-2 sm:gap-2 md:gap:2 lg:gap-0">
                   <LabelValue
                     label="Estimated Hours"
                     direction="top-to-bottom"
                     textSize="md"
-                    value={OvertimeAccomplishment.estimatedHours ? OvertimeAccomplishment.estimatedHours : '--'}
+                    value={
+                      OvertimeAccomplishment.estimatedHours
+                        ? UseFormatHour(OvertimeAccomplishment.estimatedHours)
+                        : '--'
+                    }
                   />
                 </div>
+                {OvertimeAccomplishment.status === OvertimeAccomplishmentStatus.APPROVED ? (
+                  <div className="grid px-5 sm:grid-rows-2 sm:grid-cols-1 md:grid-rows-2 md:grid-cols-1 lg:grid-rows-1 lg:grid-cols-2 sm:gap-2 md:gap:2 lg:gap-0">
+                    <LabelValue
+                      label="Approved By"
+                      direction="top-to-bottom"
+                      textSize="md"
+                      value={OvertimeAccomplishment.approvedBy ? OvertimeAccomplishment.approvedBy : '--'}
+                    />
+
+                    <LabelValue
+                      label="Approved Hours"
+                      direction="top-to-bottom"
+                      textSize="md"
+                      value={OvertimeAccomplishment.actualHrs ? UseFormatHour(OvertimeAccomplishment.actualHrs) : '--'}
+                    />
+                  </div>
+                ) : null}
 
                 <hr />
-
-                <div className="grid px-5 sm:grid-rows-2 sm:grid-cols-1 md:grid-rows-2 md:grid-cols-1 lg:grid-rows-1 lg:grid-cols-2 sm:gap-2 md:gap:2 lg:gap-0">
-                  <div className="grid  grid-cols-1 gap-0">
+                <div className="grid px-5 sm:grid-cols-2 sm:gap-2 md:gap:2 lg:gap-0">
+                  <div className="grid   gap-0">
                     <label className="font-normal text-gray-500">IVMS Entries:</label>
 
                     {OvertimeAccomplishment && OvertimeAccomplishment.entriesForTheDay?.length > 0 ? (
-                      OvertimeAccomplishment.entriesForTheDay?.map((logs: string, idx: number) => {
-                        return (
-                          <div key={idx} className="pl-3">
-                            <label className="text-sm font-medium ">{logs}</label>
+                      <>
+                        {OvertimeAccomplishment.entriesForTheDay?.map((logs: string, idx: number) => {
+                          if (moreIvmsLogs) {
+                            return (
+                              <div key={idx} className="pl-3">
+                                <label className="text-sm font-medium ">{logs}</label>
+                              </div>
+                            );
+                          } else {
+                            if (idx <= 1)
+                              return (
+                                <div key={idx} className="pl-3">
+                                  <label className="text-sm font-medium ">{logs}</label>
+                                </div>
+                              );
+                          }
+                        })}
+                        {OvertimeAccomplishment.entriesForTheDay?.length > 2 ? (
+                          <div className="pl-3">
+                            <label
+                              className="text-sm font-medium cursor-pointer text-indigo-500 hover:text-indigo-600"
+                              onClick={(e) => setMoreIvmsLogs(!moreIvmsLogs)}
+                            >
+                              {moreIvmsLogs ? 'Less...' : 'More...'}
+                            </label>
                           </div>
-                        );
-                      })
+                        ) : null}
+                      </>
                     ) : (
                       <label className="text-md font-medium pl-3">None</label>
                     )}
                   </div>
 
-                  <div className="grid px-5 grid-rows-2 grid-cols-1 gap-2">
+                  <div className="grid px-5 gap-2">
                     <LabelValue
                       label="Encoded Time In"
                       direction="top-to-bottom"
@@ -201,11 +249,20 @@ const ViewEmployeeOvertimeAccomplishmentModal: FunctionComponent<OvertimeAccompl
                           : '--'
                       }
                     />
+
+                    <LabelValue
+                      label="Actual Hours"
+                      direction="top-to-bottom"
+                      textSize="md"
+                      value={
+                        OvertimeAccomplishment.computedEncodedHours
+                          ? UseFormatHour(OvertimeAccomplishment.computedEncodedHours)
+                          : '--'
+                      }
+                    />
                   </div>
                 </div>
-
                 <hr />
-
                 {/* If there is accomplishment filled up */}
                 {OvertimeAccomplishment?.accomplishments ? (
                   <div className="grid px-5 grid-cols-1">
@@ -221,7 +278,6 @@ const ViewEmployeeOvertimeAccomplishmentModal: FunctionComponent<OvertimeAccompl
                     />
                   </div>
                 ) : null}
-
                 {/* If status is declined */}
                 {OvertimeAccomplishment.status === OvertimeAccomplishmentStatus.DISAPPROVED ? (
                   <div className="grid px-5 sm:grid-rows-2 sm:grid-cols-1 md:grid-rows-2 md:grid-cols-1 lg:grid-rows-1 lg:grid-cols-2 sm:gap-2 md:gap:2 lg:gap-0">
@@ -233,7 +289,6 @@ const ViewEmployeeOvertimeAccomplishmentModal: FunctionComponent<OvertimeAccompl
                     />
                   </div>
                 ) : null}
-
                 <hr />
               </div>
             </div>
