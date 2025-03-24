@@ -71,7 +71,13 @@ export type EmployeeAsOptionWithRestDays = EmployeeAsOptionWithPosition & {
 };
 
 export type EmployeeOvertimeDetails = Pick<EmploymentDetails, 'employeeId' | 'companyId'> &
-  Pick<PersonalDetails, 'fullName'> & { scheduleBase: ScheduleBases | null; avatarUrl: string; assignment: string };
+  Pick<PersonalDetails, 'fullName'> & {
+    scheduleBase: ScheduleBases | null;
+    avatarUrl: string;
+    assignment: string;
+    accomplishmentStatus: string;
+    isAccomplishmentSubmitted: string;
+  };
 
 export type EmployeeOption = {
   label: string;

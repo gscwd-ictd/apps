@@ -195,7 +195,7 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
   const [finalVacationLeaveBalance, setFinalVacationLeaveBalance] = useState<number>(0);
   const [finalForcedLeaveBalance, setFinalForcedLeaveBalance] = useState<number>(0);
   const [finalSickLeaveBalance, setFinalSickLeaveBalance] = useState<number>(0);
-  const [finalSpecialPrivilegekBalance, setFinalSpecialPrivilegekBalance] = useState<number>(0);
+  const [finalSpecialPrivilegeBalance, setFinalSpecialPrivilegeBalance] = useState<number>(0);
 
   //ROUNDED OFF LEAVE CREDITS
   const [roundedFinalVacationLeaveBalance, setRoundedFinalVacationLeaveBalance] = useState<number>(0);
@@ -650,10 +650,12 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
       } else if (roundedFinalSickLeaveBalance < 0 && watch('typeOfLeaveDetails.leaveName') === LeaveName.SICK) {
         handlePostError('Insufficient Sick Leave Credits.');
       } else if (
-        finalSpecialPrivilegekBalance < 0 &&
+        finalSpecialPrivilegeBalance < 0 &&
         watch('typeOfLeaveDetails.leaveName') === LeaveName.SPECIAL_PRIVILEGE
       ) {
         handlePostError('Insufficient Special Privilege Leave Credits.');
+      } else if (leaveDates.length > 3 && watch('typeOfLeaveDetails.leaveName') === LeaveName.SPECIAL_PRIVILEGE) {
+        handlePostError('Special Privilege Leave can only be applied for a maximum of 3 days.');
       } else if (
         overlappingLeaveCount > 0 &&
         (watch('typeOfLeaveDetails.leaveName') === LeaveName.MATERNITY ||
@@ -766,7 +768,7 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
     setFinalVacationLeaveBalance(vacationLeaveBalance - leaveDates.length);
     setFinalSickLeaveBalance(Number(sickLeaveBalance - leaveDates.length));
     setFinalForcedLeaveBalance(forcedLeaveBalance - leaveDates.length);
-    setFinalSpecialPrivilegekBalance(specialPrivilegeLeaveBalance - leaveDates.length);
+    setFinalSpecialPrivilegeBalance(specialPrivilegeLeaveBalance - leaveDates.length);
 
     //update rounded off leave credits also
     setRoundedFinalVacationLeaveBalance(Math.round(vacationLeaveBalance) - leaveDates.length);
@@ -1104,11 +1106,21 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
                   ) : null}
 
                   {/* Special Privilege Leave Balance Notifications */}
-                  {finalSpecialPrivilegekBalance < 0 &&
+                  {finalSpecialPrivilegeBalance < 0 &&
                   watch('typeOfLeaveDetails.leaveName') === LeaveName.SPECIAL_PRIVILEGE ? (
                     <AlertNotification
                       alertType="warning"
                       notifMessage="Insufficient Special Privilege Leave Balance."
+                      dismissible={false}
+                      className="mb-1"
+                    />
+                  ) : null}
+
+                  {/* Special Privilege Leave Balance Notifications */}
+                  {leaveDates.length > 3 && watch('typeOfLeaveDetails.leaveName') === LeaveName.SPECIAL_PRIVILEGE ? (
+                    <AlertNotification
+                      alertType="warning"
+                      notifMessage="Special Privilege Leave can only be applied for a maximum of 3 days."
                       dismissible={false}
                       className="mb-1"
                     />
@@ -1987,14 +1999,14 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
                           watch('typeOfLeaveDetails.leaveName') !== LeaveName.TERMINAL ? (
                             <td
                               className={`${
-                                Number(finalSpecialPrivilegekBalance) < 0 &&
+                                Number(finalSpecialPrivilegeBalance) < 0 &&
                                 watch('typeOfLeaveDetails.leaveName') === LeaveName.SPECIAL_PRIVILEGE
                                   ? 'bg-red-300'
                                   : ''
                               } border border-slate-200 p-1 text-center text-sm`}
                             >
                               {watch('typeOfLeaveDetails.leaveName') === LeaveName.SPECIAL_PRIVILEGE
-                                ? Number(finalSpecialPrivilegekBalance).toFixed(3)
+                                ? Number(finalSpecialPrivilegeBalance).toFixed(3)
                                 : Number(specialPrivilegeLeaveBalance).toFixed(3)}
                             </td>
                           ) : null}
@@ -2074,8 +2086,10 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
                     ? true
                     : roundedFinalSickLeaveBalance < 0 && watch('typeOfLeaveDetails.leaveName') === LeaveName.SICK
                     ? true
-                    : finalSpecialPrivilegekBalance < 0 &&
+                    : finalSpecialPrivilegeBalance < 0 &&
                       watch('typeOfLeaveDetails.leaveName') === LeaveName.SPECIAL_PRIVILEGE
+                    ? true
+                    : leaveDates.length > 3 && watch('typeOfLeaveDetails.leaveName') === LeaveName.SPECIAL_PRIVILEGE
                     ? true
                     : overlappingLeaveCount > 0 &&
                       (watch('typeOfLeaveDetails.leaveName') === LeaveName.MATERNITY ||
