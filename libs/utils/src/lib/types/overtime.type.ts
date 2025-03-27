@@ -12,6 +12,7 @@ export type Overtime = {
   status: OvertimeStatus;
   dateApproved: string;
   approvedBy: string;
+  remarks?: string;
 };
 
 export type OvertimeImmediateSupervisor = {

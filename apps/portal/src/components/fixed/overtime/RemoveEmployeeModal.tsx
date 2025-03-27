@@ -62,9 +62,7 @@ export const RemoveEmployeeModal = ({ modalState, name, employeeId, setModalStat
             <label>Are you sure you want to remove</label>
             <label className="text-red-600 font-bold">{name}</label>
             <label>from this Overtime application?</label>
-            <label className="text-sm text-red-600 pt-4">
-              Note: Removal can only be done if application is still pending.
-            </label>
+            <label className="text-sm text-red-600 pt-4">Note: This action is final and cannot be undone.</label>
           </div>
         </Modal.Body>
         <Modal.Footer>

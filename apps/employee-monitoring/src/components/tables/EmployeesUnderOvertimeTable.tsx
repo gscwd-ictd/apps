@@ -7,7 +7,7 @@ import Image from 'next/image';
 
 import OvertimeAccomplishmentModal from '../modal/monitoring/overtime/OvertimeAccomplishmentModal';
 import UseRenderNameIcon from '../../utils/functions/RenderNameIcon';
-import UseRenderOvertimeStatus from '../../utils/functions/RenderOvertimeStatus';
+import UseRenderOvertimeAccomplishmentStatus from '../../utils/functions/RenderOvertimeAccomplishmentStatus';
 
 type EmployeesUnderOvertimeTableProps = {
   overtimeId: string;
@@ -42,7 +42,6 @@ export const EmployeesUnderOvertimeTable: FunctionComponent<EmployeesUnderOverti
             <tr className="text-xs divide-x divide-y border-y">
               <th className="px-2 py-2 font-semibold text-center text-gray-900 uppercase"></th>
               <th className="px-2 py-2 font-semibold text-center text-gray-900 uppercase break-words">Name</th>
-              <th className="px-2 py-2 font-semibold text-center text-gray-900 uppercase">Schedule Base</th>
               <th className="px-2 py-2 font-semibold text-center text-gray-900 uppercase">Assignment</th>
               <th className="px-2 py-2 font-semibold text-center text-gray-900 uppercase">Staus</th>
               <th className="px-2 py-2 font-semibold text-center text-gray-900 uppercase"></th>
@@ -69,12 +68,10 @@ export const EmployeesUnderOvertimeTable: FunctionComponent<EmployeesUnderOverti
 
                     <td className="items-center p-2 break-words text-center">{employee.fullName}</td>
 
-                    <td className="items-center p-2 break-words text-center">{employee.scheduleBase}</td>
-
                     <td className="items-center p-2 break-words text-center">{employee.assignment}</td>
 
                     <td className="items-center p-2 break-words text-center">
-                      {UseRenderOvertimeStatus(employee.accomplishmentStatus)}
+                      {UseRenderOvertimeAccomplishmentStatus(employee.accomplishmentStatus)}
                     </td>
 
                     <td className="items-center p-2 break-words text-center">
