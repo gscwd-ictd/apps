@@ -93,13 +93,17 @@ export const OvertimeAccomplishmentModal = ({ modalState, setModalState, closeMo
       setValue('overtimeApplicationId', overtimeAccomplishmentDetails.overtimeApplicationId);
       setValue(
         'encodedTimeIn',
-        overtimeAccomplishmentDetails?.ivmsTimeIn
+        overtimeAccomplishmentDetails?.encodedTimeIn
+          ? dayjs(overtimeAccomplishmentDetails?.encodedTimeIn).format('YYYY-MM-DDTHH:mm')
+          : overtimeAccomplishmentDetails?.ivmsTimeIn
           ? dayjs(overtimeAccomplishmentDetails?.ivmsTimeOut).format('YYYY-MM-DDThh:mm')
           : null
       );
       setValue(
         'encodedTimeOut',
-        overtimeAccomplishmentDetails?.ivmsTimeOut
+        overtimeAccomplishmentDetails?.encodedTimeOut
+          ? dayjs(overtimeAccomplishmentDetails?.encodedTimeOut).format('YYYY-MM-DDTHH:mm')
+          : overtimeAccomplishmentDetails?.ivmsTimeOut
           ? dayjs(overtimeAccomplishmentDetails?.ivmsTimeOut).format('YYYY-MM-DDThh:mm')
           : null
       );
@@ -554,7 +558,8 @@ export const OvertimeAccomplishmentModal = ({ modalState, setModalState, closeMo
                             Encoded Start and End Time:
                           </label>
 
-                          {overtimeAccomplishmentDetails?.accomplishments ? (
+                          {overtimeAccomplishmentDetails?.accomplishments &&
+                          overtimeAccomplishmentDetails?.status != OvertimeAccomplishmentStatus.PENDING ? (
                             <div className="w-auto ml-5 flex flex-col">
                               <label className="text-md font-medium">
                                 Start: {DateTimeFormatter(overtimeAccomplishmentDetails?.encodedTimeIn)}
@@ -583,12 +588,26 @@ export const OvertimeAccomplishmentModal = ({ modalState, setModalState, closeMo
                                     label={'Overtime Start'}
                                     className="w-full font-medium"
                                     textSize="sm"
-                                    disabled={overtimeAccomplishmentDetails?.accomplishments ? true : false}
+                                    disabled={
+                                      overtimeAccomplishmentDetails?.accomplishments &&
+                                      overtimeAccomplishmentDetails?.status != OvertimeAccomplishmentStatus.PENDING
+                                        ? true
+                                        : false
+                                    }
                                     defaultValue={
-                                      overtimeAccomplishmentDetails?.ivmsTimeIn
+                                      overtimeAccomplishmentDetails?.encodedTimeIn
+                                        ? dayjs(overtimeAccomplishmentDetails?.encodedTimeIn).format('YYYY-MM-DDTHH:mm')
+                                        : overtimeAccomplishmentDetails?.ivmsTimeIn
                                         ? dayjs(overtimeAccomplishmentDetails?.ivmsTimeIn).format('YYYY-MM-DDThh:mm')
                                         : null
                                     }
+                                    // defaultValue={
+                                    //   overtimeAccomplishmentDetails?.encodedTimeIn
+                                    //     ? dayjs(overtimeAccomplishmentDetails?.encodedTimeIn).format('YYYY-MM-DDThh:mm')
+                                    //     : overtimeAccomplishmentDetails?.ivmsTimeIn
+                                    //     ? dayjs(overtimeAccomplishmentDetails?.ivmsTimeIn).format('YYYY-MM-DDThh:mm')
+                                    //     : null
+                                    // }
                                     controller={{
                                       ...register('encodedTimeIn', {
                                         onChange: (e) => {
@@ -608,9 +627,18 @@ export const OvertimeAccomplishmentModal = ({ modalState, setModalState, closeMo
                                     label={'Overtime End'}
                                     className="w-full font-medium"
                                     textSize="sm"
-                                    disabled={overtimeAccomplishmentDetails?.accomplishments ? true : false}
+                                    disabled={
+                                      overtimeAccomplishmentDetails?.accomplishments &&
+                                      overtimeAccomplishmentDetails?.status != OvertimeAccomplishmentStatus.PENDING
+                                        ? true
+                                        : false
+                                    }
                                     defaultValue={
-                                      overtimeAccomplishmentDetails?.ivmsTimeOut
+                                      overtimeAccomplishmentDetails?.encodedTimeOut
+                                        ? dayjs(overtimeAccomplishmentDetails?.encodedTimeOut).format(
+                                            'YYYY-MM-DDThh:mm'
+                                          )
+                                        : overtimeAccomplishmentDetails?.ivmsTimeOut
                                         ? dayjs(overtimeAccomplishmentDetails?.ivmsTimeOut).format('YYYY-MM-DDThh:mm')
                                         : null
                                     }
@@ -645,7 +673,8 @@ export const OvertimeAccomplishmentModal = ({ modalState, setModalState, closeMo
                                     }
                                     disabled
                                     value={`${
-                                      overtimeAccomplishmentDetails?.computedEncodedHours
+                                      overtimeAccomplishmentDetails?.computedEncodedHours &&
+                                      overtimeAccomplishmentDetails?.status != OvertimeAccomplishmentStatus.PENDING
                                         ? overtimeAccomplishmentDetails?.computedEncodedHours?.toFixed(2)
                                         : isNaN(finalEncodedHours)
                                         ? 0
@@ -688,7 +717,8 @@ export const OvertimeAccomplishmentModal = ({ modalState, setModalState, closeMo
                         </div>
                       </div>
 
-                      {overtimeAccomplishmentDetails?.accomplishments ? (
+                      {overtimeAccomplishmentDetails?.accomplishments &&
+                      overtimeAccomplishmentDetails?.status != OvertimeAccomplishmentStatus.PENDING ? (
                         <div className={`flex flex-col justify-start items-start w-full  px-0.5 pb-3`}>
                           <label className="text-slate-500 text-md whitespace-nowrap pb-0.5">Accomplishments:</label>
 
@@ -739,8 +769,8 @@ export const OvertimeAccomplishmentModal = ({ modalState, setModalState, closeMo
                       ) : null}
                     </div>
 
-                    {overtimeAccomplishmentDetails.status === OvertimeAccomplishmentStatus.PENDING &&
-                    !overtimeAccomplishmentDetails?.accomplishments ? (
+                    {overtimeAccomplishmentDetails.status === OvertimeAccomplishmentStatus.PENDING ? (
+                      // && !overtimeAccomplishmentDetails?.accomplishments
                       <div className="flex flex-col justify-between items-center w-full">
                         <div className="flex flex-row justify-between items-center w-full">
                           <label className="text-slate-500 text-md whitespace-nowrap">Accomplishment:</label>
@@ -752,7 +782,11 @@ export const OvertimeAccomplishmentModal = ({ modalState, setModalState, closeMo
                           className="resize-none w-full p-2 mt-1 rounded text-slate-500 text-md border-slate-300"
                           placeholder="Please enter your accomplishments"
                           {...register('accomplishments')}
-                          defaultValue={overtimeAccomplishmentDetails?.accomplishments ?? ''}
+                          defaultValue={
+                            overtimeAccomplishmentDetails?.accomplishments
+                              ? overtimeAccomplishmentDetails?.accomplishments
+                              : ''
+                          }
                         ></textarea>
                       </div>
                     ) : null}
@@ -767,8 +801,8 @@ export const OvertimeAccomplishmentModal = ({ modalState, setModalState, closeMo
             {
               //status is approved or disapproved
               overtimeAccomplishmentDetails.status === OvertimeAccomplishmentStatus.APPROVED ||
-              overtimeAccomplishmentDetails.status === OvertimeAccomplishmentStatus.DISAPPROVED ||
-              overtimeAccomplishmentDetails?.accomplishments ? (
+              overtimeAccomplishmentDetails.status === OvertimeAccomplishmentStatus.DISAPPROVED ? (
+                // || overtimeAccomplishmentDetails?.accomplishments
                 <Button variant={'default'} size={'md'} loading={false} type="submit" onClick={closeModalAction}>
                   Close
                 </Button>
@@ -797,7 +831,9 @@ export const OvertimeAccomplishmentModal = ({ modalState, setModalState, closeMo
                   form="SubmitAccomplishmentForm"
                   type="submit"
                 >
-                  {'Submit Accomplishment'}
+                  {overtimeAccomplishmentDetails?.accomplishments
+                    ? 'Re-Submit Accomplishment'
+                    : 'Submit Accomplishment'}
                 </Button>
               )
             }

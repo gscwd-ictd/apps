@@ -1,5 +1,5 @@
 /* eslint-disable @nx/enforce-module-boundaries */
-import { Modal, ToastNotification } from '@gscwd-apps/oneui';
+import { LoadingSpinner, Modal, ToastNotification } from '@gscwd-apps/oneui';
 import useSWR from 'swr';
 import Image from 'next/image';
 import React, { FunctionComponent, useEffect, useState } from 'react';
@@ -107,192 +107,198 @@ const ViewEmployeeOvertimeAccomplishmentModal: FunctionComponent<OvertimeAccompl
           </div>
         </Modal.Header>
         <Modal.Body>
-          <div className="w-full min-h-[14rem]">
-            <div className="flex flex-col w-full gap-4 rounded ">
-              <div className="flex flex-col gap-4 px-3 rounded ">
-                {/* HEADER */}
-                <div className="flex justify-between w-full px-2 py-1 sm:flex-col md:flex-col lg:flex-row">
-                  <section className="flex items-center gap-2">
-                    <div className="flex items-center gap-2">
-                      {rowData.employee?.avatarUrl ? (
-                        <div className="flex flex-wrap justify-center">
-                          <div className="w-[6rem]">
-                            <Image
-                              src={`${process.env.NEXT_PUBLIC_IMAGE_SERVER_URL}${rowData.employee?.avatarUrl}`}
-                              width={100}
-                              height={100}
-                              alt="employee-photo"
-                              className="h-auto max-w-full align-middle border-none rounded-full shadow"
-                            />
+          {overtimeAccomplishmentLoading ? (
+            <LoadingSpinner size="lg" />
+          ) : (
+            <div className="w-full min-h-[14rem]">
+              <div className="flex flex-col w-full gap-4 rounded ">
+                <div className="flex flex-col gap-4 px-3 rounded ">
+                  {/* HEADER */}
+                  <div className="flex justify-between w-full px-2 py-1 sm:flex-col md:flex-col lg:flex-row">
+                    <section className="flex items-center gap-2">
+                      <div className="flex items-center gap-2">
+                        {rowData.employee?.avatarUrl ? (
+                          <div className="flex flex-wrap justify-center">
+                            <div className="w-[6rem]">
+                              <Image
+                                src={`${process.env.NEXT_PUBLIC_IMAGE_SERVER_URL}${rowData.employee?.avatarUrl}`}
+                                width={100}
+                                height={100}
+                                alt="employee-photo"
+                                className="h-auto max-w-full align-middle border-none rounded-full shadow"
+                              />
+                            </div>
                           </div>
-                        </div>
-                      ) : (
-                        <i className="text-gray-700 text-8xl bx bxs-user"></i>
-                      )}
-                    </div>
+                        ) : (
+                          <i className="text-gray-700 text-8xl bx bxs-user"></i>
+                        )}
+                      </div>
 
-                    <div className="flex flex-col">
-                      <div className="text-xl font-semibold">{rowData.employee?.fullName}</div>
-                      <div className="font-light">{rowData.employee?.assignment}</div>
-                      <div className="font-semibold ">{rowData.employee?.companyId}</div>
-                    </div>
-                  </section>
-                </div>
-                <hr />
-                <div className="grid px-5 sm:grid-rows-2 sm:grid-cols-1 md:grid-rows-2 md:grid-cols-1 lg:grid-rows-1 lg:grid-cols-2 sm:gap-2 md:gap:2 lg:gap-0">
-                  <LabelValue
-                    label="Planned Date"
-                    direction="top-to-bottom"
-                    textSize="md"
-                    value={OvertimeAccomplishment.plannedDate || '--'}
-                  />
-
-                  <LabelValue
-                    label="Status"
-                    direction="top-to-bottom"
-                    textSize="md"
-                    value={
-                      OvertimeAccomplishment.status
-                        ? UseRenderOvertimeAccomplishmentStatus(OvertimeAccomplishment.status)
-                        : '--'
-                    }
-                  />
-                </div>
-                <div className="grid px-5 sm:grid-rows-2 sm:grid-cols-1 md:grid-rows-2 md:grid-cols-1 lg:grid-rows-1 lg:grid-cols-2 sm:gap-2 md:gap:2 lg:gap-0">
-                  <LabelValue
-                    label="Estimated Hours"
-                    direction="top-to-bottom"
-                    textSize="md"
-                    value={
-                      OvertimeAccomplishment.estimatedHours
-                        ? UseFormatHour(OvertimeAccomplishment.estimatedHours)
-                        : '--'
-                    }
-                  />
-                </div>
-                {OvertimeAccomplishment.status === OvertimeAccomplishmentStatus.APPROVED ? (
+                      <div className="flex flex-col">
+                        <div className="text-xl font-semibold">{rowData.employee?.fullName}</div>
+                        <div className="font-light">{rowData.employee?.assignment}</div>
+                        <div className="font-semibold ">{rowData.employee?.companyId}</div>
+                      </div>
+                    </section>
+                  </div>
+                  <hr />
                   <div className="grid px-5 sm:grid-rows-2 sm:grid-cols-1 md:grid-rows-2 md:grid-cols-1 lg:grid-rows-1 lg:grid-cols-2 sm:gap-2 md:gap:2 lg:gap-0">
                     <LabelValue
-                      label="Approved By"
+                      label="Planned Date"
                       direction="top-to-bottom"
                       textSize="md"
-                      value={OvertimeAccomplishment.approvedBy ? OvertimeAccomplishment.approvedBy : '--'}
+                      value={OvertimeAccomplishment.plannedDate || '--'}
                     />
 
                     <LabelValue
-                      label="Approved Hours"
+                      label="Status"
                       direction="top-to-bottom"
                       textSize="md"
-                      value={OvertimeAccomplishment.actualHrs ? UseFormatHour(OvertimeAccomplishment.actualHrs) : '--'}
+                      value={
+                        OvertimeAccomplishment.status
+                          ? UseRenderOvertimeAccomplishmentStatus(OvertimeAccomplishment.status)
+                          : '--'
+                      }
                     />
                   </div>
-                ) : null}
+                  <div className="grid px-5 sm:grid-rows-2 sm:grid-cols-1 md:grid-rows-2 md:grid-cols-1 lg:grid-rows-1 lg:grid-cols-2 sm:gap-2 md:gap:2 lg:gap-0">
+                    <LabelValue
+                      label="Estimated Hours"
+                      direction="top-to-bottom"
+                      textSize="md"
+                      value={
+                        OvertimeAccomplishment.estimatedHours
+                          ? UseFormatHour(OvertimeAccomplishment.estimatedHours)
+                          : '--'
+                      }
+                    />
+                  </div>
+                  {OvertimeAccomplishment.status === OvertimeAccomplishmentStatus.APPROVED ? (
+                    <div className="grid px-5 sm:grid-rows-2 sm:grid-cols-1 md:grid-rows-2 md:grid-cols-1 lg:grid-rows-1 lg:grid-cols-2 sm:gap-2 md:gap:2 lg:gap-0">
+                      <LabelValue
+                        label="Approved By"
+                        direction="top-to-bottom"
+                        textSize="md"
+                        value={OvertimeAccomplishment.approvedBy ? OvertimeAccomplishment.approvedBy : '--'}
+                      />
 
-                <hr />
-                <div className="grid px-5 sm:grid-cols-2 sm:gap-2 md:gap:2 lg:gap-0">
-                  <div className="grid   gap-0">
-                    <label className="font-normal text-gray-500">IVMS Entries:</label>
+                      <LabelValue
+                        label="Approved Hours"
+                        direction="top-to-bottom"
+                        textSize="md"
+                        value={
+                          OvertimeAccomplishment.actualHrs ? UseFormatHour(OvertimeAccomplishment.actualHrs) : '--'
+                        }
+                      />
+                    </div>
+                  ) : null}
 
-                    {OvertimeAccomplishment && OvertimeAccomplishment.entriesForTheDay?.length > 0 ? (
-                      <>
-                        {OvertimeAccomplishment.entriesForTheDay?.map((logs: string, idx: number) => {
-                          if (moreIvmsLogs) {
-                            return (
-                              <div key={idx} className="pl-3">
-                                <label className="text-sm font-medium ">{logs}</label>
-                              </div>
-                            );
-                          } else {
-                            if (idx <= 1)
+                  <hr />
+                  <div className="grid px-5 sm:grid-cols-2 sm:gap-2 md:gap:2 lg:gap-0">
+                    <div className="grid   gap-0">
+                      <label className="font-normal text-gray-500">IVMS Entries:</label>
+
+                      {OvertimeAccomplishment && OvertimeAccomplishment.entriesForTheDay?.length > 0 ? (
+                        <>
+                          {OvertimeAccomplishment.entriesForTheDay?.map((logs: string, idx: number) => {
+                            if (moreIvmsLogs) {
                               return (
                                 <div key={idx} className="pl-3">
                                   <label className="text-sm font-medium ">{logs}</label>
                                 </div>
                               );
-                          }
-                        })}
-                        {OvertimeAccomplishment.entriesForTheDay?.length > 2 ? (
-                          <div className="pl-3">
-                            <label
-                              className="text-sm font-medium cursor-pointer text-indigo-500 hover:text-indigo-600"
-                              onClick={(e) => setMoreIvmsLogs(!moreIvmsLogs)}
-                            >
-                              {moreIvmsLogs ? 'Less...' : 'More...'}
-                            </label>
-                          </div>
-                        ) : null}
-                      </>
-                    ) : (
-                      <label className="text-md font-medium pl-3">None</label>
-                    )}
+                            } else {
+                              if (idx <= 1)
+                                return (
+                                  <div key={idx} className="pl-3">
+                                    <label className="text-sm font-medium ">{logs}</label>
+                                  </div>
+                                );
+                            }
+                          })}
+                          {OvertimeAccomplishment.entriesForTheDay?.length > 2 ? (
+                            <div className="pl-3">
+                              <label
+                                className="text-sm font-medium cursor-pointer text-indigo-500 hover:text-indigo-600"
+                                onClick={(e) => setMoreIvmsLogs(!moreIvmsLogs)}
+                              >
+                                {moreIvmsLogs ? 'Less...' : 'More...'}
+                              </label>
+                            </div>
+                          ) : null}
+                        </>
+                      ) : (
+                        <label className="text-md font-medium pl-3">None</label>
+                      )}
+                    </div>
+
+                    <div className="grid px-5 gap-2">
+                      <LabelValue
+                        label="Encoded Time In"
+                        direction="top-to-bottom"
+                        textSize="md"
+                        value={
+                          OvertimeAccomplishment.encodedTimeIn
+                            ? DateTimeFormatter(OvertimeAccomplishment.encodedTimeIn)
+                            : '--'
+                        }
+                      />
+
+                      <LabelValue
+                        label="Encoded Time Out"
+                        direction="top-to-bottom"
+                        textSize="md"
+                        value={
+                          OvertimeAccomplishment.encodedTimeOut
+                            ? DateTimeFormatter(OvertimeAccomplishment.encodedTimeOut)
+                            : '--'
+                        }
+                      />
+
+                      <LabelValue
+                        label="Actual Hours"
+                        direction="top-to-bottom"
+                        textSize="md"
+                        value={
+                          OvertimeAccomplishment.computedEncodedHours
+                            ? UseFormatHour(OvertimeAccomplishment.computedEncodedHours)
+                            : '--'
+                        }
+                      />
+                    </div>
                   </div>
-
-                  <div className="grid px-5 gap-2">
-                    <LabelValue
-                      label="Encoded Time In"
-                      direction="top-to-bottom"
-                      textSize="md"
-                      value={
-                        OvertimeAccomplishment.encodedTimeIn
-                          ? DateTimeFormatter(OvertimeAccomplishment.encodedTimeIn)
-                          : '--'
-                      }
-                    />
-
-                    <LabelValue
-                      label="Encoded Time Out"
-                      direction="top-to-bottom"
-                      textSize="md"
-                      value={
-                        OvertimeAccomplishment.encodedTimeOut
-                          ? DateTimeFormatter(OvertimeAccomplishment.encodedTimeOut)
-                          : '--'
-                      }
-                    />
-
-                    <LabelValue
-                      label="Actual Hours"
-                      direction="top-to-bottom"
-                      textSize="md"
-                      value={
-                        OvertimeAccomplishment.computedEncodedHours
-                          ? UseFormatHour(OvertimeAccomplishment.computedEncodedHours)
-                          : '--'
-                      }
-                    />
-                  </div>
+                  <hr />
+                  {/* If there is accomplishment filled up */}
+                  {OvertimeAccomplishment?.accomplishments ? (
+                    <div className="grid px-5 grid-cols-1">
+                      <LabelValue
+                        label="Accomplishment Report"
+                        direction="top-to-bottom"
+                        textSize="md"
+                        value={
+                          OvertimeAccomplishment.accomplishments
+                            ? OvertimeAccomplishment.accomplishments
+                            : 'Not yet filled.'
+                        }
+                      />
+                    </div>
+                  ) : null}
+                  {/* If status is declined */}
+                  {OvertimeAccomplishment.status === OvertimeAccomplishmentStatus.DISAPPROVED ? (
+                    <div className="grid px-5 sm:grid-rows-2 sm:grid-cols-1 md:grid-rows-2 md:grid-cols-1 lg:grid-rows-1 lg:grid-cols-2 sm:gap-2 md:gap:2 lg:gap-0">
+                      <LabelValue
+                        label="Remarks"
+                        direction="top-to-bottom"
+                        textSize="md"
+                        value={OvertimeAccomplishment.remarks ? OvertimeAccomplishment.remarks : 'N/A'}
+                      />
+                    </div>
+                  ) : null}
+                  <hr />
                 </div>
-                <hr />
-                {/* If there is accomplishment filled up */}
-                {OvertimeAccomplishment?.accomplishments ? (
-                  <div className="grid px-5 grid-cols-1">
-                    <LabelValue
-                      label="Accomplishment Report"
-                      direction="top-to-bottom"
-                      textSize="md"
-                      value={
-                        OvertimeAccomplishment.accomplishments
-                          ? OvertimeAccomplishment.accomplishments
-                          : 'Not yet filled.'
-                      }
-                    />
-                  </div>
-                ) : null}
-                {/* If status is declined */}
-                {OvertimeAccomplishment.status === OvertimeAccomplishmentStatus.DISAPPROVED ? (
-                  <div className="grid px-5 sm:grid-rows-2 sm:grid-cols-1 md:grid-rows-2 md:grid-cols-1 lg:grid-rows-1 lg:grid-cols-2 sm:gap-2 md:gap:2 lg:gap-0">
-                    <LabelValue
-                      label="Remarks"
-                      direction="top-to-bottom"
-                      textSize="md"
-                      value={OvertimeAccomplishment.remarks ? OvertimeAccomplishment.remarks : 'N/A'}
-                    />
-                  </div>
-                ) : null}
-                <hr />
               </div>
             </div>
-          </div>
+          )}
         </Modal.Body>
       </Modal>
     </>
