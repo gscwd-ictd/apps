@@ -135,7 +135,7 @@ export const OvertimeModal = ({ modalState, setModalState, closeModalAction }: M
     if (overtimeDetails) {
       setPendingAccomplishmentEmployees(Array.from(new Set([])));
       let employeeIdList = [];
-      for (let i = 0; i < overtimeDetails.employees?.length; i++) {
+      for (let i = 0; i < overtimeDetails?.employees?.length; i++) {
         if (
           overtimeDetails?.employees[i]?.isAccomplishmentSubmitted == true &&
           overtimeDetails?.employees[i]?.accomplishmentStatus === OvertimeAccomplishmentStatus.PENDING
@@ -146,7 +146,7 @@ export const OvertimeModal = ({ modalState, setModalState, closeModalAction }: M
       setPendingAccomplishmentEmployees(employeeIdList);
     }
 
-    checkIfCancellable(overtimeDetails.employees);
+    checkIfCancellable(overtimeDetails?.employees);
   }, [overtimeDetails]);
 
   useEffect(() => {
@@ -450,7 +450,8 @@ export const OvertimeModal = ({ modalState, setModalState, closeModalAction }: M
                             <div
                               key={employee.companyId}
                               className={`${index != 0 ? 'border-t border-slate-200' : ''} ${
-                                employee.accomplishmentStatus === OvertimeAccomplishmentStatus.REMOVED_BY_MANAGER
+                                employee.accomplishmentStatus === OvertimeAccomplishmentStatus.REMOVED_BY_MANAGER ||
+                                employee.accomplishmentStatus === OvertimeAccomplishmentStatus.REMOVED_BY_SUPERVISOR
                                   ? 'opacity-40'
                                   : ''
                               } px-2 py-4 md:px-4 md:py-4 flex flex-row justify-between items-center gap-8 `}
@@ -539,8 +540,9 @@ export const OvertimeModal = ({ modalState, setModalState, closeModalAction }: M
                                 {canStillRemoveEmployee ? (
                                   overtimeDetails.status !== OvertimeStatus.CANCELLED ? (
                                     employee.accomplishmentStatus === OvertimeAccomplishmentStatus.APPROVED ||
+                                    employee.accomplishmentStatus === OvertimeAccomplishmentStatus.REMOVED_BY_MANAGER ||
                                     employee.accomplishmentStatus ===
-                                      OvertimeAccomplishmentStatus.REMOVED_BY_MANAGER ? (
+                                      OvertimeAccomplishmentStatus.REMOVED_BY_SUPERVISOR ? (
                                       <Button
                                         variant={'default'}
                                         size={'sm'}

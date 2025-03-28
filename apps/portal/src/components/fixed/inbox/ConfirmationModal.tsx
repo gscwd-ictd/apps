@@ -2,7 +2,7 @@
 
 import { Button, Checkbox, Modal } from '@gscwd-apps/oneui';
 import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
-import { patchPortal, putPortal } from 'apps/portal/src/utils/helpers/portal-axios-helper';
+import { patchPortal, putEms } from 'apps/portal/src/utils/helpers/portal-axios-helper';
 import { useInboxStore } from 'apps/portal/src/store/inbox.store';
 import { InboxMessageResponse, InboxMessageType } from 'libs/utils/src/lib/enums/inbox.enum';
 import { useEmployeeStore } from 'apps/portal/src/store/employee.store';
@@ -109,7 +109,7 @@ export const ConfirmationInboxModal = ({
     const submitTrainingResponseRoute = `${process.env.NEXT_PUBLIC_PORTAL_URL}/trainings/`;
     putInboxResponse();
 
-    const { error, result } = await putPortal(submitTrainingResponseRoute, {
+    const { error, result } = await putEms(submitTrainingResponseRoute, {
       nomineeId: selectedPayloadId,
       status: confirmationResponse,
       remarks: confirmationResponse == InboxMessageResponse.TRAINING_DECLINE ? declineRemarks : null,

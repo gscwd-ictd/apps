@@ -3,13 +3,16 @@ import { useEffect, useRef, useState } from 'react';
 import { HiX } from 'react-icons/hi';
 import { AlertNotification, Button, LoadingSpinner, Modal } from '@gscwd-apps/oneui';
 import { SubmitHandler, useForm } from 'react-hook-form';
-import { postPortal } from '../../../utils/helpers/portal-axios-helper';
+import { postPortal, putPortal } from '../../../utils/helpers/portal-axios-helper';
 import { SelectOption } from '../../../../../../libs/utils/src/lib/types/select.type';
 import { useEmployeeStore } from '../../../store/employee.store';
 import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
 import { useOvertimeStore } from 'apps/portal/src/store/overtime.store';
 import { MySelectList } from '../../modular/inputs/SelectList';
-import { OvertimeForm } from 'libs/utils/src/lib/types/overtime.type';
+import { EmployeeOvertimeDetail, OvertimeForm } from 'libs/utils/src/lib/types/overtime.type';
+import { OvertimeStatus } from 'libs/utils/src/lib/enums/overtime.enum';
+import dayjs from 'dayjs';
+import CancelOvertimeModal from './CancelOvertimeModal';
 
 type ModalProps = {
   modalState: boolean;
@@ -26,6 +29,16 @@ export const OvertimeApplicationModal = ({ modalState, setModalState, closeModal
     postOvertime,
     postOvertimeSuccess,
     postOvertimeFail,
+
+    putOvertime,
+    putOvertimeSuccess,
+    putOvertimeFail,
+
+    overtimeDetails,
+    setOvertimeDetails,
+    pendingOvertimeModalIsOpen,
+    cancelOvertimeModalIsOpen,
+    setCancelOvertimeModalIsOpen,
   } = useOvertimeStore((state) => ({
     applyOvertimeModalIsOpen: state.applyOvertimeModalIsOpen,
     loadingResponse: state.loading.loadingResponse,
@@ -33,6 +46,15 @@ export const OvertimeApplicationModal = ({ modalState, setModalState, closeModal
     postOvertime: state.postOvertime,
     postOvertimeSuccess: state.postOvertimeSuccess,
     postOvertimeFail: state.postOvertimeFail,
+
+    putOvertime: state.putOvertime,
+    putOvertimeSuccess: state.putOvertimeSuccess,
+    putOvertimeFail: state.putOvertimeFail,
+    overtimeDetails: state.overtimeDetails,
+    setOvertimeDetails: state.setOvertimeDetails,
+    pendingOvertimeModalIsOpen: state.pendingOvertimeModalIsOpen,
+    cancelOvertimeModalIsOpen: state.cancelOvertimeModalIsOpen,
+    setCancelOvertimeModalIsOpen: state.setCancelOvertimeModalIsOpen,
   }));
 
   // set state for employee store
@@ -66,25 +88,79 @@ export const OvertimeApplicationModal = ({ modalState, setModalState, closeModal
 
   useEffect(() => {
     if (!applyOvertimeModalIsOpen) {
+      setOvertimeDetails(null);
       reset();
       setSelectedEmployees([]);
     }
+    setValue('plannedDate', null);
+    setValue('purpose', '');
+    setValue('estimatedHours', null);
   }, [applyOvertimeModalIsOpen]);
+
+  //for pending approval modal
+  useEffect(() => {
+    if (pendingOvertimeModalIsOpen) {
+      let tempSelectedEmployees = [];
+      if (overtimeDetails?.employees?.length >= 1) {
+        for (let i = 0; i < overtimeDetails?.employees?.length; i++) {
+          tempSelectedEmployees.push({
+            label: overtimeDetails?.employees[i].fullName,
+            value: overtimeDetails?.employees[i].employeeId,
+          });
+        }
+        setSelectedEmployees(tempSelectedEmployees);
+      }
+      if (overtimeDetails) {
+        setValue('plannedDate', overtimeDetails?.plannedDate);
+        setValue('purpose', overtimeDetails?.purpose);
+        setValue('estimatedHours', parseFloat(overtimeDetails?.estimatedHours));
+      }
+    } else {
+      reset();
+      setValue('plannedDate', null);
+      setValue('purpose', '');
+      setValue('estimatedHours', null);
+      setSelectedEmployees([]);
+    }
+  }, [pendingOvertimeModalIsOpen]);
 
   const onSubmit: SubmitHandler<OvertimeForm> = (data: OvertimeForm) => {
     handlePostResult(data);
   };
 
   const handlePostResult = async (data: OvertimeForm) => {
-    postOvertime();
-    const { error, result } = await postPortal('/v1/overtime/', data);
-    if (error) {
-      postOvertimeFail(result);
+    if (overtimeDetails) {
+      let newData = {
+        id: overtimeDetails?.id,
+        plannedDate: watch('plannedDate'),
+        estimatedHours: watch('estimatedHours'),
+        purpose: watch('purpose'),
+        employees: watch('employees'),
+      };
+      putOvertime();
+      const { error, result } = await putPortal('/overtime-applications/', newData);
+      if (error) {
+        putOvertimeFail(result);
+      } else {
+        putOvertimeSuccess(result);
+        reset();
+        closeModalAction();
+      }
     } else {
-      postOvertimeSuccess(result);
-      reset();
-      closeModalAction();
+      postOvertime();
+      const { error, result } = await postPortal('/v1/overtime/', data);
+      if (error) {
+        postOvertimeFail(result);
+      } else {
+        postOvertimeSuccess(result);
+        reset();
+        closeModalAction();
+      }
     }
+  };
+
+  const closeCancelOvertimeModal = () => {
+    setCancelOvertimeModalIsOpen(false);
   };
 
   const { windowWidth } = UseWindowDimensions();
@@ -115,6 +191,18 @@ export const OvertimeApplicationModal = ({ modalState, setModalState, closeModal
               dismissible={true}
             />
           ) : null}
+
+          {overtimeDetails && overtimeDetails?.id && overtimeDetails?.status === OvertimeStatus.PENDING ? (
+            <AlertNotification alertType="warning" notifMessage={'For Supervisor Review'} dismissible={false} />
+          ) : null}
+
+          {/* Cancel Overtime Application Modal */}
+          <CancelOvertimeModal
+            modalState={cancelOvertimeModalIsOpen}
+            setModalState={setCancelOvertimeModalIsOpen}
+            closeModalAction={closeCancelOvertimeModal}
+          />
+
           <form id="ApplyOvertimeForm" onSubmit={handleSubmit(onSubmit)}>
             <div className="w-full h-full flex flex-col gap-2 ">
               <div className="w-full flex flex-col gap-2 px-4 rounded">
@@ -128,6 +216,11 @@ export const OvertimeApplicationModal = ({ modalState, setModalState, closeModal
                       required
                       type="date"
                       className="border-slate-300 text-slate-500 h-12 text-md w-full md:w-60 rounded"
+                      // defaultValue={
+                      //   overtimeDetails?.plannedDate
+                      //     ? dayjs(overtimeDetails?.plannedDate).format('YYYY-MM-DDThh:mm')
+                      //     : ''
+                      // }
                       {...register('plannedDate')}
                     />
                   </div>
@@ -144,7 +237,7 @@ export const OvertimeApplicationModal = ({ modalState, setModalState, closeModal
                       className="border-slate-300 text-slate-500 h-12 text-md w-full md:w-60 rounded"
                       placeholder="Enter number of hours"
                       required
-                      defaultValue={0}
+                      // defaultValue={overtimeDetails?.estimatedHours ? parseFloat(overtimeDetails?.estimatedHours) : 0}
                       max="23"
                       step={0.01}
                       min={'0.1'}
@@ -181,7 +274,9 @@ export const OvertimeApplicationModal = ({ modalState, setModalState, closeModal
                     className="resize-none w-full p-2 rounded text-slate-500 text-md border-slate-300"
                     required
                     {...register('purpose')}
-                  ></textarea>
+                  >
+                    {/* {overtimeDetails?.purpose ? overtimeDetails?.purpose : ''} */}
+                  </textarea>
                 </div>
               </div>
             </div>
@@ -189,11 +284,30 @@ export const OvertimeApplicationModal = ({ modalState, setModalState, closeModal
         </Modal.Body>
         <Modal.Footer>
           <div className="flex justify-end gap-2 px-4">
-            <div className="min-w-[6rem] max-w-auto">
-              <Button variant={'primary'} size={'md'} loading={false} form="ApplyOvertimeForm" type="submit">
-                Apply Overtime
+            <Button
+              variant={'primary'}
+              size={'md'}
+              loading={false}
+              disabled={selectedEmployees.length <= 0 ? true : false}
+              form="ApplyOvertimeForm"
+              type="submit"
+            >
+              {overtimeDetails?.id && overtimeDetails?.status === OvertimeStatus.PENDING
+                ? 'Re-Submit Overtime'
+                : 'Apply Overtime'}
+            </Button>
+
+            {overtimeDetails?.id && overtimeDetails?.status === OvertimeStatus.PENDING ? (
+              <Button
+                variant={'warning'}
+                size={'md'}
+                loading={false}
+                onClick={(e) => setCancelOvertimeModalIsOpen(true)}
+                type="submit"
+              >
+                Cancel Overtime
               </Button>
-            </div>
+            ) : null}
           </div>
         </Modal.Footer>
       </Modal>
