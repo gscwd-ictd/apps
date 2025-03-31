@@ -16,8 +16,9 @@ function UseRenderOvertimeAccomplishmentStatus(status: OvertimeAccomplishmentSta
           ? 'error'
           : status === OvertimeAccomplishmentStatus.PENDING
           ? 'warning'
-          : status === OvertimeAccomplishmentStatus.REMOVED_BY_MANAGER
-          ? 'default'
+          : status === OvertimeAccomplishmentStatus.REMOVED_BY_MANAGER ||
+            status === OvertimeAccomplishmentStatus.REMOVED_BY_SUPERVISOR
+          ? 'error'
           : 'default'
       }
       label={
@@ -28,8 +29,16 @@ function UseRenderOvertimeAccomplishmentStatus(status: OvertimeAccomplishmentSta
           : status === OvertimeAccomplishmentStatus.PENDING
           ? 'Pending'
           : status === OvertimeAccomplishmentStatus.REMOVED_BY_MANAGER
-          ? 'Removed'
+          ? 'By Manager'
+          : status === OvertimeAccomplishmentStatus.REMOVED_BY_SUPERVISOR
+          ? 'By Supvr.'
           : status
+      }
+      icon={
+        status === OvertimeAccomplishmentStatus.REMOVED_BY_MANAGER ||
+        status === OvertimeAccomplishmentStatus.REMOVED_BY_SUPERVISOR
+          ? true
+          : false
       }
     />
   );

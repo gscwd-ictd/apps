@@ -218,13 +218,13 @@ export const OvertimeAuthorizationAccomplishmentPdf = ({
                     flexDirection: 'column',
                     fontSize: 7,
                     padding: 2,
-                    width: '5%',
+                    width: '7%',
                     textAlign: 'center',
                     justifyContent: 'center',
                     alignItems: 'center',
                   }}
                 >
-                  <Text>ACTUAL</Text>
+                  <Text>APPROVED</Text>
                   <Text>HOURS</Text>
                 </View>
                 <View
@@ -235,7 +235,7 @@ export const OvertimeAuthorizationAccomplishmentPdf = ({
                     flexDirection: 'column',
                     fontSize: 7,
                     padding: 2,
-                    width: '8%',
+                    width: '7%',
                     textAlign: 'center',
                     justifyContent: 'center',
                     alignItems: 'center',
@@ -252,7 +252,7 @@ export const OvertimeAuthorizationAccomplishmentPdf = ({
                     flexDirection: 'column',
                     fontSize: 7,
                     padding: 2,
-                    width: '26%',
+                    width: '25%',
                     textAlign: 'center',
                     justifyContent: 'center',
                     alignItems: 'center',
@@ -400,7 +400,7 @@ export const OvertimeAuthorizationAccomplishmentPdf = ({
                         borderRight: '1px solid #000',
                         flexDirection: 'column',
                         fontSize: 7,
-                        width: '5%',
+                        width: '7%',
                         textAlign: 'center',
                         justifyContent: 'center',
                         alignItems: 'center',
@@ -415,7 +415,7 @@ export const OvertimeAuthorizationAccomplishmentPdf = ({
                         borderRight: '1px solid #000',
                         flexDirection: 'column',
                         fontSize: 7,
-                        width: '8%',
+                        width: '7%',
                         textAlign: 'center',
                         justifyContent: 'center',
                         alignItems: 'center',
@@ -430,7 +430,7 @@ export const OvertimeAuthorizationAccomplishmentPdf = ({
                         borderRight: '1px solid #000',
                         flexDirection: 'column',
                         fontSize: 7,
-                        width: '26%',
+                        width: '25%',
 
                         justifyContent: 'center',
                         alignItems: 'flex-start',

@@ -383,9 +383,9 @@ const ViewLeaveApplicationModal: FunctionComponent<ViewLeaveApplicationModalProp
                             rowData.leaveName === LeaveName.SPECIAL_LEAVE_BENEFITS_FOR_WOMEN ||
                             rowData.leaveName === LeaveName.ADOPTION ? (
                               // show first and last date (array) only if SBL (maternity, study, rehab...)
-                              `${DateFormatter(rowData.leaveDates[0], 'MM-DD-YYYY')} - ${DateFormatter(
+                              `${DateFormatter(rowData.leaveDates[0], 'YYYY/MM/DD')} - ${DateFormatter(
                                 rowData.leaveDates[rowData.leaveDates?.length - 1],
-                                'MM-DD-YYYY'
+                                'YYYY/MM/DD'
                               )}`
                             ) : (
                               // show all dates if not SBL (maternity, study, rehab...)

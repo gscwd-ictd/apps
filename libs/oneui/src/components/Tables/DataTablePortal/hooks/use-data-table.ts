@@ -98,9 +98,10 @@ export const useDataTable = <T>(options: DataTableOptions<T>, type: ApprovalType
               ? 'nominationStatus'
               : 'label',
           value:
-            Approvaltype === ApprovalType.PASSSLIP
-              ? PassSlipStatus.FOR_SUPERVISOR_APPROVAL
-              : Approvaltype === ApprovalType.LEAVE
+            // Approvaltype === ApprovalType.PASSSLIP
+            //   ? PassSlipStatus.FOR_SUPERVISOR_APPROVAL
+            // :
+            Approvaltype === ApprovalType.LEAVE
               ? LeaveStatus.FOR_SUPERVISOR_APPROVAL
               : Approvaltype === ApprovalType.FINAL_LEAVE
               ? LeaveStatus.FOR_HRDM_APPROVAL

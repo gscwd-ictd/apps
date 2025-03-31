@@ -99,6 +99,7 @@ export default function Overtime({ employeeDetails }: InferGetServerSidePropsTyp
   const router = useRouter();
 
   const openApplyOvertimeModal = () => {
+    setOvertimeDetails(null);
     if (!applyOvertimeModalIsOpen) {
       setApplyOvertimeModalIsOpen(true);
     }
@@ -121,11 +122,13 @@ export default function Overtime({ employeeDetails }: InferGetServerSidePropsTyp
 
   // cancel action for Overtime Application Modal
   const closeApplyOvertimeModal = async () => {
+    setOvertimeDetails(null);
     setApplyOvertimeModalIsOpen(false);
   };
 
   // cancel action for Overtime Pending Modal
   const closePendingOvertimeModal = async () => {
+    setOvertimeDetails(null);
     setPendingOvertimeModalIsOpen(false);
   };
 
@@ -407,8 +410,15 @@ export default function Overtime({ employeeDetails }: InferGetServerSidePropsTyp
           closeModalAction={closeOvertimeSummaryModal}
         />
 
-        {/* Overtime Pending Modal */}
-        <OvertimeModal
+        {/* Old Overtime Pending Modal */}
+        {/* <OvertimeModal
+          modalState={pendingOvertimeModalIsOpen}
+          setModalState={setPendingOvertimeModalIsOpen}
+          closeModalAction={closePendingOvertimeModal}
+        /> */}
+
+        {/* New Overtime Pending Modal */}
+        <OvertimeApplicationModal
           modalState={pendingOvertimeModalIsOpen}
           setModalState={setPendingOvertimeModalIsOpen}
           closeModalAction={closePendingOvertimeModal}

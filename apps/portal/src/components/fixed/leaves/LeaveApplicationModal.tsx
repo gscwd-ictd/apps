@@ -17,12 +17,13 @@ import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
 import { LeaveName, MonetizationType } from 'libs/utils/src/lib/enums/leave.enum';
 import { useLeaveLedgerStore } from 'apps/portal/src/store/leave-ledger.store';
 import { LeaveLedgerEntry } from 'libs/utils/src/lib/types/leave-ledger-entry.type';
-import { addMonths, format } from 'date-fns';
+import { format } from 'date-fns';
 import { EditorContent, useEditor } from '@tiptap/react';
-import { RichTextMenuBar } from '../../../../../../libs/oneui/src/components/RichTextMenuBar';
 import StarterKit from '@tiptap/starter-kit';
 import Underline from '@tiptap/extension-underline';
 import Placeholder from '@tiptap/extension-placeholder';
+import LeaveApplicationSchema from './LeaveApplicationSchema';
+import { yupResolver } from '@hookform/resolvers/yup';
 
 type LeaveApplicationModalProps = {
   modalState: boolean;
@@ -194,7 +195,7 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
   const [finalVacationLeaveBalance, setFinalVacationLeaveBalance] = useState<number>(0);
   const [finalForcedLeaveBalance, setFinalForcedLeaveBalance] = useState<number>(0);
   const [finalSickLeaveBalance, setFinalSickLeaveBalance] = useState<number>(0);
-  const [finalSpecialPrivilegekBalance, setFinalSpecialPrivilegekBalance] = useState<number>(0);
+  const [finalSpecialPrivilegeBalance, setFinalSpecialPrivilegeBalance] = useState<number>(0);
 
   //ROUNDED OFF LEAVE CREDITS
   const [roundedFinalVacationLeaveBalance, setRoundedFinalVacationLeaveBalance] = useState<number>(0);
@@ -296,8 +297,17 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
   }, [swrLeaveTypes, swrError]);
 
   // React hook form
-  const { reset, register, handleSubmit, watch, setValue } = useForm<LeaveApplicationForm>({
-    mode: 'onChange',
+  const {
+    reset,
+    register,
+    handleSubmit,
+    watch,
+    setValue,
+    formState: { errors },
+  } = useForm<LeaveApplicationForm>({
+    resolver: yupResolver(LeaveApplicationSchema),
+    reValidateMode: 'onBlur',
+    mode: 'onSubmit',
     defaultValues: {
       typeOfLeaveDetails: {
         id: '',
@@ -406,6 +416,7 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
     // setSickLeaveInput(0);
     setSelectedLeaveMonetizationType(null);
     setLateFiling(false);
+    setValue('isLateFiling', false);
   }, [watch('typeOfLeaveDetails.leaveName')]);
 
   useEffect(() => {
@@ -607,11 +618,13 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
       } else if (
         (watch('lateFilingJustification') === '' ||
           watch('lateFilingJustification') === null ||
-          watch('lateFilingJustification') === '<p></p>') &&
+          watch('lateFilingJustification') === undefined ||
+          watch('lateFilingJustification') === '<p></p>' ||
+          watch('lateFilingJustification')?.length < 40) &&
         lateFiling
       ) {
         //if late filing and justification letter is empty
-        handlePostError('Justification Letter for Late Filing is empty.');
+        handlePostError('Justification Letter for Late Filing is empty or has insufficient number of characters.');
       } else if (monthNow === '12' && watch('typeOfLeaveDetails.leaveName') === LeaveName.FORCED) {
         //disabled if applying for force leave and is December
         handlePostError('Forced Leaves cannot be applied during December.');
@@ -637,10 +650,12 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
       } else if (roundedFinalSickLeaveBalance < 0 && watch('typeOfLeaveDetails.leaveName') === LeaveName.SICK) {
         handlePostError('Insufficient Sick Leave Credits.');
       } else if (
-        finalSpecialPrivilegekBalance < 0 &&
+        finalSpecialPrivilegeBalance < 0 &&
         watch('typeOfLeaveDetails.leaveName') === LeaveName.SPECIAL_PRIVILEGE
       ) {
         handlePostError('Insufficient Special Privilege Leave Credits.');
+      } else if (leaveDates.length > 3 && watch('typeOfLeaveDetails.leaveName') === LeaveName.SPECIAL_PRIVILEGE) {
+        handlePostError('Special Privilege Leave can only be applied for a maximum of 3 days.');
       } else if (
         overlappingLeaveCount > 0 &&
         (watch('typeOfLeaveDetails.leaveName') === LeaveName.MATERNITY ||
@@ -753,7 +768,7 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
     setFinalVacationLeaveBalance(vacationLeaveBalance - leaveDates.length);
     setFinalSickLeaveBalance(Number(sickLeaveBalance - leaveDates.length));
     setFinalForcedLeaveBalance(forcedLeaveBalance - leaveDates.length);
-    setFinalSpecialPrivilegekBalance(specialPrivilegeLeaveBalance - leaveDates.length);
+    setFinalSpecialPrivilegeBalance(specialPrivilegeLeaveBalance - leaveDates.length);
 
     //update rounded off leave credits also
     setRoundedFinalVacationLeaveBalance(Math.round(vacationLeaveBalance) - leaveDates.length);
@@ -874,7 +889,11 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
   });
 
   useEffect(() => {
-    setValue('lateFilingJustification', lateFilingJustification);
+    if (lateFilingJustification === '<p></p>') {
+      setValue('lateFilingJustification', null);
+    } else {
+      setValue('lateFilingJustification', lateFilingJustification);
+    }
   }, [lateFilingJustification]);
 
   //reset late filing justification field if lateFiling is off
@@ -928,18 +947,6 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
                     />
                   ) : null}
 
-                  {/* If Justification letter is empty */}
-                  {(watch('lateFilingJustification') === '' ||
-                    watch('lateFilingJustification') === null ||
-                    watch('lateFilingJustification') === '<p></p>') &&
-                  lateFiling ? (
-                    <AlertNotification
-                      alertType="warning"
-                      notifMessage="Justification Letter for Late Filing is empty."
-                      dismissible={false}
-                      className="mb-1"
-                    />
-                  ) : null}
                   {/* Has Existing Pending Leave of the Same Name - cannot file a new one */}
                   {hasPendingLeave ? (
                     <AlertNotification
@@ -1099,11 +1106,21 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
                   ) : null}
 
                   {/* Special Privilege Leave Balance Notifications */}
-                  {finalSpecialPrivilegekBalance < 0 &&
+                  {finalSpecialPrivilegeBalance < 0 &&
                   watch('typeOfLeaveDetails.leaveName') === LeaveName.SPECIAL_PRIVILEGE ? (
                     <AlertNotification
                       alertType="warning"
                       notifMessage="Insufficient Special Privilege Leave Balance."
+                      dismissible={false}
+                      className="mb-1"
+                    />
+                  ) : null}
+
+                  {/* Special Privilege Leave Balance Notifications */}
+                  {leaveDates.length > 3 && watch('typeOfLeaveDetails.leaveName') === LeaveName.SPECIAL_PRIVILEGE ? (
+                    <AlertNotification
+                      alertType="warning"
+                      notifMessage="Special Privilege Leave can only be applied for a maximum of 3 days."
                       dismissible={false}
                       className="mb-1"
                     />
@@ -1508,17 +1525,18 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
                                 className="border-slate-300 text-slate-500 h-12 text-md w-full rounded-md"
                                 placeholder="Leave Balance to Convert"
                                 required
-                                value={leaveBalanceInput?.toFixed(3)}
+                                value={leaveBalanceInput}
                               />
                             </div>
                           </div>
                         </div>
 
                         <div className="flex flex-row justify-between items-center w-full">
-                          <div className="flex flex-row justify-between items-center w-full">
-                            <label className="pt-2 pr-2 text-slate-500 text-md font-medium">
+                          <div className="flex flex-col justify-between items-start w-full">
+                            <div className="pt-2 pr-2 text-slate-500 text-md font-medium">
                               Unearned Credits for the Month:
-                            </label>
+                            </div>
+                            <div className="pr-2 text-slate-500 text-xs font-medium">Vacation Leave + Sick Leave</div>
                           </div>
 
                           <div className="flex gap-2 w-full items-center">
@@ -1717,14 +1735,33 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
                       Justification Letter:<span className="text-red-600">*</span>
                     </label>
 
-                    <div className="resize-none w-full p-2 mt-1 rounded-md text-slate-500 text-md border-slate-300 mb-2 border focus:border-0">
-                      {/* <RichTextMenuBar editor={editor} content={''} /> */}
+                    <div
+                      className={`resize-none w-full p-2 mt-1 rounded-md text-slate-500 text-md ${
+                        errors.lateFilingJustification ? 'border-red-500' : 'border-slate-300'
+                      }  mb-0 border focus:border-3`}
+                    >
                       <EditorContent
                         placeholder={''}
                         editor={editor}
                         style={{ whiteSpace: 'pre-line' }}
                       ></EditorContent>
                     </div>
+                    {/* If Justification letter is empty */}
+                    {errors.lateFilingJustification ? (
+                      <label className="text-xs text-red-400">{errors?.lateFilingJustification?.message}</label>
+                    ) : null}
+                    {/* {(watch('lateFilingJustification') === '' ||
+                      watch('lateFilingJustification') === null ||
+                      watch('lateFilingJustification') === '<p></p>' ||
+                      watch('lateFilingJustification')?.length < 40) &&
+                    lateFiling ? (
+                      <AlertNotification
+                        alertType="warning"
+                        notifMessage="Justification Letter for Late Filing is empty or has insufficient number of characters."
+                        dismissible={false}
+                        className="mb-1"
+                      />
+                    ) : null} */}
                   </>
                 ) : null}
 
@@ -1962,14 +1999,14 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
                           watch('typeOfLeaveDetails.leaveName') !== LeaveName.TERMINAL ? (
                             <td
                               className={`${
-                                Number(finalSpecialPrivilegekBalance) < 0 &&
+                                Number(finalSpecialPrivilegeBalance) < 0 &&
                                 watch('typeOfLeaveDetails.leaveName') === LeaveName.SPECIAL_PRIVILEGE
                                   ? 'bg-red-300'
                                   : ''
                               } border border-slate-200 p-1 text-center text-sm`}
                             >
                               {watch('typeOfLeaveDetails.leaveName') === LeaveName.SPECIAL_PRIVILEGE
-                                ? Number(finalSpecialPrivilegekBalance).toFixed(3)
+                                ? Number(finalSpecialPrivilegeBalance).toFixed(3)
                                 : Number(specialPrivilegeLeaveBalance).toFixed(3)}
                             </td>
                           ) : null}
@@ -2026,6 +2063,7 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
                     : //if late filing and justification letter is empty, added minimum character requirement
                     (watch('lateFilingJustification') === '' ||
                         watch('lateFilingJustification') === null ||
+                        watch('lateFilingJustification') === undefined ||
                         watch('lateFilingJustification') === '<p></p>' ||
                         watch('lateFilingJustification')?.length < 40) &&
                       lateFiling
@@ -2048,8 +2086,10 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
                     ? true
                     : roundedFinalSickLeaveBalance < 0 && watch('typeOfLeaveDetails.leaveName') === LeaveName.SICK
                     ? true
-                    : finalSpecialPrivilegekBalance < 0 &&
+                    : finalSpecialPrivilegeBalance < 0 &&
                       watch('typeOfLeaveDetails.leaveName') === LeaveName.SPECIAL_PRIVILEGE
+                    ? true
+                    : leaveDates.length > 3 && watch('typeOfLeaveDetails.leaveName') === LeaveName.SPECIAL_PRIVILEGE
                     ? true
                     : overlappingLeaveCount > 0 &&
                       (watch('typeOfLeaveDetails.leaveName') === LeaveName.MATERNITY ||

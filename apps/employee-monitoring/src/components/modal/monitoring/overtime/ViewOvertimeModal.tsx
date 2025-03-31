@@ -1,12 +1,12 @@
 /* eslint-disable @nx/enforce-module-boundaries */
 import { Modal } from '@gscwd-apps/oneui';
-import dayjs from 'dayjs';
 import React, { FunctionComponent, useEffect } from 'react';
 import { LabelValue } from '../../../labels/LabelValue';
 import { Overtime } from 'libs/utils/src/lib/types/overtime.type';
 import UseRenderOvertimeStatus from 'apps/employee-monitoring/src/utils/functions/RenderOvertimeStatus';
 import { EmployeesUnderOvertimeTable } from '../../../tables/EmployeesUnderOvertimeTable';
 import { DateTimeFormatter } from 'libs/utils/src/lib/functions/DateTimeFormatter';
+import { OvertimeStatus } from 'libs/utils/src/lib/enums/overtime.enum';
 
 type ViewOvertimeModalProps = {
   modalState: boolean;
@@ -55,7 +55,7 @@ const ViewOvertimeModal: FunctionComponent<ViewOvertimeModalProps> = ({
                     label="Overtime Date"
                     direction="top-to-bottom"
                     textSize="md"
-                    value={dayjs(rowData.plannedDate).format('MMMM DD, YYYY')}
+                    value={DateTimeFormatter(rowData.plannedDate, 'MMMM DD, YYYY')}
                   />
                 </div>
 
@@ -75,23 +75,7 @@ const ViewOvertimeModal: FunctionComponent<ViewOvertimeModalProps> = ({
                   />
                 </div>
 
-                <div className="grid px-5 sm:grid-rows-2 sm:grid-cols-1 md:grid-rows-2 md:grid-cols-1 lg:grid-rows-1 lg:grid-cols-2 sm:gap-2 md:gap:2 lg:gap-0">
-                  <LabelValue
-                    label="Approved By"
-                    direction="top-to-bottom"
-                    textSize="md"
-                    value={rowData.approvedBy ? rowData.approvedBy : 'N/A'}
-                  />
-
-                  <LabelValue
-                    label="Date Approved"
-                    direction="top-to-bottom"
-                    textSize="md"
-                    value={rowData.dateApproved ? DateTimeFormatter(rowData.dateApproved) : '-- -- ----'}
-                  />
-                </div>
-
-                <div className="grid px-5 sm:grid-rows-2 sm:grid-cols-1 md:grid-rows-2 md:grid-cols-1 lg:grid-rows-1 lg:grid-cols-2 sm:gap-2 md:gap:2 lg:gap-0">
+                <div className="grid px-5 sm:grid-rows-2 grid-cols-1 md:grid-rows-2 lg:grid-rows-1 sm:gap-2 md:gap:2 lg:gap-0">
                   <LabelValue
                     label="Purpose"
                     direction="top-to-bottom"
@@ -99,6 +83,42 @@ const ViewOvertimeModal: FunctionComponent<ViewOvertimeModalProps> = ({
                     value={rowData.purpose ? rowData.purpose : 'N/A'}
                   />
                 </div>
+
+                {rowData.status === OvertimeStatus.PENDING || rowData.status === OvertimeStatus.CANCELLED ? null : (
+                  <>
+                    <hr />
+                    <div className="grid px-5 sm:grid-rows-2 sm:grid-cols-1 md:grid-rows-2 md:grid-cols-1 lg:grid-rows-1 lg:grid-cols-2 sm:gap-2 md:gap:2 lg:gap-0">
+                      <LabelValue
+                        label={`${rowData.status === OvertimeStatus.DISAPPROVED ? 'Disapproved By' : 'Approved By'}`}
+                        direction="top-to-bottom"
+                        textSize="md"
+                        value={rowData.approvedBy ? rowData.approvedBy : 'N/A'}
+                      />
+
+                      <LabelValue
+                        label={`${
+                          rowData.status === OvertimeStatus.DISAPPROVED ? 'Date Disapproved' : 'Date Approved'
+                        }`}
+                        direction="top-to-bottom"
+                        textSize="md"
+                        value={
+                          rowData.dateApproved ? DateTimeFormatter(rowData.dateApproved, 'MMMM DD, YYYY') : '-- -- ----'
+                        }
+                      />
+                    </div>
+                  </>
+                )}
+
+                {rowData.status === OvertimeStatus.DISAPPROVED ? (
+                  <div className="grid px-5 grid-cols-1 sm:gap-2 md:gap:2 lg:gap-0">
+                    <LabelValue
+                      label="Disapproval Reason"
+                      direction="top-to-bottom"
+                      textSize="md"
+                      value={rowData.remarks ? rowData.remarks : 'N/A'}
+                    />
+                  </div>
+                ) : null}
 
                 <hr />
 

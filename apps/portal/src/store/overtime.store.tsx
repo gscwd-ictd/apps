@@ -13,6 +13,7 @@ import {
 } from 'libs/utils/src/lib/types/overtime.type';
 import { create } from 'zustand';
 import { devtools } from 'zustand/middleware';
+import { OvertimeAccomplishmentStatus } from 'libs/utils/src/lib/enums/overtime.enum';
 
 export type OvertimeState = {
   employeeList: Array<SelectOption>;
@@ -138,6 +139,10 @@ export type OvertimeState = {
   postOvertime: () => void;
   postOvertimeSuccess: (response: OvertimeForm) => void;
   postOvertimeFail: (error: string) => void;
+
+  putOvertime: () => void;
+  putOvertimeSuccess: (response: OvertimeForm) => void;
+  putOvertimeFail: (error: string) => void;
 
   setRemoveEmployeeModalIsOpen: (removeEmployeeModalIsOpen: boolean) => void;
   setOvertimeSummaryModalIsOpen: (overtimeSummaryModalIsOpen: boolean) => void;
@@ -656,6 +661,51 @@ export const useOvertimeStore = create<OvertimeState>()(
       }));
     },
 
+    //POST OVERTIME ACTIONS
+    putOvertime: () => {
+      set((state) => ({
+        ...state,
+        response: {
+          ...state.response,
+          postResponseApply: {},
+        },
+        loading: {
+          ...state.loading,
+          loadingResponse: true,
+        },
+        error: {
+          ...state.error,
+          errorResponse: '',
+        },
+      }));
+    },
+    putOvertimeSuccess: (response: any) => {
+      set((state) => ({
+        ...state,
+        response: {
+          ...state.response,
+          postResponseApply: response,
+        },
+        loading: {
+          ...state.loading,
+          loadingResponse: false,
+        },
+      }));
+    },
+    putOvertimeFail: (error: string) => {
+      set((state) => ({
+        ...state,
+        loading: {
+          ...state.loading,
+          loadingResponse: false,
+        },
+        error: {
+          ...state.error,
+          errorResponse: error,
+        },
+      }));
+    },
+
     //DELETE OVERTIME ACTIONS
     cancelOvertime: () => {
       set((state) => ({
@@ -747,7 +797,21 @@ export const useOvertimeStore = create<OvertimeState>()(
     },
 
     removeEmployeeFromOvertime: (employeeId: string, employees: Array<EmployeeOvertimeDetail>) => {
-      const tempEmployees = employees.filter((employee) => employee.employeeId !== employeeId);
+      //old removal of employees from overtime
+      // const tempEmployees = employees.filter((employee) => employee.employeeId !== employeeId);
+      // set((state) => ({
+      //   ...state,
+      //   overtimeDetails: {
+      //     ...state.overtimeDetails,
+      //     employees: tempEmployees,
+      //   },
+      // }));
+
+      const tempEmployees = employees.map((item) =>
+        item.employeeId !== employeeId
+          ? item
+          : { ...item, accomplishmentStatus: OvertimeAccomplishmentStatus.REMOVED_BY_SUPERVISOR }
+      );
       set((state) => ({
         ...state,
         overtimeDetails: {

@@ -14,7 +14,32 @@ const nextConfig = {
   },
 };
 
+const securityHeaders = [
+  {
+    key: 'X-Frame-Options',
+    value: 'DENY',
+  },
+
+  {
+    key: 'Content-Security-Policy',
+    value: "frame-ancestors 'none'",
+  },
+];
+
 module.exports = withNx({
+  reactStrictMode: true,
+  async headers() {
+    return [
+      {
+        // Apply these headers to all routes in your application.
+
+        source: '/(.*)',
+
+        headers: securityHeaders,
+      },
+    ];
+  },
+
   ...nextConfig,
   images: {
     domains: ['172.20.110.45', '172.20.110.60', 'avatars.gscwd.app'],

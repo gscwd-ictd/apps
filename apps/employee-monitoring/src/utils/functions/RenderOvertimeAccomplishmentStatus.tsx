@@ -8,11 +8,14 @@ function UseRenderOvertimeAccomplishmentStatus(status: OvertimeAccomplishmentSta
   return (
     <BadgePill
       variant={
-        status === OvertimeAccomplishmentStatus.APPROVED || status === 'approved'
+        status === OvertimeAccomplishmentStatus.APPROVED
           ? 'success'
-          : status === OvertimeAccomplishmentStatus.DISAPPROVED || status === 'disapproved'
+          : status === OvertimeAccomplishmentStatus.DISAPPROVED
           ? 'error'
-          : status === OvertimeAccomplishmentStatus.PENDING || status === 'pending'
+          : status === OvertimeAccomplishmentStatus.REMOVED_BY_MANAGER ||
+            status === OvertimeAccomplishmentStatus.REMOVED_BY_SUPERVISOR
+          ? 'error'
+          : status === OvertimeAccomplishmentStatus.PENDING
           ? 'warning'
           : 'default'
       }
@@ -21,6 +24,10 @@ function UseRenderOvertimeAccomplishmentStatus(status: OvertimeAccomplishmentSta
           ? 'Approved'
           : status === OvertimeAccomplishmentStatus.DISAPPROVED
           ? 'Disapproved'
+          : status === OvertimeAccomplishmentStatus.REMOVED_BY_MANAGER
+          ? 'Removed by Manager'
+          : status === OvertimeAccomplishmentStatus.REMOVED_BY_SUPERVISOR
+          ? 'Removed by Supervisor'
           : status === OvertimeAccomplishmentStatus.PENDING
           ? 'Pending'
           : null
