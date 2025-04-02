@@ -11,8 +11,8 @@ import { Schedule } from 'libs/utils/src/lib/types/schedule.type';
 export type TimeLogState = {
   dtr: EmployeeTimeLog;
   schedule: Schedule & EmployeeRestDay;
-  isHoliday: boolean;
-  isRestDay: boolean;
+  isHoliday: boolean | null;
+  isRestDay: boolean | null;
   loading: {
     loadingTimeLogs: boolean;
   };
@@ -44,8 +44,8 @@ export const useTimeLogStore = create<TimeLogState>()(
         ...state,
         dtr: {} as EmployeeTimeLog,
         schedule: {} as Schedule & EmployeeRestDay,
-        isHoliday: false,
-        isRestDay: false,
+        isHoliday: null,
+        isRestDay: null,
         loading: {
           ...state.loading,
           loadingTimeLogs: loading,

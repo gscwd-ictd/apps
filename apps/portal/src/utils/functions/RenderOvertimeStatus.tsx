@@ -17,7 +17,7 @@ function UseRenderOvertimeStatus(status: OvertimeStatus | string, textSize: Text
           : status === OvertimeStatus.PENDING || status === 'pending'
           ? 'warning'
           : status === OvertimeStatus.CANCELLED || status === 'cancelled'
-          ? 'default'
+          ? 'error'
           : 'default'
       }
       label={

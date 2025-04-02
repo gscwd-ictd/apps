@@ -92,6 +92,7 @@ export const OvertimeModal = ({ modalState, setModalState, closeModalAction }: M
   const [approveAllAccomplishmentData, setApproveAllAccomplishmentData] =
     useState<OvertimeAccomplishmentApprovalPatch>();
   const [pendingAccomplishmentEmployees, setPendingAccomplishmentEmployees] = useState<Array<string>>([]);
+  const [approvedAccomplishmentEmployees, setApprovedAccomplishmentEmployees] = useState<Array<string>>([]);
   const [canStillRemoveEmployee, setCanStillRemoveEmployee] = useState<boolean>(true);
   const [actualHours, setActualHours] = useState<number>(0);
   const [finalEmployeeList, setFinalEmployeeList] = useState<Array<EmployeeOvertimeDetail>>([]);
@@ -134,20 +135,32 @@ export const OvertimeModal = ({ modalState, setModalState, closeModalAction }: M
   useEffect(() => {
     if (overtimeDetails) {
       setPendingAccomplishmentEmployees(Array.from(new Set([])));
-      let employeeIdList = [];
+      setApprovedAccomplishmentEmployees(Array.from(new Set([])));
+      let pendingEmployeeIdList = [];
+      let approvedEmployeeIdList = [];
       for (let i = 0; i < overtimeDetails?.employees?.length; i++) {
+        //for pending
         if (
           overtimeDetails?.employees[i]?.isAccomplishmentSubmitted == true &&
           overtimeDetails?.employees[i]?.accomplishmentStatus === OvertimeAccomplishmentStatus.PENDING
         ) {
-          employeeIdList.push(overtimeDetails?.employees[i]?.employeeId);
+          pendingEmployeeIdList.push(overtimeDetails?.employees[i]?.employeeId);
+        }
+        //for approved
+
+        if (
+          overtimeDetails?.employees[i]?.isAccomplishmentSubmitted == true &&
+          overtimeDetails?.employees[i]?.accomplishmentStatus === OvertimeAccomplishmentStatus.APPROVED
+        ) {
+          approvedEmployeeIdList.push(overtimeDetails?.employees[i]?.employeeId);
         }
       }
-      setPendingAccomplishmentEmployees(employeeIdList);
+      setPendingAccomplishmentEmployees(pendingEmployeeIdList);
+      setApprovedAccomplishmentEmployees(approvedEmployeeIdList);
     }
 
     checkIfCancellable(overtimeDetails?.employees);
-  }, [overtimeDetails]);
+  }, [overtimeDetails, modalState]);
 
   useEffect(() => {
     setApproveAllAccomplishmentData({
@@ -213,21 +226,28 @@ export const OvertimeModal = ({ modalState, setModalState, closeModalAction }: M
   });
 
   // close Confirm Application Modal
-  const closeConfirmModal = async () => {
+  const closeConfirmModal = () => {
     setConfirmApplicationModalIsOpen(false);
     setApproveAllAccomplishmentModalIsOpen(false);
     setRemoveEmployeeModalIsOpen(false);
   };
 
-  const closeAccomplishmentModal = async () => {
+  const closeAccomplishmentModal = () => {
     setOvertimeAccomplishmentModalIsOpen(false);
   };
 
-  const handleEmployeeAccomplishment = async (employeeId: string, employeeName: string) => {
+  const handleEmployeeAccomplishment = (employeeId: string, employeeName: string) => {
     setOvertimeAccomplishmentEmployeeId(employeeId);
     setOvertimeAccomplishmentEmployeeName(employeeName);
     setOvertimeAccomplishmentApplicationId(overtimeDetails.id);
     setOvertimeAccomplishmentModalIsOpen(true);
+  };
+
+  const handleCancelOvertime = () => {
+    setValue('status', OvertimeStatus.CANCELLED);
+    setConfirmApplicationModalIsOpen(true);
+    // setApproveAllAccomplishmentModalIsOpen(false);
+    // setRemoveEmployeeModalIsOpen(false);
   };
 
   const onSubmit: SubmitHandler<overtimeAction> = (data: overtimeAction) => {
@@ -329,7 +349,7 @@ export const OvertimeModal = ({ modalState, setModalState, closeModalAction }: M
                       dismissible={false}
                     />
 
-                    {pendingAccomplishmentEmployees.length > 0 ? (
+                    {pendingAccomplishmentEmployees.length > 0 && overtimeDetails.status === OvertimeStatus.APPROVED ? (
                       <AlertNotification
                         alertType={'warning'}
                         notifMessage={
@@ -670,7 +690,19 @@ export const OvertimeModal = ({ modalState, setModalState, closeModalAction }: M
               </Button>
             ) : overtimeDetails.status === OvertimeStatus.APPROVED ? (
               <>
-                {overtimeDetails.status === OvertimeStatus.APPROVED && pendingAccomplishmentEmployees.length > 0 ? (
+                {approvedAccomplishmentEmployees.length <= 0 ? (
+                  <Button
+                    variant={'warning'}
+                    size={'md'}
+                    loading={false}
+                    onClick={(e) => handleCancelOvertime()}
+                    type="submit"
+                  >
+                    {`${windowWidth > 1330 ? 'Cancel Overtime' : windowWidth > 1024 ? 'Cancel Overtime' : 'Cancel OT'}`}
+                  </Button>
+                ) : null}
+
+                {pendingAccomplishmentEmployees.length > 0 ? (
                   <Button
                     variant={'primary'}
                     size={'md'}
@@ -681,7 +713,13 @@ export const OvertimeModal = ({ modalState, setModalState, closeModalAction }: M
                       pendingAccomplishmentEmployees.length > 0 && actualHours > 0 && actualHours ? false : true
                     }
                   >
-                    Approve All Accomplishments
+                    {`${
+                      windowWidth > 1330
+                        ? 'Approve All Accomplishments'
+                        : windowWidth > 1024
+                        ? 'Approve All Accomplishments'
+                        : 'Approve All'
+                    }`}
                   </Button>
                 ) : null}
 
