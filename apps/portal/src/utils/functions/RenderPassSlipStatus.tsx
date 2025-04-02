@@ -24,7 +24,7 @@ function UseRenderPassSlipStatus(status: PassSlipStatus, textSize: TextSize) {
             status === PassSlipStatus.AWAITING_MEDICAL_CERTIFICATE
           ? 'warning'
           : status === PassSlipStatus.CANCELLED
-          ? 'default'
+          ? 'error'
           : status === PassSlipStatus.USED || status === PassSlipStatus.UNUSED
           ? 'default'
           : 'default'

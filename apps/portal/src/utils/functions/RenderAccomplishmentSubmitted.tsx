@@ -8,8 +8,8 @@ function UseRenderAccomplishmentSubmitted(status: boolean, textSize: TextSize) {
   return (
     <BadgePill
       textSize={textSize}
-      variant={status == true ? 'success' : status == false ? 'warning' : 'default'}
-      label={status == true ? 'Has Submitted' : status == false ? 'Not Submitted' : 'N/A'}
+      variant={status === true ? 'success' : status === false ? 'warning' : 'default'}
+      label={status === true ? 'Has Submitted' : status === false ? 'Not Submitted' : 'N/A'}
     />
   );
 }
