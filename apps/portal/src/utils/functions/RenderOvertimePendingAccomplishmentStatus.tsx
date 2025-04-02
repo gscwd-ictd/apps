@@ -3,20 +3,32 @@
 
 import { OvertimeAccomplishmentStatus, OvertimeStatus } from 'libs/utils/src/lib/enums/overtime.enum';
 import BadgePill from '../../components/modular/badges/BadgePill';
-import { EmployeeOvertimeDetail } from 'libs/utils/src/lib/types/overtime.type';
+import { OvertimeDetails } from 'libs/utils/src/lib/types/overtime.type';
 import { TextSize } from 'libs/utils/src/lib/enums/text-size.enum';
 
-function RenderOvertimePendingAccomplishmentStatus(employees: Array<EmployeeOvertimeDetail>, textSize: TextSize) {
+function RenderOvertimePendingAccomplishmentStatus(employees: OvertimeDetails, textSize: TextSize) {
   let pendingAccomplishmentApproval = [];
-  pendingAccomplishmentApproval = employees.filter(
+  pendingAccomplishmentApproval = employees?.employees.filter(
     (e) => e.isAccomplishmentSubmitted == true && e.accomplishmentStatus === OvertimeAccomplishmentStatus.PENDING
   );
 
   return (
     <BadgePill
       textSize={textSize}
-      variant={pendingAccomplishmentApproval.length >= 1 ? 'warning' : 'default'}
-      label={pendingAccomplishmentApproval.length >= 1 ? 'Pending Approvals' : 'No Pending Approvals'}
+      variant={
+        employees?.status === OvertimeStatus.CANCELLED
+          ? 'error'
+          : pendingAccomplishmentApproval.length >= 1
+          ? 'warning'
+          : 'default'
+      }
+      label={
+        employees?.status === OvertimeStatus.CANCELLED
+          ? 'Cancelled'
+          : pendingAccomplishmentApproval.length >= 1
+          ? 'Pending Approvals'
+          : 'No Pending Approvals'
+      }
     />
   );
 }
