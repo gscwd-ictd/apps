@@ -14,9 +14,9 @@ import { MySelectList } from '../../../inputs/SelectList';
 import { listOfRestDays } from 'libs/utils/src/lib/constants/rest-days.const';
 import { SelectOption } from 'libs/utils/src/lib/types/select.type';
 import UseRestDaysOptionToNumberArray from 'apps/employee-monitoring/src/utils/functions/ConvertRestDaysOptionToNumberArray';
-import { Notification } from 'libs/oneui/src/components/Notification/Notification';
 import Toggle from '../../../switch/Toggle';
 import DailyTimeRecordCalendar from '../DailyTimeRecordCalendar';
+import { mutate } from 'swr';
 
 type AddEmpSchedModalProps = {
   modalState: boolean;
@@ -143,6 +143,11 @@ const AddEmpSchedModal: FunctionComponent<AddEmpSchedModalProps> = ({
 
       // close the modal since it is a success
       onCloseScheduleSheet();
+
+      // mutate the time log table to get updated data
+      mutate((key) => typeof key === 'string' && key.startsWith('daily-time-record/employees'), undefined, {
+        revalidate: true,
+      });
     } else if (error) {
       // post scheduling sheet fail
       postEmployeeScheduleFail(result);

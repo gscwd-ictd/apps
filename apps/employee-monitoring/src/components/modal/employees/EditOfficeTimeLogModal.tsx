@@ -1,4 +1,4 @@
-import { Alert, Button, Modal, ToastNotification } from '@gscwd-apps/oneui';
+import { Alert, AlertNotification, Button, Modal, ToastNotification } from '@gscwd-apps/oneui';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { LabelInput } from 'apps/employee-monitoring/src/components/inputs/LabelInput';
 import { LabelValue } from 'apps/employee-monitoring/src/components/labels/LabelValue';
@@ -6,13 +6,13 @@ import { EmployeeDtr, useDtrStore } from 'apps/employee-monitoring/src/store/dtr
 import { patchEmpMonitoring } from 'apps/employee-monitoring/src/utils/helper/employee-monitoring-axios-helper';
 import useSWR from 'swr';
 import fetcherEMS from 'apps/employee-monitoring/src/utils/fetcher/FetcherEMS';
-
 import dayjs from 'dayjs';
 import { EmployeeDtrWithSchedule } from 'libs/utils/src/lib/types/dtr.type';
 import { isEmpty } from 'lodash';
 import { Dispatch, FunctionComponent, SetStateAction, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { OfficeSchema } from './OfficeSchema';
+import { mutate } from 'swr';
 
 type EditDailySchedModalProps = {
   modalState: boolean;
@@ -38,8 +38,17 @@ const EditOfficeTimeLogModal: FunctionComponent<EditDailySchedModalProps> = ({
   rowData,
   companyId,
 }) => {
+  const { updateEmployeeDtr, updateEmployeeDtrFail, updateEmployeeDtrSuccess, errorUpdateEmployeeDtr } = useDtrStore(
+    (state) => ({
+      updateEmployeeDtr: state.updateEmployeeDtr,
+      updateEmployeeDtrSuccess: state.updateEmployeeDtrSuccess,
+      updateEmployeeDtrFail: state.updateEmployeeDtrFail,
+      errorUpdateEmployeeDtr: state.error.errorUpdateEmployeeDtr,
+    })
+  );
+
   // fetch time logs for the day
-  const { data: swrTimeLogs, error: swrTimeLogsError } = useSWR(
+  const { data: swrTimeLogs } = useSWR(
     modalState ? `/daily-time-record/employees/entries/logs/${rowData.companyId}/${rowData.day}` : null,
     fetcherEMS,
     {
@@ -62,28 +71,6 @@ const EditOfficeTimeLogModal: FunctionComponent<EditDailySchedModalProps> = ({
     mode: 'onChange',
     reValidateMode: 'onBlur',
   });
-
-  const [confirmAlertIsOpen, setConfirmAlertIsOpen] = useState<boolean>(false);
-
-  const closeModal = () => {
-    reset();
-    closeModalAction();
-  };
-
-  // removes the seconds and returns 24H format
-  const removeSeconds = (value: string | null) => {
-    if (isEmpty(value)) return null;
-    else return dayjs(rowData.dtr.dtrDate + ' ' + value).format('HH:mm');
-  };
-
-  const { updateEmployeeDtr, updateEmployeeDtrFail, updateEmployeeDtrSuccess, errorUpdateEmployeeDtr } = useDtrStore(
-    (state) => ({
-      updateEmployeeDtr: state.updateEmployeeDtr,
-      updateEmployeeDtrSuccess: state.updateEmployeeDtrSuccess,
-      updateEmployeeDtrFail: state.updateEmployeeDtrFail,
-      errorUpdateEmployeeDtr: state.error.errorUpdateEmployeeDtr,
-    })
-  );
 
   const onSubmit = async (data: Partial<EmployeeDtr>) => {
     // initialize an empty array
@@ -120,9 +107,23 @@ const EditOfficeTimeLogModal: FunctionComponent<EditDailySchedModalProps> = ({
       updateEmployeeDtrSuccess(result);
       setConfirmAlertIsOpen(false);
       closeModal();
+
+      // mutate the time log table to get updated data
+      mutate((key) => typeof key === 'string' && key.startsWith('daily-time-record/employees'), undefined, {
+        revalidate: true,
+      });
     }
   };
 
+  // Confirmation modal
+  const [confirmAlertIsOpen, setConfirmAlertIsOpen] = useState<boolean>(false);
+
+  const closeModal = () => {
+    reset();
+    closeModalAction();
+  };
+
+  // Set form values based from fetched data
   const setDefaultValues = (rowData: EmployeeDtrWithSchedule) => {
     reset({
       companyId: rowData.companyId,
@@ -143,6 +144,12 @@ const EditOfficeTimeLogModal: FunctionComponent<EditDailySchedModalProps> = ({
     setValue('lunchOut', removeSeconds(rowData.dtr.lunchOut));
     setValue('withLunch', rowData.schedule.withLunch);
     setValue('shift', rowData.schedule.shift);
+  };
+
+  // removes the seconds and returns 24H format
+  const removeSeconds = (value: string | null) => {
+    if (isEmpty(value)) return null;
+    else return dayjs(rowData.dtr.dtrDate + ' ' + value).format('HH:mm');
   };
 
   const format12Hour = (time: string) => {
@@ -187,7 +194,7 @@ const EditOfficeTimeLogModal: FunctionComponent<EditDailySchedModalProps> = ({
         </Alert.Footer>
       </Alert>
 
-      <Modal open={modalState} setOpen={setModalState} steady>
+      <Modal open={modalState} setOpen={setModalState}>
         <Modal.Header withCloseBtn>
           <div className="flex justify-between w-full pl-5">
             <span className="text-2xl font-medium text-gray-900">Time Log Correction</span>
@@ -203,6 +210,14 @@ const EditOfficeTimeLogModal: FunctionComponent<EditDailySchedModalProps> = ({
         </Modal.Header>
 
         <Modal.Body>
+          {isEmpty(rowData.schedule?.shift) ? (
+            <AlertNotification
+              alertType="error"
+              notifMessage="There is no schedule set for this day."
+              dismissible={false}
+            />
+          ) : null}
+
           <form onSubmit={handleSubmit(onSubmit)} id="editOfficeDtrModal">
             <div className="flex flex-col w-full gap-5 px-5 mt-5">
               <div className="grid sm:grid-rows-2 sm:grid-cols-1 md:grid-rows-2 md:grid-cols-1 lg:grid-rows-1 lg:grid-cols-2 sm:gap-2 md:gap:2 lg:gap-0">
@@ -215,7 +230,11 @@ const EditOfficeTimeLogModal: FunctionComponent<EditDailySchedModalProps> = ({
 
                 <LabelValue
                   label="Shift"
-                  value={rowData.schedule?.shift.charAt(0).toUpperCase() + rowData.schedule?.shift.slice(1)}
+                  value={
+                    rowData.schedule?.shift
+                      ? rowData.schedule?.shift.charAt(0).toUpperCase() + rowData.schedule?.shift.slice(1)
+                      : '--'
+                  }
                   direction="top-to-bottom"
                   textSize="md"
                 />

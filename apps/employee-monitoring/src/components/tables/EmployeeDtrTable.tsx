@@ -8,7 +8,7 @@ import fetcherEMS from '../../utils/fetcher/FetcherEMS';
 import { isEmpty } from 'lodash';
 import { HolidayTypes } from '../../utils/enum/holiday-types.enum';
 import { EmployeeDtrWithSchedule } from 'libs/utils/src/lib/types/dtr.type';
-import EditDailySchedModal from 'apps/employee-monitoring/src/components/modal/employees/EditOfficeTimeLogModal';
+import EditOfficeTimeLogModal from 'apps/employee-monitoring/src/components/modal/employees/EditOfficeTimeLogModal';
 import localizedFormat from 'dayjs/plugin/localizedFormat';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
 import duration from 'dayjs/plugin/duration';
@@ -167,7 +167,7 @@ export const EmployeeDtrTable: FunctionComponent<EmployeeDtrTableProps> = ({ emp
 
   return (
     <>
-      <EditDailySchedModal
+      <EditOfficeTimeLogModal
         modalState={editModalIsOpen}
         setModalState={setEditModalIsOpen}
         closeModalAction={closeEditActionModal}
@@ -198,7 +198,7 @@ export const EmployeeDtrTable: FunctionComponent<EmployeeDtrTableProps> = ({ emp
         <>
           {/* OFFICE EMPLOYEE DTR TABLE */}
           {employeeData.scheduleBase === ScheduleBase.OFFICE ? (
-            <div className="flex w-full mt-2 overflow-x-auto ">
+            <div className="flex w-full mt-2 overflow-x-auto">
               <table className="w-full border table-auto border-spacing-0 bg-slate-50">
                 <thead className="">
                   <tr className="text-xs border-b divide-x divide-y">
@@ -369,33 +369,40 @@ export const EmployeeDtrTable: FunctionComponent<EmployeeDtrTableProps> = ({ emp
           {/* FIELD/STATION EMPLOYEE DTR TABLE */}
           {employeeData.scheduleBase === ScheduleBase.FIELD ||
           employeeData.scheduleBase === ScheduleBase.PUMPING_STATION ? (
-            <>
+            <div className="w-full size-max overflow-x-auto">
               <section className="grid grid-cols-11 grid-rows-2 text-xs font-semibold border rounded-tl rounded-tr border-slate-300 bg-gray-50 mt-2">
+                <div className="col-span-3 row-span-1 py-1 border">
+                  <span className="flex items-center justify-center w-full ">Time in</span>
+                </div>
+
+                <div className="col-span-3 row-span-1 py-1 border">
+                  <span className="flex items-center justify-center w-full ">Time out</span>
+                </div>
+
+                <div className="col-span-2 row-span-2 border ">
+                  <span className="flex items-center justify-center w-full h-full">Schedule</span>
+                </div>
+
                 <div className="col-span-2 row-span-2 border rounded-tl ">
                   <span className="flex items-center justify-center w-full h-full">Remarks</span>
                 </div>
-                <div className="col-span-4 row-span-1 py-1 border">
-                  <span className="flex items-center justify-center w-full ">Time in</span>
-                </div>
-                <div className="col-span-4 row-span-1 py-1 border">
-                  <span className="flex items-center justify-center w-full ">Time out</span>
-                </div>
+
                 <div className="col-span-1 row-span-2 border rounded-tr ">
                   <span className="flex items-center justify-center w-full h-full">Actions</span>
                 </div>
 
-                <div className="col-span-4 row-span-1 border">
-                  <div className="grid grid-cols-5 ">
+                <div className="col-span-3 row-span-1 border">
+                  <div className="grid grid-cols-4">
                     <div className="col-span-2 py-1 text-center ">Date</div>
                     <div className="col-span-1 py-1 border-x"></div>
-                    <div className="col-span-2 py-1 text-center">Time Log</div>
+                    <div className="col-span-1 py-1 text-center">Time Log</div>
                   </div>
                 </div>
-                <div className="col-span-4 row-span-1 border">
-                  <div className="grid grid-cols-5">
+                <div className="col-span-3 row-span-1 border">
+                  <div className="grid grid-cols-4">
                     <div className="col-span-2 py-1 text-center">Date</div>
                     <div className="col-span-1 py-1 border-x"></div>
-                    <div className="col-span-2 py-1 text-center">Time Log</div>
+                    <div className="col-span-1 py-1 text-center">Time Log</div>
                   </div>
                 </div>
               </section>
@@ -422,7 +429,7 @@ export const EmployeeDtrTable: FunctionComponent<EmployeeDtrTableProps> = ({ emp
 
                     return (
                       <section
-                        className={`grid grid-cols-11 text-xs  border-b  border-x border-slate-300 ${
+                        className={`grid grid-cols-11 text-xs border-b border-x border-slate-300 ${
                           logs.holidayType === HolidayTypes.REGULAR
                             ? regularHoliday
                             : logs.holidayType === HolidayTypes.SPECIAL
@@ -431,26 +438,20 @@ export const EmployeeDtrTable: FunctionComponent<EmployeeDtrTableProps> = ({ emp
                         } `}
                         key={index}
                       >
-                        <div className="col-span-2 border">
-                          <span className="flex items-center justify-center w-full h-full text-center break-words">
-                            {logs.dtr.remarks ? logs.dtr.remarks : '-'}
-                          </span>
-                        </div>
-
                         {/* TIME IN */}
-                        <div className="col-span-4 border">
-                          <div className="grid grid-cols-5 ">
+                        <div className="col-span-3 border">
+                          <div className="grid grid-cols-4 ">
                             <div className="col-span-2 py-3 text-center ">{formatDateInWords(logs.day)}</div>
                             <div className="col-span-1 py-3 text-center border-x">{dayjs(logs.day).format('ddd')}</div>
-                            <div className="col-span-2 py-3 text-center">
+                            <div className="col-span-1 py-3 text-center">
                               <span className={timeInColor}>{logs.dtr.timeIn ? formatTime(logs.dtr.timeIn) : '-'}</span>
                             </div>
                           </div>
                         </div>
 
                         {/* TIME OUT */}
-                        <div className="col-span-4 border">
-                          <div className="grid grid-cols-5 ">
+                        <div className="col-span-3 border">
+                          <div className="grid grid-cols-4 ">
                             <div className="col-span-2 py-3 text-center ">
                               {logs.schedule.shift === 'night'
                                 ? formatDateInWords(dayjs(logs.day).add(1, 'day').format('MM-DD-YYYY'))
@@ -461,7 +462,7 @@ export const EmployeeDtrTable: FunctionComponent<EmployeeDtrTableProps> = ({ emp
                                 ? dayjs(logs.day).add(1, 'day').format('ddd')
                                 : dayjs(logs.day).format('ddd')}
                             </div>
-                            <div className="col-span-2 py-3 text-center">
+                            <div className="col-span-1 py-3 text-center">
                               <span className={timeOutColor}>
                                 {logs.dtr.timeOut ? formatTime(logs.dtr.timeOut) : '-'}
                               </span>
@@ -469,8 +470,23 @@ export const EmployeeDtrTable: FunctionComponent<EmployeeDtrTableProps> = ({ emp
                           </div>
                         </div>
 
+                        {/* SCHEDULE */}
+                        <div className="col-span-2 border">
+                          <span className="flex items-center justify-center w-full h-full text-center break-words">
+                            {/* {logs.dtr.remarks ? logs.dtr.remarks : '-'} */}
+                            {formatTime(logs.schedule.timeIn)} - {formatTime(logs.schedule.timeOut)}
+                          </span>
+                        </div>
+
+                        {/* REMARKS */}
+                        <div className="col-span-2 border">
+                          <span className="flex items-center justify-center w-full h-full text-center break-words">
+                            {logs.dtr.remarks ? logs.dtr.remarks : '-'}
+                          </span>
+                        </div>
+
                         {/* ACTION */}
-                        <div className="flex items-center justify-center w-full col-span-1 border gap-1">
+                        <div className="col-span-1 flex items-center justify-center w-full  border gap-1">
                           {/* Time log edit button */}
                           <button
                             className="px-1 text-white bg-green-600 rounded disabled:bg-red-600"
@@ -494,7 +510,7 @@ export const EmployeeDtrTable: FunctionComponent<EmployeeDtrTableProps> = ({ emp
                     );
                   })
                 : null}
-            </>
+            </div>
           ) : null}
 
           {/* Aggregate data */}

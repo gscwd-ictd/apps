@@ -85,122 +85,6 @@ export const OvertimeAccomplishmentModal = ({ modalState, setModalState, closeMo
     setConfirmOvertimeAccomplishmentModalIsOpen(true);
   };
 
-  useEffect(() => {
-    if (!pendingOvertimeAccomplishmentModalIsOpen) {
-      reset();
-    } else {
-      setValue('employeeId', overtimeAccomplishmentDetails.employeeId);
-      setValue('overtimeApplicationId', overtimeAccomplishmentDetails.overtimeApplicationId);
-      setValue(
-        'encodedTimeIn',
-        overtimeAccomplishmentDetails?.encodedTimeIn
-          ? dayjs(overtimeAccomplishmentDetails?.encodedTimeIn).format('YYYY-MM-DDTHH:mm')
-          : overtimeAccomplishmentDetails?.ivmsTimeIn
-          ? dayjs(overtimeAccomplishmentDetails?.ivmsTimeOut).format('YYYY-MM-DDThh:mm')
-          : null
-      );
-      setValue(
-        'encodedTimeOut',
-        overtimeAccomplishmentDetails?.encodedTimeOut
-          ? dayjs(overtimeAccomplishmentDetails?.encodedTimeOut).format('YYYY-MM-DDTHH:mm')
-          : overtimeAccomplishmentDetails?.ivmsTimeOut
-          ? dayjs(overtimeAccomplishmentDetails?.ivmsTimeOut).format('YYYY-MM-DDThh:mm')
-          : null
-      );
-      setValue('accomplishments', overtimeAccomplishmentDetails.accomplishments);
-    }
-  }, [pendingOvertimeAccomplishmentModalIsOpen]);
-
-  useEffect(() => {
-    setFinalEncodedHours(overtimeAccomplishmentDetails.computedEncodedHours);
-  }, [employeeDetails, overtimeAccomplishmentDetails]);
-
-  useEffect(() => {
-    const encodedTimeIn = dayjs(`${watch('encodedTimeIn')}`);
-    const encodedTimeOut = dayjs(`${watch('encodedTimeOut')}`);
-    let totalHours: number;
-
-    //get difference between 2 time
-    if (encodedTimeOut.isAfter(encodedTimeIn)) {
-      totalHours = Number(encodedTimeOut.diff(encodedTimeIn, 'hour', true).toFixed(2));
-    }
-
-    setEncodedHours(totalHours);
-
-    // >>>>>>>>>> OLD CODE <<<<<<<<<<
-    // let encodeTimeIn = dayjs(`${watch('encodedTimeIn')}`).format('HH:mm');
-    // let encodeTimeOut = dayjs(`${watch('encodedTimeOut')}`).format('HH:mm');
-    // let totalSeconds;
-
-    //get difference between 2 time
-    // if (encodeTimeOut > encodeTimeIn) {
-    //   totalSeconds = dayjs(`${watch('encodedTimeIn')}`).diff(dayjs(`${watch('encodedTimeOut')}`), 'second');
-    // } else {
-    //   totalSeconds = dayjs(`${watch('encodedTimeIn')}`).diff(dayjs(`${watch('encodedTimeOut')}`), 'second');
-    // }
-
-    // let totalHours = Math.floor(totalSeconds / (60 * 60)); // How many hours?
-    // totalSeconds = totalSeconds - totalHours * 60 * 60; // Pull those hours out of totalSeconds
-
-    // let totalMinutes = Math.floor(totalSeconds / 60); //With hours out this will retun minutes
-    // totalSeconds = totalSeconds - totalMinutes * 60; // Again pull out of totalSeconds
-    // let finalTime = totalHours + totalMinutes / 60;
-
-    // setEncodedHours(finalTime < 0 ? finalTime * -1 : finalTime);
-    // >>>>>>>>>> OLD CODE <<<<<<<<<<
-  }, [watch('encodedTimeIn'), watch('encodedTimeOut')]);
-
-  // compute encoded overtime duration based on encoded time IN and OUT
-  //apply every 3hrs work & 1hr break rule
-  useEffect(() => {
-    let numberOfBreaks: number; // for 3-1 rule
-    //if holiday or rest day
-    if (isHoliday || isRestday) {
-      //if scheduled OT
-
-      //8-1 rule - is Holiday or Rest Day
-      if (encodedHours > 4 && encodedHours < 10) {
-        let temporaryHours = encodedHours - 1;
-        setFinalEncodedHours(Number(temporaryHours.toFixed(2)));
-      }
-
-      //3-1 rule beyond 9 hours
-      else if (encodedHours >= 10) {
-        numberOfBreaks = Number(((encodedHours - 9) / 4).toFixed(2)); // for 3-1 rule
-
-        let temporaryHours = Number(encodedHours - 1 - Math.floor(numberOfBreaks));
-        setFinalEncodedHours(Number(temporaryHours.toFixed(2)));
-      } else {
-        setFinalEncodedHours(encodedHours);
-      }
-    }
-    //if regular work day - 3-1 rule only
-    else {
-      //if scheduled OT
-      if (encodedHours >= 4) {
-        numberOfBreaks = Number((encodedHours / 4).toFixed(2)); // for 3-1 rule
-        let temporaryHours = Number(encodedHours - Math.floor(numberOfBreaks));
-        setFinalEncodedHours(Number(temporaryHours.toFixed(2)));
-      }
-      //no break time (less than 4 hours)
-      else {
-        setFinalEncodedHours(encodedHours);
-      }
-
-      // >>>>>>>>>> OLD CODE <<<<<<<<<<
-      // if (Number(encodedHours.toFixed(2)) >= 4) {
-      //   numberOfBreaks = (Number(encodedHours) / 4).toFixed(2); // for 3-1 rule
-      //   let temporaryHours = Number(encodedHours - Math.floor(numberOfBreaks));
-      //   setFinalEncodedHours(Number(temporaryHours.toFixed(2)));
-      // }
-      // //no break time (less than 4 hours)
-      // else {
-      //   setFinalEncodedHours(Number(encodedHours.toFixed(2)));
-      // }
-      // >>>>>>>>>> OLD CODE <<<<<<<<<<
-    }
-  }, [encodedHours]);
-
   const faceScanUrl = `${process.env.NEXT_PUBLIC_EMPLOYEE_MONITORING_URL}/v1/daily-time-record/employees/${
     employeeDetails.employmentDetails.companyId
   }/${dayjs(overtimeAccomplishmentDetails.plannedDate).format('YYYY-MM-DD')}`;
@@ -246,6 +130,89 @@ export const OvertimeAccomplishmentModal = ({ modalState, setModalState, closeMo
       getTimeLogs(swrFaceScanIsLoading);
     }
   }, [swrFaceScanIsLoading]);
+
+  useEffect(() => {
+    if (!pendingOvertimeAccomplishmentModalIsOpen) {
+      reset();
+    } else {
+      setValue('employeeId', overtimeAccomplishmentDetails.employeeId);
+      setValue('overtimeApplicationId', overtimeAccomplishmentDetails.overtimeApplicationId);
+      setValue(
+        'encodedTimeIn',
+        overtimeAccomplishmentDetails?.encodedTimeIn
+          ? dayjs(overtimeAccomplishmentDetails?.encodedTimeIn).format('YYYY-MM-DDTHH:mm')
+          : overtimeAccomplishmentDetails?.ivmsTimeIn
+          ? dayjs(overtimeAccomplishmentDetails?.ivmsTimeOut).format('YYYY-MM-DDThh:mm')
+          : null
+      );
+      setValue(
+        'encodedTimeOut',
+        overtimeAccomplishmentDetails?.encodedTimeOut
+          ? dayjs(overtimeAccomplishmentDetails?.encodedTimeOut).format('YYYY-MM-DDTHH:mm')
+          : overtimeAccomplishmentDetails?.ivmsTimeOut
+          ? dayjs(overtimeAccomplishmentDetails?.ivmsTimeOut).format('YYYY-MM-DDThh:mm')
+          : null
+      );
+      setValue('accomplishments', overtimeAccomplishmentDetails.accomplishments);
+    }
+  }, [pendingOvertimeAccomplishmentModalIsOpen]);
+
+  useEffect(() => {
+    setFinalEncodedHours(overtimeAccomplishmentDetails.computedEncodedHours);
+  }, [employeeDetails, overtimeAccomplishmentDetails]);
+
+  useEffect(() => {
+    const encodedTimeIn = dayjs(`${watch('encodedTimeIn')}`);
+    const encodedTimeOut = dayjs(`${watch('encodedTimeOut')}`);
+    let totalHours: number;
+
+    //get difference between 2 time
+    if (encodedTimeOut.isAfter(encodedTimeIn)) {
+      totalHours = Number(encodedTimeOut.diff(encodedTimeIn, 'hour', true).toFixed(2));
+    }
+
+    setEncodedHours(totalHours);
+  }, [watch('encodedTimeIn'), watch('encodedTimeOut')]);
+
+  // compute encoded overtime duration based on encoded time IN and OUT
+  //apply every 3hrs work & 1hr break rule
+  useEffect(() => {
+    if (!isEmpty(swrFaceScan)) {
+      let numberOfBreaks: number; // for 3-1 rule
+      //if holiday or rest day
+      if (isHoliday || isRestday) {
+        //if scheduled OT
+
+        //8-1 rule - is Holiday or Rest Day
+        if (encodedHours > 4 && encodedHours < 10) {
+          let temporaryHours = encodedHours - 1;
+          setFinalEncodedHours(Number(temporaryHours.toFixed(2)));
+        }
+
+        //3-1 rule beyond 9 hours
+        else if (encodedHours >= 10) {
+          numberOfBreaks = Number(((encodedHours - 9) / 4).toFixed(2)); // for 3-1 rule
+          let temporaryHours = Number(encodedHours - 1 - Math.floor(numberOfBreaks));
+          setFinalEncodedHours(Number(temporaryHours.toFixed(2)));
+        } else {
+          setFinalEncodedHours(encodedHours);
+        }
+      }
+      //if regular work day - 3-1 rule only
+      else {
+        //if scheduled OT
+        if (encodedHours >= 4) {
+          numberOfBreaks = Number((encodedHours / 4).toFixed(2)); // for 3-1 rule
+          let temporaryHours = Number(encodedHours - Math.floor(numberOfBreaks));
+          setFinalEncodedHours(Number(temporaryHours.toFixed(2)));
+        }
+        //no break time (less than 4 hours)
+        else {
+          setFinalEncodedHours(encodedHours);
+        }
+      }
+    }
+  }, [encodedHours]);
 
   return (
     <>
@@ -673,12 +640,11 @@ export const OvertimeAccomplishmentModal = ({ modalState, setModalState, closeMo
                                     }
                                     disabled
                                     value={`${
-                                      overtimeAccomplishmentDetails?.computedEncodedHours &&
-                                      overtimeAccomplishmentDetails?.status != OvertimeAccomplishmentStatus.PENDING
-                                        ? overtimeAccomplishmentDetails?.computedEncodedHours?.toFixed(2)
-                                        : isNaN(finalEncodedHours)
-                                        ? 0
-                                        : finalEncodedHours
+                                      // overtimeAccomplishmentDetails?.computedEncodedHours &&
+                                      // overtimeAccomplishmentDetails?.status != OvertimeAccomplishmentStatus.PENDING
+                                      //   ? overtimeAccomplishmentDetails?.computedEncodedHours?.toFixed(2)
+                                      // :
+                                      isNaN(finalEncodedHours) ? 0 : finalEncodedHours
                                     } Hour(s)`}
                                   />
                                 </div>
