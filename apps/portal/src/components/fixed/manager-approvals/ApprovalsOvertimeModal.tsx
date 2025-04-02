@@ -349,7 +349,7 @@ export const OvertimeModal = ({ modalState, setModalState, closeModalAction }: M
                       dismissible={false}
                     />
 
-                    {pendingAccomplishmentEmployees.length > 0 ? (
+                    {pendingAccomplishmentEmployees.length > 0 && overtimeDetails.status === OvertimeStatus.APPROVED ? (
                       <AlertNotification
                         alertType={'warning'}
                         notifMessage={
@@ -690,7 +690,7 @@ export const OvertimeModal = ({ modalState, setModalState, closeModalAction }: M
               </Button>
             ) : overtimeDetails.status === OvertimeStatus.APPROVED ? (
               <>
-                {overtimeDetails.status === OvertimeStatus.APPROVED && approvedAccomplishmentEmployees.length <= 0 ? (
+                {approvedAccomplishmentEmployees.length <= 0 ? (
                   <Button
                     variant={'warning'}
                     size={'md'}
@@ -702,7 +702,7 @@ export const OvertimeModal = ({ modalState, setModalState, closeModalAction }: M
                   </Button>
                 ) : null}
 
-                {overtimeDetails.status === OvertimeStatus.APPROVED && pendingAccomplishmentEmployees.length > 0 ? (
+                {pendingAccomplishmentEmployees.length > 0 ? (
                   <Button
                     variant={'primary'}
                     size={'md'}
