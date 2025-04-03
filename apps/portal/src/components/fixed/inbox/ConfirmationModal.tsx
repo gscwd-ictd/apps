@@ -171,7 +171,7 @@ export const ConfirmationInboxModal = ({
                     <label>1.</label>
                     <div className="flex flex-col">
                       <label>
-                        Should the employee fail to render in full the service obligation referred to in this pilicy on
+                        Should the employee fail to render in full the service obligation referred to in this policy on
                         account of voluntary resignation, optional retirement, separation from the service through their
                         fault, or other causes within their control, they shall refund based on the following forumla:
                       </label>
