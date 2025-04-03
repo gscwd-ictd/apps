@@ -644,6 +644,29 @@ const ViewLeaveApplicationModal: FunctionComponent<ViewLeaveApplicationModalProp
                   </div>
                 ) : null}
 
+                {!isEmpty(leaveApplicationDetails.leaveApplicationBasicInfo?.hrdmApprovalDate) ? (
+                  <>
+                    <hr />
+                    <div className="grid grid-cols-2 grid-rows-1 px-7 sm:gap-2 md:gap:2 lg:gap-0">
+                      <LabelValue
+                        label="Manager Name"
+                        direction="top-to-bottom"
+                        textSize="md"
+                        value={leaveApplicationDetails.leaveApplicationBasicInfo?.hrdmApprovedByName ?? ''}
+                      />
+                      <LabelValue
+                        label="HRDM/DivM Approval Date"
+                        direction="top-to-bottom"
+                        textSize="md"
+                        value={DateTimeFormatter(
+                          leaveApplicationDetails.leaveApplicationBasicInfo?.hrdmApprovalDate,
+                          'MMMM DD, YYYY hh:mm A'
+                        )}
+                      />
+                    </div>
+                  </>
+                ) : null}
+
                 <hr />
 
                 {!isEmpty(leaveApplicationDetails.leaveApplicationBasicInfo?.supervisorDisapprovalRemarks) ? (
