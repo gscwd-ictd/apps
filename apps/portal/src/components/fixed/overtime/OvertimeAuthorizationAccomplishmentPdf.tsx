@@ -224,6 +224,40 @@ export const OvertimeAuthorizationAccomplishmentPdf = ({
                     alignItems: 'center',
                   }}
                 >
+                  <Text>TIME-IN</Text>
+                  <Text>TIME-OUT</Text>
+                </View>
+                <View
+                  style={{
+                    display: 'flex',
+                    borderRight: '1px solid #000',
+                    borderBottom: '1px solid #000',
+                    flexDirection: 'column',
+                    fontSize: 7,
+                    padding: 2,
+                    width: '6%',
+                    textAlign: 'center',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                  }}
+                >
+                  <Text>ENCODED</Text>
+                  <Text>HOURS</Text>
+                </View>
+                <View
+                  style={{
+                    display: 'flex',
+                    borderRight: '1px solid #000',
+                    borderBottom: '1px solid #000',
+                    flexDirection: 'column',
+                    fontSize: 7,
+                    padding: 2,
+                    width: '7%',
+                    textAlign: 'center',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                  }}
+                >
                   <Text>APPROVED</Text>
                   <Text>HOURS</Text>
                 </View>
@@ -393,6 +427,37 @@ export const OvertimeAuthorizationAccomplishmentPdf = ({
                       }}
                     >
                       <Text>{employee?.estimatedHours}</Text>
+                    </View>
+                    <View
+                      style={{
+                        display: 'flex',
+                        borderRight: '1px solid #000',
+                        flexDirection: 'column',
+                        fontSize: 7,
+                        width: '7%',
+                        textAlign: 'center',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        padding: 4,
+                      }}
+                    >
+                      <Text>{'--:--:--'}</Text>
+                      <Text>{'--:--:--'}</Text>
+                    </View>
+                    <View
+                      style={{
+                        display: 'flex',
+                        borderRight: '1px solid #000',
+                        flexDirection: 'column',
+                        fontSize: 7,
+                        width: '6%',
+                        textAlign: 'center',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        padding: 4,
+                      }}
+                    >
+                      <Text>{'N/A'}</Text>
                     </View>
                     <View
                       style={{

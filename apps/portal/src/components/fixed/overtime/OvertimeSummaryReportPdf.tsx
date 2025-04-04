@@ -245,13 +245,14 @@ export const OvertimeSummaryReportPdf = ({
                 <View style={[styles.tableCol, { width: 45 }]}>
                   <Text style={styles.tableCell}>SUBSTITUTE DUTY OT HOURS (D)</Text>
                 </View>
-                <View style={[styles.tableCol, { width: 45 }]}>
-                  <Text style={styles.tableCell}>
-                    SUBSTITUTE AMOUNT (A X D{selectedEmployeeType !== 'job order' ? 'X 1.25' : ''})
+                <View style={[styles.tableCol, { width: 55 }]}>
+                  <Text style={[styles.tableCell, { marginBottom: -10 }]}>SUBSTITUTE AMOUNT</Text>
+                  <Text style={[styles.tableCell, {}]}>
+                    (A X D{selectedEmployeeType !== 'job order' ? 'X 1.25' : ''})
                   </Text>
                 </View>
 
-                <View style={styles.tableCol_dates_main}>
+                {/* <View style={styles.tableCol_dates_main}>
                   <View style={styles.tableCol_dates}>
                     <Text
                       style={[
@@ -296,7 +297,7 @@ export const OvertimeSummaryReportPdf = ({
                       <Text style={[styles.tableCell, { padding: 1 }]}>AMOUNT</Text>
                     </View>
                   </View>
-                </View>
+                </View> */}
 
                 <View style={[styles.tableCol, { width: 60 }]}>
                   <Text style={styles.tableCell}>TOTAL OVERTIME AMOUNT</Text>
@@ -670,17 +671,17 @@ export const OvertimeSummaryReportPdf = ({
                     <View style={[styles.tableCol, { width: 45 }]}>
                       <Text style={styles.tableCell}>{overtime?.substituteDutyOTHours.toFixed(2)}</Text>
                     </View>
-                    <View style={[styles.tableCol, { width: 45 }]}>
+                    <View style={[styles.tableCol, { width: 55 }]}>
                       <Text style={styles.tableCell}>{overtime?.substituteAmount.toLocaleString()}</Text>
                     </View>
-                    <View style={[styles.tableCol, { width: 41 }]}>
+                    {/* <View style={[styles.tableCol, { width: 41 }]}>
                       <Text style={styles.tableCell}>{overtime?.nightDifferentialHrs.toFixed(2)}</Text>
                     </View>
                     <View style={[styles.tableCol, { width: 42 }]}>
                       <Text style={[styles.tableCell, { padding: 1 }]}>
                         {overtime?.nightDifferentialAmount.toLocaleString()}
                       </Text>
-                    </View>
+                    </View> */}
                     <View style={[styles.tableCol, { width: 60 }]}>
                       <Text style={styles.tableCell}>{overtime?.totalOvertimeAmount.toLocaleString()}</Text>
                     </View>
@@ -741,19 +742,19 @@ export const OvertimeSummaryReportPdf = ({
                 <View style={[styles.tableCol, { width: 45 }]}>
                   <Text style={styles.tableCell}></Text>
                 </View>
-                <View style={[styles.tableCol, { width: 45 }]}>
+                <View style={[styles.tableCol, { width: 55 }]}>
                   <Text style={styles.tableCell}>
                     {overtimeSummaryReport?.overallSubstituteDutyOTAmount?.toLocaleString()}
                   </Text>
                 </View>
-                <View style={[styles.tableCol, { width: 41 }]}>
+                {/* <View style={[styles.tableCol, { width: 41 }]}>
                   <Text style={styles.tableCell}></Text>
                 </View>
                 <View style={[styles.tableCol, { width: 42 }]}>
                   <Text style={[styles.tableCell, { padding: 1 }]}>
                     {overtimeSummaryReport?.overallNightDifferentialAmount?.toLocaleString()}
                   </Text>
-                </View>
+                </View> */}
                 <View style={[styles.tableCol, { width: 60 }]}>
                   <Text style={styles.tableCell}>{overtimeSummaryReport?.overallTotalOTAmount?.toLocaleString()}</Text>
                 </View>
