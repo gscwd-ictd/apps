@@ -159,7 +159,7 @@ export const ReportOnAttendancePdf: FunctionComponent<ReportOnAttendancePdfProps
                       <Text style={[styles.tableHeaderText]}>Date/s (Late & Undertime)</Text>
                     </View>
                     <View style={[styles.tableHeader, styles.w7, { borderRight: 'none' }]}>
-                      <Text style={[styles.tableHeaderText]}>No. Attendance</Text>
+                      <Text style={[styles.tableHeaderText]}>No Attendance</Text>
                     </View>
                   </View>
 
@@ -213,7 +213,7 @@ export const ReportOnAttendancePdf: FunctionComponent<ReportOnAttendancePdfProps
                             </View>
 
                             <View style={[styles.tableData, styles.w7, { borderRight: 'none' }]}>
-                              <Text style={[styles.tableDataText]}>{attendanceData.noOfAttendance || ''}</Text>
+                              <Text style={[styles.tableDataText]}>{attendanceData.noAttendance || ''}</Text>
                             </View>
                           </View>
                         );
