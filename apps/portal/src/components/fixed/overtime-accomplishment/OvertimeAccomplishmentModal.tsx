@@ -106,7 +106,6 @@ export const OvertimeAccomplishmentModal = ({ modalState, setModalState, closeMo
     }
   );
 
-  console.log(overtimeAccomplishmentDetails);
   // Initial zustand state update
   useEffect(() => {
     if (swrFaceScanIsLoading) {
