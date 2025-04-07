@@ -29,7 +29,7 @@ export type EmployeeAttendanceRoa = {
   numberOfTimesHalfDay?: number;
   daysHalfDay?: string;
   datesLate?: string;
-  noOfAttendance?: number;
+  noAttendance?: number;
 };
 export type ReportOnAttendance = {
   report: Array<EmployeeAttendanceRoa>;
