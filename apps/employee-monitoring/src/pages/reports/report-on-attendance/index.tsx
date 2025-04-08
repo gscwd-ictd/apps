@@ -11,6 +11,8 @@ import ReportOnAttendancePdf from 'apps/employee-monitoring/src/components/pdf/R
 import { useReportsStore } from 'apps/employee-monitoring/src/store/report.store';
 import { LoadingSpinner, ToastNotification } from '@gscwd-apps/oneui';
 import { Navigate } from 'apps/employee-monitoring/src/components/router/navigate';
+import { LoadingProgressBar } from 'apps/employee-monitoring/src/components/loading/LoadingProgressBar';
+import FetcherEMSwithProgress from 'apps/employee-monitoring/src/utils/fetcher/FetcherEMSwithProgress';
 
 const Index = () => {
   const router = useRouter();
@@ -23,6 +25,7 @@ const Index = () => {
   } = useSWR(
     `${process.env.NEXT_PUBLIC_EMPLOYEE_MONITORING_BE_DOMAIN}/reports/?report=${router.query.reportName}&date_from=${router.query.date_from}&date_to=${router.query.date_to}`,
     fetcherEMS,
+    // FetcherEMSwithProgress,
     {
       shouldRetryOnError: false,
       revalidateOnFocus: false,
@@ -79,6 +82,8 @@ const Index = () => {
               {swrIsLoading ? (
                 <LoadingSpinner size="lg" />
               ) : (
+                // CONTINUEEEE HERRREEEEEEE
+                // <LoadingProgressBar value={} />
                 <ReportOnAttendancePdf reportOnAttendanceData={ReportOnAttendanceDoc} />
               )}
             </Card>
