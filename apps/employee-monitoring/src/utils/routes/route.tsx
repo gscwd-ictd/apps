@@ -1,8 +1,4 @@
-// import cookies
-import Cookies from 'universal-cookie';
-
-import React, { FunctionComponent } from 'react';
-import { useRouter } from 'next/router';
+import React from 'react';
 import { GetServerSideProps, GetServerSidePropsContext, NextPage } from 'next/types';
 import { getUserLoginDetails, withCookieSession } from '../helper/session';
 
@@ -12,7 +8,6 @@ type AuthmiddlewareProps = {
 
 const Authmiddleware = ({ children }: AuthmiddlewareProps) => {
   // initialize
-
   return <>{children}</>;
 };
 
