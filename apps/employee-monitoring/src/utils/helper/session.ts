@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { ServerResponse } from 'http';
 import { GetServerSideProps, GetServerSidePropsContext } from 'next';
+import { redirect } from 'next/navigation';
 
 type UserAccess = {
   I: string;
@@ -41,9 +42,8 @@ export const getUserLoginDetails = () => userLoginDetails;
  *
  */
 
-export async function getCookieFromServer(cookie) {
+export async function getCookieFromServer(cookie: string) {
   // assign the splitted cookie to cookies array of string
-
   const cookiesArray = cookie ? (cookie.split(';') as string[]) : null;
 
   // get the element where name is ssid_hrms
@@ -51,14 +51,19 @@ export async function getCookieFromServer(cookie) {
 
   // get the hrms ssid length else redirect to /login
   if (hrmsSsid && hrmsSsid.length > 0) {
-    const { data } = await axios.get(`${process.env.NEXT_PUBLIC_HRMS_DOMAIN_BE}/users/details`, {
-      // withCredentials: true,
-      headers: { Cookie: `${hrmsSsid}` },
-    });
+    try {
+      const { data } = await axios.get(`${process.env.NEXT_PUBLIC_HRMS_DOMAIN_BE}/users/details`, {
+        headers: { Cookie: `${hrmsSsid}` },
+      });
 
-    setUserLoginDetails(data);
-    return data;
-  } else return null;
+      setUserLoginDetails(data);
+      return data;
+    } catch (error) {
+      redirect(`${process.env.NEXT_PUBLIC_HRMS_DOMAIN_FE}/login`);
+    }
+  } else {
+    redirect(`${process.env.NEXT_PUBLIC_HRMS_DOMAIN_FE}/login`);
+  }
 }
 
 // updated cookie with session
@@ -75,7 +80,7 @@ export function withCookieSession(serverSideProps: GetServerSideProps) {
       const hrmsSsid = getHrmsSsid(cookiesArray);
 
       // get the hrms ssid length else redirect to /login
-      if (hrmsSsid.length > 0) {
+      if (hrmsSsid && hrmsSsid.length > 0) {
         const { data } = await axios.get(`${process.env.NEXT_PUBLIC_HRMS_DOMAIN_BE}/users/details`, {
           withCredentials: true,
           headers: { Cookie: `${hrmsSsid}` },
@@ -86,20 +91,10 @@ export function withCookieSession(serverSideProps: GetServerSideProps) {
 
         return await serverSideProps(context);
       } else {
-        return {
-          redirect: {
-            permanent: false,
-            destination: '/login',
-          },
-        };
+        redirect(`${process.env.NEXT_PUBLIC_HRMS_DOMAIN_FE}/login`);
       }
     } catch {
-      return {
-        redirect: {
-          permanent: false,
-          destination: '/login',
-        },
-      };
+      redirect(`${process.env.NEXT_PUBLIC_HRMS_DOMAIN_FE}/login`);
     }
   };
 }
