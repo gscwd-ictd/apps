@@ -1,5 +1,5 @@
 import { Can } from 'apps/employee-monitoring/src/context/casl/Can';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { isEmpty } from 'lodash';
 import useSWR from 'swr';
 import fetcherEMS from '../../../utils/fetcher/FetcherEMS';
@@ -11,11 +11,12 @@ import ReportOnAttendancePdf from 'apps/employee-monitoring/src/components/pdf/R
 import { useReportsStore } from 'apps/employee-monitoring/src/store/report.store';
 import { LoadingSpinner, ToastNotification } from '@gscwd-apps/oneui';
 import { Navigate } from 'apps/employee-monitoring/src/components/router/navigate';
-import { LoadingProgressBar } from 'apps/employee-monitoring/src/components/loading/LoadingProgressBar';
-import FetcherEMSwithProgress from 'apps/employee-monitoring/src/utils/fetcher/FetcherEMSwithProgress';
+import { UseLoadingProgressStore } from 'apps/employee-monitoring/src/store/loading.store';
 
 const Index = () => {
   const router = useRouter();
+  // const [isLoading, setIsLoading] = useState<boolean>(false);
+  // const [loadPercentage, setLoadPercentage] = useState<number>(0);
 
   // fetch data for Report On Attendance Document
   const {
@@ -25,7 +26,6 @@ const Index = () => {
   } = useSWR(
     `${process.env.NEXT_PUBLIC_EMPLOYEE_MONITORING_BE_DOMAIN}/reports/?report=${router.query.reportName}&date_from=${router.query.date_from}&date_to=${router.query.date_to}`,
     fetcherEMS,
-    // FetcherEMSwithProgress,
     {
       shouldRetryOnError: false,
       revalidateOnFocus: false,
@@ -41,6 +41,10 @@ const Index = () => {
       ErrorReportOnAttendanceDoc: state.errorReportOnAttendanceDoc,
       SetErrorReportOnAttendanceDoc: state.setErrorReportOnAttendanceDoc,
     }));
+
+  const { loadingProgress } = UseLoadingProgressStore((state) => ({
+    loadingProgress: state.loadingProgress,
+  }));
 
   // Upon success/fail of swr request, zustand state will be updated
   useEffect(() => {
@@ -82,8 +86,6 @@ const Index = () => {
               {swrIsLoading ? (
                 <LoadingSpinner size="lg" />
               ) : (
-                // CONTINUEEEE HERRREEEEEEE
-                // <LoadingProgressBar value={} />
                 <ReportOnAttendancePdf reportOnAttendanceData={ReportOnAttendanceDoc} />
               )}
             </Card>

@@ -479,13 +479,13 @@ const ViewLeaveApplicationModal: FunctionComponent<ViewLeaveApplicationModalProp
                     {!isEmpty(leaveApplicationDetails.leaveApplicationDetails?.inPhilippinesOrAbroad) ? (
                       <>
                         <LabelValue
-                          label="Leave Details"
+                          label="Location"
                           direction="top-to-bottom"
                           textSize="md"
                           value={leaveApplicationDetails.leaveApplicationDetails?.inPhilippinesOrAbroad}
                         />
                         <LabelValue
-                          label="Location"
+                          label="Leave Details"
                           direction="top-to-bottom"
                           textSize="md"
                           value={leaveApplicationDetails.leaveApplicationDetails?.location}
