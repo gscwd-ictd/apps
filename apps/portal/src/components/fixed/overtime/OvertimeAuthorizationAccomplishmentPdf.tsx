@@ -67,39 +67,42 @@ export const OvertimeAuthorizationAccomplishmentPdf = ({
           size={'FOLIO'}
           orientation="landscape"
           style={{
-            paddingBottom: 25,
+            paddingBottom: 45,
             paddingTop: 25,
           }}
         >
           <View style={styles.page}>
-            <View style={styles.controlNumber}>
-              <Text>{/* NO. 1 */}</Text>
-            </View>
-            <PdfHeader />
-            <Text style={styles.pdfTitle}>{overtimeAuthorizationAccomplishmentReport?.orgName?.toUpperCase()}</Text>
-            <Text style={styles.pdfTitle}>
-              OVERTIME AUTHORIZATION-ACCOMPLISHMENT SUMMARY FOR {selectedEmployeeType?.toUpperCase()} EMPLOYEES
-            </Text>
-            <Text style={[styles.pdfTitle, { paddingBottom: 10 }]}>
-              PERIOD COVERED:{' '}
-              <Text style={[styles.pdfTitle, { paddingLeft: 3, paddingRight: 3, textDecoration: 'underline' }]}>
-                {overtimeAuthorizationAccomplishmentReport.periodCovered}
+            <View fixed>
+              <View style={styles.controlNumber}>
+                <Text>{/* NO. 1 */}</Text>
+              </View>
+              <PdfHeader />
+              <Text style={styles.pdfTitle}>{overtimeAuthorizationAccomplishmentReport?.orgName?.toUpperCase()}</Text>
+              <Text style={styles.pdfTitle}>
+                OVERTIME AUTHORIZATION-ACCOMPLISHMENT SUMMARY FOR {selectedEmployeeType?.toUpperCase()} EMPLOYEES
               </Text>
-            </Text>
+              <Text style={[styles.pdfTitle, { paddingBottom: 10 }]}>
+                PERIOD COVERED:{' '}
+                <Text style={[styles.pdfTitle, { paddingLeft: 3, paddingRight: 3, textDecoration: 'underline' }]}>
+                  {overtimeAuthorizationAccomplishmentReport.periodCovered}
+                </Text>
+              </Text>
+            </View>
 
             {/* MAIN TABLE CONTAINER */}
             <View
+              fixed
               style={{
                 width: 'auto',
                 display: 'flex',
-                // borderBottom: '1px solid #000',
+                borderBottom: '1px solid #000',
                 borderRight: '1px solid #000',
                 borderTop: '1px solid #000',
                 borderLeft: '1px solid #000',
                 flexDirection: 'column',
                 marginLeft: 20,
                 marginRight: 20,
-                marginTop: 10,
+                marginTop: 2,
                 fontSize: 9,
               }}
             >
@@ -115,7 +118,23 @@ export const OvertimeAuthorizationAccomplishmentPdf = ({
                   style={{
                     display: 'flex',
                     borderRight: '1px solid #000',
-                    borderBottom: '1px solid #000',
+                    // borderBottom: '1px solid #000',
+                    flexDirection: 'column',
+                    fontSize: 7,
+                    padding: 4,
+                    width: '3%',
+                    textAlign: 'center',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                  }}
+                >
+                  <Text>NO.</Text>
+                </View>
+                <View
+                  style={{
+                    display: 'flex',
+                    borderRight: '1px solid #000',
+                    // borderBottom: '1px solid #000',
                     flexDirection: 'column',
                     fontSize: 7,
                     padding: 4,
@@ -131,7 +150,7 @@ export const OvertimeAuthorizationAccomplishmentPdf = ({
                   style={{
                     display: 'flex',
                     borderRight: '1px solid #000',
-                    borderBottom: '1px solid #000',
+                    // borderBottom: '1px solid #000',
                     flexDirection: 'column',
                     fontSize: 7,
                     padding: 2,
@@ -147,11 +166,11 @@ export const OvertimeAuthorizationAccomplishmentPdf = ({
                   style={{
                     display: 'flex',
                     borderRight: '1px solid #000',
-                    borderBottom: '1px solid #000',
+                    // borderBottom: '1px solid #000',
                     flexDirection: 'column',
                     fontSize: 7,
                     padding: 2,
-                    width: '20%',
+                    width: '15%',
                     textAlign: 'center',
                     justifyContent: 'center',
                     alignItems: 'center',
@@ -163,7 +182,7 @@ export const OvertimeAuthorizationAccomplishmentPdf = ({
                   style={{
                     display: 'flex',
                     borderRight: '1px solid #000',
-                    borderBottom: '1px solid #000',
+                    // borderBottom: '1px solid #000',
                     flexDirection: 'column',
                     fontSize: 7,
                     padding: 2,
@@ -180,7 +199,7 @@ export const OvertimeAuthorizationAccomplishmentPdf = ({
                   style={{
                     display: 'flex',
                     borderRight: '1px solid #000',
-                    borderBottom: '1px solid #000',
+                    // borderBottom: '1px solid #000',
                     flexDirection: 'column',
                     fontSize: 7,
                     padding: 2,
@@ -197,7 +216,7 @@ export const OvertimeAuthorizationAccomplishmentPdf = ({
                   style={{
                     display: 'flex',
                     borderRight: '1px solid #000',
-                    borderBottom: '1px solid #000',
+                    // borderBottom: '1px solid #000',
                     flexDirection: 'column',
                     fontSize: 7,
                     padding: 2,
@@ -214,11 +233,11 @@ export const OvertimeAuthorizationAccomplishmentPdf = ({
                   style={{
                     display: 'flex',
                     borderRight: '1px solid #000',
-                    borderBottom: '1px solid #000',
+                    // borderBottom: '1px solid #000',
                     flexDirection: 'column',
                     fontSize: 7,
                     padding: 2,
-                    width: '7%',
+                    width: '12%',
                     textAlign: 'center',
                     justifyContent: 'center',
                     alignItems: 'center',
@@ -231,7 +250,7 @@ export const OvertimeAuthorizationAccomplishmentPdf = ({
                   style={{
                     display: 'flex',
                     borderRight: '1px solid #000',
-                    borderBottom: '1px solid #000',
+                    // borderBottom: '1px solid #000',
                     flexDirection: 'column',
                     fontSize: 7,
                     padding: 2,
@@ -248,7 +267,7 @@ export const OvertimeAuthorizationAccomplishmentPdf = ({
                   style={{
                     display: 'flex',
                     borderRight: '1px solid #000',
-                    borderBottom: '1px solid #000',
+                    // borderBottom: '1px solid #000',
                     flexDirection: 'column',
                     fontSize: 7,
                     padding: 2,
@@ -265,7 +284,7 @@ export const OvertimeAuthorizationAccomplishmentPdf = ({
                   style={{
                     display: 'flex',
                     borderRight: '1px solid #000',
-                    borderBottom: '1px solid #000',
+                    // borderBottom: '1px solid #000',
                     flexDirection: 'column',
                     fontSize: 7,
                     padding: 2,
@@ -282,11 +301,11 @@ export const OvertimeAuthorizationAccomplishmentPdf = ({
                   style={{
                     display: 'flex',
                     borderRight: '1px solid #000',
-                    borderBottom: '1px solid #000',
+                    // borderBottom: '1px solid #000',
                     flexDirection: 'column',
                     fontSize: 7,
                     padding: 2,
-                    width: '25%',
+                    width: '22%',
                     textAlign: 'center',
                     justifyContent: 'center',
                     alignItems: 'center',
@@ -297,7 +316,7 @@ export const OvertimeAuthorizationAccomplishmentPdf = ({
                 <View
                   style={{
                     display: 'flex',
-                    borderBottom: '1px solid #000',
+                    // borderBottom: '1px solid #000',
                     flexDirection: 'column',
                     fontSize: 7,
                     padding: 2,
@@ -320,7 +339,7 @@ export const OvertimeAuthorizationAccomplishmentPdf = ({
                   style={{
                     width: 'auto',
                     display: 'flex',
-                    borderTop: '1px solid #000',
+                    // borderTop: '1px solid #000',
                     borderBottom: '1px solid #000',
                     borderRight: '1px solid #000',
                     borderLeft: '1px solid #000',
@@ -339,6 +358,22 @@ export const OvertimeAuthorizationAccomplishmentPdf = ({
                       flexDirection: 'row',
                     }}
                   >
+                    <View
+                      style={{
+                        display: 'flex',
+                        borderRight: '1px solid #000',
+                        // borderBottom: '1px solid #000',
+                        flexDirection: 'column',
+                        fontSize: 7,
+                        padding: 4,
+                        width: '3%',
+                        textAlign: 'center',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                      }}
+                    >
+                      <Text>{idx + 1}</Text>
+                    </View>
                     <View
                       style={{
                         display: 'flex',
@@ -375,7 +410,7 @@ export const OvertimeAuthorizationAccomplishmentPdf = ({
                         borderRight: '1px solid #000',
                         flexDirection: 'column',
                         fontSize: 7,
-                        width: '20%',
+                        width: '15%',
                         justifyContent: 'center',
                         alignItems: 'flex-start',
                         padding: 4,
@@ -434,15 +469,15 @@ export const OvertimeAuthorizationAccomplishmentPdf = ({
                         borderRight: '1px solid #000',
                         flexDirection: 'column',
                         fontSize: 7,
-                        width: '7%',
+                        width: '12%',
                         textAlign: 'center',
                         justifyContent: 'center',
                         alignItems: 'center',
                         padding: 4,
                       }}
                     >
-                      <Text>{'--:--:--'}</Text>
-                      <Text>{'--:--:--'}</Text>
+                      <Text>{employee?.timeIn ? employee?.timeIn : '--:--:--'}</Text>
+                      <Text>{employee?.timeOut ? employee?.timeOut : '--:--:--'}</Text>
                     </View>
                     <View
                       style={{
@@ -457,7 +492,7 @@ export const OvertimeAuthorizationAccomplishmentPdf = ({
                         padding: 4,
                       }}
                     >
-                      <Text>{'N/A'}</Text>
+                      <Text>{employee?.encodedHours ? employee?.encodedHours.toFixed(2) : ''}</Text>
                     </View>
                     <View
                       style={{
@@ -495,7 +530,7 @@ export const OvertimeAuthorizationAccomplishmentPdf = ({
                         borderRight: '1px solid #000',
                         flexDirection: 'column',
                         fontSize: 7,
-                        width: '25%',
+                        width: '22%',
 
                         justifyContent: 'center',
                         alignItems: 'flex-start',
@@ -692,6 +727,18 @@ export const OvertimeAuthorizationAccomplishmentPdf = ({
               </View>
             </View>
           </View>
+          <Text
+            style={{
+              position: 'absolute',
+              marginTop: '92vh',
+              width: '100%',
+              padding: 10,
+              fontSize: 10,
+              textAlign: 'center',
+            }}
+            render={({ pageNumber, totalPages }) => `${pageNumber} / ${totalPages}`}
+            fixed
+          />
         </Page>
       </Document>
     </>

@@ -30,8 +30,8 @@ const styles = StyleSheet.create({
   table: {
     display: 'flex',
     width: '100%',
-    borderStyle: 'solid',
-    borderWidth: 1,
+    // borderStyle: 'solid',
+    // borderWidth: 1,
     borderRightWidth: 0,
     borderBottomWidth: 0,
   },
@@ -127,41 +127,64 @@ export const OvertimeSummaryReportPdf = ({
           size={'FOLIO'}
           orientation="landscape"
           style={{
-            paddingBottom: 25,
+            paddingBottom: 45,
             paddingTop: 25,
           }}
         >
           <View style={styles.page}>
-            <View style={styles.controlNumber}>{/* <Text>NO. 1</Text> */}</View>
-            <PdfHeader />
-            <Text style={styles.pdfTitle}>{overtimeSummaryReport.assignedTo}</Text>
-            <Text style={styles.pdfTitle}>OVERTIME SUMMARY FOR {selectedEmployeeType?.toUpperCase()} EMPLOYEES</Text>
-            <Text style={[styles.pdfTitle, { paddingBottom: 10 }]}>
-              PERIOD COVERED:{' '}
-              <Text style={[styles.pdfTitle, { paddingLeft: 3, paddingRight: 3, textDecoration: 'underline' }]}>
-                {overtimeSummaryReport.periodCovered}
+            <View fixed>
+              <View style={styles.controlNumber}>{/* <Text>NO. 1</Text> */}</View>
+              <PdfHeader />
+              <Text style={styles.pdfTitle}>{overtimeSummaryReport.assignedTo}</Text>
+              <Text style={styles.pdfTitle}>OVERTIME SUMMARY FOR {selectedEmployeeType?.toUpperCase()} EMPLOYEES</Text>
+              <Text style={[styles.pdfTitle, { paddingBottom: 10 }]}>
+                PERIOD COVERED:{' '}
+                <Text style={[styles.pdfTitle, { paddingLeft: 3, paddingRight: 3, textDecoration: 'underline' }]}>
+                  {overtimeSummaryReport.periodCovered}
+                </Text>
               </Text>
-            </Text>
+            </View>
+
             <View style={styles.table}>
-              <View style={styles.tableRow}>
-                <View style={[styles.tableCol, { width: 20 }]}>
+              <View fixed style={[styles.tableRow, { borderWidth: 0 }]}>
+                <View
+                  style={[
+                    styles.tableCol,
+                    { width: 20, borderStyle: 'solid', borderTopWidth: 1, borderBottomWidth: 1, borderLeftWidth: 1 },
+                  ]}
+                >
                   <Text style={styles.tableCell}>NO.</Text>
                 </View>
-                <View style={styles.tableCol}>
+                <View style={[styles.tableCol, { borderStyle: 'solid', borderBottomWidth: 1, borderTopWidth: 1 }]}>
                   <Text style={{ margin: 'auto', textAlign: 'center', fontSize: 8, width: 134 }}>NAME</Text>
                 </View>
 
-                <View style={[styles.tableCol, { width: 52 }]}>
+                <View
+                  style={[
+                    styles.tableCol,
+                    { width: 52, borderStyle: 'solid', borderBottomWidth: 1, borderTopWidth: 1 },
+                  ]}
+                >
                   <Text style={styles.tableCell}>
                     MONTHLY {'\n'} BASIC {'\n'} SALARY
                   </Text>
                 </View>
 
-                <View style={[styles.tableCol, { width: 40 }]}>
+                <View
+                  style={[
+                    styles.tableCol,
+                    { width: 40, borderStyle: 'solid', borderBottomWidth: 1, borderTopWidth: 1 },
+                  ]}
+                >
                   <Text style={styles.tableCell}>RATE PER HOUR (A)</Text>
                 </View>
 
-                <View style={styles.tableCol_dates_main}>
+                <View
+                  style={[
+                    styles.tableCol_dates_main,
+                    { borderStyle: 'solid', borderBottomWidth: 1, borderTopWidth: 1 },
+                  ]}
+                >
                   <View style={[styles.tableCol_dates, { height: 30 }]}>
                     <Text style={[styles.tableCell, { paddingTop: 2, paddingBottom: 2, fontSize: 14 }]}>
                       {dayjs(selectedMonth).format('MMMM')}
@@ -219,33 +242,68 @@ export const OvertimeSummaryReportPdf = ({
                   </View>
                 </View>
 
-                <View style={[styles.tableCol, { width: 35 }]}>
+                <View
+                  style={[
+                    styles.tableCol,
+                    { width: 35, borderStyle: 'solid', borderBottomWidth: 1, borderTopWidth: 1 },
+                  ]}
+                >
                   <Text style={styles.tableCell}>TOTAL NO. OT HOURS</Text>
                 </View>
 
-                <View style={[styles.tableCol, { width: 40 }]}>
+                <View
+                  style={[
+                    styles.tableCol,
+                    { width: 40, borderStyle: 'solid', borderBottomWidth: 1, borderTopWidth: 1 },
+                  ]}
+                >
                   <Text style={styles.tableCell}>TOTAL REGULAR HOURS OT (B)</Text>
                 </View>
 
-                <View style={[styles.tableCol, { width: 40 }]}>
+                <View
+                  style={[
+                    styles.tableCol,
+                    { width: 40, borderStyle: 'solid', borderBottomWidth: 1, borderTopWidth: 1 },
+                  ]}
+                >
                   <Text style={styles.tableCell}>
                     AMOUNT (A X B{selectedEmployeeType !== 'job order' ? ' X 1.25' : ''})
                   </Text>
                 </View>
 
-                <View style={[styles.tableCol, { width: 50 }]}>
+                <View
+                  style={[
+                    styles.tableCol,
+                    { width: 50, borderStyle: 'solid', borderBottomWidth: 1, borderTopWidth: 1 },
+                  ]}
+                >
                   <Text style={styles.tableCell}>TOTAL HOLIDAY / DAY-OFF OT HOURS (C)</Text>
                 </View>
 
-                <View style={[styles.tableCol, { width: 40 }]}>
+                <View
+                  style={[
+                    styles.tableCol,
+                    { width: 40, borderStyle: 'solid', borderBottomWidth: 1, borderTopWidth: 1 },
+                  ]}
+                >
                   <Text style={styles.tableCell}>
                     AMOUNT (A X C{selectedEmployeeType !== 'job order' ? ' X 1.5' : ''})
                   </Text>
                 </View>
-                <View style={[styles.tableCol, { width: 45 }]}>
+                <View
+                  style={[
+                    styles.tableCol,
+                    { width: 45, borderStyle: 'solid', borderBottomWidth: 1, borderTopWidth: 1 },
+                  ]}
+                >
                   <Text style={styles.tableCell}>SUBSTITUTE DUTY OT HOURS (D)</Text>
                 </View>
-                <View style={[styles.tableCol, { width: 55 }]}>
+                <View
+                  style={[
+                    styles.tableCol,
+                    { width: 55, borderStyle: 'solid', borderBottomWidth: 1, borderTopWidth: 1 },
+                  ]}
+                >
                   <Text style={[styles.tableCell, { marginBottom: -10 }]}>SUBSTITUTE AMOUNT</Text>
                   <Text style={[styles.tableCell, {}]}>
                     (A X D{selectedEmployeeType !== 'job order' ? 'X 1.25' : ''})
@@ -299,15 +357,20 @@ export const OvertimeSummaryReportPdf = ({
                   </View>
                 </View> */}
 
-                <View style={[styles.tableCol, { width: 60 }]}>
+                <View
+                  style={[
+                    styles.tableCol,
+                    { width: 60, borderStyle: 'solid', borderBottomWidth: 1, borderTopWidth: 1 },
+                  ]}
+                >
                   <Text style={styles.tableCell}>TOTAL OVERTIME AMOUNT</Text>
                 </View>
               </View>
               {/* EMPLOYEE DETAILS */}
               {overtimeSummaryReport?.summary?.length > 0 &&
                 overtimeSummaryReport?.summary?.map((overtime: OvertimeSummaryEmployee, idx: number) => (
-                  <View style={[styles.tableRow, { borderTop: '1px solid #000' }]} key={idx} wrap={false}>
-                    <View style={[styles.tableCol, { width: 20 }]}>
+                  <View style={[styles.tableRow, { borderTop: '0px solid #000' }]} key={idx} wrap={false}>
+                    <View style={[styles.tableCol, { width: 20, borderLeftWidth: 1 }]}>
                       <Text style={styles.tableCell}>{idx + 1}</Text>
                     </View>
                     <View style={styles.tableCol}>
@@ -688,12 +751,12 @@ export const OvertimeSummaryReportPdf = ({
                   </View>
                 ))}
               {/* TOTALS */}
-              <View style={[styles.tableRow, { borderTop: '1px solid #000' }]} wrap={false}>
+              <View style={[styles.tableRow, { borderTop: '0px solid #000' }]} wrap={false}>
                 {/* <View style={[styles.tableCol, { width: 20 }]}>
                           <Text style={styles.tableCell}>1</Text>
                         </View> */}
-                <View style={styles.tableCol}>
-                  <Text style={{ margin: 'auto', textAlign: 'left', fontSize: 8, width: 154, paddingLeft: 5 }}>
+                <View style={[styles.tableCol, { borderLeftWidth: 1 }]}>
+                  <Text style={{ margin: 'auto', textAlign: 'left', fontSize: 8, width: 153, paddingLeft: 5 }}>
                     TOTAL
                   </Text>
                 </View>
@@ -929,6 +992,19 @@ export const OvertimeSummaryReportPdf = ({
               </View>
             </View>
           </View>
+
+          <Text
+            style={{
+              position: 'absolute',
+              marginTop: '92vh',
+              width: '100%',
+              padding: 10,
+              fontSize: 10,
+              textAlign: 'center',
+            }}
+            render={({ pageNumber, totalPages }) => `${pageNumber} / ${totalPages}`}
+            fixed
+          />
         </Page>
       </Document>
       {/* </PDFViewer> */}
