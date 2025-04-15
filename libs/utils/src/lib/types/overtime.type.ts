@@ -240,6 +240,9 @@ export type OvertimeAccomplishmentSummary = {
   actualHours: string | null;
   otStatus: OvertimeStatus;
   accomplishmentStatus: OvertimeAccomplishmentStatus;
+  timeIn?: string | null;
+  timeOut?: string | null;
+  encodedHours?: number | null;
 };
 
 //used in combined OT authorization and accomplishment pdf
