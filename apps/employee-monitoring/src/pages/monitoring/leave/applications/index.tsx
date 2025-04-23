@@ -189,18 +189,11 @@ const Index = () => {
     }),
     columnHelper.accessor('leaveDates', {
       header: 'Leave Dates',
-      filterFn: 'fuzzy',
-      // filterFn: 'arrIncludesSome',
+      filterFn: 'arrIncludes',
       enableSorting: false,
       enableGlobalFilter: false,
       cell: (props) => renderRowLeaveDates(props.row.original.leaveDates),
     }),
-    // columnHelper.display({
-    //   id: 'leaveDates',
-    //   header: 'Leave Dates',
-    //   filterFn: 'fuzzy',
-    //   cell: (props) => renderRowLeaveDates(props.row.original.leaveDates),
-    // }),
     columnHelper.accessor('status', {
       header: 'Status',
       cell: (info) => UseRenderLeaveStatus(info.getValue()),
