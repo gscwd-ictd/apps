@@ -446,35 +446,39 @@ const UpdateTimeLogModal: FunctionComponent<EditDailySchedModalProps> = ({
                       </div>
                     </div>
 
-                    <div className="flex flex-col justify-start items-start w-full sm:w-1/2 px-0.5 sm:pl-5 pb-3  ">
-                      <div className="w-full">
-                        <LabelInput
-                          textSize="sm"
-                          required
-                          id="updatedLunchOut"
-                          label="Requested Lunch Out Update:"
-                          step="any"
-                          type="time"
-                          value={rowData?.dtrCorrection?.lunchOut ?? ''}
-                          disabled={true}
-                        />
-                      </div>
-                    </div>
+                    {rowData?.schedule?.withLunch ? (
+                      <>
+                        <div className="flex flex-col justify-start items-start w-full sm:w-1/2 px-0.5 sm:pl-5 pb-3  ">
+                          <div className="w-full">
+                            <LabelInput
+                              textSize="sm"
+                              required
+                              id="updatedLunchOut"
+                              label="Requested Lunch Out Update:"
+                              step="any"
+                              type="time"
+                              value={rowData?.dtrCorrection?.lunchOut ?? ''}
+                              disabled={true}
+                            />
+                          </div>
+                        </div>
 
-                    <div className="flex flex-col justify-start items-start w-full sm:w-1/2 px-0.5 sm:pr-5 pb-3  ">
-                      <div className="w-full">
-                        <LabelInput
-                          textSize="sm"
-                          required
-                          id="updatedLunchIn"
-                          label="Requested Lunch In Update:"
-                          step="any"
-                          type="time"
-                          value={rowData?.dtrCorrection?.lunchIn ?? ''}
-                          disabled={true}
-                        />
-                      </div>
-                    </div>
+                        <div className="flex flex-col justify-start items-start w-full sm:w-1/2 px-0.5 sm:pr-5 pb-3  ">
+                          <div className="w-full">
+                            <LabelInput
+                              textSize="sm"
+                              required
+                              id="updatedLunchIn"
+                              label="Requested Lunch In Update:"
+                              step="any"
+                              type="time"
+                              value={rowData?.dtrCorrection?.lunchIn ?? ''}
+                              disabled={true}
+                            />
+                          </div>
+                        </div>
+                      </>
+                    ) : null}
 
                     <div className="flex flex-col justify-start items-start w-full sm:w-1/2 px-0.5 sm:pl-5 pb-3  ">
                       <div className="w-full">
