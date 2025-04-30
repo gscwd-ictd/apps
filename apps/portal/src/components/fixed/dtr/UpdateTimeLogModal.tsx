@@ -1,4 +1,4 @@
-import { AlertNotification, Button, Modal } from '@gscwd-apps/oneui';
+import { AlertNotification, Button, LoadingSpinner, Modal, ToastNotification } from '@gscwd-apps/oneui';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { LabelInput } from 'apps/employee-monitoring/src/components/inputs/LabelInput';
 import { LabelValue } from 'apps/employee-monitoring/src/components/labels/LabelValue';
@@ -15,6 +15,8 @@ import { DateFormatter } from 'libs/utils/src/lib/functions/DateFormatter';
 import { ConfirmationUpdateTimeLogModal } from './ConfirmationModal';
 import { DtrCorrectionStatus } from 'libs/utils/src/lib/enums/dtr.enum';
 import { useEmployeeStore } from 'apps/portal/src/store/employee.store';
+import useSWR from 'swr';
+import { fetchWithToken } from 'apps/portal/src/utils/hoc/fetcher';
 
 type EditDailySchedModalProps = {
   modalState: boolean;
@@ -49,6 +51,17 @@ const UpdateTimeLogModal: FunctionComponent<EditDailySchedModalProps> = ({
   });
 
   const employeeDetails = useEmployeeStore((state) => state.employeeDetails);
+  const dtrUrl = `${process.env.NEXT_PUBLIC_EMPLOYEE_MONITORING_URL}/v1/daily-time-record/employees/entries/logs/${rowData?.companyId}/${rowData?.day}`;
+  // fetch time logs for the day
+  const {
+    data: swrTimeLogs,
+    isLoading: swrTimeLogsIsLoading,
+    error: swrTimeLogsError,
+    mutate: mutateDtrUrl,
+  } = useSWR(modalState ? dtrUrl : null, fetchWithToken, {
+    shouldRetryOnError: false,
+    revalidateOnFocus: false,
+  });
 
   // default values
   const [defaultDtrValues, setDefaultDtrValues] = useState<EmployeeDtr & TimeLogRemarks>(
@@ -145,6 +158,10 @@ const UpdateTimeLogModal: FunctionComponent<EditDailySchedModalProps> = ({
         title={'Time Log Correction'}
       />
 
+      {!isEmpty(swrTimeLogsError) ? (
+        <ToastNotification toastType="error" notifMessage={`${swrTimeLogsError}: Failed to load IVMS Entries.`} />
+      ) : null}
+
       <Modal open={modalState} setOpen={setModalState} size={windowWidth > 1024 ? 'sm' : 'full'}>
         <Modal.Header withCloseBtn>
           <div className="flex justify-between w-full pl-5">
@@ -223,6 +240,29 @@ const UpdateTimeLogModal: FunctionComponent<EditDailySchedModalProps> = ({
 
               <hr />
 
+              <div className="flex flex-col justify-start items-start w-full px-0.5">
+                <label className="font-medium text-gray-900 dark:text-gray-800 text-sm whitespace-nowrap pb-0.5">
+                  IVMS/DTR Entries:
+                </label>
+                <div className="w-full ml-5">
+                  {swrTimeLogsIsLoading ? (
+                    <LoadingSpinner size={'md'} />
+                  ) : swrTimeLogs && swrTimeLogs.length > 0 ? (
+                    swrTimeLogs.map((logs: string, idx: number) => {
+                      return (
+                        <div key={idx}>
+                          <label className="text-sm font-medium ">{logs}</label>
+                        </div>
+                      );
+                    })
+                  ) : (
+                    <label className="text-sm font-medium ">None Found</label>
+                  )}
+                </div>
+              </div>
+
+              <hr />
+
               <div className="flex flex-wrap justify-between">
                 <div className="flex flex-col justify-start items-start w-full sm:w-1/2 sm:pr-5 px-0.5 pb-3  ">
                   <div className="w-full ">
@@ -260,28 +300,30 @@ const UpdateTimeLogModal: FunctionComponent<EditDailySchedModalProps> = ({
                   </div>
                 </div>
 
-                <div className="flex flex-col justify-start items-start w-full sm:w-1/2 px-0.5 sm:pl-5 pb-3  ">
-                  <div className="w-full">
-                    <LabelInput
-                      textSize="sm"
-                      required={false}
-                      id={'scheduleLunchOut'}
-                      type="time"
-                      label={'Lunch Out:'}
-                      isDirty={dirtyFields.lunchOut}
-                      controller={{
-                        ...register('lunchOut', {
-                          onChange: (e) => {
-                            setValue('lunchOut', e.target.value, {
-                              shouldValidate: true,
-                            });
-                            trigger(); // trigger all validations for inputs
-                          },
-                        }),
-                      }}
-                      isError={errors.lunchOut ? true : false}
-                      errorMessage={errors.lunchOut?.message}
-                      className={`
+                {rowData?.schedule?.withLunch ? (
+                  <>
+                    <div className="flex flex-col justify-start items-start w-full sm:w-1/2 px-0.5 sm:pl-5 pb-3  ">
+                      <div className="w-full">
+                        <LabelInput
+                          textSize="sm"
+                          required={false}
+                          id={'scheduleLunchOut'}
+                          type="time"
+                          label={'Lunch Out:'}
+                          isDirty={dirtyFields.lunchOut}
+                          controller={{
+                            ...register('lunchOut', {
+                              onChange: (e) => {
+                                setValue('lunchOut', e.target.value, {
+                                  shouldValidate: true,
+                                });
+                                trigger(); // trigger all validations for inputs
+                              },
+                            }),
+                          }}
+                          isError={errors.lunchOut ? true : false}
+                          errorMessage={errors.lunchOut?.message}
+                          className={`
                         ${
                           dirtyFields.lunchOut && !errors.lunchOut
                             ? 'bg-green-300'
@@ -290,42 +332,42 @@ const UpdateTimeLogModal: FunctionComponent<EditDailySchedModalProps> = ({
                             : 'bg-inherit'
                         }
                       `}
-                      disabled={
-                        getValues('withLunch') === true
-                          ? rowData.dtr?.lunchOut
-                            ? true
-                            : rowData?.dtrCorrection?.status
-                            ? true
-                            : false
-                          : true
-                      }
-                    />
-                  </div>
-                </div>
+                          disabled={
+                            getValues('withLunch') === true
+                              ? rowData.dtr?.lunchOut
+                                ? true
+                                : rowData?.dtrCorrection?.status
+                                ? true
+                                : false
+                              : true
+                          }
+                        />
+                      </div>
+                    </div>
 
-                <div className="flex flex-col justify-start items-start w-full sm:w-1/2 px-0.5 sm:pr-5 pb-3  ">
-                  <div className="w-full">
-                    <LabelInput
-                      textSize="sm"
-                      required={false}
-                      id={'scheduleLunchIn'}
-                      type="time"
-                      label={'Lunch In:'}
-                      step="any"
-                      isDirty={dirtyFields.lunchIn}
-                      controller={{
-                        ...register('lunchIn', {
-                          onChange: (e) => {
-                            setValue('lunchIn', e.target.value, {
-                              shouldValidate: true,
-                            });
-                            trigger(); // trigger all validations for inputs
-                          },
-                        }),
-                      }}
-                      isError={errors.lunchIn ? true : false}
-                      errorMessage={errors.lunchIn?.message}
-                      className={`
+                    <div className="flex flex-col justify-start items-start w-full sm:w-1/2 px-0.5 sm:pr-5 pb-3  ">
+                      <div className="w-full">
+                        <LabelInput
+                          textSize="sm"
+                          required={false}
+                          id={'scheduleLunchIn'}
+                          type="time"
+                          label={'Lunch In:'}
+                          step="any"
+                          isDirty={dirtyFields.lunchIn}
+                          controller={{
+                            ...register('lunchIn', {
+                              onChange: (e) => {
+                                setValue('lunchIn', e.target.value, {
+                                  shouldValidate: true,
+                                });
+                                trigger(); // trigger all validations for inputs
+                              },
+                            }),
+                          }}
+                          isError={errors.lunchIn ? true : false}
+                          errorMessage={errors.lunchIn?.message}
+                          className={`
                         ${
                           dirtyFields.lunchIn && !errors.lunchIn
                             ? 'bg-green-300'
@@ -334,18 +376,20 @@ const UpdateTimeLogModal: FunctionComponent<EditDailySchedModalProps> = ({
                             : 'bg-inherit'
                         }
                       `}
-                      disabled={
-                        getValues('withLunch') === true
-                          ? rowData.dtr?.lunchIn
-                            ? true
-                            : rowData?.dtrCorrection?.status
-                            ? true
-                            : false
-                          : true
-                      }
-                    />
-                  </div>
-                </div>
+                          disabled={
+                            getValues('withLunch') === true
+                              ? rowData.dtr?.lunchIn
+                                ? true
+                                : rowData?.dtrCorrection?.status
+                                ? true
+                                : false
+                              : true
+                          }
+                        />
+                      </div>
+                    </div>
+                  </>
+                ) : null}
 
                 <div className="flex flex-col justify-start items-start w-full sm:w-1/2 px-0.5 sm:pl-5 pb-3  ">
                   <div className="w-full">
