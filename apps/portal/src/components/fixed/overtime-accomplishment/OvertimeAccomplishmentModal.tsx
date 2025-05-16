@@ -20,6 +20,7 @@ import { fetchWithToken } from 'apps/portal/src/utils/hoc/fetcher';
 import { isEmpty } from 'lodash';
 import useSWR from 'swr';
 import { UseTwelveHourFormat } from 'libs/utils/src/lib/functions/TwelveHourFormatter';
+import { UserRole } from 'apps/portal/src/utils/enums/userRoles';
 
 type ModalProps = {
   modalState: boolean;
@@ -178,38 +179,47 @@ export const OvertimeAccomplishmentModal = ({ modalState, setModalState, closeMo
   //apply every 3hrs work & 1hr break rule
   useEffect(() => {
     if (!isEmpty(swrFaceScan)) {
-      let numberOfBreaks: number; // for 3-1 rule
-      //if holiday or rest day
-      if (isHoliday || isRestday) {
-        //if scheduled OT
+      if (
+        employeeDetails.employmentDetails.userRole !== UserRole.COS &&
+        employeeDetails.employmentDetails.userRole !== UserRole.COS_JO &&
+        employeeDetails.employmentDetails.userRole !== UserRole.JOB_ORDER
+      ) {
+        let numberOfBreaks: number; // for 3-1 rule
+        //if holiday or rest day
+        if (isHoliday || isRestday) {
+          //if scheduled OT
 
-        //8-1 rule - is Holiday or Rest Day
-        if (encodedHours > 4 && encodedHours < 10) {
-          let temporaryHours = encodedHours - 1;
-          setFinalEncodedHours(Number(temporaryHours.toFixed(2)));
-        }
+          //8-1 rule - is Holiday or Rest Day
+          if (encodedHours > 4 && encodedHours < 10) {
+            let temporaryHours = encodedHours - 1;
+            setFinalEncodedHours(Number(temporaryHours.toFixed(2)));
+          }
 
-        //3-1 rule beyond 9 hours
-        else if (encodedHours >= 10) {
-          numberOfBreaks = Number(((encodedHours - 9) / 4).toFixed(2)); // for 3-1 rule
-          let temporaryHours = Number(encodedHours - 1 - Math.floor(numberOfBreaks));
-          setFinalEncodedHours(Number(temporaryHours.toFixed(2)));
-        } else {
-          setFinalEncodedHours(encodedHours);
+          //3-1 rule beyond 9 hours
+          else if (encodedHours >= 10) {
+            numberOfBreaks = Number(((encodedHours - 9) / 4).toFixed(2)); // for 3-1 rule
+            let temporaryHours = Number(encodedHours - 1 - Math.floor(numberOfBreaks));
+            setFinalEncodedHours(Number(temporaryHours.toFixed(2)));
+          } else {
+            setFinalEncodedHours(encodedHours);
+          }
         }
-      }
-      //if regular work day - 3-1 rule only
-      else {
-        //if scheduled OT
-        if (encodedHours >= 4) {
-          numberOfBreaks = Number((encodedHours / 4).toFixed(2)); // for 3-1 rule
-          let temporaryHours = Number(encodedHours - Math.floor(numberOfBreaks));
-          setFinalEncodedHours(Number(temporaryHours.toFixed(2)));
-        }
-        //no break time (less than 4 hours)
+        //if regular work day - 3-1 rule only
         else {
-          setFinalEncodedHours(encodedHours);
+          //if scheduled OT
+          if (encodedHours >= 4) {
+            numberOfBreaks = Number((encodedHours / 4).toFixed(2)); // for 3-1 rule
+            let temporaryHours = Number(encodedHours - Math.floor(numberOfBreaks));
+            setFinalEncodedHours(Number(temporaryHours.toFixed(2)));
+          }
+          //no break time (less than 4 hours)
+          else {
+            setFinalEncodedHours(encodedHours);
+          }
         }
+      } else {
+        //if JO, COS, COS-JO, no need to apply 3-1 and 8-1 rules
+        setFinalEncodedHours(encodedHours);
       }
     }
   }, [encodedHours]);

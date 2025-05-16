@@ -1,6 +1,8 @@
 import { add, eachDayOfInterval, endOfMonth, format, getDay, parse, startOfToday } from 'date-fns';
+import dayjs from 'dayjs';
 import React, { Fragment, useState, useCallback } from 'react';
 import { HiOutlineChevronLeft, HiOutlineChevronRight } from 'react-icons/hi';
+import isSameOrAfter from 'dayjs/plugin/isSameOrAfter';
 
 function classNames(...classes: (string | undefined)[]): string {
   return classes.filter(Boolean).join(' ');
@@ -13,6 +15,7 @@ type DailyTimeRecordCalendarProps = {
   isError?: boolean;
   errorMessage?: string;
   dtrDates?: string[];
+  forScheduling?: boolean;
 };
 
 export default function DailyTimeRecordCalendar({
@@ -21,21 +24,36 @@ export default function DailyTimeRecordCalendar({
   controller,
   isError = false,
   errorMessage,
+  forScheduling,
 }: DailyTimeRecordCalendarProps) {
   const today = startOfToday();
   const [currentMonth, setCurrentMonth] = useState(format(today, 'MMM-yyyy'));
   const firstDayCurrentMonth = parse(currentMonth, 'MMM-yyyy', new Date());
   const [dtrDates, setDtrDates] = useState<string[]>([]);
 
+  dayjs.extend(isSameOrAfter);
+
   const handleDateSelect = useCallback(
     (date: string) => {
-      setDtrDates((prevDates) => {
-        const newDates = prevDates.includes(date) ? prevDates.filter((d) => d !== date) : [...prevDates, date];
-        if (onDateSelectProp) {
-          onDateSelectProp(newDates);
+      if (forScheduling) {
+        if (dayjs(date).isSameOrAfter(minimumScheduleDate())) {
+          setDtrDates((prevDates) => {
+            const newDates = prevDates.includes(date) ? prevDates.filter((d) => d !== date) : [...prevDates, date];
+            if (onDateSelectProp) {
+              onDateSelectProp(newDates);
+            }
+            return newDates;
+          });
+        } else {
+          setDtrDates((prevDates) => {
+            const newDates = prevDates.includes(date) ? prevDates.filter((d) => d !== date) : [...prevDates, date];
+            if (onDateSelectProp) {
+              onDateSelectProp(newDates);
+            }
+            return newDates;
+          });
         }
-        return newDates;
-      });
+      }
     },
     [onDateSelectProp]
   );
@@ -47,15 +65,22 @@ export default function DailyTimeRecordCalendar({
     end: endOfMonth(firstDayCurrentMonth),
   });
 
-  function previousMonth() {
+  const previousMonth = () => {
     const firstDayNextMonth = add(firstDayCurrentMonth, { months: -1 });
     setCurrentMonth(format(firstDayNextMonth, 'MMM-yyyy'));
-  }
+  };
 
-  function nextMonth() {
+  const nextMonth = () => {
     const firstDayNextMonth = add(firstDayCurrentMonth, { months: 1 });
     setCurrentMonth(format(firstDayNextMonth, 'MMM-yyyy'));
-  }
+  };
+
+  // minimum date for scheduling
+  const minimumScheduleDate = () => {
+    const now = dayjs().subtract(30, 'days').format('YYYY-MM-DD');
+
+    return now;
+  };
 
   return (
     <Fragment>
@@ -105,10 +130,18 @@ export default function DailyTimeRecordCalendar({
                       type="button"
                       className={classNames(
                         'mx-auto flex h-8 w-8 items-center justify-center rounded-full',
+                        // Selected dates in the picker
                         dtrDates.includes(format(day, 'yyyy-MM-dd')) && 'bg-green-500 text-white',
+
+                        // Current day in the calendar
                         currentDate === format(day, 'yyyy-MM-dd') &&
                           !dtrDates.includes(currentDate) &&
-                          'bg-blue-500 text-white'
+                          'bg-blue-500 text-white',
+
+                        // Unclickable dates
+                        forScheduling &&
+                          dayjs(day).isBefore(minimumScheduleDate()) &&
+                          'text-gray-300 cursor-not-allowed'
                       )}
                       {...controller}
                       id={id}

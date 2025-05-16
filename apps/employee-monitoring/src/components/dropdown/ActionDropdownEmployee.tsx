@@ -2,7 +2,7 @@
 import { FunctionComponent } from 'react';
 import { EmployeeRowData } from '../../utils/types/table-row-types/monitoring/employee.type';
 import * as Popover from '@radix-ui/react-popover';
-import { Can } from 'apps/employee-monitoring/src/context/casl/Can';
+import { Can } from 'apps/employee-monitoring/src/context/casl/CaslContext';
 
 type ActionDropdownProps = {
   employee: EmployeeRowData;

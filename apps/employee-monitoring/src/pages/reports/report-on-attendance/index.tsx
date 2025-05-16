@@ -1,4 +1,4 @@
-import { Can } from 'apps/employee-monitoring/src/context/casl/Can';
+import { Can } from 'apps/employee-monitoring/src/context/casl/CaslContext';
 import { useEffect, useState } from 'react';
 import { isEmpty } from 'lodash';
 import useSWR from 'swr';

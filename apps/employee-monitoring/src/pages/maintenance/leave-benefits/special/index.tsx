@@ -13,7 +13,7 @@ import EditSpecialModal from 'apps/employee-monitoring/src/components/modal/main
 import DeleteSpecialModal from 'apps/employee-monitoring/src/components/modal/maintenance/leave/special/DeleteSpecialModal';
 import UseRenderDistribution from 'apps/employee-monitoring/src/utils/functions/RenderDistribution';
 import UseRenderBooleanYesOrNo from 'apps/employee-monitoring/src/utils/functions/RenderBooleanYesOrNo';
-import { Can } from 'apps/employee-monitoring/src/context/casl/Can';
+import { Can } from 'apps/employee-monitoring/src/context/casl/CaslContext';
 
 export default function Index() {
   const {

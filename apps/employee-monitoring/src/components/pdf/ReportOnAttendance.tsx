@@ -32,7 +32,6 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-start',
     alignItems: 'flex-start',
     fontSize: 7,
-    paddingTop: 10,
     width: '100%',
   },
   tableHeader: {
@@ -63,6 +62,12 @@ const styles = StyleSheet.create({
   signatoryContainer: {
     fontSize: 8.5,
     fontFamily: 'Helvetica',
+  },
+  pageNumberText: {
+    fontSize: 8,
+    paddingTop: 1,
+    fontFamily: 'Helvetica',
+    textAlign: 'center',
   },
   rowContainer: {
     flexDirection: 'row',
@@ -103,6 +108,14 @@ export const ReportOnAttendancePdf: FunctionComponent<ReportOnAttendancePdfProps
 
   const router = useRouter();
 
+  const renderPageNumber = (pageNumber: number, totalPages: number) => {
+    if (pageNumber === totalPages) {
+      return '';
+    } else {
+      return `${pageNumber} / ${totalPages}`;
+    }
+  };
+
   useEffect(() => {
     setIsClient(true);
   }, []);
@@ -119,7 +132,16 @@ export const ReportOnAttendancePdf: FunctionComponent<ReportOnAttendancePdfProps
                 <PdfHeader isFixed={true} />
 
                 {/* DOCUMENT TITLE */}
-                <View style={[styles.w100, styles.horizontalCenter]}>
+                <View
+                  style={[
+                    styles.w100,
+                    styles.horizontalCenter,
+                    {
+                      paddingBottom: 10,
+                    },
+                  ]}
+                  fixed
+                >
                   <Text style={[styles.documentTitle]}>REPORT ON ATTENDANCE</Text>
                   <Text style={[styles.documentTitle]}>(Tardiness, Undertime and Half-day)</Text>
                   <Text style={[styles.documentTitle]}>
@@ -254,7 +276,7 @@ export const ReportOnAttendancePdf: FunctionComponent<ReportOnAttendancePdfProps
                     >
                       {reportOnAttendanceData.signatory?.reviewedBy.name}
                     </Text>
-                    <Text style={[{ paddingTop: 2 }]}>
+                    <Text style={[{ paddingTop: 2, marginRight: 10 }]}>
                       {reportOnAttendanceData.signatory?.reviewedBy.positionTitle}
                     </Text>
                   </View>
@@ -276,6 +298,14 @@ export const ReportOnAttendancePdf: FunctionComponent<ReportOnAttendancePdfProps
                       {reportOnAttendanceData.signatory?.approvedBy.positionTitle}
                     </Text>
                   </View>
+                </View>
+
+                {/* PAGE NUMBERING */}
+                <View style={[styles.horizontalCenter]} fixed>
+                  <Text
+                    style={[styles.pageNumberText]}
+                    render={({ pageNumber, totalPages }) => renderPageNumber(pageNumber, totalPages)}
+                  />
                 </View>
               </View>
             </Page>

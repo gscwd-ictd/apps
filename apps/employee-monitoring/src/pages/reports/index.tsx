@@ -1,4 +1,4 @@
-import { Can } from 'apps/employee-monitoring/src/context/casl/Can';
+import { Can } from 'apps/employee-monitoring/src/context/casl/CaslContext';
 import { Navigate } from '../../components/router/navigate';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { Reports } from '../../utils/constants/reports.const';
