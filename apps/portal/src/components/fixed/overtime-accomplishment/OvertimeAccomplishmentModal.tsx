@@ -219,7 +219,6 @@ export const OvertimeAccomplishmentModal = ({ modalState, setModalState, closeMo
         }
       } else {
         //if JO, COS, COS-JO, no need to apply 3-1 rule
-        let numberOfBreaks: number; // should be 0
         //if holiday or rest day
         if (isHoliday || isRestday) {
           //if scheduled OT
