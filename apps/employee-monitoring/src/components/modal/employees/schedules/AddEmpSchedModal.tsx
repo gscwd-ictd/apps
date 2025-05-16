@@ -167,6 +167,13 @@ const AddEmpSchedModal: FunctionComponent<AddEmpSchedModalProps> = ({
     closeModalAction();
   };
 
+  // minimum date for scheduling
+  const minimumScheduleDate = () => {
+    const now = dayjs().subtract(30, 'days').format('YYYY-MM-DD');
+
+    return now;
+  };
+
   // set schedule id loading to true
   useEffect(() => {
     getScheduleById();
@@ -298,7 +305,7 @@ const AddEmpSchedModal: FunctionComponent<AddEmpSchedModalProps> = ({
                   {datePicker === true ? (
                     <div className="grid gap-2 grid-cols-1">
                       <label className="text-md font-medium text-gray-900">Select Dates</label>
-                      <DailyTimeRecordCalendar id="dtr-calendar" onDateSelect={handleDateSelect} />
+                      <DailyTimeRecordCalendar id="dtr-calendar" onDateSelect={handleDateSelect} forScheduling={true} />
                     </div>
                   ) : null}
 
@@ -315,7 +322,9 @@ const AddEmpSchedModal: FunctionComponent<AddEmpSchedModalProps> = ({
                         }}
                         isError={errors.dtrDates ? true : false}
                         errorMessage={errors.dtrDates?.message}
+                        min={minimumScheduleDate()}
                       />
+
                       <LabelInput
                         id="stationSsEndDate"
                         name="dtrDates.dateTo"

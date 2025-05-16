@@ -14,7 +14,7 @@ import { UseCapitalizer } from '../../utils/functions/Capitalizer';
 import UseRenderBadgePill from '../../utils/functions/RenderBadgePill';
 import { EmployeeDtrWithSummary } from 'libs/utils/src/lib/types/dtr.type';
 import { ActionDropdownEmployee } from '../../components/dropdown/ActionDropdownEmployee';
-import { Can } from 'apps/employee-monitoring/src/context/casl/Can';
+import { Can } from 'apps/employee-monitoring/src/context/casl/CaslContext';
 import UseRenderAvatarInTable from '../../utils/functions/RenderAvatarInTable';
 
 export default function Index() {

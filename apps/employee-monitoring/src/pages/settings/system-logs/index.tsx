@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Can } from 'apps/employee-monitoring/src/context/casl/Can';
+import { Can } from 'apps/employee-monitoring/src/context/casl/CaslContext';
 import useSWR from 'swr';
 import { isEmpty } from 'lodash';
 

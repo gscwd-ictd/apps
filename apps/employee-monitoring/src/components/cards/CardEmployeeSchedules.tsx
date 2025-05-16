@@ -6,7 +6,7 @@ import { Schedule } from 'libs/utils/src/lib/types/schedule.type';
 import { isEmpty } from 'lodash';
 import { FunctionComponent, useEffect, useState } from 'react';
 import useSWR from 'swr';
-import { Can } from '../../context/casl/Can';
+import { Can } from '../../context/casl/CaslContext';
 import { EmployeeSchedule, useScheduleSheetStore } from '../../store/schedule-sheet.store';
 import fetcherEMS from '../../utils/fetcher/FetcherEMS';
 import UseConvertRestDaysToString from '../../utils/functions/ConvertRestDaysToString';

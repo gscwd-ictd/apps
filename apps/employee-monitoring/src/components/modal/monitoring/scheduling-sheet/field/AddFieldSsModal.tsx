@@ -199,6 +199,13 @@ const AddFieldSsModal: FunctionComponent<AddFieldSsModalProps> = ({ modalState, 
     }
   };
 
+  // minimum date for scheduling
+  const minimumScheduleDate = () => {
+    const now = dayjs().subtract(60, 'days').format('YYYY-MM-DD');
+
+    return now;
+  };
+
   // fetch of custom groups
   useEffect(() => {
     if (swrCustomGroupsIsLoading) {
@@ -349,6 +356,7 @@ const AddFieldSsModal: FunctionComponent<AddFieldSsModalProps> = ({ modalState, 
                         }}
                         isError={errors.dtrDates?.dateFrom ? true : false}
                         errorMessage={errors.dtrDates?.dateFrom.message}
+                        min={minimumScheduleDate()}
                       />
                       <LabelInput
                         id="fieldSsEndDate"

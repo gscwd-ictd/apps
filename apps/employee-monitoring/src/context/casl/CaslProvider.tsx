@@ -1,19 +1,22 @@
 // import cookies
 import React, { useContext } from 'react';
-import { AbilityContext } from '../../context/casl/Can';
-import { defineAbility } from '@casl/ability';
+import { AbilityContext } from './CaslContext';
+import { AnyMongoAbility, defineAbility, PureAbility } from '@casl/ability';
 import { isEmpty } from 'lodash';
 import { AuthmiddlewareContext } from '../../pages/_app';
-import { Navigate } from '../router/navigate';
+import { Navigate } from '../../components/router/navigate';
 
-type AuthmiddlewareProps = {
+type CaslProviderProps = {
   children: React.ReactNode | React.ReactNode[];
 };
 
-export default function Index({ children }: AuthmiddlewareProps) {
+type AppAbility = PureAbility<Actions> & AnyMongoAbility;
+type Actions = 'access';
+
+export default function Index({ children }: CaslProviderProps) {
   const { userProfile } = useContext(AuthmiddlewareContext);
 
-  const ability = defineAbility((can) => {
+  const ability = defineAbility<AppAbility>((can) => {
     const userAccessArr = userProfile?.userAccess?.map((access) => {
       return access;
     });
@@ -35,7 +38,7 @@ export default function Index({ children }: AuthmiddlewareProps) {
         {!isEmpty(userProfile) ? (
           <>{children}</>
         ) : (
-          <Navigate to={`${process.env.NEXT_PUBLIC_HRIS_DOMAIN_FE}/module-dashboard`} />
+          <Navigate to={`${process.env.NEXT_PUBLIC_HRMS_DOMAIN_FE}/module-dashboard`} />
         )}
       </AbilityContext.Provider>
     </>

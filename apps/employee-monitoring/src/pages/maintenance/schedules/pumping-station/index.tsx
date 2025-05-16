@@ -1,16 +1,11 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import {
-  DataTable,
-  useDataTable,
-  LoadingSpinner,
-  ToastNotification,
-} from '@gscwd-apps/oneui';
+import { DataTable, useDataTable, LoadingSpinner, ToastNotification } from '@gscwd-apps/oneui';
 import { Card } from 'apps/employee-monitoring/src/components/cards/Card';
 import { BreadCrumbs } from 'apps/employee-monitoring/src/components/navigations/BreadCrumbs';
 import React, { useEffect, useState } from 'react';
 import { useScheduleStore } from 'apps/employee-monitoring/src/store/schedule.store';
 import { isEmpty } from 'lodash';
-import { Can } from 'apps/employee-monitoring/src/context/casl/Can';
+import { Can } from 'apps/employee-monitoring/src/context/casl/CaslContext';
 import { ModalActions } from 'libs/utils/src/lib/enums/modal-actions.enum';
 import { createColumnHelper } from '@tanstack/react-table';
 import useSWR from 'swr';
@@ -27,9 +22,7 @@ import DeleteStationSchedModal from 'apps/employee-monitoring/src/components/mod
 export default function Index() {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const setAction = useScheduleStore((state) => state.setAction);
-  const [currentRowData, setCurrentRowData] = useState<Schedule>(
-    {} as Schedule
-  );
+  const [currentRowData, setCurrentRowData] = useState<Schedule>({} as Schedule);
 
   const {
     Schedules,
@@ -135,9 +128,7 @@ export default function Index() {
     columnHelper.accessor('scheduleType', {
       enableSorting: false,
       header: () => 'Category',
-      cell: (info) => (
-        <div className="w-[6rem]">{UseRenderScheduleType(info.getValue())}</div>
-      ),
+      cell: (info) => <div className="w-[6rem]">{UseRenderScheduleType(info.getValue())}</div>,
     }),
     columnHelper.accessor('timeIn', {
       enableSorting: false,
@@ -162,9 +153,7 @@ export default function Index() {
     columnHelper.accessor('shift', {
       enableSorting: false,
       header: () => 'Shift',
-      cell: (info) => (
-        <div className="w-[6rem]">{UseRenderShiftType(info.getValue())}</div>
-      ),
+      cell: (info) => <div className="w-[6rem]">{UseRenderShiftType(info.getValue())}</div>,
     }),
 
     columnHelper.display({
@@ -201,11 +190,7 @@ export default function Index() {
 
   // mutate from swr
   useEffect(() => {
-    if (
-      !isEmpty(PostResponse) ||
-      !isEmpty(UpdateResponse) ||
-      !isEmpty(DeleteResponse)
-    ) {
+    if (!isEmpty(PostResponse) || !isEmpty(UpdateResponse) || !isEmpty(DeleteResponse)) {
       mutateSchedules();
 
       setTimeout(() => {
@@ -235,37 +220,22 @@ export default function Index() {
         />
 
         {/* Notification error */}
-        {!isEmpty(ScheduleError) ? (
-          <ToastNotification toastType="error" notifMessage={ScheduleError} />
-        ) : null}
+        {!isEmpty(ScheduleError) ? <ToastNotification toastType="error" notifMessage={ScheduleError} /> : null}
 
         {/* Notification error */}
-        {!isEmpty(SchedulesError) ? (
-          <ToastNotification toastType="error" notifMessage={SchedulesError} />
-        ) : null}
+        {!isEmpty(SchedulesError) ? <ToastNotification toastType="error" notifMessage={SchedulesError} /> : null}
 
         {/* Notification Add Success */}
-        {!isEmpty(PostResponse) ? (
-          <ToastNotification
-            toastType="success"
-            notifMessage="Successfully added!"
-          />
-        ) : null}
+        {!isEmpty(PostResponse) ? <ToastNotification toastType="success" notifMessage="Successfully added!" /> : null}
 
         {/* Notification Update Success */}
         {!isEmpty(UpdateResponse) ? (
-          <ToastNotification
-            toastType="success"
-            notifMessage="Successfully updated!"
-          />
+          <ToastNotification toastType="success" notifMessage="Successfully updated!" />
         ) : null}
 
         {/* Notification Delete Success */}
         {!isEmpty(DeleteResponse) ? (
-          <ToastNotification
-            toastType="success"
-            notifMessage="Successfully deleted!"
-          />
+          <ToastNotification toastType="success" notifMessage="Successfully deleted!" />
         ) : null}
 
         <AddStationSchedModal
@@ -305,12 +275,7 @@ export default function Index() {
                     </button>
                   </div>
 
-                  <DataTable
-                    model={table}
-                    showGlobalFilter={true}
-                    showColumnFilter={false}
-                    paginate={true}
-                  />
+                  <DataTable model={table} showGlobalFilter={true} showColumnFilter={false} paginate={true} />
                 </div>
               )}
             </Card>

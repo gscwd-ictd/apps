@@ -9,7 +9,7 @@ import {
   MyCalendarX2,
 } from '../icons/MyLucideIcons';
 import { Paths } from '../../utils/constants/route';
-import { Can } from 'apps/employee-monitoring/src/context/casl/Can';
+import { AbilityContext, Can } from 'apps/employee-monitoring/src/context/casl/CaslContext';
 import Link from 'next/link';
 
 export const SideNavigation = () => {
@@ -18,6 +18,8 @@ export const SideNavigation = () => {
   } = useContext(PageContentContext);
 
   const { pathname } = useRouter();
+
+  const ability = useContext(AbilityContext);
 
   return (
     <Sidebar className="relative w-full transition-all" background="bg-[#2a3042]">
@@ -90,13 +92,17 @@ export const SideNavigation = () => {
           </Can>
 
           {/**Monitoring Header */}
-          <Can I="access" this={['Scheduling_sheets', 'Leave_applications', 'Overtime', 'Pass_slips', 'Travel_orders']}>
+          {ability.can('access', 'Scheduling_sheets') ||
+          ability.can('access', 'Leave_applications') ||
+          ability.can('access', 'Overtime') ||
+          ability.can('access', 'Pass_slips') ||
+          ability.can('access', 'Travel_orders') ? (
             <Sidebar.Header className={`py-2`}>
               <span className="pl-4 text-xs font-medium text-gray-500 uppercase">
                 {isCollapsed ? <hr className="border border-slate-600" /> : 'Monitoring'}
               </span>
             </Sidebar.Header>
-          </Can>
+          ) : null}
 
           {/**Monitoring Scheduling Sheet */}
           <Can I="access" this="Scheduling_sheets">
@@ -271,13 +277,15 @@ export const SideNavigation = () => {
           </Can>
 
           {/**Maintenance Header */}
-          <Can I="access" this={['Schedules', 'Leave_benefits', 'Events']}>
+          {ability.can('access', 'Schedules') ||
+          ability.can('access', 'Leave_benefits') ||
+          ability.can('access', 'Events') ? (
             <Sidebar.Header className={`py-2`}>
               <span className="pl-4 text-xs font-medium text-gray-500 uppercase">
                 {isCollapsed ? <hr className="border border-slate-600" /> : 'Maintenance'}
               </span>
             </Sidebar.Header>
-          </Can>
+          ) : null}
 
           {/**Maintenance Schedules */}
           <Can I="access" this="Schedules">
@@ -449,16 +457,18 @@ export const SideNavigation = () => {
           </Can>
 
           {/**Settings Header */}
-          <Can
-            I="access"
-            this={['Custom_groups', 'Modules', 'Users', 'Officer_of_the_day', 'System_logs', 'Announcements']}
-          >
+          {ability.can('access', 'Custom_groups') ||
+          ability.can('access', 'Modules') ||
+          ability.can('access', 'Users') ||
+          ability.can('access', 'Officer_of_the_day') ||
+          ability.can('access', 'System_logs') ||
+          ability.can('access', 'Announcements') ? (
             <Sidebar.Header className={`py-2`}>
               <span className="pl-4 text-xs font-medium text-gray-500 uppercase">
                 {isCollapsed ? <hr className="border border-slate-600" /> : 'Settings'}
               </span>
             </Sidebar.Header>
-          </Can>
+          ) : null}
 
           {/**Settings CUSTOM GROUPS */}
           <Can I="access" this="Custom_groups">

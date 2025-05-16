@@ -3,7 +3,7 @@ import { createColumnHelper } from '@tanstack/react-table';
 import { Card } from 'apps/employee-monitoring/src/components/cards/Card';
 import { BreadCrumbs } from 'apps/employee-monitoring/src/components/navigations/BreadCrumbs';
 import AddStationSsModal from 'apps/employee-monitoring/src/components/modal/monitoring/scheduling-sheet/station/AddStationSsModal.tsx';
-import { Can } from 'apps/employee-monitoring/src/context/casl/Can';
+import { Can } from 'apps/employee-monitoring/src/context/casl/CaslContext';
 import {
   CurrentScheduleSheet,
   ScheduleSheet,

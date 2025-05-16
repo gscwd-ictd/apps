@@ -13,7 +13,7 @@ import { Button, ToastNotification } from '@gscwd-apps/oneui';
 import { useScheduleSheetStore } from 'apps/employee-monitoring/src/store/schedule-sheet.store';
 import { EmployeeDtrTable } from 'apps/employee-monitoring/src/components/tables/EmployeeDtrTable';
 import { EmployeeDtrWithScheduleAndSummary } from 'libs/utils/src/lib/types/dtr.type';
-import { Can } from 'apps/employee-monitoring/src/context/casl/Can';
+import { Can } from 'apps/employee-monitoring/src/context/casl/CaslContext';
 import { Navigate } from 'apps/employee-monitoring/src/components/router/navigate';
 import AddRemarksDTRModal from 'apps/employee-monitoring/src/components/modal/employees/AddRemarksDTRModal';
 

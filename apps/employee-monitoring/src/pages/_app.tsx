@@ -7,7 +7,7 @@ import { Aside, Main, PageContent } from '@gscwd-apps/oneui';
 import { SideNavigation } from '../components/navigations/SideNavigation';
 import { TopNavigation } from '../components/navigations/TopNavigation';
 import { Footer } from '../components/navigations/Footer';
-import Authmiddleware from '../components/pages/authmiddleware';
+import CaslProvider from '../context/casl/CaslProvider';
 
 import { getCookieFromServer, UserProfile } from '../utils/helper/session';
 import { createContext, useEffect, useState } from 'react';
@@ -35,7 +35,7 @@ export default function CustomApp({ Component, pageProps, userDetails }: AppProp
   return (
     <>
       <AuthmiddlewareContext.Provider value={{ userProfile: userDetails ?? userProfile }}>
-        <Authmiddleware>
+        <CaslProvider>
           <Head>
             <title>GSCWD Employee Monitoring</title>
           </Head>
@@ -51,7 +51,7 @@ export default function CustomApp({ Component, pageProps, userDetails }: AppProp
               <Footer />
             </Main>
           </PageContent>
-        </Authmiddleware>
+        </CaslProvider>
       </AuthmiddlewareContext.Provider>
     </>
   );
