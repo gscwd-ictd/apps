@@ -218,8 +218,26 @@ export const OvertimeAccomplishmentModal = ({ modalState, setModalState, closeMo
           }
         }
       } else {
-        //if JO, COS, COS-JO, no need to apply 3-1 and 8-1 rules
-        setFinalEncodedHours(encodedHours);
+        //if JO, COS, COS-JO, no need to apply 3-1 rule
+        //if holiday or rest day
+        if (isHoliday || isRestday) {
+          //if scheduled OT
+
+          //8-1 rule - is Holiday or Rest Day
+          if (encodedHours > 4 && encodedHours < 10) {
+            let temporaryHours = encodedHours - 1;
+            setFinalEncodedHours(Number(temporaryHours.toFixed(2)));
+          }
+          // beyond 9 hours but no 3-1 rule
+          else if (encodedHours >= 10) {
+            let temporaryHours = Number(encodedHours - 1);
+            setFinalEncodedHours(Number(temporaryHours.toFixed(2)));
+          } else {
+            setFinalEncodedHours(encodedHours);
+          }
+        } else {
+          setFinalEncodedHours(encodedHours);
+        }
       }
     }
   }, [encodedHours]);
