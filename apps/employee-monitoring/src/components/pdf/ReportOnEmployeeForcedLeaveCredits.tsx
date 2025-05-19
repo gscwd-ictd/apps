@@ -8,6 +8,7 @@ import { ReportOnEmpForcedLeaveCredits } from '../../utils/types/report.type';
 import { DateFormatter } from 'libs/utils/src/lib/functions/DateFormatter';
 import { PdfHeader } from '@gscwd-apps/oneui';
 import dayjs from 'dayjs';
+import { UseRenderPageNumberPdf } from '../../utils/functions/RenderPageNumberPdf';
 
 type ReportOnEmployeeForcedLeaveCreditsProps = {
   reportOnEmployeeForcedLeaveCreditsData: ReportOnEmpForcedLeaveCredits;
@@ -65,6 +66,12 @@ const styles = StyleSheet.create({
     fontSize: 8.5,
     fontFamily: 'Helvetica',
   },
+  pageNumberText: {
+    fontSize: 8,
+    paddingTop: 1,
+    fontFamily: 'Helvetica',
+    textAlign: 'center',
+  },
   rowContainer: {
     flexDirection: 'row',
     alignItems: 'stretch',
@@ -121,7 +128,7 @@ export const ReportOnEmployeeForcedLeaveCreditsPdf: FunctionComponent<ReportOnEm
                 <PdfHeader isFixed={true} />
 
                 {/* DOCUMENT TITLE */}
-                <View style={[styles.w100, styles.horizontalCenter]}>
+                <View style={[styles.w100, styles.horizontalCenter]} fixed>
                   <Text style={[styles.documentTitle]}>REPORT ON EMPLOYEE FORCED LEAVE CREDITS</Text>
                   <Text style={[styles.documentTitle, styles.upperText]}>
                     AS OF {`${dayjs(router.query.month_year + '').format('MMMM YYYY')}`}
@@ -131,7 +138,7 @@ export const ReportOnEmployeeForcedLeaveCreditsPdf: FunctionComponent<ReportOnEm
                 {/* ATTENDANCE TABLE */}
                 <View style={styles.reportTable}>
                   {/* COLUMN HEADERS  */}
-                  <View style={[styles.rowContainer, styles.borderTop, styles.rowBorder]}>
+                  <View style={[styles.rowContainer, styles.borderTop, styles.rowBorder]} fixed>
                     <View style={[styles.tableHeader, styles.w14]}>
                       <Text style={[styles.tableHeaderText, styles.upperText, styles.boldText]}>Emp No.</Text>
                     </View>
@@ -182,7 +189,7 @@ export const ReportOnEmployeeForcedLeaveCreditsPdf: FunctionComponent<ReportOnEm
                 <View style={[styles.rowContainer, styles.signatoryContainer]}>
                   {/* LEFT */}
                   <View style={[styles.w33_33]}>
-                    <Text style={[{ padding: '29 0 30 0' }]}>Prepared by:</Text>
+                    <Text style={[{ padding: '22 0 30 0' }]}>Prepared by:</Text>
                     <Text
                       style={[
                         {
@@ -200,7 +207,7 @@ export const ReportOnEmployeeForcedLeaveCreditsPdf: FunctionComponent<ReportOnEm
 
                   {/* CENTER */}
                   <View style={[styles.w33_33]}>
-                    <Text style={[{ padding: '29 0 30 0' }]}>Checked by:</Text>
+                    <Text style={[{ padding: '22 0 30 0' }]}>Checked by:</Text>
                     <Text
                       style={[
                         {
@@ -211,14 +218,14 @@ export const ReportOnEmployeeForcedLeaveCreditsPdf: FunctionComponent<ReportOnEm
                     >
                       {reportOnEmployeeForcedLeaveCreditsData.signatory?.reviewedBy.name}
                     </Text>
-                    <Text style={[{ paddingTop: 2 }]}>
+                    <Text style={[{ paddingTop: 2, marginRight: 10 }]}>
                       {reportOnEmployeeForcedLeaveCreditsData.signatory?.reviewedBy.positionTitle}
                     </Text>
                   </View>
 
                   {/* RIGHT */}
                   <View style={[styles.w33_33]}>
-                    <Text style={[{ padding: '29 0 30 0' }]}>Noted by:</Text>
+                    <Text style={[{ padding: '22 0 30 0' }]}>Noted by:</Text>
                     <Text
                       style={[
                         {
@@ -233,6 +240,14 @@ export const ReportOnEmployeeForcedLeaveCreditsPdf: FunctionComponent<ReportOnEm
                       {reportOnEmployeeForcedLeaveCreditsData.signatory?.approvedBy.positionTitle}
                     </Text>
                   </View>
+                </View>
+
+                {/* PAGE NUMBERING */}
+                <View style={[styles.horizontalCenter]} fixed>
+                  <Text
+                    style={[styles.pageNumberText]}
+                    render={({ pageNumber, totalPages }) => UseRenderPageNumberPdf(pageNumber, totalPages)}
+                  />
                 </View>
               </View>
             </Page>

@@ -7,6 +7,7 @@ import { isEmpty } from 'lodash';
 import { ReportOnOfficialBusinessPassSlip } from '../../utils/types/report.type';
 import { DateFormatter } from 'libs/utils/src/lib/functions/DateFormatter';
 import { PdfHeader } from '@gscwd-apps/oneui';
+import { UseRenderPageNumberPdf } from '../../utils/functions/RenderPageNumberPdf';
 
 type ReportOnOfficialBusinessPassSlipProps = {
   reportOnOfficialBusinessPassSlipData: ReportOnOfficialBusinessPassSlip;
@@ -63,6 +64,12 @@ const styles = StyleSheet.create({
   signatoryContainer: {
     fontSize: 8.5,
     fontFamily: 'Helvetica',
+  },
+  pageNumberText: {
+    fontSize: 8,
+    paddingTop: 1,
+    fontFamily: 'Helvetica',
+    textAlign: 'center',
   },
   rowContainer: {
     flexDirection: 'row',
@@ -123,7 +130,7 @@ export const ReportOnOfficialBusinessPassSlipPdf: FunctionComponent<ReportOnOffi
                 <PdfHeader isFixed={true} />
 
                 {/* DOCUMENT TITLE */}
-                <View style={[styles.w100, styles.horizontalCenter]}>
+                <View style={[styles.w100, styles.horizontalCenter]} fixed>
                   <Text style={[styles.documentTitle]}>REPORT ON OFFICIAL BUSINESS PASS SLIP</Text>
                   <Text style={[styles.documentTitle]}>
                     FOR THE PERIOD OF {DateFormatter(`${router.query.date_from}`, 'MMMM DD, YYYY')} -{' '}
@@ -134,7 +141,7 @@ export const ReportOnOfficialBusinessPassSlipPdf: FunctionComponent<ReportOnOffi
                 {/* ATTENDANCE TABLE */}
                 <View style={styles.reportTable}>
                   {/* COLUMN HEADERS  */}
-                  <View style={[styles.rowContainer, styles.borderTop, styles.rowBorder]}>
+                  <View style={[styles.rowContainer, styles.borderTop, styles.rowBorder]} fixed>
                     {/* NUMBER */}
                     <View style={[styles.tableHeader, styles.w5]}></View>
                     <View style={[styles.tableHeader, styles.w30, { fontSize: 7 }]}>
@@ -194,7 +201,7 @@ export const ReportOnOfficialBusinessPassSlipPdf: FunctionComponent<ReportOnOffi
                 <View style={[styles.rowContainer, styles.signatoryContainer]}>
                   {/* LEFT */}
                   <View style={[styles.w33_33]}>
-                    <Text style={[{ padding: '29 0 30 0' }]}>Prepared by:</Text>
+                    <Text style={[{ padding: '22 0 30 0' }]}>Prepared by:</Text>
                     <Text
                       style={[
                         {
@@ -212,7 +219,7 @@ export const ReportOnOfficialBusinessPassSlipPdf: FunctionComponent<ReportOnOffi
 
                   {/* CENTER */}
                   <View style={[styles.w33_33]}>
-                    <Text style={[{ padding: '29 0 30 0' }]}>Checked by:</Text>
+                    <Text style={[{ padding: '22 0 30 0' }]}>Checked by:</Text>
                     <Text
                       style={[
                         {
@@ -223,14 +230,14 @@ export const ReportOnOfficialBusinessPassSlipPdf: FunctionComponent<ReportOnOffi
                     >
                       {reportOnOfficialBusinessPassSlipData.signatory?.reviewedBy.name}
                     </Text>
-                    <Text style={[{ paddingTop: 2 }]}>
+                    <Text style={[{ paddingTop: 2, marginRight: 10 }]}>
                       {reportOnOfficialBusinessPassSlipData.signatory?.reviewedBy.positionTitle}
                     </Text>
                   </View>
 
                   {/* RIGHT */}
                   <View style={[styles.w33_33]}>
-                    <Text style={[{ padding: '29 0 30 0' }]}>Noted by:</Text>
+                    <Text style={[{ padding: '22 0 30 0' }]}>Noted by:</Text>
                     <Text
                       style={[
                         {
@@ -245,6 +252,14 @@ export const ReportOnOfficialBusinessPassSlipPdf: FunctionComponent<ReportOnOffi
                       {reportOnOfficialBusinessPassSlipData.signatory?.approvedBy.positionTitle}
                     </Text>
                   </View>
+                </View>
+
+                {/* PAGE NUMBERING */}
+                <View style={[styles.horizontalCenter]} fixed>
+                  <Text
+                    style={[styles.pageNumberText]}
+                    render={({ pageNumber, totalPages }) => UseRenderPageNumberPdf(pageNumber, totalPages)}
+                  />
                 </View>
               </View>
             </Page>
