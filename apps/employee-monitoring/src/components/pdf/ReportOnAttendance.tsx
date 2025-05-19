@@ -7,6 +7,7 @@ import { isEmpty } from 'lodash';
 import { ReportOnAttendance } from '../../utils/types/report.type';
 import { DateFormatter } from 'libs/utils/src/lib/functions/DateFormatter';
 import { PdfHeader } from '@gscwd-apps/oneui';
+import { UseRenderPageNumberPdf } from '../../utils/functions/RenderPageNumberPdf';
 
 type ReportOnAttendancePdfProps = {
   reportOnAttendanceData: ReportOnAttendance;
@@ -108,14 +109,6 @@ export const ReportOnAttendancePdf: FunctionComponent<ReportOnAttendancePdfProps
 
   const router = useRouter();
 
-  const renderPageNumber = (pageNumber: number, totalPages: number) => {
-    if (pageNumber === totalPages) {
-      return '';
-    } else {
-      return `${pageNumber} / ${totalPages}`;
-    }
-  };
-
   useEffect(() => {
     setIsClient(true);
   }, []);
@@ -153,7 +146,7 @@ export const ReportOnAttendancePdf: FunctionComponent<ReportOnAttendancePdfProps
                 {/* ATTENDANCE TABLE */}
                 <View style={styles.reportTable}>
                   {/* COLUMN HEADERS  */}
-                  <View style={[styles.rowContainer, styles.borderTop, styles.rowBorder]}>
+                  <View style={[styles.rowContainer, styles.borderTop, styles.rowBorder]} fixed>
                     {/* NUMBER */}
                     <View style={[styles.tableHeader, styles.w3]}></View>
                     <View style={[styles.tableHeader, styles.w25, { fontSize: 7 }]}>
@@ -247,7 +240,7 @@ export const ReportOnAttendancePdf: FunctionComponent<ReportOnAttendancePdfProps
                 <View style={[styles.rowContainer, styles.signatoryContainer]}>
                   {/* LEFT */}
                   <View style={[styles.w33_33]}>
-                    <Text style={[{ padding: '29 0 30 0' }]}>Prepared by:</Text>
+                    <Text style={[{ padding: '22 0 30 0' }]}>Prepared by:</Text>
                     <Text
                       style={[
                         {
@@ -265,7 +258,7 @@ export const ReportOnAttendancePdf: FunctionComponent<ReportOnAttendancePdfProps
 
                   {/* CENTER */}
                   <View style={[styles.w33_33]}>
-                    <Text style={[{ padding: '29 0 30 0' }]}>Checked by:</Text>
+                    <Text style={[{ padding: '22 0 30 0' }]}>Checked by:</Text>
                     <Text
                       style={[
                         {
@@ -283,7 +276,7 @@ export const ReportOnAttendancePdf: FunctionComponent<ReportOnAttendancePdfProps
 
                   {/* RIGHT */}
                   <View style={[styles.w33_33]}>
-                    <Text style={[{ padding: '29 0 30 0' }]}>Noted by:</Text>
+                    <Text style={[{ padding: '22 0 30 0' }]}>Noted by:</Text>
                     <Text
                       style={[
                         {
@@ -304,7 +297,7 @@ export const ReportOnAttendancePdf: FunctionComponent<ReportOnAttendancePdfProps
                 <View style={[styles.horizontalCenter]} fixed>
                   <Text
                     style={[styles.pageNumberText]}
-                    render={({ pageNumber, totalPages }) => renderPageNumber(pageNumber, totalPages)}
+                    render={({ pageNumber, totalPages }) => UseRenderPageNumberPdf(pageNumber, totalPages)}
                   />
                 </View>
               </View>

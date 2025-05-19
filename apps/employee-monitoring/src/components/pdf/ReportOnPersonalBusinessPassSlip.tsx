@@ -64,6 +64,12 @@ const styles = StyleSheet.create({
     fontSize: 8.5,
     fontFamily: 'Helvetica',
   },
+  pageNumberText: {
+    fontSize: 8,
+    paddingTop: 1,
+    fontFamily: 'Helvetica',
+    textAlign: 'center',
+  },
   rowContainer: {
     flexDirection: 'row',
     alignItems: 'stretch',
@@ -107,6 +113,14 @@ export const ReportOnPersonalBusinessPassSlipPdf: FunctionComponent<ReportOnPers
 
   const router = useRouter();
 
+  const renderPageNumber = (pageNumber: number, totalPages: number) => {
+    if (pageNumber === totalPages) {
+      return '';
+    } else {
+      return `${pageNumber} / ${totalPages}`;
+    }
+  };
+
   useEffect(() => {
     setIsClient(true);
   }, []);
@@ -123,7 +137,7 @@ export const ReportOnPersonalBusinessPassSlipPdf: FunctionComponent<ReportOnPers
                 <PdfHeader isFixed={true} />
 
                 {/* DOCUMENT TITLE */}
-                <View style={[styles.w100, styles.horizontalCenter]}>
+                <View style={[styles.w100, styles.horizontalCenter]} fixed>
                   <Text style={[styles.documentTitle]}>REPORT ON PERSONAL BUSINESS PASS SLIP</Text>
                   <Text style={[styles.documentTitle]}>
                     FOR THE PERIOD OF {DateFormatter(`${router.query.date_from}`, 'MMMM DD, YYYY')} -{' '}
@@ -134,7 +148,7 @@ export const ReportOnPersonalBusinessPassSlipPdf: FunctionComponent<ReportOnPers
                 {/* ATTENDANCE TABLE */}
                 <View style={styles.reportTable}>
                   {/* COLUMN HEADERS  */}
-                  <View style={[styles.rowContainer, styles.borderTop, styles.rowBorder]}>
+                  <View style={[styles.rowContainer, styles.borderTop, styles.rowBorder]} fixed>
                     {/* NUMBER */}
                     <View style={[styles.tableHeader, styles.w5]}></View>
                     <View style={[styles.tableHeader, styles.w30, { fontSize: 7 }]}>
@@ -194,7 +208,7 @@ export const ReportOnPersonalBusinessPassSlipPdf: FunctionComponent<ReportOnPers
                 <View style={[styles.rowContainer, styles.signatoryContainer]}>
                   {/* LEFT */}
                   <View style={[styles.w33_33]}>
-                    <Text style={[{ padding: '29 0 30 0' }]}>Prepared by:</Text>
+                    <Text style={[{ padding: '22 0 30 0' }]}>Prepared by:</Text>
                     <Text
                       style={[
                         {
@@ -212,7 +226,7 @@ export const ReportOnPersonalBusinessPassSlipPdf: FunctionComponent<ReportOnPers
 
                   {/* CENTER */}
                   <View style={[styles.w33_33]}>
-                    <Text style={[{ padding: '29 0 30 0' }]}>Checked by:</Text>
+                    <Text style={[{ padding: '22 0 30 0' }]}>Checked by:</Text>
                     <Text
                       style={[
                         {
@@ -223,14 +237,14 @@ export const ReportOnPersonalBusinessPassSlipPdf: FunctionComponent<ReportOnPers
                     >
                       {reportOnPersonalBusinessPassSlipData.signatory?.reviewedBy.name}
                     </Text>
-                    <Text style={[{ paddingTop: 2 }]}>
+                    <Text style={[{ paddingTop: 2, marginRight: 10 }]}>
                       {reportOnPersonalBusinessPassSlipData.signatory?.reviewedBy.positionTitle}
                     </Text>
                   </View>
 
                   {/* RIGHT */}
                   <View style={[styles.w33_33]}>
-                    <Text style={[{ padding: '29 0 30 0' }]}>Noted by:</Text>
+                    <Text style={[{ padding: '22 0 30 0' }]}>Noted by:</Text>
                     <Text
                       style={[
                         {
@@ -245,6 +259,14 @@ export const ReportOnPersonalBusinessPassSlipPdf: FunctionComponent<ReportOnPers
                       {reportOnPersonalBusinessPassSlipData.signatory?.approvedBy.positionTitle}
                     </Text>
                   </View>
+                </View>
+
+                {/* PAGE NUMBERING */}
+                <View style={[styles.horizontalCenter]} fixed>
+                  <Text
+                    style={[styles.pageNumberText]}
+                    render={({ pageNumber, totalPages }) => renderPageNumber(pageNumber, totalPages)}
+                  />
                 </View>
               </View>
             </Page>
