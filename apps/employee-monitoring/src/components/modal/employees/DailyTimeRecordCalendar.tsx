@@ -44,15 +44,15 @@ export default function DailyTimeRecordCalendar({
             }
             return newDates;
           });
-        } else {
-          setDtrDates((prevDates) => {
-            const newDates = prevDates.includes(date) ? prevDates.filter((d) => d !== date) : [...prevDates, date];
-            if (onDateSelectProp) {
-              onDateSelectProp(newDates);
-            }
-            return newDates;
-          });
         }
+      } else {
+        setDtrDates((prevDates) => {
+          const newDates = prevDates.includes(date) ? prevDates.filter((d) => d !== date) : [...prevDates, date];
+          if (onDateSelectProp) {
+            onDateSelectProp(newDates);
+          }
+          return newDates;
+        });
       }
     },
     [onDateSelectProp]
