@@ -149,7 +149,8 @@ export default function Calendar({
         (dates) => dayjs(`${dates}`).diff(`${today}`, 'day') >= 0 && dayjs(`${dates}`).diff(`${today}`, 'day') <= 10
       ).length <= 0 &&
       selectedDates.length > 0 &&
-      (leaveName === LeaveName.VACATION ||
+      (leaveName === LeaveName.LEAVE_WITHOUT_PAY ||
+        leaveName === LeaveName.VACATION ||
         leaveName === LeaveName.FORCED ||
         leaveName === LeaveName.SOLO_PARENT ||
         leaveName === LeaveName.SPECIAL_PRIVILEGE ||
@@ -158,7 +159,9 @@ export default function Calendar({
     ) {
       //check if there are only past dates selected for VL, FL - legit late filing
       if (
-        (leaveName === LeaveName.VACATION || leaveName === LeaveName.FORCED) &&
+        (leaveName === LeaveName.LEAVE_WITHOUT_PAY ||
+          leaveName === LeaveName.VACATION ||
+          leaveName === LeaveName.FORCED) &&
         isLateFiling &&
         selectedDates.filter((dates) => dayjs(`${dates}`).diff(`${today}`, 'day') < 0).length > 0 &&
         selectedDates.filter((dates) => dayjs(`${dates}`).diff(`${today}`, 'day') > 10).length <= 0
@@ -178,7 +181,8 @@ export default function Calendar({
       }
       //check if there are future dates selected for VL, FL, SOLO PARENT, SPL, SICK
       else if (
-        (leaveName === LeaveName.VACATION ||
+        (leaveName === LeaveName.LEAVE_WITHOUT_PAY ||
+          leaveName === LeaveName.VACATION ||
           leaveName === LeaveName.FORCED ||
           leaveName === LeaveName.SOLO_PARENT ||
           leaveName === LeaveName.SICK ||
@@ -215,7 +219,8 @@ export default function Calendar({
         if (!swrUnavailableDates?.unavailableDates?.some((item) => item.date === specifiedDate)) {
           //for all leaves with credits with future dates from today and has future approved/pending leaves - allow future dates till infinity
           if (
-            (leaveName === LeaveName.VACATION ||
+            (leaveName === LeaveName.LEAVE_WITHOUT_PAY ||
+              leaveName === LeaveName.VACATION ||
               leaveName === LeaveName.FORCED ||
               leaveName === LeaveName.SOLO_PARENT ||
               leaveName === LeaveName.SPECIAL_PRIVILEGE ||
@@ -242,7 +247,9 @@ export default function Calendar({
           }
           //for FL/SOLO PARENT within 10 days from today and not late filing
           else if (
-            (leaveName === LeaveName.FORCED || leaveName === LeaveName.SOLO_PARENT) &&
+            (leaveName === LeaveName.LEAVE_WITHOUT_PAY ||
+              leaveName === LeaveName.FORCED ||
+              leaveName === LeaveName.SOLO_PARENT) &&
             dayjs(`${specifiedDate}`).diff(`${today}`, 'day') >= 0 &&
             dayjs(`${specifiedDate}`).diff(`${today}`, 'day') <= 10 &&
             !isLateFiling
@@ -270,7 +277,8 @@ export default function Calendar({
           }
           //for VL, FL, Solo Parent, SPL, within 10 days from today and the past days and is late filing
           else if (
-            (leaveName === LeaveName.VACATION ||
+            (leaveName === LeaveName.LEAVE_WITHOUT_PAY ||
+              leaveName === LeaveName.VACATION ||
               leaveName === LeaveName.FORCED ||
               leaveName === LeaveName.SOLO_PARENT) &&
             dayjs(`${specifiedDate}`).diff(`${today}`, 'day') <= 10 &&
@@ -302,8 +310,7 @@ export default function Calendar({
           else if (
             leaveName === LeaveName.PATERNITY ||
             leaveName === LeaveName.VAWC ||
-            leaveName === LeaveName.SPECIAL_EMERGENCY_CALAMITY ||
-            leaveName === LeaveName.LEAVE_WITHOUT_PAY
+            leaveName === LeaveName.SPECIAL_EMERGENCY_CALAMITY
           ) {
             setSelectedDates((selectedDates) => [...selectedDates, specifiedDate]);
           }
@@ -521,7 +528,9 @@ export default function Calendar({
                             DateFormatter(day, 'YYYY-MM-DD') === '2025-01-27' && 'text-red-600 bg-red-300 rounded-full',
 
                             //disable date selection for past dates from current day for VL/FL
-                            (leaveName === LeaveName.VACATION || leaveName === LeaveName.FORCED) &&
+                            (leaveName === LeaveName.LEAVE_WITHOUT_PAY ||
+                              leaveName === LeaveName.VACATION ||
+                              leaveName === LeaveName.FORCED) &&
                               dayjs(`${day}`).diff(`${today}`, 'day') < 0 &&
                               isLateFiling === false &&
                               'text-slate-300',
@@ -535,7 +544,8 @@ export default function Calendar({
                             //   isLateFiling === true &&
                             //   'text-slate-300',
                             //disable date selection starting from 10th day from current day for FL/SOLO/SPL - added allow all dates if a date with the 10 days is selected
-                            (leaveName === LeaveName.FORCED ||
+                            (leaveName === LeaveName.LEAVE_WITHOUT_PAY ||
+                              leaveName === LeaveName.FORCED ||
                               leaveName === LeaveName.SPECIAL_PRIVILEGE ||
                               leaveName === LeaveName.SICK ||
                               leaveName === LeaveName.SOLO_PARENT) &&
