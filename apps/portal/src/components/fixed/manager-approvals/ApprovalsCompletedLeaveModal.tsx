@@ -296,7 +296,8 @@ export const ApprovalsCompletedLeaveModal = ({
                           </div>
                         </div>
 
-                        {leaveIndividualDetail?.leaveName === LeaveName.VACATION ||
+                        {leaveIndividualDetail?.leaveName === LeaveName.LEAVE_WITHOUT_PAY ||
+                        leaveIndividualDetail?.leaveName === LeaveName.VACATION ||
                         leaveIndividualDetail?.leaveName === LeaveName.FORCED ||
                         leaveIndividualDetail?.leaveName === LeaveName.SPECIAL_PRIVILEGE ||
                         leaveIndividualDetail?.leaveName === LeaveName.SICK ||
@@ -304,7 +305,8 @@ export const ApprovalsCompletedLeaveModal = ({
                         leaveIndividualDetail?.leaveName === LeaveName.OTHERS ? (
                           <div className="flex flex-col justify-start items-start w-full sm:w-1/2 px-0.5 pb-3">
                             <label className="text-slate-500 text-md whitespace-nowrap pb-0.5 ">
-                              {leaveIndividualDetail?.leaveName === LeaveName.VACATION ||
+                              {leaveIndividualDetail?.leaveName === LeaveName.LEAVE_WITHOUT_PAY ||
+                              leaveIndividualDetail?.leaveName === LeaveName.VACATION ||
                               leaveIndividualDetail?.leaveName === LeaveName.FORCED ||
                               leaveIndividualDetail?.leaveName === LeaveName.SPECIAL_PRIVILEGE
                                 ? 'Location:'
@@ -318,7 +320,8 @@ export const ApprovalsCompletedLeaveModal = ({
                             </label>
 
                             <div className="w-auto ml-5">
-                              {leaveIndividualDetail?.leaveName === LeaveName.VACATION ||
+                              {leaveIndividualDetail?.leaveName === LeaveName.LEAVE_WITHOUT_PAY ||
+                              leaveIndividualDetail?.leaveName === LeaveName.VACATION ||
                               leaveIndividualDetail?.leaveName === LeaveName.FORCED ||
                               leaveIndividualDetail?.leaveName === LeaveName.SPECIAL_PRIVILEGE ? (
                                 <div className="text-md font-medium">
@@ -349,7 +352,8 @@ export const ApprovalsCompletedLeaveModal = ({
                           </div>
                         ) : null}
 
-                        {leaveIndividualDetail?.leaveName === LeaveName.VACATION ||
+                        {leaveIndividualDetail?.leaveName === LeaveName.LEAVE_WITHOUT_PAY ||
+                        leaveIndividualDetail?.leaveName === LeaveName.VACATION ||
                         leaveIndividualDetail?.leaveName === LeaveName.FORCED ||
                         leaveIndividualDetail?.leaveName === LeaveName.SPECIAL_PRIVILEGE ||
                         leaveIndividualDetail?.leaveName === LeaveName.SICK ||
@@ -364,7 +368,8 @@ export const ApprovalsCompletedLeaveModal = ({
                             </label>
                             <div className="w-auto ml-5 mr-5">
                               <label className=" text-md font-medium">
-                                {leaveIndividualDetail?.leaveName === LeaveName.VACATION ||
+                                {leaveIndividualDetail?.leaveName === LeaveName.LEAVE_WITHOUT_PAY ||
+                                leaveIndividualDetail?.leaveName === LeaveName.VACATION ||
                                 leaveIndividualDetail?.leaveName === LeaveName.FORCED ||
                                 leaveIndividualDetail?.leaveName === LeaveName.SPECIAL_PRIVILEGE
                                   ? leaveIndividualDetail.inPhilippines

@@ -236,13 +236,6 @@ export const LeaveCompletedModal = ({ modalState, setModalState, closeModalActio
           {loadingLeaveDetails || errorLeaveDetails ? (
             <div className="w-full h-[90%]  static flex flex-col justify-center items-center place-items-center">
               <LoadingSpinner size={'lg'} />
-              {/* <SpinnerDotted
-                  speed={70}
-                  thickness={70}
-                  className="w-full flex h-full transition-all "
-                  color="slateblue"
-                  size={100}
-                /> */}
             </div>
           ) : (
             <div className="w-full h-full flex flex-col  ">
@@ -524,7 +517,8 @@ export const LeaveCompletedModal = ({ modalState, setModalState, closeModalActio
                           </div>
                         ) : null}
 
-                        {leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.VACATION ||
+                        {leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.LEAVE_WITHOUT_PAY ||
+                        leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.VACATION ||
                         leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.FORCED ||
                         leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.SPECIAL_PRIVILEGE ||
                         leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.SICK ||
@@ -532,7 +526,9 @@ export const LeaveCompletedModal = ({ modalState, setModalState, closeModalActio
                         leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.OTHERS ? (
                           <div className="flex flex-col justify-start items-start w-full sm:w-1/2 px-0.5 pb-3">
                             <label className="text-slate-500 text-md whitespace-nowrap pb-0.5 ">
-                              {leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.VACATION ||
+                              {leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName ===
+                                LeaveName.LEAVE_WITHOUT_PAY ||
+                              leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.VACATION ||
                               leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.FORCED ||
                               leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName ===
                                 LeaveName.SPECIAL_PRIVILEGE
@@ -547,7 +543,9 @@ export const LeaveCompletedModal = ({ modalState, setModalState, closeModalActio
                             </label>
 
                             <div className="w-auto ml-5">
-                              {leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.VACATION ||
+                              {leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName ===
+                                LeaveName.LEAVE_WITHOUT_PAY ||
+                              leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.VACATION ||
                               leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.FORCED ||
                               leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName ===
                                 LeaveName.SPECIAL_PRIVILEGE ? (
@@ -578,7 +576,8 @@ export const LeaveCompletedModal = ({ modalState, setModalState, closeModalActio
                             </div>
                           </div>
                         ) : null}
-                        {leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.VACATION ||
+                        {leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.LEAVE_WITHOUT_PAY ||
+                        leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.VACATION ||
                         leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.FORCED ||
                         leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.SPECIAL_PRIVILEGE ||
                         leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.SICK ||
@@ -598,7 +597,9 @@ export const LeaveCompletedModal = ({ modalState, setModalState, closeModalActio
                             </label>
                             <div className="w-auto ml-5 mr-5">
                               <label className=" text-md font-medium">
-                                {leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.VACATION ||
+                                {leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName ===
+                                  LeaveName.LEAVE_WITHOUT_PAY ||
+                                leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.VACATION ||
                                 leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.FORCED ||
                                 leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName ===
                                   LeaveName.SPECIAL_PRIVILEGE
