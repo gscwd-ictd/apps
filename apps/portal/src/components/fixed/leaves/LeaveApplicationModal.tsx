@@ -589,6 +589,8 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
           employeeId: data.employeeId,
           inPhilippines: data.location,
           leaveApplicationDates: data.leaveApplicationDates,
+          isLateFiling: data.isLateFiling,
+          lateFilingJustification: data.lateFilingJustification,
         };
       } else {
         dataToSend = {
@@ -596,6 +598,8 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
           employeeId: data.employeeId,
           abroad: data.location,
           leaveApplicationDates: data.leaveApplicationDates,
+          isLateFiling: data.isLateFiling,
+          lateFilingJustification: data.lateFilingJustification,
         };
       }
     } else {
@@ -1722,7 +1726,8 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
                       )}
                     </div>
 
-                    {watch('typeOfLeaveDetails.leaveName') === LeaveName.FORCED ||
+                    {watch('typeOfLeaveDetails.leaveName') === LeaveName.LEAVE_WITHOUT_PAY ||
+                    watch('typeOfLeaveDetails.leaveName') === LeaveName.FORCED ||
                     watch('typeOfLeaveDetails.leaveName') === LeaveName.VACATION ||
                     watch('typeOfLeaveDetails.leaveName') === LeaveName.SPECIAL_PRIVILEGE ||
                     watch('typeOfLeaveDetails.leaveName') === LeaveName.SOLO_PARENT ||
