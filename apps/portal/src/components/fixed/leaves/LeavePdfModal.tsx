@@ -65,7 +65,7 @@ export const LeavePdfModal = ({ modalState, setModalState, closeModalAction, tit
                 {/* {({ loading }) => (loading ? 'Loading document...' : 'Download PDF')} */}
               </PDFDownloadLink>
 
-              <PDFViewer width={'100%'} height={2800} showToolbar className="hidden md:block ">
+              <PDFViewer width={'100%'} height={2400} showToolbar className="hidden md:block ">
                 <LeavePdf
                   employeeDetails={employeeDetails}
                   leaveDetails={leaveIndividualDetail}
