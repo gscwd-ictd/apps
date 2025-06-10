@@ -47,7 +47,6 @@ const Index = () => {
   // Upon success/fail of swr request, zustand state will be updated
   useEffect(() => {
     if (!isEmpty(swrReportOnSummaryOfLeaveWithoutPayDocument)) {
-      console.log(swrReportOnSummaryOfLeaveWithoutPayDocument.data);
       SetReportOnSummaryLeaveWithoutPayDoc(swrReportOnSummaryOfLeaveWithoutPayDocument.data);
     }
 
