@@ -100,14 +100,13 @@ const styles = StyleSheet.create({
 
   // Width Styles
   w100: { width: '100%' },
-  w50: { width: '50%' },
-  w38: { width: '38%' },
   w33_33: { width: '33.33%' },
   w25: { width: '25%' },
+  w16: { width: '16%' },
   w12: { width: '12%' },
   w11: { width: '11%' },
-  w10: { width: '10%' },
-  w5: { width: '5%' },
+  w8: { width: '8%' },
+  w6: { width: '6%' },
 });
 
 export const ReportOnSummaryOfLeaveWithoutPayPdf: FunctionComponent<ReportOnSummaryOfLeaveWithoutPayProps> = ({
@@ -144,15 +143,15 @@ export const ReportOnSummaryOfLeaveWithoutPayPdf: FunctionComponent<ReportOnSumm
                 <View style={styles.reportTable}>
                   {/* COLUMN HEADERS  */}
                   <View style={[styles.rowContainer, styles.borderTop, styles.rowBorder]} fixed>
-                    <View style={[styles.tableHeader, styles.w10]}>
+                    <View style={[styles.tableHeader, styles.w8]}>
                       <Text style={[styles.tableHeaderText, styles.upperText, styles.boldText]}>Status</Text>
                     </View>
 
-                    <View style={[styles.tableHeader, styles.w10]}>
+                    <View style={[styles.tableHeader, styles.w8]}>
                       <Text style={[styles.tableHeaderText, styles.upperText, styles.boldText]}>Employee No.</Text>
                     </View>
 
-                    <View style={[styles.tableHeader, styles.w25]}>
+                    <View style={[styles.tableHeader, styles.w16]}>
                       <Text style={[styles.tableHeaderText, styles.upperText, styles.boldText]}>Names</Text>
                     </View>
 
@@ -160,20 +159,24 @@ export const ReportOnSummaryOfLeaveWithoutPayPdf: FunctionComponent<ReportOnSumm
                       <Text style={[styles.tableHeaderText, styles.upperText, styles.boldText]}>Leave Description</Text>
                     </View>
 
-                    <View style={[styles.tableHeader, styles.w11]}>
+                    <View style={[styles.tableHeader, styles.w6]}>
                       <Text style={[styles.tableHeaderText, styles.upperText, styles.boldText]}>From</Text>
                     </View>
 
-                    <View style={[styles.tableHeader, styles.w11]}>
+                    <View style={[styles.tableHeader, styles.w6]}>
                       <Text style={[styles.tableHeaderText, styles.upperText, styles.boldText]}>To</Text>
                     </View>
 
-                    <View style={[styles.tableHeader, styles.w11]}>
+                    <View style={[styles.tableHeader, styles.w8]}>
                       <Text style={[styles.tableHeaderText, styles.upperText, styles.boldText]}>No. Of Days</Text>
                     </View>
 
-                    <View style={[styles.tableHeader, styles.w11, { borderRight: 'none' }]}>
+                    <View style={[styles.tableHeader, styles.w12]}>
                       <Text style={[styles.tableHeaderText, styles.upperText, styles.boldText]}>Remarks</Text>
+                    </View>
+
+                    <View style={[styles.tableHeader, styles.w25, { borderRight: 'none' }]}>
+                      <Text style={[styles.tableHeaderText, styles.upperText, styles.boldText]}>Justification</Text>
                     </View>
                   </View>
 
@@ -186,15 +189,15 @@ export const ReportOnSummaryOfLeaveWithoutPayPdf: FunctionComponent<ReportOnSumm
                             key={index}
                             wrap={false}
                           >
-                            <View style={[styles.tableData, styles.w10]}>
+                            <View style={[styles.tableData, styles.w8]}>
                               <Text style={[styles.tableDataText]}>APPROVED</Text>
                             </View>
 
-                            <View style={[styles.tableData, styles.w10]}>
+                            <View style={[styles.tableData, styles.w8]}>
                               <Text style={[styles.tableDataText]}>{empLwop.companyId || ''}</Text>
                             </View>
 
-                            <View style={[styles.tableData, styles.w25, { alignItems: 'flex-start' }]}>
+                            <View style={[styles.tableData, styles.w16, { alignItems: 'flex-start' }]}>
                               <Text style={[styles.tableDataText]}>{empLwop.employeeName || ''}</Text>
                             </View>
 
@@ -202,20 +205,24 @@ export const ReportOnSummaryOfLeaveWithoutPayPdf: FunctionComponent<ReportOnSumm
                               <Text style={[styles.tableDataText]}>LEAVE WITHOUT PAY</Text>
                             </View>
 
-                            <View style={[styles.tableData, styles.w11]}>
+                            <View style={[styles.tableData, styles.w6]}>
                               <Text style={[styles.tableDataText]}>{empLwop.dateFrom || ''}</Text>
                             </View>
 
-                            <View style={[styles.tableData, styles.w11]}>
+                            <View style={[styles.tableData, styles.w6]}>
                               <Text style={[styles.tableDataText]}>{empLwop.dateTo || ''}</Text>
                             </View>
 
-                            <View style={[styles.tableData, styles.w11]}>
+                            <View style={[styles.tableData, styles.w8]}>
                               <Text style={[styles.tableDataText]}>{`${empLwop.noOfDays + ' DAY/S'}` || ''}</Text>
                             </View>
 
-                            <View style={[styles.tableData, styles.w11, { borderRight: 'none' }]}>
+                            <View style={[styles.tableData, styles.w12]}>
                               <Text style={[styles.tableDataText]}>NOT YET DEDUCTED TO PAYROLL</Text>
+                            </View>
+
+                            <View style={[styles.tableData, styles.w25, { borderRight: 'none' }]}>
+                              <Text style={[styles.tableDataText]}>{empLwop.justification || ''}</Text>
                             </View>
                           </View>
                         );

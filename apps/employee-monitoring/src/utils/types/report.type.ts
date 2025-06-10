@@ -142,6 +142,7 @@ export type EmployeeLwp = {
   noOfDays: number;
   dateFrom: string;
   dateTo: string;
+  justification: string;
 };
 export type ReportOnSummaryLeaveWithoutPay = {
   report: Array<EmployeeLwp>;
