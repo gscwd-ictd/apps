@@ -1,4 +1,4 @@
-import * as yup from 'yup'
+import * as yup from 'yup';
 
 const schema = yup.object().shape({
   elemSchoolName: yup.string().required('Please enter school name').trim().label('This'),
@@ -26,7 +26,7 @@ const schema = yup.object().shape({
       params: {},
       message: 'Please verify the year',
       test: function (value) {
-        return value! >= this.parent.elemFrom
+        return value! >= this.parent.elemFrom;
       },
     })
     .label('This'),
@@ -36,8 +36,28 @@ const schema = yup.object().shape({
     .label('This')
     .nullable(true)
     .notRequired()
+    // .when('elemUnits', {
+    //   is: 'Grade 1' || 'Grade 2' || 'Grade 3' || 'Grade 4' || 'Grade 5',
+    //   then: yup.number().nullable(true).notRequired().label('This'),
+    // })
     .when('elemUnits', {
-      is: 'Grade 1' || 'Grade 2' || 'Grade 3' || 'Grade 4' || 'Grade 5',
+      is: 'Grade 1',
+      then: yup.number().nullable(true).notRequired().label('This'),
+    })
+    .when('elemUnits', {
+      is: 'Grade 2',
+      then: yup.number().nullable(true).notRequired().label('This'),
+    })
+    .when('elemUnits', {
+      is: 'Grade 3',
+      then: yup.number().nullable(true).notRequired().label('This'),
+    })
+    .when('elemUnits', {
+      is: 'Grade 4',
+      then: yup.number().nullable(true).notRequired().label('This'),
+    })
+    .when('elemUnits', {
+      is: 'Grade 5',
       then: yup.number().nullable(true).notRequired().label('This'),
     })
     .when('elemUnits', {
@@ -57,7 +77,7 @@ const schema = yup.object().shape({
           params: {},
           message: "Should be the same with 'Year Ended'",
           test: function (value) {
-            return value! === this.parent.elemTo
+            return value! === this.parent.elemTo;
           },
         }),
     }),
@@ -73,8 +93,18 @@ const schema = yup.object().shape({
   secDegree: yup
     .string()
     .nullable(true)
+    // .when('secSchoolName', {
+    //   is: null || '',
+    //   then: yup.string().notRequired().nullable(true).trim(),
+    //   otherwise: yup.string().nullable(false).trim().required('Please select from the list'),
+    // })
     .when('secSchoolName', {
-      is: null || '',
+      is: null,
+      then: yup.string().notRequired().nullable(true).trim(),
+      otherwise: yup.string().nullable(false).trim().required('Please select from the list'),
+    })
+    .when('secSchoolName', {
+      is: '',
       then: yup.string().notRequired().nullable(true).trim(),
       otherwise: yup.string().nullable(false).trim().required('Please select from the list'),
     })
@@ -82,8 +112,32 @@ const schema = yup.object().shape({
   secFrom: yup
     .number()
     .nullable(true)
+    // .when('secSchoolName', {
+    //   is: null || '',
+    //   then: yup.number().nullable(true).notRequired(),
+    //   otherwise: yup
+    //     .number()
+    //     .nullable(false)
+    //     .required('Please enter a valid year')
+    //     .transform((v, o) => (o === '' ? null : v))
+    //     .typeError('Please enter a valid year')
+    //     .min(1900, 'Please enter a valid year')
+    //     .max(2100, 'Please enter a valid year'),
+    // })
     .when('secSchoolName', {
-      is: null || '',
+      is: null,
+      then: yup.number().nullable(true).notRequired(),
+      otherwise: yup
+        .number()
+        .nullable(false)
+        .required('Please enter a valid year')
+        .transform((v, o) => (o === '' ? null : v))
+        .typeError('Please enter a valid year')
+        .min(1900, 'Please enter a valid year')
+        .max(2100, 'Please enter a valid year'),
+    })
+    .when('secSchoolName', {
+      is: '',
       then: yup.number().nullable(true).notRequired(),
       otherwise: yup
         .number()
@@ -98,8 +152,30 @@ const schema = yup.object().shape({
   secTo: yup
     .number()
     .nullable(true)
+    // .when('secSchoolName', {
+    //   is: null || '',
+    //   then: yup.number().nullable(true).notRequired(),
+    //   otherwise: yup
+    //     .number()
+    //     .nullable(false)
+    //     .required('Please enter a valid year')
+    //     .transform((v, o) => (o === '' ? null : v))
+    //     .typeError('Please enter a valid year')
+    //     .min(1900, 'Please enter a valid year')
+    //     .max(2100, 'Please enter a valid year')
+    //     .test({
+    //       name: 'min',
+    //       exclusive: false,
+    //       params: {},
+    //       message: 'Please verify the year',
+    //       test: function (value) {
+    //         return value! >= this.parent.secFrom;
+    //       },
+    //     })
+    //     .required(),
+    // }
     .when('secSchoolName', {
-      is: null || '',
+      is: null,
       then: yup.number().nullable(true).notRequired(),
       otherwise: yup
         .number()
@@ -115,7 +191,29 @@ const schema = yup.object().shape({
           params: {},
           message: 'Please verify the year',
           test: function (value) {
-            return value! >= this.parent.secFrom
+            return value! >= this.parent.secFrom;
+          },
+        })
+        .required(),
+    })
+    .when('secSchoolName', {
+      is: '',
+      then: yup.number().nullable(true).notRequired(),
+      otherwise: yup
+        .number()
+        .nullable(false)
+        .required('Please enter a valid year')
+        .transform((v, o) => (o === '' ? null : v))
+        .typeError('Please enter a valid year')
+        .min(1900, 'Please enter a valid year')
+        .max(2100, 'Please enter a valid year')
+        .test({
+          name: 'min',
+          exclusive: false,
+          params: {},
+          message: 'Please verify the year',
+          test: function (value) {
+            return value! >= this.parent.secFrom;
           },
         })
         .required(),
@@ -124,8 +222,18 @@ const schema = yup.object().shape({
   secUnits: yup
     .string()
     .nullable(true)
+    // .when('secSchoolName', {
+    //   is: null || '',
+    //   then: yup.string().nullable(true).notRequired().trim(),
+    //   otherwise: yup.string().nullable(false).required('Please select from the list'),
+    // })
     .when('secSchoolName', {
-      is: null || '',
+      is: null,
+      then: yup.string().nullable(true).notRequired().trim(),
+      otherwise: yup.string().nullable(false).required('Please select from the list'),
+    })
+    .when('secSchoolName', {
+      is: '',
       then: yup.string().nullable(true).notRequired().trim(),
       otherwise: yup.string().nullable(false).required('Please select from the list'),
     })
@@ -151,7 +259,7 @@ const schema = yup.object().shape({
           params: {},
           message: "Should be the same with 'Year Ended'",
           test: function (value) {
-            return value! === this.parent.secTo
+            return value! === this.parent.secTo;
           },
         }),
     })
@@ -159,8 +267,28 @@ const schema = yup.object().shape({
   secAwards: yup
     .string()
     .nullable(true)
+    // .when('secSchoolName', {
+    //   is: null || '',
+    //   then: yup.string().nullable(true).notRequired().trim(),
+    //   otherwise: yup
+    //     .string()
+    //     .nullable(false)
+    //     .required()
+    //     // .matches(/^([A-Za-z0-9_@./#&+-]{1,})$|^N\/A$/, 'Should enter a valid input')
+    //     .label('This'),
+    // }),
     .when('secSchoolName', {
-      is: null || '',
+      is: null,
+      then: yup.string().nullable(true).notRequired().trim(),
+      otherwise: yup
+        .string()
+        .nullable(false)
+        .required()
+        // .matches(/^([A-Za-z0-9_@./#&+-]{1,})$|^N\/A$/, 'Should enter a valid input')
+        .label('This'),
+    })
+    .when('secSchoolName', {
+      is: '',
       then: yup.string().nullable(true).notRequired().trim(),
       otherwise: yup
         .string()
@@ -169,6 +297,6 @@ const schema = yup.object().shape({
         // .matches(/^([A-Za-z0-9_@./#&+-]{1,})$|^N\/A$/, 'Should enter a valid input')
         .label('This'),
     }),
-})
+});
 
-export default schema
+export default schema;
