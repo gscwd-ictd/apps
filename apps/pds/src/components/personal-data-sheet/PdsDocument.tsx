@@ -230,816 +230,816 @@ export const PdsDocument = ({ formatDate, pds }: Data): JSX.Element => {
     governmentIssuedId,
   } = pds;
 
-  // const renderChildrenExtraPage = () => {
-  //   const content = pds.children.slice(12).map((child, index) => (
-  //     <View style={[styles.borderTop, { flexDirection: 'row' }]} key={index}>
-  //       <View style={[styles.borderRight, styles.inputValue, styles.w64_2]}>
-  //         <Text>{child.childName}</Text>
-  //       </View>
-
-  //       <View style={[styles.inputValue, styles.w35_8]}>
-  //         <Text>{formatDate(child.birthDate)}</Text>
-  //       </View>
-  //     </View>
-  //   ));
-
-  //   return content;
-  // };
-
-  // const renderVocationalExtraPage = () => {
-  //   const content = pds.vocational.slice(1).map((vocation, index) => (
-  //     <View style={[styles.borderTop, { flexDirection: 'row', alignItems: 'stretch' }]} key={index}>
-  //       {/* Level */}
-  //       <View style={[styles.inputKey, styles.borderRight, styles.w17_2]}>
-  //         <Text style={[styles.verticalCenter]}>VOCATIONAL/TRADE COURSE</Text>
-  //       </View>
-
-  //       {/* Name of School */}
-  //       <View style={[styles.borderRight, styles.inputValue, styles.w24_5, { padding: '4 2' }]}>
-  //         <View style={[styles.verticalCenter]}>
-  //           <Text>{vocation.schoolName || 'N/A'}</Text>
-  //         </View>
-  //       </View>
-
-  //       {/* Degree/Course */}
-  //       <View style={[styles.borderRight, styles.inputValue, styles.w22_5, { padding: '4 2' }]}>
-  //         <View style={[styles.verticalCenter]}>
-  //           <Text>{vocation.degree || 'N/A'}</Text>
-  //         </View>
-  //       </View>
-
-  //       {/* Period of Attendance */}
-  //       <View style={[styles.borderRight, styles.inputValue, styles.w12, { padding: '0', flexDirection: 'row' }]}>
-  //         <View style={[styles.borderRight, styles.w50, styles.horizontalCenter]}>
-  //           <Text style={[styles.verticalCenter]}>{vocation.from || 'N/A'}</Text>
-  //         </View>
-  //         <View style={[styles.w50, styles.horizontalCenter]}>
-  //           <Text style={[styles.verticalCenter]}>{vocation.to || 'PRESENT'}</Text>
-  //         </View>
-  //       </View>
-
-  //       {/* Units earned */}
-  //       <View style={[styles.borderRight, styles.inputValue, styles.horizontalCenter, styles.w8_9]}>
-  //         <View style={[styles.verticalCenter]}>
-  //           <Text>
-  //             {vocation.yearGraduated !== null
-  //               ? 'GRADUATED'
-  //               : vocation.units === '' && vocation.yearGraduated === null
-  //               ? 'N/A'
-  //               : vocation.units}
-  //           </Text>
-  //         </View>
-  //       </View>
-
-  //       {/* Year graduated */}
-  //       <View style={[styles.borderRight, styles.inputValue, styles.horizontalCenter, styles.w7_45]}>
-  //         <View style={[styles.verticalCenter]}>
-  //           <Text>{vocation.yearGraduated || 'N/A'}</Text>
-  //         </View>
-  //       </View>
-
-  //       {/* Scholarship/Honors */}
-  //       <View style={[styles.inputValue, styles.horizontalCenter, styles.w7_45, { fontSize: 6.2, padding: '4 2' }]}>
-  //         <View style={[styles.verticalCenter]}>
-  //           <Text hyphenationCallback={(e) => chunkSubstr(e)}>{vocation.awards || 'N/A'}</Text>
-  //         </View>
-  //       </View>
-  //     </View>
-  //   ));
-
-  //   return content;
-  // };
-
-  // const renderCollegeExtraPage = () => {
-  //   const content = pds.college.slice(1).map((college, index) => (
-  //     <View style={[styles.borderTop, { flexDirection: 'row', alignItems: 'stretch' }]} key={index}>
-  //       {/* Level */}
-  //       <View style={[styles.inputKey, styles.borderRight, styles.w17_2]}>
-  //         <Text style={[styles.verticalCenter]}>COLLEGE</Text>
-  //       </View>
-
-  //       {/* Name of School */}
-  //       <View style={[styles.borderRight, styles.inputValue, styles.w24_5, { padding: '4 2' }]}>
-  //         <View style={[styles.verticalCenter]}>
-  //           <Text>{college.schoolName || 'N/A'}</Text>
-  //         </View>
-  //       </View>
-
-  //       {/* Degree/Course */}
-  //       <View style={[styles.borderRight, styles.inputValue, styles.w22_5, { padding: '4 2' }]}>
-  //         <View style={[styles.verticalCenter]}>
-  //           <Text>{college.degree || 'N/A'}</Text>
-  //         </View>
-  //       </View>
-
-  //       {/* Period of Attendance */}
-  //       <View style={[styles.borderRight, styles.inputValue, styles.w12, { padding: '0', flexDirection: 'row' }]}>
-  //         <View style={[styles.borderRight, styles.w50, styles.horizontalCenter]}>
-  //           <Text style={[styles.verticalCenter]}>{college.from || 'N/A'}</Text>
-  //         </View>
-  //         <View style={[styles.w50, styles.horizontalCenter]}>
-  //           <Text style={[styles.verticalCenter]}>{college.to || 'PRESENT'}</Text>
-  //         </View>
-  //       </View>
-
-  //       {/* Units earned */}
-  //       <View style={[styles.borderRight, styles.inputValue, styles.horizontalCenter, styles.w8_9]}>
-  //         <View style={[styles.verticalCenter]}>
-  //           <Text>
-  //             {college.yearGraduated !== null
-  //               ? 'GRADUATED'
-  //               : college.units === '' && college.yearGraduated === null
-  //               ? 'N/A'
-  //               : college.units}
-  //           </Text>
-  //         </View>
-  //       </View>
-
-  //       {/* Year graduated */}
-  //       <View style={[styles.borderRight, styles.inputValue, styles.horizontalCenter, styles.w7_45]}>
-  //         <View style={[styles.verticalCenter]}>
-  //           <Text>{college.yearGraduated || 'N/A'}</Text>
-  //         </View>
-  //       </View>
-
-  //       {/* Scholarship/Honors */}
-  //       <View style={[styles.inputValue, styles.horizontalCenter, styles.w7_45, { fontSize: 6.2, padding: '4 2' }]}>
-  //         <View style={[styles.verticalCenter]}>
-  //           <Text hyphenationCallback={(e) => chunkSubstr(e)}>{college.awards || 'N/A'}</Text>
-  //         </View>
-  //       </View>
-  //     </View>
-  //   ));
-
-  //   return content;
-  // };
-
-  // const renderGraduateExtraPage = () => {
-  //   const content = pds.graduate.slice(1).map((graduate, index) => (
-  //     <View style={[styles.borderTop, { flexDirection: 'row', alignItems: 'stretch' }]} key={index}>
-  //       {/* Level */}
-  //       <View style={[styles.inputKey, styles.borderRight, styles.w17_2]}>
-  //         <Text style={[styles.verticalCenter]}>GRADUATE STUDIES</Text>
-  //       </View>
-
-  //       {/* Name of School */}
-  //       <View style={[styles.borderRight, styles.inputValue, styles.w24_5, { padding: '4 2' }]}>
-  //         <View style={[styles.verticalCenter]}>
-  //           <Text>{graduate.schoolName || 'N/A'}</Text>
-  //         </View>
-  //       </View>
-
-  //       {/* Degree/Course */}
-  //       <View style={[styles.borderRight, styles.inputValue, styles.w22_5, { padding: '4 2' }]}>
-  //         <View style={[styles.verticalCenter]}>
-  //           <Text>{graduate.degree || 'N/A'}</Text>
-  //         </View>
-  //       </View>
-
-  //       {/* Period of Attendance */}
-  //       <View style={[styles.borderRight, styles.inputValue, styles.w12, { padding: '0', flexDirection: 'row' }]}>
-  //         <View style={[styles.borderRight, styles.w50, styles.horizontalCenter]}>
-  //           <Text style={[styles.verticalCenter]}>{graduate.from || 'N/A'}</Text>
-  //         </View>
-  //         <View style={[styles.w50, styles.horizontalCenter]}>
-  //           <Text style={[styles.verticalCenter]}>{graduate.to || 'PRESENT'}</Text>
-  //         </View>
-  //       </View>
-
-  //       {/* Units earned */}
-  //       <View style={[styles.borderRight, styles.inputValue, styles.horizontalCenter, styles.w8_9]}>
-  //         <View style={[styles.verticalCenter]}>
-  //           <Text>
-  //             {graduate.yearGraduated !== null
-  //               ? 'GRADUATED'
-  //               : graduate.units === '' && graduate.yearGraduated === null
-  //               ? 'N/A'
-  //               : graduate.units}
-  //           </Text>
-  //         </View>
-  //       </View>
-
-  //       {/* Year graduated */}
-  //       <View style={[styles.borderRight, styles.inputValue, styles.horizontalCenter, styles.w7_45]}>
-  //         <View style={[styles.verticalCenter]}>
-  //           <Text>{graduate.yearGraduated || 'N/A'}</Text>
-  //         </View>
-  //       </View>
-
-  //       {/* Scholarship/Honors */}
-  //       <View style={[styles.inputValue, styles.horizontalCenter, styles.w7_45, { fontSize: 6.2, padding: '4 2' }]}>
-  //         <View style={[styles.verticalCenter]}>
-  //           <Text hyphenationCallback={(e) => chunkSubstr(e)}>{graduate.awards || 'N/A'}</Text>
-  //         </View>
-  //       </View>
-  //     </View>
-  //   ));
-
-  //   return content;
-  // };
-
-  // const renderEligibilityExtraPage = () => {
-  //   const content = pds.eligibility.slice(7).map((eligibility, index) => (
-  //     <View style={[styles.borderTop, { flexDirection: 'row', alignItems: 'stretch' }]} key={index}>
-  //       {/* Eligibility Name */}
-  //       <View style={[styles.inputValue, styles.borderRight, styles.w34, { flexDirection: 'row' }]}>
-  //         <Text style={[styles.verticalCenter]}>{eligibility.name || 'N/A'}</Text>
-  //       </View>
-
-  //       {/* Rating */}
-  //       <View style={[styles.inputValue, styles.borderRight, styles.horizontalCenter, styles.w15_1]}>
-  //         <Text style={[styles.verticalCenter]}>{eligibility.rating || 'N/A'}</Text>
-  //       </View>
-
-  //       {/* Date of examination */}
-  //       <View style={[styles.borderRight, styles.inputValue, styles.horizontalCenter, styles.w15_1]}>
-  //         <View style={[styles.verticalCenter]}>
-  //           {eligibility.examDate.from && eligibility.examDate.to ? (
-  //             <Text style={{ textTransform: 'lowercase' }}>
-  //               {eligibility.examDate.from + ' to ' + eligibility.examDate.to}
-  //             </Text>
-  //           ) : (
-  //             <Text>{eligibility.examDate.from}</Text>
-  //           )}
-  //         </View>
-  //       </View>
-
-  //       {/* Place of examination */}
-  //       <View
-  //         style={[styles.borderRight, styles.inputValue, styles.horizontalCenter, styles.w21_8, { padding: '0 2' }]}
-  //       >
-  //         <View style={[styles.verticalCenter]}>
-  //           <Text>{eligibility.examPlace || 'N/A'}</Text>
-  //         </View>
-  //       </View>
-
-  //       {/* License */}
-  //       <View style={[styles.inputValue, styles.w14, { padding: 0, flexDirection: 'row' }]}>
-  //         <View style={[styles.w50, styles.horizontalCenter, styles.borderRight]}>
-  //           <Text style={[styles.verticalCenter, { padding: '3 0' }]} hyphenationCallback={(e) => chunkSubstr(e)}>
-  //             {eligibility.licenseNumber || 'N/A'}
-  //           </Text>
-  //         </View>
-  //         <View style={[styles.w50, styles.horizontalCenter]}>
-  //           <View style={[styles.verticalCenter, { padding: '3 0' }]}>
-  //             <Text>{formatDate(eligibility.validity) || 'N/A'}</Text>
-  //           </View>
-  //         </View>
-  //       </View>
-  //     </View>
-  //   ));
-
-  //   return content;
-  // };
-
-  // const renderWorkExperienceExtraPage = () => {
-  //   const content = pds.workExperience.slice(28).map((experience, index) => (
-  //     <View style={[styles.borderTop, { flexDirection: 'row', alignItems: 'stretch' }]} key={index}>
-  //       {/* Inclusive Dates */}
-  //       <View
-  //         style={[
-  //           styles.horizontalCenter,
-  //           styles.borderRight,
-  //           styles.inputValue,
-  //           styles.w17_2,
-  //           { padding: '0', flexDirection: 'row' },
-  //         ]}
-  //       >
-  //         <View style={[styles.w50, styles.horizontalCenter, styles.borderRight]}>
-  //           <Text style={[styles.verticalCenter, { padding: '3 0' }]}>{formatDate(experience.from) || 'N/A'}</Text>
-  //         </View>
-  //         <View style={[styles.w50, styles.horizontalCenter]}>
-  //           <View style={[styles.verticalCenter, { padding: '3 0' }]}>
-  //             <Text>{formatDate(experience.to) || 'PRESENT'}</Text>
-  //           </View>
-  //         </View>
-  //       </View>
-
-  //       {/* Position Title */}
-  //       <View
-  //         style={[
-  //           styles.inputValue,
-  //           styles.borderRight,
-  //           styles.horizontalCenter,
-  //           styles.w31_9,
-  //           { flexDirection: 'row' },
-  //         ]}
-  //       >
-  //         <View style={[styles.verticalCenter, styles.horizontalCenter, styles.w100]}>
-  //           <Text>{experience.positionTitle || 'N/A'}</Text>
-  //         </View>
-  //       </View>
-
-  //       {/* Company Name */}
-  //       <View style={[styles.borderRight, styles.inputValue, styles.horizontalCenter, styles.w27_1]}>
-  //         <View style={[styles.verticalCenter]}>
-  //           <Text>{experience.companyName || 'N/A'}</Text>
-  //         </View>
-  //       </View>
-
-  //       {/* Monthly Salary */}
-  //       <View style={[styles.borderRight, styles.inputValue, styles.horizontalCenter, styles.w5_6, { padding: 0 }]}>
-  //         <View style={[styles.verticalCenter]}>
-  //           <Text>{experience.monthlySalary || 'N/A'}</Text>
-  //         </View>
-  //       </View>
-
-  //       {/* Salary Grade / Increment */}
-  //       <View style={[styles.borderRight, styles.inputValue, styles.horizontalCenter, styles.w5_6, { padding: 1 }]}>
-  //         <View style={[styles.verticalCenter]}>
-  //           <Text>{experience.salaryGrade || 'N/A'}</Text>
-  //         </View>
-  //       </View>
-
-  //       {/* Status of Appointment */}
-  //       <View
-  //         style={[
-  //           styles.borderRight,
-  //           styles.inputValue,
-  //           styles.horizontalCenter,
-  //           styles.w7,
-  //           { fontSize: 6.2, padding: 0 },
-  //         ]}
-  //       >
-  //         <View style={[styles.verticalCenter]}>
-  //           <Text hyphenationCallback={(e) => chunkSubstr(e)}>{experience.appointmentStatus || 'N/A'}</Text>
-  //         </View>
-  //       </View>
-
-  //       {/* Gov't Service */}
-  //       <View style={[styles.inputValue, styles.horizontalCenter, styles.w5_6, { padding: 0 }]}>
-  //         <View style={[styles.verticalCenter]}>
-  //           <Text>{experience.isGovernmentService ? 'Y' : 'N'}</Text>
-  //         </View>
-  //       </View>
-  //     </View>
-  //   ));
-
-  //   return content;
-  // };
-
-  // const renderVoluntaryWorkExtraPage = () => {
-  //   const content = pds.voluntaryWork.slice(5).map((voluntaryWork, index) => (
-  //     <View style={[styles.borderTop, { flexDirection: 'row', alignItems: 'stretch' }]} key={index}>
-  //       {/* Name & Address of Org */}
-  //       <View
-  //         style={[
-  //           styles.inputValue,
-  //           styles.borderRight,
-  //           styles.horizontalCenter,
-  //           styles.w46_2,
-  //           { flexDirection: 'row' },
-  //         ]}
-  //       >
-  //         <Text>{voluntaryWork.organizationName || 'N/A'}</Text>
-  //       </View>
-
-  //       {/* Inclusive Dates */}
-  //       <View
-  //         style={[
-  //           styles.horizontalCenter,
-  //           styles.borderRight,
-  //           styles.inputValue,
-  //           styles.w18,
-  //           { padding: '0', flexDirection: 'row' },
-  //         ]}
-  //       >
-  //         <View style={[styles.w50, styles.horizontalCenter, styles.borderRight]}>
-  //           <Text style={[styles.verticalCenter, { padding: '3 0' }]}>{formatDate(voluntaryWork.from) || 'N/A'}</Text>
-  //         </View>
-  //         <View style={[styles.w50, styles.horizontalCenter]}>
-  //           <View style={[styles.verticalCenter, { padding: '3 0' }]}>
-  //             <Text>{formatDate(voluntaryWork.to) || 'N/A'}</Text>
-  //           </View>
-  //         </View>
-  //       </View>
-
-  //       {/* Hours */}
-  //       <View style={[styles.borderRight, styles.inputValue, styles.horizontalCenter, styles.w6]}>
-  //         <View style={[styles.verticalCenter]}>
-  //           <Text style={{ fontSize: 5.7 }}>{voluntaryWork.numberOfHours || 'N/A'}</Text>
-  //         </View>
-  //       </View>
-
-  //       {/* Position */}
-  //       <View style={[styles.inputValue, styles.horizontalCenter, styles.w29_8, { padding: 0 }]}>
-  //         <View style={[styles.verticalCenter]}>
-  //           <Text>{voluntaryWork.position || 'N/A'}</Text>
-  //         </View>
-  //       </View>
-  //     </View>
-  //   ));
-
-  //   return content;
-  // };
-
-  // const renderLearningDevelopmentExtraPage1 = () => {
-  //   const content = pds.learningDevelopment.slice(18, 51).map((training, index) => (
-  //     <View style={[styles.borderTop, { flexDirection: 'row', alignItems: 'stretch' }]} key={index}>
-  //       {/* Title of Learning and Development */}
-  //       <View style={[styles.inputValue, styles.borderRight, styles.horizontalCenter, styles.w46_2]}>
-  //         <Text style={[styles.verticalCenter]}>{training.title || 'N/A'}</Text>
-  //       </View>
-
-  //       {/* Inclusive Dates of Attendance */}
-  //       <View
-  //         style={[
-  //           styles.horizontalCenter,
-  //           styles.borderRight,
-  //           styles.inputValue,
-  //           styles.w18,
-  //           { padding: '0', flexDirection: 'row' },
-  //         ]}
-  //       >
-  //         <View style={[styles.w50, styles.horizontalCenter, styles.borderRight]}>
-  //           <Text style={[styles.verticalCenter, { padding: '3 0' }]}>{formatDate(training.from) || 'N/A'}</Text>
-  //         </View>
-  //         <View style={[styles.w50, styles.horizontalCenter]}>
-  //           <View style={[styles.verticalCenter, { padding: '3 0' }]}>
-  //             <Text>{formatDate(training.to) || 'N/A'}</Text>
-  //           </View>
-  //         </View>
-  //       </View>
-
-  //       {/* Hours */}
-  //       <View style={[styles.borderRight, styles.inputValue, styles.horizontalCenter, styles.w6, { padding: '5.5 3' }]}>
-  //         <View style={[styles.verticalCenter]}>
-  //           <Text>{training.numberOfHours || 'N/A'}</Text>
-  //         </View>
-  //       </View>
-
-  //       {/* Type of L&D */}
-  //       <View
-  //         style={[
-  //           styles.borderRight,
-  //           styles.inputValue,
-  //           styles.horizontalCenter,
-  //           styles.w6,
-  //           { fontSize: 5, padding: '5.5 3' },
-  //         ]}
-  //       >
-  //         <View style={[styles.verticalCenter]}>
-  //           <Text hyphenationCallback={(e) => chunkSubstr(e)}>{training.type || 'N/A'}</Text>
-  //         </View>
-  //       </View>
-
-  //       {/* Sponsored By */}
-  //       <View style={[styles.inputValue, styles.horizontalCenter, styles.w23_8, { padding: 0 }]}>
-  //         <View style={[styles.verticalCenter]}>
-  //           <Text hyphenationCallback={(e) => chunkSubstr(e)}>{training.conductedBy || 'N/A'}</Text>
-  //         </View>
-  //       </View>
-  //     </View>
-  //   ));
-
-  //   return content;
-  // };
-
-  // const renderLearningDevelopmentExtraPage2 = () => {
-  //   const content = pds.learningDevelopment.slice(51, 84).map((training, index) => (
-  //     <View style={[styles.borderTop, { flexDirection: 'row', alignItems: 'stretch' }]} key={index}>
-  //       {/* Title of Learning and Development */}
-  //       <View style={[styles.inputValue, styles.borderRight, styles.horizontalCenter, styles.w46_2]}>
-  //         <Text style={[styles.verticalCenter]}>{training.title || 'N/A'}</Text>
-  //       </View>
-
-  //       {/* Inclusive Dates of Attendance */}
-  //       <View
-  //         style={[
-  //           styles.horizontalCenter,
-  //           styles.borderRight,
-  //           styles.inputValue,
-  //           styles.w18,
-  //           { padding: '0', flexDirection: 'row' },
-  //         ]}
-  //       >
-  //         <View style={[styles.w50, styles.horizontalCenter, styles.borderRight]}>
-  //           <Text style={[styles.verticalCenter, { padding: '3 0' }]}>{formatDate(training.from) || 'N/A'}</Text>
-  //         </View>
-  //         <View style={[styles.w50, styles.horizontalCenter]}>
-  //           <View style={[styles.verticalCenter, { padding: '3 0' }]}>
-  //             <Text>{formatDate(training.to) || 'N/A'}</Text>
-  //           </View>
-  //         </View>
-  //       </View>
-
-  //       {/* Hours */}
-  //       <View style={[styles.borderRight, styles.inputValue, styles.horizontalCenter, styles.w6, { padding: '5.5 3' }]}>
-  //         <View style={[styles.verticalCenter]}>
-  //           <Text>{training.numberOfHours || 'N/A'}</Text>
-  //         </View>
-  //       </View>
-
-  //       {/* Type of L&D */}
-  //       <View
-  //         style={[
-  //           styles.borderRight,
-  //           styles.inputValue,
-  //           styles.horizontalCenter,
-  //           styles.w6,
-  //           { fontSize: 5, padding: '5.5 3' },
-  //         ]}
-  //       >
-  //         <View style={[styles.verticalCenter]}>
-  //           <Text hyphenationCallback={(e) => chunkSubstr(e)}>{training.type || 'N/A'}</Text>
-  //         </View>
-  //       </View>
-
-  //       {/* Sponsored By */}
-  //       <View style={[styles.inputValue, styles.horizontalCenter, styles.w23_8, { padding: 0 }]}>
-  //         <View style={[styles.verticalCenter]}>
-  //           <Text>{training.conductedBy || 'N/A'}</Text>
-  //         </View>
-  //       </View>
-  //     </View>
-  //   ));
-
-  //   return content;
-  // };
-
-  // const renderLearningDevelopmentExtraPage3 = () => {
-  //   const content = pds.learningDevelopment.slice(84, 117).map((training, index) => (
-  //     <View style={[styles.borderTop, { flexDirection: 'row', alignItems: 'stretch' }]} key={index}>
-  //       {/* Title of Learning and Development */}
-  //       <View style={[styles.inputValue, styles.borderRight, styles.horizontalCenter, styles.w46_2]}>
-  //         <Text style={[styles.verticalCenter]}>{training.title || 'N/A'}</Text>
-  //       </View>
-
-  //       {/* Inclusive Dates of Attendance */}
-  //       <View
-  //         style={[
-  //           styles.horizontalCenter,
-  //           styles.borderRight,
-  //           styles.inputValue,
-  //           styles.w18,
-  //           { padding: '0', flexDirection: 'row' },
-  //         ]}
-  //       >
-  //         <View style={[styles.w50, styles.horizontalCenter, styles.borderRight]}>
-  //           <Text style={[styles.verticalCenter, { padding: '3 0' }]}>{formatDate(training.from) || 'N/A'}</Text>
-  //         </View>
-  //         <View style={[styles.w50, styles.horizontalCenter]}>
-  //           <View style={[styles.verticalCenter, { padding: '3 0' }]}>
-  //             <Text>{formatDate(training.to) || 'N/A'}</Text>
-  //           </View>
-  //         </View>
-  //       </View>
-
-  //       {/* Hours */}
-  //       <View style={[styles.borderRight, styles.inputValue, styles.horizontalCenter, styles.w6, { padding: '5.5 3' }]}>
-  //         <View style={[styles.verticalCenter]}>
-  //           <Text>{training.numberOfHours || 'N/A'}</Text>
-  //         </View>
-  //       </View>
-
-  //       {/* Type of L&D */}
-  //       <View
-  //         style={[
-  //           styles.borderRight,
-  //           styles.inputValue,
-  //           styles.horizontalCenter,
-  //           styles.w6,
-  //           { fontSize: 5, padding: '5.5 3' },
-  //         ]}
-  //       >
-  //         <View style={[styles.verticalCenter]}>
-  //           <Text hyphenationCallback={(e) => chunkSubstr(e)}>{training.type || 'N/A'}</Text>
-  //         </View>
-  //       </View>
-
-  //       {/* Sponsored By */}
-  //       <View style={[styles.inputValue, styles.horizontalCenter, styles.w23_8, { padding: 0 }]}>
-  //         <View style={[styles.verticalCenter]}>
-  //           <Text>{training.conductedBy || 'N/A'}</Text>
-  //         </View>
-  //       </View>
-  //     </View>
-  //   ));
-
-  //   return content;
-  // };
-
-  // const renderLearningDevelopmentExtraPage4 = () => {
-  //   const content = pds.learningDevelopment.slice(117, 150).map((training, index) => (
-  //     <View style={[styles.borderTop, { flexDirection: 'row', alignItems: 'stretch' }]} key={index}>
-  //       {/* Title of Learning and Development */}
-  //       <View style={[styles.inputValue, styles.borderRight, styles.horizontalCenter, styles.w46_2]}>
-  //         <Text style={[styles.verticalCenter]}>{training.title || 'N/A'}</Text>
-  //       </View>
-
-  //       {/* Inclusive Dates of Attendance */}
-  //       <View
-  //         style={[
-  //           styles.horizontalCenter,
-  //           styles.borderRight,
-  //           styles.inputValue,
-  //           styles.w18,
-  //           { padding: '0', flexDirection: 'row' },
-  //         ]}
-  //       >
-  //         <View style={[styles.w50, styles.horizontalCenter, styles.borderRight]}>
-  //           <Text style={[styles.verticalCenter, { padding: '3 0' }]}>{formatDate(training.from) || 'N/A'}</Text>
-  //         </View>
-  //         <View style={[styles.w50, styles.horizontalCenter]}>
-  //           <View style={[styles.verticalCenter, { padding: '3 0' }]}>
-  //             <Text>{formatDate(training.to) || 'N/A'}</Text>
-  //           </View>
-  //         </View>
-  //       </View>
-
-  //       {/* Hours */}
-  //       <View style={[styles.borderRight, styles.inputValue, styles.horizontalCenter, styles.w6, { padding: '5.5 3' }]}>
-  //         <View style={[styles.verticalCenter]}>
-  //           <Text>{training.numberOfHours || 'N/A'}</Text>
-  //         </View>
-  //       </View>
-
-  //       {/* Type of L&D */}
-  //       <View
-  //         style={[
-  //           styles.borderRight,
-  //           styles.inputValue,
-  //           styles.horizontalCenter,
-  //           styles.w6,
-  //           { fontSize: 5, padding: '5.5 3' },
-  //         ]}
-  //       >
-  //         <View style={[styles.verticalCenter]}>
-  //           <Text hyphenationCallback={(e) => chunkSubstr(e)}>{training.type || 'N/A'}</Text>
-  //         </View>
-  //       </View>
-
-  //       {/* Sponsored By */}
-  //       <View style={[styles.inputValue, styles.horizontalCenter, styles.w23_8, { padding: 0 }]}>
-  //         <View style={[styles.verticalCenter]}>
-  //           <Text>{training.conductedBy || 'N/A'}</Text>
-  //         </View>
-  //       </View>
-  //     </View>
-  //   ));
-
-  //   return content;
-  // };
-
-  // const renderLearningDevelopmentExtraPage5 = () => {
-  //   const content = pds.learningDevelopment.slice(150, 183).map((training, index) => (
-  //     <View style={[styles.borderTop, { flexDirection: 'row', alignItems: 'stretch' }]} key={index}>
-  //       {/* Title of Learning and Development */}
-  //       <View style={[styles.inputValue, styles.borderRight, styles.horizontalCenter, styles.w46_2]}>
-  //         <Text style={[styles.verticalCenter]}>{training.title || 'N/A'}</Text>
-  //       </View>
-
-  //       {/* Inclusive Dates of Attendance */}
-  //       <View
-  //         style={[
-  //           styles.horizontalCenter,
-  //           styles.borderRight,
-  //           styles.inputValue,
-  //           styles.w18,
-  //           { padding: '0', flexDirection: 'row' },
-  //         ]}
-  //       >
-  //         <View style={[styles.w50, styles.horizontalCenter, styles.borderRight]}>
-  //           <Text style={[styles.verticalCenter, { padding: '3 0' }]}>{formatDate(training.from) || 'N/A'}</Text>
-  //         </View>
-  //         <View style={[styles.w50, styles.horizontalCenter]}>
-  //           <View style={[styles.verticalCenter, { padding: '3 0' }]}>
-  //             <Text>{formatDate(training.to) || 'N/A'}</Text>
-  //           </View>
-  //         </View>
-  //       </View>
-
-  //       {/* Hours */}
-  //       <View style={[styles.borderRight, styles.inputValue, styles.horizontalCenter, styles.w6, { padding: '5.5 3' }]}>
-  //         <View style={[styles.verticalCenter]}>
-  //           <Text>{training.numberOfHours || 'N/A'}</Text>
-  //         </View>
-  //       </View>
-
-  //       {/* Type of L&D */}
-  //       <View
-  //         style={[
-  //           styles.borderRight,
-  //           styles.inputValue,
-  //           styles.horizontalCenter,
-  //           styles.w6,
-  //           { fontSize: 5, padding: '5.5 3' },
-  //         ]}
-  //       >
-  //         <View style={[styles.verticalCenter]}>
-  //           <Text hyphenationCallback={(e) => chunkSubstr(e)}>{training.type || 'N/A'}</Text>
-  //         </View>
-  //       </View>
-
-  //       {/* Sponsored By */}
-  //       <View style={[styles.inputValue, styles.horizontalCenter, styles.w23_8, { padding: 0 }]}>
-  //         <View style={[styles.verticalCenter]}>
-  //           <Text>{training.conductedBy || 'N/A'}</Text>
-  //         </View>
-  //       </View>
-  //     </View>
-  //   ));
-
-  //   return content;
-  // };
-
-  // const renderLearningDevelopmentExtraPage6 = () => {
-  //   const content = pds.learningDevelopment.slice(183, 216).map((training, index) => (
-  //     <View style={[styles.borderTop, { flexDirection: 'row', alignItems: 'stretch' }]} key={index}>
-  //       {/* Title of Learning and Development */}
-  //       <View style={[styles.inputValue, styles.borderRight, styles.horizontalCenter, styles.w46_2]}>
-  //         <Text style={[styles.verticalCenter]}>{training.title || 'N/A'}</Text>
-  //       </View>
-
-  //       {/* Inclusive Dates of Attendance */}
-  //       <View
-  //         style={[
-  //           styles.horizontalCenter,
-  //           styles.borderRight,
-  //           styles.inputValue,
-  //           styles.w18,
-  //           { padding: '0', flexDirection: 'row' },
-  //         ]}
-  //       >
-  //         <View style={[styles.w50, styles.horizontalCenter, styles.borderRight]}>
-  //           <Text style={[styles.verticalCenter, { padding: '3 0' }]}>{formatDate(training.from) || 'N/A'}</Text>
-  //         </View>
-  //         <View style={[styles.w50, styles.horizontalCenter]}>
-  //           <View style={[styles.verticalCenter, { padding: '3 0' }]}>
-  //             <Text>{formatDate(training.to) || 'N/A'}</Text>
-  //           </View>
-  //         </View>
-  //       </View>
-
-  //       {/* Hours */}
-  //       <View style={[styles.borderRight, styles.inputValue, styles.horizontalCenter, styles.w6, { padding: '5.5 3' }]}>
-  //         <View style={[styles.verticalCenter]}>
-  //           <Text>{training.numberOfHours || 'N/A'}</Text>
-  //         </View>
-  //       </View>
-
-  //       {/* Type of L&D */}
-  //       <View
-  //         style={[
-  //           styles.borderRight,
-  //           styles.inputValue,
-  //           styles.horizontalCenter,
-  //           styles.w6,
-  //           { fontSize: 5, padding: '5.5 3' },
-  //         ]}
-  //       >
-  //         <View style={[styles.verticalCenter]}>
-  //           <Text hyphenationCallback={(e) => chunkSubstr(e)}>{training.type || 'N/A'}</Text>
-  //         </View>
-  //       </View>
-
-  //       {/* Sponsored By */}
-  //       <View style={[styles.inputValue, styles.horizontalCenter, styles.w23_8, { padding: 0 }]}>
-  //         <View style={[styles.verticalCenter]}>
-  //           <Text>{training.conductedBy || 'N/A'}</Text>
-  //         </View>
-  //       </View>
-  //     </View>
-  //   ));
-
-  //   return content;
-  // };
-
-  // const renderSpecialSkillsExtraPage = () => {
-  //   const content = pds.skills.slice(7).map((skill, index) => (
-  //     <View style={[styles.inputValue, styles.borderTop]} key={index}>
-  //       <Text style={[styles.verticalCenter]}>
-  //         <>{skill.skill}</>
-  //       </Text>
-  //     </View>
-  //   ));
-
-  //   return content;
-  // };
-
-  // const renderRecognitionExtraPage = () => {
-  //   const content = pds.recognitions.slice(7).map((recog, index) => (
-  //     <View style={[styles.inputValue, styles.borderTop]} key={index}>
-  //       <Text style={[styles.verticalCenter]}>
-  //         <>{recog.recognition}</>
-  //       </Text>
-  //     </View>
-  //   ));
-
-  //   return content;
-  // };
-
-  // const renderMembershipExtraPage = () => {
-  //   const content = pds.organizations.slice(7).map((org, index) => (
-  //     <View style={[styles.inputValue, styles.borderTop]} key={index}>
-  //       <Text style={[styles.verticalCenter]}>
-  //         <>{org.organization}</>
-  //       </Text>
-  //     </View>
-  //   ));
-
-  //   return content;
-  // };
+  const renderChildrenExtraPage = () => {
+    const content = pds.children.slice(12).map((child, index) => (
+      <View style={[styles.borderTop, { flexDirection: 'row' }]} key={index}>
+        <View style={[styles.borderRight, styles.inputValue, styles.w64_2]}>
+          <Text>{child.childName}</Text>
+        </View>
+
+        <View style={[styles.inputValue, styles.w35_8]}>
+          <Text>{formatDate(child.birthDate)}</Text>
+        </View>
+      </View>
+    ));
+
+    return content;
+  };
+
+  const renderVocationalExtraPage = () => {
+    const content = pds.vocational.slice(1).map((vocation, index) => (
+      <View style={[styles.borderTop, { flexDirection: 'row', alignItems: 'stretch' }]} key={index}>
+        {/* Level */}
+        <View style={[styles.inputKey, styles.borderRight, styles.w17_2]}>
+          <Text style={[styles.verticalCenter]}>VOCATIONAL/TRADE COURSE</Text>
+        </View>
+
+        {/* Name of School */}
+        <View style={[styles.borderRight, styles.inputValue, styles.w24_5, { padding: '4 2' }]}>
+          <View style={[styles.verticalCenter]}>
+            <Text>{vocation.schoolName || 'N/A'}</Text>
+          </View>
+        </View>
+
+        {/* Degree/Course */}
+        <View style={[styles.borderRight, styles.inputValue, styles.w22_5, { padding: '4 2' }]}>
+          <View style={[styles.verticalCenter]}>
+            <Text>{vocation.degree || 'N/A'}</Text>
+          </View>
+        </View>
+
+        {/* Period of Attendance */}
+        <View style={[styles.borderRight, styles.inputValue, styles.w12, { padding: '0', flexDirection: 'row' }]}>
+          <View style={[styles.borderRight, styles.w50, styles.horizontalCenter]}>
+            <Text style={[styles.verticalCenter]}>{vocation.from || 'N/A'}</Text>
+          </View>
+          <View style={[styles.w50, styles.horizontalCenter]}>
+            <Text style={[styles.verticalCenter]}>{vocation.to || 'PRESENT'}</Text>
+          </View>
+        </View>
+
+        {/* Units earned */}
+        <View style={[styles.borderRight, styles.inputValue, styles.horizontalCenter, styles.w8_9]}>
+          <View style={[styles.verticalCenter]}>
+            <Text>
+              {vocation.yearGraduated !== null
+                ? 'GRADUATED'
+                : vocation.units === '' && vocation.yearGraduated === null
+                ? 'N/A'
+                : vocation.units}
+            </Text>
+          </View>
+        </View>
+
+        {/* Year graduated */}
+        <View style={[styles.borderRight, styles.inputValue, styles.horizontalCenter, styles.w7_45]}>
+          <View style={[styles.verticalCenter]}>
+            <Text>{vocation.yearGraduated || 'N/A'}</Text>
+          </View>
+        </View>
+
+        {/* Scholarship/Honors */}
+        <View style={[styles.inputValue, styles.horizontalCenter, styles.w7_45, { fontSize: 6.2, padding: '4 2' }]}>
+          <View style={[styles.verticalCenter]}>
+            <Text hyphenationCallback={(e) => chunkSubstr(e)}>{vocation.awards || 'N/A'}</Text>
+          </View>
+        </View>
+      </View>
+    ));
+
+    return content;
+  };
+
+  const renderCollegeExtraPage = () => {
+    const content = pds.college.slice(1).map((college, index) => (
+      <View style={[styles.borderTop, { flexDirection: 'row', alignItems: 'stretch' }]} key={index}>
+        {/* Level */}
+        <View style={[styles.inputKey, styles.borderRight, styles.w17_2]}>
+          <Text style={[styles.verticalCenter]}>COLLEGE</Text>
+        </View>
+
+        {/* Name of School */}
+        <View style={[styles.borderRight, styles.inputValue, styles.w24_5, { padding: '4 2' }]}>
+          <View style={[styles.verticalCenter]}>
+            <Text>{college.schoolName || 'N/A'}</Text>
+          </View>
+        </View>
+
+        {/* Degree/Course */}
+        <View style={[styles.borderRight, styles.inputValue, styles.w22_5, { padding: '4 2' }]}>
+          <View style={[styles.verticalCenter]}>
+            <Text>{college.degree || 'N/A'}</Text>
+          </View>
+        </View>
+
+        {/* Period of Attendance */}
+        <View style={[styles.borderRight, styles.inputValue, styles.w12, { padding: '0', flexDirection: 'row' }]}>
+          <View style={[styles.borderRight, styles.w50, styles.horizontalCenter]}>
+            <Text style={[styles.verticalCenter]}>{college.from || 'N/A'}</Text>
+          </View>
+          <View style={[styles.w50, styles.horizontalCenter]}>
+            <Text style={[styles.verticalCenter]}>{college.to || 'PRESENT'}</Text>
+          </View>
+        </View>
+
+        {/* Units earned */}
+        <View style={[styles.borderRight, styles.inputValue, styles.horizontalCenter, styles.w8_9]}>
+          <View style={[styles.verticalCenter]}>
+            <Text>
+              {college.yearGraduated !== null
+                ? 'GRADUATED'
+                : college.units === '' && college.yearGraduated === null
+                ? 'N/A'
+                : college.units}
+            </Text>
+          </View>
+        </View>
+
+        {/* Year graduated */}
+        <View style={[styles.borderRight, styles.inputValue, styles.horizontalCenter, styles.w7_45]}>
+          <View style={[styles.verticalCenter]}>
+            <Text>{college.yearGraduated || 'N/A'}</Text>
+          </View>
+        </View>
+
+        {/* Scholarship/Honors */}
+        <View style={[styles.inputValue, styles.horizontalCenter, styles.w7_45, { fontSize: 6.2, padding: '4 2' }]}>
+          <View style={[styles.verticalCenter]}>
+            <Text hyphenationCallback={(e) => chunkSubstr(e)}>{college.awards || 'N/A'}</Text>
+          </View>
+        </View>
+      </View>
+    ));
+
+    return content;
+  };
+
+  const renderGraduateExtraPage = () => {
+    const content = pds.graduate.slice(1).map((graduate, index) => (
+      <View style={[styles.borderTop, { flexDirection: 'row', alignItems: 'stretch' }]} key={index}>
+        {/* Level */}
+        <View style={[styles.inputKey, styles.borderRight, styles.w17_2]}>
+          <Text style={[styles.verticalCenter]}>GRADUATE STUDIES</Text>
+        </View>
+
+        {/* Name of School */}
+        <View style={[styles.borderRight, styles.inputValue, styles.w24_5, { padding: '4 2' }]}>
+          <View style={[styles.verticalCenter]}>
+            <Text>{graduate.schoolName || 'N/A'}</Text>
+          </View>
+        </View>
+
+        {/* Degree/Course */}
+        <View style={[styles.borderRight, styles.inputValue, styles.w22_5, { padding: '4 2' }]}>
+          <View style={[styles.verticalCenter]}>
+            <Text>{graduate.degree || 'N/A'}</Text>
+          </View>
+        </View>
+
+        {/* Period of Attendance */}
+        <View style={[styles.borderRight, styles.inputValue, styles.w12, { padding: '0', flexDirection: 'row' }]}>
+          <View style={[styles.borderRight, styles.w50, styles.horizontalCenter]}>
+            <Text style={[styles.verticalCenter]}>{graduate.from || 'N/A'}</Text>
+          </View>
+          <View style={[styles.w50, styles.horizontalCenter]}>
+            <Text style={[styles.verticalCenter]}>{graduate.to || 'PRESENT'}</Text>
+          </View>
+        </View>
+
+        {/* Units earned */}
+        <View style={[styles.borderRight, styles.inputValue, styles.horizontalCenter, styles.w8_9]}>
+          <View style={[styles.verticalCenter]}>
+            <Text>
+              {graduate.yearGraduated !== null
+                ? 'GRADUATED'
+                : graduate.units === '' && graduate.yearGraduated === null
+                ? 'N/A'
+                : graduate.units}
+            </Text>
+          </View>
+        </View>
+
+        {/* Year graduated */}
+        <View style={[styles.borderRight, styles.inputValue, styles.horizontalCenter, styles.w7_45]}>
+          <View style={[styles.verticalCenter]}>
+            <Text>{graduate.yearGraduated || 'N/A'}</Text>
+          </View>
+        </View>
+
+        {/* Scholarship/Honors */}
+        <View style={[styles.inputValue, styles.horizontalCenter, styles.w7_45, { fontSize: 6.2, padding: '4 2' }]}>
+          <View style={[styles.verticalCenter]}>
+            <Text hyphenationCallback={(e) => chunkSubstr(e)}>{graduate.awards || 'N/A'}</Text>
+          </View>
+        </View>
+      </View>
+    ));
+
+    return content;
+  };
+
+  const renderEligibilityExtraPage = () => {
+    const content = pds.eligibility.slice(7).map((eligibility, index) => (
+      <View style={[styles.borderTop, { flexDirection: 'row', alignItems: 'stretch' }]} key={index}>
+        {/* Eligibility Name */}
+        <View style={[styles.inputValue, styles.borderRight, styles.w34, { flexDirection: 'row' }]}>
+          <Text style={[styles.verticalCenter]}>{eligibility.name || 'N/A'}</Text>
+        </View>
+
+        {/* Rating */}
+        <View style={[styles.inputValue, styles.borderRight, styles.horizontalCenter, styles.w15_1]}>
+          <Text style={[styles.verticalCenter]}>{eligibility.rating || 'N/A'}</Text>
+        </View>
+
+        {/* Date of examination */}
+        <View style={[styles.borderRight, styles.inputValue, styles.horizontalCenter, styles.w15_1]}>
+          <View style={[styles.verticalCenter]}>
+            {eligibility.examDate.from && eligibility.examDate.to ? (
+              <Text style={{ textTransform: 'lowercase' }}>
+                {eligibility.examDate.from + ' to ' + eligibility.examDate.to}
+              </Text>
+            ) : (
+              <Text>{eligibility.examDate.from}</Text>
+            )}
+          </View>
+        </View>
+
+        {/* Place of examination */}
+        <View
+          style={[styles.borderRight, styles.inputValue, styles.horizontalCenter, styles.w21_8, { padding: '0 2' }]}
+        >
+          <View style={[styles.verticalCenter]}>
+            <Text>{eligibility.examPlace || 'N/A'}</Text>
+          </View>
+        </View>
+
+        {/* License */}
+        <View style={[styles.inputValue, styles.w14, { padding: 0, flexDirection: 'row' }]}>
+          <View style={[styles.w50, styles.horizontalCenter, styles.borderRight]}>
+            <Text style={[styles.verticalCenter, { padding: '3 0' }]} hyphenationCallback={(e) => chunkSubstr(e)}>
+              {eligibility.licenseNumber || 'N/A'}
+            </Text>
+          </View>
+          <View style={[styles.w50, styles.horizontalCenter]}>
+            <View style={[styles.verticalCenter, { padding: '3 0' }]}>
+              <Text>{formatDate(eligibility.validity) || 'N/A'}</Text>
+            </View>
+          </View>
+        </View>
+      </View>
+    ));
+
+    return content;
+  };
+
+  const renderWorkExperienceExtraPage = () => {
+    const content = pds.workExperience.slice(28).map((experience, index) => (
+      <View style={[styles.borderTop, { flexDirection: 'row', alignItems: 'stretch' }]} key={index}>
+        {/* Inclusive Dates */}
+        <View
+          style={[
+            styles.horizontalCenter,
+            styles.borderRight,
+            styles.inputValue,
+            styles.w17_2,
+            { padding: '0', flexDirection: 'row' },
+          ]}
+        >
+          <View style={[styles.w50, styles.horizontalCenter, styles.borderRight]}>
+            <Text style={[styles.verticalCenter, { padding: '3 0' }]}>{formatDate(experience.from) || 'N/A'}</Text>
+          </View>
+          <View style={[styles.w50, styles.horizontalCenter]}>
+            <View style={[styles.verticalCenter, { padding: '3 0' }]}>
+              <Text>{formatDate(experience.to) || 'PRESENT'}</Text>
+            </View>
+          </View>
+        </View>
+
+        {/* Position Title */}
+        <View
+          style={[
+            styles.inputValue,
+            styles.borderRight,
+            styles.horizontalCenter,
+            styles.w31_9,
+            { flexDirection: 'row' },
+          ]}
+        >
+          <View style={[styles.verticalCenter, styles.horizontalCenter, styles.w100]}>
+            <Text>{experience.positionTitle || 'N/A'}</Text>
+          </View>
+        </View>
+
+        {/* Company Name */}
+        <View style={[styles.borderRight, styles.inputValue, styles.horizontalCenter, styles.w27_1]}>
+          <View style={[styles.verticalCenter]}>
+            <Text>{experience.companyName || 'N/A'}</Text>
+          </View>
+        </View>
+
+        {/* Monthly Salary */}
+        <View style={[styles.borderRight, styles.inputValue, styles.horizontalCenter, styles.w5_6, { padding: 0 }]}>
+          <View style={[styles.verticalCenter]}>
+            <Text>{experience.monthlySalary || 'N/A'}</Text>
+          </View>
+        </View>
+
+        {/* Salary Grade / Increment */}
+        <View style={[styles.borderRight, styles.inputValue, styles.horizontalCenter, styles.w5_6, { padding: 1 }]}>
+          <View style={[styles.verticalCenter]}>
+            <Text>{experience.salaryGrade || 'N/A'}</Text>
+          </View>
+        </View>
+
+        {/* Status of Appointment */}
+        <View
+          style={[
+            styles.borderRight,
+            styles.inputValue,
+            styles.horizontalCenter,
+            styles.w7,
+            { fontSize: 6.2, padding: 0 },
+          ]}
+        >
+          <View style={[styles.verticalCenter]}>
+            <Text hyphenationCallback={(e) => chunkSubstr(e)}>{experience.appointmentStatus || 'N/A'}</Text>
+          </View>
+        </View>
+
+        {/* Gov't Service */}
+        <View style={[styles.inputValue, styles.horizontalCenter, styles.w5_6, { padding: 0 }]}>
+          <View style={[styles.verticalCenter]}>
+            <Text>{experience.isGovernmentService ? 'Y' : 'N'}</Text>
+          </View>
+        </View>
+      </View>
+    ));
+
+    return content;
+  };
+
+  const renderVoluntaryWorkExtraPage = () => {
+    const content = pds.voluntaryWork.slice(5).map((voluntaryWork, index) => (
+      <View style={[styles.borderTop, { flexDirection: 'row', alignItems: 'stretch' }]} key={index}>
+        {/* Name & Address of Org */}
+        <View
+          style={[
+            styles.inputValue,
+            styles.borderRight,
+            styles.horizontalCenter,
+            styles.w46_2,
+            { flexDirection: 'row' },
+          ]}
+        >
+          <Text>{voluntaryWork.organizationName || 'N/A'}</Text>
+        </View>
+
+        {/* Inclusive Dates */}
+        <View
+          style={[
+            styles.horizontalCenter,
+            styles.borderRight,
+            styles.inputValue,
+            styles.w18,
+            { padding: '0', flexDirection: 'row' },
+          ]}
+        >
+          <View style={[styles.w50, styles.horizontalCenter, styles.borderRight]}>
+            <Text style={[styles.verticalCenter, { padding: '3 0' }]}>{formatDate(voluntaryWork.from) || 'N/A'}</Text>
+          </View>
+          <View style={[styles.w50, styles.horizontalCenter]}>
+            <View style={[styles.verticalCenter, { padding: '3 0' }]}>
+              <Text>{formatDate(voluntaryWork.to) || 'N/A'}</Text>
+            </View>
+          </View>
+        </View>
+
+        {/* Hours */}
+        <View style={[styles.borderRight, styles.inputValue, styles.horizontalCenter, styles.w6]}>
+          <View style={[styles.verticalCenter]}>
+            <Text style={{ fontSize: 5.7 }}>{voluntaryWork.numberOfHours || 'N/A'}</Text>
+          </View>
+        </View>
+
+        {/* Position */}
+        <View style={[styles.inputValue, styles.horizontalCenter, styles.w29_8, { padding: 0 }]}>
+          <View style={[styles.verticalCenter]}>
+            <Text>{voluntaryWork.position || 'N/A'}</Text>
+          </View>
+        </View>
+      </View>
+    ));
+
+    return content;
+  };
+
+  const renderLearningDevelopmentExtraPage1 = () => {
+    const content = pds.learningDevelopment.slice(18, 51).map((training, index) => (
+      <View style={[styles.borderTop, { flexDirection: 'row', alignItems: 'stretch' }]} key={index}>
+        {/* Title of Learning and Development */}
+        <View style={[styles.inputValue, styles.borderRight, styles.horizontalCenter, styles.w46_2]}>
+          <Text style={[styles.verticalCenter]}>{training.title || 'N/A'}</Text>
+        </View>
+
+        {/* Inclusive Dates of Attendance */}
+        <View
+          style={[
+            styles.horizontalCenter,
+            styles.borderRight,
+            styles.inputValue,
+            styles.w18,
+            { padding: '0', flexDirection: 'row' },
+          ]}
+        >
+          <View style={[styles.w50, styles.horizontalCenter, styles.borderRight]}>
+            <Text style={[styles.verticalCenter, { padding: '3 0' }]}>{formatDate(training.from) || 'N/A'}</Text>
+          </View>
+          <View style={[styles.w50, styles.horizontalCenter]}>
+            <View style={[styles.verticalCenter, { padding: '3 0' }]}>
+              <Text>{formatDate(training.to) || 'N/A'}</Text>
+            </View>
+          </View>
+        </View>
+
+        {/* Hours */}
+        <View style={[styles.borderRight, styles.inputValue, styles.horizontalCenter, styles.w6, { padding: '5.5 3' }]}>
+          <View style={[styles.verticalCenter]}>
+            <Text>{training.numberOfHours || 'N/A'}</Text>
+          </View>
+        </View>
+
+        {/* Type of L&D */}
+        <View
+          style={[
+            styles.borderRight,
+            styles.inputValue,
+            styles.horizontalCenter,
+            styles.w6,
+            { fontSize: 5, padding: '5.5 3' },
+          ]}
+        >
+          <View style={[styles.verticalCenter]}>
+            <Text hyphenationCallback={(e) => chunkSubstr(e)}>{training.type || 'N/A'}</Text>
+          </View>
+        </View>
+
+        {/* Sponsored By */}
+        <View style={[styles.inputValue, styles.horizontalCenter, styles.w23_8, { padding: 0 }]}>
+          <View style={[styles.verticalCenter]}>
+            <Text hyphenationCallback={(e) => chunkSubstr(e)}>{training.conductedBy || 'N/A'}</Text>
+          </View>
+        </View>
+      </View>
+    ));
+
+    return content;
+  };
+
+  const renderLearningDevelopmentExtraPage2 = () => {
+    const content = pds.learningDevelopment.slice(51, 84).map((training, index) => (
+      <View style={[styles.borderTop, { flexDirection: 'row', alignItems: 'stretch' }]} key={index}>
+        {/* Title of Learning and Development */}
+        <View style={[styles.inputValue, styles.borderRight, styles.horizontalCenter, styles.w46_2]}>
+          <Text style={[styles.verticalCenter]}>{training.title || 'N/A'}</Text>
+        </View>
+
+        {/* Inclusive Dates of Attendance */}
+        <View
+          style={[
+            styles.horizontalCenter,
+            styles.borderRight,
+            styles.inputValue,
+            styles.w18,
+            { padding: '0', flexDirection: 'row' },
+          ]}
+        >
+          <View style={[styles.w50, styles.horizontalCenter, styles.borderRight]}>
+            <Text style={[styles.verticalCenter, { padding: '3 0' }]}>{formatDate(training.from) || 'N/A'}</Text>
+          </View>
+          <View style={[styles.w50, styles.horizontalCenter]}>
+            <View style={[styles.verticalCenter, { padding: '3 0' }]}>
+              <Text>{formatDate(training.to) || 'N/A'}</Text>
+            </View>
+          </View>
+        </View>
+
+        {/* Hours */}
+        <View style={[styles.borderRight, styles.inputValue, styles.horizontalCenter, styles.w6, { padding: '5.5 3' }]}>
+          <View style={[styles.verticalCenter]}>
+            <Text>{training.numberOfHours || 'N/A'}</Text>
+          </View>
+        </View>
+
+        {/* Type of L&D */}
+        <View
+          style={[
+            styles.borderRight,
+            styles.inputValue,
+            styles.horizontalCenter,
+            styles.w6,
+            { fontSize: 5, padding: '5.5 3' },
+          ]}
+        >
+          <View style={[styles.verticalCenter]}>
+            <Text hyphenationCallback={(e) => chunkSubstr(e)}>{training.type || 'N/A'}</Text>
+          </View>
+        </View>
+
+        {/* Sponsored By */}
+        <View style={[styles.inputValue, styles.horizontalCenter, styles.w23_8, { padding: 0 }]}>
+          <View style={[styles.verticalCenter]}>
+            <Text>{training.conductedBy || 'N/A'}</Text>
+          </View>
+        </View>
+      </View>
+    ));
+
+    return content;
+  };
+
+  const renderLearningDevelopmentExtraPage3 = () => {
+    const content = pds.learningDevelopment.slice(84, 117).map((training, index) => (
+      <View style={[styles.borderTop, { flexDirection: 'row', alignItems: 'stretch' }]} key={index}>
+        {/* Title of Learning and Development */}
+        <View style={[styles.inputValue, styles.borderRight, styles.horizontalCenter, styles.w46_2]}>
+          <Text style={[styles.verticalCenter]}>{training.title || 'N/A'}</Text>
+        </View>
+
+        {/* Inclusive Dates of Attendance */}
+        <View
+          style={[
+            styles.horizontalCenter,
+            styles.borderRight,
+            styles.inputValue,
+            styles.w18,
+            { padding: '0', flexDirection: 'row' },
+          ]}
+        >
+          <View style={[styles.w50, styles.horizontalCenter, styles.borderRight]}>
+            <Text style={[styles.verticalCenter, { padding: '3 0' }]}>{formatDate(training.from) || 'N/A'}</Text>
+          </View>
+          <View style={[styles.w50, styles.horizontalCenter]}>
+            <View style={[styles.verticalCenter, { padding: '3 0' }]}>
+              <Text>{formatDate(training.to) || 'N/A'}</Text>
+            </View>
+          </View>
+        </View>
+
+        {/* Hours */}
+        <View style={[styles.borderRight, styles.inputValue, styles.horizontalCenter, styles.w6, { padding: '5.5 3' }]}>
+          <View style={[styles.verticalCenter]}>
+            <Text>{training.numberOfHours || 'N/A'}</Text>
+          </View>
+        </View>
+
+        {/* Type of L&D */}
+        <View
+          style={[
+            styles.borderRight,
+            styles.inputValue,
+            styles.horizontalCenter,
+            styles.w6,
+            { fontSize: 5, padding: '5.5 3' },
+          ]}
+        >
+          <View style={[styles.verticalCenter]}>
+            <Text hyphenationCallback={(e) => chunkSubstr(e)}>{training.type || 'N/A'}</Text>
+          </View>
+        </View>
+
+        {/* Sponsored By */}
+        <View style={[styles.inputValue, styles.horizontalCenter, styles.w23_8, { padding: 0 }]}>
+          <View style={[styles.verticalCenter]}>
+            <Text>{training.conductedBy || 'N/A'}</Text>
+          </View>
+        </View>
+      </View>
+    ));
+
+    return content;
+  };
+
+  const renderLearningDevelopmentExtraPage4 = () => {
+    const content = pds.learningDevelopment.slice(117, 150).map((training, index) => (
+      <View style={[styles.borderTop, { flexDirection: 'row', alignItems: 'stretch' }]} key={index}>
+        {/* Title of Learning and Development */}
+        <View style={[styles.inputValue, styles.borderRight, styles.horizontalCenter, styles.w46_2]}>
+          <Text style={[styles.verticalCenter]}>{training.title || 'N/A'}</Text>
+        </View>
+
+        {/* Inclusive Dates of Attendance */}
+        <View
+          style={[
+            styles.horizontalCenter,
+            styles.borderRight,
+            styles.inputValue,
+            styles.w18,
+            { padding: '0', flexDirection: 'row' },
+          ]}
+        >
+          <View style={[styles.w50, styles.horizontalCenter, styles.borderRight]}>
+            <Text style={[styles.verticalCenter, { padding: '3 0' }]}>{formatDate(training.from) || 'N/A'}</Text>
+          </View>
+          <View style={[styles.w50, styles.horizontalCenter]}>
+            <View style={[styles.verticalCenter, { padding: '3 0' }]}>
+              <Text>{formatDate(training.to) || 'N/A'}</Text>
+            </View>
+          </View>
+        </View>
+
+        {/* Hours */}
+        <View style={[styles.borderRight, styles.inputValue, styles.horizontalCenter, styles.w6, { padding: '5.5 3' }]}>
+          <View style={[styles.verticalCenter]}>
+            <Text>{training.numberOfHours || 'N/A'}</Text>
+          </View>
+        </View>
+
+        {/* Type of L&D */}
+        <View
+          style={[
+            styles.borderRight,
+            styles.inputValue,
+            styles.horizontalCenter,
+            styles.w6,
+            { fontSize: 5, padding: '5.5 3' },
+          ]}
+        >
+          <View style={[styles.verticalCenter]}>
+            <Text hyphenationCallback={(e) => chunkSubstr(e)}>{training.type || 'N/A'}</Text>
+          </View>
+        </View>
+
+        {/* Sponsored By */}
+        <View style={[styles.inputValue, styles.horizontalCenter, styles.w23_8, { padding: 0 }]}>
+          <View style={[styles.verticalCenter]}>
+            <Text>{training.conductedBy || 'N/A'}</Text>
+          </View>
+        </View>
+      </View>
+    ));
+
+    return content;
+  };
+
+  const renderLearningDevelopmentExtraPage5 = () => {
+    const content = pds.learningDevelopment.slice(150, 183).map((training, index) => (
+      <View style={[styles.borderTop, { flexDirection: 'row', alignItems: 'stretch' }]} key={index}>
+        {/* Title of Learning and Development */}
+        <View style={[styles.inputValue, styles.borderRight, styles.horizontalCenter, styles.w46_2]}>
+          <Text style={[styles.verticalCenter]}>{training.title || 'N/A'}</Text>
+        </View>
+
+        {/* Inclusive Dates of Attendance */}
+        <View
+          style={[
+            styles.horizontalCenter,
+            styles.borderRight,
+            styles.inputValue,
+            styles.w18,
+            { padding: '0', flexDirection: 'row' },
+          ]}
+        >
+          <View style={[styles.w50, styles.horizontalCenter, styles.borderRight]}>
+            <Text style={[styles.verticalCenter, { padding: '3 0' }]}>{formatDate(training.from) || 'N/A'}</Text>
+          </View>
+          <View style={[styles.w50, styles.horizontalCenter]}>
+            <View style={[styles.verticalCenter, { padding: '3 0' }]}>
+              <Text>{formatDate(training.to) || 'N/A'}</Text>
+            </View>
+          </View>
+        </View>
+
+        {/* Hours */}
+        <View style={[styles.borderRight, styles.inputValue, styles.horizontalCenter, styles.w6, { padding: '5.5 3' }]}>
+          <View style={[styles.verticalCenter]}>
+            <Text>{training.numberOfHours || 'N/A'}</Text>
+          </View>
+        </View>
+
+        {/* Type of L&D */}
+        <View
+          style={[
+            styles.borderRight,
+            styles.inputValue,
+            styles.horizontalCenter,
+            styles.w6,
+            { fontSize: 5, padding: '5.5 3' },
+          ]}
+        >
+          <View style={[styles.verticalCenter]}>
+            <Text hyphenationCallback={(e) => chunkSubstr(e)}>{training.type || 'N/A'}</Text>
+          </View>
+        </View>
+
+        {/* Sponsored By */}
+        <View style={[styles.inputValue, styles.horizontalCenter, styles.w23_8, { padding: 0 }]}>
+          <View style={[styles.verticalCenter]}>
+            <Text>{training.conductedBy || 'N/A'}</Text>
+          </View>
+        </View>
+      </View>
+    ));
+
+    return content;
+  };
+
+  const renderLearningDevelopmentExtraPage6 = () => {
+    const content = pds.learningDevelopment.slice(183, 216).map((training, index) => (
+      <View style={[styles.borderTop, { flexDirection: 'row', alignItems: 'stretch' }]} key={index}>
+        {/* Title of Learning and Development */}
+        <View style={[styles.inputValue, styles.borderRight, styles.horizontalCenter, styles.w46_2]}>
+          <Text style={[styles.verticalCenter]}>{training.title || 'N/A'}</Text>
+        </View>
+
+        {/* Inclusive Dates of Attendance */}
+        <View
+          style={[
+            styles.horizontalCenter,
+            styles.borderRight,
+            styles.inputValue,
+            styles.w18,
+            { padding: '0', flexDirection: 'row' },
+          ]}
+        >
+          <View style={[styles.w50, styles.horizontalCenter, styles.borderRight]}>
+            <Text style={[styles.verticalCenter, { padding: '3 0' }]}>{formatDate(training.from) || 'N/A'}</Text>
+          </View>
+          <View style={[styles.w50, styles.horizontalCenter]}>
+            <View style={[styles.verticalCenter, { padding: '3 0' }]}>
+              <Text>{formatDate(training.to) || 'N/A'}</Text>
+            </View>
+          </View>
+        </View>
+
+        {/* Hours */}
+        <View style={[styles.borderRight, styles.inputValue, styles.horizontalCenter, styles.w6, { padding: '5.5 3' }]}>
+          <View style={[styles.verticalCenter]}>
+            <Text>{training.numberOfHours || 'N/A'}</Text>
+          </View>
+        </View>
+
+        {/* Type of L&D */}
+        <View
+          style={[
+            styles.borderRight,
+            styles.inputValue,
+            styles.horizontalCenter,
+            styles.w6,
+            { fontSize: 5, padding: '5.5 3' },
+          ]}
+        >
+          <View style={[styles.verticalCenter]}>
+            <Text hyphenationCallback={(e) => chunkSubstr(e)}>{training.type || 'N/A'}</Text>
+          </View>
+        </View>
+
+        {/* Sponsored By */}
+        <View style={[styles.inputValue, styles.horizontalCenter, styles.w23_8, { padding: 0 }]}>
+          <View style={[styles.verticalCenter]}>
+            <Text>{training.conductedBy || 'N/A'}</Text>
+          </View>
+        </View>
+      </View>
+    ));
+
+    return content;
+  };
+
+  const renderSpecialSkillsExtraPage = () => {
+    const content = pds.skills.slice(7).map((skill, index) => (
+      <View style={[styles.inputValue, styles.borderTop]} key={index}>
+        <Text style={[styles.verticalCenter]}>
+          <>{skill.skill}</>
+        </Text>
+      </View>
+    ));
+
+    return content;
+  };
+
+  const renderRecognitionExtraPage = () => {
+    const content = pds.recognitions.slice(7).map((recog, index) => (
+      <View style={[styles.inputValue, styles.borderTop]} key={index}>
+        <Text style={[styles.verticalCenter]}>
+          <>{recog.recognition}</>
+        </Text>
+      </View>
+    ));
+
+    return content;
+  };
+
+  const renderMembershipExtraPage = () => {
+    const content = pds.organizations.slice(7).map((org, index) => (
+      <View style={[styles.inputValue, styles.borderTop]} key={index}>
+        <Text style={[styles.verticalCenter]}>
+          <>{org.organization}</>
+        </Text>
+      </View>
+    ));
+
+    return content;
+  };
 
   return (
     <>
@@ -1169,7 +1169,7 @@ export const PdsDocument = ({ formatDate, pds }: Data): JSX.Element => {
                 </View>
               </View>
 
-              {/* {renderChildrenExtraPage()} */}
+              {renderChildrenExtraPage()}
               <SignatureDate />
             </View>
           </Page>
@@ -1266,9 +1266,9 @@ export const PdsDocument = ({ formatDate, pds }: Data): JSX.Element => {
                 </View>
               </View>
 
-              {/* {renderVocationalExtraPage()}
+              {renderVocationalExtraPage()}
               {renderCollegeExtraPage()}
-              {renderGraduateExtraPage()} */}
+              {renderGraduateExtraPage()}
               <SignatureDate />
             </View>
           </Page>
@@ -1352,7 +1352,7 @@ export const PdsDocument = ({ formatDate, pds }: Data): JSX.Element => {
                 </View>
               </View>
 
-              {/* {renderEligibilityExtraPage()} */}
+              {renderEligibilityExtraPage()}
               <SignatureDate />
             </View>
           </Page>
@@ -1454,7 +1454,7 @@ export const PdsDocument = ({ formatDate, pds }: Data): JSX.Element => {
                 </View>
               </View>
 
-              {/* {renderWorkExperienceExtraPage()} */}
+              {renderWorkExperienceExtraPage()}
               <SignatureDate />
             </View>
           </Page>
@@ -1525,7 +1525,7 @@ export const PdsDocument = ({ formatDate, pds }: Data): JSX.Element => {
                 </View>
               </View>
 
-              {/* {renderVoluntaryWorkExtraPage()} */}
+              {renderVoluntaryWorkExtraPage()}
               <SignatureDate />
             </View>
           </Page>
@@ -1622,7 +1622,7 @@ export const PdsDocument = ({ formatDate, pds }: Data): JSX.Element => {
                 </View>
               </View>
 
-              {/* {renderLearningDevelopmentExtraPage1()} */}
+              {renderLearningDevelopmentExtraPage1()}
               <SignatureDate />
             </View>
           </Page>
@@ -1718,7 +1718,7 @@ export const PdsDocument = ({ formatDate, pds }: Data): JSX.Element => {
                 </View>
               </View>
 
-              {/* {renderLearningDevelopmentExtraPage2()} */}
+              {renderLearningDevelopmentExtraPage2()}
               <SignatureDate />
             </View>
           </Page>
@@ -1814,7 +1814,7 @@ export const PdsDocument = ({ formatDate, pds }: Data): JSX.Element => {
                 </View>
               </View>
 
-              {/* {renderLearningDevelopmentExtraPage3()} */}
+              {renderLearningDevelopmentExtraPage3()}
               <SignatureDate />
             </View>
           </Page>
@@ -1910,7 +1910,7 @@ export const PdsDocument = ({ formatDate, pds }: Data): JSX.Element => {
                 </View>
               </View>
 
-              {/* {renderLearningDevelopmentExtraPage4()} */}
+              {renderLearningDevelopmentExtraPage4()}
               <SignatureDate />
             </View>
           </Page>
@@ -2006,7 +2006,7 @@ export const PdsDocument = ({ formatDate, pds }: Data): JSX.Element => {
                 </View>
               </View>
 
-              {/* {renderLearningDevelopmentExtraPage5()} */}
+              {renderLearningDevelopmentExtraPage5()}
               <SignatureDate />
             </View>
           </Page>
@@ -2102,7 +2102,7 @@ export const PdsDocument = ({ formatDate, pds }: Data): JSX.Element => {
                 </View>
               </View>
 
-              {/* {renderLearningDevelopmentExtraPage6()} */}
+              {renderLearningDevelopmentExtraPage6()}
               <SignatureDate />
             </View>
           </Page>
@@ -2119,7 +2119,7 @@ export const PdsDocument = ({ formatDate, pds }: Data): JSX.Element => {
                 </Text>
               </View>
 
-              {/* {renderSpecialSkillsExtraPage()} */}
+              {renderSpecialSkillsExtraPage()}
               <SignatureDate />
             </View>
           </Page>
@@ -2137,7 +2137,7 @@ export const PdsDocument = ({ formatDate, pds }: Data): JSX.Element => {
                 </View>
               </View>
 
-              {/* {renderRecognitionExtraPage()} */}
+              {renderRecognitionExtraPage()}
               <SignatureDate />
             </View>
           </Page>
@@ -2155,7 +2155,7 @@ export const PdsDocument = ({ formatDate, pds }: Data): JSX.Element => {
                 </View>
               </View>
 
-              {/* {renderMembershipExtraPage()} */}
+              {renderMembershipExtraPage()}
               <SignatureDate />
             </View>
           </Page>
