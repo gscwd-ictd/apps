@@ -17,7 +17,7 @@ import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
 import { LeaveName, MonetizationType } from 'libs/utils/src/lib/enums/leave.enum';
 import { useLeaveLedgerStore } from 'apps/portal/src/store/leave-ledger.store';
 import { LeaveLedgerEntry } from 'libs/utils/src/lib/types/leave-ledger-entry.type';
-import { format } from 'date-fns';
+import { format, isValid } from 'date-fns';
 import { EditorContent, useEditor } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import Underline from '@tiptap/extension-underline';
@@ -860,7 +860,7 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
   useEffect(() => {
     if (
       watch('typeOfLeaveDetails.leaveName') === LeaveName.MONETIZATION ||
-      watch('typeOfLeaveDetails.leaveName') === LeaveName.TERMINAL
+      (watch('typeOfLeaveDetails.leaveName') === LeaveName.TERMINAL && leaveDateFrom != '' && leaveDateFrom != null)
     ) {
       computeEstimateAmount();
     }
@@ -1570,11 +1570,15 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
                                 className="border-slate-300 text-slate-500 h-12 text-md w-full rounded-md"
                                 placeholder="Running Unearned Leave Credits for the month"
                                 required
-                                value={(
-                                  Number(format(new Date(leaveDateFrom), 'd')) *
-                                  Number(process.env.NEXT_PUBLIC_UNEARNED_CREDIT_MULTIPLIER) *
-                                  2
-                                ).toFixed(3)}
+                                value={
+                                  leaveDateFrom != '' && leaveDateFrom != null
+                                    ? (
+                                        Number(format(new Date(leaveDateFrom), 'd')) *
+                                        Number(process.env.NEXT_PUBLIC_UNEARNED_CREDIT_MULTIPLIER) *
+                                        2
+                                      ).toFixed(3)
+                                    : 0
+                                }
                               />
                             </div>
                           </div>
