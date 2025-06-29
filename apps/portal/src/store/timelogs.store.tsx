@@ -13,6 +13,7 @@ export type TimeLogState = {
   schedule: Schedule & EmployeeRestDay;
   isHoliday: boolean | null;
   isRestDay: boolean | null;
+  suspensionHours: number;
   loading: {
     loadingTimeLogs: boolean;
   };
@@ -31,6 +32,7 @@ export const useTimeLogStore = create<TimeLogState>()(
     schedule: {} as Schedule & EmployeeRestDay,
     isHoliday: false,
     isRestDay: false,
+    suspensionHours: 0,
     loading: {
       loadingTimeLogs: false,
     },
@@ -46,6 +48,7 @@ export const useTimeLogStore = create<TimeLogState>()(
         schedule: {} as Schedule & EmployeeRestDay,
         isHoliday: null,
         isRestDay: null,
+        suspensionHours: 0,
         loading: {
           ...state.loading,
           loadingTimeLogs: loading,
@@ -63,6 +66,7 @@ export const useTimeLogStore = create<TimeLogState>()(
         schedule: response.schedule,
         isHoliday: response.isHoliday,
         isRestDay: response.isRestDay,
+        suspensionHours: response.suspensionHours,
         loading: {
           ...state.loading,
           loadingTimeLogs: loading,

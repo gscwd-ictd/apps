@@ -310,16 +310,17 @@ export const PassSlipCompletedModal = ({
         <Modal.Footer>
           <div className="flex justify-end gap-2 px-4">
             <div className="w-full justify-end flex gap-2">
-              {(passSlip.status === PassSlipStatus.APPROVED ||
+              {((passSlip.status === PassSlipStatus.APPROVED ||
                 passSlip.status === PassSlipStatus.AWAITING_MEDICAL_CERTIFICATE ||
                 passSlip.status === PassSlipStatus.APPROVED_WITHOUT_MEDICAL_CERTIFICATE ||
                 passSlip.status === PassSlipStatus.APPROVED_WITH_MEDICAL_CERTIFICATE) &&
-              passSlip.natureOfBusiness != NatureOfBusiness.HALF_DAY &&
-              passSlip.natureOfBusiness != NatureOfBusiness.UNDERTIME &&
-              !passSlip.disputeRemarks &&
-              passSlip.timeIn &&
-              GetDateDifference(`${passSlip.dateOfApplication}`, `${dayjs().format('YYYY-MM-DD HH:mm:ss')} `).days <=
-                3 ? (
+                passSlip.natureOfBusiness != NatureOfBusiness.HALF_DAY &&
+                passSlip.natureOfBusiness != NatureOfBusiness.UNDERTIME &&
+                !passSlip.disputeRemarks &&
+                passSlip.timeIn &&
+                GetDateDifference(`${passSlip.dateOfApplication}`, `${dayjs().format('YYYY-MM-DD HH:mm:ss')} `).days <=
+                  3) ||
+              passSlip.status === PassSlipStatus.UNUSED ? (
                 <Button variant={'warning'} size={'md'} loading={false} onClick={(e) => modalAction(e)} type="submit">
                   File Dispute
                 </Button>
