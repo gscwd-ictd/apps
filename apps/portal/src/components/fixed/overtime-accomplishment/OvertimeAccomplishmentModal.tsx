@@ -47,16 +47,25 @@ export const OvertimeAccomplishmentModal = ({ modalState, setModalState, closeMo
     setOvertimeAccomplishmentPatchDetails: state.setOvertimeAccomplishmentPatchDetails,
   }));
 
-  const { dtr, isHoliday, isRestday, getTimeLogs, getTimeLogsSuccess, getTimeLogsFail, errorTimeLogs } =
-    useTimeLogStore((state) => ({
-      dtr: state.dtr,
-      isHoliday: state.isHoliday,
-      isRestday: state.isRestDay,
-      getTimeLogs: state.getTimeLogs,
-      getTimeLogsSuccess: state.getTimeLogsSuccess,
-      getTimeLogsFail: state.getTimeLogsFail,
-      errorTimeLogs: state.error.errorTimeLogs,
-    }));
+  const {
+    dtr,
+    isHoliday,
+    isRestday,
+    suspensionHours,
+    getTimeLogs,
+    getTimeLogsSuccess,
+    getTimeLogsFail,
+    errorTimeLogs,
+  } = useTimeLogStore((state) => ({
+    dtr: state.dtr,
+    isHoliday: state.isHoliday,
+    isRestday: state.isRestDay,
+    suspensionHours: state.suspensionHours,
+    getTimeLogs: state.getTimeLogs,
+    getTimeLogsSuccess: state.getTimeLogsSuccess,
+    getTimeLogsFail: state.getTimeLogsFail,
+    errorTimeLogs: state.error.errorTimeLogs,
+  }));
 
   const employeeDetails = useEmployeeStore((state) => state.employeeDetails);
 
@@ -163,6 +172,12 @@ export const OvertimeAccomplishmentModal = ({ modalState, setModalState, closeMo
   }, [employeeDetails, overtimeAccomplishmentDetails]);
 
   useEffect(() => {
+    if (!modalState) {
+      setFinalEncodedHours(0);
+    }
+  }, [modalState]);
+
+  useEffect(() => {
     const encodedTimeIn = dayjs(`${watch('encodedTimeIn')}`);
     const encodedTimeOut = dayjs(`${watch('encodedTimeOut')}`);
     let totalHours: number;
@@ -202,6 +217,37 @@ export const OvertimeAccomplishmentModal = ({ modalState, setModalState, closeMo
             setFinalEncodedHours(Number(temporaryHours.toFixed(2)));
           } else {
             setFinalEncodedHours(encodedHours);
+          }
+        } else if (suspensionHours > 0) {
+          //OT during work suspension
+
+          if (suspensionHours >= 8) {
+            //8-1 rule - is Holiday or Rest Day
+            if (encodedHours > 4 && encodedHours < 10) {
+              let temporaryHours = encodedHours - 1;
+              setFinalEncodedHours(Number(temporaryHours.toFixed(2)));
+            }
+
+            //3-1 rule beyond 9 hours
+            else if (encodedHours >= 10) {
+              numberOfBreaks = Number(((encodedHours - 9) / 4).toFixed(2)); // for 3-1 rule
+              let temporaryHours = Number(encodedHours - 1 - Math.floor(numberOfBreaks));
+              setFinalEncodedHours(Number(temporaryHours.toFixed(2)));
+            } else {
+              setFinalEncodedHours(encodedHours);
+            }
+          } else {
+            //work suspension is less than 8 hours
+            //3-1 rule only
+            if (encodedHours >= 4) {
+              numberOfBreaks = Number((encodedHours / 4).toFixed(2)); // for 3-1 rule
+              let temporaryHours = Number(encodedHours - Math.floor(numberOfBreaks));
+              setFinalEncodedHours(Number(temporaryHours.toFixed(2)));
+            }
+            //no break time (less than 4 hours)
+            else {
+              setFinalEncodedHours(encodedHours);
+            }
           }
         }
         //if regular work day - 3-1 rule only
@@ -303,6 +349,14 @@ export const OvertimeAccomplishmentModal = ({ modalState, setModalState, closeMo
                         <AlertNotification
                           alertType="info"
                           notifMessage={'This Overtime occured during a Holiday or Restday.'}
+                          dismissible={false}
+                        />
+                      ) : null}
+
+                      {suspensionHours > 0 ? (
+                        <AlertNotification
+                          alertType="info"
+                          notifMessage={`This Overtime occured during Work Suspension (${suspensionHours} Hours).`}
                           dismissible={false}
                         />
                       ) : null}

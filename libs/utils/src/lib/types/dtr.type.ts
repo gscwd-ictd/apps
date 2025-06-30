@@ -32,6 +32,7 @@ export type EmployeeDtrWithSchedule = {
   holidayType: HolidayTypes | null; // recently added
   isHoliday: boolean;
   isRestDay: boolean;
+  suspensionHours: number;
   isOt?: boolean;
   hasPendingDtrCorrection: boolean;
   leaveDateStatus?: LeaveDateStatus; //for leave cancellation checker
