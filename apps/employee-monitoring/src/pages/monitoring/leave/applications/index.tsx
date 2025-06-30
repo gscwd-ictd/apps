@@ -166,15 +166,17 @@ const Index = () => {
   const columns = [
     // leaveId
     columnHelper.accessor('id', {
+      header: 'ID',
+      enableColumnFilter: false,
       cell: (info) => info.getValue(),
     }),
     columnHelper.accessor('referenceNo', {
       header: 'Ref No.',
-      enableColumnFilter: false,
       cell: (info) => info.getValue(),
     }),
     columnHelper.accessor('dateOfFiling', {
       header: 'Date of Filing',
+      filterFn: 'fuzzy',
       cell: (info) => dayjs(info.getValue()).format('MMMM DD, YYYY'),
     }),
     columnHelper.accessor('employee.employeeName', {
@@ -189,10 +191,11 @@ const Index = () => {
     }),
     columnHelper.accessor('leaveDates', {
       header: 'Leave Dates',
-      filterFn: 'arrIncludes',
+      filterFn: 'arrIncludesSomeCstm',
       enableSorting: false,
       enableGlobalFilter: false,
-      cell: (props) => renderRowLeaveDates(props.row.original.leaveDates),
+      // enableColumnFilter: false,
+      cell: (info) => renderRowLeaveDates(info.getValue()),
     }),
     columnHelper.accessor('status', {
       header: 'Status',
@@ -295,10 +298,15 @@ const Index = () => {
           ) : (
             <div className="flex flex-row flex-wrap justify-between">
               <form className="order-2">
-                <LabelInput id="monthYear" type="month" controller={{ ...register('monthYear') }} />
+                <LabelInput
+                  label={'Month/Year'}
+                  id="monthYear"
+                  type="month"
+                  controller={{ ...register('monthYear') }}
+                />
               </form>
 
-              <DataTable model={table} showGlobalFilter={true} showColumnFilter={true} paginate={true} />
+              <DataTable model={table} showGlobalFilter={false} showColumnFilter={true} paginate={true} />
             </div>
           )}
         </Card>

@@ -782,7 +782,7 @@ const ViewLeaveApplicationModal: FunctionComponent<ViewLeaveApplicationModalProp
                                         parseFloat(`${leaveLedger[leaveLedger.length - 1]?.sickLeaveBalance}`)
                                       ).toFixed(3)
                                     : Number(
-                                        parseFloat(`${selectedLeaveLedger[0]?.sickLeaveBalance}`).toFixed(3) +
+                                        parseFloat(`${selectedLeaveLedger[0]?.sickLeaveBalance}`) +
                                           parseFloat(`${selectedLeaveLedger[0]?.sickLeave}`) * -1
                                       ).toFixed(3)}
                                 </td>
