@@ -30,6 +30,7 @@ import { TrainingNominationStatus } from '../../../../../../../libs/utils/src/li
 declare module '@tanstack/table-core' {
   interface FilterFns {
     fuzzy: FilterFn<unknown>;
+    arrIncludesSomeCstm: FilterFn<unknown>;
   }
 
   interface FilterMeta {
@@ -62,6 +63,13 @@ export const fuzzySort: SortingFn<unknown> = (rowA, rowB, columnId) => {
   return dir === 0 ? sortingFns.alphanumeric(rowA, rowB, columnId) : dir;
 };
 
+const arrIncludesSomeCstmFilter: FilterFn<any> = (row, columnId: string, filterValue: unknown[]) => {
+  if (Array.isArray(row.getValue<unknown>)) {
+    return filterValue.some((val) => row.getValue<unknown[]>(columnId)?.includes(val));
+  }
+  return filterValue.some((val) => val === row.getValue<unknown>(columnId));
+};
+
 export const useDataTable = <T>(options: DataTableOptions<T>, type: ApprovalType) => {
   const { columns, data, enableRowSelection, columnVisibility } = options;
 
@@ -84,6 +92,7 @@ export const useDataTable = <T>(options: DataTableOptions<T>, type: ApprovalType
     columns: tableColumns,
     filterFns: {
       fuzzy: fuzzyFilter,
+      arrIncludesSomeCstm: arrIncludesSomeCstmFilter,
     },
     initialState: {
       pagination: {

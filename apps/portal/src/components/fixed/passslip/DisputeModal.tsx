@@ -16,10 +16,12 @@ type DisputeApplicationModalProps = {
   action: PassSlipStatus; // for dispute
   tokenId: string; //like pass Slip Id, leave Id etc.
   title: string;
+  currentStatus: PassSlipStatus;
 };
 
 type DisputeForm = {
   disputeRemarks: string;
+  encodedTimeOut?: string | null;
   encodedTimeIn: string;
   status: PassSlipStatus;
   passSlipId: string;
@@ -31,6 +33,7 @@ export const DisputeApplicationModal = ({
   action,
   tokenId,
   title,
+  currentStatus,
 }: DisputeApplicationModalProps) => {
   const {
     setCompletedPassSlipModalIsOpen,
@@ -51,6 +54,7 @@ export const DisputeApplicationModal = ({
     mode: 'onChange',
     defaultValues: {
       disputeRemarks: '',
+      encodedTimeOut: '',
       encodedTimeIn: '',
       status: PassSlipStatus.FOR_DISPUTE,
       passSlipId: tokenId,
@@ -96,6 +100,36 @@ export const DisputeApplicationModal = ({
         <Modal.Body>
           <form id="DisputePassSlipForm" onSubmit={handleSubmit(onSubmit)}>
             <div className="flex flex-col w-full h-full px-4 gap-2 text-md ">
+              {currentStatus === PassSlipStatus.UNUSED ? (
+                <div className="flex flex-col md:flex-row justify-between items-start md:items-center w-full">
+                  <label className="text-slate-500 text-md font-medium">Update Time Out:</label>
+
+                  <div className="w-full md:w-1/2 flex flex-row gap-2 items-center justify-between">
+                    <label className="text-slate-500 w-full text-md ">
+                      <LabelInput
+                        required
+                        id={'encodedTimeOut'}
+                        type={'time'}
+                        label={''}
+                        className="w-full text-slate-400 font-medium cursor-pointer"
+                        textSize="md"
+                        controller={{
+                          ...register('encodedTimeOut', {
+                            onChange: (e) => {
+                              setValue('encodedTimeOut', e.target.value, {
+                                shouldValidate: true,
+                              });
+                              trigger(); // triggers all validations for inputs
+                            },
+                          }),
+                        }}
+                      />
+                    </label>
+                  </div>
+                </div>
+              ) : (
+                <></>
+              )}
               <div className="flex flex-col md:flex-row justify-between items-start md:items-center w-full">
                 <label className="text-slate-500 text-md font-medium">Update Time In:</label>
 

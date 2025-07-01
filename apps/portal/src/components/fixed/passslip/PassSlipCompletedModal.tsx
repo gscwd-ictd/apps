@@ -176,7 +176,8 @@ export const PassSlipCompletedModal = ({
                 closeModalAction={closeConfirmationModal}
                 action={PassSlipStatus.FOR_DISPUTE}
                 tokenId={passSlip.id}
-                title={'Dispute Pass Slip Time In'}
+                title={'Dispute Pass Slip'}
+                currentStatus={passSlip.status}
               />
 
               <div className="flex flex-wrap justify-between">
@@ -294,6 +295,11 @@ export const PassSlipCompletedModal = ({
 
                       <div className="w-auto ml-5 flex flex-col">
                         <label className="text-md font-medium">
+                          {`Disputed Time Out is ${
+                            passSlip.encodedTimeOut ? UseTwelveHourFormat(passSlip.encodedTimeOut) : 'None'
+                          }.`}
+                        </label>
+                        <label className="text-md font-medium">
                           {`Disputed Time In is ${
                             passSlip.encodedTimeIn ? UseTwelveHourFormat(passSlip.encodedTimeIn) : 'None'
                           }.`}
@@ -322,9 +328,10 @@ export const PassSlipCompletedModal = ({
                   3) ||
               passSlip.status === PassSlipStatus.UNUSED ? (
                 <Button variant={'warning'} size={'md'} loading={false} onClick={(e) => modalAction(e)} type="submit">
-                  File Dispute
+                  {passSlip.status === PassSlipStatus.UNUSED ? 'UPDATE' : 'DISPUTE'}
                 </Button>
               ) : null}
+
               <Button variant={'default'} size={'md'} loading={false} onClick={(e) => closeModalAction()}>
                 Close
               </Button>
