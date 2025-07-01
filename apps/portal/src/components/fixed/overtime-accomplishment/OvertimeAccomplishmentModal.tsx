@@ -168,14 +168,16 @@ export const OvertimeAccomplishmentModal = ({ modalState, setModalState, closeMo
   }, [pendingOvertimeAccomplishmentModalIsOpen]);
 
   useEffect(() => {
-    setFinalEncodedHours(overtimeAccomplishmentDetails.computedEncodedHours);
-  }, [employeeDetails, overtimeAccomplishmentDetails]);
-
-  useEffect(() => {
-    if (!modalState) {
+    if (modalState) {
+      if (overtimeAccomplishmentDetails?.computedEncodedHours) {
+        setFinalEncodedHours(overtimeAccomplishmentDetails.computedEncodedHours);
+      } else {
+        setFinalEncodedHours(0);
+      }
+    } else {
       setFinalEncodedHours(0);
     }
-  }, [modalState]);
+  }, [employeeDetails, overtimeAccomplishmentDetails, modalState]);
 
   useEffect(() => {
     const encodedTimeIn = dayjs(`${watch('encodedTimeIn')}`);
@@ -194,6 +196,7 @@ export const OvertimeAccomplishmentModal = ({ modalState, setModalState, closeMo
   //apply every 3hrs work & 1hr break rule
   useEffect(() => {
     if (!isEmpty(swrFaceScan)) {
+      //OT CONDITIONS FOR CASUAL/PERMANENT
       if (
         employeeDetails.employmentDetails.userRole !== UserRole.COS &&
         employeeDetails.employmentDetails.userRole !== UserRole.COS_JO &&
@@ -263,12 +266,13 @@ export const OvertimeAccomplishmentModal = ({ modalState, setModalState, closeMo
             setFinalEncodedHours(encodedHours);
           }
         }
-      } else {
+      }
+      //OT CONDITIONS FOR JO, COS, COS-JO
+      else {
         //if JO, COS, COS-JO, no need to apply 3-1 rule
         //if holiday or rest day
         if (isHoliday || isRestday) {
           //if scheduled OT
-
           //8-1 rule - is Holiday or Rest Day
           if (encodedHours > 4 && encodedHours < 10) {
             let temporaryHours = encodedHours - 1;
@@ -280,6 +284,35 @@ export const OvertimeAccomplishmentModal = ({ modalState, setModalState, closeMo
             setFinalEncodedHours(Number(temporaryHours.toFixed(2)));
           } else {
             setFinalEncodedHours(encodedHours);
+          }
+        } else if (suspensionHours > 0) {
+          //OT during work suspension
+
+          if (suspensionHours >= 8) {
+            //8-1 rule - same as Holiday or Rest Day
+            if (encodedHours > 4 && encodedHours < 10) {
+              let temporaryHours = encodedHours - 1;
+              setFinalEncodedHours(Number(temporaryHours.toFixed(2)));
+            }
+            // beyond 9 hours but no 3-1 rule
+            else if (encodedHours >= 10) {
+              let temporaryHours = Number(encodedHours - 1);
+              setFinalEncodedHours(Number(temporaryHours.toFixed(2)));
+            } else {
+              setFinalEncodedHours(encodedHours);
+            }
+          }
+          //work suspension is less than 8 hours
+          else {
+            // 4 or more hours OT = 1 hr break
+            if (encodedHours >= 4) {
+              let temporaryHours = Number(encodedHours - 1);
+              setFinalEncodedHours(Number(temporaryHours.toFixed(2)));
+            }
+            // 3 or less hours = actual hours
+            else {
+              setFinalEncodedHours(encodedHours);
+            }
           }
         } else {
           setFinalEncodedHours(encodedHours);
