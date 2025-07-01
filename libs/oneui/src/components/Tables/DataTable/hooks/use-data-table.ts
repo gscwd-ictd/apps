@@ -22,6 +22,7 @@ import { RankingInfo, rankItem, compareItems } from '@tanstack/match-sorter-util
 declare module '@tanstack/table-core' {
   interface FilterFns {
     fuzzy: FilterFn<unknown>;
+    arrIncludesSomeCstm: FilterFn<unknown>;
   }
 
   interface FilterMeta {
@@ -54,6 +55,13 @@ export const fuzzySort: SortingFn<unknown> = (rowA, rowB, columnId) => {
   return dir === 0 ? sortingFns.alphanumeric(rowA, rowB, columnId) : dir;
 };
 
+const arrIncludesSomeCstmFilter: FilterFn<any> = (row, columnId: string, filterValue: unknown[]) => {
+  if (Array.isArray(row.getValue<unknown>)) {
+    return filterValue.some((val) => row.getValue<unknown[]>(columnId)?.includes(val));
+  }
+  return filterValue.some((val) => val === row.getValue<unknown>(columnId));
+};
+
 export const useDataTable = <T>(options: DataTableOptions<T>) => {
   const { columns, data, enableRowSelection, columnVisibility } = options;
 
@@ -74,6 +82,7 @@ export const useDataTable = <T>(options: DataTableOptions<T>) => {
     columns: tableColumns,
     filterFns: {
       fuzzy: fuzzyFilter,
+      arrIncludesSomeCstm: arrIncludesSomeCstmFilter,
     },
     initialState: {
       pagination: {

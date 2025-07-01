@@ -39,6 +39,7 @@ export type PassSlip = {
   status: PassSlipStatus;
   disputeRemarks?: string;
   isDisputeApproved?: boolean | null;
+  encodedTimeOut?: string | null;
   encodedTimeIn?: string;
   isMedical?: boolean;
   supervisorApprovalDate: string | null;
