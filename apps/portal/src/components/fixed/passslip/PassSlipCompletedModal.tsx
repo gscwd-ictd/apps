@@ -326,7 +326,9 @@ export const PassSlipCompletedModal = ({
                 passSlip.timeIn &&
                 GetDateDifference(`${passSlip.dateOfApplication}`, `${dayjs().format('YYYY-MM-DD HH:mm:ss')} `).days <=
                   3) ||
-              passSlip.status === PassSlipStatus.UNUSED ? (
+              (passSlip.status === PassSlipStatus.UNUSED &&
+                passSlip.natureOfBusiness != NatureOfBusiness.HALF_DAY &&
+                passSlip.natureOfBusiness != NatureOfBusiness.UNDERTIME) ? (
                 <Button variant={'warning'} size={'md'} loading={false} onClick={(e) => modalAction(e)} type="submit">
                   {passSlip.status === PassSlipStatus.UNUSED ? 'UPDATE' : 'DISPUTE'}
                 </Button>
