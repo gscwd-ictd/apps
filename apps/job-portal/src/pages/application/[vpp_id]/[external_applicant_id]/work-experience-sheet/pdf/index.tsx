@@ -1,7 +1,6 @@
 import Head from 'next/head';
 import { NextPage, GetServerSideProps, InferGetServerSidePropsType, GetServerSidePropsContext } from 'next';
 import axios from 'axios';
-import { isEmpty } from 'lodash';
 import { WesDocumentView } from 'apps/job-portal/src/components/work-experience-sheet/WesDocumentView';
 
 const WorkExperienceSheetPdf: NextPage = ({ applicantWes }: InferGetServerSidePropsType<typeof getServerSideProps>) => {

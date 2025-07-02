@@ -1,6 +1,5 @@
 import { GetServerSideProps, GetServerSidePropsContext, InferGetServerSidePropsType } from 'next';
 import axios from 'axios';
-import TopNavigation from '../../components/page-header/TopNavigation';
 import { ApplicantDetails } from '../../components/fixed/layout/ApplicantDetails';
 import { usePageStore } from '../../store/page.store';
 import { useEffect } from 'react';

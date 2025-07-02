@@ -1,6 +1,4 @@
-import axios from 'axios';
-import { GetServerSideProps, GetServerSidePropsContext, InferGetServerSidePropsType } from 'next';
-import Link from 'next/link';
+import { GetServerSidePropsContext } from 'next';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 import { useState } from 'react';
@@ -8,6 +6,7 @@ import { HiCheckCircle, HiShieldExclamation } from 'react-icons/hi';
 import { fetchWithToken } from '../../../../utils/hoc/fetcher';
 import { CardContainer } from '../../../components/modular/cards/CardContainer';
 import { LoadingSpinner } from '@gscwd-apps/oneui';
+import { useTabStore } from 'apps/job-portal/src/store/tab.store';
 
 type Loading = {
   state: boolean;
@@ -28,6 +27,9 @@ type CreateSessionProps = {
 
 export default function CreateSession({ token }: CreateSessionProps) {
   const router = useRouter();
+
+  const setSelectedTab = useTabStore((state) => state.setSelectedTab);
+
   const [isLoading, setIsLoading] = useState<Loading>({
     state: false,
     level: 1,
@@ -66,7 +68,10 @@ export default function CreateSession({ token }: CreateSessionProps) {
     if (isLoading.level === 2 && userDetails.login === 'success') {
       setTimeout(async () => {
         setIsLoading({ state: true, level: 3 });
+
         await router.push(`${process.env.NEXT_PUBLIC_JOB_PORTAL}/application/${userDetails.details.vppId}/checklist`);
+
+        router.reload();
       }, 1000);
     } else if (isLoading.level === 2 && userDetails.login !== 'success') {
       setTimeout(() => {
@@ -99,13 +104,6 @@ export default function CreateSession({ token }: CreateSessionProps) {
                   {isLoading.level <= 2 ? (
                     <>
                       <LoadingSpinner size={'lg'} />
-                      {/* <SpinnerDotted
-                        speed={150}
-                        thickness={120}
-                        className="flex w-full h-full transition-all animate-pulse "
-                        color={isLoading.level === 1 ? 'slateblue' : isLoading.level === 2 ? 'indigo' : 'green'}
-                        size={100}
-                      /> */}
                     </>
                   ) : (
                     <>
@@ -135,13 +133,6 @@ export default function CreateSession({ token }: CreateSessionProps) {
                   )}
                 </div>
               </CardContainer>
-              {/* <div className="flex justify-center w-full">
-                {isLoading.level === 3 && userDetails.login !== 'success' && (
-                  <Link href={''}>
-                    <span className="pt-5 text-xl underline">Click here to resend email verification</span>
-                  </Link>
-                )}
-              </div> */}
             </div>
           </div>
         </main>

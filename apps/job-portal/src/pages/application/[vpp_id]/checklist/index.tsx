@@ -6,18 +6,16 @@ import { isEmpty } from 'lodash';
 import { GetServerSideProps, GetServerSidePropsContext } from 'next';
 import { useRouter } from 'next/router';
 import { useContext, useEffect, useState } from 'react';
-import { HiBadgeCheck, HiCheckCircle, HiEye, HiInformationCircle } from 'react-icons/hi';
+import { HiCheckCircle, HiEye, HiInformationCircle } from 'react-icons/hi';
 import useSWR from 'swr';
 import { MyPopover } from '../../../../components/fixed/popover/helppopover';
 import { CardContainer } from '../../../../components/modular/cards/CardContainer';
 import { axiosFetcher } from '../../../../components/modular/fetcher/Fetcher';
 import { NodeCircle } from '../../../../components/modular/nodes/Node';
-import TopNavigation from '../../../../components/page-header/TopNavigation';
 import { useApplicantStore } from '../../../../store/applicant.store';
 import { usePageStore } from '../../../../store/page.store';
 import { Pds } from '../../../../store/pds.store';
 import { useWorkExpSheetStore } from '../../../../store/work-experience-sheet.store';
-import { VerticalActionDropDown } from 'apps/job-portal/src/components/fixed/dropdown/VerticalActionDropdown';
 import {
   VerticalDropdown,
   VerticalDropdownProps,
@@ -310,6 +308,10 @@ export default function Checklist({ vppId, positionTitle }: ChecklistProps) {
     }
   }, [applicantName]);
 
+  // useEffect(() => {
+  //   router.reload();
+  // }, []);
+
   return (
     <>
       <div className="bg-slate-100">
@@ -346,6 +348,7 @@ export default function Checklist({ vppId, positionTitle }: ChecklistProps) {
             </div>
           </Alert.Footer>
         </Alert>
+
         {/** SUCCESS ALERT */}
         <Alert open={alertSuccessIsOpen} setOpen={setAlertSuccessIsOpen}>
           <Alert.Description>
@@ -368,6 +371,7 @@ export default function Checklist({ vppId, positionTitle }: ChecklistProps) {
             </div>
           </Alert.Footer>
         </Alert>
+
         {/** ERROR ALERT */}
         <Alert open={alertErrorIsOpen} setOpen={setAlertErrorIsOpen}>
           <Alert.Description>
@@ -401,6 +405,7 @@ export default function Checklist({ vppId, positionTitle }: ChecklistProps) {
             </div>
           </Alert.Footer>
         </Alert>
+
         <header className="shadow ">
           <div className="px-4 py-6 mx-auto max-w-7xl sm:px-6 lg:px-8">
             <h1 className="text-3xl font-semibold tracking-tight text-gray-900">{positionTitle}</h1>
@@ -783,10 +788,20 @@ export default function Checklist({ vppId, positionTitle }: ChecklistProps) {
           </div>
         </main>
         <footer>
-          {progress.firstStep && progress.secondStep && progress.thirdStep && submission.hasSubmitted === false && (
+          {progress.firstStep && progress.secondStep && progress.thirdStep && submission.hasSubmitted === false ? (
             <div className="flex w-full justify-center px-2 sm:px-2 py-5 lg:px-[21.5%]">
               <Button onClick={() => setAlertSubmitIsOpen(true)} type="button" className="w-full h-[3rem] bg-blue-600">
                 Submit Application
+              </Button>
+            </div>
+          ) : (
+            <div className="flex w-full justify-center px-2 sm:px-2 py-5 lg:px-[21.5%]">
+              <Button
+                onClick={() => router.push(`${process.env.NEXT_PUBLIC_JOB_PORTAL}`)}
+                type="button"
+                className="w-full h-[3rem] bg-blue-600"
+              >
+                Submit Another Application
               </Button>
             </div>
           )}
