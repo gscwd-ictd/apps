@@ -388,9 +388,7 @@ export const SideNav = ({ employeeDetails }: NavDetails) => {
               </div>
 
               {/* VACANCIES */}
-              {!isEqual(employeeDetails.employmentDetails.userRole, UserRole.JOB_ORDER) &&
-              !isEqual(employeeDetails.employmentDetails.userRole, UserRole.COS) &&
-              !isEqual(employeeDetails.employmentDetails.userRole, UserRole.COS_JO) ? (
+              {!isEqual(employeeDetails.employmentDetails.userRole, UserRole.COS) ? (
                 <div>
                   <SideNavLink
                     icon={<HiOutlineNewspaper className="w-6 h-6 text-indigo-500" />}

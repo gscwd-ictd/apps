@@ -8,14 +8,10 @@ import { GetServerSideProps, GetServerSidePropsContext } from 'next/types';
 import React, { useEffect, useState } from 'react';
 import { HiArrowSmLeft } from 'react-icons/hi';
 import useSWR from 'swr';
-import { DeleteButton } from '../../../../../components/fixed/buttons/Delete';
 import { WorkExprSheet } from '../../../../../components/fixed/panels/work-sheet/WorkExprSheet';
-import { TabHeader } from '../../../../../components/fixed/tabs/TabHeader';
 import { CardContainer } from '../../../../../components/modular/cards/CardContainer';
 import { axiosFetcher } from '../../../../../components/modular/fetcher/Fetcher';
-import { NodeCircle } from '../../../../../components/modular/nodes/Node';
 import Toggle from '../../../../../components/modular/switch/Toggle';
-import TopNavigation from '../../../../../components/page-header/TopNavigation';
 import { usePageStore } from '../../../../../store/page.store';
 import { useWorkExpSheetStore, WorkExperienceSheet } from '../../../../../store/work-experience-sheet.store';
 
@@ -24,10 +20,8 @@ type WorkSheetPanelProps = {
   allWorkExperiences: Array<WorkExperience>;
 };
 
-export default function WorkSheetPanel({ allWorkExperiences, vppId }: WorkSheetPanelProps): JSX.Element {
-  const hasPds = usePageStore((state) => state.hasPds);
+export default function WorkSheetPanel({ allWorkExperiences }: WorkSheetPanelProps): JSX.Element {
   const router = useRouter();
-  const progress = usePageStore((state) => state.progress);
   const isLoaded = useWorkExpSheetStore((state) => state.isLoaded);
   const [indexToRemove, setIndexToRemove] = useState<number>(-1);
   const workExperiences = useWorkExpSheetStore((state) => state.workExperiences);
@@ -36,10 +30,7 @@ export default function WorkSheetPanel({ allWorkExperiences, vppId }: WorkSheetP
   const [removeAlertIsOpen, setRemoveAlertIsOpen] = useState<boolean>(false);
   const workExperiencesSheet = useWorkExpSheetStore((state) => state.workExperiencesSheet);
   const [externalApplicantId, setExternalApplicantId] = useState<string>('');
-  const selectedWorkExperience = useWorkExpSheetStore((state) => state.selectedWorkExperience);
-  const setSelectedWorkExperience = useWorkExpSheetStore((state) => state.setSelectedWorkExperience);
   const setHasPds = usePageStore((state) => state.setHasPds);
-  const setProgress = usePageStore((state) => state.setProgress);
   const setIsLoaded = useWorkExpSheetStore((state) => state.setIsLoaded);
   const setWorkExperiences = useWorkExpSheetStore((state) => state.setWorkExperiences);
   const setWorkExperiencesSheet = useWorkExpSheetStore((state) => state.setWorkExperiencesSheet);
@@ -242,7 +233,6 @@ export default function WorkSheetPanel({ allWorkExperiences, vppId }: WorkSheetP
             )}
 
             {/** CHECKBOX */}
-
             <div className="flex justify-center w-full pt-6">
               <div className="flex w-[60rem] justify-end">
                 <Toggle

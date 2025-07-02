@@ -11,7 +11,6 @@ import { pdsToSubmit } from '../../../../utils/helpers/pds.helper';
 import { HeadContainer } from '../head/Head';
 import { useApplicantStore } from '../../../store/applicant.store';
 import { HiExclamationCircle } from 'react-icons/hi';
-import axios from 'axios';
 import { usePublicationStore } from '../../../store/publication.store';
 import { PdsAlertSubmitConfirmation } from '../pds/PdsAlertSubmitConfirmation';
 import { PdsAlertSubmitSuccess } from '../pds/PdsAlertSubmitSuccess';
@@ -27,14 +26,11 @@ import {
   AssignVoluntaryWorksForUpdating,
   AssignWorkExperiencesForUpdating,
 } from '../../../../utils/functions/functions';
-import { isEmpty } from 'lodash';
-import { usePageStore } from '../../../store/page.store';
 import { PdsAlertSubmitFailed } from '../pds/PdsAlertSubmitFailed';
 import { Alert, Button, PageContentContext } from '@gscwd-apps/oneui';
 import { SolidPrevButton } from '../navigation/button/SolidPrevButton';
 
 export default function SubmitPanel(): JSX.Element {
-  const page = usePageStore((state) => state.page);
   const isExistingApplicant = useApplicantStore((state) => state.isExistingApplicant);
   const pds = pdsToSubmit(usePdsStore((state) => state));
   const publication = usePublicationStore((state) => state.publication);
@@ -46,6 +42,7 @@ export default function SubmitPanel(): JSX.Element {
   const [alertFailed, setAlertFailed] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false); // set loading state
   const [isDisabled, setIsDisabled] = useState<boolean>(false); // submit button state
+  const [applicantDataResult, setApplicantDataResult] = useState<string>('');
   const applicant = useApplicantStore((state) => state.applicant);
   const deletedChildren = usePdsStore((state) => state.deletedChildren);
   const deletedVocationals = usePdsStore((state) => state.deletedVocationals);
@@ -118,10 +115,11 @@ export default function SubmitPanel(): JSX.Element {
     setIsLoading(true);
 
     // set timeout callback function and sets the loading to false after the timeout
-
     const applicantData = await postApplicantData();
 
     setIsConfirmationPressed(true);
+
+    setApplicantDataResult(applicantData.result.token);
 
     return { error: applicantData.error, result: applicantData.result };
   };
@@ -202,14 +200,13 @@ export default function SubmitPanel(): JSX.Element {
   // success action
   const alertSuccessAction = async () => {
     if (isExistingApplicant === false) {
-      await axios.post(`${process.env.NEXT_PUBLIC_HRIS_DOMAIN}/auth/logout`, {}, { withCredentials: true });
+      // await axios.post(`${process.env.NEXT_PUBLIC_HRIS_DOMAIN}/auth/logout`, {}, { withCredentials: true });
+      // await postData(`${process.env.NEXT_PUBLIC_HRIS_DOMAIN}/external-applicants/${publication.vppId}`, {
+      //   email: pds.personalInfo.email,
+      // });
+      // router.push(`${process.env.NEXT_PUBLIC_JOB_PORTAL}/application/${publication.vppId}/email?sent=true`);
 
-      await postData(`${process.env.NEXT_PUBLIC_HRIS_DOMAIN}/external-applicants/${publication.vppId}`, {
-        email: pds.personalInfo.email,
-      });
-
-      router.push(`${process.env.NEXT_PUBLIC_JOB_PORTAL}/application/${publication.vppId}/email?sent=true`);
-      setSelectedTab(1);
+      router.push(`${process.env.NEXT_PUBLIC_JOB_PORTAL}/application/create-session/?token=${applicantDataResult}`);
     } else if (isExistingApplicant === true) {
       router.push(`${process.env.NEXT_PUBLIC_JOB_PORTAL}/application/${publication.vppId}/checklist`);
       setSelectedTab(1);

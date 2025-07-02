@@ -358,22 +358,15 @@ export default function Vacancies({ employeeDetails }: InferGetServerSidePropsTy
             {swrVacanciesIsLoading ? (
               <div className="w-full h-96 static flex flex-col justify-center items-center place-items-center">
                 <LoadingSpinner size={'lg'} />
-                {/* <SpinnerDotted
-                  speed={70}
-                  thickness={70}
-                  className="flex w-full h-full transition-all "
-                  color="slateblue"
-                  size={100}
-                /> */}
               </div>
             ) : (
               <ContentBody>
-                <div className={`w-full flex lg:flex-row flex-col`}>
-                  <div className={`lg:w-[58rem] w-full`}>
-                    {employeeDetails.employmentDetails.userRole !== UserRole.JOB_ORDER &&
-                    employeeDetails.employmentDetails.userRole !== UserRole.COS &&
-                    employeeDetails.employmentDetails.userRole !== UserRole.COS_JO ? (
-                      vacancies && vacancies.length > 0 ? (
+                {employeeDetails.employmentDetails.userRole !== UserRole.JOB_ORDER &&
+                employeeDetails.employmentDetails.userRole !== UserRole.COS &&
+                employeeDetails.employmentDetails.userRole !== UserRole.COS_JO ? (
+                  <div className={`w-full flex lg:flex-row flex-col `}>
+                    <div className={`lg:w-[58rem] w-full h-[30rem] overflow-x-hidden overflow-y-auto`}>
+                      {vacancies && vacancies.length > 0 ? (
                         vacancies.map((vacancies: VacancyDetails, messageIdx: number) => {
                           return (
                             <div key={messageIdx}>
@@ -392,48 +385,57 @@ export default function Vacancies({ employeeDetails }: InferGetServerSidePropsTy
                         <div className="flex justify-center pt-20 px-5">
                           <h1 className="text-4xl text-gray-300">No vacancies found</h1>
                         </div>
-                      )
-                    ) : (
-                      <div className="flex justify-center pt-20 px-5">
-                        <h1 className="text-4xl text-gray-300">No data found</h1>
-                      </div>
-                    )}
-                  </div>
-                  <div className="w-full">
-                    {isEmpty(jobDetails?.error) && jobDetails && messageContent ? (
-                      <div className="flex flex-col items-center w-full text-gray-700 h-1/2 md:h-full md:ml-4 md:mr-4 ">
-                        <div
-                          className={`${
-                            isMessageOpen ? 'w-full md:ml-10 md:mr-10 px-4 flex flex-col bg-white' : 'hidden'
-                          }`}
-                        >
-                          {/* <label className="pb-2">{mailMessage}</label> */}
-                          <JobDetailsPanel data={jobDetails} details={messageContent} />
+                      )}
+                    </div>
+                    <div className="w-full">
+                      {isEmpty(jobDetails?.error) && jobDetails && messageContent ? (
+                        <div className="flex flex-col items-center w-full text-gray-700 h-1/2 md:h-full md:ml-4 md:mr-4 ">
+                          <div
+                            className={`${
+                              isMessageOpen ? 'w-full md:ml-10 md:mr-10 px-4 flex flex-col bg-white' : 'hidden'
+                            }`}
+                          >
+                            {/* <label className="pb-2">{mailMessage}</label> */}
+                            <JobDetailsPanel data={jobDetails} details={messageContent} />
 
-                          <label className="pt-2 pb-2">Click Details button for more information.</label>
-                          <div className="flex flex-row justify-end gap-4 pb-10">
-                            <div
-                              className={`${
-                                messageContent?.postingDeadline ? '' : 'flex flex-row gap-4 items-center justify-end'
-                              }`}
-                            >
-                              <button
-                                className={`w-24 h-10 rounded bg-indigo-500 text-white hover:bg-indigo-600`}
-                                onClick={openModal}
+                            <label className="pt-2 pb-2">Click Details button for more information.</label>
+                            <div className="flex flex-row justify-end gap-4 pb-10">
+                              <div
+                                className={`${
+                                  messageContent?.postingDeadline ? '' : 'flex flex-row gap-4 items-center justify-end'
+                                }`}
                               >
-                                Details
-                              </button>
+                                <button
+                                  className={`w-24 h-10 rounded bg-indigo-500 text-white hover:bg-indigo-600`}
+                                  onClick={openModal}
+                                >
+                                  Details
+                                </button>
+                              </div>
                             </div>
                           </div>
                         </div>
-                      </div>
-                    ) : (
-                      <div className="flex justify-center pt-20 px-5">
-                        <h1 className="text-4xl text-gray-300">No posting selected</h1>
-                      </div>
-                    )}
+                      ) : (
+                        <div className="flex justify-center pt-20 px-5">
+                          <h1 className="text-4xl text-gray-300">No posting selected</h1>
+                        </div>
+                      )}
+                    </div>
                   </div>
-                </div>
+                ) : (
+                  <div className="flex flex-col justify-center items-center gap-5 pt-20 px-5">
+                    <h1 className="text-4xl text-gray-300 text-center">
+                      To view the current list of job openings, please visit our
+                    </h1>
+                    <div>
+                      <a href={`${process.env.NEXT_PUBLIC_JOB_PORTAL}`} target="_blank" rel="noreferrer">
+                        <Button variant={'primary'} size={'lg'} className={'w-80'} loading={false}>
+                          <span className="tracking-tight text-white text-left text-3xl">Job Portal</span>
+                        </Button>
+                      </a>
+                    </div>
+                  </div>
+                )}
               </ContentBody>
             )}
           </div>
@@ -447,11 +449,7 @@ export const getServerSideProps: GetServerSideProps = withCookieSession(async (c
   const employeeDetails = getUserDetails();
 
   // check if user role is job order or less = kick out
-  if (
-    isEqual(employeeDetails.employmentDetails.userRole, UserRole.JOB_ORDER) ||
-    isEqual(employeeDetails.employmentDetails.userRole, UserRole.COS) ||
-    isEqual(employeeDetails.employmentDetails.userRole, UserRole.COS_JO)
-  ) {
+  if (isEqual(employeeDetails.employmentDetails.userRole, UserRole.COS)) {
     // if true, the employee is not allowed to access this page
     return {
       redirect: {
