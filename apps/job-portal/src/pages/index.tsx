@@ -4,7 +4,6 @@ import { NextPage, GetServerSideProps, InferGetServerSidePropsType } from 'next'
 import { useRouter } from 'next/router';
 import { useContext, useEffect, useState } from 'react';
 import axios from 'axios';
-import TopNavigation from '../components/page-header/TopNavigation';
 import JobOpeningsTable from '../components/table/JobOpeningsTable';
 import { FormModal } from '../components/modular/common/overlays/FormModal';
 import { SpinnerCircularFixed } from 'spinners-react';
@@ -14,7 +13,7 @@ import { usePageStore } from '../store/page.store';
 import { usePublicationStore } from '../store/publication.store';
 import { ViewJobDetailsModal } from '../components/fixed/modals/ViewJobDetailsModal';
 import { Publication } from 'apps/job-portal/utils/types/data/publication-type';
-import { PageContentContext } from '@gscwd-apps/oneui';
+import { PageContentContext } from '../components/fixed/page/PageContent';
 
 const Home: NextPage = ({ jobOpenings }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
   const router = useRouter();

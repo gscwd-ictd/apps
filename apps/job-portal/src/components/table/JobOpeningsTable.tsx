@@ -6,8 +6,8 @@ import { isEmpty } from 'lodash';
 import type { NextComponentType, NextPageContext } from 'next';
 import { ActionDropDown } from '../fixed/dropdown/ActionDropdown';
 import { useContext } from 'react';
-import { PageContentContext } from '@gscwd-apps/oneui';
 import { VerticalActionDropDown } from '../fixed/dropdown/VerticalActionDropdown';
+import { PageContentContext } from '../fixed/page/PageContent';
 
 export interface JobOpeningsProps {
   jobOpenings: Array<Publication>;
