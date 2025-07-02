@@ -78,7 +78,7 @@ export const PageContent: FunctionComponent<PageContentProps> = ({ children }) =
         },
       }}
     >
-      <div className="block w-full transition-all bg-slate-100 h-screen">{children}</div>
+      <div className="flex flex-col flex-grow h-full w-full bg-slate-100 transition-all">{children}</div>
     </PageContentContext.Provider>
   );
 };

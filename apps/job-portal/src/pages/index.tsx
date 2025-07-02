@@ -4,7 +4,6 @@ import { NextPage, GetServerSideProps, InferGetServerSidePropsType } from 'next'
 import { useRouter } from 'next/router';
 import { useContext, useEffect, useState } from 'react';
 import axios from 'axios';
-import TopNavigation from '../components/page-header/TopNavigation';
 import JobOpeningsTable from '../components/table/JobOpeningsTable';
 import { FormModal } from '../components/modular/common/overlays/FormModal';
 import { SpinnerCircularFixed } from 'spinners-react';
@@ -14,7 +13,7 @@ import { usePageStore } from '../store/page.store';
 import { usePublicationStore } from '../store/publication.store';
 import { ViewJobDetailsModal } from '../components/fixed/modals/ViewJobDetailsModal';
 import { Publication } from 'apps/job-portal/utils/types/data/publication-type';
-import { PageContentContext } from '@gscwd-apps/oneui';
+import { PageContentContext } from '../components/fixed/page/PageContent';
 
 const Home: NextPage = ({ jobOpenings }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
   const router = useRouter();
@@ -99,14 +98,14 @@ const Home: NextPage = ({ jobOpenings }: InferGetServerSidePropsType<typeof getS
   }, []);
 
   return (
-    <div className="flex flex-col ">
-      <header className="w-full bg-white shadow">
+    <div className="flex flex-col h-full ">
+      <header className="w-full bg-white shadow shrink-0">
         <div className="px-4 py-6 mx-auto max-w-7xl sm:px-6 lg:px-8">
           <h1 className="text-3xl font-bold tracking-tight text-gray-900">JOB OPENINGS</h1>
         </div>
       </header>
 
-      <main>
+      <main className="flex-grow overflow-auto">
         <JobOpeningsTable jobOpenings={jobOpenings} />
       </main>
       <section>
