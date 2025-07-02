@@ -1,6 +1,6 @@
-import { PageContentContext } from '@gscwd-apps/oneui';
 import { forwardRef, HTMLAttributes, useContext } from 'react';
 import { HiCheck } from 'react-icons/hi';
+import { PageContentContext } from '../../fixed/page/PageContent';
 
 export type TabType = {
   title: string;

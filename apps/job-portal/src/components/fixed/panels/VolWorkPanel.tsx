@@ -6,10 +6,10 @@ import { NextButton } from '../navigation/button/NextButton';
 import { PrevButton } from '../navigation/button/PrevButton';
 import { VolWorkExp } from './voluntary-experience/VolWorkExp';
 import { useContext } from 'react';
-import { PageContentContext } from '@gscwd-apps/oneui';
 import { usePdsStore } from 'apps/job-portal/src/store/pds.store';
 import { SolidPrevButton } from '../navigation/button/SolidPrevButton';
 import { SolidNextButton } from '../navigation/button/SolidNextButton';
+import { PageContentContext } from '../page/PageContent';
 
 export default function VolWorkPanel(): JSX.Element {
   // set tab state from tab store

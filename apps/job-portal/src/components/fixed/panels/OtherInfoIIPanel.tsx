@@ -12,9 +12,9 @@ import schema from '../../../schema/OtherInfoII';
 import { usePdsStore } from '../../../store/pds.store';
 import { useTabStore } from '../../../store/tab.store';
 import { HeadContainer } from '../head/Head';
-import { PageContentContext } from '@gscwd-apps/oneui';
 import { SolidNextButton } from '../navigation/button/SolidNextButton';
 import { SolidPrevButton } from '../navigation/button/SolidPrevButton';
+import { PageContentContext } from '../page/PageContent';
 
 export default function OtherInfoIIPanel(): JSX.Element {
   // call references array from pds context

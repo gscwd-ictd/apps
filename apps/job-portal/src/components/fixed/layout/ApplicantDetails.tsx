@@ -3,7 +3,7 @@ import { CardContainer } from '../../modular/cards/CardContainer';
 import { ApplicantEmail } from '../forms/ApplicantEmail';
 import { ApplicantForm } from '../forms/ApplicantForm';
 import { ApplicantFormPane } from './ApplicantFormPane';
-import { PageContentContext } from '@gscwd-apps/oneui';
+import { PageContentContext } from '../page/PageContent';
 
 type ApplicantDetailsProps = {
   page: number;

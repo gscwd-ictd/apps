@@ -27,7 +27,8 @@ import {
   AssignWorkExperiencesForUpdating,
 } from '../../../../utils/functions/functions';
 import { PdsAlertSubmitFailed } from '../pds/PdsAlertSubmitFailed';
-import { Alert, Button, PageContentContext } from '@gscwd-apps/oneui';
+import { Alert, Button } from '@gscwd-apps/oneui';
+import { PageContentContext } from '../page/PageContent';
 import { SolidPrevButton } from '../navigation/button/SolidPrevButton';
 
 export default function SubmitPanel(): JSX.Element {

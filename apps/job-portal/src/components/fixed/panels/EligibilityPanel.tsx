@@ -5,10 +5,10 @@ import { HeadContainer } from '../head/Head';
 import { NextButton } from '../navigation/button/NextButton';
 import { PrevButton } from '../navigation/button/PrevButton';
 import { CSEligibility } from './eligibility/CSEligibility';
-import { PageContentContext } from '@gscwd-apps/oneui';
 import { SolidPrevButton } from '../navigation/button/SolidPrevButton';
 import { SolidNextButton } from '../navigation/button/SolidNextButton';
 import { usePdsStore } from 'apps/job-portal/src/store/pds.store';
+import { PageContentContext } from '../page/PageContent';
 
 export default function EligibilityPanel(): JSX.Element {
   // set tab state from tab store

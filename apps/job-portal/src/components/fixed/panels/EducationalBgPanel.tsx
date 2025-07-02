@@ -12,9 +12,9 @@ import schema from '../../../schema/EducationInfo';
 import { useTabStore } from '../../../store/tab.store';
 import { HeadContainer } from '../head/Head';
 import { useContext } from 'react';
-import { PageContentContext } from '@gscwd-apps/oneui';
 import { SolidPrevButton } from '../navigation/button/SolidPrevButton';
 import { SolidNextButton } from '../navigation/button/SolidNextButton';
+import { PageContentContext } from '../page/PageContent';
 
 // yup validation schema
 
