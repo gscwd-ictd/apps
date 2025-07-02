@@ -1,10 +1,4 @@
-import {
-  createContext,
-  FunctionComponent,
-  ReactNode,
-  useEffect,
-  useState,
-} from 'react';
+import { createContext, FunctionComponent, ReactNode, useEffect, useState } from 'react';
 
 type PageContentProps = {
   children?: ReactNode | ReactNode[];
@@ -42,9 +36,7 @@ const useWidth = () => {
 
 export const PageContentContext = createContext({} as PageContentContextState);
 
-export const PageContent: FunctionComponent<PageContentProps> = ({
-  children,
-}) => {
+export const PageContent: FunctionComponent<PageContentProps> = ({ children }) => {
   const windowWidth = useWidth();
   const [isCollapsed, setIsCollapsed] = useState<boolean>(false);
   const [isDarkMode, setIsDarkMode] = useState<boolean>(true);
@@ -86,9 +78,7 @@ export const PageContent: FunctionComponent<PageContentProps> = ({
         },
       }}
     >
-      <div className="block w-full h-screen transition-all bg-slate-100 ">
-        {children}
-      </div>
+      <div className="block w-full transition-all bg-slate-100 ">{children}</div>
     </PageContentContext.Provider>
   );
 };
