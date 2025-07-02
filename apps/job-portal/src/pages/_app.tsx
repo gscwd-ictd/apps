@@ -11,7 +11,7 @@ function CustomApp({ Component, pageProps }: AppProps) {
       <Head>
         <title>Welcome to job-portal!</title>
       </Head>
-      <main className="app">
+      <main className="flex flex-col min-h-screen">
         <PageContent>
           <TopNavigation />
           <Component {...pageProps} />

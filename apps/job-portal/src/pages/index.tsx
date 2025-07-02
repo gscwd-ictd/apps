@@ -99,14 +99,14 @@ const Home: NextPage = ({ jobOpenings }: InferGetServerSidePropsType<typeof getS
   }, []);
 
   return (
-    <div className="flex flex-col ">
-      <header className="w-full bg-white shadow">
+    <div className="flex flex-col h-full ">
+      <header className="w-full bg-white shadow shrink-0">
         <div className="px-4 py-6 mx-auto max-w-7xl sm:px-6 lg:px-8">
           <h1 className="text-3xl font-bold tracking-tight text-gray-900">JOB OPENINGS</h1>
         </div>
       </header>
 
-      <main>
+      <main className="flex-grow overflow-auto">
         <JobOpeningsTable jobOpenings={jobOpenings} />
       </main>
       <section>
