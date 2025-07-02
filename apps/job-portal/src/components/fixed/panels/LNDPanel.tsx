@@ -6,9 +6,9 @@ import { NextButton } from '../navigation/button/NextButton';
 import { PrevButton } from '../navigation/button/PrevButton';
 import { LearningNDevt } from './learning-and-devt/LND';
 import { useContext } from 'react';
-import { PageContentContext } from '@gscwd-apps/oneui';
 import { SolidNextButton } from '../navigation/button/SolidNextButton';
 import { SolidPrevButton } from '../navigation/button/SolidPrevButton';
+import { PageContentContext } from '../page/PageContent';
 
 export default function LNDPanel(): JSX.Element {
   // set tab state from misc context

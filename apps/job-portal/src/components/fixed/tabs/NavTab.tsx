@@ -20,7 +20,8 @@ import TopNavigation from '../../page-header/TopNavigation';
 import { HiArrowSmLeft } from 'react-icons/hi';
 import { useContext, useState } from 'react';
 import { usePublicationStore } from '../../../store/publication.store';
-import { Alert, Button, PageContentContext } from '@gscwd-apps/oneui';
+import { Alert, Button } from '@gscwd-apps/oneui';
+import { PageContentContext } from '../page/PageContent';
 
 export const NavTab = (): JSX.Element => {
   // get selected tab from tab store

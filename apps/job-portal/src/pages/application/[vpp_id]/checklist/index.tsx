@@ -1,6 +1,6 @@
 /* eslint-disable react/no-unescaped-entities */
 /* eslint-disable react/jsx-no-target-blank */
-import { Alert, Button, PageContentContext } from '@gscwd-apps/oneui';
+import { Alert, Button } from '@gscwd-apps/oneui';
 import axios from 'axios';
 import { isEmpty } from 'lodash';
 import { GetServerSideProps, GetServerSidePropsContext } from 'next';
@@ -20,6 +20,7 @@ import {
   VerticalDropdown,
   VerticalDropdownProps,
 } from 'apps/job-portal/src/components/fixed/dropdown/VerticalDropdown';
+import { PageContentContext } from '../../../../components/fixed/page/PageContent';
 
 type ChecklistProps = {
   vppId: string;

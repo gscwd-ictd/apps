@@ -12,8 +12,8 @@ import { ErrorContext } from '../../../context/ErrorContext';
 import { useTabStore } from '../../../store/tab.store';
 import { usePdsStore } from '../../../store/pds.store';
 import { HeadContainer } from '../head/Head';
-import { PageContentContext } from '@gscwd-apps/oneui';
 import { SolidNextButton } from '../navigation/button/SolidNextButton';
+import { PageContentContext } from '../page/PageContent';
 
 export const BasicInfoPanel = (): JSX.Element => {
   const selectedTab = useTabStore((state) => state.selectedTab);

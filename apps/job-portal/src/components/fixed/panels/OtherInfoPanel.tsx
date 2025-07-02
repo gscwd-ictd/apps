@@ -7,9 +7,9 @@ import { PrevButton } from '../navigation/button/PrevButton';
 import { OIOrgs } from './other-info/Organizations';
 import { OIRecogs } from './other-info/Recogs';
 import { OISkills } from './other-info/Skills';
-import { PageContentContext } from '@gscwd-apps/oneui';
 import { SolidNextButton } from '../navigation/button/SolidNextButton';
 import { SolidPrevButton } from '../navigation/button/SolidPrevButton';
+import { PageContentContext } from '../page/PageContent';
 
 export default function OtherInfoPanel(): JSX.Element {
   // set tab state from tab store

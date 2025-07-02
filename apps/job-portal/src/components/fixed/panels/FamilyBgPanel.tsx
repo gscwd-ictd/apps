@@ -11,13 +11,10 @@ import { FormProvider, useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import schema from '../../../schema/FamilyInfo';
 import { useTabStore } from '../../../store/tab.store';
-import { usePdsStore } from '../../../store/pds.store';
-import { useEmployeeStore } from '../../../store/employee.store';
 import { HeadContainer } from '../head/Head';
-import { useApplicantStore } from '../../../store/applicant.store';
-import { PageContentContext } from '@gscwd-apps/oneui';
 import { SolidNextButton } from '../navigation/button/SolidNextButton';
 import { SolidPrevButton } from '../navigation/button/SolidPrevButton';
+import { PageContentContext } from '../page/PageContent';
 
 export default function FamilyBgPanel(): JSX.Element {
   const handleNextTab = useTabStore((state) => state.handleNextTab);

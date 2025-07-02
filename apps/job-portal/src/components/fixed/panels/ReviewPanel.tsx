@@ -20,9 +20,9 @@ import { LearningDevelopment } from 'apps/job-portal/utils/types/data/lnd.type';
 import { Organization, Recognition, Skill } from 'apps/job-portal/utils/types/data/other-info.type';
 import { Reference } from 'apps/job-portal/utils/types/data/supporting-info.type';
 import { useContext } from 'react';
-import { PageContentContext } from '@gscwd-apps/oneui';
 import { SolidNextButton } from '../navigation/button/SolidNextButton';
 import { SolidPrevButton } from '../navigation/button/SolidPrevButton';
+import { PageContentContext } from '../page/PageContent';
 
 export default function ReviewPanel(): JSX.Element {
   // set tab state from tab store
