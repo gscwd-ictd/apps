@@ -12,7 +12,6 @@ import SubmitPanel from '../panels/SubmitPanel';
 import { FormWizard } from '../../modular/custom/FormWizard';
 import { RefErrorProvider } from '../../../context/RefErrorContext';
 import { useRouter } from 'next/router';
-import DarkNav from '../navigation/DarkNav';
 import { ErrorProvider } from '../../../context/ErrorContext';
 import { useTabStore } from '../../../store/tab.store';
 import { tabs } from '../../../../utils/constants/tabs';
@@ -41,12 +40,13 @@ export const NavTab = (): JSX.Element => {
       <div className="fixed top-0 z-50 w-full" tabIndex={-1}>
         <TopNavigation />
         <button
-          className="flex items-center gap-2 mb-5 text-gray-500 transition-colors ease-in-out hover:text-gray-700"
+          className="flex items-center gap-2 pt-3 pl-2 text-gray-500 transition-colors ease-in-out hover:text-gray-700 "
           onClick={() => setCancelAlertIsOpen(true)}
         >
           <HiArrowSmLeft className="w-5 h-5" />
           <span className="font-medium">Go back</span>
         </button>
+
         <header className="fixed top-0 z-50 flex justify-center w-full -mt-3">
           <div className="px-4 py-6 mx-auto max-w-7xl sm:px-6 lg:px-8">
             <h1 className="w-full subpixel-antialiased font-medium tracking-widest text-white uppercase select-none shrink-0 drop-shadow-lg sm:text-sm md:text-4xl">
@@ -55,6 +55,7 @@ export const NavTab = (): JSX.Element => {
           </div>
         </header>
       </div>
+
       <Alert open={cancelAlertIsOpen} setOpen={setCancelAlertIsOpen}>
         <Alert.Description>
           <div className="flex justify-center w-full h-full">
@@ -80,10 +81,7 @@ export const NavTab = (): JSX.Element => {
           </div>
         </Alert.Footer>
       </Alert>
-      {/* <div className="fixed top-0 z-50" tabIndex={-1}>
-        <SideNav action={logout} />
-        <DarkNav action={logout} />
-      </div> */}
+
       <div>
         {/* Main DIV */}
 
@@ -91,7 +89,7 @@ export const NavTab = (): JSX.Element => {
           {/* START OF TABS HERE */}
 
           {!isMobile && (
-            <div className="justify-center mt-20 overflow-x-auto">
+            <div className="justify-center mt-[7rem] overflow-x-auto">
               <FormWizard
                 selectedTab={selectedTab}
                 setSelectedTab={setSelectedTab}
