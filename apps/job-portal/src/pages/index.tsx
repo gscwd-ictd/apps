@@ -105,7 +105,7 @@ const Home: NextPage = ({ jobOpenings }: InferGetServerSidePropsType<typeof getS
         </div>
       </header>
 
-      <main className="flex-grow overflow-auto">
+      <main className="flex-grow overflow-auto pb-20">
         <JobOpeningsTable jobOpenings={jobOpenings} />
       </main>
       <section>

@@ -119,7 +119,7 @@ export default function WorkSheetPanel({ allWorkExperiences }: WorkSheetPanelPro
     <>
       <div className="min-h-screen bg-white">
         <button
-          className="fixed flex items-center gap-2 mb-5 text-gray-500 transition-colors ease-in-out hover:text-gray-700"
+          className="flex items-center gap-2 pt-3 pl-2 text-gray-500 transition-colors ease-in-out hover:text-gray-700 "
           onClick={() => setCancelAlertIsOpen(true)}
         >
           <HiArrowSmLeft className="w-5 h-5" />

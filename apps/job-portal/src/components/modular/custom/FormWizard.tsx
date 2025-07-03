@@ -14,6 +14,7 @@ type FormWizardProps = {
   tabsLength: number;
   tabs: Array<TabType>;
   onClick?: any;
+  className?: string;
 };
 
 type FormNodeProps = {
