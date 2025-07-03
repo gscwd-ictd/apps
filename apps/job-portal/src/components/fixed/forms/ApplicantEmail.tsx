@@ -1,10 +1,7 @@
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { SpinnerCircularFixed } from 'spinners-react';
-import {
-  useApplicantStore,
-  ApplicantFormData,
-} from '../../../store/applicant.store';
+import { useApplicantStore, ApplicantFormData } from '../../../store/applicant.store';
 import { usePageStore } from '../../../store/page.store';
 import schema from '../../../schema/ApplicantEmail';
 import { StyledButton } from '../../modular/buttons/StyledButton';
@@ -30,11 +27,7 @@ export const ApplicantEmail = () => {
     setIsLoading(true);
 
     try {
-      await axios.post(
-        `${process.env.NEXT_PUBLIC_HRIS_DOMAIN}/auth/logout`,
-        {},
-        { withCredentials: true }
-      );
+      await axios.post(`${process.env.NEXT_PUBLIC_HRIS_DOMAIN}/auth/logout`, {}, { withCredentials: true });
     } catch (error) {
       //
     }
@@ -46,11 +39,10 @@ export const ApplicantEmail = () => {
       }
     );
 
-    if (!error && !isEmpty(result)) {
+    if (!error && !isEmpty(result.token)) {
       // redirect page if email is found
-      await router.push(
-        `${process.env.NEXT_PUBLIC_JOB_PORTAL}/application/${publication.vppId}/email?sent=true`
-      );
+      await router.push(`${process.env.NEXT_PUBLIC_JOB_PORTAL}/application/create-session/?token=${result.token}`);
+
       setIsLoading(false);
     } else if (isEmpty(result)) {
       // change page to page 2 if email is not existing
@@ -77,14 +69,8 @@ export const ApplicantEmail = () => {
 
   return (
     <>
-      <form
-        id="applicantEmail"
-        className="w-full px-12 mt-10"
-        onSubmit={handleSubmit(onSubmit)}
-      >
-        <div className="flex justify-start w-full mb-10 text-2xl font-semibold">
-          Applicant Information
-        </div>
+      <form id="applicantEmail" className="w-full px-12 mt-10" onSubmit={handleSubmit(onSubmit)}>
+        <div className="flex justify-start w-full mb-10 text-2xl font-semibold">Applicant Information</div>
 
         <div className="w-full mb-5">
           <FloatingLabelInputRF
