@@ -7,10 +7,11 @@ import { Button, Modal, TextField } from '@gscwd-apps/oneui';
 import { useWorkExpStore } from '../../../../src/store/workexperience.store';
 import { HiPencil, HiPlus, HiTrash, HiX } from 'react-icons/hi';
 import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
+import { values } from 'lodash';
 
 export const VacancyWorkExperience = (props: { data: WorkExperiencePds }): JSX.Element => {
   const [indexForEdit, setIndexForEdit] = useState<number>(-1);
-  const [otherDetailsIndex, setOtherDetailsIndex] = useState<number[]>([]);
+  const [otherDetailsIndex, setOtherDetailsIndex] = useState<string[]>([]);
   const [accomplishmentInput, setAccomplishmentInput] = useState<string>('');
   const [dutyInput, setDutyInput] = useState<string>('');
   const workExperienceArray = useWorkExpStore((state) => state.workExperience);
@@ -102,14 +103,34 @@ export const VacancyWorkExperience = (props: { data: WorkExperiencePds }): JSX.E
     }, 100);
   };
 
+  // const addWorkExperience = (Idx: number, expId: string, e: unknown) => {
+  //   //show additional work exp data based on Idx (.map)
+  //   if (otherDetailsIndex.includes(Idx)) {
+  //     const newOtherDetails = otherDetailsIndex.filter((index) => index !== Idx);
+  //     setOtherDetailsIndex(newOtherDetails);
+  //     removeExperience(expId);
+  //   } else {
+  //     setOtherDetailsIndex((otherDetailsIndex) => [...otherDetailsIndex, Idx]); //add Idx to array
+  //     addExperience({
+  //       basic: {
+  //         workExperienceId: expId,
+  //         office: '',
+  //         supervisor: '',
+  //       },
+  //       duties: [],
+  //       accomplishments: [],
+  //     });
+  //   }
+  // };
+
   const addWorkExperience = (Idx: number, expId: string, e: unknown) => {
-    //show additional work exp data based on Idx (.map)
-    if (otherDetailsIndex.includes(Idx)) {
-      const newOtherDetails = otherDetailsIndex.filter((index) => index !== Idx);
+    //show additional work exp data based on expId
+    if (otherDetailsIndex.includes(expId)) {
+      const newOtherDetails = otherDetailsIndex.filter((value) => value !== expId);
       setOtherDetailsIndex(newOtherDetails);
       removeExperience(expId);
     } else {
-      setOtherDetailsIndex((otherDetailsIndex) => [...otherDetailsIndex, Idx]); //add Idx to array
+      setOtherDetailsIndex((otherDetailsIndex) => [...otherDetailsIndex, expId]); //add Idx to array
       addExperience({
         basic: {
           workExperienceId: expId,
@@ -263,7 +284,7 @@ export const VacancyWorkExperience = (props: { data: WorkExperiencePds }): JSX.E
                   ></input>
                 </div>
 
-                <div className={`${otherDetailsIndex.includes(Idx) ? 'mx-2' : 'hidden'}`}>
+                <div className={`${otherDetailsIndex.includes(exp._id) ? 'mx-2' : 'hidden'}`}>
                   <div>
                     <label className="font-semibold">Date: </label>
                     {exp.from} - {exp.to ? exp.to : 'PRESENT'}
@@ -289,11 +310,18 @@ export const VacancyWorkExperience = (props: { data: WorkExperiencePds }): JSX.E
                           <span className="font-semibold">Immediate Supervisor:</span>
                         </td>
                         <td>
+                          {Idx} - {exp._id}
                           <TextField
                             onChange={(e) => inputImmediateSupervisor(e, exp._id)}
                             className="w-full"
-                            value={otherDetailsIndex.includes(Idx) ? workExperienceArray[Idx]?.basic.supervisor : ''}
-                            required={otherDetailsIndex.includes(Idx) ? true : false}
+                            value={
+                              otherDetailsIndex.includes(exp._id)
+                                ? workExperienceArray.filter((value) => value.basic.workExperienceId === exp._id)[0]
+                                    ?.basic.supervisor
+                                : ''
+                            }
+                            // value={otherDetailsIndex.includes(exp._id) ? workExperienceArray[Idx]?.basic.supervisor : ''}
+                            required={otherDetailsIndex.includes(exp._id) ? true : false}
                           />
                         </td>
                       </tr>
@@ -305,8 +333,15 @@ export const VacancyWorkExperience = (props: { data: WorkExperiencePds }): JSX.E
                           <TextField
                             onChange={(e) => inputOfficeUnit(e, exp._id)}
                             className="w-full"
-                            value={otherDetailsIndex.includes(Idx) ? workExperienceArray[Idx]?.basic.office : ''}
-                            required={otherDetailsIndex.includes(Idx) ? true : false}
+                            // value={otherDetailsIndex.includes(exp._id) ? workExperienceArray[Idx]?.basic.office : ''}
+
+                            value={
+                              otherDetailsIndex.includes(exp._id)
+                                ? workExperienceArray.filter((value) => value.basic.workExperienceId === exp._id)[0]
+                                    ?.basic.office
+                                : ''
+                            }
+                            required={otherDetailsIndex.includes(exp._id) ? true : false}
                           />
                         </td>
                       </tr>
