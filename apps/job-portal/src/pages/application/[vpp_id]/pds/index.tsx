@@ -639,13 +639,6 @@ export default function Dashboard({ vppId, pdsDetails, externalApplicantId }: Da
             <>
               <div className="flex items-center justify-center w-full h-screen">
                 <LoadingSpinner size={'lg'} />
-                {/* <SpinnerDotted
-                  speed={150}
-                  thickness={120}
-                  color="indigo"
-                  size={100}
-                  className="flex w-full h-full transition-all animate-pulse "
-                /> */}
               </div>
             </>
           ) : (

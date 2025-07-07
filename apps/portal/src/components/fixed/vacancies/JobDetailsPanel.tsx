@@ -3,6 +3,7 @@ import { JobOpeningDetails, VacancyDetails } from '../../../types/vacancies.type
 import { useWorkExpStore } from 'apps/portal/src/store/workexperience.store';
 import BadgePill from '../../modular/badges/BadgePill';
 import { TextSize } from 'libs/utils/src/lib/enums/text-size.enum';
+import { AlertNotification } from 'libs/oneui/src/components/AlertNotification/AlertNotification';
 
 export const JobDetailsPanel = (props: { data: JobOpeningDetails; details: VacancyDetails }): JSX.Element => {
   const { hasApplied } = useWorkExpStore((state) => ({
@@ -11,6 +12,15 @@ export const JobDetailsPanel = (props: { data: JobOpeningDetails; details: Vacan
 
   return (
     <>
+      {hasApplied ? (
+        <div className="flex flex-col justify-center w-full pb-1 ">
+          <AlertNotification
+            alertType="info"
+            notifMessage="You have already applied for this position."
+            dismissible={false}
+          />
+        </div>
+      ) : null}
       <div className="flex flex-col gap-2 px-4 py-4 m-0 text-gray-800 bg-slate-100 rounded-xl">
         <div className="flex flex-wrap justify-between">
           <div className="flex flex-col justify-start items-start w-full md:w-1/2 px-0.5 pb-3  ">
@@ -75,18 +85,6 @@ export const JobDetailsPanel = (props: { data: JobOpeningDetails; details: Vacan
               </label>
             </div>
           </div>
-
-          {hasApplied ? (
-            <div className="flex flex-col justify-center items-end w-full px-0.5 pb-1 ">
-              <div>
-                <BadgePill
-                  textSize={TextSize.TEXT_SM}
-                  variant="primary"
-                  label={'You have already applied for this position.'}
-                />
-              </div>
-            </div>
-          ) : null}
         </div>
       </div>
     </>
