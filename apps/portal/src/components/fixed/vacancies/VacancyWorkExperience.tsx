@@ -310,7 +310,6 @@ export const VacancyWorkExperience = (props: { data: WorkExperiencePds }): JSX.E
                           <span className="font-semibold">Immediate Supervisor:</span>
                         </td>
                         <td>
-                          {Idx} - {exp._id}
                           <TextField
                             onChange={(e) => inputImmediateSupervisor(e, exp._id)}
                             className="w-full"
