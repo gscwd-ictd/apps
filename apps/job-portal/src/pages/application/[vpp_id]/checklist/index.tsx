@@ -427,7 +427,8 @@ export default function Checklist({ vppId, positionTitle }: ChecklistProps) {
                     <HiInformationCircle size={40} className="text-slate-600" />
                   </section>
                   <section className="text-xs sm:text-xs md:text-md lg:text-sm">
-                    • {'  '}Do not refresh the page. Any changes you've made in the work experience sheet will be
+                    • {'  '}Do not use Incognito Mode or Private Mode.
+                    <br /> • {'  '}Do not refresh the page. Any changes you've made in the work experience sheet will be
                     discarded. <br />• {'  '}If you proceed to the homepage, your session for this publication will end.
                     <br />
                   </section>
