@@ -26,7 +26,7 @@ export const WorkExperiencePicker = ({ tab, setTab }: WorkExperiencePickerProps)
     <>
       <div className="">
         <div className="h-auto overflow-y-auto">
-          <div className="grid justify-between w-full  sm:grid-cols-1 lg:grid-cols-2 gap-4 align-middle">
+          <div className="grid w-full sm:grid-cols-1 lg:grid-cols-2 gap-4 align-middle">
             {/* LEFT */}
             <div className="flex sm:h-[22rem] sm:overflow-y-auto lg:h-full w-full rounded ">
               <div className="w-full">
@@ -60,8 +60,8 @@ export const WorkExperiencePicker = ({ tab, setTab }: WorkExperiencePickerProps)
             <div className="w-full rounded border border-slate-200 bg-slate-100">
               {tab === 0 ? (
                 <>
-                  <div className="w-full h-full">
-                    <p className="flex items-center justify-center w-full h-full text-2xl">
+                  <div className="w-full h-full p-5 ">
+                    <p className="flex items-center justify-center w-full h-full text-2xl text-center">
                       No selected Work Experience
                     </p>
                   </div>

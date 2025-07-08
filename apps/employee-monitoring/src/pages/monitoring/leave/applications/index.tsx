@@ -191,7 +191,7 @@ const Index = () => {
     }),
     columnHelper.accessor('leaveDates', {
       header: 'Leave Dates',
-      filterFn: 'arrIncludesSome',
+      filterFn: 'arrIncludes',
       enableSorting: false,
       enableGlobalFilter: false,
       cell: (info) => renderRowLeaveDates(info.getValue()),

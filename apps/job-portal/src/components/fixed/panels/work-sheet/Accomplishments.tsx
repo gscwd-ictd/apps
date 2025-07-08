@@ -1,10 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { HiPlus, HiXCircle } from 'react-icons/hi';
-import {
-  Accomplishment,
-  useWorkExpSheetStore,
-} from '../../../../store/work-experience-sheet.store';
+import { HiXCircle } from 'react-icons/hi';
+import { TiPlus } from 'react-icons/ti';
+import { Accomplishment, useWorkExpSheetStore } from '../../../../store/work-experience-sheet.store';
 import { createColumnHelper } from '@tanstack/react-table';
 import LoadingIndicator from '../../loader/LoadingIndicator';
 import { Button, DataTable, Modal, useDataTable } from '@gscwd-apps/oneui';
@@ -23,26 +21,14 @@ export const Accomplishments = () => {
   const { register, reset, handleSubmit } = useForm<Accomplishment>({
     defaultValues: { accomplishment: '' },
   });
-  const selectedWorkExperience = useWorkExpSheetStore(
-    (state) => state.selectedWorkExperience
-  );
-  const setSelectedWorkExperience = useWorkExpSheetStore(
-    (state) => state.setSelectedWorkExperience
-  );
-  const accomplishments = useWorkExpSheetStore(
-    (state) => state.accomplishments
-  );
-  const setAccomplishments = useWorkExpSheetStore(
-    (state) => state.setAccomplishments
-  );
+  const selectedWorkExperience = useWorkExpSheetStore((state) => state.selectedWorkExperience);
+  const setSelectedWorkExperience = useWorkExpSheetStore((state) => state.setSelectedWorkExperience);
+  const accomplishments = useWorkExpSheetStore((state) => state.accomplishments);
+  const setAccomplishments = useWorkExpSheetStore((state) => state.setAccomplishments);
 
   const renderRowActions = (index: number) => {
     return (
-      <button
-        onClick={() => handleRemove(index)}
-        className="items-center w-full"
-        type="button"
-      >
+      <button onClick={() => handleRemove(index)} className="items-center w-full" type="button">
         <HiXCircle size={25} className="text-red-500" />
       </button>
     );
@@ -133,17 +119,12 @@ export const Accomplishments = () => {
           </Button>
         </Modal.Footer>
       </Modal>
+
       <div className="w-full">
         <div className="flex w-full gap-2">
-          <div className="font-medium text-gray-700">
-            List of Accomplishments and Contributions (If any){' '}
-          </div>
+          <div className="font-medium text-gray-700">List of Accomplishments and Contributions (If any) </div>
           {selectedWorkExperience.isSelected ? null : (
-            <HiPlus
-              size={22}
-              className="text-white bg-green-500 rounded hover:cursor-pointer"
-              onClick={openAccModal}
-            />
+            <TiPlus size={22} className="text-white bg-green-500 rounded hover:cursor-pointer" onClick={openAccModal} />
           )}
         </div>
         <div className="mt-2 h-[16rem] w-full overflow-y-auto bg-slate-50">
@@ -155,12 +136,7 @@ export const Accomplishments = () => {
             selectedWorkExperience.accomplishments &&
             selectedWorkExperience.accomplishments.length > 0 && (
               <div>
-                <DataTable
-                  model={table}
-                  showGlobalFilter={false}
-                  showColumnFilter={false}
-                  paginate={false}
-                />
+                <DataTable model={table} showGlobalFilter={false} showColumnFilter={false} paginate={false} />
               </div>
             )
           )}

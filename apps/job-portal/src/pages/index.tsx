@@ -14,6 +14,8 @@ import { usePublicationStore } from '../store/publication.store';
 import { ViewJobDetailsModal } from '../components/fixed/modals/ViewJobDetailsModal';
 import { Publication } from 'apps/job-portal/utils/types/data/publication-type';
 import { PageContentContext } from '../components/fixed/page/PageContent';
+import { CardContainer } from '../components/modular/cards/CardContainer';
+import { HiInformationCircle } from 'react-icons/hi';
 
 const Home: NextPage = ({ jobOpenings }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
   const router = useRouter();
@@ -106,6 +108,24 @@ const Home: NextPage = ({ jobOpenings }: InferGetServerSidePropsType<typeof getS
       </header>
 
       <main className="flex-grow overflow-auto pb-20">
+        <CardContainer
+          className="rounded-xl p-5 mx-2 lg:mx-[20%]"
+          bgColor={'bg-yellow-100'}
+          title={''}
+          remarks={''}
+          subtitle={''}
+        >
+          <div className="flex gap-2">
+            <section>
+              <HiInformationCircle size={40} className="text-slate-600" />
+            </section>
+            <section className="text-xs sm:text-xs md:text-md lg:text-sm">
+              • {'  '}Do not use Incognito Mode or Private Mode as it may conflict with the user experience.
+              <br />• {'  '}Do not refresh the page after application. Any changes made will be discarded.
+            </section>
+          </div>
+        </CardContainer>
+
         <JobOpeningsTable jobOpenings={jobOpenings} />
       </main>
       <section>

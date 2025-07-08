@@ -37,16 +37,14 @@ export const TabHeader: FC<TabHeaderProps> = ({
         target="_blank"
         href={href}
         onClick={onClick}
-        //  ${tab === tabIndex ? 'bg-slate-700' : 'bg-slate-100'}
         className={`
         ${tab === tabIndex ? 'bg-slate-700' : 'bg-slate-100'}
-         mr-6 flex h-auto min-h-[6rem] w-full cursor-pointer items-center justify-start rounded-xl ${
+         flex h-auto min-h-[6rem] w-full cursor-pointer items-center justify-start rounded-xl ${
            invert ? 'rounded-b-none' : 'rounded-tr-none'
          } 
-
         border-b  border-gray-200  py-2 pt-1 transition-all ease-in-out  hover:drop-shadow-lg`}
       >
-        <div className={`${icon ? 'visible' : 'invisible'} flex w-[10%] justify-center `}>
+        <div className={`${icon ? 'visible' : 'invisible'} flex w-[10%] justify-center`}>
           <div
             className={`h-[1rem] w-[1rem] items-center rounded-full ${
               tab === tabIndex ? 'bg-green-600' : 'bg-slate-400'
@@ -78,13 +76,13 @@ export const TabHeader: FC<TabHeaderProps> = ({
             {duration}
           </p>
         </div>
-        <div className="w-[10%] px-4">
+        <div className="w-[10%] justify-center">
           <div
-            className={`flex min-w-[1.2rem] max-w-full rounded-md ${className} ${
+            className={`flex items-cenetr rounded-md ${className} ${
               tab === tabIndex ? 'visible' : 'invisible'
-            } flex-grow-0 select-none justify-center text-sm text-white`}
+            } flex-grow-0 select-none text-2xl text-white 2`}
           >
-            {<HiBadgeCheck size={100} className="text-green-500 " />}
+            {<HiBadgeCheck className="text-green-500 " />}
           </div>
         </div>
       </a>

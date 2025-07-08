@@ -1,12 +1,9 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { HiPlus, HiXCircle } from 'react-icons/hi';
-import {
-  Duty,
-  useWorkExpSheetStore,
-  WorkExperienceSheet,
-} from '../../../../store/work-experience-sheet.store';
+import { HiXCircle } from 'react-icons/hi';
+import { TiPlus } from 'react-icons/ti';
+import { Duty, useWorkExpSheetStore, WorkExperienceSheet } from '../../../../store/work-experience-sheet.store';
 import * as yup from 'yup';
 import { createColumnHelper } from '@tanstack/react-table';
 import { SpinnerCircular } from 'spinners-react';
@@ -34,13 +31,9 @@ const readOnlyColumns = [
 ];
 
 export const Duties = () => {
-  const selectedWorkExperience = useWorkExpSheetStore(
-    (state) => state.selectedWorkExperience
-  );
+  const selectedWorkExperience = useWorkExpSheetStore((state) => state.selectedWorkExperience);
   const [dutyIsRemoved, setDutyIsRemoved] = useState<boolean>(false);
-  const setSelectedWorkExperience = useWorkExpSheetStore(
-    (state) => state.setSelectedWorkExperience
-  );
+  const setSelectedWorkExperience = useWorkExpSheetStore((state) => state.setSelectedWorkExperience);
   const { register, handleSubmit, reset } = useForm<Duty>({
     defaultValues: { duty: '' },
     resolver: yupResolver(schema),
@@ -52,11 +45,7 @@ export const Duties = () => {
 
   const renderRowActions = (index: number) => {
     return (
-      <button
-        onClick={() => handleRemove(index)}
-        className="items-center w-full"
-        type="button"
-      >
+      <button onClick={() => handleRemove(index)} className="items-center w-full" type="button">
         <HiXCircle size={25} className="text-red-500" />
       </button>
     );
@@ -123,16 +112,11 @@ export const Duties = () => {
     <>
       <Modal open={dutiesModalIsOpen} setOpen={setDutiesModalIsOpen} size="sm">
         <Modal.Header>
-          <p className="flex justify-center w-full text-2xl font-medium text-slate-700">
-            Write actual duty
-          </p>
+          <p className="flex justify-center w-full text-2xl font-medium text-slate-700">Write actual duty</p>
         </Modal.Header>
         <Modal.Body>
           <form id="duties" onSubmit={dutiesOnSubmit} className="">
-            <textarea
-              className="h-[10rem] w-full rounded  bg-slate-100 text-left"
-              {...register('duty')}
-            />
+            <textarea className="h-[10rem] w-full rounded  bg-slate-100 text-left" {...register('duty')} />
           </form>
         </Modal.Body>
         <Modal.Footer>
@@ -143,11 +127,9 @@ export const Duties = () => {
       </Modal>
       <div className="w-full">
         <div className="flex w-full gap-2">
-          <div className="font-medium text-gray-700">
-            Summary of Actual Duties
-          </div>
+          <div className="font-medium text-gray-700">Summary of Actual Duties</div>
           {selectedWorkExperience.isSelected ? null : (
-            <HiPlus
+            <TiPlus
               size={22}
               className="text-white bg-green-500 rounded hover:cursor-pointer"
               onClick={openDutiesModal}
@@ -163,12 +145,7 @@ export const Duties = () => {
             selectedWorkExperience.duties &&
             selectedWorkExperience.duties.length > 0 && (
               <div className="overflow-y-auto">
-                <DataTable
-                  model={table}
-                  showGlobalFilter={false}
-                  showColumnFilter={false}
-                  paginate={false}
-                />
+                <DataTable model={table} showGlobalFilter={false} showColumnFilter={false} paginate={false} />
               </div>
             )
           )}

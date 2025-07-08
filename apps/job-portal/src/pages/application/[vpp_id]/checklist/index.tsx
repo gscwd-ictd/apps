@@ -443,13 +443,15 @@ export default function Checklist({ vppId, positionTitle }: ChecklistProps) {
                 remarks={''}
                 subtitle={''}
               >
-                <section>
-                  <HiInformationCircle size={40} className="text-slate-600" />
-                </section>
-                <section className="text-xs sm:text-xs md:text-md lg:text-sm">
-                  You have submitted an application for this publication.
-                  <br />
-                </section>
+                <div className="flex gap-2">
+                  <section>
+                    <HiInformationCircle size={40} className="text-slate-600" />
+                  </section>
+                  <section className="text-xs sm:text-xs md:text-md lg:text-sm content-center">
+                    You have submitted an application for this publication.
+                    <br />
+                  </section>
+                </div>
               </CardContainer>
             )}
 
