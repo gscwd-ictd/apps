@@ -126,6 +126,7 @@ export const WorkExprSheet = (): JSX.Element => {
             </section>
           </div>
         </CardContainer>
+
         <CardContainer
           className="sm:w-full lg:w-[44rem] rounded-xl mx-2 border p-5"
           bgColor={'bg-sky-100'}
@@ -140,6 +141,7 @@ export const WorkExprSheet = (): JSX.Element => {
             <section>Work experiences are sorted by date upon final submission of application.</section>
           </div>
         </CardContainer>
+
         {!noWorkExperience ? (
           <>
             <div className="flex flex-col w-full grid-cols-2 gap-4 py-7">
@@ -148,6 +150,7 @@ export const WorkExprSheet = (): JSX.Element => {
               </div>
               {/**  */}
             </div>
+
             <Modal open={modal.isOpen} setOpen={openModal} size="lg" steady>
               <Modal.Header>
                 {/* {modal.page === 1 ? 'Pick a relevant work experience' : modal.page === 2 ? 'Completely fill-out your work experience' : ''} */}
@@ -159,9 +162,11 @@ export const WorkExprSheet = (): JSX.Element => {
                     : ''}
                 </h1>
               </Modal.Header>
+
               <Modal.Body>
                 <ModalController page={modal.page} tab={tab} setTab={setTab} />
               </Modal.Body>
+
               <Modal.Footer>
                 <div className="flex justify-between w-full gap-4">
                   <Button
@@ -193,6 +198,7 @@ export const WorkExprSheet = (): JSX.Element => {
                 </div>
               </Modal.Footer>
             </Modal>
+
             {/** Alert Success */}
             <Alert open={alertIsOpen} setOpen={setAlertIsOpen}>
               <Alert.Description>This action cannot be undone. Do you want to proceed?</Alert.Description>
