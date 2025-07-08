@@ -7,11 +7,7 @@ type ModalControllerProps = {
   setTab: (tab: number) => void;
 };
 
-export const ModalController = ({
-  page,
-  tab,
-  setTab,
-}: ModalControllerProps): JSX.Element => {
+export const ModalController = ({ page, tab, setTab }: ModalControllerProps): JSX.Element => {
   return (
     <>
       {page === 1 && <WorkExperiencePicker tab={tab} setTab={setTab} />}

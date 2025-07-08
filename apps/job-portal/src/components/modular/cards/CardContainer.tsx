@@ -1,17 +1,17 @@
-import { ReactNode } from 'react'
+import { ReactNode } from 'react';
 
 type CardContainerProps = {
-  bgColor: string
-  className?: string
-  titleClassName?: string
-  title: string
-  icon?: any
-  remarks: string | JSX.Element
-  remarksClassName?: string
-  subtitle: string
-  subtitleClassName?: string
-  children: React.ReactNode
-}
+  bgColor: string;
+  className?: string;
+  titleClassName?: string;
+  title: string;
+  icon?: any;
+  remarks: string | JSX.Element;
+  remarksClassName?: string;
+  subtitle: string;
+  subtitleClassName?: string;
+  children: React.ReactNode;
+};
 
 export const CardContainer = ({
   bgColor = 'bg-white',
@@ -37,14 +37,18 @@ export const CardContainer = ({
               </h3>
             ) : null}
             {remarks ? (
-              <div className={`lg:text-md md:text-md xs:text-xs mx-5 mt-3 pt-2 italic sm:text-xs ${remarksClassName}`}>{remarks}</div>
+              <div className={`lg:text-md md:text-md xs:text-xs mx-5 mt-3 pt-2 italic sm:text-xs ${remarksClassName}`}>
+                {remarks}
+              </div>
             ) : null}
           </div>
 
-          {subtitle ? <p className={`${subtitleClassName} col-span-1 select-none hover:text-indigo-800`}>{subtitle}</p> : null}
+          {subtitle ? (
+            <p className={`${subtitleClassName} col-span-1 select-none hover:text-indigo-800`}>{subtitle}</p>
+          ) : null}
         </header>
         <main>{children}</main>
       </div>
     </>
-  )
-}
+  );
+};

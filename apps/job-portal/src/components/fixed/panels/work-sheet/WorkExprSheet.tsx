@@ -142,13 +142,27 @@ export const WorkExprSheet = (): JSX.Element => {
           </div>
         </CardContainer>
 
+        <CardContainer
+          className="sm:w-full lg:w-[44rem] rounded-xl mx-2 border p-5"
+          bgColor={'bg-sky-100'}
+          title={''}
+          remarks={''}
+          subtitle={''}
+        >
+          <div className="flex items-center gap-4">
+            <section>
+              <HiInformationCircle size={40} className="text-slate-600" />
+            </section>
+            <section>Go back to Checklist Page for the final submission of this application.</section>
+          </div>
+        </CardContainer>
+
         {!noWorkExperience ? (
           <>
             <div className="flex flex-col w-full grid-cols-2 gap-4 py-7">
               <div className="w-full col-span-1 px-2">
                 <Button onClick={openModal} btnLabel="Select a work experience" variant="theme" type="button" />
               </div>
-              {/**  */}
             </div>
 
             <Modal open={modal.isOpen} setOpen={openModal} size="lg" steady>

@@ -14,6 +14,7 @@ import { axiosFetcher } from '../../../../../components/modular/fetcher/Fetcher'
 import Toggle from '../../../../../components/modular/switch/Toggle';
 import { usePageStore } from '../../../../../store/page.store';
 import { useWorkExpSheetStore, WorkExperienceSheet } from '../../../../../store/work-experience-sheet.store';
+import { IoClose } from 'react-icons/io5';
 
 type WorkSheetPanelProps = {
   vppId: string;
@@ -117,7 +118,7 @@ export default function WorkSheetPanel({ allWorkExperiences }: WorkSheetPanelPro
 
   return (
     <>
-      <div className="min-h-screen bg-white">
+      <div className="min-h-screen bg-white pb-14">
         <button
           className="flex items-center gap-2 pt-3 pl-2 text-gray-500 transition-colors ease-in-out hover:text-gray-700 "
           onClick={() => setCancelAlertIsOpen(true)}
@@ -185,14 +186,16 @@ export default function WorkSheetPanel({ allWorkExperiences }: WorkSheetPanelPro
                         subtitle=""
                         className="px-2 py-5 border rounded-xl"
                       >
-                        <table>
+                        <table className="w-full">
                           <thead>
                             <tr className="border-b-4 text-slate-700">
                               <th className="w-[5%] px-2 "></th>
-                              <th className="w-[20%] px-2 text-left text-xl font-medium">Position Title</th>
-                              <th className="w-[35%] px-2 text-left text-xl font-medium">Company Name</th>
-                              <th className="w-[30%] px-2 text-left text-xl font-medium">Duration</th>
-                              <th className="w-[10%] px-2 text-left text-xl font-medium">Action</th>
+                              <th className="w-[20%] px-2 text-left lg:text-xl sm:text-md font-medium">
+                                Position Title
+                              </th>
+                              <th className="w-[35%] px-2 text-left lg:text-xl sm:text-md font-medium">Company Name</th>
+                              <th className="w-[30%] px-2 text-left lg:text-xl sm:text-md font-medium">Duration</th>
+                              <th className="w-[10%] px-2 text-center lg:text-xl sm:text-md font-medium">Action</th>
                             </tr>
                           </thead>
                           <tbody className="">
@@ -212,10 +215,10 @@ export default function WorkSheetPanel({ allWorkExperiences }: WorkSheetPanelPro
                                       <td className="w-[10%] px-2 pt-4 text-center">
                                         <div className="flex">
                                           <span
-                                            className="flex items-center justify-center px-2 text-2xl font-medium text-center text-white bg-red-500 rounded hover:cursor-pointer"
+                                            className="flex items-center justify-center px-2 text-2xl font-medium text-center text-white bg-red-500 rounded hover:cursor-pointer m-auto"
                                             onClick={() => onRemove(workExpSheet._id!, index)}
                                           >
-                                            x
+                                            <IoClose size={22} className="text-white h-8" />
                                           </span>
                                         </div>
                                       </td>
@@ -234,7 +237,7 @@ export default function WorkSheetPanel({ allWorkExperiences }: WorkSheetPanelPro
 
             {/** CHECKBOX */}
             <div className="flex justify-center w-full pt-6">
-              <div className="flex w-[60rem] justify-end">
+              <div className="flex justify-end">
                 <Toggle
                   enabled={noWorkExperience}
                   setEnabled={setNoWorkExperience}
