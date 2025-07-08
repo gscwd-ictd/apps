@@ -191,10 +191,9 @@ const Index = () => {
     }),
     columnHelper.accessor('leaveDates', {
       header: 'Leave Dates',
-      filterFn: 'arrIncludesSomeCstm',
+      filterFn: 'arrIncludesSome',
       enableSorting: false,
       enableGlobalFilter: false,
-      // enableColumnFilter: false,
       cell: (info) => renderRowLeaveDates(info.getValue()),
     }),
     columnHelper.accessor('status', {
