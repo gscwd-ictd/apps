@@ -23,6 +23,7 @@ type WorkSheetPanelProps = {
 
 export default function WorkSheetPanel({ allWorkExperiences }: WorkSheetPanelProps): JSX.Element {
   const router = useRouter();
+
   const isLoaded = useWorkExpSheetStore((state) => state.isLoaded);
   const [indexToRemove, setIndexToRemove] = useState<number>(-1);
   const workExperiences = useWorkExpSheetStore((state) => state.workExperiences);
@@ -257,7 +258,6 @@ export default function WorkSheetPanel({ allWorkExperiences }: WorkSheetPanelPro
 }
 
 export const getServerSideProps: GetServerSideProps = async (context: GetServerSidePropsContext) => {
-  // console.log(context.params?.external_applicant_id);
   try {
     const { data } = await axios.get(
       `${process.env.NEXT_PUBLIC_HRIS_DOMAIN}/pds/work-experience/${context.params?.external_applicant_id}`,

@@ -49,7 +49,9 @@ const Home: NextPage = ({ jobOpenings }: InferGetServerSidePropsType<typeof getS
       setIsLoading(true);
       setTimeout(async () => {
         setIsLoading(false);
+
         localStorage.setItem('publication', JSON.stringify(publication));
+
         await router.push(`${process.env.NEXT_PUBLIC_JOB_PORTAL}/application/${publication.vppId}`);
         setModal({ ...modal, isOpen: false, page: 1 });
       }, 2000);
@@ -80,23 +82,12 @@ const Home: NextPage = ({ jobOpenings }: InferGetServerSidePropsType<typeof getS
     aside: { isMobile },
   } = useContext(PageContentContext);
 
-  // removes the ssid_hrms cookie on page load
-  const removeCookie = async () => {
-    try {
-      return await axios.post(`${process.env.NEXT_PUBLIC_HRIS_DOMAIN}/auth/logout`, {}, { withCredentials: true });
-    } catch (error) {
-      return error;
-    }
-  };
-
   useEffect(() => {
     if (actionSelection === 'Position Details') setOpenDetailsModal(true);
   }, [actionSelection]);
 
   useEffect(() => {
     setCheckboxTerms(false);
-    // localStorage.clear()
-    // removeCookie();
   }, []);
 
   return (
@@ -128,6 +119,7 @@ const Home: NextPage = ({ jobOpenings }: InferGetServerSidePropsType<typeof getS
 
         <JobOpeningsTable jobOpenings={jobOpenings} />
       </main>
+
       <section>
         <FormModal
           isOpen={modal.isOpen}
@@ -165,6 +157,7 @@ const Home: NextPage = ({ jobOpenings }: InferGetServerSidePropsType<typeof getS
           </div>
         </FormModal>
       </section>
+
       <section>
         <ViewJobDetailsModal
           modalState={openDetailsModal}
@@ -188,7 +181,7 @@ export const getServerSideProps: GetServerSideProps = async () => {
       },
     };
   } catch (error) {
-    console.log('CATCH!!!');
+    console.log('Error GET vpp', error.message);
     return {
       props: {},
     };

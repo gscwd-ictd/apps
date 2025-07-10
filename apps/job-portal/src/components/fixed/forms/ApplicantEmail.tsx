@@ -11,9 +11,15 @@ import { usePublicationStore } from '../../../store/publication.store';
 import { FloatingLabelInputRF } from '../../modular/inputs/FloatingLabelInputRF';
 import { isEmpty } from 'lodash';
 import axios from 'axios';
+import { CardContainer } from '../../modular/cards/CardContainer';
+import { HiInformationCircle } from 'react-icons/hi2';
+import { useState } from 'react';
 
 export const ApplicantEmail = () => {
   const router = useRouter();
+
+  const [isVerifyError, setIsVerifyError] = useState<boolean>(false);
+
   const applicant = useApplicantStore((state) => state.applicant);
   const isLoading = usePageStore((state) => state.isLoading);
   const setApplicant = useApplicantStore((state) => state.setApplicant);
@@ -22,14 +28,13 @@ export const ApplicantEmail = () => {
   const publication = usePublicationStore((state) => state.publication);
 
   const onSubmit = async () => {
-    // localStorage.clear();
     localStorage.removeItem('applicant');
     setIsLoading(true);
 
     try {
       await axios.post(`${process.env.NEXT_PUBLIC_HRIS_DOMAIN}/auth/logout`, {}, { withCredentials: true });
     } catch (error) {
-      //
+      // console.log(error);
     }
 
     const { result, error } = await postData(
@@ -40,21 +45,25 @@ export const ApplicantEmail = () => {
     );
 
     if (!error && !isEmpty(result.token)) {
+      // setIsLoading(true);
+      localStorage.setItem('applicant', JSON.stringify(result.details));
+
       // redirect page if email is found
       await router.push(`${process.env.NEXT_PUBLIC_JOB_PORTAL}/application/create-session/?token=${result.token}`);
-
       setIsLoading(false);
     } else if (isEmpty(result)) {
       // change page to page 2 if email is not existing
       setTimeout(() => {
         setPage(2);
         setIsLoading(false);
-      }, 2000);
-    } else if (error === true && result === 'Invalid Posting ID') {
+      }, 1000);
+    } else if (error === true) {
+      setIsVerifyError(error);
+
       // if vpp id is not found
       setTimeout(() => {
         setIsLoading(false);
-      }, 2000);
+      }, 1000);
     }
   };
 
@@ -69,6 +78,17 @@ export const ApplicantEmail = () => {
 
   return (
     <>
+      {isVerifyError ? (
+        <CardContainer className="rounded-xl p-3 mx-4" bgColor={'bg-red-100'} title={''} remarks={''} subtitle={''}>
+          <div className="flex gap-2">
+            <section>
+              <HiInformationCircle size={30} className="text-slate-600" />
+            </section>
+            <section className="text-xs sm:text-xs md:text-md lg:text-sm">Verification Error</section>
+          </div>
+        </CardContainer>
+      ) : null}
+
       <form id="applicantEmail" className="w-full px-12 mt-10" onSubmit={handleSubmit(onSubmit)}>
         <div className="flex justify-start w-full mb-10 text-2xl font-semibold">Applicant Information</div>
 
@@ -92,7 +112,6 @@ export const ApplicantEmail = () => {
             className="placeholder:text-sm placeholder:text-gray-600"
           />
         </div>
-
         <div className="w-full mb-5">
           <FloatingLabelInputRF
             id="confirmEmail"
@@ -114,11 +133,9 @@ export const ApplicantEmail = () => {
             className="placeholder:text-sm placeholder:text-gray-600"
           />
         </div>
-
         <div className="flex justify-start w-full mb-2 text-xs font-light">
           The provided email address will be used for your Personal data sheet.
         </div>
-
         <div className="mb-16 flex min-w-[8rem]">
           <StyledButton
             type="submit"

@@ -84,6 +84,7 @@
     "lodash.debounce": "^4.0.8",
     "lucide-react": "^0.108.0",
     "next": "13.3.0",
+    "next-client-cookies": "^2.1.0",
     "node-appwrite": "^11.1.0",
     "ordinal-number-suffix": "^0.1.2",
     "qr-scanner": "^1.4.2",
