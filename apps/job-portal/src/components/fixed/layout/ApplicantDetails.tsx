@@ -31,6 +31,7 @@ export const ApplicantDetails = ({ page }: ApplicantDetailsProps) => {
                 <ApplicantFormPane page={page} />
               </div>
             )}
+
             <div
               className={`sm:w-full lg:w-[65%] ${
                 page === 1 ? 'h-[28rem]' : page === 2 ? 'h-[44rem]' : null

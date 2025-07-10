@@ -38,12 +38,13 @@ export default function CreateSession({ token }: CreateSessionProps) {
 
   const getData = async () => {
     try {
-      const userDetails = await fetchWithToken(
+      const details = await fetchWithToken(
         'POST',
         `${process.env.NEXT_PUBLIC_HRIS_DOMAIN}/external-applicants/login`,
         token
       );
-      return setUserDetails(userDetails);
+
+      return setUserDetails(details);
     } catch (error) {
       return {};
     }
@@ -60,25 +61,25 @@ export default function CreateSession({ token }: CreateSessionProps) {
     if (isLoading.state === true && isLoading.level === 1) {
       setTimeout(() => {
         setIsLoading({ state: true, level: 2 });
-      }, 500);
+      }, 1000);
     }
   }, [isLoading]);
 
   useEffect(() => {
-    if (isLoading.level === 2 && userDetails.login === 'success') {
+    if (isLoading?.level === 2 && userDetails?.login === 'success') {
       setTimeout(async () => {
         setIsLoading({ state: true, level: 3 });
 
-        await router.push(`${process.env.NEXT_PUBLIC_JOB_PORTAL}/application/${userDetails.details.vppId}/checklist`);
+        await router.push(`${process.env.NEXT_PUBLIC_JOB_PORTAL}/application/${userDetails?.details?.vppId}/checklist`);
 
         router.reload();
-      }, 1000);
-    } else if (isLoading.level === 2 && userDetails.login !== 'success') {
+      }, 1500);
+    } else if (isLoading?.level === 2 && userDetails?.login !== 'success') {
       setTimeout(() => {
         setIsLoading({ state: true, level: 3 });
-      }, 500);
+      }, 1500);
     }
-  }, [isLoading.level]);
+  }, [isLoading?.level, userDetails]);
 
   return (
     <>
@@ -86,11 +87,11 @@ export default function CreateSession({ token }: CreateSessionProps) {
         <header className="shadow ">
           <div className="px-4 py-6 mx-auto max-w-7xl sm:px-6 lg:px-8">
             <h1 className="text-3xl font-semibold tracking-tight text-gray-900">
-              {isLoading.level === 1
+              {isLoading?.level === 1
                 ? 'Please wait'
-                : isLoading.level === 2
+                : isLoading?.level === 2
                 ? 'Almost there'
-                : isLoading.level === 3 && userDetails.login !== 'success'
+                : isLoading?.level === 3 && userDetails?.login !== 'success'
                 ? 'Oops! Something went wrong.'
                 : 'Redirecting'}
             </h1>
@@ -101,13 +102,13 @@ export default function CreateSession({ token }: CreateSessionProps) {
             <div className="flex flex-col items-center justify-center w-full h-full text-3xl">
               <CardContainer bgColor={'bg-slate-50'} title={''} remarks={''} subtitle={''} className="">
                 <div className="flex h-full w-full p-10 flex-col place-items-center items-center justify-center rounded shadow transition-all">
-                  {isLoading.level <= 2 ? (
+                  {isLoading?.level <= 2 ? (
                     <>
                       <LoadingSpinner size={'lg'} />
                     </>
                   ) : (
                     <>
-                      {userDetails.login === 'success' ? (
+                      {userDetails?.login === 'success' ? (
                         <div className="flex items-center justify-center w-full h-full transition-all animate-pulse ">
                           <HiCheckCircle size={100} color="indigo" />
                         </div>
@@ -118,13 +119,13 @@ export default function CreateSession({ token }: CreateSessionProps) {
                       )}
                     </>
                   )}
-                  {isLoading.state === true && isLoading.level === 1 ? (
+                  {isLoading?.state === true && isLoading?.level === 1 ? (
                     <div className="pb-5">Loading resources...</div>
-                  ) : isLoading.state === true && isLoading.level === 2 ? (
+                  ) : isLoading?.state === true && isLoading?.level === 2 ? (
                     <div className="pb-5">Loading Application Checklist...</div>
                   ) : (
                     <div className="">
-                      {userDetails.login === 'success' ? (
+                      {userDetails?.login === 'success' ? (
                         <div className="pb-5">Success!</div>
                       ) : (
                         <div className="pb-5">The link may have expired.</div>

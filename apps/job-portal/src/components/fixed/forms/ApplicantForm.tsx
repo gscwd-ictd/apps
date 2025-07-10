@@ -1,10 +1,7 @@
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { SpinnerCircularFixed } from 'spinners-react';
-import {
-  useApplicantStore,
-  ApplicantFormData,
-} from '../../../store/applicant.store';
+import { useApplicantStore, ApplicantFormData } from '../../../store/applicant.store';
 import { usePageStore } from '../../../store/page.store';
 import schema from '../../../schema/Applicant';
 import { StyledButton } from '../../modular/buttons/StyledButton';
@@ -15,6 +12,7 @@ import axios from 'axios';
 
 export const ApplicantForm = () => {
   const router = useRouter();
+
   const applicant = useApplicantStore((state) => state.applicant);
   const isLoading = usePageStore((state) => state.isLoading);
   const setApplicant = useApplicantStore((state) => state.setApplicant);
@@ -26,16 +24,11 @@ export const ApplicantForm = () => {
 
     setIsLoading(true);
     localStorage.setItem('applicant', JSON.stringify(applicant));
-    try {
-      await axios.post(
-        `${process.env.NEXT_PUBLIC_HRIS_DOMAIN}/auth/logout`,
-        {},
-        { withCredentials: true }
-      );
 
-      await router.push(
-        `${process.env.NEXT_PUBLIC_JOB_PORTAL}/application/${publication.vppId}/checklist`
-      );
+    try {
+      await axios.post(`${process.env.NEXT_PUBLIC_HRIS_DOMAIN}/auth/logout`, {}, { withCredentials: true });
+
+      await router.push(`${process.env.NEXT_PUBLIC_JOB_PORTAL}/application/${publication.vppId}/checklist`);
     } catch (error) {
       //
     }
@@ -54,14 +47,8 @@ export const ApplicantForm = () => {
 
   return (
     <>
-      <form
-        id="applicantInfo"
-        className="w-full px-12 mt-10"
-        onSubmit={handleSubmit(onSubmit)}
-      >
-        <div className="flex justify-start w-full mb-10 text-2xl font-semibold">
-          Applicant Information
-        </div>
+      <form id="applicantInfo" className="w-full px-12 mt-10" onSubmit={handleSubmit(onSubmit)}>
+        <div className="flex justify-start w-full mb-10 text-2xl font-semibold">Applicant Information</div>
 
         <div className="w-full mb-5">
           <FloatingLabelInputRF
@@ -181,13 +168,11 @@ export const ApplicantForm = () => {
             className="rounded hover:cursor-pointer active:bg-slate-200"
             {...register('checkbox', {
               value: applicant.checkbox,
-              onChange: () =>
-                setApplicant({ ...applicant, checkbox: !applicant.checkbox }),
+              onChange: () => setApplicant({ ...applicant, checkbox: !applicant.checkbox }),
             })}
           />
           <label htmlFor="agree" className="hover:cursor-pointer">
-            By ticking, you are confirming that you have read, understood and
-            agree to GSCWD Terms and Conditions.
+            By ticking, you are confirming that you have read, understood and agree to GSCWD Terms and Conditions.
           </label>
         </div>
 

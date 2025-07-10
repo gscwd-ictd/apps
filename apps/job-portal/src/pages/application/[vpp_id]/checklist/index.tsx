@@ -31,13 +31,12 @@ type ChecklistProps = {
 
 export default function Checklist({ vppId, positionTitle }: ChecklistProps) {
   const router = useRouter();
+
   const progress = usePageStore((state) => state.progress);
   const hasPds = usePageStore((state) => state.hasPds);
   const workExperiencesSheet = useWorkExpSheetStore((state) => state.workExperiencesSheet);
   const externalApplicantId = useApplicantStore((state) => state.externalApplicantId);
-  const [alertSubmitIsOpen, setAlertSubmitIsOpen] = useState<boolean>(false);
-  const [alertSuccessIsOpen, setAlertSuccessIsOpen] = useState<boolean>(false);
-  const [alertErrorIsOpen, setAlertErrorIsOpen] = useState<boolean>(false);
+
   // const appSubmitted = useApplicantStore((state) => state.appSubmitted)
   const noWorkExperience = useWorkExpSheetStore((state) => state.noWorkExperience);
   const applicant = useApplicantStore((state) => state.applicant);
@@ -48,6 +47,10 @@ export default function Checklist({ vppId, positionTitle }: ChecklistProps) {
   // const setAppSubmitted = useApplicantStore((state) => state.setAppSubmitted)
   const setExternalApplicantId = useApplicantStore((state) => state.setExternalApplicantId);
   const setSubmission = useApplicantStore((state) => state.setSubmission);
+
+  const [alertSubmitIsOpen, setAlertSubmitIsOpen] = useState<boolean>(false);
+  const [alertSuccessIsOpen, setAlertSuccessIsOpen] = useState<boolean>(false);
+  const [alertErrorIsOpen, setAlertErrorIsOpen] = useState<boolean>(false);
 
   // fetch pds
   const { data: pds } = useSWR(
@@ -308,10 +311,6 @@ export default function Checklist({ vppId, positionTitle }: ChecklistProps) {
       });
     }
   }, [applicantName]);
-
-  // useEffect(() => {
-  //   router.reload();
-  // }, []);
 
   return (
     <>
@@ -824,11 +823,11 @@ export const getServerSideProps: GetServerSideProps = async (context: GetServerS
     return {
       props: {
         vppId: context.query.vpp_id,
-
         positionTitle: fetchPublication.data.positionTitle,
       },
     };
   } catch (error) {
+    console.log('Checklist Page ERROR', error);
     return {
       props: {},
       // redirect: { destination: process.env.NEXT_PUBLIC_JOB_PORTAL }
