@@ -43,10 +43,10 @@ export const DashboardCard: React.FC<DashboardCardProps> = ({
         <a
           href={destination}
           target="_blank"
-          className={`flex md:flex-row items-start w-full  gap-3 p-5 mb-5 transition-all ease-in-out bg-white rounded-xl rounded-bl-none rounded-tr-none shadow cursor-pointer shadow-slate-200 hover:scale-105 hover:shadow-xl hover:shadow-slate-200`}
+          className={`flex md:flex-row items-start w-full gap-3 pt-5 pl-5 pr-2 pb-5 mb-5 transition-all ease-in-out bg-white rounded-xl rounded-bl-none rounded-tr-none shadow cursor-pointer shadow-slate-200 hover:scale-105 hover:shadow-xl hover:shadow-slate-200`}
           rel="noreferrer"
         >
-          <div className={`flex h-10 w-10 items-center justify-center rounded-md cursor-pointer ${bgColor[color]}`}>
+          <div className={`flex h-8 w-8 items-center justify-center rounded-md cursor-pointer ${bgColor[color]}`}>
             {icon}
           </div>
           <div>
@@ -59,14 +59,14 @@ export const DashboardCard: React.FC<DashboardCardProps> = ({
       {linkType === 'router' && (
         <div
           onClick={() => router.push(destination, undefined, { shallow: true })}
-          className={`flex md:flex-row items-start w-full  gap-3 p-5 mb-5 transition-all ease-in-out bg-white rounded-xl rounded-bl-none rounded-tr-none shadow cursor-pointer shadow-slate-200 hover:scale-105 hover:shadow-xl hover:shadow-slate-200`}
+          className={`flex md:flex-row items-start gap-3 pt-5 pl-5 pr-2 pb-5 mb-5 transition-all ease-in-out bg-white rounded-xl rounded-bl-none rounded-tr-none shadow cursor-pointer shadow-slate-200 hover:scale-105 hover:shadow-xl hover:shadow-slate-200`}
         >
-          <div className={`flex h-10 w-10 items-center justify-center rounded-md cursor-pointer ${bgColor[color]}`}>
+          <div className={`flex h-8 w-8 items-center justify-center rounded-md cursor-pointer ${bgColor[color]}`}>
             {icon}
           </div>
 
           <div>
-            <label className={`font-semibold text-gray-600 cursor-pointer ${titleSize}`}>{title}</label>
+            <label className={`font-semibold text-gray-600 cursor-pointer text-wrap ${titleSize}`}>{title}</label>
             <p className="text-xs text-gray-400">{description}</p>
             <div>{children}</div>
           </div>

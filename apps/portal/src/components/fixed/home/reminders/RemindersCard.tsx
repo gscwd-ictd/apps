@@ -37,18 +37,18 @@ export const RemindersCard: React.FC<Props> = ({ reminders = '' }) => {
 
       {reminderstemp.map((reminder) => {
         return (
-          <a key={reminder.id}>
+          <div key={reminder.id}>
             <div className="px-1 flex gap-2 justify-between items-center cursor-pointer hover:bg-slate-200">
-              <div className="flex flex-row gap-2 items-center justify-start">
-                <HiCheckCircle className="w-4 h-4 text-indigo-500" />
+              <div className="flex flex-row gap-2 items-center justify-center">
+                <span className="text-indigo-500 text-4xl">•</span>
                 <div className="flex flex-col cursor-pointer">
                   <span className="text-sm font-bold text-slate-700">{reminder.title}</span>
-                  <span className="text-xs text-slate-600">{reminder.desc}</span>
+                  <span className="text-xs text-slate-600 w-full">{reminder.desc}</span>
                 </div>
               </div>
               {/* <div className="text-xs text-slate-600 text-center whitespace-nowrap">{format(new Date(reminder.date), 'MMM dd')}</div> */}
             </div>
-          </a>
+          </div>
         );
       })}
     </div>

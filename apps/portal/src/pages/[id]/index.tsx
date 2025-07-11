@@ -418,7 +418,7 @@ export default function Dashboard({ userDetails }: InferGetServerSidePropsType<t
             <div className="absolute top-0 left-0 z-0 flex items-center justify-center w-full h-full overflow-hidden pointer-events-none opacity-10">
               <Image src={'/gwdlogo.png'} priority className="w-2/4 " alt={''} width={'500'} height={'500'} />
             </div>
-            <div className="pt-2 md:pt-0 grid grid-cols-1 gap-4 px-4 md:grid-cols-3 lg:grid-cols-5">
+            <div className="pt-2 md:pt-0 grid grid-cols-1 gap-4 px-4 md:grid-cols-3 lg:grid-cols-5 xl:grid-cols-5">
               <div className="z-10 order-1 col-span-1 md:col-span-5 lg:col-span-5 lg:order-1">
                 <div className="grid grid-cols-2 gap-4 md:grid-cols-4 lg:grid-cols-5 ">
                   <div className="order-1 col-span-2 md:order-1 md:col-span-2 md:row-span-2 lg:row-span-2 lg:col-span-1 lg:order-1 ">
@@ -435,7 +435,7 @@ export default function Dashboard({ userDetails }: InferGetServerSidePropsType<t
                   <div className="order-8 col-span-2 row-span-4 md:col-span-4 md:order-8 lg:col-span-2 lg:order-3">
                     <Carousel />
                   </div>
-                  <div className="order-5 col-span-2 md:row-span-2 lg:row-span-4 md:col-span-2 md:order-4 lg:col-span-1 lg:order-5">
+                  <div className="order-5 col-span-2 md:row-span-3 lg:row-span-4 md:col-span-2 md:order-4 lg:col-span-1 lg:order-5">
                     <EmployeeDashboard />
                   </div>
                   <div className="grid grid-cols-2 gap-4 order-3 col-span-2 md:order-3 md:col-span-2 lg:col-span-2 lg:order-4">

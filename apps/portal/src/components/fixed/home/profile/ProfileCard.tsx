@@ -21,7 +21,7 @@ export const ProfileCard: React.FC<Props> = ({ fullName, position, division, pho
       } w-full border-blue-800 shadow bg-white flex gap-1 flex-col justify-center items-center text-center rounded p-5`}
     >
       <img
-        className="rounded-full border border-stone-100 shadow w-2/4"
+        className="rounded-full border border-stone-100 shadow w-[9rem]"
         src={photoUrl ? process.env.NEXT_PUBLIC_IMAGE_SERVER_URL + photoUrl : photoUrl_temp}
         alt={'photo'}
       ></img>
