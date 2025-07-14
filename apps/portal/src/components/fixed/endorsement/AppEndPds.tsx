@@ -26,11 +26,7 @@ export const AppEndPds = ({ applicantDetails }: AppEndPdsProps) => {
     isLoading: swrIsLoading,
     error: swrError,
   } = useSWR(
-    `${
-      applicantDetails.applicantType === 'external'
-        ? `${externalApplicantUrl}`
-        : internalApplicantUrl
-    }`,
+    `${applicantDetails.applicantType === 'external' ? `${externalApplicantUrl}` : internalApplicantUrl}`,
     fetcherHRIS,
     {
       revalidateOnFocus: true,
@@ -65,13 +61,5 @@ export const AppEndPds = ({ applicantDetails }: AppEndPdsProps) => {
       </>
     );
 
-  return (
-    <>
-      {swrIsLoading ? (
-        <LoadingSpinner size="md" />
-      ) : (
-        <AppEndViewPds pds={pds} />
-      )}
-    </>
-  );
+  return <>{swrIsLoading ? <LoadingSpinner size="md" /> : <AppEndViewPds pds={pds} />}</>;
 };
