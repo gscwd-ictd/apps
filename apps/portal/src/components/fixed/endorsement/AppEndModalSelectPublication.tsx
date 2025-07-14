@@ -6,26 +6,18 @@ import { useAppEndStore } from '../../../store/endorsement.store';
 import { AllPublicationList } from './AllPublicationList';
 
 export const AppEndSelectPublication = () => {
-  const {
-    publicationList,
-    filteredPublicationList,
-    searchValue,
-    modal,
-    setSearchValue,
-    setFilteredPublicationList,
-  } = useAppEndStore((state) => ({
-    publicationList: state.publicationList,
-    filteredPublicationList: state.filteredPublicationList,
-    searchValue: state.searchValue,
-    setSearchValue: state.setSearchValue,
-    setFilteredPublicationList: state.setFilteredPublicationList,
-    modal: state.modal,
-  }));
+  const { publicationList, filteredPublicationList, searchValue, modal, setSearchValue, setFilteredPublicationList } =
+    useAppEndStore((state) => ({
+      publicationList: state.publicationList,
+      filteredPublicationList: state.filteredPublicationList,
+      searchValue: state.searchValue,
+      setSearchValue: state.setSearchValue,
+      setFilteredPublicationList: state.setFilteredPublicationList,
+      modal: state.modal,
+    }));
 
   // initialize ref for search input
-  const searchRef = useRef(
-    null
-  ) as unknown as MutableRefObject<HTMLInputElement>;
+  const searchRef = useRef(null) as unknown as MutableRefObject<HTMLInputElement>;
 
   // on search function used for filtering positions
   const onSearch = (event: FormEvent<HTMLInputElement>) => {
@@ -107,10 +99,7 @@ export const AppEndSelectPublication = () => {
               />
               {searchValue !== '' ? (
                 <>
-                  <button
-                    className="absolute -right-0 mr-7 focus:outline-none"
-                    onClick={onClearSearch}
-                  >
+                  <button className="absolute -right-0 mr-7 focus:outline-none" onClick={onClearSearch}>
                     <HiXCircle className="w-6 h-6 mt-3 transition-colors ease-in-out text-slate-300 hover:text-slate-400" />
                   </button>
                 </>
