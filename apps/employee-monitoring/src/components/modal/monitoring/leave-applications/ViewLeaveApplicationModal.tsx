@@ -25,6 +25,7 @@ import { TextSize } from 'libs/utils/src/lib/enums/text-size.enum';
 import { JustificationLetterPdfModal } from './JustificationLetterPdfModal';
 import dayjs from 'dayjs';
 import { LeaveLedgerEntry } from 'libs/utils/src/lib/types/leave-ledger-entry.type';
+import { mutate } from 'swr';
 
 type ViewLeaveApplicationModalProps = {
   rowData: MonitoringLeave;
@@ -175,6 +176,11 @@ const ViewLeaveApplicationModal: FunctionComponent<ViewLeaveApplicationModalProp
       // patch leave application success
       patchLeaveApplicationSuccess(result);
       closeModalAction();
+
+      // mutate notifications
+      mutate((key) => typeof key === 'string' && key.startsWith('/stats/hrmo/dashboard'), undefined, {
+        revalidate: true,
+      });
     } else if (error) {
       // patch leave application fail
       patchLeaveApplicationFail(result);

@@ -8,7 +8,6 @@ import { SideNavigation } from '../components/navigations/SideNavigation';
 import { TopNavigation } from '../components/navigations/TopNavigation';
 import { Footer } from '../components/navigations/Footer';
 import CaslProvider from '../context/casl/CaslProvider';
-
 import { getCookieFromServer, UserProfile } from '../utils/helper/session';
 import { createContext, useEffect, useState } from 'react';
 import { isEmpty } from 'lodash';
@@ -26,6 +25,7 @@ export const AuthmiddlewareContext = createContext({} as AuthmiddlewareState);
 export default function CustomApp({ Component, pageProps, userDetails }: AppProps & AppOwnProps) {
   const [userProfile, setUserProfile] = useState<UserProfile>(null);
 
+  // set store for user profile
   useEffect(() => {
     if (!isEmpty(userDetails) && isEmpty(userProfile)) {
       setUserProfile(userDetails);

@@ -21,6 +21,7 @@ type ItemProps = Omit<Props, 'children'> & {
   display: string;
   selected?: boolean;
   hasSubItem?: boolean;
+  notificationCount?: number;
 };
 
 type SidebarComposition = {
@@ -75,6 +76,7 @@ const Item: FunctionComponent<ItemProps> = ({
   className,
   subItems,
   display,
+  notificationCount,
   hasSubItem = false,
 }) => {
   const {
@@ -93,6 +95,14 @@ const Item: FunctionComponent<ItemProps> = ({
               </motion.span>
             )}
           </AnimatePresence>
+
+          {notificationCount && notificationCount > 0 ? (
+            <div className="w-full flex justify-end mr-3">
+              <div className="w-min pl-2 pr-2 rounded-md select-none flex-grow-0 text-white justify-center text-xs bg-red-500">
+                {notificationCount || 0}
+              </div>
+            </div>
+          ) : null}
         </Link>
       ) : (
         <Accordion className="flex flex-col justify-center w-full">
@@ -105,6 +115,12 @@ const Item: FunctionComponent<ItemProps> = ({
                     <span className={`${isCollapsed ? '' : ''}`}>{display}</span>
                   </motion.span>
 
+                  {notificationCount && notificationCount > 0 ? (
+                    <div className="w-full flex justify-end mr-1">
+                      <div className="w-[10px] h-[10px] rounded-lg select-none flex-grow-0 text-white justify-center text-xs bg-red-500"></div>
+                    </div>
+                  ) : null}
+
                   <i className="bx bx-chevron-up ui-open:rotate-180 ui-open:transform ui-open:transition-all"></i>
                 </div>
               ) : isCollapsed ? (
@@ -112,6 +128,12 @@ const Item: FunctionComponent<ItemProps> = ({
                   <motion.span initial={{ opacity: 0, x: -100 }} animate={{ opacity: 1, x: 0 }} hidden>
                     {display}
                   </motion.span>
+
+                  {notificationCount && notificationCount > 0 ? (
+                    <div className="w-full flex justify-end mr-1">
+                      <div className="w-[10px] h-[10px] rounded-lg select-none flex-grow-0 text-white justify-center text-xs bg-red-500"></div>
+                    </div>
+                  ) : null}
 
                   <i className="bx bx-chevron-up ui-open:rotate-180 ui-open:transform ui-open:transition-all"></i>
                 </>

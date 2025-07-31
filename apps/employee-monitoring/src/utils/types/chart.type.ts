@@ -8,4 +8,5 @@ export type DashboardStats = {
   pendingLeaveApplications: string;
   overtimeApplications: string;
   pendingPassSlips: string;
+  pendingLeaveCancellations: string;
 };

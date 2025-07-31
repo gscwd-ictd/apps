@@ -1,6 +1,6 @@
 import { PageContentContext, Sidebar } from '@gscwd-apps/oneui';
 import { useRouter } from 'next/router';
-import { useContext } from 'react';
+import { useContext, useEffect } from 'react';
 import {
   MyCalendarClockIcon,
   MyCalendarHeartIcon,
@@ -11,15 +11,56 @@ import {
 import { Paths } from '../../utils/constants/route';
 import { AbilityContext, Can } from 'apps/employee-monitoring/src/context/casl/CaslContext';
 import Link from 'next/link';
+import { isEmpty } from 'lodash';
+import useSWR from 'swr';
+import fetcherEMS from '../../utils/fetcher/FetcherEMS';
+import { useChartsStore } from '../../store/chart.store';
 
 export const SideNavigation = () => {
   const {
     aside: { isCollapsed },
   } = useContext(PageContentContext);
 
+  // Zustand init
+  const { PendingPassSlips, PendingLeaveApplications, PendingLeaveCancellations } = useChartsStore((state) => ({
+    PendingPassSlips: state.getDashboardStats.pendingPassSlips,
+    PendingLeaveApplications: state.getDashboardStats.pendingLeaveApplications,
+    PendingLeaveCancellations: state.getDashboardStats.pendingLeaveCancellations,
+  }));
+
   const { pathname } = useRouter();
 
   const ability = useContext(AbilityContext);
+
+  // use swr pass slips
+  const { data, error } = useSWR('/stats/hrmo/dashboard', fetcherEMS, {
+    onErrorRetry: (error, key, config, revalidate, { retryCount }) => {
+      if (retryCount >= 2) return;
+    },
+  });
+
+  // Zustand init
+  const { SetGetDashboardStats, SetErrorDashboardStats, SetLoadingDashboardStats } = useChartsStore((state) => ({
+    SetGetDashboardStats: state.setGetDashboardStats,
+    SetErrorDashboardStats: state.setErrorDashboardStats,
+    SetLoadingDashboardStats: state.setLoadingDashboardStats,
+  }));
+
+  // get notifs
+  useEffect(() => {
+    SetLoadingDashboardStats(true);
+    // success
+    if (!isEmpty(data)) {
+      SetGetDashboardStats(data.data);
+      SetLoadingDashboardStats(false);
+    }
+
+    // fail
+    if (!isEmpty(error)) {
+      SetErrorDashboardStats(error.message);
+      SetLoadingDashboardStats(false);
+    }
+  }, [data, error]);
 
   return (
     <Sidebar className="relative w-full transition-all" background="bg-[#2a3042]">
@@ -104,6 +145,62 @@ export const SideNavigation = () => {
             </Sidebar.Header>
           ) : null}
 
+          {/**LEAVE APPLICATIONS */}
+          <Can I="access" this="Leave">
+            <Sidebar.Item
+              display="Leave Applications"
+              className="text-sm"
+              icon={<i className="text-xl bx bx-run"></i>}
+              path=""
+              hasSubItem
+              selected={pathname === Paths[2] || pathname === Paths[23]}
+              subItems={
+                <>
+                  {/* APPLICATIONS */}
+                  <Can I="access" this="Leave_applications">
+                    <Sidebar.Item
+                      display="Applications"
+                      className={`${isCollapsed ? 'text-sm' : 'text-sm pl-5'}`}
+                      selected={pathname === Paths[2] ? true : false}
+                      icon={<i className="text-xl bx bxs-file-plus"></i>}
+                      path={Paths[2]}
+                      notificationCount={parseInt(PendingLeaveApplications)}
+                    />
+                  </Can>
+
+                  {/* CANCELLATIONS */}
+                  <Can I="access" this="Leave_cancellations">
+                    <Sidebar.Item
+                      display="Cancellations"
+                      className={`${isCollapsed ? 'text-sm' : 'text-sm pl-5'}`}
+                      selected={pathname === Paths[23] ? true : false}
+                      icon={<i className="text-xl bx bxs-calendar-x"></i>}
+                      path={Paths[23]}
+                      notificationCount={parseInt(PendingLeaveCancellations)}
+                    />
+                  </Can>
+                </>
+              }
+              notificationCount={parseInt(PendingLeaveApplications) + parseInt(PendingLeaveCancellations)}
+            />
+          </Can>
+
+          {/**PASS SLIPS */}
+          <Can I="access" this="Pass_slips">
+            <Sidebar.Item
+              display="Pass Slips"
+              className="text-sm"
+              selected={pathname === Paths[6] ? true : false}
+              icon={
+                <>
+                  <i className="text-xl bx bxs-file-export"></i>
+                </>
+              }
+              path={Paths[6]}
+              notificationCount={parseInt(PendingPassSlips)}
+            />
+          </Can>
+
           {/**Monitoring Scheduling Sheet */}
           <Can I="access" this="Scheduling_sheets">
             <Sidebar.Item
@@ -164,43 +261,6 @@ export const SideNavigation = () => {
             />
           </Can>
 
-          {/**LEAVE APPLICATIONS */}
-          <Can I="access" this="Leave">
-            <Sidebar.Item
-              display="Leave Applications"
-              className="text-sm"
-              icon={<i className="text-xl bx bx-run"></i>}
-              path=""
-              hasSubItem
-              selected={pathname === Paths[2] || pathname === Paths[23]}
-              subItems={
-                <>
-                  {/* APPLICATIONS */}
-                  <Can I="access" this="Leave_applications">
-                    <Sidebar.Item
-                      display="Applications"
-                      className={`${isCollapsed ? 'text-sm' : 'text-sm pl-5'}`}
-                      selected={pathname === Paths[2] ? true : false}
-                      icon={<i className="text-xl bx bxs-file-plus"></i>}
-                      path={Paths[2]}
-                    />
-                  </Can>
-
-                  {/* CANCELLATIONS */}
-                  <Can I="access" this="Leave_cancellations">
-                    <Sidebar.Item
-                      display="Cancellations"
-                      className={`${isCollapsed ? 'text-sm' : 'text-sm pl-5'}`}
-                      selected={pathname === Paths[23] ? true : false}
-                      icon={<i className="text-xl bx bxs-calendar-x"></i>}
-                      path={Paths[23]}
-                    />
-                  </Can>
-                </>
-              }
-            />
-          </Can>
-
           {/**OVERTIME */}
           <Can I="access" this="Overtime">
             <Sidebar.Item
@@ -243,21 +303,6 @@ export const SideNavigation = () => {
                   </Can>
                 </>
               }
-            />
-          </Can>
-
-          {/**PASS SLIPS */}
-          <Can I="access" this="Pass_slips">
-            <Sidebar.Item
-              display="Pass Slips"
-              className="text-sm"
-              selected={pathname === Paths[6] ? true : false}
-              icon={
-                <>
-                  <i className="text-xl bx bxs-file-export"></i>
-                </>
-              }
-              path={Paths[6]}
             />
           </Can>
 

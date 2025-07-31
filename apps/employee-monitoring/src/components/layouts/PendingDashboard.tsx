@@ -1,37 +1,17 @@
-import { useEffect, useState } from 'react';
+/* eslint-disable @nx/enforce-module-boundaries */
 import { isEmpty } from 'lodash';
 import { CardLeaveRequests } from '../cards/CardLeaveRequests';
 import { CardOvertimeRequests } from '../cards/CardOvertimeRequests';
 import { CardPassSlipRequests } from '../cards/CardPassSlipRequests';
-import fetcherEMS from '../../utils/fetcher/FetcherEMS';
-import useSWR from 'swr';
 import { ToastNotification } from '@gscwd-apps/oneui';
 import { useChartsStore } from '../../store/chart.store';
 
 export const PendingDashboard = () => {
-  // use swr pass slips
-  const { data, isLoading, error } = useSWR('/stats/hrmo/dashboard', fetcherEMS, {
-    onErrorRetry: (error, key, config, revalidate, { retryCount }) => {
-      if (retryCount >= 2) return;
-    },
-  });
-
   // Zustand init
-  const { SetGetDashboardStats, ErrorDashboardStats, SetErrorDashboardStats } = useChartsStore((state) => ({
-    GetDashboardStats: state.getDashboardStats,
-    SetGetDashboardStats: state.setGetDashboardStats,
+  const { ErrorDashboardStats, isLoading } = useChartsStore((state) => ({
     ErrorDashboardStats: state.errorDashboardStats,
-    SetErrorDashboardStats: state.setErrorDashboardStats,
+    isLoading: state.loadingDashboardStats,
   }));
-
-  // get passlips success or fail
-  useEffect(() => {
-    // success
-    if (!isEmpty(data)) SetGetDashboardStats(data.data);
-
-    // fail
-    if (!isEmpty(error)) SetErrorDashboardStats(error.message);
-  }, [data, error]);
 
   return (
     <>

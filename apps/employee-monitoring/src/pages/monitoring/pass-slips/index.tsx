@@ -177,7 +177,7 @@ export default function Index() {
     }),
     columnHelper.accessor('isMedical', {
       header: 'Medical Purpose',
-      enableColumnFilter: false,
+      // enableColumnFilter: false,
       enableSorting: true,
       cell: (info) => {
         const value = info.getValue();

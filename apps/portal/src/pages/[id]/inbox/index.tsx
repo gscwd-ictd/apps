@@ -10,7 +10,7 @@ import { employee } from '../../../utils/constants/data';
 import { GetServerSideProps, GetServerSidePropsContext, InferGetServerSidePropsType } from 'next/types';
 import { useEmployeeStore } from '../../../store/employee.store';
 import useSWR from 'swr';
-import { LoadingSpinner, ToastNotification } from '@gscwd-apps/oneui';
+import { ListDef, LoadingSpinner, Select, ToastNotification } from '@gscwd-apps/oneui';
 import React from 'react';
 import 'react-toastify/dist/ReactToastify.css';
 import { isEmpty, isEqual } from 'lodash';
@@ -59,6 +59,11 @@ export default function PassSlip({ employeeDetails }: InferGetServerSidePropsTyp
     setPsbMessageModalIsOpen,
     setOvertimeMessageModalIsOpen,
     setTrainingMessageModalIsOpen,
+
+    selectedPsbStatus,
+    setSelectedPsbStatus,
+    selectedTrainingStatus,
+    setSelectedTrainingStatus,
   } = useInboxStore((state) => ({
     tab: state.tab,
     loadingPsbMessages: state.loading.loadingPsbMessages,
@@ -93,6 +98,11 @@ export default function PassSlip({ employeeDetails }: InferGetServerSidePropsTyp
     setPsbMessageModalIsOpen: state.setPsbMessageModalIsOpen,
     setOvertimeMessageModalIsOpen: state.setOvertimeMessageModalIsOpen,
     setTrainingMessageModalIsOpen: state.setTrainingMessageModalIsOpen,
+
+    selectedPsbStatus: state.selectedPsbStatus,
+    setSelectedPsbStatus: state.setSelectedPsbStatus,
+    selectedTrainingStatus: state.selectedTrainingStatus,
+    setSelectedTrainingStatus: state.setSelectedTrainingStatus,
   }));
 
   const router = useRouter();
@@ -225,6 +235,33 @@ export default function PassSlip({ employeeDetails }: InferGetServerSidePropsTyp
     setDeclineRemarks('');
   };
 
+  type Status = { status: string };
+  const psbStatus = [{ status: 'pending' }, { status: 'accepted' }, { status: 'declined' }] as Status[];
+  const psbStatusList: ListDef<Status> = {
+    key: 'status',
+    render: (info, state) => (
+      <div className={`${state.active ? 'bg-indigo-200' : state.selected ? 'bg-slate-200 ' : ''} pl-4 cursor-pointer`}>
+        {info.status.charAt(0).toUpperCase() + info.status.slice(1)}
+      </div>
+    ),
+  };
+  const onChangePsbStatus = (status: string) => {
+    setSelectedPsbStatus(status);
+  };
+
+  const trainingStatus = [{ status: 'pending' }, { status: 'accepted' }, { status: 'declined' }] as Status[];
+  const trainingStatusList: ListDef<Status> = {
+    key: 'status',
+    render: (info, state) => (
+      <div className={`${state.active ? 'bg-indigo-200' : state.selected ? 'bg-slate-200 ' : ''} pl-4 cursor-pointer`}>
+        {info.status.charAt(0).toUpperCase() + info.status.slice(1)}
+      </div>
+    ),
+  };
+  const onChangeTrainingStatus = (status: string) => {
+    setSelectedTrainingStatus(status);
+  };
+
   return (
     <>
       {!isEmpty(patchResponseApply) ? (
@@ -291,18 +328,29 @@ export default function PassSlip({ employeeDetails }: InferGetServerSidePropsTyp
               title="Employee Inbox"
               subtitle="View messages and notifications"
               backUrl={`/${router.query.id}`}
-            ></ContentHeader>
+            >
+              <div className="flex flex-row justify-end gap-2">
+                <Select
+                  className={`w-40 capitalize ${tab === 4 ? '' : 'hidden'}`}
+                  data={trainingStatus}
+                  initial={trainingStatus[0]}
+                  listDef={trainingStatusList}
+                  onSelect={(selectedItem) => onChangeTrainingStatus(selectedItem.status)}
+                />
+
+                <Select
+                  className={`w-40 capitalize ${tab === 5 ? '' : 'hidden'}`}
+                  data={psbStatus}
+                  initial={psbStatus[0]}
+                  listDef={psbStatusList}
+                  onSelect={(selectedItem) => onChangePsbStatus(selectedItem.status)}
+                />
+              </div>
+            </ContentHeader>
 
             {loadingPsbMessages && loadingOvertimeMessages && loadingTrainingMessages ? (
               <div className="w-full h-96 static flex flex-col justify-center items-center place-items-center">
                 <LoadingSpinner size={'lg'} />
-                {/* <SpinnerDotted
-                  speed={70}
-                  thickness={70}
-                  className="flex w-full h-full transition-all "
-                  color="slateblue"
-                  size={100}
-                /> */}
               </div>
             ) : (
               <ContentBody>
@@ -310,7 +358,7 @@ export default function PassSlip({ employeeDetails }: InferGetServerSidePropsTyp
                   <div className={`lg:w-[58rem] w-full`}>
                     <InboxTabs tab={tab} />
                   </div>
-                  <div className="w-full">
+                  <div className="w-full flex flex-col items-end gap-8">
                     <InboxTabWindow />
                   </div>
                 </div>
