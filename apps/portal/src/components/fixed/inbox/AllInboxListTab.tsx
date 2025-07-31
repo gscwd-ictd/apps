@@ -5,6 +5,8 @@ import { OvertimeMessageContent, PsbMessageContent } from 'apps/portal/src/types
 import { OvertimeStatus } from 'libs/utils/src/lib/enums/overtime.enum';
 import { TrainingByEmployeeId } from 'libs/utils/src/lib/types/training.type';
 import { NomineeStatus } from 'libs/utils/src/lib/enums/training.enum';
+import { ListDef, Select } from '@gscwd-apps/oneui';
+import { useEffect, useState } from 'react';
 
 type TabProps = {
   tab: number;
@@ -24,6 +26,8 @@ export const AllInboxListTab = ({ tab }: TabProps) => {
     setMessagePsb,
     setMessageOvertime,
     setMessageTraining,
+    selectedPsbStatus,
+    selectedTrainingStatus,
   } = useInboxStore((state) => ({
     trainingMessages: state.message.trainingMessages,
     overtimeMessages: state.message.overtimeMessages,
@@ -37,6 +41,8 @@ export const AllInboxListTab = ({ tab }: TabProps) => {
     setMessagePsb: state.setMessagePsb,
     setMessageOvertime: state.setMessageOvertime,
     setMessageTraining: state.setMessageTraining,
+    selectedPsbStatus: state.selectedPsbStatus,
+    selectedTrainingStatus: state.selectedTrainingStatus,
   }));
 
   const onSelect = (messageDetails) => {
@@ -62,6 +68,33 @@ export const AllInboxListTab = ({ tab }: TabProps) => {
       }
     }
   };
+
+  const [filteredPsbMessages, setFilteredPsbMessages] = useState<Array<PsbMessageContent>>([]);
+  const [filteredTrainingMessages, setFilteredTrainingMessages] = useState<Array<TrainingByEmployeeId>>([]);
+
+  useEffect(() => {
+    setFilteredPsbMessages(
+      psbMessages.filter((e) =>
+        selectedPsbStatus === 'pending'
+          ? !e.details?.acknowledgedSchedule && !e.details?.declinedSchedule
+          : selectedPsbStatus === 'accepted'
+          ? e.details?.acknowledgedSchedule
+          : e.details?.declinedSchedule
+      )
+    );
+  }, [psbMessages, selectedPsbStatus]);
+
+  useEffect(() => {
+    setFilteredTrainingMessages(
+      trainingMessages.filter((e) =>
+        selectedTrainingStatus === 'pending'
+          ? e.nomineeStatus === NomineeStatus.PENDING
+          : selectedTrainingStatus === 'accepted'
+          ? e.nomineeStatus === NomineeStatus.ACCEPTED
+          : e.nomineeStatus === NomineeStatus.DECLINED
+      )
+    );
+  }, [trainingMessages, selectedTrainingStatus]);
 
   return (
     <>
@@ -115,9 +148,9 @@ export const AllInboxListTab = ({ tab }: TabProps) => {
         </div>
       ) : null}
 
-      {tab === 4 && trainingMessages && trainingMessages.length > 0 ? (
+      {tab === 4 && filteredTrainingMessages && filteredTrainingMessages.length > 0 ? (
         <ul className={'mt-4 lg:mt-0'}>
-          {trainingMessages.map((item: TrainingByEmployeeId, index: number) => {
+          {filteredTrainingMessages.map((item: TrainingByEmployeeId, index: number) => {
             return (
               <li
                 key={index}
@@ -149,15 +182,15 @@ export const AllInboxListTab = ({ tab }: TabProps) => {
             );
           })}
         </ul>
-      ) : tab === 4 && trainingMessages && trainingMessages.length <= 0 ? (
+      ) : tab === 4 && filteredTrainingMessages && filteredTrainingMessages.length <= 0 ? (
         <div className="flex justify-center pt-20">
           <h1 className="text-4xl text-gray-300">No messages found at the moment</h1>
         </div>
       ) : null}
 
-      {tab === 5 && psbMessages && psbMessages.length > 0 ? (
+      {tab === 5 && filteredPsbMessages && filteredPsbMessages.length > 0 ? (
         <ul className={'mt-4 lg:mt-0'}>
-          {psbMessages.map((item: PsbMessageContent, index: number) => {
+          {filteredPsbMessages.map((item: PsbMessageContent, index: number) => {
             return (
               <li
                 key={index}
@@ -222,7 +255,7 @@ export const AllInboxListTab = ({ tab }: TabProps) => {
             );
           })}
         </ul>
-      ) : tab === 5 && psbMessages && psbMessages.length <= 0 ? (
+      ) : tab === 5 && filteredPsbMessages && filteredPsbMessages.length <= 0 ? (
         <div className="flex justify-center pt-20">
           <h1 className="text-4xl text-gray-300">No messages found at the moment</h1>
         </div>

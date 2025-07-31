@@ -14,6 +14,7 @@ import UseRenderBadgePill from 'apps/employee-monitoring/src/utils/functions/Ren
 import { patchEmpMonitoring } from 'apps/employee-monitoring/src/utils/helper/employee-monitoring-axios-helper';
 import UseRenderLeaveCancellationStatus from 'apps/employee-monitoring/src/utils/functions/RenderLeaveCancellationStatus';
 import LeaveCancellationConfirmModal from './LeaveCancellationConfirmModal';
+import { mutate } from 'swr';
 
 type ViewLeaveCancellationModalProps = {
   rowData: LeaveCancellationDetails;
@@ -89,6 +90,11 @@ const ViewLeaveCancellationModal: FunctionComponent<ViewLeaveCancellationModalPr
       // patch leave application success
       SetApproveLeaveCancellation(result);
       closeModalAction();
+
+      // mutate notifications
+      mutate((key) => typeof key === 'string' && key.startsWith('/stats/hrmo/dashboard'), undefined, {
+        revalidate: true,
+      });
     } else if (error) {
       // patch leave application fail
       SetErrorApproveLeaveCancellation(result);

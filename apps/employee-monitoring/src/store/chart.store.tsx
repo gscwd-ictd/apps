@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import { devtools } from 'zustand/middleware';
 import { MonthlyTardinessChartData, DashboardStats } from '../utils/types/chart.type';
+import { boolean } from 'yup';
 
 export type ChartsState = {
   getTardinessChartData: MonthlyTardinessChartData;
@@ -11,6 +12,9 @@ export type ChartsState = {
 
   getDashboardStats: DashboardStats;
   setGetDashboardStats: (getDashboardStats: DashboardStats) => void;
+
+  loadingDashboardStats: boolean;
+  setLoadingDashboardStats: (loadingDashboardStats: boolean) => void;
 
   errorDashboardStats: string;
   setErrorDashboardStats: (errorDashboardStats: string) => void;
@@ -28,6 +32,9 @@ export const useChartsStore = create<ChartsState>()(
 
     getDashboardStats: {} as DashboardStats,
     setGetDashboardStats: (getDashboardStats) => set({ getDashboardStats }),
+
+    loadingDashboardStats: false,
+    setLoadingDashboardStats: (loadingDashboardStats) => set({ loadingDashboardStats }),
 
     errorDashboardStats: '',
     setErrorDashboardStats: (errorDashboardStats) => set({ errorDashboardStats }),

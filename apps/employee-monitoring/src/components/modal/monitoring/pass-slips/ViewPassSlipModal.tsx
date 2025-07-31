@@ -1,6 +1,5 @@
 /* eslint-disable @nx/enforce-module-boundaries */
-import { AlertNotification, Button, LoadingSpinner, Modal, ToastNotification } from '@gscwd-apps/oneui';
-import dayjs from 'dayjs';
+import { AlertNotification, LoadingSpinner, Modal, ToastNotification } from '@gscwd-apps/oneui';
 import { NatureOfBusiness, PassSlipStatus } from 'libs/utils/src/lib/enums/pass-slip.enum';
 import { HrmoApprovalPassSlip, PassSlip } from 'libs/utils/src/lib/types/pass-slip.type';
 import Image from 'next/image';
@@ -19,6 +18,7 @@ import { isEmpty } from 'lodash';
 import UseConvertDayToTime from 'apps/employee-monitoring/src/utils/functions/ConvertDateToTime';
 import { DateTimeFormatter } from 'libs/utils/src/lib/functions/DateTimeFormatter';
 import { patchEmpMonitoring } from 'apps/employee-monitoring/src/utils/helper/employee-monitoring-axios-helper';
+import { mutate } from 'swr';
 
 const actionTaken: Array<SelectOption> = [
   { label: 'Approve', value: 'for supervisor approval' },
@@ -166,6 +166,8 @@ const ViewPassSlipModal: FunctionComponent<ViewPassSlipModalProps> = ({
       resetFormPassSlipApproval();
       resetPassSlipMedicalPurpose();
     } else {
+      console.log(rowData);
+
       setValuePassSlipApproval('passSlipId', rowData.id);
       setValuePassSlipApproval('status', rowData.status);
       setValuePassSlipMedicalPurpose('passSlipId', rowData.id);
@@ -179,6 +181,11 @@ const ViewPassSlipModal: FunctionComponent<ViewPassSlipModalProps> = ({
       closeModalAction();
       resetFormPassSlipApproval();
       resetPassSlipMedicalPurpose();
+
+      // mutate notifications
+      mutate((key) => typeof key === 'string' && key.startsWith('/stats/hrmo/dashboard'), undefined, {
+        revalidate: true,
+      });
     }
   }, [ResponseHrmoApprovalPassSlip]);
 
@@ -239,6 +246,7 @@ const ViewPassSlipModal: FunctionComponent<ViewPassSlipModalProps> = ({
 
                   <div className="flex flex-col">
                     <div className="text-2xl font-semibold">{rowData.employeeName}</div>
+                    <div className="text-md font-semibold">{rowData.assignmentName}</div>
                   </div>
                 </div>
 
@@ -260,6 +268,15 @@ const ViewPassSlipModal: FunctionComponent<ViewPassSlipModalProps> = ({
                       value={rowData.status ? UseRenderPassSlipStatus(rowData.status, 'text-sm') : ''}
                     />
                   </div>
+
+                  <div className="sm:order-1 md:order-1 lg:order-2 pt-2">
+                    <LabelValue
+                      label="Pass Slip Date"
+                      direction="top-to-bottom"
+                      textSize="md"
+                      value={DateTimeFormatter(rowData.createdAt, 'MMMM DD, YYYY hh:mm A')}
+                    />
+                  </div>
                 </div>
 
                 {!isEmpty(rowData.hrmoDisapprovalRemarks) ? (
@@ -274,14 +291,14 @@ const ViewPassSlipModal: FunctionComponent<ViewPassSlipModalProps> = ({
                 ) : null}
 
                 <hr />
-                <div className="grid grid-cols-1 grid-rows-1 px-5 sm:gap-2 md:gap:2 lg:gap-0">
+                {/* <div className="grid grid-cols-1 grid-rows-1 px-5 sm:gap-2 md:gap:2 lg:gap-0">
                   <LabelValue
                     label="Pass Slip Date: "
                     textSize="md"
                     value={DateTimeFormatter(rowData.createdAt, 'MMMM DD, YYYY hh:mm A')}
                     direction="left-to-right"
                   />
-                </div>
+                </div> */}
 
                 {!isEmpty(rowData.hrmoApprovalDate) ? (
                   <div className="grid grid-cols-1 grid-rows-1 px-5 sm:gap-2 md:gap:2 lg:gap-0">
@@ -294,33 +311,33 @@ const ViewPassSlipModal: FunctionComponent<ViewPassSlipModalProps> = ({
                   </div>
                 ) : null}
 
-                {!isEmpty(rowData.supervisorApprovalDate) ? (
-                  <div className="grid grid-cols-1 grid-rows-1 px-5 sm:gap-2 md:gap:2 lg:gap-0">
-                    <LabelValue
-                      label="Supervisor Approval Date: "
-                      textSize="md"
-                      value={DateTimeFormatter(rowData.supervisorApprovalDate, 'MMMM DD, YYYY hh:mm A')}
-                      direction="left-to-right"
-                    />
-                  </div>
-                ) : null}
-
                 <hr />
+
                 <div className="grid px-5 sm:grid-rows-2 sm:grid-cols-1 md:grid-rows-2 md:grid-cols-1 lg:grid-rows-1 lg:grid-cols-2 sm:gap-2 md:gap:2 lg:gap-0">
                   <div className="pr-10">
-                    <LabelValue
+                    {/* <LabelValue
                       label="Assignment"
                       direction="top-to-bottom"
                       textSize="md"
                       value={rowData.assignmentName ? rowData.assignmentName : 'N/A'}
+                    /> */}
+                    <LabelValue
+                      label="Supervisor Name"
+                      direction="top-to-bottom"
+                      textSize="md"
+                      value={rowData.supervisorName}
                     />
                   </div>
-                  <LabelValue
-                    label="Supervisor Name"
-                    direction="top-to-bottom"
-                    textSize="md"
-                    value={rowData.supervisorName}
-                  />
+                  {!isEmpty(rowData.supervisorApprovalDate) ? (
+                    <div className="grid grid-cols-1 grid-rows-1 px-5 sm:gap-2 md:gap:2 lg:gap-0">
+                      <LabelValue
+                        label="Approval Date"
+                        direction="top-to-bottom"
+                        textSize="md"
+                        value={DateTimeFormatter(rowData.supervisorApprovalDate, 'MMMM DD, YYYY hh:mm A')}
+                      />
+                    </div>
+                  ) : null}
                 </div>
 
                 <hr />

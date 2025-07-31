@@ -36,6 +36,11 @@ export type InboxState = {
   tab: number;
   setTab: (tab: number) => void;
 
+  selectedPsbStatus: string;
+  setSelectedPsbStatus: (selectedPsbStatus: string) => void;
+  selectedTrainingStatus: string;
+  setSelectedTrainingStatus: (selectedTrainingStatus: string) => void;
+
   psbMessageModalIsOpen: boolean;
   overtimeMessageModalIsOpen: boolean;
   trainingMessageModalIsOpen: boolean;
@@ -133,6 +138,14 @@ export const useInboxStore = create<InboxState>()(
       errorResponse: '',
     },
 
+    selectedPsbStatus: 'pending',
+    setSelectedPsbStatus: (selectedPsbStatus: string) => {
+      set((state) => ({ ...state, selectedPsbStatus }));
+    },
+    selectedTrainingStatus: 'pending',
+    setSelectedTrainingStatus: (selectedTrainingStatus: string) => {
+      set((state) => ({ ...state, selectedTrainingStatus }));
+    },
     psbMessageModalIsOpen: false,
     overtimeMessageModalIsOpen: false,
     trainingMessageModalIsOpen: false,
@@ -149,7 +162,7 @@ export const useInboxStore = create<InboxState>()(
       set((state) => ({ ...state, trainingMessageModalIsOpen }));
     },
 
-    tab: 1,
+    tab: 3,
 
     setTab: (tab: number) => {
       set((state) => ({ ...state, tab }));

@@ -60,7 +60,7 @@ const EditTravelOrderModal: FunctionComponent<EditModalProps> = ({
     data: employees,
     error: employeesError,
     isLoading: employeesLoading,
-  } = useSWR(modalState ? '/employees/options' : null, fetcherHRMS, {
+  } = useSWR(modalState ? '/employees/options/v2' : null, fetcherHRMS, {
     shouldRetryOnError: false,
     revalidateOnFocus: false,
   });
