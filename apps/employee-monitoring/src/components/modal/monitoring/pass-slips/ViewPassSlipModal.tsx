@@ -166,8 +166,6 @@ const ViewPassSlipModal: FunctionComponent<ViewPassSlipModalProps> = ({
       resetFormPassSlipApproval();
       resetPassSlipMedicalPurpose();
     } else {
-      console.log(rowData);
-
       setValuePassSlipApproval('passSlipId', rowData.id);
       setValuePassSlipApproval('status', rowData.status);
       setValuePassSlipMedicalPurpose('passSlipId', rowData.id);
