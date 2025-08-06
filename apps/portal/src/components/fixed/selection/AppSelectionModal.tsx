@@ -15,7 +15,7 @@ export const AppSelectionModal = () => {
     tab,
     publicationList,
     fulfilledPublicationList,
-
+    pendingPublicationList,
     modal,
     selectedApplicants,
     selectedPublication,
@@ -27,6 +27,7 @@ export const AppSelectionModal = () => {
   } = useAppSelectionStore((state) => ({
     tab: state.tab,
     publicationList: state.publicationList,
+    pendingPublicationList: state.pendingPublicationList,
     fulfilledPublicationList: state.fulfilledPublicationList,
     modal: state.modal,
     setFilteredPublicationList: state.setFilteredPublicationList,
@@ -56,15 +57,15 @@ export const AppSelectionModal = () => {
 
   useEffect(() => {
     if (tab === 1) {
-      if (publicationList.length > 0) {
-        setFilteredPublicationList(publicationList);
+      if (pendingPublicationList.length > 0) {
+        setFilteredPublicationList(pendingPublicationList);
       } else {
         setFilteredPublicationList([] as Array<Publication>);
       }
     } else {
       setFilteredPublicationList(fulfilledPublicationList);
     }
-  }, [fulfilledPublicationList, modal.isOpen, publicationList, tab]);
+  }, [fulfilledPublicationList, modal.isOpen, pendingPublicationList, tab]);
 
   return (
     <>
