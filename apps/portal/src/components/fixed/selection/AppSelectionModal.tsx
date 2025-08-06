@@ -2,24 +2,35 @@
 import { Modal } from '@gscwd-apps/oneui';
 import { AppSelectionModalController } from './AppSelectionListController';
 import { useAppSelectionStore } from '../../../../src/store/selection.store';
-import { PublicationPostingStatus } from '../../../../src/types/publication.type';
+import { Publication, PublicationPostingStatus } from '../../../../src/types/publication.type';
 import { isEmpty } from 'lodash';
 import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
+import { useEffect } from 'react';
 
 export const AppSelectionModal = () => {
   const publicationDetails = useAppSelectionStore((state) => state.publicationDetails);
 
   // get state for the modal
   const {
+    tab,
+    publicationList,
+    fulfilledPublicationList,
+    pendingPublicationList,
     modal,
     selectedApplicants,
     selectedPublication,
+    setFilteredPublicationList,
     setModal,
     setAlertConfirmationIsOpen,
     setFilteredValue,
     setSelectedApplicants,
   } = useAppSelectionStore((state) => ({
+    tab: state.tab,
+    publicationList: state.publicationList,
+    pendingPublicationList: state.pendingPublicationList,
+    fulfilledPublicationList: state.fulfilledPublicationList,
     modal: state.modal,
+    setFilteredPublicationList: state.setFilteredPublicationList,
     setModal: state.setModal,
     setAlertConfirmationIsOpen: state.setAlertConfirmationIsOpen,
     selectedApplicants: state.selectedApplicants,
@@ -43,6 +54,18 @@ export const AppSelectionModal = () => {
   };
 
   const { windowWidth } = UseWindowDimensions();
+
+  useEffect(() => {
+    if (tab === 1) {
+      if (pendingPublicationList.length > 0) {
+        setFilteredPublicationList(pendingPublicationList);
+      } else {
+        setFilteredPublicationList([] as Array<Publication>);
+      }
+    } else {
+      setFilteredPublicationList(fulfilledPublicationList);
+    }
+  }, [fulfilledPublicationList, modal.isOpen, pendingPublicationList, tab]);
 
   return (
     <>
@@ -95,10 +118,11 @@ export const AppSelectionModal = () => {
                   onClick={modalAction}
                   disabled={
                     modal.page === 2 &&
-                    !(selectedApplicants.length === 0) &&
-                    modal.page === 2 &&
                     selectedApplicants.length > 0 &&
-                    selectedApplicants.length !== parseInt(selectedPublication.numberOfPositions!)
+                    selectedApplicants.length > parseInt(selectedPublication.numberOfPositions!)
+                      ? true
+                      : false
+                    //change conditions to allow selection of applicants even if not filling the required vacancies - 8-6-2025
                   }
                   className="min-w-[6rem] max-w-auto disabled:bg-indigo-400 disabled:cursor-not-allowed text-white text-opacity-85 bg-indigo-500 px-3 text-sm transition-all ease-in-out duration-100 font-semibold tracking-wide py-2 rounded whitespace-nowrap focus:outline-none focus:ring-4 hover:shadow-lg active:shadow-md active:ring-0 active:scale-95"
                 >
