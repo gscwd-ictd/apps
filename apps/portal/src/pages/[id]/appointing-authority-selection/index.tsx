@@ -213,13 +213,13 @@ export default function AppPosAppointment({ employeeDetails }: InferGetServerSid
             subtitle="Select an applicant for the position"
             backUrl={`/${router.query.id}`}
           >
-            {tab === 1 ? (
-              <Button onClick={openModal} className="hidden lg:block" size={`md`}>
-                <div className="flex items-center w-full gap-2">
-                  <HiSearch /> Find a Publication
-                </div>
-              </Button>
-            ) : null}
+            {/* {tab === 1 ? ( */}
+            <Button onClick={openModal} className="hidden lg:block" size={`md`}>
+              <div className="flex items-center w-full gap-2">
+                <HiSearch /> Find a Publication
+              </div>
+            </Button>
+            {/* ) : null} */}
 
             <Button onClick={openModal} className="block lg:hidden" size={`lg`}>
               <div className="flex items-center w-full gap-2">
@@ -231,13 +231,6 @@ export default function AppPosAppointment({ employeeDetails }: InferGetServerSid
           {loadingPendingPublicationList && loadingFulfilledPublicationList ? (
             <div className="w-full h-96  static flex flex-col justify-center items-center place-items-center">
               <LoadingSpinner size={'lg'} />
-              {/* <SpinnerDotted
-                speed={70}
-                thickness={70}
-                className="flex w-full h-full transition-all "
-                color="slateblue"
-                size={100}
-              /> */}
             </div>
           ) : (
             <ContentBody>

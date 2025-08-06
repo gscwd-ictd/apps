@@ -9,25 +9,31 @@ import useSWR from 'swr';
 
 export const AppSelectionSelectPublication = () => {
   // initialize ref for search input
-  const searchRef = useRef(
-    null
-  ) as unknown as MutableRefObject<HTMLInputElement>;
+  const searchRef = useRef(null) as unknown as MutableRefObject<HTMLInputElement>;
 
   const {
+    patchResponseApply,
+    tab,
     filteredValue,
     publicationList,
+    pendingPublicationList,
     filteredPublicationList,
+    fulfilledPublicationList,
     setFilteredValue,
     setFilteredPublicationList,
     getPublicationList,
     getPublicationListSuccess,
     getPublicationListFail,
   } = useAppSelectionStore((state) => ({
+    patchResponseApply: state.response.patchResponseApply,
+    tab: state.tab,
     filteredValue: state.filteredValue,
     loadingPublicationList: state.loading.loadingPublicationList,
     errorPublicationList: state.errors.errorPublicationList,
     publicationList: state.publicationList,
+    pendingPublicationList: state.pendingPublicationList,
     filteredPublicationList: state.filteredPublicationList,
+    fulfilledPublicationList: state.fulfilledPublicationList,
     setFilteredValue: state.setFilteredValue,
     setFilteredPublicationList: state.setFilteredPublicationList,
     getPublicationList: state.getPublicationList,
@@ -36,35 +42,35 @@ export const AppSelectionSelectPublication = () => {
   }));
 
   // get api for the list of publications
-  const publicationUrl = `${process.env.NEXT_PUBLIC_HRIS_URL}/applicant-endorsement/appointing-authority-selection/publications`;
+  // const publicationUrl = `${process.env.NEXT_PUBLIC_HRIS_URL}/applicant-endorsement/appointing-authority-selection/publications`;
 
-  const {
-    data: swrPublications,
-    isLoading: swrPublicationIsLoading,
-    error: swrPublicationError,
-    mutate: mutatePublications,
-  } = useSWR(publicationUrl, fetchWithToken, {
-    shouldRetryOnError: false,
-    revalidateOnFocus: false,
-  });
+  // const {
+  //   data: swrPublications,
+  //   isLoading: swrPublicationIsLoading,
+  //   error: swrPublicationError,
+  //   mutate: mutatePublications,
+  // } = useSWR(publicationUrl, fetchWithToken, {
+  //   shouldRetryOnError: false,
+  //   revalidateOnFocus: false,
+  // });
 
   // Initial zustand state update
-  useEffect(() => {
-    if (swrPublicationIsLoading) {
-      getPublicationList(swrPublicationIsLoading);
-    }
-  }, [swrPublicationIsLoading]);
+  // useEffect(() => {
+  //   if (swrPublicationIsLoading) {
+  //     getPublicationList(swrPublicationIsLoading);
+  //   }
+  // }, [swrPublicationIsLoading]);
 
   // Upon success/fail of swr request, zustand state will be updated
-  useEffect(() => {
-    if (!isEmpty(swrPublications)) {
-      getPublicationListSuccess(swrPublicationIsLoading, swrPublications);
-    }
+  // useEffect(() => {
+  //   if (!isEmpty(swrPublications)) {
+  //     getPublicationListSuccess(swrPublicationIsLoading, swrPublications);
+  //   }
 
-    if (!isEmpty(swrPublicationError)) {
-      getPublicationListFail(swrPublicationIsLoading, swrPublicationError);
-    }
-  }, [swrPublications, swrPublicationError]);
+  //   if (!isEmpty(swrPublicationError)) {
+  //     getPublicationListFail(swrPublicationIsLoading, swrPublicationError);
+  //   }
+  // }, [swrPublications, swrPublicationError]);
 
   // on search function used for filtering positions
   const onSearch = (event: FormEvent<HTMLInputElement>) => {
@@ -74,19 +80,35 @@ export const AppSelectionSelectPublication = () => {
     // create an array that will contain the search results
     const filteredResult: Array<Publication> = [];
 
-    // loop through positions array and filter according to position title
-    publicationList.filter((publication: Publication) => {
-      // check if there is a match
-      if (
-        publication.positionTitle.match(new RegExp(value, 'i')) ||
-        publication.itemNumber.match(new RegExp(value, 'i')) ||
-        publication.placeOfAssignment.match(new RegExp(value, 'i'))
-      ) {
-        // insert the matching position inside the filtered result
+    if (tab === 1) {
+      // loop through positions array and filter according to position title
+      pendingPublicationList.filter((publication: Publication) => {
+        // check if there is a match
+        if (
+          publication.positionTitle.match(new RegExp(value, 'i')) ||
+          publication.itemNumber.match(new RegExp(value, 'i')) ||
+          publication.placeOfAssignment.match(new RegExp(value, 'i'))
+        ) {
+          // insert the matching position inside the filtered result
 
-        filteredResult.push(publication);
-      }
-    });
+          filteredResult.push(publication);
+        }
+      });
+    } else {
+      // loop through positions array and filter according to position title
+      fulfilledPublicationList.filter((publication: Publication) => {
+        // check if there is a match
+        if (
+          publication.positionTitle.match(new RegExp(value, 'i')) ||
+          publication.itemNumber.match(new RegExp(value, 'i')) ||
+          publication.placeOfAssignment.match(new RegExp(value, 'i'))
+        ) {
+          // insert the matching position inside the filtered result
+
+          filteredResult.push(publication);
+        }
+      });
+    }
 
     // set search value to current value of the search input
     setFilteredValue(value);
@@ -104,15 +126,41 @@ export const AppSelectionSelectPublication = () => {
     setFilteredValue('');
 
     // set the filtered positions back to default
-    setFilteredPublicationList(publicationList);
+    if (tab === 1) {
+      setFilteredPublicationList(pendingPublicationList);
+    } else {
+      setFilteredPublicationList(fulfilledPublicationList);
+    }
   };
 
   // set focus whenever filtered positions change
   useEffect(() => {
-    if (!swrPublicationIsLoading) {
-      searchRef.current.focus();
+    // if (!swrPublicationIsLoading) {
+    searchRef.current.focus();
+    // }
+  }, [
+    filteredPublicationList,
+    // , swrPublicationIsLoading
+  ]);
+
+  useEffect(() => {
+    if (tab === 1) {
+      if (pendingPublicationList.length > 0) {
+        setFilteredPublicationList(pendingPublicationList);
+      } else {
+        setFilteredPublicationList([] as Array<Publication>);
+      }
+    } else {
+      setFilteredPublicationList(fulfilledPublicationList);
     }
-  }, [filteredPublicationList, swrPublicationIsLoading]);
+  }, [tab]);
+
+  //mutate publications when patchResponseApply is updated
+  // useEffect(() => {
+  //   if (!isEmpty(patchResponseApply)) {
+  //     mutatePublications();
+  //   }
+  // }, [patchResponseApply]);
 
   return (
     <>
@@ -121,9 +169,7 @@ export const AppSelectionSelectPublication = () => {
           <div className="flex justify-end px-3 mb-1 text-sm">
             <p className="text-gray-600">
               {`${filteredPublicationList.length} ${
-                filteredPublicationList.length > 1
-                  ? 'publications'
-                  : 'publication'
+                filteredPublicationList.length > 1 ? 'publications' : 'publication'
               }`}{' '}
               found
             </p>
@@ -141,10 +187,7 @@ export const AppSelectionSelectPublication = () => {
               />
               {filteredValue !== '' ? (
                 <>
-                  <button
-                    className="absolute -right-0 mr-7 focus:outline-none"
-                    onClick={onClearSearch}
-                  >
+                  <button className="absolute -right-0 mr-7 focus:outline-none" onClick={onClearSearch}>
                     <HiXCircle className="w-6 h-6 mt-3 transition-colors ease-in-out text-slate-300 hover:text-slate-400" />
                   </button>
                 </>

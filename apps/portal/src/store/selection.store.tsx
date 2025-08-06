@@ -1,11 +1,7 @@
 /* eslint-disable @nx/enforce-module-boundaries */
 import { create } from 'zustand';
 import { ModalState, ErrorState } from '../types/modal.type';
-import {
-  ApplicantWithScores,
-  PsbScores,
-  Ranking,
-} from '../types/selection.type';
+import { ApplicantWithScores, PsbScores, Ranking } from '../types/selection.type';
 import { Publication, PublicationDetails } from '../types/publication.type';
 import { AlertState } from '../types/alert.type';
 import { devtools } from 'zustand/middleware';
@@ -123,13 +119,9 @@ export type SelectionState = {
   applicantList: Array<ApplicantWithScores>;
   setApplicantList: (applicants: Array<ApplicantWithScores>) => void;
   filteredPublicationList: Array<Publication>;
-  setFilteredPublicationList: (
-    filteredPublicationList: Array<Publication>
-  ) => void;
+  setFilteredPublicationList: (filteredPublicationList: Array<Publication>) => void;
   selectedApplicantDetails: ApplicantDetails;
-  setSelectedApplicantDetails: (
-    selectedApplicantDetails: ApplicantDetails
-  ) => void;
+  setSelectedApplicantDetails: (selectedApplicantDetails: ApplicantDetails) => void;
   publicationDetails: PublicationDetails;
   setPublicationDetails: (publicationDetails: PublicationDetails) => void;
   applicantScores: Array<PsbScores>;
@@ -148,8 +140,7 @@ export type SelectionState = {
 export const useAppSelectionStore = create<SelectionState>()(
   devtools((set) => ({
     filteredValue: '',
-    setFilteredValue: (filteredValue: string) =>
-      set((state) => ({ ...state, filteredValue })),
+    setFilteredValue: (filteredValue: string) => set((state) => ({ ...state, filteredValue })),
     response: {
       patchResponseApply: {},
     },
@@ -176,21 +167,16 @@ export const useAppSelectionStore = create<SelectionState>()(
       positionTitle: '',
       rank: '',
     },
-    setSelectedApplicantDetails: (
-      selectedApplicantDetails: ApplicantDetails
-    ) => {
+    setSelectedApplicantDetails: (selectedApplicantDetails: ApplicantDetails) => {
       set((state) => ({ ...state, selectedApplicantDetails }));
     },
     showPdsAlert: false,
-    setShowPdsAlert: (showPdsAlert: boolean) =>
-      set((state) => ({ ...state, showPdsAlert })),
+    setShowPdsAlert: (showPdsAlert: boolean) => set((state) => ({ ...state, showPdsAlert })),
     dropdownAction: '',
-    setDropdownAction: (dropdownAction: string) =>
-      set((state) => ({ ...state, dropdownAction })),
+    setDropdownAction: (dropdownAction: string) => set((state) => ({ ...state, dropdownAction })),
 
     psbDetails: [],
-    setPsbDetails: (psbDetails: Array<PsbDetails>) =>
-      set((state) => ({ ...state, psbDetails })),
+    setPsbDetails: (psbDetails: Array<PsbDetails>) => set((state) => ({ ...state, psbDetails })),
 
     getPsbDetails: () =>
       set((state) => ({
@@ -206,8 +192,7 @@ export const useAppSelectionStore = create<SelectionState>()(
       applicantDetails: ApplicantDetails
     ) => {
       const filteredApplicant = applicantList.find(
-        (applicant) =>
-          applicant.postingApplicantId === applicantDetails.postingApplicantId
+        (applicant) => applicant.postingApplicantId === applicantDetails.postingApplicantId
       );
       response &&
         response.map((psb) => {
@@ -240,8 +225,7 @@ export const useAppSelectionStore = create<SelectionState>()(
       set((state) => ({ ...state, pds }));
     },
     showPsbDetailsAlert: false,
-    setShowPsbDetailsAlert: (showPsbDetailsAlert: boolean) =>
-      set((state) => ({ ...state, showPsbDetailsAlert })),
+    setShowPsbDetailsAlert: (showPsbDetailsAlert: boolean) => set((state) => ({ ...state, showPsbDetailsAlert })),
 
     alert: { isOpen: false, page: 1 },
     modal: { isOpen: false, page: 1, subtitle: '', title: '' } as ModalState,
@@ -288,17 +272,13 @@ export const useAppSelectionStore = create<SelectionState>()(
     setSelectedApplicants: (selectedApplicants: Array<ApplicantWithScores>) => {
       set((state) => ({ ...state, selectedApplicants }));
     },
-    setFilteredApplicantList: (
-      filteredApplicantList: Array<ApplicantWithScores>
-    ) => {
+    setFilteredApplicantList: (filteredApplicantList: Array<ApplicantWithScores>) => {
       set((state) => ({ ...state, filteredApplicantList }));
     },
     setApplicantList: (applicantList: Array<ApplicantWithScores>) => {
       set((state) => ({ ...state, applicantList }));
     },
-    setFilteredPublicationList: (
-      filteredPublicationList: Array<Publication>
-    ) => {
+    setFilteredPublicationList: (filteredPublicationList: Array<Publication>) => {
       set((state) => ({ ...state, filteredPublicationList }));
     },
     setPublicationDetails: (publicationDetails: PublicationDetails) => {
@@ -331,14 +311,11 @@ export const useAppSelectionStore = create<SelectionState>()(
         },
       }));
     },
-    getPublicationListSuccess: (
-      loading: boolean,
-      response: Array<Publication>
-    ) => {
+    getPublicationListSuccess: (loading: boolean, response: Array<Publication>) => {
       set((state) => ({
         ...state,
         publicationList: response,
-        filteredPublicationList: response,
+        // filteredPublicationList: response,
         loading: {
           ...state.loading,
           loadingPublicationList: loading,
@@ -375,13 +352,11 @@ export const useAppSelectionStore = create<SelectionState>()(
         },
       }));
     },
-    getPendingPublicationListSuccess: (
-      loading: boolean,
-      response: Array<Publication>
-    ) => {
+    getPendingPublicationListSuccess: (loading: boolean, response: Array<Publication>) => {
       set((state) => ({
         ...state,
         pendingPublicationList: response,
+        filteredPublicationList: response,
         loading: {
           ...state.loading,
           loadingPendingPublicationList: false,
@@ -418,10 +393,7 @@ export const useAppSelectionStore = create<SelectionState>()(
         },
       }));
     },
-    getFulfilledPublicationListSuccess: (
-      loading: boolean,
-      response: Array<Publication>
-    ) => {
+    getFulfilledPublicationListSuccess: (loading: boolean, response: Array<Publication>) => {
       set((state) => ({
         ...state,
         fulfilledPublicationList: response,
@@ -501,8 +473,7 @@ export const useAppSelectionStore = create<SelectionState>()(
     setAlertConfirmationIsOpen: (alertConfirmationIsOpen: boolean) =>
       set((state) => ({ ...state, alertConfirmationIsOpen })),
 
-    setAlertInfoIsOpen: (alertInfoIsOpen: boolean) =>
-      set((state) => ({ ...state, alertInfoIsOpen })),
+    setAlertInfoIsOpen: (alertInfoIsOpen: boolean) => set((state) => ({ ...state, alertInfoIsOpen })),
 
     emptyResponseAndError: () => {
       set((state) => ({
