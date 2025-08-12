@@ -115,6 +115,21 @@ export const DtrTable = ({ employeeDetails }: DtrTableProps) => {
                   <tbody className="text-sm text-center ">
                     {employeeDtr?.dtrDays?.length > 0 ? (
                       employeeDtr.dtrDays.map((logs, index) => {
+                        let undertimeForWorkSuspension = false;
+                        if (logs.dtr.remarks.includes('Work Suspension')) {
+                          //get only the time from the remarks ex. (Work Suspension (08:00AM))
+                          const workSuspensionTimeOut = `${
+                            logs.dtr.remarks.split('Work Suspension (')[1].split(')')[0]
+                          }`;
+
+                          if (
+                            UseUndertimeChecker(logs.dtr.timeOut, workSuspensionTimeOut) == true &&
+                            logs.isRestDay === false &&
+                            logs.isHoliday === false
+                          ) {
+                            undertimeForWorkSuspension = true;
+                          }
+                        }
                         return (
                           <tr
                             key={index}
@@ -194,12 +209,22 @@ export const DtrTable = ({ employeeDetails }: DtrTableProps) => {
                             >
                               {logs.dtr.lunchIn ? UseTwelveHourFormat(logs.dtr.lunchIn) : ''}
                             </td>
+
                             <td
                               className={`border text-center py-2 ${
-                                UseUndertimeChecker(logs.dtr.timeOut, logs.schedule.timeOut) == true &&
+                                //if undertime during work suspension
+                                logs.dtr.remarks.includes('Work Suspension') &&
+                                undertimeForWorkSuspension === true &&
                                 logs.holidayType !== HolidayTypes.REGULAR &&
                                 logs.holidayType !== HolidayTypes.SPECIAL &&
                                 logs.dtr.remarks !== 'Rest Day'
+                                  ? 'text-red-500'
+                                  : //if normal undertime
+                                  UseUndertimeChecker(logs.dtr.timeOut, logs.schedule.timeOut) == true &&
+                                    !logs.dtr.remarks.includes('Work Suspension') &&
+                                    logs.holidayType !== HolidayTypes.REGULAR &&
+                                    logs.holidayType !== HolidayTypes.SPECIAL &&
+                                    logs.dtr.remarks !== 'Rest Day'
                                   ? 'text-red-500'
                                   : ''
                               } ${
@@ -226,8 +251,8 @@ export const DtrTable = ({ employeeDetails }: DtrTableProps) => {
                               } py-2 text-center border`}
                             >
                               <div className="whitespace-nowrap">
-                                <label>{UseTwelveHourFormat(employeeDtr.dtrDays[index].schedule.timeIn)}</label> -{' '}
-                                <label>{UseTwelveHourFormat(employeeDtr.dtrDays[index].schedule.timeOut)}</label>
+                                <label>{UseTwelveHourFormat(logs.schedule.timeIn)}</label> -{' '}
+                                <label>{UseTwelveHourFormat(logs.schedule.timeOut)}</label>
                               </div>
                             </td>
                             <td
@@ -347,6 +372,22 @@ export const DtrTable = ({ employeeDetails }: DtrTableProps) => {
                   <tbody className="text-sm text-center ">
                     {employeeDtr?.dtrDays?.length > 0 ? (
                       employeeDtr.dtrDays.map((logs, index) => {
+                        let undertimeForWorkSuspension = false;
+                        if (logs.dtr.remarks.includes('Work Suspension')) {
+                          //get only the time from the remarks ex. (Work Suspension (08:00AM))
+                          const workSuspensionTimeOut = `${
+                            logs.dtr.remarks.split('Work Suspension (')[1].split(')')[0]
+                          }`;
+
+                          if (
+                            UseUndertimeChecker(logs.dtr.timeOut, workSuspensionTimeOut) == true &&
+                            logs.isRestDay === false &&
+                            logs.isHoliday === false
+                          ) {
+                            undertimeForWorkSuspension = true;
+                          }
+                        }
+
                         return (
                           <tr
                             key={index}
@@ -407,16 +448,26 @@ export const DtrTable = ({ employeeDetails }: DtrTableProps) => {
                                   : ''
                               } py-2 text-center border`}
                             >
-                              {employeeDtr.dtrDays[index].schedule.shift === 'night'
+                              {logs.schedule.shift === 'night'
                                 ? dayjs(logs.day).add(1, 'day').format('YYYY-MM-DD')
                                 : logs.day}
                             </td>
                             <td
                               className={`border text-center py-2 ${
-                                UseUndertimeChecker(logs.dtr.timeOut, logs.schedule.timeOut) == true &&
+                                //if undertime during work suspension and not on night shift
+                                logs.dtr.remarks.includes('Work Suspension') &&
+                                undertimeForWorkSuspension === true &&
                                 logs.holidayType !== HolidayTypes.REGULAR &&
                                 logs.holidayType !== HolidayTypes.SPECIAL &&
-                                logs.dtr.remarks !== 'Rest Day'
+                                logs.dtr.remarks !== 'Rest Day' &&
+                                logs.schedule.shift !== 'night'
+                                  ? 'text-red-500'
+                                  : //if normal undertime
+                                  UseUndertimeChecker(logs.dtr.timeOut, logs.schedule.timeOut) == true &&
+                                    !logs.dtr.remarks.includes('Work Suspension') &&
+                                    logs.holidayType !== HolidayTypes.REGULAR &&
+                                    logs.holidayType !== HolidayTypes.SPECIAL &&
+                                    logs.dtr.remarks !== 'Rest Day'
                                   ? 'text-red-500'
                                   : ''
                               } ${
@@ -443,8 +494,8 @@ export const DtrTable = ({ employeeDetails }: DtrTableProps) => {
                               } py-2 text-center border`}
                             >
                               <div className="whitespace-nowrap">
-                                <label>{UseTwelveHourFormat(employeeDtr.dtrDays[index].schedule.timeIn)}</label> -{' '}
-                                <label>{UseTwelveHourFormat(employeeDtr.dtrDays[index].schedule.timeOut)}</label>
+                                <label>{UseTwelveHourFormat(logs.schedule.timeIn)}</label> -{' '}
+                                <label>{UseTwelveHourFormat(logs.schedule.timeOut)}</label>
                               </div>
                             </td>
                             <td

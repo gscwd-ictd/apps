@@ -425,7 +425,17 @@ export const DtrPdf: FunctionComponent<DtrPdfProps> = ({ employeeData, employeeD
                         checkIfHoliday(log.holidayType) != HolidayTypes.SPECIAL
                       ) {
                         timeOutColor = gray;
+                      } else if (log.dtr.remarks.includes('Work Suspension')) {
+                        //undertime during work suspension
+                        //get only the time from the remarks ex. (Work Suspension (08:00AM))
+                        const workSuspensionTimeOut = `${log.dtr.remarks.split('Work Suspension (')[1].split(')')[0]}`;
+                        compareIfEarly(log.day, log.dtr.timeOut, workSuspensionTimeOut) === true &&
+                        log.isRestDay === false &&
+                        log.isHoliday === false
+                          ? (timeOutColor = yellow)
+                          : (timeOutColor = '');
                       } else {
+                        //normal undertime
                         compareIfEarly(log.day, log.dtr.timeOut, log.schedule.timeOut) === true &&
                         log.isRestDay === false &&
                         log.isHoliday === false
@@ -544,9 +554,35 @@ export const DtrPdf: FunctionComponent<DtrPdfProps> = ({ employeeData, employeeD
                         : (timeInColor = '');
 
                       // time out color
-                      compareIfEarly(log.day, log.dtr.timeOut, log.schedule.timeOut) === true
-                        ? (timeOutColor = yellow)
-                        : (timeOutColor = '');
+                      // compareIfEarly(log.day, log.dtr.timeOut, log.schedule.timeOut) === true
+                      //   ? (timeOutColor = yellow)
+                      //   : (timeOutColor = '');
+
+                      // time out color
+                      if (
+                        log.isRestDay === true &&
+                        checkIfHoliday(log.holidayType) != HolidayTypes.REGULAR &&
+                        checkIfHoliday(log.holidayType) != HolidayTypes.SPECIAL
+                      ) {
+                        timeOutColor = gray;
+                      } else if (log.dtr.remarks.includes('Work Suspension')) {
+                        //undertime during work suspension and not on night shift
+                        //get only the time from the remarks ex. (Work Suspension (08:00AM))
+                        const workSuspensionTimeOut = `${log.dtr.remarks.split('Work Suspension (')[1].split(')')[0]}`;
+                        compareIfEarly(log.day, log.dtr.timeOut, workSuspensionTimeOut) === true &&
+                        log.isRestDay === false &&
+                        log.isHoliday === false &&
+                        log.schedule.shift !== 'night'
+                          ? (timeOutColor = yellow)
+                          : (timeOutColor = '');
+                      } else {
+                        //normal undertime
+                        compareIfEarly(log.day, log.dtr.timeOut, log.schedule.timeOut) === true &&
+                        log.isRestDay === false &&
+                        log.isHoliday === false
+                          ? (timeOutColor = yellow)
+                          : (timeOutColor = '');
+                      }
 
                       return (
                         <View

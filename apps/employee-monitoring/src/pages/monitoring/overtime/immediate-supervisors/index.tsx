@@ -163,7 +163,7 @@ const Index = () => {
   return (
     <>
       <div className="w-full">
-        <BreadCrumbs title="Overtime Applications" />
+        <BreadCrumbs title="Overtime Immediate Supervisors" />
         {/* Notifications */}
         {!isEmpty(ErrorOvertimeImmediateSupervisors) ? (
           <ToastNotification toastType="error" notifMessage={ErrorOvertimeImmediateSupervisors} />
