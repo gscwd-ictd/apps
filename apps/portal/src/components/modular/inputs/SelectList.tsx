@@ -58,8 +58,13 @@ export function MySelectList({
 
   useEffect(() => {
     if (searchedItem.length > 0) {
+      //if searchedItem is not empty, set the listToSearch to searchedItem
       setListToSearch(searchedItem);
+    } else if (searchedItem.length == 0 && searchedInput.length > 0) {
+      //if searchedItem is empty and searchedInput is not empty, set the listToSearch to blank / nothing found on search
+      setListToSearch([]);
     } else {
+      //all options are available
       setListToSearch(options);
     }
   }, [searchedItem]);
