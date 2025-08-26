@@ -2,7 +2,7 @@
 import { AlertNotification, LoadingSpinner, Modal, ToastNotification } from '@gscwd-apps/oneui';
 import { LabelInput } from 'apps/employee-monitoring/src/components/inputs/LabelInput';
 import { EmployeeScheduleForm, useScheduleSheetStore } from 'apps/employee-monitoring/src/store/schedule-sheet.store';
-import { Dispatch, FunctionComponent, SetStateAction, useEffect, useState } from 'react';
+import { Dispatch, FunctionComponent, SetStateAction, useContext, useEffect, useState } from 'react';
 import useSWR from 'swr';
 import fetcherEMS from 'apps/employee-monitoring/src/utils/fetcher/FetcherEMS';
 import { isEmpty } from 'lodash';
@@ -17,6 +17,7 @@ import UseRestDaysOptionToNumberArray from 'apps/employee-monitoring/src/utils/f
 import Toggle from '../../../switch/Toggle';
 import DailyTimeRecordCalendar from '../DailyTimeRecordCalendar';
 import { mutate } from 'swr';
+import { AuthmiddlewareContext } from 'apps/employee-monitoring/src/pages/_app';
 
 type AddEmpSchedModalProps = {
   modalState: boolean;
@@ -31,6 +32,8 @@ const AddEmpSchedModal: FunctionComponent<AddEmpSchedModalProps> = ({
   setModalState,
   employeeData,
 }) => {
+  const { userProfile } = useContext(AuthmiddlewareContext);
+
   // state for usage of date picker
   const [datePicker, setDatePicker] = useState<boolean>(false);
 
@@ -169,9 +172,13 @@ const AddEmpSchedModal: FunctionComponent<AddEmpSchedModalProps> = ({
 
   // minimum date for scheduling
   const minimumScheduleDate = () => {
-    const now = dayjs().subtract(30, 'days').format('YYYY-MM-DD');
-
-    return now;
+    if (!userProfile.isSuperUser) {
+      const now = dayjs().subtract(30, 'days').format('YYYY-MM-DD');
+      return now;
+    } else {
+      const now = dayjs().subtract(2, 'years').format('YYYY-MM-DD');
+      return now;
+    }
   };
 
   // set schedule id loading to true
