@@ -8,6 +8,8 @@ import { format } from 'date-fns';
 import OvertimeSummaryReportModal from './OvertimeSummaryReportModal';
 import { useEffect, useState } from 'react';
 import OvertimeAuthorizationAccomplishmentModal from './OvertimeAuthorizationAccomplishmentModal';
+import { MySelectList } from '../../modular/inputs/SelectList';
+import { NightDifferentialReportModal } from './NightDifferentialReportModal';
 
 type ModalProps = {
   modalState: boolean;
@@ -66,6 +68,11 @@ export const OvertimeSummaryModal = ({ modalState, setModalState, closeModalActi
     setPdfOvertimeSummaryModalIsOpen,
     pdfOvertimeAuthorizationAccomplishmentModalIsOpen,
     setPdfOvertimeAuthorizationAccomplishmentModalIsOpen,
+    nightDiffEmployees,
+    mutatedNightDiffEmployees,
+    setMutatedNightDiffEmployees,
+    pdfNightDifferentialModalIsOpen,
+    setPdfNightDifferentialModalIsOpen,
   } = useOvertimeStore((state) => ({
     selectedMonth: state.selectedMonth,
     selectedPeriod: state.selectedPeriod,
@@ -79,9 +86,15 @@ export const OvertimeSummaryModal = ({ modalState, setModalState, closeModalActi
     setPdfOvertimeSummaryModalIsOpen: state.setPdfOvertimeSummaryModalIsOpen,
     pdfOvertimeAuthorizationAccomplishmentModalIsOpen: state.pdfOvertimeAuthorizationAccomplishmentModalIsOpen,
     setPdfOvertimeAuthorizationAccomplishmentModalIsOpen: state.setPdfOvertimeAuthorizationAccomplishmentModalIsOpen,
+    nightDiffEmployees: state.nightDiffEmployees,
+    mutatedNightDiffEmployees: state.mutatedNightDiffEmployees,
+    setMutatedNightDiffEmployees: state.setMutatedNightDiffEmployees,
+    pdfNightDifferentialModalIsOpen: state.pdfNightDifferentialModalIsOpen,
+    setPdfNightDifferentialModalIsOpen: state.setPdfNightDifferentialModalIsOpen,
   }));
 
   const [summaryType, setSummaryType] = useState<string>(null);
+  const [selectedEmployees, setSelectedEmployees] = useState<Array<SelectOption>>([]);
 
   const onChangeMonth = (month: number) => {
     setSelectedMonth(month);
@@ -102,11 +115,14 @@ export const OvertimeSummaryModal = ({ modalState, setModalState, closeModalActi
   const closePdfOvertimeSummaryModal = () => {
     setPdfOvertimeSummaryModalIsOpen(false);
     setPdfOvertimeAuthorizationAccomplishmentModalIsOpen(false);
+    setPdfNightDifferentialModalIsOpen(false);
   };
 
   const handleOvertimeModal = () => {
     if (summaryType === 'overtimeAuthorizationAccomplishment') {
       setPdfOvertimeAuthorizationAccomplishmentModalIsOpen(true);
+    } else if (summaryType === 'nightShiftDifferentialPay') {
+      setPdfNightDifferentialModalIsOpen(true);
     } else {
       setPdfOvertimeSummaryModalIsOpen(true);
     }
@@ -116,7 +132,21 @@ export const OvertimeSummaryModal = ({ modalState, setModalState, closeModalActi
 
   useEffect(() => {
     setSummaryType(null);
+    setSelectedYear(Number(format(new Date(), 'yyyy')));
+    setSelectedEmployees([]);
   }, [modalState]);
+
+  useEffect(() => {
+    let mutatedOptions: Array<SelectOption> = [];
+    nightDiffEmployees.map((item) => {
+      mutatedOptions.push({ label: item.employeeFullName, value: item.employeeId });
+    });
+    // mutatedOptions.sort((a, b) => a.label.localeCompare(b.label));
+    // set local state
+    // setSelectedEmployees(mutatedOptions);
+    //update to zustand
+    setMutatedNightDiffEmployees(mutatedOptions);
+  }, [nightDiffEmployees]);
 
   return (
     <>
@@ -124,7 +154,7 @@ export const OvertimeSummaryModal = ({ modalState, setModalState, closeModalActi
         <Modal.Header>
           <h3 className="font-semibold text-gray-700">
             <div className="px-5 flex justify-between">
-              <span className="text-xl md:text-2xl">Overtime Summary</span>
+              <span className="text-xl md:text-2xl">Report Summary</span>
               <button
                 className="hover:bg-slate-100 outline-slate-100 outline-8 px-2 rounded-full"
                 onClick={closeModalAction}
@@ -138,7 +168,9 @@ export const OvertimeSummaryModal = ({ modalState, setModalState, closeModalActi
           <div className="w-full h-full flex flex-col gap-2 ">
             <div className="w-full flex flex-col gap-2 px-4 rounded">
               <div className={`md:flex-row md:items-center flex-col items-start flex gap-0 md:gap-3 justify-between`}>
-                <label className="text-slate-500 text-md font-medium whitespace-nowrap">Summary Type:</label>
+                <label className="text-slate-500 text-md font-medium whitespace-nowrap">
+                  Summary Type: <span className="text-red-600">*</span>
+                </label>
                 <div className="w-full md:w-80">
                   <select
                     className="text-slate-500 h-12 w-full md:w-80 rounded text-md border-slate-300"
@@ -151,34 +183,60 @@ export const OvertimeSummaryModal = ({ modalState, setModalState, closeModalActi
                     </option>
                     <option value={'overtimeSummary'}>Overtime Summary</option>
                     <option value={'overtimeAuthorizationAccomplishment'}>Accomplishment Summary</option>
+                    <option value={'nightShiftDifferentialPay'}>Night Shift Differential Pay</option>
                   </select>
                 </div>
               </div>
 
-              <div className={`md:flex-row md:items-center flex-col items-start flex gap-0 md:gap-3 justify-between`}>
-                <label className="text-slate-500 text-md font-medium whitespace-nowrap">Employee Type:</label>
-                <div className="w-full md:w-80">
-                  <select
-                    className="text-slate-500 h-12 w-full md:w-80 rounded text-md border-slate-300"
-                    required
-                    onChange={(e) => onChangeEmployeeType(e.target.value)}
-                    defaultValue={''}
-                  >
-                    <option value={''} disabled>
-                      Selected Type
-                    </option>
-                    {employeeTypeList.map((item: Item, idx: number) => (
-                      <option value={item.value} key={idx}>
-                        {/* <option value={item.value} key={idx} disabled={item.label === 'Job Order' ? true : false}> */}
-                        {item.label}
+              {summaryType === 'nightShiftDifferentialPay' ? (
+                <div className="flex flex-col gap-1 md:pt-3">
+                  <label className="text-slate-500 text-md font-medium">
+                    Employees:
+                    <span className="text-red-600">*</span>
+                  </label>
+
+                  <MySelectList
+                    withSearchBar={true}
+                    id="employees"
+                    label=""
+                    multiple
+                    options={mutatedNightDiffEmployees}
+                    onChange={(o) => setSelectedEmployees(o)}
+                    value={selectedEmployees}
+                  />
+                </div>
+              ) : null}
+
+              {summaryType !== 'nightShiftDifferentialPay' ? (
+                <div className={`md:flex-row md:items-center flex-col items-start flex gap-0 md:gap-3 justify-between`}>
+                  <label className="text-slate-500 text-md font-medium whitespace-nowrap">
+                    Employee Type: <span className="text-red-600">*</span>
+                  </label>
+                  <div className="w-full md:w-80">
+                    <select
+                      className="text-slate-500 h-12 w-full md:w-80 rounded text-md border-slate-300"
+                      required
+                      onChange={(e) => onChangeEmployeeType(e.target.value)}
+                      defaultValue={''}
+                    >
+                      <option value={''} disabled>
+                        Selected Type
                       </option>
-                    ))}
-                  </select>
+                      {employeeTypeList.map((item: Item, idx: number) => (
+                        <option value={item.value} key={idx}>
+                          {/* <option value={item.value} key={idx} disabled={item.label === 'Job Order' ? true : false}> */}
+                          {item.label}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
                 </div>
-              </div>
+              ) : null}
 
               <div className={`md:flex-row md:items-center flex-col items-start flex gap-0 md:gap-3 justify-between`}>
-                <label className="text-slate-500 text-md font-medium whitespace-nowrap">Month:</label>
+                <label className="text-slate-500 text-md font-medium whitespace-nowrap">
+                  Month: <span className="text-red-600">*</span>
+                </label>
                 <div className="w-full md:w-80">
                   <select
                     className="text-slate-500 h-12 w-full md:w-80 rounded text-md border-slate-300"
@@ -199,7 +257,9 @@ export const OvertimeSummaryModal = ({ modalState, setModalState, closeModalActi
               </div>
 
               <div className={`md:flex-row md:items-center flex-col items-start flex gap-0 md:gap-3 justify-between`}>
-                <label className="text-slate-500 text-md font-medium whitespace-nowrap">Year:</label>
+                <label className="text-slate-500 text-md font-medium whitespace-nowrap">
+                  Year: <span className="text-red-600">*</span>
+                </label>
                 <div className="w-full md:w-80">
                   <select
                     className="text-slate-500 h-12 w-full md:w-80 rounded text-md border-slate-300"
@@ -207,9 +267,9 @@ export const OvertimeSummaryModal = ({ modalState, setModalState, closeModalActi
                     onChange={(e) => onChangeYear(e.target.value as unknown as number)}
                     defaultValue={''}
                   >
-                    <option value={''} disabled>
+                    {/* <option value={''} disabled>
                       Select Year
-                    </option>
+                    </option> */}
                     {yearList.map((item: Item, idx: number) => (
                       <option value={item.value} key={idx}>
                         {item.label}
@@ -220,7 +280,9 @@ export const OvertimeSummaryModal = ({ modalState, setModalState, closeModalActi
               </div>
 
               <div className={`md:flex-row md:items-center flex-col items-start flex gap-0 md:gap-3 justify-between`}>
-                <label className="text-slate-500 text-md font-medium whitespace-nowrap">Period:</label>
+                <label className="text-slate-500 text-md font-medium whitespace-nowrap">
+                  Period: <span className="text-red-600">*</span>
+                </label>
                 <div className="w-full md:w-80">
                   <select
                     className="text-slate-500 h-12 w-full md:w-80 rounded text-md border-slate-300"
@@ -253,13 +315,34 @@ export const OvertimeSummaryModal = ({ modalState, setModalState, closeModalActi
             setModalState={setPdfOvertimeAuthorizationAccomplishmentModalIsOpen}
             closeModalAction={closePdfOvertimeSummaryModal}
           />
+
+          {/* Overtime Authorization-Accomplishment Summary Modal */}
+          <NightDifferentialReportModal
+            modalState={pdfNightDifferentialModalIsOpen}
+            selectedEmployees={selectedEmployees}
+            setModalState={setPdfNightDifferentialModalIsOpen}
+            closeModalAction={closePdfOvertimeSummaryModal}
+          />
         </Modal.Body>
         <Modal.Footer>
           <div className="flex justify-end gap-2 px-4">
             <div className="min-w-[6rem] max-w-auto">
               <Button
                 disabled={
-                  selectedMonth && selectedPeriod && selectedYear && selectedEmployeeType && summaryType ? false : true
+                  summaryType &&
+                  summaryType !== 'nightShiftDifferentialPay' &&
+                  selectedMonth &&
+                  selectedPeriod &&
+                  selectedYear &&
+                  selectedEmployeeType
+                    ? false
+                    : summaryType &&
+                      summaryType == 'nightShiftDifferentialPay' &&
+                      selectedMonth &&
+                      selectedPeriod &&
+                      selectedYear
+                    ? false
+                    : true
                 }
                 variant={'primary'}
                 size={'md'}

@@ -50,6 +50,18 @@ export const postPortal = async (url: string, data: any, config = {}) =>
       return { error: true, result: error.response.data.message };
     });
 
+export const postApiPortal = async (url: string, data: any, config = {}) =>
+  await axiosApiPortal
+    .post(url, { ...data }, { ...config })
+    .then((response) => {
+      return { error: false, result: response.data };
+    })
+    .catch((error) => {
+      if (error.message === 'Network Error') return { error: true, result: `Cannot connect to the server.` };
+
+      return { error: true, result: error.response.data.message };
+    });
+
 // PUT EMS
 export const putEms = async (url: string, data: any, config = {}) =>
   await axiosApi
