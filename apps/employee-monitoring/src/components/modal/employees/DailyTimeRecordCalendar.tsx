@@ -1,8 +1,9 @@
 import { add, eachDayOfInterval, endOfMonth, format, getDay, parse, startOfToday } from 'date-fns';
 import dayjs from 'dayjs';
-import React, { Fragment, useState, useCallback } from 'react';
+import React, { Fragment, useState, useCallback, useContext } from 'react';
 import { HiOutlineChevronLeft, HiOutlineChevronRight } from 'react-icons/hi';
 import isSameOrAfter from 'dayjs/plugin/isSameOrAfter';
+import { AuthmiddlewareContext } from 'apps/employee-monitoring/src/pages/_app';
 
 function classNames(...classes: (string | undefined)[]): string {
   return classes.filter(Boolean).join(' ');
@@ -26,6 +27,7 @@ export default function DailyTimeRecordCalendar({
   errorMessage,
   forScheduling,
 }: DailyTimeRecordCalendarProps) {
+  const { userProfile } = useContext(AuthmiddlewareContext);
   const today = startOfToday();
   const [currentMonth, setCurrentMonth] = useState(format(today, 'MMM-yyyy'));
   const firstDayCurrentMonth = parse(currentMonth, 'MMM-yyyy', new Date());
@@ -77,9 +79,13 @@ export default function DailyTimeRecordCalendar({
 
   // minimum date for scheduling
   const minimumScheduleDate = () => {
-    const now = dayjs().subtract(30, 'days').format('YYYY-MM-DD');
-
-    return now;
+    if (!userProfile.isSuperUser) {
+      const now = dayjs().subtract(30, 'days').format('YYYY-MM-DD');
+      return now;
+    } else {
+      const now = dayjs().subtract(2, 'years').format('YYYY-MM-DD');
+      return now;
+    }
   };
 
   return (
