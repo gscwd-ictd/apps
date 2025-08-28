@@ -14,9 +14,13 @@ import {
 import { create } from 'zustand';
 import { devtools } from 'zustand/middleware';
 import { OvertimeAccomplishmentStatus } from 'libs/utils/src/lib/enums/overtime.enum';
+import { NightDifferentialEmployee } from '../types/employee.type';
+import { NightDifferentialReport } from '../types/night-differential.type';
 
 export type OvertimeState = {
   employeeList: Array<SelectOption>;
+  nightDiffEmployees: Array<NightDifferentialEmployee>;
+  mutatedNightDiffEmployees: Array<SelectOption>;
   // overtime: {
   //   forApproval: Array<OvertimeDetails>;
   //   completed: Array<OvertimeDetails>;
@@ -35,23 +39,27 @@ export type OvertimeState = {
     loadingOvertime: boolean;
     loadingResponse: boolean;
     loadingEmployeeList: boolean;
+    loadingNightDiffEmployeeList: boolean;
     loadingAccomplishment: boolean;
     loadingAuthorizationReport: boolean;
     loadingAccomplishmentReport: boolean;
     loadingOvertimeSummaryReport: boolean;
     loadingOvertimeAuthorizationAccomplishmentReport: boolean;
     loadingRemoveEmployee: boolean;
+    loadingNightDifferentialReport: boolean;
   };
   error: {
     errorOvertime: string;
     errorResponse: string;
     errorEmployeeList: string;
+    errorNightDiffEmployeeList: string;
     errorAccomplishment: string;
     errorAuthorizationReport: string;
     errorAccomplishmentReport: string;
     errorOvertimeSummaryReport: string;
     errorOvertimeAuthorizationAccomplishmentReport: string;
     errorRemoveEmployee: string;
+    errorNightDifferentialReport: string;
   };
 
   overtimeAccomplishmentEmployeeId: string;
@@ -67,6 +75,11 @@ export type OvertimeState = {
   getEmployeeListSuccess: (loading: boolean, response) => void;
   getEmployeeListFail: (loading: boolean, error: string) => void;
 
+  getNightDiffEmployeeList: (loading: boolean) => void;
+  getNightDiffEmployeeListSuccess: (loading: boolean, response) => void;
+  getNightDiffEmployeeListFail: (loading: boolean, error: string) => void;
+  setMutatedNightDiffEmployees: (mutatedNightDiffEmployees: Array<SelectOption>) => void;
+
   overtimeDetails: OvertimeDetails;
   removeEmployeeModalIsOpen: boolean;
   overtimeSummaryModalIsOpen: boolean;
@@ -75,10 +88,13 @@ export type OvertimeState = {
   pendingOvertimeModalIsOpen: boolean;
   completedOvertimeModalIsOpen: boolean;
   accomplishmentOvertimeModalIsOpen: boolean;
+  nightDifferentialModalIsOpen: boolean;
   pdfAccomplishmentReportModalIsOpen: boolean;
   pdfOvertimeAuthorizationModalIsOpen: boolean;
   pdfOvertimeSummaryModalIsOpen: boolean;
   pdfOvertimeAuthorizationAccomplishmentModalIsOpen: boolean;
+  pdfNightDifferentialModalIsOpen: boolean;
+
   tab: number;
 
   //for selecting month, year and Period for OT summary PDF generation
@@ -108,6 +124,12 @@ export type OvertimeState = {
   getOvertimeAccomplishmentReport: (loading: boolean) => void;
   getOvertimeAccomplishmentReportSuccess: (loading: boolean, response) => void;
   getOvertimeAccomplishmentReportFail: (loading: boolean, error: string) => void;
+
+  //for getting night differential report in PDF
+  nightDifferentialReport: NightDifferentialReport;
+  getNightDifferentialReport: (loading: boolean) => void;
+  getNightDifferentialReportSuccess: (loading: boolean, response) => void;
+  getNightDifferentialReportFail: (loading: boolean, error: string) => void;
 
   //for getting overtime authorization report in PDF
   overtimeAuthorizationReport: OvertimeAuthorization;
@@ -158,6 +180,8 @@ export type OvertimeState = {
   setPdfOvertimeAuthorizationAccomplishmentModalIsOpen: (
     pdfOvertimeAuthorizationAccomplishmentModalIsOpen: boolean
   ) => void;
+  setPdfNightDifferentialModalIsOpen: (pdfNightDifferentialModalIsOpen: boolean) => void;
+  setNightDifferentialModalIsOpen: (nightDifferentialModalIsOpen: boolean) => void;
 
   //getting overtime details inside MODAL
   setOvertimeDetails: (overtimeDetails: OvertimeDetails) => void;
@@ -169,7 +193,8 @@ export type OvertimeState = {
 export const useOvertimeStore = create<OvertimeState>()(
   devtools((set) => ({
     employeeList: [],
-
+    nightDiffEmployees: [],
+    mutatedNightDiffEmployees: [],
     overtime: {
       overtimes: [],
       supervisorName: '',
@@ -183,28 +208,33 @@ export const useOvertimeStore = create<OvertimeState>()(
       loadingOvertime: false,
       loadingResponse: false,
       loadingEmployeeList: false,
+      loadingNightDiffEmployeeList: false,
       loadingAccomplishment: false,
       loadingAuthorizationReport: false,
       loadingAccomplishmentReport: false,
       loadingOvertimeSummaryReport: false,
       loadingOvertimeAuthorizationAccomplishmentReport: false,
       loadingRemoveEmployee: false,
+      loadingNightDifferentialReport: false,
     },
     error: {
       errorOvertime: '',
       errorResponse: '',
       errorEmployeeList: '',
+      errorNightDiffEmployeeList: '',
       errorAccomplishment: '',
       errorAuthorizationReport: '',
       errorAccomplishmentReport: '',
       errorOvertimeSummaryReport: '',
       errorOvertimeAuthorizationAccomplishmentReport: '',
       errorRemoveEmployee: '',
+      errorNightDifferentialReport: '',
     },
 
     overtimeDetails: {} as OvertimeDetails,
     accomplishmentDetails: {} as OvertimeAccomplishment,
     overtimeSummaryReport: {} as OvertimeSummary,
+    nightDifferentialReport: {} as NightDifferentialReport,
 
     overtimeAuthorizationReport: {} as OvertimeAuthorization,
     overtimeAccomplishmentReport: {} as OvertimeAccomplishmentReport,
@@ -221,12 +251,18 @@ export const useOvertimeStore = create<OvertimeState>()(
     pdfOvertimeAuthorizationModalIsOpen: false,
     pdfOvertimeSummaryModalIsOpen: false,
     pdfOvertimeAuthorizationAccomplishmentModalIsOpen: false,
+    pdfNightDifferentialModalIsOpen: false,
+    nightDifferentialModalIsOpen: false,
     tab: 1,
 
     selectedMonth: null,
     selectedYear: null,
     selectedPeriod: null,
     selectedEmployeeType: null,
+
+    setMutatedNightDiffEmployees: (mutatedNightDiffEmployees: Array<SelectOption>) => {
+      return set((state) => ({ ...state, mutatedNightDiffEmployees }));
+    },
 
     setSelectedMonth: (selectedMonth: number) => {
       set((state) => ({ ...state, selectedMonth }));
@@ -289,6 +325,14 @@ export const useOvertimeStore = create<OvertimeState>()(
       pdfOvertimeAuthorizationAccomplishmentModalIsOpen: boolean
     ) => {
       set((state) => ({ ...state, pdfOvertimeAuthorizationAccomplishmentModalIsOpen }));
+    },
+
+    setPdfNightDifferentialModalIsOpen: (pdfNightDifferentialModalIsOpen: boolean) => {
+      set((state) => ({ ...state, pdfNightDifferentialModalIsOpen }));
+    },
+
+    setNightDifferentialModalIsOpen: (nightDifferentialModalIsOpen: boolean) => {
+      set((state) => ({ ...state, nightDifferentialModalIsOpen }));
     },
 
     setOvertimeDetails: (overtimeDetails: OvertimeDetails) => {
@@ -390,6 +434,46 @@ export const useOvertimeStore = create<OvertimeState>()(
         error: {
           ...state.error,
           errorAuthorizationReport: error,
+        },
+      }));
+    },
+
+    //GET NIGHT DIFFERENTIAL EPORT FOR PDF
+    getNightDifferentialReport: (loading: boolean) => {
+      set((state) => ({
+        ...state,
+        nightDifferentialReport: {} as NightDifferentialReport,
+        loading: {
+          ...state.loading,
+          loadingNightDifferentialReport: loading,
+        },
+        error: {
+          ...state.error,
+          errorNightDifferentialReport: '',
+        },
+      }));
+    },
+
+    getNightDifferentialReportSuccess: (loading: boolean, response: NightDifferentialReport) => {
+      set((state) => ({
+        ...state,
+        nightDifferentialReport: response,
+        loading: {
+          ...state.loading,
+          loadingNightDifferentialReport: loading,
+        },
+      }));
+    },
+    getNightDifferentialReportFail: (loading: boolean, error: string) => {
+      set((state) => ({
+        ...state,
+        loading: {
+          ...state.loading,
+          loadingNightDifferentialReport: loading,
+        },
+        error: {
+          ...state.error,
+          errorNightDifferentialReport: error,
         },
       }));
     },
@@ -557,6 +641,46 @@ export const useOvertimeStore = create<OvertimeState>()(
         error: {
           ...state.error,
           errorEmployeeList: error,
+        },
+      }));
+    },
+
+    //GET NIGHT SHIFT DIFFERENTIAL EMPLOYEE LIST ACTIONS
+    getNightDiffEmployeeList: (loading: boolean) => {
+      set((state) => ({
+        ...state,
+        nightDiffEmployees: [],
+        mutatedNightDiffEmployees: [],
+        loading: {
+          ...state.loading,
+          loadingNightDiffEmployeeList: loading,
+        },
+        error: {
+          ...state.error,
+          errorNightDiffEmployeeList: '',
+        },
+      }));
+    },
+    getNightDiffEmployeeListSuccess: (loading: boolean, response: Array<NightDifferentialEmployee>) => {
+      set((state) => ({
+        ...state,
+        nightDiffEmployees: response,
+        loading: {
+          ...state.loading,
+          loadingNightDiffEmployeeList: loading,
+        },
+      }));
+    },
+    getNightDiffEmployeeListFail: (loading: boolean, error: string) => {
+      set((state) => ({
+        ...state,
+        loading: {
+          ...state.loading,
+          loadingNightDiffEmployeeList: loading,
+        },
+        error: {
+          ...state.error,
+          errorNightDiffEmployeeList: error,
         },
       }));
     },

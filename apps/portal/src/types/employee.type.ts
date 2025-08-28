@@ -221,3 +221,10 @@ export const employeeGabalesDummy: EmployeeDetails = {
     overtimeImmediateSupervisorId: null,
   },
 };
+
+//for night differential pay pdf and select option
+export type NightDifferentialEmployee = {
+  employeeId: string;
+  companyId: string;
+  employeeFullName: string;
+};

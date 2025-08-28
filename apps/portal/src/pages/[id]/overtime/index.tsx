@@ -46,6 +46,8 @@ export default function Overtime({ employeeDetails }: InferGetServerSidePropsTyp
     errorAuthorizationReport,
     errorAccomplishmentReport,
     errorOvertimeSummaryReport,
+    errorNightDiffEmployeeList,
+    errorNightDifferentialReport,
     overtimes,
     setOvertimeSummaryModalIsOpen,
     setPendingOvertimeModalIsOpen,
@@ -63,6 +65,9 @@ export default function Overtime({ employeeDetails }: InferGetServerSidePropsTyp
     setSelectedPeriod,
     setSelectedEmployeeType,
     setOvertimeDetails,
+    getNightDiffEmployeeList,
+    getNightDiffEmployeeListSuccess,
+    getNightDiffEmployeeListFail,
   } = useOvertimeStore((state) => ({
     removeEmployeeResponse: state.response.removeEmployeeResponse,
     errorRemoveEmployee: state.error.errorRemoveEmployee,
@@ -77,6 +82,8 @@ export default function Overtime({ employeeDetails }: InferGetServerSidePropsTyp
     errorAuthorizationReport: state.error.errorAuthorizationReport,
     errorAccomplishmentReport: state.error.errorAccomplishmentReport,
     errorOvertimeSummaryReport: state.error.errorOvertimeSummaryReport,
+    errorNightDiffEmployeeList: state.error.errorNightDiffEmployeeList,
+    errorNightDifferentialReport: state.error.errorNightDifferentialReport,
     overtimes: state.overtime.overtimes,
     setOvertimeSummaryModalIsOpen: state.setOvertimeSummaryModalIsOpen,
     setPendingOvertimeModalIsOpen: state.setPendingOvertimeModalIsOpen,
@@ -94,6 +101,9 @@ export default function Overtime({ employeeDetails }: InferGetServerSidePropsTyp
     setSelectedPeriod: state.setSelectedPeriod,
     setSelectedEmployeeType: state.setSelectedEmployeeType,
     setOvertimeDetails: state.setOvertimeDetails,
+    getNightDiffEmployeeList: state.getNightDiffEmployeeList,
+    getNightDiffEmployeeListSuccess: state.getNightDiffEmployeeListSuccess,
+    getNightDiffEmployeeListFail: state.getNightDiffEmployeeListFail,
   }));
 
   const router = useRouter();
@@ -145,6 +155,7 @@ export default function Overtime({ employeeDetails }: InferGetServerSidePropsTyp
     setEmployeeDetails(employeeDetails);
   }, [employeeDetails]);
 
+  //for selecting employees for overtime application
   const employeeListUrl = `${process.env.NEXT_PUBLIC_EMPLOYEE_MONITORING_URL}/v1/overtime/supervisor/${employeeDetails.employmentDetails.userId}/employees/`;
 
   const {
@@ -171,6 +182,34 @@ export default function Overtime({ employeeDetails }: InferGetServerSidePropsTyp
       getEmployeeListFail(swrEmployeeListIsLoading, swrEmployeeListError.message);
     }
   }, [swrEmployeeList, swrEmployeeListError]);
+
+  //for selecting employees for night shift differential pay
+  const nightDifferentialemployeeListUrl = `${process.env.NEXT_PUBLIC_PORTAL_URL}/employees/ot-supervisor-employees`;
+
+  const {
+    data: swrNightDiffEmployeeList,
+    isLoading: swrNightDiffEmployeeListIsLoading,
+    error: swrNightDiffEmployeeListError,
+    mutate: mutateNightDiffEmployeeList,
+  } = useSWR(employeeDetails.employmentDetails.userId ? nightDifferentialemployeeListUrl : null, fetchWithToken, {});
+
+  // Initial zustand state update
+  useEffect(() => {
+    if (swrNightDiffEmployeeListIsLoading) {
+      getNightDiffEmployeeList(swrNightDiffEmployeeListIsLoading);
+    }
+  }, [swrNightDiffEmployeeListIsLoading]);
+
+  // Upon success/fail of swr request, zustand state will be updated
+  useEffect(() => {
+    if (!isEmpty(swrNightDiffEmployeeList)) {
+      getNightDiffEmployeeListSuccess(swrNightDiffEmployeeListIsLoading, swrNightDiffEmployeeList);
+    }
+
+    if (!isEmpty(swrNightDiffEmployeeListError)) {
+      getNightDiffEmployeeListFail(swrNightDiffEmployeeListIsLoading, swrNightDiffEmployeeListError.message);
+    }
+  }, [swrNightDiffEmployeeList, swrNightDiffEmployeeListError]);
 
   const overtimeListUrl_overtimeSupervisor = `${process.env.NEXT_PUBLIC_EMPLOYEE_MONITORING_URL}/v1/overtime/${employeeDetails.employmentDetails.overtimeImmediateSupervisorId}`;
   const overtimeListUrl_manager = `${process.env.NEXT_PUBLIC_EMPLOYEE_MONITORING_URL}/v1/overtime/${employeeDetails.employmentDetails.userId}/list`;
@@ -387,6 +426,22 @@ export default function Overtime({ employeeDetails }: InferGetServerSidePropsTyp
       {/* List of Overtime Load Failed */}
       {!isEmpty(swrOvertimeListError) ? (
         <ToastNotification toastType="error" notifMessage={`${swrOvertimeListError}: Failed to load Overtime List.`} />
+      ) : null}
+
+      {/* List of Night Differential Load Failed */}
+      {!isEmpty(errorNightDiffEmployeeList) ? (
+        <ToastNotification
+          toastType="error"
+          notifMessage={`${errorNightDiffEmployeeList}: Failed to load Night Differential Employee List.`}
+        />
+      ) : null}
+
+      {/* List of Night Differential Report PDf Load Failed */}
+      {!isEmpty(errorNightDifferentialReport) ? (
+        <ToastNotification
+          toastType="error"
+          notifMessage={`${errorNightDifferentialReport}: Failed to load Night Shift Differential Report.`}
+        />
       ) : null}
 
       <EmployeeProvider employeeData={employee}>
