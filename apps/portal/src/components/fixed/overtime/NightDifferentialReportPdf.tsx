@@ -125,7 +125,7 @@ export const NightDifferentialReportPdf = ({
   return (
     <>
       {/* <PDFViewer width={'100%'} height={1000} showToolbar> */}
-      <Document title="Overtime Accomplishment Report Summary">
+      <Document title="Night Shift Differential Pay">
         <Page
           size={'FOLIO'}
           orientation="landscape"
@@ -149,7 +149,7 @@ export const NightDifferentialReportPdf = ({
               <Text style={[styles.pdfTitle, { paddingBottom: 10 }]}>
                 DEPARTMENT:{' '}
                 <Text style={[styles.pdfTitle, { paddingLeft: 3, paddingRight: 3, textDecoration: 'underline' }]}>
-                  {nightDifferentialReport.assignment}
+                  {nightDifferentialReport.assignment.toUpperCase()}
                 </Text>
               </Text>
             </View>
@@ -165,13 +165,13 @@ export const NightDifferentialReportPdf = ({
                   <Text style={styles.tableCell}>NO.</Text>
                 </View>
                 <View style={[styles.tableCol, { borderStyle: 'solid', borderBottomWidth: 1, borderTopWidth: 1 }]}>
-                  <Text style={{ margin: 'auto', textAlign: 'center', fontSize: 8, width: 134 }}>NAME</Text>
+                  <Text style={{ margin: 'auto', textAlign: 'center', fontSize: 8, width: 180 }}>NAME</Text>
                 </View>
 
                 <View
                   style={[
                     styles.tableCol,
-                    { width: 52, borderStyle: 'solid', borderBottomWidth: 1, borderTopWidth: 1 },
+                    { width: 60, borderStyle: 'solid', borderBottomWidth: 1, borderTopWidth: 1 },
                   ]}
                 >
                   <Text style={styles.tableCell}>DAILY RATE {'\n'} (A)</Text>
@@ -180,7 +180,7 @@ export const NightDifferentialReportPdf = ({
                 <View
                   style={[
                     styles.tableCol,
-                    { width: 40, borderStyle: 'solid', borderBottomWidth: 1, borderTopWidth: 1 },
+                    { width: 60, borderStyle: 'solid', borderBottomWidth: 1, borderTopWidth: 1 },
                   ]}
                 >
                   <Text style={styles.tableCell}>RATE HOURLY {'\n'} (B) </Text>
@@ -252,25 +252,25 @@ export const NightDifferentialReportPdf = ({
                 <View
                   style={[
                     styles.tableCol,
-                    { width: 35, borderStyle: 'solid', borderBottomWidth: 1, borderTopWidth: 1 },
+                    { width: 80, borderStyle: 'solid', borderBottomWidth: 1, borderTopWidth: 1 },
                   ]}
                 >
-                  <Text style={styles.tableCell}>TOTAL NO. OT HOURS {'\n'} (C) </Text>
+                  <Text style={styles.tableCell}>TOTAL NO. {'\n'} OT HOURS (C) </Text>
                 </View>
 
                 <View
                   style={[
                     styles.tableCol,
-                    { width: 40, borderStyle: 'solid', borderBottomWidth: 1, borderTopWidth: 1 },
+                    { width: 80, borderStyle: 'solid', borderBottomWidth: 1, borderTopWidth: 1 },
                   ]}
                 >
-                  <Text style={styles.tableCell}>TOTAL HOURLY SALARY {'\n'} (B*C) </Text>
+                  <Text style={styles.tableCell}>TOTAL HOURLY {'\n'} SALARY (B*C) </Text>
                 </View>
 
                 <View
                   style={[
                     styles.tableCol,
-                    { width: 40, borderStyle: 'solid', borderBottomWidth: 1, borderTopWidth: 1 },
+                    { width: 80, borderStyle: 'solid', borderBottomWidth: 1, borderTopWidth: 1 },
                   ]}
                 >
                   <Text style={styles.tableCell}>20% NIGHT {'\n'} DIFFERENTIAL</Text>
@@ -285,16 +285,16 @@ export const NightDifferentialReportPdf = ({
                         <Text style={styles.tableCell}>{idx + 1}</Text>
                       </View>
                       <View style={styles.tableCol}>
-                        <Text style={{ margin: 'auto', textAlign: 'left', fontSize: 8, width: 134 }}>
+                        <Text style={{ margin: 'auto', textAlign: 'left', fontSize: 8, width: 180 }}>
                           {nightDiff?.employeeFullName}
                         </Text>
                       </View>
 
-                      <View style={[styles.tableCol, { width: 52 }]}>
+                      <View style={[styles.tableCol, { width: 60 }]}>
                         <Text style={styles.tableCell}>{nightDiff?.dailyRate?.toLocaleString()}</Text>
                       </View>
 
-                      <View style={[styles.tableCol, { width: 40 }]}>
+                      <View style={[styles.tableCol, { width: 60 }]}>
                         <Text style={styles.tableCell}>{nightDiff?.hourlyRate?.toLocaleString()}</Text>
                       </View>
 
@@ -310,7 +310,7 @@ export const NightDifferentialReportPdf = ({
                                 backgroundColor: `${
                                   nightDiff?.dtrEntriesDetails[0]?.nightDifferentialHours >= 0 &&
                                   nightDiff?.dtrEntriesDetails[0]?.nightDifferentialHours !== null
-                                    ? 'cyan'
+                                    ? ''
                                     : ''
                                 }`,
                               },
@@ -332,7 +332,7 @@ export const NightDifferentialReportPdf = ({
                                 backgroundColor: `${
                                   nightDiff?.dtrEntriesDetails[1]?.nightDifferentialHours >= 0 &&
                                   nightDiff?.dtrEntriesDetails[1]?.nightDifferentialHours !== null
-                                    ? 'cyan'
+                                    ? ''
                                     : ''
                                 }`,
                               },
@@ -354,7 +354,7 @@ export const NightDifferentialReportPdf = ({
                                 backgroundColor: `${
                                   nightDiff?.dtrEntriesDetails[2]?.nightDifferentialHours >= 0 &&
                                   nightDiff?.dtrEntriesDetails[2]?.nightDifferentialHours !== null
-                                    ? 'cyan'
+                                    ? ''
                                     : ''
                                 }`,
                               },
@@ -376,7 +376,7 @@ export const NightDifferentialReportPdf = ({
                                 backgroundColor: `${
                                   nightDiff?.dtrEntriesDetails[3]?.nightDifferentialHours >= 0 &&
                                   nightDiff?.dtrEntriesDetails[3]?.nightDifferentialHours !== null
-                                    ? 'cyan'
+                                    ? ''
                                     : ''
                                 }`,
                               },
@@ -398,7 +398,7 @@ export const NightDifferentialReportPdf = ({
                                 backgroundColor: `${
                                   nightDiff?.dtrEntriesDetails[4]?.nightDifferentialHours >= 0 &&
                                   nightDiff?.dtrEntriesDetails[4]?.nightDifferentialHours !== null
-                                    ? 'cyan'
+                                    ? ''
                                     : ''
                                 }`,
                               },
@@ -420,7 +420,7 @@ export const NightDifferentialReportPdf = ({
                                 backgroundColor: `${
                                   nightDiff?.dtrEntriesDetails[5]?.nightDifferentialHours >= 0 &&
                                   nightDiff?.dtrEntriesDetails[5]?.nightDifferentialHours !== null
-                                    ? 'cyan'
+                                    ? ''
                                     : ''
                                 }`,
                               },
@@ -442,7 +442,7 @@ export const NightDifferentialReportPdf = ({
                                 backgroundColor: `${
                                   nightDiff?.dtrEntriesDetails[6]?.nightDifferentialHours >= 0 &&
                                   nightDiff?.dtrEntriesDetails[6]?.nightDifferentialHours !== null
-                                    ? 'cyan'
+                                    ? ''
                                     : ''
                                 }`,
                               },
@@ -464,7 +464,7 @@ export const NightDifferentialReportPdf = ({
                                 backgroundColor: `${
                                   nightDiff?.dtrEntriesDetails[7]?.nightDifferentialHours >= 0 &&
                                   nightDiff?.dtrEntriesDetails[7]?.nightDifferentialHours !== null
-                                    ? 'cyan'
+                                    ? ''
                                     : ''
                                 }`,
                               },
@@ -486,7 +486,7 @@ export const NightDifferentialReportPdf = ({
                                 backgroundColor: `${
                                   nightDiff?.dtrEntriesDetails[8]?.nightDifferentialHours >= 0 &&
                                   nightDiff?.dtrEntriesDetails[8]?.nightDifferentialHours !== null
-                                    ? 'cyan'
+                                    ? ''
                                     : ''
                                 }`,
                               },
@@ -508,7 +508,7 @@ export const NightDifferentialReportPdf = ({
                                 backgroundColor: `${
                                   nightDiff?.dtrEntriesDetails[9]?.nightDifferentialHours >= 0 &&
                                   nightDiff?.dtrEntriesDetails[9]?.nightDifferentialHours !== null
-                                    ? 'cyan'
+                                    ? ''
                                     : ''
                                 }`,
                               },
@@ -530,7 +530,7 @@ export const NightDifferentialReportPdf = ({
                                 backgroundColor: `${
                                   nightDiff?.dtrEntriesDetails[10]?.nightDifferentialHours >= 0 &&
                                   nightDiff?.dtrEntriesDetails[10]?.nightDifferentialHours !== null
-                                    ? 'cyan'
+                                    ? ''
                                     : ''
                                 }`,
                               },
@@ -552,7 +552,7 @@ export const NightDifferentialReportPdf = ({
                                 backgroundColor: `${
                                   nightDiff?.dtrEntriesDetails[11]?.nightDifferentialHours >= 0 &&
                                   nightDiff?.dtrEntriesDetails[11]?.nightDifferentialHours !== null
-                                    ? 'cyan'
+                                    ? ''
                                     : ''
                                 }`,
                               },
@@ -574,7 +574,7 @@ export const NightDifferentialReportPdf = ({
                                 backgroundColor: `${
                                   nightDiff?.dtrEntriesDetails[12]?.nightDifferentialHours >= 0 &&
                                   nightDiff?.dtrEntriesDetails[12]?.nightDifferentialHours !== null
-                                    ? 'cyan'
+                                    ? ''
                                     : ''
                                 }`,
                               },
@@ -596,7 +596,7 @@ export const NightDifferentialReportPdf = ({
                                 backgroundColor: `${
                                   nightDiff?.dtrEntriesDetails[13]?.nightDifferentialHours >= 0 &&
                                   nightDiff?.dtrEntriesDetails[13]?.nightDifferentialHours !== null
-                                    ? 'cyan'
+                                    ? ''
                                     : ''
                                 }`,
                               },
@@ -618,7 +618,7 @@ export const NightDifferentialReportPdf = ({
                                 backgroundColor: `${
                                   nightDiff?.dtrEntriesDetails[14]?.nightDifferentialHours >= 0 &&
                                   nightDiff?.dtrEntriesDetails[14]?.nightDifferentialHours !== null
-                                    ? 'cyan'
+                                    ? ''
                                     : ''
                                 }`,
                               },
@@ -640,7 +640,7 @@ export const NightDifferentialReportPdf = ({
                                 backgroundColor: `${
                                   nightDiff?.dtrEntriesDetails[15]?.nightDifferentialHours >= 0 &&
                                   nightDiff?.dtrEntriesDetails[15]?.nightDifferentialHours !== null
-                                    ? 'cyan'
+                                    ? ''
                                     : ''
                                 }`,
                               },
@@ -655,18 +655,18 @@ export const NightDifferentialReportPdf = ({
                         </View>
                       </View>
 
-                      <View style={[styles.tableCol, { width: 35 }]}>
-                        <Text style={styles.tableCell}>{nightDiff?.totalNoOfHours.toFixed(2)}</Text>
+                      <View style={[styles.tableCol, { width: 80 }]}>
+                        <Text style={styles.tableCell}>{nightDiff?.totalNoOfHours?.toFixed(2)}</Text>
                       </View>
 
-                      <View style={[styles.tableCol, { width: 40 }]}>
+                      <View style={[styles.tableCol, { width: 80 }]}>
                         <Text style={styles.tableCell}>
-                          {(nightDiff?.hourlyRate * nightDiff.totalNoOfHours).toLocaleString()}
+                          {(nightDiff?.hourlyRate * nightDiff?.totalNoOfHours)?.toLocaleString()}
                         </Text>
                       </View>
 
-                      <View style={[styles.tableCol, { width: 40 }]}>
-                        <Text style={styles.tableCell}>{nightDiff?.totalNightDifferential.toLocaleString()}</Text>
+                      <View style={[styles.tableCol, { width: 80 }]}>
+                        <Text style={styles.tableCell}>{nightDiff?.totalNightDifferential?.toLocaleString()}</Text>
                       </View>
                     </View>
                   )
@@ -677,16 +677,16 @@ export const NightDifferentialReportPdf = ({
                           <Text style={styles.tableCell}>1</Text>
                         </View> */}
                 <View style={[styles.tableCol, { borderLeftWidth: 1 }]}>
-                  <Text style={{ margin: 'auto', textAlign: 'left', fontSize: 8, width: 153, paddingLeft: 5 }}>
+                  <Text style={{ margin: 'auto', textAlign: 'left', fontSize: 8, width: 199, paddingLeft: 5 }}>
                     GRAND TOTAL
                   </Text>
                 </View>
 
-                <View style={[styles.tableCol, { width: 52 }]}>
+                <View style={[styles.tableCol, { width: 60 }]}>
                   <Text style={styles.tableCell}></Text>
                 </View>
 
-                <View style={[styles.tableCol, { width: 40 }]}>
+                <View style={[styles.tableCol, { width: 60 }]}>
                   <Text style={styles.tableCell}></Text>
                 </View>
 
@@ -700,38 +700,19 @@ export const NightDifferentialReportPdf = ({
                   </View>
                 </View>
 
-                <View style={[styles.tableCol, { width: 35 }]}>
+                <View style={[styles.tableCol, { width: 80 }]}>
                   <Text style={styles.tableCell}></Text>
                 </View>
 
-                <View style={[styles.tableCol, { width: 40 }]}>
-                  <Text style={styles.tableCell}></Text>
-                </View>
-
-                <View style={[styles.tableCol, { width: 40 }]}>
+                <View style={[styles.tableCol, { width: 80 }]}>
                   <Text style={styles.tableCell}>
-                    {/* {nightDifferentialReport?.overallTotalRegularOTAmount?.toLocaleString()} */}
-                    test
+                    {nightDifferentialReport?.totalOfTotalHourlySalary?.toLocaleString()}
                   </Text>
                 </View>
 
-                <View style={[styles.tableCol, { width: 50 }]}>
-                  <Text style={styles.tableCell}></Text>
-                </View>
-
-                <View style={[styles.tableCol, { width: 40 }]}>
+                <View style={[styles.tableCol, { width: 80 }]}>
                   <Text style={styles.tableCell}>
-                    {/* {nightDifferentialReport?.overallTotalOffOTAmount?.toLocaleString()} */}
-                    test 2
-                  </Text>
-                </View>
-                <View style={[styles.tableCol, { width: 45 }]}>
-                  <Text style={styles.tableCell}></Text>
-                </View>
-                <View style={[styles.tableCol, { width: 55 }]}>
-                  <Text style={styles.tableCell}>
-                    {/* {nightDifferentialReport?.overallSubstituteDutyOTAmount?.toLocaleString()} */}
-                    test 3
+                    {nightDifferentialReport?.totalOfTotalNightDifferential?.toLocaleString()}
                   </Text>
                 </View>
               </View>

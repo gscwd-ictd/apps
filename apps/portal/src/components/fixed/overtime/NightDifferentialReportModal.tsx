@@ -33,9 +33,6 @@ export const NightDifferentialReportModal = ({
     selectedYear,
     selectedPeriod,
     nightDiffEmployees,
-    mutatedNightDiffEmployees,
-    pdfOvertimeSummaryModalIsOpen,
-    overtimeSummaryReport,
     nightDifferentialReport,
     getNightDifferentialReport,
     getNightDifferentialReportSuccess,
@@ -45,10 +42,7 @@ export const NightDifferentialReportModal = ({
     selectedYear: state.selectedYear,
     selectedPeriod: state.selectedPeriod,
     nightDiffEmployees: state.nightDiffEmployees,
-    mutatedNightDiffEmployees: state.mutatedNightDiffEmployees,
     selectedEmployeeType: state.selectedEmployeeType,
-    pdfOvertimeSummaryModalIsOpen: state.pdfOvertimeSummaryModalIsOpen,
-    overtimeSummaryReport: state.overtimeSummaryReport,
     nightDifferentialReport: state.nightDifferentialReport,
     getNightDifferentialReport: state.getNightDifferentialReport,
     getNightDifferentialReportSuccess: state.getNightDifferentialReportSuccess,
@@ -61,9 +55,10 @@ export const NightDifferentialReportModal = ({
   //post request in getting night differential report
   const handlePostNightDiff = async () => {
     getNightDifferentialReport(true);
+
     const { error, result } = await postApiPortal(
       `reports/night-differential/${selectedYear}/${selectedMonth}?nature_of_appointment=permanent&half=${selectedPeriod}`,
-      { selectedEmployeesForReport }
+      { employees: selectedEmployeesForReport }
     );
     if (error) {
       getNightDifferentialReportFail(false, result);
@@ -84,10 +79,6 @@ export const NightDifferentialReportModal = ({
     const newSelectedEmployees = nightDiffEmployees.filter((item) => selectedEmployeesIds.includes(item.employeeId));
     setSelectedEmployeesForReport(newSelectedEmployees);
   }, [selectedEmployees]);
-
-  useEffect(() => {
-    console.log(selectedEmployeesForReport);
-  }, [selectedEmployeesForReport]);
 
   return (
     <>
