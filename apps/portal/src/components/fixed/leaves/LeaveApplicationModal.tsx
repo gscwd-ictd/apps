@@ -1273,7 +1273,7 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
                   watch('typeOfLeaveDetails.leaveName') === LeaveName.MONETIZATION ? (
                     <AlertNotification
                       alertType="warning"
-                      notifMessage="Leave Monetization cannot be filed twice in a year."
+                      notifMessage="Leave Monetization is filed once a year only."
                       dismissible={false}
                       className="mb-1"
                     />
