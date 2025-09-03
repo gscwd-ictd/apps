@@ -13,6 +13,7 @@ import {
 } from '../../../../libs/utils/src/lib/types/leave-application.type';
 import { devtools } from 'zustand/middleware';
 import axios, { AxiosResponse } from 'axios';
+import { LeaveName } from 'libs/utils/src/lib/enums/leave.enum';
 
 export type LeavesState = {
   leaves: {
@@ -58,6 +59,11 @@ export type LeavesState = {
   confirmCancelLeaveModalIsOpen: boolean;
   tab: number;
   isGetLeaveLoading: boolean;
+
+  monetizationList: Array<EmployeeLeave>;
+
+  serverDate: string;
+  setServerDate: (serverDate: string) => void;
 
   setLeaveDates: (dates: Array<string>) => void;
   setLeaveDateFrom: (date: string) => void;
@@ -152,6 +158,13 @@ export const useLeaveStore = create<LeavesState>()(
     isGetLeaveLoading: true,
     tab: 1,
 
+    monetizationList: [],
+
+    serverDate: '',
+    setServerDate: (serverDate: string) => {
+      set((state) => ({ ...state, serverDate }));
+    },
+
     setLeaveDates: (leaveDates: Array<string>) => {
       set((state) => ({ ...state, leaveDates }));
     },
@@ -243,6 +256,7 @@ export const useLeaveStore = create<LeavesState>()(
           ...state.error,
           errorLeaves: '',
         },
+        monetizationList: response.completed.filter((item) => item.leaveName === LeaveName.MONETIZATION),
       }));
     },
     getLeaveListFail: (loading: boolean, error: string) => {
