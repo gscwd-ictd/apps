@@ -67,6 +67,7 @@ export default function Calendar({
     getUnavailableSuccess,
     getUnavailableFail,
     setOverlappingLeaveCount,
+    setServerDate,
   } = useLeaveStore((state) => ({
     leaveDateFrom: state.leaveDateFrom,
     leaveDateTo: state.leaveDateTo,
@@ -79,6 +80,7 @@ export default function Calendar({
     getUnavailableSuccess: state.getUnavailableSuccess,
     getUnavailableFail: state.getUnavailableFail,
     setOverlappingLeaveCount: state.setOverlappingLeaveCount,
+    setServerDate: state.setServerDate,
   }));
 
   //fetch unavailable dates (current leaves/holidays)
@@ -118,7 +120,8 @@ export default function Calendar({
           unavailableDate.date >= dayjs(swrUnavailableDates?.dateTimeNow).format('YYYY-MM-DD')
       ).length;
       setFutureLeaveCount(futureLeaves);
-      setToday(swrUnavailableDates?.dateTimeNow);
+      setToday(swrUnavailableDates?.dateTimeNow); //local date state
+      setServerDate(swrUnavailableDates?.dateTimeNow); //server date saved on store
       setCurrentMonth(dayjs(swrUnavailableDates?.dateTimeNow).format('MMM-YYYY'));
     }
 

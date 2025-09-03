@@ -12,7 +12,7 @@ import { isEmpty } from 'lodash';
 import { useEmployeeStore } from '../../../../src/store/employee.store';
 import Calendar from './LeaveCalendar';
 import { LeaveBenefitOptions } from '../../../../../../libs/utils/src/lib/types/leave-benefits.type';
-import { LeaveApplicationForm } from '../../../../../../libs/utils/src/lib/types/leave-application.type';
+import { EmployeeLeave, LeaveApplicationForm } from '../../../../../../libs/utils/src/lib/types/leave-application.type';
 import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
 import { LeaveName, MonetizationType } from 'libs/utils/src/lib/enums/leave.enum';
 import { useLeaveLedgerStore } from 'apps/portal/src/store/leave-ledger.store';
@@ -111,6 +111,13 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
     errorLeaveList,
     errorUnavailableDates,
     errorLeaveTypes,
+    monetizationList,
+    serverDate,
+    setServerDate,
+
+    getUnavailableDates,
+    getUnavailableSuccess,
+    getUnavailableFail,
 
     postLeave,
     postLeaveSuccess,
@@ -139,6 +146,13 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
     errorLeaveList: state.error.errorLeaves,
     errorUnavailableDates: state.error.errorUnavailableDates,
     errorLeaveTypes: state.error.errorLeaveTypes,
+    monetizationList: state.monetizationList,
+    serverDate: state.serverDate,
+    setServerDate: state.setServerDate,
+
+    getUnavailableDates: state.getUnavailableDates,
+    getUnavailableSuccess: state.getUnavailableSuccess,
+    getUnavailableFail: state.getUnavailableFail,
 
     postLeave: state.postLeave,
     postLeaveSuccess: state.postLeaveSuccess,
@@ -184,6 +198,16 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
     getLeaveLedgerSuccess: state.getLeaveLedgerSuccess,
     getLeaveLedgerFail: state.getLeaveLedgerFail,
   }));
+
+  //leave monetization lists
+  const [leaveMonetizationList, setLeaveMonetizationList] = useState<Array<EmployeeLeave>>([]);
+
+  useEffect(() => {
+    if (monetizationList.length > 0 && serverDate) {
+      setLeaveMonetizationList(monetizationList.filter((leave) => leave.dateOfFiling.includes(serverDate.slice(0, 4)))); //filter monetization list by current year only
+    }
+  }),
+    [monetizationList];
 
   // set state for employee store
   const employeeDetails = useEmployeeStore((state) => state.employeeDetails);
@@ -925,6 +949,41 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
     }
   }, [lateFiling]);
 
+  //fetch unavailable dates (current leaves/holidays)
+  const unavailableDatesUrl = `${process.env.NEXT_PUBLIC_EMPLOYEE_MONITORING_URL}/v1/leave-application/unavailable-dates/${employeeDetails.employmentDetails.userId}`;
+  const {
+    data: swrUnavailableDates,
+    isLoading: swrUnavailableIsLoading,
+    error: swrUnavailableError,
+  } = useSWR(
+    watch('typeOfLeaveDetails.leaveName') === LeaveName.MONETIZATION ? unavailableDatesUrl : null,
+    fetchWithToken,
+    {
+      shouldRetryOnError: true,
+      revalidateOnFocus: true,
+      refreshInterval: 3000,
+    }
+  );
+
+  // Initial zustand state update
+  useEffect(() => {
+    if (swrUnavailableIsLoading) {
+      getUnavailableDates(swrUnavailableIsLoading);
+    }
+  }, [swrUnavailableIsLoading]);
+
+  // Upon success/fail of swr request, zustand state will be updated
+  useEffect(() => {
+    if (!isEmpty(swrUnavailableDates)) {
+      getUnavailableSuccess(swrUnavailableIsLoading, swrUnavailableDates);
+      setServerDate(swrUnavailableDates?.dateTimeNow); //server date saved on store
+    }
+
+    if (!isEmpty(swrUnavailableError)) {
+      getUnavailableFail(swrUnavailableIsLoading, swrUnavailableError.message);
+    }
+  }, [swrUnavailableDates, swrUnavailableError]);
+
   return (
     <>
       <Modal size={`${windowWidth > 1024 ? 'md' : 'full'}`} open={modalState} setOpen={setModalState}>
@@ -1204,6 +1263,17 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
                     <AlertNotification
                       alertType="warning"
                       notifMessage="There are overlapping leaves in your application."
+                      dismissible={false}
+                      className="mb-1"
+                    />
+                  ) : null}
+
+                  {/* Notif for leave monetization already filed for the year */}
+                  {leaveMonetizationList.length > 0 &&
+                  watch('typeOfLeaveDetails.leaveName') === LeaveName.MONETIZATION ? (
+                    <AlertNotification
+                      alertType="warning"
+                      notifMessage="Leave Monetization is filed once a year only."
                       dismissible={false}
                       className="mb-1"
                     />
@@ -2175,6 +2245,9 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
                     ? true
                     : (estimatedAmount <= 0 || !leaveDateFrom) &&
                       watch('typeOfLeaveDetails.leaveName') === LeaveName.TERMINAL
+                    ? true
+                    : // disable if filing monetization for the 2nd time this year
+                    leaveMonetizationList.length > 0 && watch('typeOfLeaveDetails.leaveName') === LeaveName.MONETIZATION
                     ? true
                     : false
                 }
