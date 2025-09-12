@@ -141,71 +141,133 @@ export const PdDocument = (props) => {
   const { jobDescription, positionDutyResponsibilities, positionQualificationStandards, proficiencyLevel } = props;
 
   const renderCoreDuties = () => {
-    const content = positionDutyResponsibilities?.duties.core.map((duty, index) => (
-      <View style={[styles.rowContainerTable, styles.borderAll]} key={index} wrap={false}>
-        <View style={[styles.w14, styles.tData, styles.borderRight]}>
-          <Text style={[styles.horizontalCenter, styles.verticalCenter]}>{duty.percentage}</Text>
+    const content = positionDutyResponsibilities?.duties.core.map((duty, index) =>
+      // skip the first item as it is already rendered with the table header
+      index === 0 ? (
+        <></>
+      ) : (
+        <View style={[styles.rowContainerTable, styles.borderAll]} key={index} wrap={false}>
+          <View style={[styles.w14, styles.tData, styles.borderRight]}>
+            <Text style={[styles.horizontalCenter, styles.verticalCenter]}>{duty.percentage}</Text>
+          </View>
+          <View style={[styles.w60, styles.tData, styles.borderRight]}>
+            <Text>{duty.description}</Text>
+          </View>
+          <View style={[styles.w26, styles.tData, styles.horizontalCenter]}>
+            <Text>{duty.competency} / </Text>
+            <Text>{duty.level}</Text>
+          </View>
         </View>
-        <View style={[styles.w60, styles.tData, styles.borderRight]}>
-          <Text>{duty.description}</Text>
-        </View>
-        <View style={[styles.w26, styles.tData, styles.horizontalCenter]}>
-          <Text>{duty.competency} / </Text>
-          <Text>{duty.level}</Text>
-        </View>
-      </View>
-    ));
+      )
+    );
 
     return content;
   };
 
-  const renderFunctionalCompetencies = () => {
-    const content = proficiencyLevel?.functional.map((competency, index) => (
-      <View style={[styles.rowContainerTable, styles.borderAll]} key={index} wrap={false}>
-        <View style={[styles.w60, styles.tData, styles.borderRight]}>
-          <Text>
-            <Text>{competency.name}</Text> - {competency.description}
-          </Text>
+  const renderFunctionalCompetencies = (skipFirstIndex: boolean) => {
+    const content = proficiencyLevel?.functional.map((competency, index) =>
+      skipFirstIndex ? (
+        // skip the first item as it is already rendered with the table header
+        index === 0 ? (
+          <></>
+        ) : (
+          <View style={[styles.rowContainerTable, styles.borderAll]} key={index} wrap={false}>
+            <View style={[styles.w60, styles.tData, styles.borderRight]}>
+              <Text>
+                <Text>{competency.name}</Text> - {competency.description}
+              </Text>
+            </View>
+            <View style={[styles.w40, styles.tData]}>
+              <Text style={[styles.horizontalCenter, styles.verticalCenter]}>{competency.level}</Text>
+            </View>
+          </View>
+        )
+      ) : (
+        //render all items
+        <View style={[styles.rowContainerTable, styles.borderAll]} key={index} wrap={false}>
+          <View style={[styles.w60, styles.tData, styles.borderRight]}>
+            <Text>
+              <Text>{competency.name}</Text> - {competency.description}
+            </Text>
+          </View>
+          <View style={[styles.w40, styles.tData]}>
+            <Text style={[styles.horizontalCenter, styles.verticalCenter]}>{competency.level}</Text>
+          </View>
         </View>
-        <View style={[styles.w40, styles.tData]}>
-          <Text style={[styles.horizontalCenter, styles.verticalCenter]}>{competency.level}</Text>
-        </View>
-      </View>
-    ));
+      )
+    );
 
     return content;
   };
 
-  const renderCrossCuttingCompetencies = () => {
-    const content = proficiencyLevel?.crossCutting.map((competency, index) => (
-      <View style={[styles.rowContainerTable, styles.borderAll]} key={index} wrap={false}>
-        <View style={[styles.w60, styles.tData, styles.borderRight]}>
-          <Text>
-            <Text>{competency.name}</Text> - {competency.description}
-          </Text>
+  const renderCrossCuttingCompetencies = (skipFirstIndex: boolean) => {
+    const content = proficiencyLevel?.crossCutting.map((competency, index) =>
+      skipFirstIndex ? (
+        // skip the first item as it is already rendered with the table header
+        index === 0 ? (
+          <></>
+        ) : (
+          <View style={[styles.rowContainerTable, styles.borderAll]} key={index} wrap={false}>
+            <View style={[styles.w60, styles.tData, styles.borderRight]}>
+              <Text>
+                <Text>{competency.name}</Text> - {competency.description}
+              </Text>
+            </View>
+            <View style={[styles.w40, styles.tData]}>
+              <Text style={[styles.horizontalCenter, styles.verticalCenter]}>{competency.level}</Text>
+            </View>
+          </View>
+        )
+      ) : (
+        //render all items
+        <View style={[styles.rowContainerTable, styles.borderAll]} key={index} wrap={false}>
+          <View style={[styles.w60, styles.tData, styles.borderRight]}>
+            <Text>
+              <Text>{competency.name}</Text> - {competency.description}
+            </Text>
+          </View>
+          <View style={[styles.w40, styles.tData]}>
+            <Text style={[styles.horizontalCenter, styles.verticalCenter]}>{competency.level}</Text>
+          </View>
         </View>
-        <View style={[styles.w40, styles.tData]}>
-          <Text style={[styles.horizontalCenter, styles.verticalCenter]}>{competency.level}</Text>
-        </View>
-      </View>
-    ));
+      )
+    );
 
     return content;
   };
 
-  const renderManagerialCompetencies = () => {
-    const content = proficiencyLevel?.managerial.map((competency, index) => (
-      <View style={[styles.rowContainerTable, styles.borderAll]} key={index} wrap={false}>
-        <View style={[styles.w60, styles.tData, styles.borderRight]}>
-          <Text>
-            <Text>{competency.name}</Text> - {competency.description}
-          </Text>
+  const renderManagerialCompetencies = (skipFirstIndex: boolean) => {
+    const content = proficiencyLevel?.managerial.map((competency, index) =>
+      skipFirstIndex ? (
+        // skip the first item as it is already rendered with the table header
+        index === 0 ? (
+          <></>
+        ) : (
+          <View style={[styles.rowContainerTable, styles.borderAll]} key={index} wrap={false}>
+            <View style={[styles.w60, styles.tData, styles.borderRight]}>
+              <Text>
+                <Text>{competency.name}</Text> - {competency.description}
+              </Text>
+            </View>
+            <View style={[styles.w40, styles.tData]}>
+              <Text style={[styles.horizontalCenter, styles.verticalCenter]}>{competency.level}</Text>
+            </View>
+          </View>
+        )
+      ) : (
+        //render all items
+        <View style={[styles.rowContainerTable, styles.borderAll]} key={index} wrap={false}>
+          <View style={[styles.w60, styles.tData, styles.borderRight]}>
+            <Text>
+              <Text>{competency.name}</Text> - {competency.description}
+            </Text>
+          </View>
+          <View style={[styles.w40, styles.tData]}>
+            <Text style={[styles.horizontalCenter, styles.verticalCenter]}>{competency.level}</Text>
+          </View>
         </View>
-        <View style={[styles.w40, styles.tData]}>
-          <Text>{competency.level}</Text>
-        </View>
-      </View>
-    ));
+      )
+    );
 
     return content;
   };
@@ -380,21 +442,39 @@ export const PdDocument = (props) => {
                   {/* <View style={[styles.tHeadFirstLevel]}>
                     <Text>CORE</Text>
                   </View> */}
+                  <View wrap={false}>
+                    <View style={[styles.rowContainerTable, styles.borderAll]}>
+                      <View style={[styles.w14, styles.tHeadSecondLevel, styles.borderRight]}>
+                        <Text>Percentage of Work</Text>
+                      </View>
 
-                  <View style={[styles.rowContainerTable, styles.borderAll]}>
-                    <View style={[styles.w14, styles.tHeadSecondLevel, styles.borderRight]}>
-                      <Text>Percentage of Work</Text>
+                      <View style={[styles.w60, styles.tHeadSecondLevel, styles.borderRight]}>
+                        <Text>Duties and Responsibilities</Text>
+                      </View>
+
+                      <View style={[styles.w26, styles.tHeadSecondLevel]}>
+                        <Text>Competency/Level</Text>
+                      </View>
                     </View>
 
-                    <View style={[styles.w60, styles.tHeadSecondLevel, styles.borderRight]}>
-                      <Text>Duties and Responsibilities</Text>
-                    </View>
-
-                    <View style={[styles.w26, styles.tHeadSecondLevel]}>
-                      <Text>Competency/Level</Text>
+                    {/* render the first core duty to be wrapped with the table header */}
+                    <View style={[styles.rowContainerTable, styles.borderAll]} wrap={false}>
+                      <View style={[styles.w14, styles.tData, styles.borderRight]}>
+                        <Text style={[styles.horizontalCenter, styles.verticalCenter]}>
+                          {positionDutyResponsibilities?.duties.core[0].percentage}
+                        </Text>
+                      </View>
+                      <View style={[styles.w60, styles.tData, styles.borderRight]}>
+                        <Text>{positionDutyResponsibilities?.duties?.core[0].description}</Text>
+                      </View>
+                      <View style={[styles.w26, styles.tData, styles.horizontalCenter]}>
+                        <Text>{positionDutyResponsibilities?.duties?.core[0].competency} / </Text>
+                        <Text>{positionDutyResponsibilities?.duties?.core[0].level}</Text>
+                      </View>
                     </View>
                   </View>
 
+                  {/* render the remaining core duties */}
                   {renderCoreDuties()}
 
                   {/* <View
@@ -516,7 +596,15 @@ export const PdDocument = (props) => {
                 </View> */}
               </View>
             </View>
+          </View>
+        </View>
+      </Page>
 
+      <Page size="A4" style={styles.page}>
+        <Header />
+
+        <View style={[styles.bodyBorder]}>
+          <View style={[styles.bodyText]}>
             {/* QUALIFICATION STANDARDS */}
             <View wrap={false}>
               <View>
@@ -594,19 +682,92 @@ export const PdDocument = (props) => {
 
               <View>
                 {/* Table Header */}
-                <View style={[styles.rowContainerTable, styles.borderAll]}>
-                  <View style={[styles.w60, styles.tHeadSecondLevel, styles.borderRight]}>
-                    <Text>Competency</Text>
+
+                <View wrap={false}>
+                  <View style={[styles.rowContainerTable, styles.borderAll]}>
+                    <View style={[styles.w60, styles.tHeadSecondLevel, styles.borderRight]}>
+                      <Text>Competency</Text>
+                    </View>
+                    <View style={[styles.w40, styles.tHeadSecondLevel]}>
+                      <Text>Required Proficiency Level</Text>
+                    </View>
                   </View>
-                  <View style={[styles.w40, styles.tHeadSecondLevel]}>
-                    <Text>Required Proficiency Level</Text>
-                  </View>
+
+                  {/* render the first functional competency to be wrapped with the table header  */}
+
+                  {!isEmpty(proficiencyLevel?.functional) ? (
+                    <View style={[styles.rowContainerTable, styles.borderAll]} wrap={false}>
+                      <View style={[styles.w60, styles.tData, styles.borderRight]}>
+                        <Text>
+                          <Text>{proficiencyLevel?.functional[0]?.name}</Text> -{' '}
+                          {proficiencyLevel?.functional[0]?.description}
+                        </Text>
+                      </View>
+                      <View style={[styles.w40, styles.tData]}>
+                        <Text style={[styles.horizontalCenter, styles.verticalCenter]}>
+                          {proficiencyLevel?.functional[0]?.level}
+                        </Text>
+                      </View>
+                    </View>
+                  ) : !isEmpty(proficiencyLevel?.crossCutting) ? (
+                    <View style={[styles.rowContainerTable, styles.borderAll]} wrap={false}>
+                      <View style={[styles.w60, styles.tData, styles.borderRight]}>
+                        <Text>
+                          <Text>{proficiencyLevel?.crossCutting[0]?.name}</Text> -{' '}
+                          {proficiencyLevel?.crossCutting[0]?.description}
+                        </Text>
+                      </View>
+                      <View style={[styles.w40, styles.tData]}>
+                        <Text style={[styles.horizontalCenter, styles.verticalCenter]}>
+                          {proficiencyLevel?.crossCutting[0]?.level}
+                        </Text>
+                      </View>
+                    </View>
+                  ) : !isEmpty(proficiencyLevel?.managerial) ? (
+                    <View style={[styles.rowContainerTable, styles.borderAll]} wrap={false}>
+                      <View style={[styles.w60, styles.tData, styles.borderRight]}>
+                        <Text>
+                          <Text>{proficiencyLevel?.managerial[0]?.name}</Text> -{' '}
+                          {proficiencyLevel?.managerial[0]?.description}
+                        </Text>
+                      </View>
+                      <View style={[styles.w40, styles.tData]}>
+                        <Text style={[styles.horizontalCenter, styles.verticalCenter]}>
+                          {proficiencyLevel?.managerial[0]?.level}
+                        </Text>
+                      </View>
+                    </View>
+                  ) : (
+                    <></>
+                  )}
                 </View>
 
                 {/* Table Body */}
-                {renderFunctionalCompetencies()}
-                {renderCrossCuttingCompetencies()}
-                {renderManagerialCompetencies()}
+                {!isEmpty(proficiencyLevel?.functional) ? (
+                  <>
+                    {renderFunctionalCompetencies(true)}
+                    {renderCrossCuttingCompetencies(false)}
+                    {renderManagerialCompetencies(false)}
+                  </>
+                ) : !isEmpty(proficiencyLevel?.crossCutting) ? (
+                  <>
+                    {renderFunctionalCompetencies(false)}
+                    {renderCrossCuttingCompetencies(true)}
+                    {renderManagerialCompetencies(false)}
+                  </>
+                ) : !isEmpty(proficiencyLevel?.managerial) ? (
+                  <>
+                    {renderFunctionalCompetencies(false)}
+                    {renderCrossCuttingCompetencies(false)}
+                    {renderManagerialCompetencies(true)}
+                  </>
+                ) : (
+                  <>
+                    {renderFunctionalCompetencies(false)}
+                    {renderCrossCuttingCompetencies(false)}
+                    {renderManagerialCompetencies(false)}
+                  </>
+                )}
               </View>
             </View>
           </View>

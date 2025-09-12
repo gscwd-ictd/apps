@@ -63,6 +63,7 @@ export type OvertimeList = {
 //for viewing of overtime details
 export type OvertimeDetails = {
   id: string;
+  createdAt: string;
   plannedDate: string;
   dateApproved: string;
   estimatedHours: string;
