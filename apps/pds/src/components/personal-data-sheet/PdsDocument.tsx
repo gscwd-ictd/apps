@@ -634,7 +634,7 @@ export const PdsDocument = ({ formatDate, pds }: Data): JSX.Element => {
   };
 
   const renderLearningDevelopmentExtraPage1 = () => {
-    const content = pds.learningDevelopment.slice(18, 51).map((training, index) => (
+    const content = pds.learningDevelopment.slice(17, 50).map((training, index) => (
       <View style={[styles.borderTop, { flexDirection: 'row', alignItems: 'stretch' }]} key={index}>
         {/* Title of Learning and Development */}
         <View style={[styles.inputValue, styles.borderRight, styles.horizontalCenter, styles.w46_2]}>
@@ -696,7 +696,7 @@ export const PdsDocument = ({ formatDate, pds }: Data): JSX.Element => {
   };
 
   const renderLearningDevelopmentExtraPage2 = () => {
-    const content = pds.learningDevelopment.slice(51, 84).map((training, index) => (
+    const content = pds.learningDevelopment.slice(50, 83).map((training, index) => (
       <View style={[styles.borderTop, { flexDirection: 'row', alignItems: 'stretch' }]} key={index}>
         {/* Title of Learning and Development */}
         <View style={[styles.inputValue, styles.borderRight, styles.horizontalCenter, styles.w46_2]}>
@@ -758,7 +758,7 @@ export const PdsDocument = ({ formatDate, pds }: Data): JSX.Element => {
   };
 
   const renderLearningDevelopmentExtraPage3 = () => {
-    const content = pds.learningDevelopment.slice(84, 117).map((training, index) => (
+    const content = pds.learningDevelopment.slice(83, 116).map((training, index) => (
       <View style={[styles.borderTop, { flexDirection: 'row', alignItems: 'stretch' }]} key={index}>
         {/* Title of Learning and Development */}
         <View style={[styles.inputValue, styles.borderRight, styles.horizontalCenter, styles.w46_2]}>
@@ -820,7 +820,7 @@ export const PdsDocument = ({ formatDate, pds }: Data): JSX.Element => {
   };
 
   const renderLearningDevelopmentExtraPage4 = () => {
-    const content = pds.learningDevelopment.slice(117, 150).map((training, index) => (
+    const content = pds.learningDevelopment.slice(116, 149).map((training, index) => (
       <View style={[styles.borderTop, { flexDirection: 'row', alignItems: 'stretch' }]} key={index}>
         {/* Title of Learning and Development */}
         <View style={[styles.inputValue, styles.borderRight, styles.horizontalCenter, styles.w46_2]}>
@@ -882,7 +882,7 @@ export const PdsDocument = ({ formatDate, pds }: Data): JSX.Element => {
   };
 
   const renderLearningDevelopmentExtraPage5 = () => {
-    const content = pds.learningDevelopment.slice(150, 183).map((training, index) => (
+    const content = pds.learningDevelopment.slice(149, 182).map((training, index) => (
       <View style={[styles.borderTop, { flexDirection: 'row', alignItems: 'stretch' }]} key={index}>
         {/* Title of Learning and Development */}
         <View style={[styles.inputValue, styles.borderRight, styles.horizontalCenter, styles.w46_2]}>
@@ -944,7 +944,7 @@ export const PdsDocument = ({ formatDate, pds }: Data): JSX.Element => {
   };
 
   const renderLearningDevelopmentExtraPage6 = () => {
-    const content = pds.learningDevelopment.slice(183, 216).map((training, index) => (
+    const content = pds.learningDevelopment.slice(182, 215).map((training, index) => (
       <View style={[styles.borderTop, { flexDirection: 'row', alignItems: 'stretch' }]} key={index}>
         {/* Title of Learning and Development */}
         <View style={[styles.inputValue, styles.borderRight, styles.horizontalCenter, styles.w46_2]}>
@@ -1532,7 +1532,7 @@ export const PdsDocument = ({ formatDate, pds }: Data): JSX.Element => {
         ) : null}
 
         {/* Learning and Development Extra Pages */}
-        {pds.learningDevelopment && pds.learningDevelopment.length > 18 ? (
+        {pds.learningDevelopment && pds.learningDevelopment.length > 17 ? (
           <Page size={[612.3, 935.4]} style={styles.page}>
             <View style={styles.bodyBorder}>
               <View style={[styles.sectionTitleContainer, styles.borderBottom]}>
@@ -1628,7 +1628,7 @@ export const PdsDocument = ({ formatDate, pds }: Data): JSX.Element => {
           </Page>
         ) : null}
 
-        {pds.learningDevelopment && pds.learningDevelopment.length > 52 ? (
+        {pds.learningDevelopment && pds.learningDevelopment.length > 51 ? (
           <Page size={[612.3, 935.4]} style={styles.page}>
             <View style={styles.bodyBorder}>
               <View style={[styles.sectionTitleContainer, styles.borderBottom]}>
@@ -1724,7 +1724,7 @@ export const PdsDocument = ({ formatDate, pds }: Data): JSX.Element => {
           </Page>
         ) : null}
 
-        {pds.learningDevelopment && pds.learningDevelopment.length > 85 ? (
+        {pds.learningDevelopment && pds.learningDevelopment.length > 84 ? (
           <Page size={[612.3, 935.4]} style={styles.page}>
             <View style={styles.bodyBorder}>
               <View style={[styles.sectionTitleContainer, styles.borderBottom]}>
@@ -1820,7 +1820,7 @@ export const PdsDocument = ({ formatDate, pds }: Data): JSX.Element => {
           </Page>
         ) : null}
 
-        {pds.learningDevelopment && pds.learningDevelopment.length > 118 ? (
+        {pds.learningDevelopment && pds.learningDevelopment.length > 117 ? (
           <Page size={[612.3, 935.4]} style={styles.page}>
             <View style={styles.bodyBorder}>
               <View style={[styles.sectionTitleContainer, styles.borderBottom]}>
@@ -1916,7 +1916,7 @@ export const PdsDocument = ({ formatDate, pds }: Data): JSX.Element => {
           </Page>
         ) : null}
 
-        {pds.learningDevelopment && pds.learningDevelopment.length > 151 ? (
+        {pds.learningDevelopment && pds.learningDevelopment.length > 150 ? (
           <Page size={[612.3, 935.4]} style={styles.page}>
             <View style={styles.bodyBorder}>
               <View style={[styles.sectionTitleContainer, styles.borderBottom]}>
@@ -2012,7 +2012,7 @@ export const PdsDocument = ({ formatDate, pds }: Data): JSX.Element => {
           </Page>
         ) : null}
 
-        {pds.learningDevelopment && pds.learningDevelopment.length > 184 ? (
+        {pds.learningDevelopment && pds.learningDevelopment.length > 183 ? (
           <Page size={[612.3, 935.4]} style={styles.page}>
             <View style={styles.bodyBorder}>
               <View style={[styles.sectionTitleContainer, styles.borderBottom]}>

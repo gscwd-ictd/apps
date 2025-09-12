@@ -24,6 +24,10 @@ export const DataTablePortal = <T extends unknown>({
     resetFilterInputs();
   }, []);
 
+  // useEffect(() => {
+  //   console.log(model.getHeaderGroups);
+  // }, [model]);
+
   return (
     <>
       <div className="order-1 w-1/2 search-box-wrapper">

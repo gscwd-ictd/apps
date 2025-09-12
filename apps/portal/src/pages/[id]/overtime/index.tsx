@@ -237,6 +237,7 @@ export default function Overtime({ employeeDetails }: InferGetServerSidePropsTyp
   // Upon success/fail of swr request, zustand state will be updated
   useEffect(() => {
     if (!isEmpty(swrOvertimeList)) {
+      console.log(swrOvertimeList);
       getOvertimeListSuccess(swrOvertimeListIsLoading, swrOvertimeList);
     }
 
@@ -315,6 +316,14 @@ export default function Overtime({ employeeDetails }: InferGetServerSidePropsTyp
     columnHelper.accessor('id', {
       cell: (info) => info.getValue(),
     }),
+
+    columnHelper.accessor('createdAt', {
+      header: 'Create Date',
+      filterFn: 'fuzzy',
+      sortingFn: fuzzySort,
+      cell: (info) => dayjs(info.getValue()).format('MMMM DD, YYYY'),
+    }),
+
     columnHelper.accessor('plannedDate', {
       header: 'Planned Date',
       filterFn: 'fuzzy',
@@ -322,12 +331,13 @@ export default function Overtime({ employeeDetails }: InferGetServerSidePropsTyp
       cell: (info) => dayjs(info.getValue()).format('MMMM DD, YYYY'),
     }),
 
-    columnHelper.accessor('immediateSupervisorName', {
-      header: 'Requested By',
-      filterFn: 'fuzzy',
-      sortingFn: fuzzySort,
-      cell: (info) => info.getValue(),
-    }),
+    // columnHelper.accessor('immediateSupervisorName', {
+    //   header: 'Requested By',
+    //   filterFn: 'fuzzy',
+    //   sortingFn: fuzzySort,
+    //   cell: (info) => info.getValue(),
+    // }),
+
     columnHelper.accessor('estimatedHours', {
       header: 'Hours',
       filterFn: 'fuzzy',
@@ -335,11 +345,29 @@ export default function Overtime({ employeeDetails }: InferGetServerSidePropsTyp
       sortingFn: fuzzySort,
       cell: (info) => info.getValue(),
     }),
+
+    // columnHelper.accessor('employees', {
+    //   header: 'Employees',
+    //   filterFn: 'fuzzy',
+    //   enableColumnFilter: false,
+    //   sortingFn: fuzzySort,
+    //   cell: (props) => props.row.original.employees.fullName,
+    // }),
+    // columnHelper.accessor('employees', {
+    //   header: 'Employees',
+    //   filterFn: 'arrIncludes',
+    //   enableSorting: false,
+    //   enableGlobalFilter: false,
+    //   cell: (info) => renderRowEmployeeAvatar(info.getValue()),
+    // }),
+
     columnHelper.display({
       header: 'Employees',
-      enableColumnFilter: true,
+      filterFn: 'fuzzy',
+      enableColumnFilter: false,
       cell: (props) => renderRowEmployeeAvatar(props.row.original.employees),
     }),
+
     columnHelper.accessor('status', {
       header: 'Status',
       cell: (info) => UseRenderOvertimeStatus(info.getValue(), TextSize.TEXT_SM),

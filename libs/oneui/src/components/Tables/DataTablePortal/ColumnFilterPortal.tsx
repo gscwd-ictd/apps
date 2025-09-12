@@ -2,6 +2,7 @@ import { useMemo } from 'react';
 import { DebouncedInput } from './DebounceInput';
 import { Column, Table } from '@tanstack/react-table';
 import dayjs from 'dayjs';
+import { isEmpty } from 'lodash';
 
 export const ColumnFilterPortal = ({
   column,
@@ -53,6 +54,8 @@ export const ColumnFilterPortal = ({
           .map((value: any, index: number) =>
             dayjs(value).format('MM-DD-YYYY') !== 'Invalid Date' ? (
               <option value={value} label={`${dayjs(value).format('MM-DD-YYYY')}`} key={index}></option>
+            ) : !isEmpty(value[0]?.fullName) ? (
+              <option value={value[0].fullName} key={index} />
             ) : (
               <option value={value} key={index} />
             )

@@ -84,7 +84,7 @@ export const LearningAndDevelopmentPdf = ({
   const [emptyLearningDevRows] = useState(18);
 
   const renderLearningDevelopmentRows = () => {
-    const content = learningDevelopment.slice(0, 18).map((training, index) => (
+    const content = learningDevelopment.slice(0, 17).map((training, index) => (
       <View
         style={[
           styles.borderTop,
