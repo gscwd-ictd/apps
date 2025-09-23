@@ -59,6 +59,7 @@ const styles = StyleSheet.create({
   w31_9: { width: '31.9%' },
   w27_1: { width: '27.1%' },
   w17_2: { width: '17.2%' },
+  w9_5: { width: '9.5%' },
   w7: { width: '7%' },
   w5_6: { width: '5.6%' },
 });
@@ -78,21 +79,12 @@ type WorkExperiencePdfProps = {
   workExperience: Array<WorkExperience>;
 };
 
-export const WorkExperiencePdf = ({
-  formatDate,
-  workExperience,
-}: WorkExperiencePdfProps): JSX.Element => {
+export const WorkExperiencePdf = ({ formatDate, workExperience }: WorkExperiencePdfProps): JSX.Element => {
   const [emptyWorkExperienceRows, setEmptyWorkExperienceRows] = useState(28);
 
   const renderWorkExperienceRows = () => {
     const content = workExperience.slice(0, 28).map((experience, index) => (
-      <View
-        style={[
-          styles.borderTop,
-          { flexDirection: 'row', alignItems: 'stretch' },
-        ]}
-        key={index}
-      >
+      <View style={[styles.borderTop, { flexDirection: 'row', alignItems: 'stretch' }]} key={index}>
         {/* Inclusive Dates */}
         <View
           style={[
@@ -103,12 +95,8 @@ export const WorkExperiencePdf = ({
             { padding: '0', flexDirection: 'row' },
           ]}
         >
-          <View
-            style={[styles.w50, styles.horizontalCenter, styles.borderRight]}
-          >
-            <Text style={[styles.verticalCenter, { padding: '3 0' }]}>
-              {formatDate(experience.from) || 'N/A'}
-            </Text>
+          <View style={[styles.w50, styles.horizontalCenter, styles.borderRight]}>
+            <Text style={[styles.verticalCenter, { padding: '3 0' }]}>{formatDate(experience.from) || 'N/A'}</Text>
           </View>
           <View style={[styles.w50, styles.horizontalCenter]}>
             <View style={[styles.verticalCenter, { padding: '3 0' }]}>
@@ -127,33 +115,20 @@ export const WorkExperiencePdf = ({
             { flexDirection: 'row' },
           ]}
         >
-          <View
-            style={[
-              styles.verticalCenter,
-              styles.horizontalCenter,
-              styles.w100,
-            ]}
-          >
+          <View style={[styles.verticalCenter, styles.horizontalCenter, styles.w100]}>
             <Text>{experience.positionTitle || 'N/A'}</Text>
           </View>
         </View>
 
         {/* Company Name */}
-        <View
-          style={[
-            styles.borderRight,
-            styles.inputValue,
-            styles.horizontalCenter,
-            styles.w27_1,
-          ]}
-        >
+        <View style={[styles.borderRight, styles.inputValue, styles.horizontalCenter, styles.w31_9]}>
           <View style={[styles.verticalCenter]}>
             <Text>{experience.companyName || 'N/A'}</Text>
           </View>
         </View>
 
         {/* Monthly Salary */}
-        <View
+        {/* <View
           style={[
             styles.borderRight,
             styles.inputValue,
@@ -165,10 +140,10 @@ export const WorkExperiencePdf = ({
           <View style={[styles.verticalCenter]}>
             <Text>{experience.monthlySalary || 'N/A'}</Text>
           </View>
-        </View>
+        </View> */}
 
         {/* Salary Grade / Increment */}
-        <View
+        {/* <View
           style={[
             styles.borderRight,
             styles.inputValue,
@@ -180,7 +155,7 @@ export const WorkExperiencePdf = ({
           <View style={[styles.verticalCenter]}>
             <Text>{experience.salaryGrade || 'N/A'}</Text>
           </View>
-        </View>
+        </View> */}
 
         {/* Status of Appointment */}
         <View
@@ -188,26 +163,17 @@ export const WorkExperiencePdf = ({
             styles.borderRight,
             styles.inputValue,
             styles.horizontalCenter,
-            styles.w7,
+            styles.w9_5,
             { fontSize: 6.2, padding: 0 },
           ]}
         >
           <View style={[styles.verticalCenter]}>
-            <Text hyphenationCallback={(e) => chunkSubstr(e)}>
-              {experience.appointmentStatus || 'N/A'}
-            </Text>
+            <Text hyphenationCallback={(e) => chunkSubstr(e)}>{experience.appointmentStatus || 'N/A'}</Text>
           </View>
         </View>
 
         {/* Gov't Service */}
-        <View
-          style={[
-            styles.inputValue,
-            styles.horizontalCenter,
-            styles.w5_6,
-            { padding: 0 },
-          ]}
-        >
+        <View style={[styles.inputValue, styles.horizontalCenter, styles.w9_5, { padding: 0 }]}>
           <View style={[styles.verticalCenter]}>
             <Text>{experience.isGovernmentService ? 'Y' : 'N'}</Text>
           </View>
@@ -224,13 +190,7 @@ export const WorkExperiencePdf = ({
 
     for (let i = 0; i < rowToRender; i++) {
       content.push(
-        <View
-          style={[
-            styles.borderTop,
-            { flexDirection: 'row', alignItems: 'stretch' },
-          ]}
-          key={i}
-        >
+        <View style={[styles.borderTop, { flexDirection: 'row', alignItems: 'stretch' }]} key={i}>
           {/* Inclusive Dates */}
           <View
             style={[
@@ -241,12 +201,8 @@ export const WorkExperiencePdf = ({
               { padding: '0', flexDirection: 'row' },
             ]}
           >
-            <View
-              style={[styles.w50, styles.horizontalCenter, styles.borderRight]}
-            >
-              <Text style={[styles.verticalCenter, { padding: '3 0' }]}>
-                N/A
-              </Text>
+            <View style={[styles.w50, styles.horizontalCenter, styles.borderRight]}>
+              <Text style={[styles.verticalCenter, { padding: '3 0' }]}>N/A</Text>
             </View>
             <View style={[styles.w50, styles.horizontalCenter]}>
               <View style={[styles.verticalCenter, { padding: '3 0' }]}>
@@ -265,60 +221,31 @@ export const WorkExperiencePdf = ({
               { flexDirection: 'row' },
             ]}
           >
-            <View
-              style={[
-                styles.verticalCenter,
-                styles.horizontalCenter,
-                styles.w100,
-              ]}
-            >
+            <View style={[styles.verticalCenter, styles.horizontalCenter, styles.w100]}>
               <Text>N/A</Text>
             </View>
           </View>
 
           {/* Company Name */}
-          <View
-            style={[
-              styles.borderRight,
-              styles.inputValue,
-              styles.horizontalCenter,
-              styles.w27_1,
-            ]}
-          >
+          <View style={[styles.borderRight, styles.inputValue, styles.horizontalCenter, styles.w31_9]}>
             <View style={[styles.verticalCenter]}>
               <Text>N/A</Text>
             </View>
           </View>
 
           {/* Monthly Salary */}
-          <View
-            style={[
-              styles.borderRight,
-              styles.inputValue,
-              styles.horizontalCenter,
-              styles.w5_6,
-              { padding: 0 },
-            ]}
-          >
+          {/* <View style={[styles.borderRight, styles.inputValue, styles.horizontalCenter, styles.w5_6, { padding: 0 }]}>
             <View style={[styles.verticalCenter]}>
               <Text>N/A</Text>
             </View>
-          </View>
+          </View> */}
 
           {/* Salary Grade / Increment */}
-          <View
-            style={[
-              styles.borderRight,
-              styles.inputValue,
-              styles.horizontalCenter,
-              styles.w5_6,
-              { padding: 1 },
-            ]}
-          >
+          {/* <View style={[styles.borderRight, styles.inputValue, styles.horizontalCenter, styles.w5_6, { padding: 1 }]}>
             <View style={[styles.verticalCenter]}>
               <Text>N/A</Text>
             </View>
-          </View>
+          </View> */}
 
           {/* Status of Appointment */}
           <View
@@ -326,7 +253,7 @@ export const WorkExperiencePdf = ({
               styles.borderRight,
               styles.inputValue,
               styles.horizontalCenter,
-              styles.w7,
+              styles.w9_5,
               { fontSize: 6.2, padding: 0 },
             ]}
           >
@@ -336,14 +263,7 @@ export const WorkExperiencePdf = ({
           </View>
 
           {/* Gov't Service */}
-          <View
-            style={[
-              styles.inputValue,
-              styles.horizontalCenter,
-              styles.w5_6,
-              { padding: 0 },
-            ]}
-          >
+          <View style={[styles.inputValue, styles.horizontalCenter, styles.w9_5, { padding: 0 }]}>
             <View style={[styles.verticalCenter]}>
               <Text>N/A</Text>
             </View>
@@ -359,48 +279,26 @@ export const WorkExperiencePdf = ({
       <View style={[styles.sectionTitleContainer, styles.borderTop]}>
         <Text style={styles.sectionTitleText}>V. WORK EXPERIENCE</Text>
         <Text style={styles.sectionSubtitleText}>
-          (Include private employment. Start from your recent work) Description
-          of duties should be indicated in the attached Work Experience sheet.
+          (Include private employment. Start from your recent work) Description of duties should be indicated in the
+          attached Work Experience sheet.
         </Text>
       </View>
 
       {/* Work Experience Header */}
-      <View
-        style={[
-          styles.borderTop,
-          { flexDirection: 'row', alignItems: 'stretch' },
-        ]}
-      >
+      <View style={[styles.borderTop, { flexDirection: 'row', alignItems: 'stretch' }]}>
         {/* Inclusive Dates */}
-        <View
-          style={[
-            styles.horizontalCenter,
-            styles.borderRight,
-            styles.inputKey,
-            styles.w17_2,
-            { padding: '0' },
-          ]}
-        >
-          <View
-            style={[
-              styles.horizontalCenter,
-              { padding: '8 5', flexDirection: 'row' },
-            ]}
-          >
+        <View style={[styles.horizontalCenter, styles.borderRight, styles.inputKey, styles.w17_2, { padding: '0' }]}>
+          <View style={[styles.horizontalCenter, { padding: '8 5', flexDirection: 'row' }]}>
             <Text style={[styles.verticalCenter]}>28.</Text>
             <View style={[styles.w100, { textAlign: 'center' }]}>
               <Text>INCLUSIVE DATES</Text>
-              <Text>(mm/dd/yyyy)</Text>
+              <Text>(dd/mm/yyyy)</Text>
             </View>
           </View>
 
           <View style={[styles.borderTop, { flexDirection: 'row' }]}>
-            <View
-              style={[styles.w50, styles.horizontalCenter, styles.borderRight]}
-            >
-              <Text style={[styles.verticalCenter, { padding: '3 0' }]}>
-                From
-              </Text>
+            <View style={[styles.w50, styles.horizontalCenter, styles.borderRight]}>
+              <Text style={[styles.verticalCenter, { padding: '3 0' }]}>From</Text>
             </View>
             <View style={[styles.w50, styles.horizontalCenter]}>
               <View style={[styles.verticalCenter, { padding: '3 0' }]}>
@@ -412,43 +310,25 @@ export const WorkExperiencePdf = ({
 
         {/* Position Title */}
         <View
-          style={[
-            styles.inputKey,
-            styles.borderRight,
-            styles.horizontalCenter,
-            styles.w31_9,
-            { flexDirection: 'row' },
-          ]}
+          style={[styles.inputKey, styles.borderRight, styles.horizontalCenter, styles.w31_9, { flexDirection: 'row' }]}
         >
-          <View
-            style={[
-              styles.verticalCenter,
-              styles.horizontalCenter,
-              styles.w100,
-            ]}
-          >
+          <View style={[styles.verticalCenter, styles.horizontalCenter, styles.w100]}>
             <Text>POSITION TITLE</Text>
             <Text>(Write in full/Do not abbreviate)</Text>
           </View>
         </View>
 
         {/* Company Name */}
-        <View
-          style={[
-            styles.borderRight,
-            styles.inputKey,
-            styles.horizontalCenter,
-            styles.w27_1,
-          ]}
-        >
+        <View style={[styles.borderRight, styles.inputKey, styles.horizontalCenter, styles.w31_9]}>
           <View style={[styles.verticalCenter]}>
             <Text>DEPARTMENT / AGENCY / OFFICE / COMPANY</Text>
             <Text>(Write in full/Do not abbreviate)</Text>
           </View>
         </View>
 
+        {/* REMOVED AS OF REVISED 2025 FORM */}
         {/* Monthly Salary */}
-        <View
+        {/* <View
           style={[
             styles.borderRight,
             styles.inputKey,
@@ -460,10 +340,11 @@ export const WorkExperiencePdf = ({
           <View style={[styles.verticalCenter]}>
             <Text style={{ fontSize: 5.7 }}>MONTHLY SALARY</Text>
           </View>
-        </View>
+        </View> */}
 
+        {/* REMOVED AS OF REVISED 2025 FORM */}
         {/* Salary Grade / Increment */}
-        <View
+        {/* <View
           style={[
             styles.borderRight,
             styles.inputKey,
@@ -478,18 +359,10 @@ export const WorkExperiencePdf = ({
               &quot;00-0&quot;)/ INCREMENT
             </Text>
           </View>
-        </View>
+        </View> */}
 
         {/* Status of Appointment */}
-        <View
-          style={[
-            styles.borderRight,
-            styles.inputKey,
-            styles.horizontalCenter,
-            styles.w7,
-            { padding: 0 },
-          ]}
-        >
+        <View style={[styles.borderRight, styles.inputKey, styles.horizontalCenter, styles.w9_5, { padding: 0 }]}>
           <View style={[styles.verticalCenter, { fontSize: 5.7 }]}>
             <Text>STATUS OF</Text>
             <Text>APPOINTMENT</Text>
@@ -497,14 +370,7 @@ export const WorkExperiencePdf = ({
         </View>
 
         {/* Gov't Service */}
-        <View
-          style={[
-            styles.inputKey,
-            styles.horizontalCenter,
-            styles.w5_6,
-            { padding: 0 },
-          ]}
-        >
+        <View style={[styles.inputKey, styles.horizontalCenter, styles.w9_5, { padding: 0 }]}>
           <View style={[styles.verticalCenter, { fontSize: 5.7 }]}>
             <Text>GOV&apos;T</Text>
             <Text>SERVICE</Text>
@@ -515,15 +381,11 @@ export const WorkExperiencePdf = ({
 
       {renderWorkExperienceRows()}
 
-      {workExperience.length < 28 ? (
-        <>{renderEmptyWorkExperienceRows()}</>
-      ) : null}
+      {workExperience.length < 28 ? <>{renderEmptyWorkExperienceRows()}</> : null}
 
       <View style={[styles.borderTop]}>
         <View style={[styles.inputKey, styles.w100, { padding: '1 0' }]}>
-          <Text style={styles.warningText}>
-            (Continue on separate sheet if necessary)
-          </Text>
+          <Text style={styles.warningText}>(Continue on separate sheet if necessary)</Text>
         </View>
       </View>
     </View>

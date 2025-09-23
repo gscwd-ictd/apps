@@ -79,78 +79,38 @@ type EligibilityPdfProps = {
   eligibility: Array<Eligibility>;
 };
 
-export const EligibilityPdf = ({
-  formatDate,
-  eligibility,
-}: EligibilityPdfProps): JSX.Element => {
+export const EligibilityPdf = ({ formatDate, eligibility }: EligibilityPdfProps): JSX.Element => {
   const [emptyEligibilityRows, setEmptyEligibilityRows] = useState(7);
 
   const renderEligibilityRows = () => {
     const content = eligibility.slice(0, 7).map((eligibility, index) => (
-      <View
-        style={[
-          styles.borderTop,
-          { flexDirection: 'row', alignItems: 'stretch' },
-        ]}
-        key={index}
-      >
+      <View style={[styles.borderTop, { flexDirection: 'row', alignItems: 'stretch' }]} key={index}>
         {/* Eligibility Name */}
-        <View
-          style={[
-            styles.inputValue,
-            styles.borderRight,
-            styles.w34,
-            { flexDirection: 'row' },
-          ]}
-        >
-          <Text style={[styles.verticalCenter]}>
-            {eligibility.name || 'N/A'}
-          </Text>
+        <View style={[styles.inputValue, styles.borderRight, styles.w34, { flexDirection: 'row' }]}>
+          <Text style={[styles.verticalCenter]}>{eligibility.name || 'N/A'}</Text>
         </View>
 
         {/* Rating */}
-        <View
-          style={[
-            styles.inputValue,
-            styles.borderRight,
-            styles.horizontalCenter,
-            styles.w15_1,
-          ]}
-        >
-          <Text style={[styles.verticalCenter]}>
-            {eligibility.rating || 'N/A'}
-          </Text>
+        <View style={[styles.inputValue, styles.borderRight, styles.horizontalCenter, styles.w15_1]}>
+          <Text style={[styles.verticalCenter]}>{eligibility.rating || 'N/A'}</Text>
         </View>
 
         {/* Date of examination */}
-        <View
-          style={[
-            styles.borderRight,
-            styles.inputValue,
-            styles.horizontalCenter,
-            styles.w15_1,
-          ]}
-        >
+        <View style={[styles.borderRight, styles.inputValue, styles.horizontalCenter, styles.w15_1]}>
           <View style={[styles.verticalCenter]}>
             {eligibility.examDate.from && eligibility.examDate.to ? (
               <Text style={{ textTransform: 'lowercase' }}>
-                {eligibility.examDate.from + ' to ' + eligibility.examDate.to}
+                {formatDate(eligibility.examDate.from) + ' to ' + formatDate(eligibility.examDate.to)}
               </Text>
             ) : (
-              <Text>{eligibility.examDate.from}</Text>
+              <Text>{formatDate(eligibility.examDate.from)}</Text>
             )}
           </View>
         </View>
 
         {/* Place of examination */}
         <View
-          style={[
-            styles.borderRight,
-            styles.inputValue,
-            styles.horizontalCenter,
-            styles.w21_8,
-            { padding: '0 2' },
-          ]}
+          style={[styles.borderRight, styles.inputValue, styles.horizontalCenter, styles.w21_8, { padding: '0 2' }]}
         >
           <View style={[styles.verticalCenter]}>
             <Text>{eligibility.examPlace || 'N/A'}</Text>
@@ -158,20 +118,9 @@ export const EligibilityPdf = ({
         </View>
 
         {/* License */}
-        <View
-          style={[
-            styles.inputValue,
-            styles.w14,
-            { padding: 0, flexDirection: 'row' },
-          ]}
-        >
-          <View
-            style={[styles.w50, styles.horizontalCenter, styles.borderRight]}
-          >
-            <Text
-              style={[styles.verticalCenter, { padding: '3 0' }]}
-              hyphenationCallback={(e) => chunkSubstr(e)}
-            >
+        <View style={[styles.inputValue, styles.w14, { padding: 0, flexDirection: 'row' }]}>
+          <View style={[styles.w50, styles.horizontalCenter, styles.borderRight]}>
+            <Text style={[styles.verticalCenter, { padding: '3 0' }]} hyphenationCallback={(e) => chunkSubstr(e)}>
               {eligibility.licenseNumber || 'N/A'}
             </Text>
           </View>
@@ -193,46 +142,19 @@ export const EligibilityPdf = ({
 
     for (let i = 0; i < rowToRender; i++) {
       content.push(
-        <View
-          style={[
-            styles.borderTop,
-            { flexDirection: 'row', alignItems: 'stretch' },
-          ]}
-          key={i}
-        >
+        <View style={[styles.borderTop, { flexDirection: 'row', alignItems: 'stretch' }]} key={i}>
           {/* Eligibility Name */}
-          <View
-            style={[
-              styles.inputValue,
-              styles.borderRight,
-              styles.w34,
-              { flexDirection: 'row' },
-            ]}
-          >
+          <View style={[styles.inputValue, styles.borderRight, styles.w34, { flexDirection: 'row' }]}>
             <Text style={[styles.verticalCenter]}>N/A</Text>
           </View>
 
           {/* Rating */}
-          <View
-            style={[
-              styles.inputValue,
-              styles.borderRight,
-              styles.horizontalCenter,
-              styles.w15_1,
-            ]}
-          >
+          <View style={[styles.inputValue, styles.borderRight, styles.horizontalCenter, styles.w15_1]}>
             <Text style={[styles.verticalCenter]}>N/A</Text>
           </View>
 
           {/* Date of examination */}
-          <View
-            style={[
-              styles.borderRight,
-              styles.inputValue,
-              styles.horizontalCenter,
-              styles.w15_1,
-            ]}
-          >
+          <View style={[styles.borderRight, styles.inputValue, styles.horizontalCenter, styles.w15_1]}>
             <View style={[styles.verticalCenter]}>
               <Text>N/A</Text>
             </View>
@@ -240,13 +162,7 @@ export const EligibilityPdf = ({
 
           {/* Place of examination */}
           <View
-            style={[
-              styles.borderRight,
-              styles.inputValue,
-              styles.horizontalCenter,
-              styles.w21_8,
-              { padding: '0 2' },
-            ]}
+            style={[styles.borderRight, styles.inputValue, styles.horizontalCenter, styles.w21_8, { padding: '0 2' }]}
           >
             <View style={[styles.verticalCenter]}>
               <Text>N/A</Text>
@@ -254,19 +170,9 @@ export const EligibilityPdf = ({
           </View>
 
           {/* License */}
-          <View
-            style={[
-              styles.inputValue,
-              styles.w14,
-              { padding: 0, flexDirection: 'row' },
-            ]}
-          >
-            <View
-              style={[styles.w50, styles.horizontalCenter, styles.borderRight]}
-            >
-              <Text style={[styles.verticalCenter, { padding: '3 0' }]}>
-                N/A
-              </Text>
+          <View style={[styles.inputValue, styles.w14, { padding: 0, flexDirection: 'row' }]}>
+            <View style={[styles.w50, styles.horizontalCenter, styles.borderRight]}>
+              <Text style={[styles.verticalCenter, { padding: '3 0' }]}>N/A</Text>
             </View>
             <View style={[styles.w50, styles.horizontalCenter]}>
               <View style={[styles.verticalCenter, { padding: '3 0' }]}>
@@ -283,51 +189,26 @@ export const EligibilityPdf = ({
   return (
     <View>
       <View style={[styles.sectionTitleContainer]}>
-        <Text style={styles.sectionTitleText}>
-          IV. CIVIL SERVICE ELIGIBILITY
-        </Text>
+        <Text style={styles.sectionTitleText}>IV. CIVIL SERVICE ELIGIBILITY</Text>
       </View>
 
       {/* Eligibility Header */}
-      <View
-        style={[
-          styles.borderTop,
-          { flexDirection: 'row', alignItems: 'stretch' },
-        ]}
-      >
+      <View style={[styles.borderTop, { flexDirection: 'row', alignItems: 'stretch' }]}>
         {/* Eligibility Name */}
         <View
-          style={[
-            styles.inputKey,
-            styles.borderRight,
-            styles.horizontalCenter,
-            styles.w34,
-            { flexDirection: 'row' },
-          ]}
+          style={[styles.inputKey, styles.borderRight, styles.horizontalCenter, styles.w34, { flexDirection: 'row' }]}
         >
           <Text style={[styles.verticalCenter]}>27.</Text>
-          <View
-            style={[
-              styles.verticalCenter,
-              styles.horizontalCenter,
-              { padding: '3 10', width: '100%' },
-            ]}
-          >
-            <Text>CAREER SERVICE/ RA 1080 (BOARD/ BAR) UNDER</Text>
-            <Text> SPECIAL LAWS/ CES/ CSEE</Text>
-            <Text>BARANGAY ELIGIBILITY / DRIVER&apos;S LICENSE</Text>
+          <View style={[styles.verticalCenter, styles.horizontalCenter, { padding: '3 10', width: '100%' }]}>
+            <Text>CES/CSEE/CAREER SERVICE/RA 1080 (BOARD/</Text>
+            <Text>BAR)/UNDER SPECIAL LAWS/CATEGORY II/IV</Text>
+            <Text>ELIGIBILITY and ELIGIBILITIES FOR UNIFORMED</Text>
+            <Text>PERSONNEL</Text>
           </View>
         </View>
 
         {/* Rating */}
-        <View
-          style={[
-            styles.borderRight,
-            styles.inputKey,
-            styles.horizontalCenter,
-            styles.w15_1,
-          ]}
-        >
+        <View style={[styles.borderRight, styles.inputKey, styles.horizontalCenter, styles.w15_1]}>
           <View style={[styles.verticalCenter]}>
             <Text>RATING</Text>
             <Text>(If Applicable)</Text>
@@ -335,59 +216,32 @@ export const EligibilityPdf = ({
         </View>
 
         {/* Date of examination */}
-        <View
-          style={[
-            styles.borderRight,
-            styles.inputKey,
-            styles.horizontalCenter,
-            styles.w15_1,
-          ]}
-        >
+        <View style={[styles.borderRight, styles.inputKey, styles.horizontalCenter, styles.w15_1]}>
           <View style={[styles.verticalCenter]}>
             <Text>DATE OF EXAMINATION / CONFERMENT</Text>
           </View>
         </View>
 
         {/* Place of examination */}
-        <View
-          style={[
-            styles.borderRight,
-            styles.inputKey,
-            styles.horizontalCenter,
-            styles.w21_8,
-            { padding: '0 2' },
-          ]}
-        >
+        <View style={[styles.borderRight, styles.inputKey, styles.horizontalCenter, styles.w21_8, { padding: '0 2' }]}>
           <View style={[styles.verticalCenter]}>
             <Text>PLACE OF EXAMINATION / CONFERMENT</Text>
           </View>
         </View>
 
         {/* License */}
-        <View
-          style={[
-            styles.horizontalCenter,
-            styles.inputKey,
-            styles.w14,
-            { padding: '0' },
-          ]}
-        >
+        <View style={[styles.horizontalCenter, styles.inputKey, styles.w14, { padding: '0' }]}>
           <View style={[{ margin: 'auto 0', padding: '6 1' }]}>
             <Text>LICENSE (if applicable)</Text>
           </View>
 
           <View style={[styles.borderTop, { flexDirection: 'row' }]}>
-            <View
-              style={[styles.w50, styles.horizontalCenter, styles.borderRight]}
-            >
-              <Text style={[styles.verticalCenter, { padding: '3 0' }]}>
-                NUMBER
-              </Text>
+            <View style={[styles.w50, styles.horizontalCenter, styles.borderRight]}>
+              <Text style={[styles.verticalCenter, { padding: '3 0' }]}>NUMBER</Text>
             </View>
             <View style={[styles.w50, styles.horizontalCenter]}>
               <View style={[styles.verticalCenter, { padding: '3 0' }]}>
-                <Text>Date of</Text>
-                <Text>Validity</Text>
+                <Text>Valid Until</Text>
               </View>
             </View>
           </View>
@@ -401,9 +255,7 @@ export const EligibilityPdf = ({
 
       <View style={[styles.borderTop]}>
         <View style={[styles.inputKey, styles.w100, { padding: '1 0' }]}>
-          <Text style={styles.warningText}>
-            (Continue on separate sheet if necessary)
-          </Text>
+          <Text style={styles.warningText}>(Continue on separate sheet if necessary)</Text>
         </View>
       </View>
     </View>

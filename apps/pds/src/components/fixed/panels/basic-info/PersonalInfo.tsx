@@ -244,7 +244,7 @@ export const PersonalInfoBI = (): JSX.Element => {
                 id="sex"
                 selectList={gender}
                 variant="light"
-                defaultOption="Sex"
+                defaultOption="Sex at birth"
                 defaultValue={personalInfo.sex ? personalInfo.sex : ''}
                 isRequired
                 controller={{

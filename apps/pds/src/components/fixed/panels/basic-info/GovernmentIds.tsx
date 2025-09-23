@@ -10,14 +10,10 @@ import { GovernmentIdsAlert } from './GovernmentIdsAlert';
 export const GovernmentIDsBI = (): JSX.Element => {
   // set government id object, employee object state from pds context
   const governmentIssuedIds = usePdsStore((state) => state.governmentIssuedIds);
-  const governmentIssuedIdsOnEdit = usePdsStore(
-    (state) => state.governmentIssuedIdsOnEdit
-  );
+  const governmentIssuedIdsOnEdit = usePdsStore((state) => state.governmentIssuedIdsOnEdit);
   const hasPds = useEmployeeStore((state) => state.hasPds);
   const employee = useEmployeeStore((state) => state.employeeDetails);
-  const setGovernmentIssuedIds = usePdsStore(
-    (state) => state.setGovernmentIssuedIds
-  );
+  const setGovernmentIssuedIds = usePdsStore((state) => state.setGovernmentIssuedIds);
   const initialPdsState = usePdsStore((state) => state.initialPdsState);
 
   // initialize basic info useform context
@@ -31,14 +27,8 @@ export const GovernmentIDsBI = (): JSX.Element => {
   const setInitialValues = () => {
     clearErrors();
     setValue('gsisNumber', initialPdsState.governmentIssuedIds.gsisNumber);
-    setValue(
-      'pagibigNumber',
-      initialPdsState.governmentIssuedIds.pagibigNumber
-    );
-    setValue(
-      'philhealthNumber',
-      initialPdsState.governmentIssuedIds.philhealthNumber
-    );
+    setValue('pagibigNumber', initialPdsState.governmentIssuedIds.pagibigNumber);
+    setValue('philhealthNumber', initialPdsState.governmentIssuedIds.philhealthNumber);
     setValue('sssNumber', initialPdsState.governmentIssuedIds.sssNumber);
     setValue('tinNumber', initialPdsState.governmentIssuedIds.tinNumber);
     setValue('agencyNumber', initialPdsState.governmentIssuedIds.agencyNumber);
@@ -70,15 +60,12 @@ export const GovernmentIDsBI = (): JSX.Element => {
             <div className="w-full col-span-1 mb-7">
               <FloatingLabelInputRF
                 id="gsisno"
-                placeholder="GSIS BP No."
+                placeholder="UMID ID No."
                 type="text"
                 isRequired
-                defaultValue={
-                  governmentIssuedIds.gsisNumber
-                    ? governmentIssuedIds.gsisNumber
-                    : ''
-                }
-                maxLength={11}
+                defaultValue={governmentIssuedIds.gsisNumber ? governmentIssuedIds.gsisNumber : ''}
+                minLength={10}
+                maxLength={16}
                 controller={{
                   ...register('gsisNumber', {
                     value: governmentIssuedIds.gsisNumber.trim(),
@@ -106,11 +93,7 @@ export const GovernmentIDsBI = (): JSX.Element => {
                 placeholder="PAG-IBIG MID No."
                 type="text"
                 isRequired
-                defaultValue={
-                  governmentIssuedIds.pagibigNumber
-                    ? governmentIssuedIds.pagibigNumber
-                    : ''
-                }
+                defaultValue={governmentIssuedIds.pagibigNumber ? governmentIssuedIds.pagibigNumber : ''}
                 maxLength={14}
                 controller={{
                   ...register('pagibigNumber', {
@@ -140,11 +123,7 @@ export const GovernmentIDsBI = (): JSX.Element => {
                 type="text"
                 isRequired
                 maxLength={14}
-                defaultValue={
-                  governmentIssuedIds.philhealthNumber
-                    ? governmentIssuedIds.philhealthNumber
-                    : ''
-                }
+                defaultValue={governmentIssuedIds.philhealthNumber ? governmentIssuedIds.philhealthNumber : ''}
                 controller={{
                   ...register('philhealthNumber', {
                     value: governmentIssuedIds.philhealthNumber.trim(),
@@ -172,15 +151,11 @@ export const GovernmentIDsBI = (): JSX.Element => {
             <div className="w-full col-span-1 mb-7">
               <FloatingLabelInputRF
                 id="sssno"
-                placeholder="SSS No."
+                placeholder="PhilSys Number (PSN)"
                 type="text"
                 isRequired
-                maxLength={12}
-                defaultValue={
-                  governmentIssuedIds.sssNumber
-                    ? governmentIssuedIds.sssNumber.trim()
-                    : ''
-                }
+                maxLength={19}
+                defaultValue={governmentIssuedIds.sssNumber ? governmentIssuedIds.sssNumber.trim() : ''}
                 controller={{
                   ...register('sssNumber', {
                     value: governmentIssuedIds.sssNumber.trim(),
@@ -210,11 +185,7 @@ export const GovernmentIDsBI = (): JSX.Element => {
                 isRequired
                 type="text"
                 maxLength={15}
-                defaultValue={
-                  governmentIssuedIds.tinNumber
-                    ? governmentIssuedIds.tinNumber
-                    : ''
-                }
+                defaultValue={governmentIssuedIds.tinNumber ? governmentIssuedIds.tinNumber : ''}
                 controller={{
                   ...register('tinNumber', {
                     value: governmentIssuedIds.tinNumber.trim(),
@@ -242,11 +213,7 @@ export const GovernmentIDsBI = (): JSX.Element => {
                 placeholder="Agency Employee No."
                 isRequired
                 type="text"
-                defaultValue={
-                  governmentIssuedIds.agencyNumber
-                    ? governmentIssuedIds.agencyNumber
-                    : ''
-                }
+                defaultValue={governmentIssuedIds.agencyNumber ? governmentIssuedIds.agencyNumber : ''}
                 controller={{
                   ...register('agencyNumber', {
                     value: governmentIssuedIds.agencyNumber.trim(),

@@ -20,27 +20,17 @@ export const SupportingDetails = (): JSX.Element => {
   const separatedService = usePdsStore((state) => state.separatedService);
   const candidateResigned = usePdsStore((state) => state.candidateResigned);
   const immigrant = usePdsStore((state) => state.immigrant);
-  const indigenousPwdSoloParent = usePdsStore(
-    (state) => state.indigenousPwdSoloParent
-  );
-  const supportingInfoOnEdit = usePdsStore(
-    (state) => state.supportingInfoOnEdit
-  );
-  const allowQuestionsSave = useUpdatePdsStore(
-    (state) => state.allowQuestionsSave
-  );
+  const indigenousPwdSoloParent = usePdsStore((state) => state.indigenousPwdSoloParent);
+  const supportingInfoOnEdit = usePdsStore((state) => state.supportingInfoOnEdit);
+  const allowQuestionsSave = useUpdatePdsStore((state) => state.allowQuestionsSave);
   const initialPdsState = usePdsStore((state) => state.initialPdsState);
   const setOfficeRelation = usePdsStore((state) => state.setOfficeRelation);
   const setGuiltyCharged = usePdsStore((state) => state.setGuiltyCharged);
   const setConvicted = usePdsStore((state) => state.setConvicted);
   const setSeparatedService = usePdsStore((state) => state.setSeparatedService);
-  const setCandidateResigned = usePdsStore(
-    (state) => state.setCandidateResigned
-  );
+  const setCandidateResigned = usePdsStore((state) => state.setCandidateResigned);
   const setImmigrant = usePdsStore((state) => state.setImmigrant);
-  const setIndigenousPwdSoloParent = usePdsStore(
-    (state) => state.setIndigenousPwdSoloParent
-  );
+  const setIndigenousPwdSoloParent = usePdsStore((state) => state.setIndigenousPwdSoloParent);
   const hasPds = useEmployeeStore((state) => state.hasPds);
   const {
     register,
@@ -51,74 +41,56 @@ export const SupportingDetails = (): JSX.Element => {
 
   // office relation (Third Degree) handler
   const offRelThirdHandler = (e: any) => {
-    if (parseInt(e.target.value) === 1)
-      setOfficeRelation({ ...officeRelation, withinThirdDegree: true });
-    else if (parseInt(e.target.value) === 0)
-      setOfficeRelation({ ...officeRelation, withinThirdDegree: false });
+    if (parseInt(e.target.value) === 1) setOfficeRelation({ ...officeRelation, withinThirdDegree: true });
+    else if (parseInt(e.target.value) === 0) setOfficeRelation({ ...officeRelation, withinThirdDegree: false });
   };
 
   // office relation (Fourth Degree) Handler
   const offRelFourthHandler = (e: any) => {
-    if (parseInt(e.target.value) === 1)
-      setOfficeRelation({ ...officeRelation, withinFourthDegree: true });
-    else if (parseInt(e.target.value) === 0)
-      setOfficeRelation({ ...officeRelation, withinFourthDegree: false });
+    if (parseInt(e.target.value) === 1) setOfficeRelation({ ...officeRelation, withinFourthDegree: true });
+    else if (parseInt(e.target.value) === 0) setOfficeRelation({ ...officeRelation, withinFourthDegree: false });
   };
 
   // is guilty handler
   const isGuiltyHandler = (e: any) => {
-    if (parseInt(e.target.value) === 1)
-      setGuiltyCharged({ ...guiltyCharged, isGuilty: true });
-    else if (parseInt(e.target.value) === 0)
-      setGuiltyCharged({ ...guiltyCharged, isGuilty: false });
+    if (parseInt(e.target.value) === 1) setGuiltyCharged({ ...guiltyCharged, isGuilty: true });
+    else if (parseInt(e.target.value) === 0) setGuiltyCharged({ ...guiltyCharged, isGuilty: false });
   };
 
   // is charged handler
   const isChargedHandler = (e: any) => {
-    if (parseInt(e.target.value) === 1)
-      setGuiltyCharged({ ...guiltyCharged, isCharged: true });
-    else if (parseInt(e.target.value) === 0)
-      setGuiltyCharged({ ...guiltyCharged, isCharged: false });
+    if (parseInt(e.target.value) === 1) setGuiltyCharged({ ...guiltyCharged, isCharged: true });
+    else if (parseInt(e.target.value) === 0) setGuiltyCharged({ ...guiltyCharged, isCharged: false });
   };
 
   // is convicted handler
   const isConvictedHandler = (e: any) => {
-    if (parseInt(e.target.value) === 1)
-      setConvicted({ ...convicted, isConvicted: true });
-    else if (parseInt(e.target.value) === 0)
-      setConvicted({ ...convicted, isConvicted: false });
+    if (parseInt(e.target.value) === 1) setConvicted({ ...convicted, isConvicted: true });
+    else if (parseInt(e.target.value) === 0) setConvicted({ ...convicted, isConvicted: false });
   };
 
   // is separated handler
   const isSeparatedHandler = (e: any) => {
-    if (parseInt(e.target.value) === 1)
-      setSeparatedService({ ...separatedService, isSeparated: true });
-    else if (parseInt(e.target.value) === 0)
-      setSeparatedService({ ...separatedService, isSeparated: false });
+    if (parseInt(e.target.value) === 1) setSeparatedService({ ...separatedService, isSeparated: true });
+    else if (parseInt(e.target.value) === 0) setSeparatedService({ ...separatedService, isSeparated: false });
   };
 
   // is candidate handler
   const isCandidateHandler = (e: any) => {
-    if (parseInt(e.target.value) === 1)
-      setCandidateResigned({ ...candidateResigned, isCandidate: true });
-    else if (parseInt(e.target.value) === 0)
-      setCandidateResigned({ ...candidateResigned, isCandidate: false });
+    if (parseInt(e.target.value) === 1) setCandidateResigned({ ...candidateResigned, isCandidate: true });
+    else if (parseInt(e.target.value) === 0) setCandidateResigned({ ...candidateResigned, isCandidate: false });
   };
 
   // is resigned handler
   const isResignedHandler = (e: any) => {
-    if (parseInt(e.target.value) === 1)
-      setCandidateResigned({ ...candidateResigned, isResigned: true });
-    else if (parseInt(e.target.value) === 0)
-      setCandidateResigned({ ...candidateResigned, isResigned: false });
+    if (parseInt(e.target.value) === 1) setCandidateResigned({ ...candidateResigned, isResigned: true });
+    else if (parseInt(e.target.value) === 0) setCandidateResigned({ ...candidateResigned, isResigned: false });
   };
 
   // is immigrant handler
   const isImmigrantHandler = (e: any) => {
-    if (parseInt(e.target.value) === 1)
-      setImmigrant({ ...immigrant, isImmigrant: true });
-    else if (parseInt(e.target.value) === 0)
-      setImmigrant({ ...immigrant, isImmigrant: false });
+    if (parseInt(e.target.value) === 1) setImmigrant({ ...immigrant, isImmigrant: true });
+    else if (parseInt(e.target.value) === 0) setImmigrant({ ...immigrant, isImmigrant: false });
   };
 
   // is indigenous handler
@@ -137,10 +109,8 @@ export const SupportingDetails = (): JSX.Element => {
 
   // is pwd handler
   const isPWDHandler = (e: any) => {
-    if (parseInt(e.target.value) === 1)
-      setIndigenousPwdSoloParent({ ...indigenousPwdSoloParent, isPwd: true });
-    else if (parseInt(e.target.value) === 0)
-      setIndigenousPwdSoloParent({ ...indigenousPwdSoloParent, isPwd: false });
+    if (parseInt(e.target.value) === 1) setIndigenousPwdSoloParent({ ...indigenousPwdSoloParent, isPwd: true });
+    else if (parseInt(e.target.value) === 0) setIndigenousPwdSoloParent({ ...indigenousPwdSoloParent, isPwd: false });
   };
 
   // is solo parent handler
@@ -332,30 +302,20 @@ export const SupportingDetails = (): JSX.Element => {
           <div className="p-5 border  rounded-xl">
             <>
               <div className="pb-4">
-                Are you related by consanguinity or affinity to the appointing
-                or recommending authority, or to the chief of bureau or office
-                or to the person who has immediate supervision over you in the
-                Office, Bureau or Department where you will be apppointed,
+                Are you related by consanguinity or affinity to the appointing or recommending authority, or to the
+                chief of bureau or office or to the person who has immediate supervision over you in the Office, Bureau
+                or Department where you will be apppointed,
               </div>
               <div> a. Within the third degree? </div>
 
-              <RadioGroup
-                groupName="offRelThird"
-                className="w-32 border-0"
-                isFlex={true}
-                onChange={offRelThirdHandler}
-              >
+              <RadioGroup groupName="offRelThird" className="w-32 border-0" isFlex={true} onChange={offRelThirdHandler}>
                 <>
                   <RadioButtonRF
                     id={'relthirdtrue'}
                     label={'Yes'}
                     controller={{ ...register('offRelThird', { value: 1 }) }}
                     value={1}
-                    checked={
-                      officeRelation.withinThirdDegree.toString() === 'true'
-                        ? true
-                        : false
-                    }
+                    checked={officeRelation.withinThirdDegree.toString() === 'true' ? true : false}
                     muted={
                       hasPds && supportingInfoOnEdit === false
                         ? true
@@ -369,11 +329,7 @@ export const SupportingDetails = (): JSX.Element => {
                     label={'No'}
                     controller={{ ...register('offRelThird', { value: 0 }) }}
                     value={0}
-                    checked={
-                      officeRelation.withinThirdDegree.toString() === 'false'
-                        ? true
-                        : false
-                    }
+                    checked={officeRelation.withinThirdDegree.toString() === 'false' ? true : false}
                     muted={
                       hasPds && supportingInfoOnEdit === false
                         ? true
@@ -386,17 +342,9 @@ export const SupportingDetails = (): JSX.Element => {
               </RadioGroup>
 
               <div>
-                <div>
-                  b. Within the fourth degree (for Local Government Unit -
-                  Career Employees)?
-                </div>
+                <div>b. Within the fourth degree (for Local Government Unit - Career Employees)?</div>
 
-                <RadioGroup
-                  groupName="offRelFourth"
-                  className="w-32"
-                  isFlex={true}
-                  onChange={offRelFourthHandler}
-                >
+                <RadioGroup groupName="offRelFourth" className="w-32" isFlex={true} onChange={offRelFourthHandler}>
                   <>
                     <RadioButtonRF
                       id={'relfourthtrue'}
@@ -405,11 +353,7 @@ export const SupportingDetails = (): JSX.Element => {
                         ...register('offRelFourth', { value: 1 }),
                       }}
                       value={1}
-                      checked={
-                        officeRelation.withinFourthDegree.toString() === 'true'
-                          ? true
-                          : false
-                      }
+                      checked={officeRelation.withinFourthDegree.toString() === 'true' ? true : false}
                       muted={
                         hasPds && supportingInfoOnEdit === false
                           ? true
@@ -426,11 +370,7 @@ export const SupportingDetails = (): JSX.Element => {
                         ...register('offRelFourth', { value: 0 }),
                       }}
                       value={0}
-                      checked={
-                        officeRelation.withinFourthDegree.toString() === 'false'
-                          ? true
-                          : false
-                      }
+                      checked={officeRelation.withinFourthDegree.toString() === 'false' ? true : false}
                       muted={
                         hasPds && supportingInfoOnEdit === false
                           ? true
@@ -463,10 +403,8 @@ export const SupportingDetails = (): JSX.Element => {
                       officeRelation.withinThirdDegree.toString() === 'true' ||
                       officeRelation.withinFourthDegree.toString() === 'true'
                         ? false
-                        : officeRelation.withinFourthDegree.toString() ===
-                            'false' &&
-                          officeRelation.withinThirdDegree.toString() ===
-                            'false'
+                        : officeRelation.withinFourthDegree.toString() === 'false' &&
+                          officeRelation.withinThirdDegree.toString() === 'false'
                         ? true
                         : false
                     }
@@ -488,27 +426,15 @@ export const SupportingDetails = (): JSX.Element => {
 
           <div className="p-5 border rounded-xl">
             <div className="pb-4">
-              <div>
-                a. Have you ever been found guilty of any administrative
-                offense?
-              </div>
-              <RadioGroup
-                groupName="guilty"
-                className="w-32"
-                isFlex
-                onChange={isGuiltyHandler}
-              >
+              <div>a. Have you ever been found guilty of any administrative offense?</div>
+              <RadioGroup groupName="guilty" className="w-32" isFlex onChange={isGuiltyHandler}>
                 <>
                   <RadioButtonRF
                     id={'guiltytrue'}
                     label={'Yes'}
                     controller={{ ...register('isGuilty', { value: 1 }) }}
                     value={1}
-                    checked={
-                      guiltyCharged.isGuilty.toString() === 'true'
-                        ? true
-                        : false
-                    }
+                    checked={guiltyCharged.isGuilty.toString() === 'true' ? true : false}
                     // muted={hasPds && guiltyCharged.isGuilty.toString() === 'true' ? false : !hasPds ? false : true}
                     muted={
                       hasPds && supportingInfoOnEdit === false
@@ -523,11 +449,7 @@ export const SupportingDetails = (): JSX.Element => {
                     label={'No'}
                     controller={{ ...register('isGuilty', { value: 0 }) }}
                     value={0}
-                    checked={
-                      guiltyCharged.isGuilty.toString() === 'false'
-                        ? true
-                        : false
-                    }
+                    checked={guiltyCharged.isGuilty.toString() === 'false' ? true : false}
                     // muted={hasPds && guiltyCharged.isGuilty.toString() === 'false' ? true : !hasPds ? false : true}
                     muted={
                       hasPds && supportingInfoOnEdit === false
@@ -580,12 +502,7 @@ export const SupportingDetails = (): JSX.Element => {
             <div className="pt-5">
               <div>b. Have you been criminally charged before any court?</div>
 
-              <RadioGroup
-                groupName="charged"
-                className="w-32"
-                isFlex={true}
-                onChange={isChargedHandler}
-              >
+              <RadioGroup groupName="charged" className="w-32" isFlex={true} onChange={isChargedHandler}>
                 <>
                   <RadioButtonRF
                     id={'chargedtrue'}
@@ -600,11 +517,7 @@ export const SupportingDetails = (): JSX.Element => {
                         ? false
                         : false
                     }
-                    checked={
-                      guiltyCharged.isCharged.toString() === 'true'
-                        ? true
-                        : false
-                    }
+                    checked={guiltyCharged.isCharged.toString() === 'true' ? true : false}
                   />
                   <RadioButtonRF
                     id={'chargedfalse'}
@@ -619,11 +532,7 @@ export const SupportingDetails = (): JSX.Element => {
                         ? false
                         : false
                     }
-                    checked={
-                      guiltyCharged.isCharged.toString() === 'false'
-                        ? true
-                        : false
-                    }
+                    checked={guiltyCharged.isCharged.toString() === 'false' ? true : false}
                   />
                 </>
               </RadioGroup>
@@ -643,9 +552,7 @@ export const SupportingDetails = (): JSX.Element => {
                         }),
                     }),
                   }}
-                  hidden={
-                    guiltyCharged.isCharged.toString() === 'true' ? false : true
-                  }
+                  hidden={guiltyCharged.isCharged.toString() === 'true' ? false : true}
                   // muted={hasPds && guiltyCharged.isCharged.toString() === 'true' ? true : !hasPds ? false : false}
                   muted={
                     hasPds && supportingInfoOnEdit === false
@@ -675,9 +582,7 @@ export const SupportingDetails = (): JSX.Element => {
                         }),
                     }),
                   }}
-                  hidden={
-                    guiltyCharged.isCharged.toString() === 'true' ? false : true
-                  }
+                  hidden={guiltyCharged.isCharged.toString() === 'true' ? false : true}
                   isError={errors.chargedCaseStatus ? true : false}
                   // muted={hasPds && guiltyCharged.isCharged.toString() === 'true' ? true : !hasPds ? false : false}
                   muted={
@@ -694,24 +599,17 @@ export const SupportingDetails = (): JSX.Element => {
           </div>
           <div className="p-5 border  rounded-xl">
             <div className="pb-4">
-              Have you ever been convicted of any crime or violation of any law,
-              decree, ordinance or regulation by any court or tribunal?
+              Have you ever been convicted of any crime or violation of any law, decree, ordinance or regulation by any
+              court or tribunal?
             </div>
-            <RadioGroup
-              groupName="convicted"
-              className="w-32"
-              isFlex
-              onChange={isConvictedHandler}
-            >
+            <RadioGroup groupName="convicted" className="w-32" isFlex onChange={isConvictedHandler}>
               <>
                 <RadioButtonRF
                   id={'convtrue'}
                   label={'Yes'}
                   controller={{ ...register('isConvicted', { value: 1 }) }}
                   value={1}
-                  checked={
-                    convicted.isConvicted.toString() === 'true' ? true : false
-                  }
+                  checked={convicted.isConvicted.toString() === 'true' ? true : false}
                   // muted={hasPds && convicted.isConvicted.toString() === 'true' ? false : !hasPds ? false : true}
                   muted={
                     hasPds && supportingInfoOnEdit === false
@@ -726,9 +624,7 @@ export const SupportingDetails = (): JSX.Element => {
                   label={'No'}
                   controller={{ ...register('isConvicted', { value: 0 }) }}
                   value={0}
-                  checked={
-                    convicted.isConvicted.toString() === 'false' ? true : false
-                  }
+                  checked={convicted.isConvicted.toString() === 'false' ? true : false}
                   // muted={hasPds && convicted.isConvicted.toString() === 'false' ? true : !hasPds ? false : true}
                   muted={
                     hasPds && supportingInfoOnEdit === false
@@ -750,13 +646,10 @@ export const SupportingDetails = (): JSX.Element => {
                 controller={{
                   ...register('convictedDetails', {
                     value: convicted.details,
-                    onChange: (e) =>
-                      setConvicted({ ...convicted, details: e.target.value }),
+                    onChange: (e) => setConvicted({ ...convicted, details: e.target.value }),
                   }),
                 }}
-                hidden={
-                  convicted.isConvicted.toString() === 'true' ? false : true
-                }
+                hidden={convicted.isConvicted.toString() === 'true' ? false : true}
                 isError={errors.convictedDetails ? true : false}
                 errorMessage={errors.convictedDetails?.message}
                 // muted={hasPds ? true : false}
@@ -773,29 +666,19 @@ export const SupportingDetails = (): JSX.Element => {
 
           <div className="p-5 border  rounded-xl">
             <div className="pb-4">
-              Have you ever been separated from the service in any of the
-              following modes: resignation, retirement, dropped from the rolls,
-              dismissal, termination, end of term, finished contract or phased
-              out (abolition) in the public or private sector?{' '}
+              Have you ever been separated from the service in any of the following modes: resignation, retirement,
+              dropped from the rolls, dismissal, termination, end of term, finished contract or phased out (abolition)
+              in the public or private sector?{' '}
             </div>
 
-            <RadioGroup
-              groupName="sepServ"
-              className="w-32"
-              isFlex
-              onChange={isSeparatedHandler}
-            >
+            <RadioGroup groupName="sepServ" className="w-32" isFlex onChange={isSeparatedHandler}>
               <>
                 <RadioButtonRF
                   id={'sepservtrue'}
                   label={'Yes'}
                   controller={{ ...register('isSeparated', { value: 1 }) }}
                   value={1}
-                  checked={
-                    separatedService.isSeparated.toString() === 'true'
-                      ? true
-                      : false
-                  }
+                  checked={separatedService.isSeparated.toString() === 'true' ? true : false}
                   // muted={hasPds && separatedService.isSeparated.toString() === 'true' ? false : !hasPds ? false : true}
                   muted={
                     hasPds && supportingInfoOnEdit === false
@@ -810,11 +693,7 @@ export const SupportingDetails = (): JSX.Element => {
                   label={'No'}
                   controller={{ ...register('isSeparated', { value: 0 }) }}
                   value={0}
-                  checked={
-                    separatedService.isSeparated.toString() === 'false'
-                      ? true
-                      : false
-                  }
+                  checked={separatedService.isSeparated.toString() === 'false' ? true : false}
                   // muted={hasPds && separatedService.isSeparated.toString() === 'false' ? true : !hasPds ? false : true}
                   muted={
                     hasPds && supportingInfoOnEdit === false
@@ -843,11 +722,7 @@ export const SupportingDetails = (): JSX.Element => {
                       }),
                   }),
                 }}
-                hidden={
-                  separatedService.isSeparated.toString() === 'true'
-                    ? false
-                    : true
-                }
+                hidden={separatedService.isSeparated.toString() === 'true' ? false : true}
                 isError={errors.separatedDetails ? true : false}
                 errorMessage={errors.separatedDetails?.message}
                 muted={
@@ -864,26 +739,17 @@ export const SupportingDetails = (): JSX.Element => {
           <div className="p-5 border  rounded-xl">
             <div>
               <div>
-                a. Have you ever been a candidate in a national or local
-                election held within the last year (except Barangay election)?
+                a. Have you ever been a candidate in a national or local election held within the last year (except
+                Barangay election)?
               </div>
-              <RadioGroup
-                groupName="candidate"
-                className="w-32"
-                isFlex
-                onChange={isCandidateHandler}
-              >
+              <RadioGroup groupName="candidate" className="w-32" isFlex onChange={isCandidateHandler}>
                 <>
                   <RadioButtonRF
                     id={'candtrue'}
                     label={'Yes'}
                     controller={{ ...register('isCandidate', { value: 1 }) }}
                     value={1}
-                    checked={
-                      candidateResigned.isCandidate.toString() === 'true'
-                        ? true
-                        : false
-                    }
+                    checked={candidateResigned.isCandidate.toString() === 'true' ? true : false}
                     // muted={hasPds && candidateResigned.isCandidate.toString() === 'true' ? false : !hasPds ? false : true}
                     muted={
                       hasPds && supportingInfoOnEdit === false
@@ -898,11 +764,7 @@ export const SupportingDetails = (): JSX.Element => {
                     label={'No'}
                     controller={{ ...register('isCandidate', { value: 0 }) }}
                     value={0}
-                    checked={
-                      candidateResigned.isCandidate.toString() === 'false'
-                        ? true
-                        : false
-                    }
+                    checked={candidateResigned.isCandidate.toString() === 'false' ? true : false}
                     // muted={hasPds && candidateResigned.isCandidate.toString() === 'false' ? true : !hasPds ? false : true}
                     muted={
                       hasPds && supportingInfoOnEdit === false
@@ -931,11 +793,7 @@ export const SupportingDetails = (): JSX.Element => {
                         }),
                     }),
                   }}
-                  hidden={
-                    candidateResigned.isCandidate.toString() === 'true'
-                      ? false
-                      : true
-                  }
+                  hidden={candidateResigned.isCandidate.toString() === 'true' ? false : true}
                   isError={errors.candidateDetails ? true : false}
                   errorMessage={errors.candidateDetails?.message}
                   muted={
@@ -951,27 +809,17 @@ export const SupportingDetails = (): JSX.Element => {
 
             <div className="pt-5">
               <div>
-                b. Have you resigned from the government service during the
-                three (3)-month period before the last election to
-                promote/actively campaign for a national or local candidate?
+                b. Have you resigned from the government service during the three (3)-month period before the last
+                election to promote/actively campaign for a national or local candidate?
               </div>
-              <RadioGroup
-                groupName="resGovtServ"
-                className="w-32"
-                isFlex
-                onChange={isResignedHandler}
-              >
+              <RadioGroup groupName="resGovtServ" className="w-32" isFlex onChange={isResignedHandler}>
                 <>
                   <RadioButtonRF
                     id={'restrue'}
                     label={'Yes'}
                     controller={{ ...register('isResigned', { value: 1 }) }}
                     value={1}
-                    checked={
-                      candidateResigned.isResigned.toString() === 'true'
-                        ? true
-                        : false
-                    }
+                    checked={candidateResigned.isResigned.toString() === 'true' ? true : false}
                     // muted={hasPds && candidateResigned.isResigned.toString() === 'true' ? false : !hasPds ? false : true}
                     muted={
                       hasPds && supportingInfoOnEdit === false
@@ -986,11 +834,7 @@ export const SupportingDetails = (): JSX.Element => {
                     label={'No'}
                     controller={{ ...register('isResigned', { value: 0 }) }}
                     value={0}
-                    checked={
-                      candidateResigned.isResigned.toString() === 'false'
-                        ? true
-                        : false
-                    }
+                    checked={candidateResigned.isResigned.toString() === 'false' ? true : false}
                     // muted={hasPds && candidateResigned.isResigned.toString() === 'false' ? true : !hasPds ? false : true}
                     muted={
                       hasPds && supportingInfoOnEdit === false
@@ -1019,11 +863,7 @@ export const SupportingDetails = (): JSX.Element => {
                         }),
                     }),
                   }}
-                  hidden={
-                    candidateResigned.isResigned.toString() === 'true'
-                      ? false
-                      : true
-                  }
+                  hidden={candidateResigned.isResigned.toString() === 'true' ? false : true}
                   isError={errors.resignedDetails ? true : false}
                   errorMessage={errors.resignedDetails?.message}
                   muted={
@@ -1040,24 +880,16 @@ export const SupportingDetails = (): JSX.Element => {
 
           <div className="p-5 border  rounded-xl">
             <div className="pb-4">
-              Have you acquired the status of an immigrant or permanent resident
-              of another country?
+              Have you acquired the status of an immigrant or permanent resident of another country?
             </div>
-            <RadioGroup
-              groupName="immigrant"
-              className="w-32"
-              isFlex
-              onChange={isImmigrantHandler}
-            >
+            <RadioGroup groupName="immigrant" className="w-32" isFlex onChange={isImmigrantHandler}>
               <>
                 <RadioButtonRF
                   id={'immigranttrue'}
                   label={'Yes'}
                   controller={{ ...register('isImmigrant', { value: 1 }) }}
                   value={1}
-                  checked={
-                    immigrant.isImmigrant.toString() === 'true' ? true : false
-                  }
+                  checked={immigrant.isImmigrant.toString() === 'true' ? true : false}
                   // muted={hasPds && immigrant.isImmigrant.toString() === 'true' ? false : !hasPds ? false : true}
                   muted={
                     hasPds && supportingInfoOnEdit === false
@@ -1072,9 +904,7 @@ export const SupportingDetails = (): JSX.Element => {
                   label={'No'}
                   controller={{ ...register('isImmigrant', { value: 0 }) }}
                   value={0}
-                  checked={
-                    immigrant.isImmigrant.toString() === 'false' ? true : false
-                  }
+                  checked={immigrant.isImmigrant.toString() === 'false' ? true : false}
                   // muted={hasPds && immigrant.isImmigrant.toString() === 'false' ? true : !hasPds ? false : true}
                   muted={
                     hasPds && supportingInfoOnEdit === false
@@ -1096,13 +926,10 @@ export const SupportingDetails = (): JSX.Element => {
                 controller={{
                   ...register('immigrantDetails', {
                     value: immigrant.details,
-                    onChange: (e) =>
-                      setImmigrant({ ...immigrant, details: e.target.value }),
+                    onChange: (e) => setImmigrant({ ...immigrant, details: e.target.value }),
                   }),
                 }}
-                hidden={
-                  immigrant.isImmigrant.toString() === 'true' ? false : true
-                }
+                hidden={immigrant.isImmigrant.toString() === 'true' ? false : true}
                 isError={errors.immigrantDetails ? true : false}
                 errorMessage={errors.immigrantDetails?.message}
                 muted={
@@ -1119,18 +946,11 @@ export const SupportingDetails = (): JSX.Element => {
           <div className="p-5 border  rounded-xl">
             <div>
               <h4>
-                Pursuant to: (a) Indigenous People&apos;s Act (RA 8371); (b)
-                Magna Carta for Disabled Persons (RA 7277); and (c) Solo Parents
-                Welfare Act of 2000 (RA 8972), please answer the following
-                items:
+                Pursuant to: (a) Indigenous People&apos;s Act (RA 8371); (b) Magna Carta for Disabled Persons (RA 7277),
+                as amended; and (c) Expanded Solo Parents Welfare Act (RA 11861), please answer the following items:
               </h4>
               <h4>a. Are you a member of any indigenous group?</h4>
-              <RadioGroup
-                groupName="indigenous"
-                className="w-32"
-                isFlex
-                onChange={isIndigenousHandler}
-              >
+              <RadioGroup groupName="indigenous" className="w-32" isFlex onChange={isIndigenousHandler}>
                 <>
                   <RadioButtonRF
                     id={'indigenoustrue'}
@@ -1139,12 +959,7 @@ export const SupportingDetails = (): JSX.Element => {
                       ...register('isIndigenousMember', { value: 1 }),
                     }}
                     value={1}
-                    checked={
-                      indigenousPwdSoloParent.isIndigenousMember.toString() ===
-                      'true'
-                        ? true
-                        : false
-                    }
+                    checked={indigenousPwdSoloParent.isIndigenousMember.toString() === 'true' ? true : false}
                     // muted={hasPds && indigenousPwdSoloParent.isIndigenousMember.toString() === 'true' ? false : !hasPds ? false : true}
                     muted={
                       hasPds && supportingInfoOnEdit === false
@@ -1161,12 +976,7 @@ export const SupportingDetails = (): JSX.Element => {
                       ...register('isIndigenousMember', { value: 0 }),
                     }}
                     value={0}
-                    checked={
-                      indigenousPwdSoloParent.isIndigenousMember.toString() ===
-                      'false'
-                        ? true
-                        : false
-                    }
+                    checked={indigenousPwdSoloParent.isIndigenousMember.toString() === 'false' ? true : false}
                     // muted={hasPds && indigenousPwdSoloParent.isIndigenousMember.toString() === 'false' ? true : !hasPds ? false : true}
                     muted={
                       hasPds && supportingInfoOnEdit === false
@@ -1195,12 +1005,7 @@ export const SupportingDetails = (): JSX.Element => {
                         }),
                     }),
                   }}
-                  hidden={
-                    indigenousPwdSoloParent.isIndigenousMember.toString() ===
-                    'true'
-                      ? false
-                      : true
-                  }
+                  hidden={indigenousPwdSoloParent.isIndigenousMember.toString() === 'true' ? false : true}
                   isError={errors.indigenousMemberDetails ? true : false}
                   errorMessage={errors.indigenousMemberDetails?.message}
                   muted={
@@ -1216,23 +1021,14 @@ export const SupportingDetails = (): JSX.Element => {
 
             <div className="pt-5">
               <h4>b. Are you a person with disability?</h4>
-              <RadioGroup
-                groupName="pwd"
-                className="w-32"
-                isFlex
-                onChange={isPWDHandler}
-              >
+              <RadioGroup groupName="pwd" className="w-32" isFlex onChange={isPWDHandler}>
                 <>
                   <RadioButtonRF
                     id={'pwdtrue'}
                     label={'Yes'}
                     controller={{ ...register('isPwd', { value: 1 }) }}
                     value={1}
-                    checked={
-                      indigenousPwdSoloParent.isPwd.toString() === 'true'
-                        ? true
-                        : false
-                    }
+                    checked={indigenousPwdSoloParent.isPwd.toString() === 'true' ? true : false}
                     // muted={hasPds && indigenousPwdSoloParent.isPwd.toString() === 'true' ? false : !hasPds ? false : true}
                     muted={
                       hasPds && supportingInfoOnEdit === false
@@ -1247,11 +1043,7 @@ export const SupportingDetails = (): JSX.Element => {
                     label={'No'}
                     controller={{ ...register('isPwd', { value: 0 }) }}
                     value={0}
-                    checked={
-                      indigenousPwdSoloParent.isPwd.toString() === 'false'
-                        ? true
-                        : false
-                    }
+                    checked={indigenousPwdSoloParent.isPwd.toString() === 'false' ? true : false}
                     // muted={hasPds && indigenousPwdSoloParent.isPwd.toString() === 'false' ? true : !hasPds ? false : true}
                     muted={
                       hasPds && supportingInfoOnEdit === false
@@ -1280,11 +1072,7 @@ export const SupportingDetails = (): JSX.Element => {
                         }),
                     }),
                   }}
-                  hidden={
-                    indigenousPwdSoloParent.isPwd.toString() === 'true'
-                      ? false
-                      : true
-                  }
+                  hidden={indigenousPwdSoloParent.isPwd.toString() === 'true' ? false : true}
                   isError={errors.pwdIdNumber ? true : false}
                   errorMessage={errors.pwdIdNumber?.message}
                   muted={
@@ -1300,23 +1088,14 @@ export const SupportingDetails = (): JSX.Element => {
 
             <div className="pt-5">
               <h4>c. Are you a solo parent?</h4>
-              <RadioGroup
-                groupName="soloparent"
-                className="w-32"
-                isFlex
-                onChange={isSoloParentHandler}
-              >
+              <RadioGroup groupName="soloparent" className="w-32" isFlex onChange={isSoloParentHandler}>
                 <>
                   <RadioButtonRF
                     id={'soloparenttrue'}
                     label={'Yes'}
                     controller={{ ...register('isSoloParent', { value: 1 }) }}
                     value={1}
-                    checked={
-                      indigenousPwdSoloParent.isSoloParent.toString() === 'true'
-                        ? true
-                        : false
-                    }
+                    checked={indigenousPwdSoloParent.isSoloParent.toString() === 'true' ? true : false}
                     // muted={hasPds && indigenousPwdSoloParent.isSoloParent.toString() === 'true' ? false : !hasPds ? false : true}
                     muted={
                       hasPds && supportingInfoOnEdit === false
@@ -1331,12 +1110,7 @@ export const SupportingDetails = (): JSX.Element => {
                     label={'No'}
                     controller={{ ...register('isSoloParent', { value: 0 }) }}
                     value={0}
-                    checked={
-                      indigenousPwdSoloParent.isSoloParent.toString() ===
-                      'false'
-                        ? true
-                        : false
-                    }
+                    checked={indigenousPwdSoloParent.isSoloParent.toString() === 'false' ? true : false}
                     // muted={hasPds && indigenousPwdSoloParent.isSoloParent.toString() === 'false' ? true : !hasPds ? false : true}
                     muted={
                       hasPds && supportingInfoOnEdit === false
@@ -1365,11 +1139,7 @@ export const SupportingDetails = (): JSX.Element => {
                         }),
                     }),
                   }}
-                  hidden={
-                    indigenousPwdSoloParent.isSoloParent.toString() === 'true'
-                      ? false
-                      : true
-                  }
+                  hidden={indigenousPwdSoloParent.isSoloParent.toString() === 'true' ? false : true}
                   isError={errors.soloParentIdNumber ? true : false}
                   errorMessage={errors.soloParentIdNumber?.message}
                   muted={

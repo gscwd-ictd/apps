@@ -1,10 +1,6 @@
 import React, { useState } from 'react';
 import { Text, View, StyleSheet, Font } from '@react-pdf/renderer';
-import {
-  Organization,
-  Recognition,
-  Skill,
-} from 'apps/job-portal/utils/types/data/other-info.type';
+import { Organization, Recognition, Skill } from 'apps/job-portal/utils/types/data/other-info.type';
 
 const styles = StyleSheet.create({
   lineContainer: {
@@ -78,21 +74,14 @@ type OtherInformationPdfProps = {
   organizations: Array<Organization>;
 };
 
-export const OtherInformationPdf = ({
-  skills,
-  recognitions,
-  organizations,
-}: OtherInformationPdfProps): JSX.Element => {
+export const OtherInformationPdf = ({ skills, recognitions, organizations }: OtherInformationPdfProps): JSX.Element => {
   const [emptySkillRows] = useState(7);
   const [emptyRecognitionRows] = useState(7);
   const [emptyOrgRows] = useState(7);
 
   const renderSpecialSkillRows = () => {
     const content = skills.slice(0, 7).map((skill, index) => (
-      <View
-        style={[styles.inputValue, styles.borderRight, styles.borderTop]}
-        key={index}
-      >
+      <View style={[styles.inputValue, styles.borderRight, styles.borderTop]} key={index}>
         <Text style={[styles.verticalCenter]}>
           <>{skill.skill}</>
         </Text>
@@ -108,10 +97,7 @@ export const OtherInformationPdf = ({
 
     for (let i = 0; i < rowToRender; i++) {
       content.push(
-        <View
-          style={[styles.inputValue, styles.borderRight, styles.borderTop]}
-          key={i}
-        >
+        <View style={[styles.inputValue, styles.borderRight, styles.borderTop]} key={i}>
           <Text style={[styles.verticalCenter]}>N/A</Text>
         </View>
       );
@@ -122,10 +108,7 @@ export const OtherInformationPdf = ({
 
   const renderRecognitionRows = () => {
     const content = recognitions.slice(0, 7).map((award, index) => (
-      <View
-        style={[styles.inputValue, styles.borderRight, styles.borderTop]}
-        key={index}
-      >
+      <View style={[styles.inputValue, styles.borderRight, styles.borderTop]} key={index}>
         <Text style={[styles.verticalCenter]}>
           <>{award.recognition}</>
         </Text>
@@ -141,10 +124,7 @@ export const OtherInformationPdf = ({
 
     for (let i = 0; i < rowToRender; i++) {
       content.push(
-        <View
-          style={[styles.inputValue, styles.borderRight, styles.borderTop]}
-          key={i}
-        >
+        <View style={[styles.inputValue, styles.borderRight, styles.borderTop]} key={i}>
           <Text style={[styles.verticalCenter]}>N/A</Text>
         </View>
       );
@@ -187,45 +167,18 @@ export const OtherInformationPdf = ({
       </View>
 
       {/* Header */}
-      <View
-        style={[
-          styles.borderTop,
-          { flexDirection: 'row', alignItems: 'stretch' },
-        ]}
-      >
+      <View style={[styles.borderTop, { flexDirection: 'row', alignItems: 'stretch' }]}>
         {/* Special SKills */}
-        <View
-          style={[
-            styles.inputKey,
-            styles.borderRight,
-            styles.w17_2,
-            { flexDirection: 'row' },
-          ]}
-        >
+        <View style={[styles.inputKey, styles.borderRight, styles.w17_2, { flexDirection: 'row' }]}>
           <Text style={[styles.verticalCenter]}>31.</Text>
-          <Text style={[styles.verticalCenter, { paddingLeft: 2 }]}>
-            SPECIAL SKILLS and HOBBIES
-          </Text>
+          <Text style={[styles.verticalCenter, { paddingLeft: 2 }]}>SPECIAL SKILLS and HOBBIES</Text>
         </View>
 
         {/* Non-Academic Distinctions */}
-        <View
-          style={[
-            styles.inputKey,
-            styles.borderRight,
-            styles.w59,
-            { flexDirection: 'row' },
-          ]}
-        >
+        <View style={[styles.inputKey, styles.borderRight, styles.w59, { flexDirection: 'row' }]}>
           <Text style={[styles.verticalCenter]}>32.</Text>
 
-          <View
-            style={[
-              styles.w100,
-              styles.verticalCenter,
-              styles.horizontalCenter,
-            ]}
-          >
+          <View style={[styles.w100, styles.verticalCenter, styles.horizontalCenter]}>
             <Text>NON-ACADEMIC DISTINCTIONS / RECOGNITION</Text>
             <Text>(Write in full)</Text>
           </View>
@@ -235,13 +188,7 @@ export const OtherInformationPdf = ({
         <View style={[styles.inputKey, styles.w23_8, { flexDirection: 'row' }]}>
           <Text style={[styles.verticalCenter]}>33.</Text>
 
-          <View
-            style={[
-              styles.w100,
-              styles.verticalCenter,
-              styles.horizontalCenter,
-            ]}
-          >
+          <View style={[styles.w100, styles.verticalCenter, styles.horizontalCenter]}>
             <Text>MEMBERSHIP IN ASSOCIATION / ORGANIZATION</Text>
             <Text>(Write in full)</Text>
           </View>
@@ -266,6 +213,12 @@ export const OtherInformationPdf = ({
         <View style={[styles.w23_8]}>
           {renderMembershipRows()}
           {renderEmptyMembershipRows()}
+        </View>
+      </View>
+
+      <View style={[styles.borderTop]}>
+        <View style={[styles.inputKey, styles.w100, { padding: '1 0' }]}>
+          <Text style={styles.warningText}>(Continue on separate sheet if necessary)</Text>
         </View>
       </View>
     </View>

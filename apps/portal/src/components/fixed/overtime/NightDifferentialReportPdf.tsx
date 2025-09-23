@@ -119,9 +119,70 @@ type PdfProps = {
 export const NightDifferentialReportPdf = ({
   selectedMonth,
   selectedPeriod,
-
   nightDifferentialReport,
 }: PdfProps): JSX.Element => {
+  const determineHourPlacement = (index: number, dtr: NightDifferentialDetailsWithComputation) => {
+    let compareDay1 = '01';
+    let compareDay2 = '16';
+
+    if (index == 0) {
+      compareDay1 = '01';
+      compareDay2 = '16';
+    } else if (index == 1) {
+      compareDay1 = '02';
+      compareDay2 = '17';
+    } else if (index == 2) {
+      compareDay1 = '03';
+      compareDay2 = '18';
+    } else if (index == 3) {
+      compareDay1 = '04';
+      compareDay2 = '19';
+    } else if (index == 4) {
+      compareDay1 = '05';
+      compareDay2 = '20';
+    } else if (index == 5) {
+      compareDay1 = '06';
+      compareDay2 = '21';
+    } else if (index == 6) {
+      compareDay1 = '07';
+      compareDay2 = '22';
+    } else if (index == 7) {
+      compareDay1 = '08';
+      compareDay2 = '23';
+    } else if (index == 8) {
+      compareDay1 = '09';
+      compareDay2 = '24';
+    } else if (index == 9) {
+      compareDay1 = '10';
+      compareDay2 = '25';
+    } else if (index == 10) {
+      compareDay1 = '11';
+      compareDay2 = '26';
+    } else if (index == 11) {
+      compareDay1 = '12';
+      compareDay2 = '27';
+    } else if (index == 12) {
+      compareDay1 = '13';
+      compareDay2 = '28';
+    } else if (index == 13) {
+      compareDay1 = '14';
+      compareDay2 = '29';
+    } else if (index == 14) {
+      compareDay1 = '15';
+      compareDay2 = '30';
+    } else if (index == 15) {
+      compareDay1 = '';
+      compareDay2 = '31';
+    }
+
+    const filteredDtr = dtr.dtrEntriesDetails.filter(
+      (item) => item.dtrDate.slice(8, 10) === compareDay1 || item.dtrDate.slice(8, 10) === compareDay2
+    );
+    if (filteredDtr.length > 0) {
+      return filteredDtr[0].nightDifferentialHours > 0 ? filteredDtr[0].nightDifferentialHours : '';
+    }
+  };
+
   return (
     <>
       {/* <PDFViewer width={'100%'} height={1000} showToolbar> */}
@@ -307,19 +368,21 @@ export const NightDifferentialReportPdf = ({
                                 height: 20,
                                 width: 20,
                                 borderBottomWidth: 0,
-                                backgroundColor: `${
-                                  nightDiff?.dtrEntriesDetails[0]?.nightDifferentialHours >= 0 &&
-                                  nightDiff?.dtrEntriesDetails[0]?.nightDifferentialHours !== null
-                                    ? ''
-                                    : ''
-                                }`,
+                                // backgroundColor: `${
+                                //   nightDiff?.dtrEntriesDetails[0]?.nightDifferentialHours >= 0 &&
+                                //   nightDiff?.dtrEntriesDetails[0]?.nightDifferentialHours !== null
+                                //     ? ''
+                                //     : ''
+                                // }`,
                               },
                             ]}
                           >
                             <Text style={styles.tableCell_dates}>
-                              {nightDiff?.dtrEntriesDetails[0]?.nightDifferentialHours > 0
+                              {determineHourPlacement(0, nightDiff)}
+
+                              {/* {nightDiff?.dtrEntriesDetails[0]?.nightDifferentialHours > 0
                                 ? nightDiff?.dtrEntriesDetails[0]?.nightDifferentialHours
-                                : ''}
+                                : ''} */}
                             </Text>
                           </View>
                           <View
@@ -329,19 +392,20 @@ export const NightDifferentialReportPdf = ({
                                 height: 20,
                                 width: 20,
                                 borderBottomWidth: 0,
-                                backgroundColor: `${
-                                  nightDiff?.dtrEntriesDetails[1]?.nightDifferentialHours >= 0 &&
-                                  nightDiff?.dtrEntriesDetails[1]?.nightDifferentialHours !== null
-                                    ? ''
-                                    : ''
-                                }`,
+                                // backgroundColor: `${
+                                //   nightDiff?.dtrEntriesDetails[1]?.nightDifferentialHours >= 0 &&
+                                //   nightDiff?.dtrEntriesDetails[1]?.nightDifferentialHours !== null
+                                //     ? ''
+                                //     : ''
+                                // }`,
                               },
                             ]}
                           >
                             <Text style={styles.tableCell_dates}>
-                              {nightDiff?.dtrEntriesDetails[1]?.nightDifferentialHours > 0
+                              {determineHourPlacement(1, nightDiff)}
+                              {/* {nightDiff?.dtrEntriesDetails[1]?.nightDifferentialHours > 0
                                 ? nightDiff?.dtrEntriesDetails[1]?.nightDifferentialHours
-                                : ''}
+                                : ''} */}
                             </Text>
                           </View>
                           <View
@@ -351,19 +415,20 @@ export const NightDifferentialReportPdf = ({
                                 height: 20,
                                 width: 20,
                                 borderBottomWidth: 0,
-                                backgroundColor: `${
-                                  nightDiff?.dtrEntriesDetails[2]?.nightDifferentialHours >= 0 &&
-                                  nightDiff?.dtrEntriesDetails[2]?.nightDifferentialHours !== null
-                                    ? ''
-                                    : ''
-                                }`,
+                                // backgroundColor: `${
+                                //   nightDiff?.dtrEntriesDetails[2]?.nightDifferentialHours >= 0 &&
+                                //   nightDiff?.dtrEntriesDetails[2]?.nightDifferentialHours !== null
+                                //     ? ''
+                                //     : ''
+                                // }`,
                               },
                             ]}
                           >
                             <Text style={styles.tableCell_dates}>
-                              {nightDiff?.dtrEntriesDetails[2]?.nightDifferentialHours > 0
+                              {determineHourPlacement(2, nightDiff)}
+                              {/* {nightDiff?.dtrEntriesDetails[2]?.nightDifferentialHours > 0
                                 ? nightDiff?.dtrEntriesDetails[2]?.nightDifferentialHours
-                                : ''}
+                                : ''} */}
                             </Text>
                           </View>
                           <View
@@ -373,19 +438,20 @@ export const NightDifferentialReportPdf = ({
                                 height: 20,
                                 width: 20,
                                 borderBottomWidth: 0,
-                                backgroundColor: `${
-                                  nightDiff?.dtrEntriesDetails[3]?.nightDifferentialHours >= 0 &&
-                                  nightDiff?.dtrEntriesDetails[3]?.nightDifferentialHours !== null
-                                    ? ''
-                                    : ''
-                                }`,
+                                // backgroundColor: `${
+                                //   nightDiff?.dtrEntriesDetails[3]?.nightDifferentialHours >= 0 &&
+                                //   nightDiff?.dtrEntriesDetails[3]?.nightDifferentialHours !== null
+                                //     ? ''
+                                //     : ''
+                                // }`,
                               },
                             ]}
                           >
                             <Text style={styles.tableCell_dates}>
-                              {nightDiff?.dtrEntriesDetails[3]?.nightDifferentialHours > 0
+                              {determineHourPlacement(3, nightDiff)}
+                              {/* {nightDiff?.dtrEntriesDetails[3]?.nightDifferentialHours > 0
                                 ? nightDiff?.dtrEntriesDetails[3]?.nightDifferentialHours
-                                : ''}
+                                : ''} */}
                             </Text>
                           </View>
                           <View
@@ -395,19 +461,20 @@ export const NightDifferentialReportPdf = ({
                                 height: 20,
                                 width: 20,
                                 borderBottomWidth: 0,
-                                backgroundColor: `${
-                                  nightDiff?.dtrEntriesDetails[4]?.nightDifferentialHours >= 0 &&
-                                  nightDiff?.dtrEntriesDetails[4]?.nightDifferentialHours !== null
-                                    ? ''
-                                    : ''
-                                }`,
+                                // backgroundColor: `${
+                                //   nightDiff?.dtrEntriesDetails[4]?.nightDifferentialHours >= 0 &&
+                                //   nightDiff?.dtrEntriesDetails[4]?.nightDifferentialHours !== null
+                                //     ? ''
+                                //     : ''
+                                // }`,
                               },
                             ]}
                           >
                             <Text style={styles.tableCell_dates}>
-                              {nightDiff?.dtrEntriesDetails[4]?.nightDifferentialHours > 0
+                              {determineHourPlacement(4, nightDiff)}
+                              {/* {nightDiff?.dtrEntriesDetails[4]?.nightDifferentialHours > 0
                                 ? nightDiff?.dtrEntriesDetails[4]?.nightDifferentialHours
-                                : ''}
+                                : ''} */}
                             </Text>
                           </View>
                           <View
@@ -417,19 +484,20 @@ export const NightDifferentialReportPdf = ({
                                 height: 20,
                                 width: 20,
                                 borderBottomWidth: 0,
-                                backgroundColor: `${
-                                  nightDiff?.dtrEntriesDetails[5]?.nightDifferentialHours >= 0 &&
-                                  nightDiff?.dtrEntriesDetails[5]?.nightDifferentialHours !== null
-                                    ? ''
-                                    : ''
-                                }`,
+                                // backgroundColor: `${
+                                //   nightDiff?.dtrEntriesDetails[5]?.nightDifferentialHours >= 0 &&
+                                //   nightDiff?.dtrEntriesDetails[5]?.nightDifferentialHours !== null
+                                //     ? ''
+                                //     : ''
+                                // }`,
                               },
                             ]}
                           >
                             <Text style={styles.tableCell_dates}>
-                              {nightDiff?.dtrEntriesDetails[5]?.nightDifferentialHours > 0
+                              {determineHourPlacement(5, nightDiff)}
+                              {/* {nightDiff?.dtrEntriesDetails[5]?.nightDifferentialHours > 0
                                 ? nightDiff?.dtrEntriesDetails[5]?.nightDifferentialHours
-                                : ''}
+                                : ''} */}
                             </Text>
                           </View>
                           <View
@@ -439,19 +507,20 @@ export const NightDifferentialReportPdf = ({
                                 height: 20,
                                 width: 20,
                                 borderBottomWidth: 0,
-                                backgroundColor: `${
-                                  nightDiff?.dtrEntriesDetails[6]?.nightDifferentialHours >= 0 &&
-                                  nightDiff?.dtrEntriesDetails[6]?.nightDifferentialHours !== null
-                                    ? ''
-                                    : ''
-                                }`,
+                                // backgroundColor: `${
+                                //   nightDiff?.dtrEntriesDetails[6]?.nightDifferentialHours >= 0 &&
+                                //   nightDiff?.dtrEntriesDetails[6]?.nightDifferentialHours !== null
+                                //     ? ''
+                                //     : ''
+                                // }`,
                               },
                             ]}
                           >
                             <Text style={styles.tableCell_dates}>
-                              {nightDiff?.dtrEntriesDetails[6]?.nightDifferentialHours > 0
+                              {determineHourPlacement(6, nightDiff)}
+                              {/* {nightDiff?.dtrEntriesDetails[6]?.nightDifferentialHours > 0
                                 ? nightDiff?.dtrEntriesDetails[6]?.nightDifferentialHours
-                                : ''}
+                                : ''} */}
                             </Text>
                           </View>
                           <View
@@ -461,19 +530,20 @@ export const NightDifferentialReportPdf = ({
                                 height: 20,
                                 width: 20,
                                 borderBottomWidth: 0,
-                                backgroundColor: `${
-                                  nightDiff?.dtrEntriesDetails[7]?.nightDifferentialHours >= 0 &&
-                                  nightDiff?.dtrEntriesDetails[7]?.nightDifferentialHours !== null
-                                    ? ''
-                                    : ''
-                                }`,
+                                // backgroundColor: `${
+                                //   nightDiff?.dtrEntriesDetails[7]?.nightDifferentialHours >= 0 &&
+                                //   nightDiff?.dtrEntriesDetails[7]?.nightDifferentialHours !== null
+                                //     ? ''
+                                //     : ''
+                                // }`,
                               },
                             ]}
                           >
                             <Text style={styles.tableCell_dates}>
-                              {nightDiff?.dtrEntriesDetails[7]?.nightDifferentialHours > 0
+                              {determineHourPlacement(7, nightDiff)}
+                              {/* {nightDiff?.dtrEntriesDetails[7]?.nightDifferentialHours > 0
                                 ? nightDiff?.dtrEntriesDetails[7]?.nightDifferentialHours
-                                : ''}
+                                : ''} */}
                             </Text>
                           </View>
                           <View
@@ -483,19 +553,20 @@ export const NightDifferentialReportPdf = ({
                                 height: 20,
                                 width: 20,
                                 borderBottomWidth: 0,
-                                backgroundColor: `${
-                                  nightDiff?.dtrEntriesDetails[8]?.nightDifferentialHours >= 0 &&
-                                  nightDiff?.dtrEntriesDetails[8]?.nightDifferentialHours !== null
-                                    ? ''
-                                    : ''
-                                }`,
+                                // backgroundColor: `${
+                                //   nightDiff?.dtrEntriesDetails[8]?.nightDifferentialHours >= 0 &&
+                                //   nightDiff?.dtrEntriesDetails[8]?.nightDifferentialHours !== null
+                                //     ? ''
+                                //     : ''
+                                // }`,
                               },
                             ]}
                           >
                             <Text style={styles.tableCell_dates}>
-                              {nightDiff?.dtrEntriesDetails[8]?.nightDifferentialHours > 0
+                              {determineHourPlacement(8, nightDiff)}
+                              {/* {nightDiff?.dtrEntriesDetails[8]?.nightDifferentialHours > 0
                                 ? nightDiff?.dtrEntriesDetails[8]?.nightDifferentialHours
-                                : ''}
+                                : ''} */}
                             </Text>
                           </View>
                           <View
@@ -505,19 +576,20 @@ export const NightDifferentialReportPdf = ({
                                 height: 20,
                                 width: 20,
                                 borderBottomWidth: 0,
-                                backgroundColor: `${
-                                  nightDiff?.dtrEntriesDetails[9]?.nightDifferentialHours >= 0 &&
-                                  nightDiff?.dtrEntriesDetails[9]?.nightDifferentialHours !== null
-                                    ? ''
-                                    : ''
-                                }`,
+                                // backgroundColor: `${
+                                //   nightDiff?.dtrEntriesDetails[9]?.nightDifferentialHours >= 0 &&
+                                //   nightDiff?.dtrEntriesDetails[9]?.nightDifferentialHours !== null
+                                //     ? ''
+                                //     : ''
+                                // }`,
                               },
                             ]}
                           >
                             <Text style={styles.tableCell_dates}>
-                              {nightDiff?.dtrEntriesDetails[9]?.nightDifferentialHours > 0
+                              {determineHourPlacement(9, nightDiff)}
+                              {/* {nightDiff?.dtrEntriesDetails[9]?.nightDifferentialHours > 0
                                 ? nightDiff?.dtrEntriesDetails[9]?.nightDifferentialHours
-                                : ''}
+                                : ''} */}
                             </Text>
                           </View>
                           <View
@@ -527,19 +599,20 @@ export const NightDifferentialReportPdf = ({
                                 height: 20,
                                 width: 20,
                                 borderBottomWidth: 0,
-                                backgroundColor: `${
-                                  nightDiff?.dtrEntriesDetails[10]?.nightDifferentialHours >= 0 &&
-                                  nightDiff?.dtrEntriesDetails[10]?.nightDifferentialHours !== null
-                                    ? ''
-                                    : ''
-                                }`,
+                                // backgroundColor: `${
+                                //   nightDiff?.dtrEntriesDetails[10]?.nightDifferentialHours >= 0 &&
+                                //   nightDiff?.dtrEntriesDetails[10]?.nightDifferentialHours !== null
+                                //     ? ''
+                                //     : ''
+                                // }`,
                               },
                             ]}
                           >
                             <Text style={styles.tableCell_dates}>
-                              {nightDiff?.dtrEntriesDetails[10]?.nightDifferentialHours > 0
+                              {determineHourPlacement(10, nightDiff)}
+                              {/* {nightDiff?.dtrEntriesDetails[10]?.nightDifferentialHours > 0
                                 ? nightDiff?.dtrEntriesDetails[10]?.nightDifferentialHours
-                                : ''}
+                                : ''} */}
                             </Text>
                           </View>
                           <View
@@ -549,19 +622,20 @@ export const NightDifferentialReportPdf = ({
                                 height: 20,
                                 width: 20,
                                 borderBottomWidth: 0,
-                                backgroundColor: `${
-                                  nightDiff?.dtrEntriesDetails[11]?.nightDifferentialHours >= 0 &&
-                                  nightDiff?.dtrEntriesDetails[11]?.nightDifferentialHours !== null
-                                    ? ''
-                                    : ''
-                                }`,
+                                // backgroundColor: `${
+                                //   nightDiff?.dtrEntriesDetails[11]?.nightDifferentialHours >= 0 &&
+                                //   nightDiff?.dtrEntriesDetails[11]?.nightDifferentialHours !== null
+                                //     ? ''
+                                //     : ''
+                                // }`,
                               },
                             ]}
                           >
                             <Text style={styles.tableCell_dates}>
-                              {nightDiff?.dtrEntriesDetails[11]?.nightDifferentialHours > 0
+                              {determineHourPlacement(11, nightDiff)}
+                              {/* {nightDiff?.dtrEntriesDetails[11]?.nightDifferentialHours > 0
                                 ? nightDiff?.dtrEntriesDetails[11]?.nightDifferentialHours
-                                : ''}
+                                : ''} */}
                             </Text>
                           </View>
                           <View
@@ -571,19 +645,20 @@ export const NightDifferentialReportPdf = ({
                                 height: 20,
                                 width: 20,
                                 borderBottomWidth: 0,
-                                backgroundColor: `${
-                                  nightDiff?.dtrEntriesDetails[12]?.nightDifferentialHours >= 0 &&
-                                  nightDiff?.dtrEntriesDetails[12]?.nightDifferentialHours !== null
-                                    ? ''
-                                    : ''
-                                }`,
+                                // backgroundColor: `${
+                                //   nightDiff?.dtrEntriesDetails[12]?.nightDifferentialHours >= 0 &&
+                                //   nightDiff?.dtrEntriesDetails[12]?.nightDifferentialHours !== null
+                                //     ? ''
+                                //     : ''
+                                // }`,
                               },
                             ]}
                           >
                             <Text style={styles.tableCell_dates}>
-                              {nightDiff?.dtrEntriesDetails[12]?.nightDifferentialHours > 0
+                              {determineHourPlacement(12, nightDiff)}
+                              {/* {nightDiff?.dtrEntriesDetails[12]?.nightDifferentialHours > 0
                                 ? nightDiff?.dtrEntriesDetails[12]?.nightDifferentialHours
-                                : ''}
+                                : ''} */}
                             </Text>
                           </View>
                           <View
@@ -593,19 +668,20 @@ export const NightDifferentialReportPdf = ({
                                 height: 20,
                                 width: 20,
                                 borderBottomWidth: 0,
-                                backgroundColor: `${
-                                  nightDiff?.dtrEntriesDetails[13]?.nightDifferentialHours >= 0 &&
-                                  nightDiff?.dtrEntriesDetails[13]?.nightDifferentialHours !== null
-                                    ? ''
-                                    : ''
-                                }`,
+                                // backgroundColor: `${
+                                //   nightDiff?.dtrEntriesDetails[13]?.nightDifferentialHours >= 0 &&
+                                //   nightDiff?.dtrEntriesDetails[13]?.nightDifferentialHours !== null
+                                //     ? ''
+                                //     : ''
+                                // }`,
                               },
                             ]}
                           >
                             <Text style={styles.tableCell_dates}>
-                              {nightDiff?.dtrEntriesDetails[13]?.nightDifferentialHours > 0
+                              {determineHourPlacement(13, nightDiff)}
+                              {/* {nightDiff?.dtrEntriesDetails[13]?.nightDifferentialHours > 0
                                 ? nightDiff?.dtrEntriesDetails[13]?.nightDifferentialHours
-                                : ''}
+                                : ''} */}
                             </Text>
                           </View>
                           <View
@@ -615,19 +691,20 @@ export const NightDifferentialReportPdf = ({
                                 height: 20,
                                 width: 20,
                                 borderBottomWidth: 0,
-                                backgroundColor: `${
-                                  nightDiff?.dtrEntriesDetails[14]?.nightDifferentialHours >= 0 &&
-                                  nightDiff?.dtrEntriesDetails[14]?.nightDifferentialHours !== null
-                                    ? ''
-                                    : ''
-                                }`,
+                                // backgroundColor: `${
+                                //   nightDiff?.dtrEntriesDetails[14]?.nightDifferentialHours >= 0 &&
+                                //   nightDiff?.dtrEntriesDetails[14]?.nightDifferentialHours !== null
+                                //     ? ''
+                                //     : ''
+                                // }`,
                               },
                             ]}
                           >
                             <Text style={styles.tableCell_dates}>
-                              {nightDiff?.dtrEntriesDetails[14]?.nightDifferentialHours > 0
+                              {determineHourPlacement(14, nightDiff)}
+                              {/* {nightDiff?.dtrEntriesDetails[14]?.nightDifferentialHours > 0
                                 ? nightDiff?.dtrEntriesDetails[14]?.nightDifferentialHours
-                                : ''}
+                                : ''} */}
                             </Text>
                           </View>
                           <View
@@ -637,19 +714,20 @@ export const NightDifferentialReportPdf = ({
                                 height: 20,
                                 width: 20,
                                 borderBottomWidth: 0,
-                                backgroundColor: `${
-                                  nightDiff?.dtrEntriesDetails[15]?.nightDifferentialHours >= 0 &&
-                                  nightDiff?.dtrEntriesDetails[15]?.nightDifferentialHours !== null
-                                    ? ''
-                                    : ''
-                                }`,
+                                // backgroundColor: `${
+                                //   nightDiff?.dtrEntriesDetails[15]?.nightDifferentialHours >= 0 &&
+                                //   nightDiff?.dtrEntriesDetails[15]?.nightDifferentialHours !== null
+                                //     ? ''
+                                //     : ''
+                                // }`,
                               },
                             ]}
                           >
                             <Text style={styles.tableCell_dates}>
-                              {nightDiff?.dtrEntriesDetails[15]?.nightDifferentialHours > 0
+                              {determineHourPlacement(15, nightDiff)}
+                              {/* {nightDiff?.dtrEntriesDetails[15]?.nightDifferentialHours > 0
                                 ? nightDiff?.dtrEntriesDetails[15]?.nightDifferentialHours
-                                : ''}
+                                : ''} */}
                             </Text>
                           </View>
                         </View>
