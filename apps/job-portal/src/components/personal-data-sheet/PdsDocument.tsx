@@ -19,7 +19,10 @@ const styles = StyleSheet.create({
     backgroundColor: '#ffffff',
   },
   bodyBorder: {
-    margin: 10,
+    marginTop: 10,
+    marginLeft: 10,
+    marginRight: 10,
+    marginBottom: 0,
     border: '2px solid #000000',
   },
   mainTitleContainer: {
@@ -148,6 +151,7 @@ const styles = StyleSheet.create({
   w15_1: { width: '15.1%' },
   w14: { width: '14%' },
   w12: { width: '12%' },
+  w9_5: { width: '9.5%' },
   w8_9: { width: '8.9%' },
   w7_45: { width: '7.45%' },
   w7: { width: '7%' },
@@ -457,10 +461,10 @@ export const PdsDocument = ({ formatDate, pds }: Data): JSX.Element => {
           <View style={[styles.verticalCenter]}>
             {eligibility.examDate.from && eligibility.examDate.to ? (
               <Text style={{ textTransform: 'lowercase' }}>
-                {eligibility.examDate.from + ' to ' + eligibility.examDate.to}
+                {formatDate(eligibility.examDate.from) + ' to ' + formatDate(eligibility.examDate.to)}
               </Text>
             ) : (
-              <Text>{eligibility.examDate.from}</Text>
+              <Text>{formatDate(eligibility.examDate.from)}</Text>
             )}
           </View>
         </View>
@@ -532,25 +536,25 @@ export const PdsDocument = ({ formatDate, pds }: Data): JSX.Element => {
         </View>
 
         {/* Company Name */}
-        <View style={[styles.borderRight, styles.inputValue, styles.horizontalCenter, styles.w27_1]}>
+        <View style={[styles.borderRight, styles.inputValue, styles.horizontalCenter, styles.w31_9]}>
           <View style={[styles.verticalCenter]}>
             <Text>{experience.companyName || 'N/A'}</Text>
           </View>
         </View>
 
         {/* Monthly Salary */}
-        <View style={[styles.borderRight, styles.inputValue, styles.horizontalCenter, styles.w5_6, { padding: 0 }]}>
+        {/* <View style={[styles.borderRight, styles.inputValue, styles.horizontalCenter, styles.w5_6, { padding: 0 }]}>
           <View style={[styles.verticalCenter]}>
             <Text>{experience.monthlySalary || 'N/A'}</Text>
           </View>
-        </View>
+        </View> */}
 
         {/* Salary Grade / Increment */}
-        <View style={[styles.borderRight, styles.inputValue, styles.horizontalCenter, styles.w5_6, { padding: 1 }]}>
+        {/* <View style={[styles.borderRight, styles.inputValue, styles.horizontalCenter, styles.w5_6, { padding: 1 }]}>
           <View style={[styles.verticalCenter]}>
             <Text>{experience.salaryGrade || 'N/A'}</Text>
           </View>
-        </View>
+        </View> */}
 
         {/* Status of Appointment */}
         <View
@@ -558,7 +562,7 @@ export const PdsDocument = ({ formatDate, pds }: Data): JSX.Element => {
             styles.borderRight,
             styles.inputValue,
             styles.horizontalCenter,
-            styles.w7,
+            styles.w9_5,
             { fontSize: 6.2, padding: 0 },
           ]}
         >
@@ -568,7 +572,7 @@ export const PdsDocument = ({ formatDate, pds }: Data): JSX.Element => {
         </View>
 
         {/* Gov't Service */}
-        <View style={[styles.inputValue, styles.horizontalCenter, styles.w5_6, { padding: 0 }]}>
+        <View style={[styles.inputValue, styles.horizontalCenter, styles.w9_5, { padding: 0 }]}>
           <View style={[styles.verticalCenter]}>
             <Text>{experience.isGovernmentService ? 'Y' : 'N'}</Text>
           </View>
@@ -1061,7 +1065,7 @@ export const PdsDocument = ({ formatDate, pds }: Data): JSX.Element => {
             </View>
             <View style={styles.csFormContainer}>
               <Text style={styles.csForm}>CS Form No. 212</Text>
-              <Text style={styles.revised2017}>Revised 2017</Text>
+              <Text style={styles.revised2017}>Revised 2025</Text>
             </View>
             <View>
               <Text style={styles.line4Child1}>
@@ -1074,7 +1078,10 @@ export const PdsDocument = ({ formatDate, pds }: Data): JSX.Element => {
             </View>
             <View style={styles.line7Container}>
               <View style={styles.line7Child1Container}>
-                <Text style={styles.line7Child1}>Print legibly. Tick appropriate boxes (</Text>
+                <Text style={styles.line7Child1}>
+                  {' '}
+                  Print legibly if accomplished through own handwriting. Tick appropriate boxes (
+                </Text>
                 <>
                   <Svg viewBox="0 0 24 24" width={7} height={7}>
                     <Path d="M22 2v20h-20v-20h20zm2-2h-24v24h24v-24z" stroke="black" />
@@ -1085,10 +1092,10 @@ export const PdsDocument = ({ formatDate, pds }: Data): JSX.Element => {
                   <span style={{ fontFamily: 'ArialNarrowBold' }}>DO NOT ABBREVIATE</span>.
                 </Text>
               </View>
-              <View style={styles.line7Child2Container}>
+              {/* <View style={styles.line7Child2Container}>
                 <Text style={styles.line7Child2Key}>1. CS ID No</Text>
                 <Text style={styles.line7Child2Value}>(Do not fill up. For CSC use only)</Text>
-              </View>
+              </View> */}
             </View>
 
             <PersonalInformationPdf
@@ -1110,8 +1117,8 @@ export const PdsDocument = ({ formatDate, pds }: Data): JSX.Element => {
             />
 
             <SignatureDate />
-            <FooterPdf />
           </View>
+          <FooterPdf />
         </Page>
 
         {/* Page 2 */}
@@ -1122,8 +1129,8 @@ export const PdsDocument = ({ formatDate, pds }: Data): JSX.Element => {
             <WorkExperiencePdf workExperience={workExperience} formatDate={formatDate} />
 
             <SignatureDate />
-            <FooterPdf />
           </View>
+          <FooterPdf />
         </Page>
 
         {/* Page 3 */}
@@ -1136,8 +1143,8 @@ export const PdsDocument = ({ formatDate, pds }: Data): JSX.Element => {
             <OtherInformationPdf skills={skills} recognitions={recognitions} organizations={organizations} />
 
             <SignatureDate />
-            <FooterPdf />
           </View>
+          <FooterPdf />
         </Page>
 
         {/* Page 4 */}
@@ -1155,9 +1162,8 @@ export const PdsDocument = ({ formatDate, pds }: Data): JSX.Element => {
               governmentIssuedId={governmentIssuedId}
               formatDate={formatDate}
             />
-
-            <FooterPdf />
           </View>
+          <FooterPdf />
         </Page>
 
         {/* Children Extra Page */}
@@ -1170,7 +1176,7 @@ export const PdsDocument = ({ formatDate, pds }: Data): JSX.Element => {
                 </View>
 
                 <View style={[styles.inputKey, styles.w35_8]}>
-                  <Text>DATE OF BIRTH (mm/dd/yyyy)</Text>
+                  <Text>DATE OF BIRTH (dd/mm/yyyy)</Text>
                 </View>
               </View>
 
@@ -1349,8 +1355,7 @@ export const PdsDocument = ({ formatDate, pds }: Data): JSX.Element => {
                     </View>
                     <View style={[styles.w50, styles.horizontalCenter]}>
                       <View style={[styles.verticalCenter, { padding: '3 0' }]}>
-                        <Text>Date of</Text>
-                        <Text>Validity</Text>
+                        <Text>Valid Until</Text>
                       </View>
                     </View>
                   </View>
@@ -1381,7 +1386,7 @@ export const PdsDocument = ({ formatDate, pds }: Data): JSX.Element => {
                     <Text style={[styles.verticalCenter]}>28.</Text>
                     <View style={[styles.w100, { textAlign: 'center' }]}>
                       <Text>INCLUSIVE DATES</Text>
-                      <Text>(mm/dd/yyyy)</Text>
+                      <Text>(dd/mm/yyyy)</Text>
                     </View>
                   </View>
 
@@ -1414,7 +1419,7 @@ export const PdsDocument = ({ formatDate, pds }: Data): JSX.Element => {
                 </View>
 
                 {/* Company Name */}
-                <View style={[styles.borderRight, styles.inputKey, styles.horizontalCenter, styles.w27_1]}>
+                <View style={[styles.borderRight, styles.inputKey, styles.horizontalCenter, styles.w31_9]}>
                   <View style={[styles.verticalCenter]}>
                     <Text>DEPARTMENT / AGENCY / OFFICE / COMPANY</Text>
                     <Text>(Write in full/Do not abbreviate)</Text>
@@ -1422,16 +1427,16 @@ export const PdsDocument = ({ formatDate, pds }: Data): JSX.Element => {
                 </View>
 
                 {/* Monthly Salary */}
-                <View
+                {/* <View
                   style={[styles.borderRight, styles.inputKey, styles.horizontalCenter, styles.w5_6, { padding: 0 }]}
                 >
                   <View style={[styles.verticalCenter]}>
                     <Text style={{ fontSize: 5.7 }}>MONTHLY SALARY</Text>
                   </View>
-                </View>
+                </View> */}
 
                 {/* Salary Grade / Increment */}
-                <View
+                {/* <View
                   style={[styles.borderRight, styles.inputKey, styles.horizontalCenter, styles.w5_6, { padding: 1 }]}
                 >
                   <View style={[styles.verticalCenter]}>
@@ -1439,10 +1444,12 @@ export const PdsDocument = ({ formatDate, pds }: Data): JSX.Element => {
                       SALARY/ JOB/ PAY GRADE (if applicable)& STEP (Format &quot;00-0&quot;)/ INCREMENT
                     </Text>
                   </View>
-                </View>
+                </View> */}
 
                 {/* Status of Appointment */}
-                <View style={[styles.borderRight, styles.inputKey, styles.horizontalCenter, styles.w7, { padding: 0 }]}>
+                <View
+                  style={[styles.borderRight, styles.inputKey, styles.horizontalCenter, styles.w9_5, { padding: 0 }]}
+                >
                   <View style={[styles.verticalCenter, { fontSize: 5.7 }]}>
                     <Text>STATUS OF</Text>
                     <Text>APPOINTMENT</Text>
@@ -1450,7 +1457,7 @@ export const PdsDocument = ({ formatDate, pds }: Data): JSX.Element => {
                 </View>
 
                 {/* Gov't Service */}
-                <View style={[styles.inputKey, styles.horizontalCenter, styles.w5_6, { padding: 0 }]}>
+                <View style={[styles.inputKey, styles.horizontalCenter, styles.w9_5, { padding: 0 }]}>
                   <View style={[styles.verticalCenter, { fontSize: 5.7 }]}>
                     <Text>GOV&apos;T</Text>
                     <Text>SERVICE</Text>
@@ -1500,7 +1507,7 @@ export const PdsDocument = ({ formatDate, pds }: Data): JSX.Element => {
                 >
                   <View style={[styles.w100, { textAlign: 'center', padding: '4' }]}>
                     <Text>INCLUSIVE DATES</Text>
-                    <Text>(mm/dd/yyyy)</Text>
+                    <Text>(dd/mm/yyyy)</Text>
                   </View>
 
                   <View style={[styles.borderTop, { flexDirection: 'row' }]}>
@@ -1572,7 +1579,7 @@ export const PdsDocument = ({ formatDate, pds }: Data): JSX.Element => {
                   <View style={[styles.w100, { textAlign: 'center', padding: '4 6' }]}>
                     <Text>INCLUSIVE DATES OF</Text>
                     <Text>ATTENDANCE</Text>
-                    <Text>(mm/dd/yyyy)</Text>
+                    <Text>(dd/mm/yyyy)</Text>
                   </View>
 
                   <View style={[styles.borderTop, { flexDirection: 'row' }]}>
@@ -1614,7 +1621,7 @@ export const PdsDocument = ({ formatDate, pds }: Data): JSX.Element => {
                 >
                   <View style={[styles.verticalCenter, { fontSize: 5.7 }]}>
                     <Text>Type of LD</Text>
-                    <Text> ( Managerial/ Supervisory/ Technical/etc)</Text>
+                    <Text> (Managerial/ Supervisory/ Technical/etc)</Text>
                   </View>
                 </View>
 
@@ -1668,7 +1675,7 @@ export const PdsDocument = ({ formatDate, pds }: Data): JSX.Element => {
                   <View style={[styles.w100, { textAlign: 'center', padding: '4 6' }]}>
                     <Text>INCLUSIVE DATES OF</Text>
                     <Text>ATTENDANCE</Text>
-                    <Text>(mm/dd/yyyy)</Text>
+                    <Text>(dd/mm/yyyy)</Text>
                   </View>
 
                   <View style={[styles.borderTop, { flexDirection: 'row' }]}>
@@ -1710,7 +1717,7 @@ export const PdsDocument = ({ formatDate, pds }: Data): JSX.Element => {
                 >
                   <View style={[styles.verticalCenter, { fontSize: 5.7 }]}>
                     <Text>Type of LD</Text>
-                    <Text> ( Managerial/ Supervisory/ Technical/etc)</Text>
+                    <Text> (Managerial/ Supervisory/ Technical/etc)</Text>
                   </View>
                 </View>
 
@@ -1764,7 +1771,7 @@ export const PdsDocument = ({ formatDate, pds }: Data): JSX.Element => {
                   <View style={[styles.w100, { textAlign: 'center', padding: '4 6' }]}>
                     <Text>INCLUSIVE DATES OF</Text>
                     <Text>ATTENDANCE</Text>
-                    <Text>(mm/dd/yyyy)</Text>
+                    <Text>(dd/mm/yyyy)</Text>
                   </View>
 
                   <View style={[styles.borderTop, { flexDirection: 'row' }]}>
@@ -1806,7 +1813,7 @@ export const PdsDocument = ({ formatDate, pds }: Data): JSX.Element => {
                 >
                   <View style={[styles.verticalCenter, { fontSize: 5.7 }]}>
                     <Text>Type of LD</Text>
-                    <Text> ( Managerial/ Supervisory/ Technical/etc)</Text>
+                    <Text> (Managerial/ Supervisory/ Technical/etc)</Text>
                   </View>
                 </View>
 
@@ -1860,7 +1867,7 @@ export const PdsDocument = ({ formatDate, pds }: Data): JSX.Element => {
                   <View style={[styles.w100, { textAlign: 'center', padding: '4 6' }]}>
                     <Text>INCLUSIVE DATES OF</Text>
                     <Text>ATTENDANCE</Text>
-                    <Text>(mm/dd/yyyy)</Text>
+                    <Text>(dd/mm/yyyy)</Text>
                   </View>
 
                   <View style={[styles.borderTop, { flexDirection: 'row' }]}>
@@ -1902,7 +1909,7 @@ export const PdsDocument = ({ formatDate, pds }: Data): JSX.Element => {
                 >
                   <View style={[styles.verticalCenter, { fontSize: 5.7 }]}>
                     <Text>Type of LD</Text>
-                    <Text> ( Managerial/ Supervisory/ Technical/etc)</Text>
+                    <Text> (Managerial/ Supervisory/ Technical/etc)</Text>
                   </View>
                 </View>
 
@@ -1956,7 +1963,7 @@ export const PdsDocument = ({ formatDate, pds }: Data): JSX.Element => {
                   <View style={[styles.w100, { textAlign: 'center', padding: '4 6' }]}>
                     <Text>INCLUSIVE DATES OF</Text>
                     <Text>ATTENDANCE</Text>
-                    <Text>(mm/dd/yyyy)</Text>
+                    <Text>(dd/mm/yyyy)</Text>
                   </View>
 
                   <View style={[styles.borderTop, { flexDirection: 'row' }]}>
@@ -1998,7 +2005,7 @@ export const PdsDocument = ({ formatDate, pds }: Data): JSX.Element => {
                 >
                   <View style={[styles.verticalCenter, { fontSize: 5.7 }]}>
                     <Text>Type of LD</Text>
-                    <Text> ( Managerial/ Supervisory/ Technical/etc)</Text>
+                    <Text> (Managerial/ Supervisory/ Technical/etc)</Text>
                   </View>
                 </View>
 
@@ -2052,7 +2059,7 @@ export const PdsDocument = ({ formatDate, pds }: Data): JSX.Element => {
                   <View style={[styles.w100, { textAlign: 'center', padding: '4 6' }]}>
                     <Text>INCLUSIVE DATES OF</Text>
                     <Text>ATTENDANCE</Text>
-                    <Text>(mm/dd/yyyy)</Text>
+                    <Text>(dd/mm/yyyy)</Text>
                   </View>
 
                   <View style={[styles.borderTop, { flexDirection: 'row' }]}>
@@ -2094,7 +2101,7 @@ export const PdsDocument = ({ formatDate, pds }: Data): JSX.Element => {
                 >
                   <View style={[styles.verticalCenter, { fontSize: 5.7 }]}>
                     <Text>Type of LD</Text>
-                    <Text> ( Managerial/ Supervisory/ Technical/etc)</Text>
+                    <Text> (Managerial/ Supervisory/ Technical/etc)</Text>
                   </View>
                 </View>
 

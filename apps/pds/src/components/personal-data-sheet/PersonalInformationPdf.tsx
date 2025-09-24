@@ -111,7 +111,7 @@ export const PersonalInformationPdf = ({
       {/* Line 10 Surname */}
       <View style={[styles.lineContainer, styles.borderTop]}>
         <View style={[styles.borderRight, styles.inputKey, styles.w17_1]}>
-          <Text>2. SURNAME</Text>
+          <Text>1. SURNAME</Text>
         </View>
         <View style={[styles.w82_9, styles.inputValue]}>
           <Text>{personalInfo.lastName || 'N/A'}</Text>
@@ -121,7 +121,8 @@ export const PersonalInformationPdf = ({
       {/* Line 11 First name */}
       <View style={[styles.lineContainer]}>
         <View style={[styles.borderRight, styles.inputKey, styles.w17_1]}>
-          <Text>&nbsp;&nbsp;&nbsp;&nbsp;FIRST NAME</Text>
+          {/* <Text>&nbsp;&nbsp;&nbsp;&nbsp;FIRST NAME</Text> */}
+          <Text>2. FIRST NAME</Text>
         </View>
         <View style={[styles.w59, styles.inputValue, styles.borderRight, styles.borderTop]}>
           <Text>{personalInfo.firstName || 'N/A'}</Text>
@@ -158,7 +159,7 @@ export const PersonalInformationPdf = ({
         <View style={[styles.lineContainer, styles.w42]}>
           <View style={[styles.borderRight, styles.inputKey, styles.w40_7]}>
             <Text>3. DATE OF BIRTH</Text>
-            <Text>&nbsp;&nbsp;&nbsp;&nbsp;(mm/dd/yyyy)</Text>
+            <Text>&nbsp;&nbsp;&nbsp;&nbsp;(dd/mm/yyyy)</Text>
           </View>
 
           <View style={[styles.borderRight, styles.inputValue, styles.w59_3]}>
@@ -289,7 +290,7 @@ export const PersonalInformationPdf = ({
       <View style={styles.lineContainer}>
         <View style={[styles.lineContainer, styles.borderTop, styles.w42]}>
           <View style={[styles.borderRight, styles.inputKey, styles.w40_7]}>
-            <Text>5. SEX</Text>
+            <Text>5. SEX AT BIRTH</Text>
           </View>
 
           <View
@@ -728,12 +729,13 @@ export const PersonalInformationPdf = ({
       <View style={styles.lineContainer}>
         <View style={[styles.lineContainer, styles.borderTop, styles.w42]}>
           <View style={[styles.borderRight, styles.inputKey, styles.w40_7]}>
-            <Text>10. GSIS ID NO.</Text>
+            <Text>10. UMID ID NO.</Text>
           </View>
 
           <View
             style={[styles.borderRight, styles.inputValue, styles.w59_3, { flexDirection: 'row', padding: '4 8 0 8' }]}
           >
+            {/* EITHER SSS NUMBER OR GSIS NUMBER as of 2025 */}
             <Text>{governmentIssuedIds.gsisNumber || 'N/A'}</Text>
           </View>
         </View>
@@ -902,10 +904,11 @@ export const PersonalInformationPdf = ({
       <View style={styles.lineContainer}>
         <View style={[styles.lineContainer, styles.borderTop, styles.w42]}>
           <View style={[styles.borderRight, styles.inputKey, styles.w40_7]}>
-            <Text>13. SSS NO.</Text>
+            <Text>13. PhilSys Number (PSN):</Text>
           </View>
 
           <View style={[styles.borderRight, styles.inputValue, styles.w59_3, { padding: '4 8' }]}>
+            {/* PHILSYS NUMBER BUT stored in the SSS field in db */}
             <Text>{governmentIssuedIds.sssNumber || 'N/A'}</Text>
           </View>
         </View>

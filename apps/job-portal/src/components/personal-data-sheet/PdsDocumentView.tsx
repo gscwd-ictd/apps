@@ -24,7 +24,7 @@ export const PdsDocumentView: FunctionComponent<PdsDocumentViewProps> = ({ appli
   const formatDate = (assignedDate: string) => {
     if (!isEmpty(assignedDate)) {
       const date = new Date(assignedDate);
-      return dayjs(date.toLocaleDateString()).format('MM/DD/YYYY');
+      return dayjs(date.toLocaleDateString()).format('DD/MM/YYYY');
     } else {
       return '';
     }

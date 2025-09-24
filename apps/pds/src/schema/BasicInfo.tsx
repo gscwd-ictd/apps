@@ -73,11 +73,14 @@ const schema = yup.object().shape({
     .typeError('Please enter a valid value'),
   gsisNumber: yup
     .string()
-    .max(11)
-    .matches(/^N\/A$|^([0-9]{10})$|^([0-9]{11})$/, 'Write your 10 or 11-digit GSIS BP Number or N/A')
+    .max(16)
+    .matches(
+      /^N\/A$|^([0-9]{10})$|^([0-9]{11})$|^([0-9]{12})$|^([0-9]{16})$/,
+      'Write your 10 to 16-digit UMID ID Number or N/A'
+    )
     .required()
     .trim()
-    .label('GSIS BP Number'),
+    .label('UMID ID Number'),
   pagibigNumber: yup
     .string()
     // .max(12)
@@ -101,12 +104,13 @@ const schema = yup.object().shape({
     .label('PhilHealth Number'),
   sssNumber: yup
     .string()
-    // .max(10)
+    // .min(9)
+    // .max(16)
     .trim()
     // .matches(/^([0-9]{10})$|^([0-9]{9})$|^N\/A$/, 'Write a valid SSS Number or N/A')
     .matches(
-      /^([0-9]{2}[\-][0-9]{7}[\-][0-9]{1})$|^([0-9]{10})$|^N\/A$/,
-      'Write your SSS Number with or without dashes(-) or N/A'
+      /^([0-9]{2}[\-][0-9]{7}[\-][0-9]{1})$|^([0-9]{10})$|^([0-9]{4}[\-][0-9]{4}[\-][0-9]{4}[\-][0-9]{4})$|^([0-9]{16})$$|^N\/A$/,
+      'Write your Philsys Number with or without dashes(-) or N/A'
     )
     .required()
     .label('SSS Number'),

@@ -7,7 +7,7 @@ const schema = yup.object().shape({
   companyName: yup.string().required('Please enter a company name').trim().label('This'),
   monthlySalary: yup
     .number()
-    .required()
+    .nullable()
     .min(1, 'Please enter a valid salary')
     .typeError('Please enter a valid salary')
     .transform((v, o) => (o === '' ? null : v))
@@ -21,9 +21,11 @@ const schema = yup.object().shape({
       is: true,
       then: yup
         .string()
-        .required()
+        // .required()
+        .notRequired()
         .trim()
-        .nullable(false)
+        .nullable(true)
+        // .nullable(false)
         .typeError('Should not be empty')
         .label('This')
         .matches(/^([0-2][0-9])*-[1-8]$|^([3][0-2])*-[1-8]$|^([3][3])*-[1-3]$/, 'Must match the format "00-0"'),
@@ -35,7 +37,7 @@ const schema = yup.object().shape({
         .notRequired()
         .trim()
         .nullable(true)
-        .transform((v, o) => (o === '' ? null : v))
+        // .transform((v, o) => (o === '' ? null : v))
         .matches(/^([0-2][0-9])*-[1-8]$|^([3][0-2])*-[1-8]$|^([3][3])*-[1-3]$/, 'Must match the format "00-0"'),
     }),
   from: yup

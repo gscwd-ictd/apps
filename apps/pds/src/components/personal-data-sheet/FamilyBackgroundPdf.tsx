@@ -105,9 +105,7 @@ export const FamilyBackgroundPdf = ({
         </View>
 
         <View style={[styles.inputValue, styles.w35]}>
-          <Text style={{ textAlign: 'center' }}>
-            {formatDate(child.birthDate)}
-          </Text>
+          <Text style={{ textAlign: 'center' }}>{formatDate(child.birthDate)}</Text>
         </View>
       </View>
     ));
@@ -141,12 +139,7 @@ export const FamilyBackgroundPdf = ({
         <Text style={styles.sectionTitleText}>II. FAMILY BACKGROUND</Text>
       </View>
 
-      <View
-        style={[
-          styles.borderTop,
-          { flexDirection: 'row', alignItems: 'stretch' },
-        ]}
-      >
+      <View style={[styles.borderTop, { flexDirection: 'row', alignItems: 'stretch' }]}>
         <View style={[styles.w57_6]}>
           {/* Line 36 Spouse Surname */}
           <View style={{ flexDirection: 'row' }}>
@@ -154,14 +147,7 @@ export const FamilyBackgroundPdf = ({
               <Text>22. SPOUSE&#39;S SURNAME</Text>
             </View>
 
-            <View
-              style={[
-                styles.borderRight,
-                styles.inputValue,
-                styles.w70_1,
-                { padding: '4 8' },
-              ]}
-            >
+            <View style={[styles.borderRight, styles.inputValue, styles.w70_1, { padding: '4 8' }]}>
               <Text>{spouse.lastName || 'N/A'}</Text>
             </View>
           </View>
@@ -172,15 +158,7 @@ export const FamilyBackgroundPdf = ({
               <Text>&nbsp;&nbsp;&nbsp;&nbsp;FIRST NAME</Text>
             </View>
 
-            <View
-              style={[
-                styles.borderRight,
-                styles.borderTop,
-                styles.inputValue,
-                styles.w43_4,
-                { padding: '4 8' },
-              ]}
-            >
+            <View style={[styles.borderRight, styles.borderTop, styles.inputValue, styles.w43_4, { padding: '4 8' }]}>
               <Text>{spouse.firstName || 'N/A'}</Text>
             </View>
 
@@ -198,9 +176,7 @@ export const FamilyBackgroundPdf = ({
               ]}
             >
               <Text>NAME EXTENSION (JR., SR)</Text>
-              <Text style={{ padding: '3 8', fontSize: 5.7 }}>
-                {spouse.nameExtension || 'N/A'}
-              </Text>
+              <Text style={{ padding: '3 8', fontSize: 5.7 }}>{spouse.nameExtension || 'N/A'}</Text>
             </View>
           </View>
 
@@ -210,15 +186,7 @@ export const FamilyBackgroundPdf = ({
               <Text>&nbsp;&nbsp;&nbsp;&nbsp;MIDDLE NAME</Text>
             </View>
 
-            <View
-              style={[
-                styles.borderTop,
-                styles.borderRight,
-                styles.inputValue,
-                styles.w70_1,
-                { padding: '4 8' },
-              ]}
-            >
+            <View style={[styles.borderTop, styles.borderRight, styles.inputValue, styles.w70_1, { padding: '4 8' }]}>
               <Text>{spouse.middleName || 'N/A'}</Text>
             </View>
           </View>
@@ -229,14 +197,7 @@ export const FamilyBackgroundPdf = ({
               <Text>&nbsp;&nbsp;&nbsp;&nbsp;OCCUPATION</Text>
             </View>
 
-            <View
-              style={[
-                styles.borderRight,
-                styles.inputValue,
-                styles.w70_1,
-                { padding: '4 8' },
-              ]}
-            >
+            <View style={[styles.borderRight, styles.inputValue, styles.w70_1, { padding: '4 8' }]}>
               <Text>{spouse.occupation || 'N/A'}</Text>
             </View>
           </View>
@@ -247,14 +208,7 @@ export const FamilyBackgroundPdf = ({
               <Text>&nbsp;&nbsp;&nbsp;&nbsp;EMPLOYER/BUSINESS NAME</Text>
             </View>
 
-            <View
-              style={[
-                styles.borderRight,
-                styles.inputValue,
-                styles.w70_1,
-                { padding: '4 8' },
-              ]}
-            >
+            <View style={[styles.borderRight, styles.inputValue, styles.w70_1, { padding: '4 8' }]}>
               <Text>{spouse.employer || 'N/A'}</Text>
             </View>
           </View>
@@ -265,14 +219,7 @@ export const FamilyBackgroundPdf = ({
               <Text>&nbsp;&nbsp;&nbsp;&nbsp;BUSINESS ADDRESS</Text>
             </View>
 
-            <View
-              style={[
-                styles.borderRight,
-                styles.inputValue,
-                styles.w70_1,
-                { padding: '4 8' },
-              ]}
-            >
+            <View style={[styles.borderRight, styles.inputValue, styles.w70_1, { padding: '4 8' }]}>
               <Text>{spouse.businessAddress || 'N/A'}</Text>
             </View>
           </View>
@@ -283,14 +230,7 @@ export const FamilyBackgroundPdf = ({
               <Text>&nbsp;&nbsp;&nbsp;&nbsp;TELEPHONE NO.</Text>
             </View>
 
-            <View
-              style={[
-                styles.borderRight,
-                styles.inputValue,
-                styles.w70_1,
-                { padding: '4 8' },
-              ]}
-            >
+            <View style={[styles.borderRight, styles.inputValue, styles.w70_1, { padding: '4 8' }]}>
               <Text>{spouse.telephoneNumber || 'N/A'}</Text>
             </View>
           </View>
@@ -301,14 +241,7 @@ export const FamilyBackgroundPdf = ({
               <Text>24. FATHER&#39;S SURNAME</Text>
             </View>
 
-            <View
-              style={[
-                styles.borderRight,
-                styles.inputValue,
-                styles.w70_1,
-                { padding: '4 8' },
-              ]}
-            >
+            <View style={[styles.borderRight, styles.inputValue, styles.w70_1, { padding: '4 8' }]}>
               <Text>{parents.fatherLastName || 'N/A'}</Text>
             </View>
           </View>
@@ -319,15 +252,7 @@ export const FamilyBackgroundPdf = ({
               <Text>&nbsp;&nbsp;&nbsp;&nbsp;FIRST NAME</Text>
             </View>
 
-            <View
-              style={[
-                styles.borderRight,
-                styles.borderTop,
-                styles.inputValue,
-                styles.w43_4,
-                { padding: '4 8' },
-              ]}
-            >
+            <View style={[styles.borderRight, styles.borderTop, styles.inputValue, styles.w43_4, { padding: '4 8' }]}>
               <Text>{parents.fatherFirstName || 'N/A'}</Text>
             </View>
 
@@ -345,9 +270,7 @@ export const FamilyBackgroundPdf = ({
               ]}
             >
               <Text>NAME EXTENSION (JR., SR)</Text>
-              <Text style={{ padding: '3 8', fontSize: 5.7 }}>
-                {parents.fatherNameExtension || 'N/A'}
-              </Text>
+              <Text style={{ padding: '3 8', fontSize: 5.7 }}>{parents.fatherNameExtension || 'N/A'}</Text>
             </View>
           </View>
 
@@ -357,32 +280,19 @@ export const FamilyBackgroundPdf = ({
               <Text>&nbsp;&nbsp;&nbsp;&nbsp;MIDDLE NAME</Text>
             </View>
 
-            <View
-              style={[
-                styles.borderTop,
-                styles.borderRight,
-                styles.inputValue,
-                styles.w70_1,
-                { padding: '4 8' },
-              ]}
-            >
+            <View style={[styles.borderTop, styles.borderRight, styles.inputValue, styles.w70_1, { padding: '4 8' }]}>
               <Text>{parents.fatherMiddleName || 'N/A'}</Text>
             </View>
           </View>
 
           {/* Line 46 Mother's Maiden Name  */}
           <View style={[styles.borderTop, { flexDirection: 'row' }]}>
-            <View style={[styles.borderRight, styles.inputKey, styles.w29_9]}>
+            <View style={[styles.inputKey, styles.w29_9]}>
               <Text>25. MOTHER&#39;S MAIDEN NAME</Text>
             </View>
 
             <View
-              style={[
-                styles.borderRight,
-                styles.inputValue,
-                styles.w70_1,
-                { padding: '4 8' },
-              ]}
+              style={[styles.inputKey, styles.borderRight, styles.inputValue, styles.w70_1, { padding: '4 8' }]}
             ></View>
           </View>
 
@@ -392,15 +302,7 @@ export const FamilyBackgroundPdf = ({
               <Text>&nbsp;&nbsp;&nbsp;&nbsp;SURNAME</Text>
             </View>
 
-            <View
-              style={[
-                styles.borderTop,
-                styles.borderRight,
-                styles.inputValue,
-                styles.w70_1,
-                { padding: '4 8' },
-              ]}
-            >
+            <View style={[styles.borderTop, styles.borderRight, styles.inputValue, styles.w70_1, { padding: '4 8' }]}>
               <Text>{parents.motherLastName || 'N/A'}</Text>
             </View>
           </View>
@@ -411,15 +313,7 @@ export const FamilyBackgroundPdf = ({
               <Text>&nbsp;&nbsp;&nbsp;&nbsp;FIRST NAME</Text>
             </View>
 
-            <View
-              style={[
-                styles.borderTop,
-                styles.borderRight,
-                styles.inputValue,
-                styles.w70_1,
-                { padding: '4 8' },
-              ]}
-            >
+            <View style={[styles.borderTop, styles.borderRight, styles.inputValue, styles.w70_1, { padding: '4 8' }]}>
               <Text>{parents.motherFirstName || 'N/A'}</Text>
             </View>
           </View>
@@ -430,15 +324,7 @@ export const FamilyBackgroundPdf = ({
               <Text>&nbsp;&nbsp;&nbsp;&nbsp;MIDDLE NAME</Text>
             </View>
 
-            <View
-              style={[
-                styles.borderTop,
-                styles.borderRight,
-                styles.inputValue,
-                styles.w70_1,
-                { padding: '4 8' },
-              ]}
-            >
+            <View style={[styles.borderTop, styles.borderRight, styles.inputValue, styles.w70_1, { padding: '4 8' }]}>
               <Text>{parents.motherMiddleName || 'N/A'}</Text>
             </View>
           </View>
@@ -452,7 +338,7 @@ export const FamilyBackgroundPdf = ({
             </View>
 
             <View style={[styles.inputKey, styles.w35]}>
-              <Text>DATE OF BIRTH (mm/dd/yyyy)</Text>
+              <Text>DATE OF BIRTH (dd/mm/yyyy)</Text>
             </View>
           </View>
 
@@ -462,9 +348,7 @@ export const FamilyBackgroundPdf = ({
 
           <View style={[styles.borderTop]}>
             <View style={[styles.inputKey, styles.w100]}>
-              <Text style={styles.warningText}>
-                (Continue on separate sheet if necessary)
-              </Text>
+              <Text style={styles.warningText}>(Continue on separate sheet if necessary)</Text>
             </View>
           </View>
         </View>
