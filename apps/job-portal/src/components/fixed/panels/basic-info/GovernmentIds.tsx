@@ -9,9 +9,7 @@ import { GovernmentIssuedIds } from 'apps/job-portal/utils/types/data/basic-info
 export const GovernmentIDsBI = (): JSX.Element => {
   // set government id object, employee object state from pds context
   const governmentIssuedIds = usePdsStore((state) => state.governmentIssuedIds);
-  const setGovernmentIssuedIds = usePdsStore(
-    (state) => state.setGovernmentIssuedIds
-  );
+  const setGovernmentIssuedIds = usePdsStore((state) => state.setGovernmentIssuedIds);
   const employee = useEmployeeStore((state) => state.employeeDetails);
 
   // initialize basic info useform context
@@ -28,15 +26,12 @@ export const GovernmentIDsBI = (): JSX.Element => {
             <div className="w-full col-span-1 mb-7">
               <FloatingLabelInputRF
                 id="gsisno"
-                placeholder="GSIS BP No."
+                placeholder="UMID ID No."
                 type="text"
                 isRequired
-                defaultValue={
-                  governmentIssuedIds.gsisNumber
-                    ? governmentIssuedIds.gsisNumber
-                    : ''
-                }
-                maxLength={11}
+                defaultValue={governmentIssuedIds.gsisNumber ? governmentIssuedIds.gsisNumber : ''}
+                // minLength={10}
+                maxLength={16}
                 controller={{
                   ...register('gsisNumber', {
                     value: governmentIssuedIds.gsisNumber,
@@ -57,11 +52,7 @@ export const GovernmentIDsBI = (): JSX.Element => {
                 placeholder="PAG-IBIG MID No."
                 type="text"
                 isRequired
-                defaultValue={
-                  governmentIssuedIds.pagibigNumber
-                    ? governmentIssuedIds.pagibigNumber
-                    : ''
-                }
+                defaultValue={governmentIssuedIds.pagibigNumber ? governmentIssuedIds.pagibigNumber : ''}
                 maxLength={14}
                 controller={{
                   ...register('pagibigNumber', {
@@ -84,11 +75,7 @@ export const GovernmentIDsBI = (): JSX.Element => {
                 type="text"
                 isRequired
                 maxLength={14}
-                defaultValue={
-                  governmentIssuedIds.philhealthNumber
-                    ? governmentIssuedIds.philhealthNumber
-                    : ''
-                }
+                defaultValue={governmentIssuedIds.philhealthNumber ? governmentIssuedIds.philhealthNumber : ''}
                 controller={{
                   ...register('philhealthNumber', {
                     value: governmentIssuedIds.philhealthNumber,
@@ -113,11 +100,7 @@ export const GovernmentIDsBI = (): JSX.Element => {
                 type="text"
                 isRequired
                 maxLength={12}
-                defaultValue={
-                  governmentIssuedIds.sssNumber
-                    ? governmentIssuedIds.sssNumber
-                    : ''
-                }
+                defaultValue={governmentIssuedIds.sssNumber ? governmentIssuedIds.sssNumber : ''}
                 controller={{
                   ...register('sssNumber', {
                     value: governmentIssuedIds.sssNumber,
@@ -140,11 +123,7 @@ export const GovernmentIDsBI = (): JSX.Element => {
                 isRequired
                 type="text"
                 maxLength={15}
-                defaultValue={
-                  governmentIssuedIds.tinNumber
-                    ? governmentIssuedIds.tinNumber
-                    : ''
-                }
+                defaultValue={governmentIssuedIds.tinNumber ? governmentIssuedIds.tinNumber : ''}
                 controller={{
                   ...register('tinNumber', {
                     value: governmentIssuedIds.tinNumber,
@@ -165,11 +144,7 @@ export const GovernmentIDsBI = (): JSX.Element => {
                 placeholder="Agency Employee No."
                 isRequired
                 type="text"
-                defaultValue={
-                  governmentIssuedIds.agencyNumber
-                    ? governmentIssuedIds.agencyNumber
-                    : ''
-                }
+                defaultValue={governmentIssuedIds.agencyNumber ? governmentIssuedIds.agencyNumber : ''}
                 controller={{
                   ...register('agencyNumber', {
                     value: governmentIssuedIds.agencyNumber,

@@ -64,7 +64,7 @@ export const GovernmentIDsBI = (): JSX.Element => {
                 type="text"
                 isRequired
                 defaultValue={governmentIssuedIds.gsisNumber ? governmentIssuedIds.gsisNumber : ''}
-                minLength={10}
+                // minLength={10}
                 maxLength={16}
                 controller={{
                   ...register('gsisNumber', {

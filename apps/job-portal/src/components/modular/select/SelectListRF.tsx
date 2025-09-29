@@ -36,18 +36,12 @@ const focus = {
 };
 
 const focusWithin = {
-  default:
-    'focus-within:ring-1 focus-within:border focus-within:border-gray-500 focus-within:ring-gray-100',
-  primary:
-    'focus-within:ring-1  focus-within:border focus-within:border-indigo-700 focus-within:ring-indigo-100',
-  secondary:
-    'focus-within:ring-1 focus-within:border focus-within:border-emerald-600 focus-within:ring-green-100',
-  warning:
-    'focus-within:ring-1 focus-within:border focus-within:border-orange-500 focus-within:ring-orange-100',
-  danger:
-    'focus-within:ring-1 focus-within:border focus-within:border-rose-600 focus-within:ring-rose-100',
-  light:
-    'focus-within:ring-0 focus-within:border focus-within:border-indigo-500 focus-within:ring-indigo-100',
+  default: 'focus-within:ring-1 focus-within:border focus-within:border-gray-500 focus-within:ring-gray-100',
+  primary: 'focus-within:ring-1  focus-within:border focus-within:border-indigo-700 focus-within:ring-indigo-100',
+  secondary: 'focus-within:ring-1 focus-within:border focus-within:border-emerald-600 focus-within:ring-green-100',
+  warning: 'focus-within:ring-1 focus-within:border focus-within:border-orange-500 focus-within:ring-orange-100',
+  danger: 'focus-within:ring-1 focus-within:border focus-within:border-rose-600 focus-within:ring-rose-100',
+  light: 'focus-within:ring-0 focus-within:border focus-within:border-indigo-500 focus-within:ring-indigo-100',
   simple: 'focus-within:ring-0',
 };
 
@@ -65,8 +59,7 @@ type Item = {
 
 type SelectListAppearance = 'form' | 'modal';
 
-interface MySelectListRFProps
-  extends React.InputHTMLAttributes<HTMLSelectElement> {
+interface MySelectListRFProps extends React.InputHTMLAttributes<HTMLSelectElement> {
   id: string;
   name?: string;
   className?: string;
@@ -107,8 +100,8 @@ export const SelectListRF: React.FC<MySelectListRFProps> = ({
     <>
       {withLabel ? (
         <label className="text-sm text-slate-600">
-          {labelIsRequired ? <span className="text-red-700">*</span> : null}
           {label}
+          {labelIsRequired ? <span className="text-red-700">*</span> : null}
         </label>
       ) : null}
 
@@ -118,12 +111,8 @@ export const SelectListRF: React.FC<MySelectListRFProps> = ({
         disabled={muted}
         className={`${
           muted ? 'cursor-not-allowed bg-slate-100' : `${background[variant]}`
-        } fluid w-full cursor-pointer  appearance-none  ${
-          slAppVariant[appearance]
-        } cursor-pointer ${
-          appearance === 'form'
-            ? 'rounded-md border px-4 focus:border '
-            : 'rounded-xl border'
+        } fluid w-full cursor-pointer  appearance-none  ${slAppVariant[appearance]} cursor-pointer ${
+          appearance === 'form' ? 'rounded-md border px-4 focus:border ' : 'rounded-xl border'
         } ${isError ? border['danger'] : border[variant]} 
         ${isError ? background['danger'] : background[variant]}
         ${isError ? focus['danger'] : focus[variant]}
@@ -143,9 +132,7 @@ export const SelectListRF: React.FC<MySelectListRFProps> = ({
           </option>
         ))}
       </select>
-      {errorMessage && (
-        <span className="text-xs text-red-600">{errorMessage}</span>
-      )}
+      {errorMessage && <span className="text-xs text-red-600">{errorMessage}</span>}
     </>
   );
 };

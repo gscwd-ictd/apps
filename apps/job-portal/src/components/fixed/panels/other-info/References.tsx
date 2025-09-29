@@ -4,11 +4,7 @@ import { Button } from '../../../modular/buttons/Button';
 import { Card } from '../../../modular/cards/Card';
 import { InputReactForm } from '../../../modular/inputs/InputReactForm';
 import { Modal } from '../../../modular/modals/Modal';
-import {
-  Table,
-  TableDimension,
-  TableHeader,
-} from '../../../modular/tables/Table';
+import { Table, TableDimension, TableHeader } from '../../../modular/tables/Table';
 import { NoDataVisual } from '../../visuals/NoDataVisual';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
@@ -39,19 +35,14 @@ export const OIReferences = (): JSX.Element => {
   const references = usePdsStore((state) => state.references);
   const setReferences = usePdsStore((state) => state.setReferences);
   const applicant = useApplicantStore((state) => state.applicant);
-  const { refError, setRefError, refRef, shake, setShake } =
-    useContext(RefErrorContext); // set reference error state, references ref variable from references error context
+  const { refError, setRefError, refRef, shake, setShake } = useContext(RefErrorContext); // set reference error state, references ref variable from references error context
   const [addRefIsOpen, setAddRefIsOpen] = useState<boolean>(false); // add reference modal state
   const [removeRefIsOpen, setRemoveRefIsOpen] = useState<boolean>(false); // remove reference modal state
   const [refToRemove, setRefToRemove] = useState<number>(-1); // reference to remove state
   const [isBtnRefDisabled, setIsBtnRefDisabled] = useState(true); // button ref
-  const [removedReference, setRemovedReference] = useState<Reference>(
-    {} as Reference
-  );
+  const [removedReference, setRemovedReference] = useState<Reference>({} as Reference);
   const deletedReferences = usePdsStore((state) => state.deletedReferences);
-  const setDeletedReferences = usePdsStore(
-    (state) => state.setDeletedReferences
-  );
+  const setDeletedReferences = usePdsStore((state) => state.setDeletedReferences);
 
   // initialize react hook form and set default values, mode is set to on change
   const {
@@ -111,9 +102,7 @@ export const OIReferences = (): JSX.Element => {
 
   // disable button if length of array is equal to 3
   useEffect(() => {
-    references.length < 3
-      ? setIsBtnRefDisabled(false)
-      : setIsBtnRefDisabled(true);
+    references.length < 3 ? setIsBtnRefDisabled(false) : setIsBtnRefDisabled(true);
   }, [references]);
 
   // set reference error to false if length of array is equal to 3
@@ -128,11 +117,7 @@ export const OIReferences = (): JSX.Element => {
         subtitle="Add three(3) references."
         remarks={
           <Button
-            btnLabel={
-              references.length < 3
-                ? `Add Character Reference`
-                : `Cannot Add more`
-            }
+            btnLabel={references.length < 3 ? `Add Character Reference` : `Cannot Add more`}
             variant="theme"
             type="button"
             shadow
@@ -150,9 +135,7 @@ export const OIReferences = (): JSX.Element => {
               tabIndex={1}
               ref={refRef}
             >
-              <p className="w-full px-10 not-italic text-center text-white uppercase ">
-                Incomplete References
-              </p>
+              <p className="w-full px-10 not-italic text-center text-white uppercase ">Incomplete References</p>
             </div>
           ) : (
             <></>
@@ -162,10 +145,10 @@ export const OIReferences = (): JSX.Element => {
             title="References"
             subtitle={
               <>
-                Indicate the FULL name of references with the format SURNAME,
-                FIRST NAME MI, their addresses and respective telephone numbers.{' '}
-                <br></br>Please fill-out all required fields ({' '}
-                <span className="text-red-700">*</span> )
+                Indicate the FULL name of references with the format SURNAME, FIRST NAME MI, their office or residential
+                addresses and respective telephone numbers. Persons should not be related by consanguinity or affinity
+                to applicant /appointee
+                <br></br>Please fill-out all required fields ( <span className="text-red-700">*</span> )
               </>
             }
             formId="references"
@@ -248,21 +231,10 @@ export const OIReferences = (): JSX.Element => {
               <Table
                 tableHeader={
                   <>
-                    <TableHeader
-                      label="Full Name"
-                      headerWidth="w-[25%]"
-                      className="pl-4"
-                    />
+                    <TableHeader label="Full Name" headerWidth="w-[25%]" className="pl-4" />
                     <TableHeader label="Address" headerWidth="w-[35%]" />
-                    <TableHeader
-                      label="Telephone or Mobile Number"
-                      headerWidth="w-[25%]"
-                    />
-                    <TableHeader
-                      label="Actions"
-                      headerWidth="w-[15%]"
-                      alignment="center"
-                    />
+                    <TableHeader label="Telephone or Mobile Number" headerWidth="w-[25%]" />
+                    <TableHeader label="Actions" headerWidth="w-[15%]" alignment="center" />
                   </>
                 }
                 tableBody={
@@ -275,29 +247,15 @@ export const OIReferences = (): JSX.Element => {
                               key={refIdx}
                               className={`odd:bg-indigo-50 even:bg-slate-50 hover:cursor-default hover:bg-indigo-200`}
                             >
-                              <TableDimension
-                                isText={true}
-                                label={ref.name}
-                                className="pl-4"
-                              />
-                              <TableDimension
-                                isText={true}
-                                label={ref.address}
-                              />
-                              <TableDimension
-                                isText={true}
-                                label={ref.telephoneNumber}
-                              />
+                              <TableDimension isText={true} label={ref.name} className="pl-4" />
+                              <TableDimension isText={true} label={ref.address} />
+                              <TableDimension isText={true} label={ref.telephoneNumber} />
                               <TableDimension
                                 isText={false}
                                 className="px-2 text-center select-none"
                                 tableDimension={
                                   <>
-                                    <DeleteButton
-                                      action={() =>
-                                        openRemoveActionModal(ref, refIdx)
-                                      }
-                                    />
+                                    <DeleteButton action={() => openRemoveActionModal(ref, refIdx)} />
                                   </>
                                 }
                               />
