@@ -5,11 +5,7 @@ import { Button } from '../../../modular/buttons/Button';
 import { Card } from '../../../modular/cards/Card';
 import { InputReactForm } from '../../../modular/inputs/InputReactForm';
 import { Modal } from '../../../modular/modals/Modal';
-import {
-  Table,
-  TableDimension,
-  TableHeader,
-} from '../../../modular/tables/Table';
+import { Table, TableDimension, TableHeader } from '../../../modular/tables/Table';
 import { NoDataVisual } from '../../visuals/NoDataVisual';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { CheckboxRF } from '../../../modular/inputs/CheckboxRF';
@@ -33,15 +29,9 @@ export const CSEligibility = (): JSX.Element => {
   const [addEligIsOpen, setAddEligIsOpen] = useState<boolean>(false); // set add modal state
   const [removeEligIsOpen, setRemoveEligIsOpen] = useState<boolean>(false); // set remove action modal state
   const [eligToRemove, setEligToRemove] = useState<number>(-1); // set eligibility to remove state (number)
-  const [removedElig, setRemovedElig] = useState<Eligibility>(
-    {} as Eligibility
-  );
-  const deletedEligibilities = usePdsStore(
-    (state) => state.deletedEligibilities
-  );
-  const setDeletedEligibilities = usePdsStore(
-    (state) => state.setDeletedEligibilities
-  );
+  const [removedElig, setRemovedElig] = useState<Eligibility>({} as Eligibility);
+  const deletedEligibilities = usePdsStore((state) => state.deletedEligibilities);
+  const setDeletedEligibilities = usePdsStore((state) => state.setDeletedEligibilities);
 
   // initialize react hook form and set default values, mode is set to on change
   const {
@@ -159,9 +149,8 @@ export const CSEligibility = (): JSX.Element => {
             title="Eligibility"
             subtitle={
               <>
-                CAREER SERVICE/ RA 1080 (BOARD/ BAR) UNDER SPECIAL LAWS/ CES/
-                CSEE BARANGAY ELIGIBILITY / DRIVER'S LICENSE <br></br> Please
-                fill-out all required fields ({' '}
+                CES/ CSEE/ CAREER SERVICE/ RA 1080 (BOARD/ BAR) UNDER SPECIAL LAWS/ CATEGORY II/IV ELIGIBILITY &
+                ELIGIBILITIES FOR UNIFORMED PERSONNEL <br></br> Please fill-out all required fields ({' '}
                 <span className="text-red-700">*</span> )
               </>
             }
@@ -323,30 +312,13 @@ export const CSEligibility = (): JSX.Element => {
               <Table
                 tableHeader={
                   <>
-                    <TableHeader
-                      label="Eligibility Name"
-                      headerWidth="w-[25%]"
-                      className="pl-4"
-                    />
+                    <TableHeader label="Eligibility Name" headerWidth="w-[25%]" className="pl-4" />
                     <TableHeader label="Rating" headerWidth="w-[5%]" />
-                    <TableHeader
-                      label="Date of Exam/Conferment"
-                      headerWidth="w-[15%]"
-                    />
-                    <TableHeader
-                      label="Place of Examination"
-                      headerWidth="w-[20%]"
-                    />
+                    <TableHeader label="Date of Exam/Conferment" headerWidth="w-[15%]" />
+                    <TableHeader label="Place of Examination" headerWidth="w-[20%]" />
                     <TableHeader label="License Number" headerWidth="w-[10%]" />
-                    <TableHeader
-                      label="Date of Validity"
-                      headerWidth="w-[10%]"
-                    />
-                    <TableHeader
-                      label="Actions"
-                      headerWidth="w-[15%]"
-                      alignment="center"
-                    />
+                    <TableHeader label="Date of Validity" headerWidth="w-[10%]" />
+                    <TableHeader label="Actions" headerWidth="w-[15%]" alignment="center" />
                   </>
                 }
                 tableBody={
@@ -357,11 +329,7 @@ export const CSEligibility = (): JSX.Element => {
                           key={eligIdx}
                           className="odd:bg-gray-100/80 even:bg-gray-200/70 hover:cursor-default hover:bg-indigo-200 hover:transition-all"
                         >
-                          <TableDimension
-                            isText={true}
-                            label={elig.name}
-                            className="px-4"
-                          />
+                          <TableDimension isText={true} label={elig.name} className="px-4" />
                           <TableDimension
                             isText={true}
                             label={elig.rating ? elig.rating : 'N/A'}
@@ -376,37 +344,23 @@ export const CSEligibility = (): JSX.Element => {
                             showPeriodIfNull={false}
                             className="break-words"
                           />
+                          <TableDimension isText={true} className="px-1" label={elig.examPlace} />
                           <TableDimension
                             isText={true}
                             className="px-1"
-                            label={elig.examPlace}
+                            label={elig.licenseNumber ? elig.licenseNumber : 'N/A'}
                           />
                           <TableDimension
                             isText={true}
                             className="px-1"
-                            label={
-                              elig.licenseNumber ? elig.licenseNumber : 'N/A'
-                            }
-                          />
-                          <TableDimension
-                            isText={true}
-                            className="px-1"
-                            label={
-                              elig.validity
-                                ? dayjs(elig.validity).format('YYYY-MM-DD')
-                                : 'N/A'
-                            }
+                            label={elig.validity ? dayjs(elig.validity).format('YYYY-MM-DD') : 'N/A'}
                           />
                           <TableDimension
                             isText={false}
                             className="px-2 text-center select-none"
                             tableDimension={
                               <>
-                                <DeleteButton
-                                  action={() =>
-                                    openRemoveActionModal(elig, eligIdx)
-                                  }
-                                />
+                                <DeleteButton action={() => openRemoveActionModal(elig, eligIdx)} />
                               </>
                             }
                           />

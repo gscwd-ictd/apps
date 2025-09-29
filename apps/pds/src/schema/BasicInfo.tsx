@@ -113,7 +113,7 @@ const schema = yup.object().shape({
       'Write your Philsys Number with or without dashes(-) or N/A'
     )
     .required()
-    .label('SSS Number'),
+    .label('PhilSys Number'),
   tinNumber: yup
     .string()
     // .max(12)

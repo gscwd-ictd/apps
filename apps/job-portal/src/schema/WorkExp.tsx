@@ -1,5 +1,5 @@
-import dayjs from 'dayjs'
-import * as yup from 'yup'
+import dayjs from 'dayjs';
+import * as yup from 'yup';
 
 // yup validation schema
 const schema = yup.object().shape({
@@ -7,7 +7,7 @@ const schema = yup.object().shape({
   companyName: yup.string().required('Please enter a company name').trim().label('This'),
   monthlySalary: yup
     .number()
-    .required()
+    .nullable()
     .min(1, 'Please enter a valid salary')
     .typeError('Please enter a valid salary')
     .transform((v, o) => (o === '' ? null : v))
@@ -21,22 +21,19 @@ const schema = yup.object().shape({
       is: true,
       then: yup
         .string()
-        .required()
-        .trim()
-        .nullable(false)
-        .typeError('Should not be empty')
-        .label('This')
-        .matches(/^([0-2][0-9])*-[1-8]$|^([3][0-2])*-[1-8]$|^([3][3])*-[1-3]$/, 'Must match the format "00-0"'),
-      // .matches(/^[0-9]*-[1-8]$/, 'Must match the format "xx-x"'),
-      //  .matches(/^([0-2][1-9])$|^([3][1-9])$/, "Write a valid Telephone Number or N/A"),
-      // .matches(/^[0-9][1-3]*-[1-8]$/, 'Must match the format "xx-x"'),
-      otherwise: yup
-        .string()
+        // .required()
         .notRequired()
         .trim()
         .nullable(true)
-        .transform((v, o) => (o === '' ? null : v))
-        .matches(/^([0-2][0-9])*-[1-8]$|^([3][0-2])*-[1-8]$|^([3][3])*-[1-3]$/, 'Must match the format "00-0"'),
+        .typeError('Should not be empty')
+        .label('This'),
+      // .matches(/^([0-2][0-9])*-[1-8]$|^([3][0-2])*-[1-8]$|^([3][3])*-[1-3]$/, 'Must match the format "00-0"'),
+      // .matches(/^[0-9]*-[1-8]$/, 'Must match the format "xx-x"'),
+      //  .matches(/^([0-2][1-9])$|^([3][1-9])$/, "Write a valid Telephone Number or N/A"),
+      // .matches(/^[0-9][1-3]*-[1-8]$/, 'Must match the format "xx-x"'),
+      otherwise: yup.string().notRequired().trim().nullable(true),
+      // .transform((v, o) => (o === '' ? null : v))
+      // .matches(/^([0-2][0-9])*-[1-8]$|^([3][0-2])*-[1-8]$|^([3][3])*-[1-3]$/, 'Must match the format "00-0"'),
     }),
   from: yup
     .string()
@@ -44,7 +41,7 @@ const schema = yup.object().shape({
     .trim()
     .label('This')
     .test('Date', 'Please enter a valid date', (value) => {
-      return dayjs().diff(dayjs(value), 'hours') >= 0
+      return dayjs().diff(dayjs(value), 'hours') >= 0;
     }),
   isPresentWork: yup.boolean().notRequired(),
   to: yup
@@ -59,7 +56,7 @@ const schema = yup.object().shape({
         .trim()
         .label('This')
         .test('Date', 'Please enter a valid date', (value) => {
-          return dayjs().diff(dayjs(value), 'hours') >= 0
+          return dayjs().diff(dayjs(value), 'hours') >= 0;
         })
         .test({
           name: 'min',
@@ -67,11 +64,11 @@ const schema = yup.object().shape({
           params: {},
           message: 'Please verify the date',
           test: function (value) {
-            return value! >= this.parent.from
+            return value! >= this.parent.from;
           },
         }),
     })
     .when('isPresentWork', { is: true, then: yup.string().notRequired().trim().nullable(true).label('This') }),
-})
+});
 
-export default schema
+export default schema;
