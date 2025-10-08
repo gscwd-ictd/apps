@@ -394,11 +394,11 @@ export const WorkExp = (): JSX.Element => {
               <Table
                 tableHeader={
                   <>
-                    <TableHeader label="Position Title" headerWidth="w-[15%]" className="pl-4" />
-                    <TableHeader label="Company Name" headerWidth="w-[25%]" />
+                    <TableHeader label="Position Title" headerWidth="w-[25%]" className="pl-4" />
+                    <TableHeader label="Company Name" headerWidth="w-[30%]" />
                     <TableHeader label="Inclusive Date" headerWidth="w-[10%]" />
-                    <TableHeader label="Monthly Salary" headerWidth="w-[5%]" />
-                    <TableHeader label="Salary Grade" headerWidth="w-[10%]" />
+                    {/* <TableHeader label="Monthly Salary" headerWidth="w-[5%]" /> */}
+                    {/* <TableHeader label="Salary Grade" headerWidth="w-[10%]" /> */}
                     <TableHeader label="Appointment Status" headerWidth="w-[10%]" />
                     <TableHeader label="Gov't Service?" headerWidth="w-[10%]" />
                     <TableHeader label="Actions" headerWidth="w-[15%]" alignment="center" />
@@ -421,12 +421,12 @@ export const WorkExp = (): JSX.Element => {
                             periodLabel2={work.to}
                             className="break-words"
                           />
-                          <TableDimension isText={true} className="px-1" label={work.monthlySalary} />
-                          <TableDimension
+                          {/* <TableDimension isText={true} className="px-1" label={work.monthlySalary} /> */}
+                          {/* <TableDimension
                             isText={true}
                             className="px-1"
                             label={work.salaryGrade ? work.salaryGrade : 'N/A'}
-                          />
+                          /> */}
                           <TableDimension isText={true} className="px-1" label={work.appointmentStatus} />
                           <TableDimension
                             isText={true}
