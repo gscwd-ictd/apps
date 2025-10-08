@@ -10,7 +10,7 @@ import { SelectListRFFL } from '../../../modular/select/SelectListRFFL';
 /**
  * @degree Initializes the array of label and value objects in the Degree input
  */
-const degree = [{ label: 'Primary Education', value: 'Primary Education' }];
+const degree = [{ label: 'Elementary', value: 'Elementary' }];
 
 /**
  * @units Initializes the array of label and value objects in the Units input
@@ -98,8 +98,7 @@ export const Elementary = (): JSX.Element => {
                 controller={{
                   ...register('elemDegree', {
                     value: elementary.degree ? elementary.degree : '',
-                    onChange: (e) =>
-                      setElementary({ ...elementary, degree: e.target.value }),
+                    onChange: (e) => setElementary({ ...elementary, degree: e.target.value }),
                   }),
                 }}
                 isError={errors.elemDegree ? true : false}
@@ -120,8 +119,7 @@ export const Elementary = (): JSX.Element => {
                   controller={{
                     ...register('elemFrom', {
                       value: elementary.from ? elementary.from : undefined,
-                      onChange: (e) =>
-                        setElementary({ ...elementary, from: e.target.value }),
+                      onChange: (e) => setElementary({ ...elementary, from: e.target.value }),
                     }),
                   }}
                   isError={errors.elemFrom ? true : false}
@@ -139,8 +137,7 @@ export const Elementary = (): JSX.Element => {
                   controller={{
                     ...register('elemTo', {
                       value: elementary.to ? elementary.to : undefined,
-                      onChange: (e) =>
-                        setElementary({ ...elementary, to: e.target.value }),
+                      onChange: (e) => setElementary({ ...elementary, to: e.target.value }),
                     }),
                   }}
                   isError={errors.elemTo ? true : false}
@@ -159,8 +156,7 @@ export const Elementary = (): JSX.Element => {
                 controller={{
                   ...register('elemUnits', {
                     value: elementary.units ? elementary.units : '',
-                    onChange: (e) =>
-                      setElementary({ ...elementary, units: e.target.value }),
+                    onChange: (e) => setElementary({ ...elementary, units: e.target.value }),
                   }),
                 }}
                 selectList={units}
@@ -181,9 +177,7 @@ export const Elementary = (): JSX.Element => {
                 type="number"
                 controller={{
                   ...register('elemYearGraduated', {
-                    value: elementary.yearGraduated
-                      ? elementary.yearGraduated
-                      : null,
+                    value: elementary.yearGraduated ? elementary.yearGraduated : null,
                     onChange: (e) =>
                       setElementary({
                         ...elementary,
@@ -205,8 +199,7 @@ export const Elementary = (): JSX.Element => {
                 controller={{
                   ...register('elemAwards', {
                     value: elementary.awards ? elementary.awards : '',
-                    onChange: (e) =>
-                      setElementary({ ...elementary, awards: e.target.value }),
+                    onChange: (e) => setElementary({ ...elementary, awards: e.target.value }),
                   }),
                 }}
                 isError={errors.elemAwards ? true : false}
