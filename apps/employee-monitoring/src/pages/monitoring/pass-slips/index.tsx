@@ -195,6 +195,14 @@ export default function Index() {
       cell: (info) => UseRenderPassSlipStatus(info.getValue()),
       filterFn: 'equals',
     }),
+    columnHelper.accessor('isDeductibleToPay', {
+      header: 'Deductible To Pay',
+      enableSorting: true,
+      cell: (info) => {
+        return info.getValue() === true ? 'True' : 'False';
+      },
+      filterFn: 'equals',
+    }),
     columnHelper.display({
       header: () => 'Actions',
       id: 'actions',
