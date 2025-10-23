@@ -23,8 +23,8 @@ const PDFViewer = dynamic(() => import('@react-pdf/renderer').then((mod) => mod.
 export const PdsDocumentView: FunctionComponent<PdsDocumentViewProps> = ({ applicantPds }) => {
   const formatDate = (assignedDate: string) => {
     if (!isEmpty(assignedDate)) {
-      const date = new Date(assignedDate);
-      return dayjs(date.toLocaleDateString()).format('DD/MM/YYYY');
+      // const date = new Date(assignedDate);
+      return dayjs(assignedDate).format('DD/MM/YYYY');
     } else {
       return '';
     }

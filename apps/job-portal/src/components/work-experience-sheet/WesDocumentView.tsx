@@ -34,8 +34,8 @@ export const WesDocumentView: FunctionComponent<WesDocumentViewProps> = ({ appli
 
   const formatDate = (assignedDate: string) => {
     if (!isEmpty(assignedDate)) {
-      const date = new Date(assignedDate);
-      return dayjs(date.toLocaleDateString()).format('MM/DD/YYYY');
+      // const date = new Date(assignedDate);
+      return dayjs(assignedDate).format('DD/MM/YYYY');
     } else {
       return '';
     }
