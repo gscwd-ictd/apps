@@ -63,6 +63,7 @@ export const LeaveCompletedModal = ({ modalState, setModalState, closeModalActio
   const {
     leaveLedger,
     selectedLeaveLedger,
+    loadingLedger,
     setSelectedLeaveLedger,
     getLeaveLedger,
     getLeaveLedgerSuccess,
@@ -70,6 +71,7 @@ export const LeaveCompletedModal = ({ modalState, setModalState, closeModalActio
   } = useLeaveLedgerStore((state) => ({
     leaveLedger: state.leaveLedger,
     selectedLeaveLedger: state.selectedLeaveLedger,
+    loadingLedger: state.loading.loadingLeaveLedger,
     setSelectedLeaveLedger: state.setSelectedLeaveLedger,
     setVacationLeaveBalance: state.setVacationLeaveBalance,
     setForcedLeaveBalance: state.setForcedLeaveBalance,
@@ -131,17 +133,11 @@ export const LeaveCompletedModal = ({ modalState, setModalState, closeModalActio
     data: swrLeaveLedger,
     isLoading: swrLeaveLedgerLoading,
     error: swrLeaveLedgerError,
-  } = useSWR(
-    modalState && leaveIndividualDetail && employeeDetails.user._id && employeeDetails.profile.companyId
-      ? leaveLedgerUrl
-      : null,
-    fetchWithToken,
-    {
-      shouldRetryOnError: true,
-      revalidateOnFocus: true,
-      errorRetryInterval: 3000,
-    }
-  );
+  } = useSWR(employeeDetails.user._id && employeeDetails.profile.companyId ? leaveLedgerUrl : null, fetchWithToken, {
+    shouldRetryOnError: true,
+    revalidateOnFocus: true,
+    errorRetryInterval: 3000,
+  });
 
   // Initial zustand state update
   useEffect(() => {
@@ -154,7 +150,6 @@ export const LeaveCompletedModal = ({ modalState, setModalState, closeModalActio
   useEffect(() => {
     if (!isEmpty(swrLeaveLedger)) {
       getLeaveLedgerSuccess(swrLeaveLedgerLoading, swrLeaveLedger);
-      setSelectedLeaveLedger(swrLeaveLedger, leaveIndividualDetail?.leaveApplicationBasicInfo?.id);
     }
 
     if (!isEmpty(swrLeaveLedgerError)) {
@@ -168,6 +163,9 @@ export const LeaveCompletedModal = ({ modalState, setModalState, closeModalActio
       leaveIndividualDetail?.leaveApplicationBasicInfo?.status === LeaveStatus.APPROVED
     ) {
       searchMonetizationEntry(swrLeaveLedger, leaveIndividualDetail?.leaveApplicationBasicInfo?.referenceNo);
+    }
+    if (!isEmpty(leaveLedger) && leaveIndividualDetail?.leaveApplicationBasicInfo?.id) {
+      setSelectedLeaveLedger(leaveLedger, leaveIndividualDetail?.leaveApplicationBasicInfo?.id);
     }
   }, [leaveIndividualDetail]);
 
@@ -233,7 +231,7 @@ export const LeaveCompletedModal = ({ modalState, setModalState, closeModalActio
             closeModalAction={closeJustificationLetterPdfModal}
           />
 
-          {loadingLeaveDetails || errorLeaveDetails ? (
+          {loadingLeaveDetails || errorLeaveDetails || loadingLedger ? (
             <div className="w-full h-[90%]  static flex flex-col justify-center items-center place-items-center">
               <LoadingSpinner size={'lg'} />
             </div>
