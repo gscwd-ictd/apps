@@ -206,8 +206,7 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
     if (monetizationList.length > 0 && serverDate) {
       setLeaveMonetizationList(monetizationList.filter((leave) => leave.dateOfFiling.includes(serverDate.slice(0, 4)))); //filter monetization list by current year only
     }
-  }),
-    [monetizationList];
+  }, [monetizationList]);
 
   // set state for employee store
   const employeeDetails = useEmployeeStore((state) => state.employeeDetails);
