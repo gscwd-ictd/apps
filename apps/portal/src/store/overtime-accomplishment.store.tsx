@@ -68,6 +68,12 @@ export type OvertimeState = {
   // removeAccomplishments: (index: number) => void;
 
   emptyResponseAndError: () => void;
+
+  selectedYear: string;
+  setSelectedYear: (value: string) => void;
+
+  selectedMonth: string;
+  setSelectedMonth: (value: string) => void;
 };
 
 export const useOvertimeAccomplishmentStore = create<OvertimeState>()(
@@ -99,6 +105,15 @@ export const useOvertimeAccomplishmentStore = create<OvertimeState>()(
     confirmOvertimeAccomplishmentModalIsOpen: false,
 
     tab: 1,
+    selectedYear: '',
+    selectedMonth: '',
+
+    setSelectedYear: (selectedYear: string) => {
+      set((state) => ({ ...state, selectedYear }));
+    },
+    setSelectedMonth: (selectedMonth: string) => {
+      set((state) => ({ ...state, selectedMonth }));
+    },
 
     // accomplishments: [] as Array<string>,
     // addAccomplishments: (newAccomplishment: string) => {

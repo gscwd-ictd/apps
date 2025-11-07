@@ -9,7 +9,7 @@ import { employee } from '../../../utils/constants/data';
 import { GetServerSideProps, GetServerSidePropsContext, InferGetServerSidePropsType } from 'next/types';
 import { getUserDetails, withCookieSession } from '../../../utils/helpers/session';
 import { useEmployeeStore } from '../../../store/employee.store';
-import { LoadingSpinner, ToastNotification } from '@gscwd-apps/oneui';
+import { ListDef, LoadingSpinner, Select, ToastNotification } from '@gscwd-apps/oneui';
 import { fetchWithToken } from '../../../utils/hoc/fetcher';
 import useSWR from 'swr';
 import { isEmpty } from 'lodash';
@@ -32,6 +32,10 @@ export default function OvertimeAccomplishment({
     patchResponse,
     errorResponse,
     errorOvertimeAccomplishment,
+    selectedMonth,
+    selectedYear,
+    setSelectedMonth,
+    setSelectedYear,
     setPendingOvertimeAccomplishmentModalIsOpen,
     setCompletedOvertimeAccomplishmentModalIsOpen,
     emptyResponseAndError,
@@ -45,6 +49,10 @@ export default function OvertimeAccomplishment({
     patchResponse: state.response.patchResponse,
     errorResponse: state.error.errorResponse,
     errorOvertimeAccomplishment: state.error.errorOvertimeAccomplishment,
+    selectedMonth: state.selectedMonth,
+    selectedYear: state.selectedYear,
+    setSelectedMonth: state.setSelectedMonth,
+    setSelectedYear: state.setSelectedYear,
     setPendingOvertimeAccomplishmentModalIsOpen: state.setPendingOvertimeAccomplishmentModalIsOpen,
     setCompletedOvertimeAccomplishmentModalIsOpen: state.setCompletedOvertimeAccomplishmentModalIsOpen,
     emptyResponseAndError: state.emptyResponseAndError,
@@ -80,35 +88,61 @@ export default function OvertimeAccomplishment({
     setEmployeeDetails(employeeDetails);
   }, [employeeDetails]);
 
-  // const faceScanUrl = `${process.env.NEXT_PUBLIC_EMPLOYEE_MONITORING_URL}/v1/daily-time-record/employees/${
-  //   employeeDetails.employmentDetails.companyId
-  // }/${format(new Date(), 'yyyy-MM-dd')}`;
-  // // use useSWR, provide the URL and fetchWithSession function as a parameter
+  type Month = { month: string; code: string };
+  type Year = { year: string };
 
-  // const {
-  //   data: swrFaceScan,
-  //   isLoading: swrFaceScanIsLoading,
-  //   error: swrFaceScanError,
-  //   mutate: mutateFaceScanUrl,
-  // } = useSWR(employeeDetails.employmentDetails.companyId ? faceScanUrl : null, fetchWithToken, {});
+  const monthNow = format(new Date(), 'M');
+  const yearNow = format(new Date(), 'yyyy');
 
-  // // Initial zustand state update
-  // useEffect(() => {
-  //   if (swrFaceScanIsLoading) {
-  //     getTimeLogs(swrFaceScanIsLoading);
-  //   }
-  // }, [swrFaceScanIsLoading]);
+  const months = [
+    { month: 'January', code: '01' },
+    { month: 'February', code: '02' },
+    { month: 'March', code: '03' },
+    { month: 'April', code: '04' },
+    { month: 'May', code: '05' },
+    { month: 'June', code: '06' },
+    { month: 'July', code: '07' },
+    { month: 'August', code: '08' },
+    { month: 'September', code: '09' },
+    { month: 'October', code: '10' },
+    { month: 'November', code: '11' },
+    { month: 'December', code: '12' },
+  ] as Month[];
 
-  // // Upon success/fail of swr request, zustand state will be updated
-  // useEffect(() => {
-  //   if (!isEmpty(swrFaceScan)) {
-  //     getTimeLogsSuccess(swrFaceScanIsLoading, swrFaceScan);
-  //   }
+  const years = [{ year: `${yearNow}` }, { year: `${Number(yearNow) - 1}` }] as Year[];
 
-  //   if (!isEmpty(swrFaceScanError)) {
-  //     getTimeLogsFail(swrFaceScanIsLoading, swrFaceScanError.message);
-  //   }
-  // }, [swrFaceScan, swrFaceScanError]);
+  //month select
+  const list: ListDef<Month> = {
+    key: 'month',
+    render: (info, state) => (
+      <div className={`${state.active ? 'bg-indigo-200' : state.selected ? 'bg-slate-200' : ''} pl-2 cursor-pointer`}>
+        {info.month}
+      </div>
+    ),
+  };
+
+  //year select
+  const yearList: ListDef<Year> = {
+    key: 'year',
+    render: (info, state) => (
+      <div className={`${state.active ? 'bg-indigo-200' : state.selected ? 'bg-slate-200 ' : ''} pl-4 cursor-pointer`}>
+        {info.year}
+      </div>
+    ),
+  };
+
+  const onChangeMonth = (month: string) => {
+    setSelectedMonth(month);
+  };
+
+  const onChangeYear = (year: string) => {
+    setSelectedYear(year);
+  };
+
+  useEffect(() => {
+    setSelectedYear(format(new Date(), 'yyyy'));
+    setSelectedMonth(format(new Date(), 'M'));
+  }, []);
 
   const overtimeAccomplishmentUrl = `${process.env.NEXT_PUBLIC_EMPLOYEE_MONITORING_URL}/v1/overtime/employees/${employeeDetails.employmentDetails.userId}/accomplishments/`;
 
@@ -199,7 +233,24 @@ export default function OvertimeAccomplishment({
               title="Employee Overtime Accomplishment"
               subtitle="Fill up Overtime Accomplishment Reports"
               backUrl={`/${router.query.id}`}
-            ></ContentHeader>
+            >
+              <div className="flex flex-row justify-end gap-2">
+                {/* <Select
+                  className="w-36 md:w-40"
+                  data={months}
+                  initial={months[Number(monthNow) - 1]}
+                  listDef={list}
+                  onSelect={(selectedItem) => onChangeMonth(selectedItem.code)}
+                />
+                <Select
+                  className="w-36 md:w-28"
+                  data={years}
+                  initial={years[0]}
+                  listDef={yearList}
+                  onSelect={(selectedItem) => onChangeYear(selectedItem.year)}
+                /> */}
+              </div>
+            </ContentHeader>
             {swrOvertimeAccomplishmentListIsLoading ? (
               <div className="w-full h-96 static flex flex-col justify-center items-center place-items-center">
                 <LoadingSpinner size={'lg'} />
