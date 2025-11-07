@@ -201,7 +201,7 @@ export default function Index() {
       cell: (info) => {
         return info.getValue() === true ? 'True' : 'False';
       },
-      filterFn: 'equals',
+      filterFn: 'fuzzy',
     }),
     columnHelper.display({
       header: () => 'Actions',
