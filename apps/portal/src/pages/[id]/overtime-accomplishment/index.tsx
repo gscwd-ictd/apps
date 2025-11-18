@@ -144,7 +144,7 @@ export default function OvertimeAccomplishment({
     setSelectedMonth(format(new Date(), 'M'));
   }, []);
 
-  const overtimeAccomplishmentUrl = `${process.env.NEXT_PUBLIC_EMPLOYEE_MONITORING_URL}/v1/overtime/employees/${employeeDetails.employmentDetails.userId}/accomplishments/`;
+  const overtimeAccomplishmentUrl = `${process.env.NEXT_PUBLIC_EMPLOYEE_MONITORING_URL}/v1/overtime/employees/${employeeDetails.employmentDetails.userId}/accomplishments/${selectedYear}-${selectedMonth}`;
 
   const {
     data: swrOvertimeAccomplishmentList,
@@ -181,6 +181,10 @@ export default function OvertimeAccomplishment({
       }, 3000);
     }
   }, [patchResponse]);
+
+  useEffect(() => {
+    mutateOvertimeAccomplishments();
+  }, [selectedMonth, selectedYear]);
 
   return (
     <>
@@ -235,7 +239,7 @@ export default function OvertimeAccomplishment({
               backUrl={`/${router.query.id}`}
             >
               <div className="flex flex-row justify-end gap-2">
-                {/* <Select
+                <Select
                   className="w-36 md:w-40"
                   data={months}
                   initial={months[Number(monthNow) - 1]}
@@ -248,7 +252,7 @@ export default function OvertimeAccomplishment({
                   initial={years[0]}
                   listDef={yearList}
                   onSelect={(selectedItem) => onChangeYear(selectedItem.year)}
-                /> */}
+                />
               </div>
             </ContentHeader>
             {swrOvertimeAccomplishmentListIsLoading ? (
