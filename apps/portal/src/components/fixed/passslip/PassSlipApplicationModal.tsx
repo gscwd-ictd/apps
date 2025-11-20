@@ -110,6 +110,7 @@ export const PassSlipApplicationModal = ({
   const [vacationLeaveBalance, setVacationLeaveBalance] = useState<number>(0);
   const [sickLeaveBalance, setSickLeaveBalance] = useState<number>(0);
   const [specialPrivilegeLeaveBalance, setSpecialPrivilegeLeaveBalance] = useState<number>(0);
+  const [isApplying, setIsApplying] = useState<boolean>(false); //disable apply button during submission
 
   // get the latest balance by last index value
   const getLatestBalance = (leaveLedger: Array<LeaveLedgerEntry>) => {
@@ -219,13 +220,16 @@ export const PassSlipApplicationModal = ({
   };
 
   const handlePostResult = async (data: PassSlipApplicationForm) => {
+    setIsApplying(true);
     const { error, result } = await postPortal('/v1/pass-slip', data);
     if (error) {
       postPassSlipListFail(result);
+      setIsApplying(false);
     } else {
       postPassSlipListSuccess(result);
       reset();
       closeModalAction();
+      setIsApplying(false);
     }
   };
 
@@ -527,9 +531,9 @@ export const PassSlipApplicationModal = ({
                   !isEmpty(errorPassSlipsList) || !isEmpty(errorSupervisorList) || !isEmpty(errorLeaveLedger)
                     ? true
                     : !allowedToApplyForNew || passSlipsForApproval.length >= 1
-                    ? // ||
-                      // (dtr?.timeIn == null && dtr?.lunchOut == null && dtr?.lunchIn == null)
-                      true
+                    ? true
+                    : isApplying
+                    ? true
                     : false
                 }
               >

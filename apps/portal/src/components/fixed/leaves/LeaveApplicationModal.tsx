@@ -231,6 +231,7 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
   const [finalVacationAndForcedLeaveBalance, setFinalVacationAndForcedLeaveBalance] = useState<number>(0);
 
   const [lateFiling, setLateFiling] = useState<boolean>(false);
+  const [isApplying, setIsApplying] = useState<boolean>(false); //disable apply button during submission
 
   const [allowedLeaveBenefits, setAllowedLeaveBenefits] = useState<Array<LeaveBenefitOptions>>([]);
 
@@ -789,14 +790,17 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
   };
 
   const handlePostResult = async (data: LeaveApplicationForm) => {
+    setIsApplying(true);
     const { error, result } = await postPortal('/v1/leave-application', data);
     if (error) {
       postLeaveFail(result);
+      setIsApplying(false);
     } else {
       postLeaveSuccess(result);
       reset();
       setLeaveObject('');
       closeModalAction();
+      setIsApplying(false);
     }
   };
 
@@ -2247,6 +2251,9 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
                     ? true
                     : // disable if filing monetization for the 2nd time this year
                     leaveMonetizationList.length > 0 && watch('typeOfLeaveDetails.leaveName') === LeaveName.MONETIZATION
+                    ? true
+                    : // disable currently posting submission to avoid multiple submissions
+                    isApplying
                     ? true
                     : false
                 }

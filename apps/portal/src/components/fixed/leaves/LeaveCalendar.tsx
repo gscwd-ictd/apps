@@ -202,11 +202,16 @@ export default function Calendar({
       setSelectedDay(day);
       const specifiedDate = format(day, 'yyyy-MM-dd');
 
-      if (DateFormatter(day, 'YYYY-MM-DD') === '2025-01-27') {
+      if (leaveName === LeaveName.FORCED && DateFormatter(day, 'MM') === '12') {
+        //do nothing
+        //if filing for FL, cannot select December dates
+      } else if (
+        (leaveName === LeaveName.FORCED || leaveName === LeaveName.SPECIAL_PRIVILEGE) &&
+        DateFormatter(day, 'YYYY') > dayjs(swrUnavailableDates?.dateTimeNow).format('YYYY')
+      ) {
         //do nothing
         //will not add date to array
-        //Muslim holiday
-        //8hr work suspension only / not considered as holiday in the office
+        //if filing for FL/SPL, cannot select next year dates if filing on current year
       }
       //check if selected date exist in array - returns true/false
       else if (selectedDates.includes(specifiedDate)) {
@@ -288,29 +293,7 @@ export default function Calendar({
             isLateFiling
           ) {
             setSelectedDates((selectedDates) => [...selectedDates, specifiedDate]);
-          }
-
-          //for sick leave and today is Monday
-          // else if (
-          //   leaveName === LeaveName.SICK &&
-          //   // today.getDay() == 1 &&
-          //   // dayjs(`${today}`).diff(`${specifiedDate}`, 'day') <= 3 &&
-          //   dayjs(`${specifiedDate}`).diff(`${today}`, 'day') <= 10
-          // ) {
-          //   setSelectedDates((selectedDates) => [...selectedDates, specifiedDate]);
-          // }
-
-          //for sick leave and today is Tuesday - Fri
-          // else if (
-          //   leaveName === LeaveName.SICK &&
-          //   today.getDay() >= 2 &&
-          //   today.getDay() <= 5 &&
-          //   dayjs(`${today}`).diff(`${specifiedDate}`, 'day') <= 1 &&
-          //   dayjs(`${specifiedDate}`).diff(`${today}`, 'day') <= 10
-          // ) {
-          //   setSelectedDates((selectedDates) => [...selectedDates, specifiedDate]);
-          // }
-          else if (
+          } else if (
             leaveName === LeaveName.PATERNITY ||
             leaveName === LeaveName.VAWC ||
             leaveName === LeaveName.SPECIAL_EMERGENCY_CALAMITY
@@ -528,27 +511,16 @@ export default function Calendar({
                           className={classNames(
                             isEqual(day, selectedDay) && 'text-gray-900 font-semibold',
 
-                            //disable date selection for January 27, 2025 - 8hr work suspension/not a holiday
-                            DateFormatter(day, 'YYYY-MM-DD') === '2025-01-27' && 'text-red-600 bg-red-300 rounded-full',
-
                             //disable date selection for past dates from current day for VL/FL
                             (leaveName === LeaveName.VACATION || leaveName === LeaveName.FORCED) &&
                               dayjs(`${day}`).diff(`${today}`, 'day') < 0 &&
                               isLateFiling === false &&
                               'text-slate-300',
-                            //disable date selection starting from 10th day from current day for Vl/FL/SOLO/SPL if late filing
-                            // (leaveName === LeaveName.VACATION ||
-                            //   leaveName === LeaveName.FORCED ||
-                            //   leaveName === LeaveName.SPECIAL_PRIVILEGE ||
-                            //   leaveName === LeaveName.SICK ||
-                            //   leaveName === LeaveName.SOLO_PARENT) &&
-                            //   dayjs(`${day}`).diff(`${today}`, 'day') > 10 &&
-                            //   isLateFiling === true &&
-                            //   'text-slate-300',
+
                             //disable date selection starting from 10th day from current day for FL/SOLO/SPL - added allow all dates if a date with the 10 days is selected
                             (leaveName === LeaveName.LEAVE_WITHOUT_PAY ||
-                              leaveName === LeaveName.FORCED ||
                               leaveName === LeaveName.SPECIAL_PRIVILEGE ||
+                              leaveName === LeaveName.FORCED ||
                               leaveName === LeaveName.SICK ||
                               leaveName === LeaveName.SOLO_PARENT) &&
                               dayjs(`${day}`).diff(`${today}`, 'day') > 10 &&
@@ -559,6 +531,15 @@ export default function Calendar({
                                   dayjs(`${dates}`).diff(`${today}`, 'day') <= 10
                               ).length <= 0 &&
                               'text-slate-300',
+
+                            //disable FL for December dates
+                            leaveName === LeaveName.FORCED && DateFormatter(day, 'MM') === '12' && 'text-slate-300',
+
+                            //disable FL/SPL from selecting next year dates if filing from current year
+                            (leaveName === LeaveName.FORCED || leaveName === LeaveName.SPECIAL_PRIVILEGE) &&
+                              DateFormatter(day, 'YYYY') > dayjs(swrUnavailableDates?.dateTimeNow).format('YYYY') &&
+                              'text-slate-300',
+
                             //disable date selection starting from 10th day from current day for VL ONLY - added allow all dates if a date with the 10 days is selected
                             leaveName === LeaveName.VACATION &&
                               dayjs(`${day}`).diff(`${today}`, 'day') > 10 &&
@@ -578,17 +559,7 @@ export default function Calendar({
                               DateFormatter(day, 'YYYY-MM-DD') <= DateFormatter(lastDateOfDuty, 'YYYY-MM-DD') &&
                               isLateFiling === false &&
                               'text-slate-300',
-                            //disable date selection from 3rd day beyond in the past if previous day is SUN from current day for SL
-                            // leaveName === LeaveName.SICK &&
-                            //   dayjs(`${today}`).diff(`${day}`, 'day') > 3 &&
-                            //   today.getDay() == 1 &&
-                            //   'text-slate-300',
-                            // leaveName === LeaveName.SICK &&
-                            //   today.getDay() >= 2 &&
-                            //   today.getDay() <= 5 &&
-                            //   dayjs(`${today}`).diff(`${day}`, 'day') <= 1 &&
-                            //   dayjs(`${day}`).diff(`${today}`, 'day') <= 10 &&
-                            //   'text-slate-300',
+
                             //disable date selection for more than 10 days from current day for SL - added allow all dates if a date with the 10 days is selected
                             leaveName === LeaveName.SICK &&
                               dayjs(`${day}`).diff(`${today}`, 'day') > 10 &&
@@ -614,6 +585,7 @@ export default function Calendar({
                                 (item) => item.date === format(day, 'yyyy-MM-dd') && item.type === 'Holiday'
                               ) &&
                               'text-green-600 bg-green-200 rounded-full',
+
                             !isEqual(day, selectedDay) &&
                               !isToday(day) &&
                               isSameMonth(day, firstDayCurrentMonth) &&
