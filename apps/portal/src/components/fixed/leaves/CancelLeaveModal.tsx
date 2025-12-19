@@ -98,8 +98,8 @@ export const CancelLeaveModal = ({ modalState, setModalState, closeModalAction }
           }
           //check if date is future
           else if (
-            DateFormatter(leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveDates[i], 'MM-DD-YYYY') >=
-            dayjs(dayjs().toDate().toDateString()).format('MM-DD-YYYY')
+            DateFormatter(leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveDates[i], 'YYYY-MM-DD') >=
+            dayjs(dayjs().toDate().toDateString()).format('YYYY-MM-DD')
           ) {
             //add leave date to selection array
             leaveDates.push({
