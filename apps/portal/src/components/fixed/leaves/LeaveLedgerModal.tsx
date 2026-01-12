@@ -1,11 +1,13 @@
 /* eslint-disable @nx/enforce-module-boundaries */
-import { Button, Modal } from '@gscwd-apps/oneui';
+import { Button, ListDef, Modal, Select } from '@gscwd-apps/oneui';
 import { HiPrinter, HiX } from 'react-icons/hi';
 import { useEmployeeStore } from '../../../store/employee.store';
 import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
 import { LeaveLedgerTable } from '../table/LeaveLedgerTable';
 import LeaveLedgerPdfModal from './LeaveLedgerPdfModal';
 import { useLeaveLedgerStore } from 'apps/portal/src/store/leave-ledger.store';
+import { useEffect } from 'react';
+import { format } from 'date-fns';
 
 type LeaveLedgerModalProps = {
   modalState: boolean;
@@ -16,15 +18,41 @@ type LeaveLedgerModalProps = {
 export const LeaveLedgerModal = ({ modalState, setModalState, closeModalAction }: LeaveLedgerModalProps) => {
   const employeeDetails = useEmployeeStore((state) => state.employeeDetails);
 
-  const { leaveLedgerPdfModalIsOpen, setLeaveLedgerPdfModalIsOpen } = useLeaveLedgerStore((state) => ({
-    leaveLedgerPdfModalIsOpen: state.leaveLedgerPdfModalIsOpen,
-    setLeaveLedgerPdfModalIsOpen: state.setLeaveLedgerPdfModalIsOpen,
-  }));
+  const { selectedYear, setSelectedYear, leaveLedgerPdfModalIsOpen, setLeaveLedgerPdfModalIsOpen } =
+    useLeaveLedgerStore((state) => ({
+      selectedYear: state.selectedYear,
+      setSelectedYear: state.setSelectedYear,
+      leaveLedgerPdfModalIsOpen: state.leaveLedgerPdfModalIsOpen,
+      setLeaveLedgerPdfModalIsOpen: state.setLeaveLedgerPdfModalIsOpen,
+    }));
 
   // cancel action for Leave Application Modal
   const closeLeaveLedgerPdfModal = async () => {
     setLeaveLedgerPdfModalIsOpen(false);
   };
+
+  type Year = { year: string };
+  const yearNow = format(new Date(), 'yyyy');
+
+  const years = [{ year: `${yearNow}` }, { year: `${Number(yearNow) - 1}` }] as Year[];
+
+  //year select
+  const yearList: ListDef<Year> = {
+    key: 'year',
+    render: (info, state) => (
+      <div className={`${state.active ? 'bg-indigo-200' : state.selected ? 'bg-slate-200 ' : ''} pl-4 cursor-pointer`}>
+        {info.year}
+      </div>
+    ),
+  };
+
+  const onChangeYear = (year: string) => {
+    setSelectedYear(year);
+  };
+
+  useEffect(() => {
+    setSelectedYear(format(new Date(), 'yyyy'));
+  }, []);
 
   const { windowWidth } = UseWindowDimensions();
 
@@ -51,16 +79,26 @@ export const LeaveLedgerModal = ({ modalState, setModalState, closeModalAction }
             </div>
           </h3>
         </Modal.Header>
-        <Modal.Body>
+        <Modal.Body className="overflow-visible">
           <div className="flex flex-col px-4">
-            <div className="flex items-end justify-end pb-2">
+            <div className="flex items-center justify-end gap-2 pb-2">
+              <div className="overflow-visible relative">
+                <Select
+                  className="w-36 md:w-28"
+                  data={years}
+                  initial={years[0]}
+                  listDef={yearList}
+                  onSelect={(selectedItem) => onChangeYear(selectedItem.year)}
+                />
+              </div>
+
               <Button onClick={(e) => setLeaveLedgerPdfModalIsOpen(true)} size={`md`}>
                 <div className="flex items-center w-full gap-2">
                   <HiPrinter /> Print Ledger
                 </div>
               </Button>
             </div>
-            <LeaveLedgerTable employeeData={employeeDetails} />
+            <LeaveLedgerTable employeeData={employeeDetails} selectedYear={selectedYear} />
           </div>
         </Modal.Body>
         <Modal.Footer>

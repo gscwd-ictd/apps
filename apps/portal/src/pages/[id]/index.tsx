@@ -3,7 +3,7 @@
 /* eslint-disable @nx/enforce-module-boundaries */
 import { GetServerSideProps, GetServerSidePropsContext, InferGetServerSidePropsType } from 'next';
 import Head from 'next/head';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import SideNav from '../../components/fixed/nav/SideNav';
 import { MainContainer } from '../../components/modular/custom/containers/MainContainer';
 import { useAllowedModulesStore } from '../../store/allowed-modules.store';
@@ -25,7 +25,7 @@ import { ToastNotification } from '@gscwd-apps/oneui';
 import { isEmpty } from 'lodash';
 import { useTimeLogStore } from '../../store/timelogs.store';
 import { useDtrStore } from '../../store/dtr.store';
-import { HiCalendar, HiCash, HiClock, HiDocument } from 'react-icons/hi';
+import { HiCalendar, HiCash, HiClock, HiDocument, HiPaperAirplane, HiPlay } from 'react-icons/hi';
 import { useLeaveLedgerStore } from '../../store/leave-ledger.store';
 import { LeaveLedgerEntry } from 'libs/utils/src/lib/types/leave-ledger-entry.type';
 import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
@@ -33,7 +33,6 @@ import LeaveCreditMonetizationCalculatorModal from '../../components/fixed/leave
 import { useLeaveMonetizationCalculatorStore } from '../../store/leave-monetization-calculator.store';
 import dayjs from 'dayjs';
 import { usePassSlipStore } from '../../store/passslip.store';
-import { employeeCeliaDananDummy } from '../../types/employee.type';
 import { useAnnouncementsStore } from '../../store/announcements.store';
 import { UserRole } from 'libs/utils/src/lib/enums/user-roles.enum';
 
@@ -52,7 +51,6 @@ export default function Dashboard({ userDetails }: InferGetServerSidePropsType<t
   const sgAmount = userDetails?.employmentDetails?.salaryGradeAmount;
   const sgIncrement = userDetails?.employmentDetails?.salaryGrade;
 
-  const [leaveCreditMultiplier, setLeaveCreditMultiplier] = useState<number>(0.0481927);
   const [leaveCredits, setLeaveCredits] = useState<number>(0);
   const [estimatedAmount, setEstimatedAmount] = useState<number>(0);
 
@@ -119,6 +117,7 @@ export default function Dashboard({ userDetails }: InferGetServerSidePropsType<t
   const [vacationLeaveBalance, setVacationLeaveBalance] = useState<number>(0);
   const [sickLeaveBalance, setSickLeaveBalance] = useState<number>(0);
   const [specialPrivilegeLeaveBalance, setSpecialPrivilegeLeaveBalance] = useState<number>(0);
+  const [wellnessLeaveBalance, setWellnessLeaveBalance] = useState<number>(0);
 
   async function hydration() {
     if (schedule && userDetails) {
@@ -134,6 +133,7 @@ export default function Dashboard({ userDetails }: InferGetServerSidePropsType<t
     setVacationLeaveBalance(lastIndexValue.vacationLeaveBalance ?? 0);
     setSickLeaveBalance(lastIndexValue.sickLeaveBalance ?? 0);
     setSpecialPrivilegeLeaveBalance(lastIndexValue.specialPrivilegeLeaveBalance ?? 0);
+    setWellnessLeaveBalance(lastIndexValue.wellnessLeaveBalance ?? 0);
   };
 
   //fetch leave monetization settings (monetization constant)
@@ -335,29 +335,63 @@ export default function Dashboard({ userDetails }: InferGetServerSidePropsType<t
   const dateNow = dayjs(dayjs().toDate().toDateString()).format('MM-DD');
   const employeeBirthday = dayjs(employee.profile.birthDate).format('MM-DD');
 
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+
+  useEffect(() => {
+    if (dateNow === employeeBirthday && employee) {
+      audioRef.current = new Audio('/birthday.m4a');
+      audioRef.current.loop = false;
+      audioRef.current.volume = 0.5;
+
+      const unlockAudio = () => {
+        audioRef.current?.play().catch((err) => console.warn('Audio play failed:', err));
+
+        cleanup();
+      };
+
+      const cleanup = () => {
+        document.removeEventListener('click', unlockAudio);
+        document.removeEventListener('keydown', unlockAudio);
+        document.removeEventListener('touchstart', unlockAudio);
+        document.removeEventListener('touchmove', unlockAudio);
+      };
+
+      document.addEventListener('click', unlockAudio, { once: true });
+      document.addEventListener('keydown', unlockAudio, { once: true });
+      document.addEventListener('touchstart', unlockAudio, { once: true });
+      document.addEventListener('touchmove', unlockAudio, { once: true });
+
+      return () => {
+        cleanup();
+        audioRef.current?.pause();
+        audioRef.current = null;
+      };
+    }
+  }, [dateNow]);
+
   return (
     <>
       {/* Falling Hearts Effect for February Only */}
       {dateNow == '02-14' ? (
         <div className="wrapper absolute">
-          <div className="heart x1"></div>
-          <div className="heart x2"></div>
-          <div className="heart x3"></div>
-          <div className="heart x4"></div>
-          <div className="heart x5"></div>
-          <div className="altheart x6"></div>
+          <div className="heart x1 relative"></div>
+          <div className="heart x2 relative"></div>
+          <div className="heart x3 relative"></div>
+          <div className="heart x4 relative"></div>
+          <div className="heart x5 relative"></div>
+          <div className="altheart x6 relative"></div>
         </div>
       ) : null}
 
       {/* Balloon Effect for Birthday */}
       {dateNow === employeeBirthday && employee ? (
         <div className="wrapper absolute">
-          <div className="balloon1 x1"></div>
-          <div className="balloon2 x2"></div>
-          <div className="balloon1 x3"></div>
-          <div className="balloon2 x4"></div>
-          <div className="balloon1 x5"></div>
-          <div className="balloon2 x6"></div>
+          <div className="balloon1 x1 relative"></div>
+          <div className="balloon2 x2 relative"></div>
+          <div className="balloon1 x3 relative"></div>
+          <div className="balloon2 x4 relative"></div>
+          <div className="balloon1 x5 relative"></div>
+          <div className="balloon2 x6 relative"></div>
         </div>
       ) : null}
 
@@ -418,7 +452,7 @@ export default function Dashboard({ userDetails }: InferGetServerSidePropsType<t
             <div className="absolute top-0 left-0 z-0 flex items-center justify-center w-full h-full overflow-hidden pointer-events-none opacity-10">
               <Image src={'/gwdlogo.png'} priority className="w-2/4 " alt={''} width={'500'} height={'500'} />
             </div>
-            <div className="pt-2 md:pt-0 grid grid-cols-1 gap-4 px-4 md:grid-cols-3 lg:grid-cols-5 xl:grid-cols-5">
+            <div className="pt-2 md:pt-0 grid grid-cols-1 gap-4 px-4 md:grid-cols-3 lg:grid-cols-5 xl:grid-cols-5 mb-4">
               <div className="z-10 order-1 col-span-1 md:col-span-5 lg:col-span-5 lg:order-1">
                 <div className="grid grid-cols-2 gap-4 md:grid-cols-4 lg:grid-cols-5 ">
                   <div className="order-1 col-span-2 md:order-1 md:col-span-2 md:row-span-2 lg:row-span-2 lg:col-span-1 lg:order-1 ">
@@ -504,6 +538,20 @@ export default function Dashboard({ userDetails }: InferGetServerSidePropsType<t
                       </div>
 
                       <div className="order-4 col-span-2 md:col-span-2 md:order-5 lg:col-span-2 lg:order-6">
+                        <div className="w-full">
+                          <StatsCard
+                            name={'Wellness Leave'}
+                            count={wellnessLeaveBalance}
+                            isLoading={swrLeaveLedgerLoading}
+                            width={'w-auto'}
+                            height={windowHeight > 820 ? 'h-32' : 'h-32'}
+                            svg={<HiCalendar className="w-7 h-7 text-indigo-500" />}
+                            svgBgColor={'bg-indigo-100'}
+                          />
+                        </div>
+                      </div>
+
+                      <div className="order-4 col-span-2 md:col-span-2 md:order-6 lg:col-span-2 lg:order-7">
                         <div className="w-full" onClick={openLeaveCalculator}>
                           <StatsCard
                             name={'Max Leave Credit Monetization'}
@@ -520,13 +568,13 @@ export default function Dashboard({ userDetails }: InferGetServerSidePropsType<t
                     </>
                   ) : null}
 
-                  <div className="order-6 md:order-5 lg:order-7 col-span-2 row-span-2">
-                    <div className="w-full h-full gap-2 p-4 pb-10 mb-2 bg-white rounded-md shadow">
+                  <div className="order-5 md:order-7 lg:order-8 col-span-2 row-span-2">
+                    <div className="w-full py-5 gap-0  bg-white rounded-md shadow">
                       <EmployeeCalendar />
                     </div>
                   </div>
 
-                  <div className="order-7 col-span-2 row-span-1 md:col-span-2 md:order-6 lg:col-span-2 lg:order-8">
+                  <div className="order-6 col-span-2 row-span-1 md:col-span-2 md:order-7 lg:col-span-2 lg:order-9">
                     <RemindersCard reminders={''} />
                   </div>
                 </div>

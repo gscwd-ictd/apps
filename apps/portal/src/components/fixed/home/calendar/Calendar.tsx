@@ -1,8 +1,5 @@
 import { Menu, Transition } from '@headlessui/react';
-import {
-  Holidays,
-  useCalendarStore,
-} from 'apps/portal/src/store/calendar.store';
+import { Holidays, useCalendarStore } from 'apps/portal/src/store/calendar.store';
 import { fetchWithToken } from 'apps/portal/src/utils/hoc/fetcher';
 import useSWR from 'swr';
 import {
@@ -20,11 +17,7 @@ import {
   startOfToday,
 } from 'date-fns';
 import { Fragment, useEffect, useState } from 'react';
-import {
-  HiOutlineChevronLeft,
-  HiOutlineChevronRight,
-  HiOutlineXCircle,
-} from 'react-icons/hi';
+import { HiOutlineChevronLeft, HiOutlineChevronRight, HiOutlineXCircle } from 'react-icons/hi';
 import { isEmpty } from 'lodash';
 import { ToastNotification } from '@gscwd-apps/oneui';
 
@@ -49,13 +42,12 @@ export default function EmployeeCalendar() {
   const [currentMonth, setCurrentMonth] = useState(format(today, 'MMM-yyyy'));
   const firstDayCurrentMonth = parse(currentMonth, 'MMM-yyyy', new Date());
 
-  const { holidays, getHolidays, getHolidaysSuccess, getHolidaysFail } =
-    useCalendarStore((state) => ({
-      holidays: state.dates.holidays,
-      getHolidays: state.getHolidays,
-      getHolidaysSuccess: state.getHolidaysSuccess,
-      getHolidaysFail: state.getHolidaysFail,
-    }));
+  const { holidays, getHolidays, getHolidaysSuccess, getHolidaysFail } = useCalendarStore((state) => ({
+    holidays: state.dates.holidays,
+    getHolidays: state.getHolidays,
+    getHolidaysSuccess: state.getHolidaysSuccess,
+    getHolidaysFail: state.getHolidaysFail,
+  }));
 
   const holidaysUrl = `${process.env.NEXT_PUBLIC_EMPLOYEE_MONITORING_URL}/v1/holidays`;
 
@@ -114,10 +106,7 @@ export default function EmployeeCalendar() {
   return (
     <div className="relative">
       {!isEmpty(swrHolidaysError) ? (
-        <ToastNotification
-          toastType="error"
-          notifMessage={`Calendar: ${swrHolidaysError.message}.`}
-        />
+        <ToastNotification toastType="error" notifMessage={`Calendar: ${swrHolidaysError.message}.`} />
       ) : null}
 
       <div
@@ -127,24 +116,16 @@ export default function EmployeeCalendar() {
             : 'hidden'
         } `}
       >
-        <span
-          onClick={() => setViewActivities(false)}
-          className="absolute top-0 right-0 p-4 cursor-pointer"
-        >
+        <span onClick={() => setViewActivities(false)} className="absolute top-0 right-0 p-4 cursor-pointer">
           <HiOutlineXCircle className="w-6 h-6 text-slate-600" />
         </span>
         <section>
           <h2 className="font-semibold text-gray-900">
-            Schedule for{' '}
-            <time dateTime={format(selectedDay, 'yyyy-MM-dd')}>
-              {format(selectedDay, 'MMM dd, yyy')}
-            </time>
+            Schedule for <time dateTime={format(selectedDay, 'yyyy-MM-dd')}>{format(selectedDay, 'MMM dd, yyy')}</time>
           </h2>
           <ol className="mt-4 space-y-1 text-sm leading-6 text-gray-500">
             {selectedDayMeetings && selectedDayMeetings.length > 0 ? (
-              selectedDayMeetings.map((meeting) => (
-                <Meeting meeting={meeting} key={meeting.id} />
-              ))
+              selectedDayMeetings.map((meeting) => <Meeting meeting={meeting} key={meeting.id} />)
             ) : (
               <p>No events today.</p>
             )}
@@ -189,56 +170,36 @@ export default function EmployeeCalendar() {
               {days.map((day, dayIdx) => (
                 <div
                   key={day.toString()}
-                  className={classNames(
-                    dayIdx === 0 && colStartClasses[getDay(day)],
-                    'py-1.5'
-                  )}
+                  className={classNames(dayIdx === 0 && colStartClasses[getDay(day)], 'py-1.5')}
                 >
                   <button
                     type="button"
                     onClick={() => viewDateActivities(day)}
                     className={classNames(
                       isEqual(day, selectedDay) && 'text-white',
-                      !isEqual(day, selectedDay) &&
-                        isToday(day) &&
-                        'text-blue-500',
-                      !isEqual(day, selectedDay) &&
-                        !isToday(day) &&
-                        isSameMonth(day, firstDayCurrentMonth) &&
-                        '',
+                      !isEqual(day, selectedDay) && isToday(day) && 'text-blue-500',
+                      !isEqual(day, selectedDay) && !isToday(day) && isSameMonth(day, firstDayCurrentMonth) && '',
                       !isEqual(day, selectedDay) &&
                         !isToday(day) &&
                         !isSameMonth(day, firstDayCurrentMonth) &&
                         'text-gray-400',
-                      isEqual(day, selectedDay) &&
-                        isToday(day) &&
-                        'bg-blue-500',
-                      isEqual(day, selectedDay) &&
-                        !isToday(day) &&
-                        'bg-gray-900',
+                      isEqual(day, selectedDay) && isToday(day) && 'bg-blue-500',
+                      isEqual(day, selectedDay) && !isToday(day) && 'bg-gray-900',
                       !isEqual(day, selectedDay) && 'hover:bg-gray-200',
-                      (isEqual(day, selectedDay) || isToday(day)) &&
-                        'font-semibold',
+                      (isEqual(day, selectedDay) || isToday(day)) && 'font-semibold',
                       swrHolidays &&
-                        swrHolidays.some((meeting) =>
-                          isSameDay(Date.parse(meeting.holidayDate), day)
-                        ) &&
+                        swrHolidays.some((meeting) => isSameDay(Date.parse(meeting.holidayDate), day)) &&
                         'bg-red-500 font-semibold text-white',
                       'mx-auto flex h-8 w-8 items-center justify-center rounded-full'
                     )}
                   >
-                    <time dateTime={format(day, 'yyyy-MM-dd')}>
-                      {format(day, 'd')}
-                    </time>
+                    <time dateTime={format(day, 'yyyy-MM-dd')}>{format(day, 'd')}</time>
                   </button>
 
                   <div className="w-1 h-1 mx-auto mt-1">
-                    {swrHolidays &&
-                      swrHolidays.some((meeting) =>
-                        isSameDay(Date.parse(meeting.holidayDate), day)
-                      ) && (
-                        <div className="w-1 h-1 rounded-full bg-sky-500"></div>
-                      )}
+                    {swrHolidays && swrHolidays.some((meeting) => isSameDay(Date.parse(meeting.holidayDate), day)) && (
+                      <div className="w-1 h-1 rounded-full bg-sky-500"></div>
+                    )}
                   </div>
                 </div>
               ))}
@@ -256,11 +217,7 @@ function Meeting({ meeting }: any) {
 
   return (
     <li className="flex items-center px-4 py-2 space-x-4 group rounded-xl focus-within:bg-gray-100 hover:bg-gray-100">
-      <img
-        src={'/gwdlogo.png'}
-        alt=""
-        className="flex-none w-10 h-10 rounded-full"
-      />
+      <img src={'/gwdlogo.png'} alt="" className="flex-none w-10 h-10 rounded-full" />
       <div className="flex-auto">
         <p className="text-gray-900">{meeting.name}</p>
         {/* <p className="mt-0.5">
@@ -273,10 +230,7 @@ function Meeting({ meeting }: any) {
           </time>
         </p> */}
       </div>
-      <Menu
-        as="div"
-        className="relative opacity-0 focus-within:opacity-100 group-hover:opacity-100"
-      >
+      <Menu as="div" className="relative opacity-0 focus-within:opacity-100 group-hover:opacity-100">
         <div>
           {/* <Menu.Button className="-m-2 flex items-center rounded-full p-1.5 text-gray-500 hover:text-gray-600">
             <span className="sr-only">Open options</span>
@@ -317,12 +271,4 @@ function Meeting({ meeting }: any) {
   );
 }
 
-const colStartClasses = [
-  '',
-  'col-start-2',
-  'col-start-3',
-  'col-start-4',
-  'col-start-5',
-  'col-start-6',
-  'col-start-7',
-];
+const colStartClasses = ['', 'col-start-2', 'col-start-3', 'col-start-4', 'col-start-5', 'col-start-6', 'col-start-7'];

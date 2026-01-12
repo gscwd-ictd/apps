@@ -57,6 +57,8 @@ body {
   min-height: 100vh;
   overflow: hidden;
   text-align: center;
+  z-index: 50;
+  pointer-events: none;
 }
 
 .x1 {

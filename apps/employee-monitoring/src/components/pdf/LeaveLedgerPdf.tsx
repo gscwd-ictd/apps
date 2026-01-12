@@ -113,22 +113,16 @@ const styles = StyleSheet.create({
   // Width Styles
   w100: { width: '100%' },
   w80: { width: '80%' },
-  w75: { width: '75%' },
-  w50: { width: '50%' },
-  w45: { width: '45%' },
   w40: { width: '40%' },
-  w37_5: { width: 'w37.5%' },
   w30: { width: '30%' },
-  w25: { width: '25%' },
+  w22: { width: '22%' },
   w20: { width: '20%' },
-  w17: { width: '17%' },
-  w15: { width: '15%' },
-  w12: { width: '12%' },
-  w11: { width: '11%' },
+  w18: { width: '18%' },
+  w16: { width: '16%' },
   w10: { width: '10%' },
-  w9: { width: '9%' },
   w8: { width: '8%' },
   w7: { width: '7%' },
+  w6: { width: '6%' },
   w5: { width: '5%' },
 });
 
@@ -166,6 +160,9 @@ export const LeaveLedgerPdf: FunctionComponent<LeaveLedgerPdfProps> = ({ employe
   // special privilege leave balance
   const [specialPrivilegeLeaveBalance, setSpecialPrivilegeLeaveBalance] = useState<number>(0);
 
+  // wellness leave balance
+  const [wellnessLeaveBalance, setWellnessLeaveBalance] = useState<number>(0);
+
   // Array to string of dates
   const leaveDatesToString = (leaveDates: Array<string>) => {
     if (!isEmpty(leaveDates)) return '| ' + leaveDates.toString();
@@ -180,6 +177,7 @@ export const LeaveLedgerPdf: FunctionComponent<LeaveLedgerPdfProps> = ({ employe
     setVacationLeaveBalance(lastIndexValue.vacationLeaveBalance ?? 0);
     setSickLeaveBalance(lastIndexValue.sickLeaveBalance ?? 0);
     setSpecialPrivilegeLeaveBalance(lastIndexValue.specialPrivilegeLeaveBalance ?? 0);
+    setWellnessLeaveBalance(lastIndexValue.wellnessLeaveBalance ?? 0);
   };
 
   // row background color
@@ -200,6 +198,9 @@ export const LeaveLedgerPdf: FunctionComponent<LeaveLedgerPdfProps> = ({ employe
       } else if (entry.specialLeaveBenefit < 0) {
         // special leave benefit
         return '#bfdbfe';
+      } else if (entry.wellnessLeave < 0) {
+        // wellness leave
+        return '#387eff';
       } else {
         return '#ffffff';
       }
@@ -301,10 +302,10 @@ export const LeaveLedgerPdf: FunctionComponent<LeaveLedgerPdfProps> = ({ employe
                   {/* COLUMN HEADERS  */}
                   <View>
                     <View style={[styles.rowContainer, styles.rowBorder]}>
-                      <View style={[styles.tableHeader, styles.w8]}>
+                      <View style={[styles.tableHeader, styles.w6]}>
                         <Text style={[styles.tableHeaderText]}>PERIOD</Text>
                       </View>
-                      <View style={[styles.tableHeader, styles.w17]}>
+                      <View style={[styles.tableHeader, styles.w16]}>
                         <Text style={[styles.tableHeaderText]}>PARTICULARS</Text>
                       </View>
                       <View style={[styles.tableHeader2, styles.w5]}>
@@ -331,13 +332,21 @@ export const LeaveLedgerPdf: FunctionComponent<LeaveLedgerPdfProps> = ({ employe
                       <View style={[styles.tableHeader2, styles.w5]}>
                         <Text style={[styles.tableHeaderText]}>SPECIAL PRIVILEGE LEAVE BAL</Text>
                       </View>
+
+                      <View style={[styles.tableHeader2, styles.w5]}>
+                        <Text style={[styles.tableHeaderText]}>WELLNESS LEAVE</Text>
+                      </View>
+                      <View style={[styles.tableHeader2, styles.w5]}>
+                        <Text style={[styles.tableHeaderText]}>WELLNESS LEAVE BAL</Text>
+                      </View>
+
                       <View style={[styles.tableHeader2, styles.w5]}>
                         <Text style={[styles.tableHeaderText]}>SPECIAL LEAVE BENEFIT</Text>
                       </View>
                       <View style={[styles.tableHeader2, styles.w5]}>
                         <Text style={[styles.tableHeaderText]}>SPECIAL LEAVE BENEFIT BAL</Text>
                       </View>
-                      <View style={[styles.tableHeader, styles.w25, { borderRight: 'none' }]}>
+                      <View style={[styles.tableHeader, styles.w18, { borderRight: 'none' }]}>
                         <Text style={[styles.tableHeaderText]}>REMARKS</Text>
                       </View>
                     </View>
@@ -358,14 +367,14 @@ export const LeaveLedgerPdf: FunctionComponent<LeaveLedgerPdfProps> = ({ employe
                             wrap={false}
                           >
                             {/* PERIOD */}
-                            <View style={[styles.tableData, styles.w8]}>
+                            <View style={[styles.tableData, styles.w6]}>
                               <Text style={[styles.tableDataText, styles.verticalCenter]}>
                                 {dayjs(entry.period).format('MM/DD/YYYY')}
                               </Text>
                             </View>
 
                             {/* PARTICULARS */}
-                            <View style={[styles.tableData, styles.w17, { textAlign: 'left' }]}>
+                            <View style={[styles.tableData, styles.w16, { textAlign: 'left' }]}>
                               <Text style={[styles.tableDataText, styles.verticalCenter]}>{entry.particulars}</Text>
                             </View>
 
@@ -434,6 +443,22 @@ export const LeaveLedgerPdf: FunctionComponent<LeaveLedgerPdfProps> = ({ employe
                               </Text>
                             </View>
 
+                            {/* WL */}
+                            <View style={[styles.tableData, styles.w5]}>
+                              <Text style={[styles.tableDataText, styles.verticalCenter]}>
+                                {!isEmpty(entry.wellnessLeave) && parseFloat(entry.wellnessLeave.toString()) !== 0
+                                  ? entry.wellnessLeave
+                                  : null}
+                              </Text>
+                            </View>
+
+                            {/* WL BALANCE */}
+                            <View style={[styles.tableData, styles.w5]}>
+                              <Text style={[styles.tableDataText, styles.verticalCenter]}>
+                                {entry.wellnessLeaveBalance}
+                              </Text>
+                            </View>
+
                             {/* SLB */}
                             <View style={[styles.tableData, styles.w5]}>
                               <Text style={[styles.tableDataText, styles.verticalCenter]}>
@@ -452,7 +477,7 @@ export const LeaveLedgerPdf: FunctionComponent<LeaveLedgerPdfProps> = ({ employe
                             </View>
 
                             {/* REMARKS */}
-                            <View style={[styles.tableData, styles.w25, { borderRight: 'none' }]}>
+                            <View style={[styles.tableData, styles.w18, { borderRight: 'none' }]}>
                               <Text
                                 style={[styles.tableDataText, styles.verticalCenter]}
                                 hyphenationCallback={remarksHyphenationCallback}
@@ -473,7 +498,7 @@ export const LeaveLedgerPdf: FunctionComponent<LeaveLedgerPdfProps> = ({ employe
 
                     {/* TOTAL */}
                     <View style={[styles.rowContainer, styles.rowBorder]}>
-                      <View style={[styles.tableData, styles.w25]}>
+                      <View style={[styles.tableData, styles.w22]}>
                         <Text style={[styles.tableDataText, { fontFamily: 'Helvetica-Bold' }]}>TOTAL</Text>
                       </View>
                       <View style={[styles.tableData, styles.w5]}>
@@ -516,13 +541,25 @@ export const LeaveLedgerPdf: FunctionComponent<LeaveLedgerPdfProps> = ({ employe
                           {specialPrivilegeLeaveBalance}
                         </Text>
                       </View>
+
+                      <View style={[styles.tableData, styles.w5]}>
+                        <Text style={[styles.tableDataText]}></Text>
+                      </View>
+                      <View style={[styles.tableData, styles.w5]}>
+                        <Text
+                          style={[styles.tableDataText, { fontFamily: 'Helvetica-Bold', backgroundColor: '#387eff' }]}
+                        >
+                          {wellnessLeaveBalance}
+                        </Text>
+                      </View>
+
                       <View style={[styles.tableData, styles.w5]}>
                         <Text style={[styles.tableDataText]}></Text>
                       </View>
                       <View style={[styles.tableData, styles.w5]}>
                         <Text style={[styles.tableDataText]}></Text>
                       </View>
-                      <View style={[styles.tableData, styles.w25, { borderRight: 'none' }]}>
+                      <View style={[styles.tableData, styles.w18, { borderRight: 'none' }]}>
                         <Text style={[styles.tableDataText]}></Text>
                       </View>
                     </View>

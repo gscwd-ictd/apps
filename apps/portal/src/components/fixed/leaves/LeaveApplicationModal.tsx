@@ -174,12 +174,14 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
     forcedLeaveBalance,
     sickLeaveBalance,
     specialPrivilegeLeaveBalance,
+    wellnessLeaveBalance,
     errorLeaveLedger,
 
     setVacationLeaveBalance,
     setForcedLeaveBalance,
     setSickLeaveBalance,
     setSpecialPrivilegeLeaveBalance,
+    setWellnessLeaveBalance,
     getLeaveLedger,
     getLeaveLedgerSuccess,
     getLeaveLedgerFail,
@@ -188,12 +190,14 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
     forcedLeaveBalance: state.forcedLeaveBalance,
     sickLeaveBalance: state.sickLeaveBalance,
     specialPrivilegeLeaveBalance: state.specialPrivilegeLeaveBalance,
+    wellnessLeaveBalance: state.wellnessLeaveBalance,
     errorLeaveLedger: state.error.errorLeaveLedger,
 
     setVacationLeaveBalance: state.setVacationLeaveBalance,
     setForcedLeaveBalance: state.setForcedLeaveBalance,
     setSickLeaveBalance: state.setSickLeaveBalance,
     setSpecialPrivilegeLeaveBalance: state.setSpecialPrivilegeLeaveBalance,
+    setWellnessLeaveBalance: state.setWellnessLeaveBalance,
     getLeaveLedger: state.getLeaveLedger,
     getLeaveLedgerSuccess: state.getLeaveLedgerSuccess,
     getLeaveLedgerFail: state.getLeaveLedgerFail,
@@ -219,6 +223,7 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
   const [finalForcedLeaveBalance, setFinalForcedLeaveBalance] = useState<number>(0);
   const [finalSickLeaveBalance, setFinalSickLeaveBalance] = useState<number>(0);
   const [finalSpecialPrivilegeBalance, setFinalSpecialPrivilegeBalance] = useState<number>(0);
+  const [finalWellnessLeaveBalance, setFinalWellnessLeaveBalance] = useState<number>(0);
 
   //ROUNDED OFF LEAVE CREDITS
   const [roundedFinalVacationLeaveBalance, setRoundedFinalVacationLeaveBalance] = useState<number>(0);
@@ -240,6 +245,7 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
   const [pendingForcedLeaveDateCount, setPendingForcedLeaveDateCount] = useState<number>(0);
   const [pendingSickLeaveDateCount, setPendingSickLeaveDateCount] = useState<number>(0);
   const [pendingSplLeaveDateCount, setPendingSplLeaveDateCount] = useState<number>(0);
+  const [pendingWellnessLeaveDateCount, setPendingWellnessLeaveDateCount] = useState<number>(0);
 
   //LESS THIS APPLICATION FOR MONETIZATION
   const [lessVlFl, setLessVlFL] = useState<number>(0);
@@ -252,6 +258,7 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
     setVacationLeaveBalance(lastIndexValue.vacationLeaveBalance ?? 0);
     setSickLeaveBalance(lastIndexValue.sickLeaveBalance ?? 0);
     setSpecialPrivilegeLeaveBalance(lastIndexValue.specialPrivilegeLeaveBalance ?? 0);
+    setWellnessLeaveBalance(lastIndexValue.wellnessLeaveBalance ?? 0);
   };
 
   //fetch employee leave ledger
@@ -523,6 +530,15 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
           lateFilingJustification: data.lateFilingJustification,
         };
       }
+    } else if (data.typeOfLeaveDetails.leaveName === LeaveName.WELLNESS) {
+      dataToSend = {
+        leaveBenefitsId: data.typeOfLeaveDetails.id,
+        employeeId: data.employeeId,
+        inPhilippines: data.location,
+        leaveApplicationDates: data.leaveApplicationDates,
+        isLateFiling: data.isLateFiling,
+        lateFilingJustification: data.lateFilingJustification,
+      };
     } else if (data.typeOfLeaveDetails.leaveName === LeaveName.SICK) {
       if (data.hospital === 'inHospital') {
         dataToSend = {
@@ -698,8 +714,12 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
         watch('typeOfLeaveDetails.leaveName') === LeaveName.SPECIAL_PRIVILEGE
       ) {
         handlePostError('Insufficient Special Privilege Leave Credits.');
+      } else if (finalWellnessLeaveBalance < 0 && watch('typeOfLeaveDetails.leaveName') === LeaveName.WELLNESS) {
+        handlePostError('Insufficient Wellness Leave Credits.');
       } else if (leaveDates.length > 3 && watch('typeOfLeaveDetails.leaveName') === LeaveName.SPECIAL_PRIVILEGE) {
         handlePostError('Special Privilege Leave can only be applied for a maximum of 3 days.');
+      } else if (leaveDates.length > 3 && watch('typeOfLeaveDetails.leaveName') === LeaveName.WELLNESS) {
+        handlePostError('Wellness Leave can only be applied for a maximum of 3 days.');
       } else if (
         overlappingLeaveCount > 0 &&
         (watch('typeOfLeaveDetails.leaveName') === LeaveName.MATERNITY ||
@@ -816,6 +836,7 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
     setFinalSickLeaveBalance(Number(sickLeaveBalance - leaveDates.length));
     setFinalForcedLeaveBalance(forcedLeaveBalance - leaveDates.length);
     setFinalSpecialPrivilegeBalance(specialPrivilegeLeaveBalance - leaveDates.length);
+    setFinalWellnessLeaveBalance(wellnessLeaveBalance - leaveDates.length);
 
     //update rounded off leave credits also
     setRoundedFinalVacationLeaveBalance(Math.round(vacationLeaveBalance) - leaveDates.length);
@@ -1199,10 +1220,30 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
                   ) : null}
 
                   {/* Special Privilege Leave Balance Notifications */}
+                  {finalWellnessLeaveBalance < 0 && watch('typeOfLeaveDetails.leaveName') === LeaveName.WELLNESS ? (
+                    <AlertNotification
+                      alertType="warning"
+                      notifMessage="Insufficient Wellness Leave Balance."
+                      dismissible={false}
+                      className="mb-1"
+                    />
+                  ) : null}
+
+                  {/* Special Privilege Leave Balance Notifications */}
                   {leaveDates.length > 3 && watch('typeOfLeaveDetails.leaveName') === LeaveName.SPECIAL_PRIVILEGE ? (
                     <AlertNotification
                       alertType="warning"
                       notifMessage="Special Privilege Leave can only be applied for a maximum of 3 days."
+                      dismissible={false}
+                      className="mb-1"
+                    />
+                  ) : null}
+
+                  {/* Wellness Leave Balance Notifications */}
+                  {leaveDates.length > 3 && watch('typeOfLeaveDetails.leaveName') === LeaveName.WELLNESS ? (
+                    <AlertNotification
+                      alertType="warning"
+                      notifMessage="Wellness Leave can only be applied for a maximum of 3 days."
                       dismissible={false}
                       className="mb-1"
                     />
@@ -1354,6 +1395,8 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
                           ? `For Monetization of Leave Balance, application for monetization of fifthy percent (50%) or more of the accumulated leave credits shall be accompanied by letter request to the head of the agency stating the valid and justifiable reasons. For Terminal Leave, proof of employee's resignation or retirement or separation from the service.`
                           : watch('typeOfLeaveDetails.leaveName') === LeaveName.TERMINAL
                           ? `Proof of employee's resignation or retirement or separation from service.`
+                          : watch('typeOfLeaveDetails.leaveName') === LeaveName.WELLNESS
+                          ? `Wellness leave is intended to provide employees with time off to focus on their mental and physical well-being. It can be used for activities such as relaxation, pursuing hobbies, or attending wellness programs.`
                           : ``}
                       </span>
                     </div>
@@ -1380,6 +1423,10 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
                             <>
                               Study:<span className="text-red-600">*</span>
                             </>
+                          ) : watch('typeOfLeaveDetails.leaveName') === LeaveName.WELLNESS ? (
+                            <>
+                              Purpose:<span className="text-red-600">*</span>
+                            </>
                           ) : watch('typeOfLeaveDetails.leaveName') === LeaveName.OTHERS ? (
                             <>
                               Other Purpose:<span className="text-red-600">*</span>
@@ -1393,88 +1440,80 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
                         watch('typeOfLeaveDetails.leaveName') === LeaveName.VACATION ||
                         watch('typeOfLeaveDetails.leaveName') === LeaveName.FORCED ||
                         watch('typeOfLeaveDetails.leaveName') === LeaveName.SPECIAL_PRIVILEGE ? (
-                          <>
-                            <select
-                              id="inPhilippinesOrAbroad"
-                              className="text-slate-500 w-full h-14 rounded-md text-md border-slate-300"
-                              required
-                              defaultValue={''}
-                              {...register('inPhilippinesOrAbroad')}
-                            >
-                              <option value="" disabled>
-                                Select Location:
+                          <select
+                            id="inPhilippinesOrAbroad"
+                            className="text-slate-500 w-full h-14 rounded-md text-md border-slate-300"
+                            required
+                            defaultValue={''}
+                            {...register('inPhilippinesOrAbroad')}
+                          >
+                            <option value="" disabled>
+                              Select Location:
+                            </option>
+                            {leaveLocation.map((item: Item, idx: number) => (
+                              <option value={item.value} key={idx}>
+                                {item.label}
                               </option>
-                              {leaveLocation.map((item: Item, idx: number) => (
-                                <option value={item.value} key={idx}>
-                                  {item.label}
-                                </option>
-                              ))}
-                            </select>
-                          </>
+                            ))}
+                          </select>
                         ) : null}
 
                         {watch('typeOfLeaveDetails.leaveName') === LeaveName.SICK ? (
-                          <>
-                            <select
-                              id="hospital"
-                              className="text-slate-500 w-full h-16 rounded-md text-md border-slate-300"
-                              required
-                              defaultValue={''}
-                              {...register('hospital')}
-                            >
-                              <option value="" disabled>
-                                Select Hosptitalization:
+                          <select
+                            id="hospital"
+                            className="text-slate-500 w-full h-16 rounded-md text-md border-slate-300"
+                            required
+                            defaultValue={''}
+                            {...register('hospital')}
+                          >
+                            <option value="" disabled>
+                              Select Hosptitalization:
+                            </option>
+                            {leaveHospital.map((item: Item, idx: number) => (
+                              <option value={item.value} key={idx}>
+                                {item.label}
                               </option>
-                              {leaveHospital.map((item: Item, idx: number) => (
-                                <option value={item.value} key={idx}>
-                                  {item.label}
-                                </option>
-                              ))}
-                            </select>
-                          </>
+                            ))}
+                          </select>
                         ) : null}
 
                         {watch('typeOfLeaveDetails.leaveName') === LeaveName.STUDY ? (
-                          <>
-                            <select
-                              id="study"
-                              className="text-slate-500 w-full h-16 rounded-md text-md border-slate-300"
-                              required
-                              defaultValue={''}
-                              // {...register('study')}
-                              onChange={(e) => handleStudy(e.target.value as unknown as string)}
-                            >
-                              <option value="" disabled>
-                                Select Study Purpose:
+                          <select
+                            id="study"
+                            className="text-slate-500 w-full h-16 rounded-md text-md border-slate-300"
+                            required
+                            defaultValue={''}
+                            // {...register('study')}
+                            onChange={(e) => handleStudy(e.target.value as unknown as string)}
+                          >
+                            <option value="" disabled>
+                              Select Study Purpose:
+                            </option>
+                            {leaveStudy.map((item: Item, idx: number) => (
+                              <option value={item.value} key={idx}>
+                                {item.label}
                               </option>
-                              {leaveStudy.map((item: Item, idx: number) => (
-                                <option value={item.value} key={idx}>
-                                  {item.label}
-                                </option>
-                              ))}
-                            </select>
-                          </>
+                            ))}
+                          </select>
                         ) : null}
 
                         {watch('typeOfLeaveDetails.leaveName') === LeaveName.OTHERS ? (
-                          <>
-                            <select
-                              id="others"
-                              className="text-slate-500 w-full h-16 rounded-md text-md border-slate-300"
-                              required
-                              defaultValue={''}
-                              {...register('other')}
-                            >
-                              <option value="" disabled>
-                                Select Other:
+                          <select
+                            id="others"
+                            className="text-slate-500 w-full h-16 rounded-md text-md border-slate-300"
+                            required
+                            defaultValue={''}
+                            {...register('other')}
+                          >
+                            <option value="" disabled>
+                              Select Other:
+                            </option>
+                            {leaveOther.map((item: Item, idx: number) => (
+                              <option value={item.value} key={idx}>
+                                {item.label}
                               </option>
-                              {leaveOther.map((item: Item, idx: number) => (
-                                <option value={item.value} key={idx}>
-                                  {item.label}
-                                </option>
-                              ))}
-                            </select>
-                          </>
+                            ))}
+                          </select>
                         ) : null}
                       </div>
                     </div>
@@ -1736,6 +1775,7 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
                     watch('typeOfLeaveDetails.leaveName') === LeaveName.VACATION ||
                     watch('typeOfLeaveDetails.leaveName') === LeaveName.FORCED ||
                     watch('typeOfLeaveDetails.leaveName') === LeaveName.SPECIAL_PRIVILEGE ||
+                    watch('typeOfLeaveDetails.leaveName') === LeaveName.WELLNESS ||
                     watch('typeOfLeaveDetails.leaveName') === LeaveName.SICK ||
                     watch('typeOfLeaveDetails.leaveName') === LeaveName.SPECIAL_LEAVE_BENEFITS_FOR_WOMEN ||
                     (watch('typeOfLeaveDetails.leaveName') === LeaveName.STUDY && selectedStudy === 'other') ? (
@@ -1743,7 +1783,8 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
                         {...(watch('typeOfLeaveDetails.leaveName') === LeaveName.LEAVE_WITHOUT_PAY ||
                         watch('typeOfLeaveDetails.leaveName') === LeaveName.VACATION ||
                         watch('typeOfLeaveDetails.leaveName') === LeaveName.FORCED ||
-                        watch('typeOfLeaveDetails.leaveName') === LeaveName.SPECIAL_PRIVILEGE
+                        watch('typeOfLeaveDetails.leaveName') === LeaveName.SPECIAL_PRIVILEGE ||
+                        watch('typeOfLeaveDetails.leaveName') === LeaveName.WELLNESS
                           ? { ...register('location') }
                           : watch('typeOfLeaveDetails.leaveName') === LeaveName.SICK
                           ? { ...register('illness') }
@@ -1757,7 +1798,8 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
                         placeholder={`${
                           watch('typeOfLeaveDetails.leaveName') === LeaveName.VACATION ||
                           watch('typeOfLeaveDetails.leaveName') === LeaveName.FORCED ||
-                          watch('typeOfLeaveDetails.leaveName') === LeaveName.SPECIAL_PRIVILEGE
+                          watch('typeOfLeaveDetails.leaveName') === LeaveName.SPECIAL_PRIVILEGE ||
+                          watch('typeOfLeaveDetails.leaveName') === LeaveName.WELLNESS
                             ? 'Specify Leave Details'
                             : watch('typeOfLeaveDetails.leaveName') === LeaveName.SICK ||
                               watch('typeOfLeaveDetails.leaveName') === LeaveName.SPECIAL_LEAVE_BENEFITS_FOR_WOMEN
@@ -1807,6 +1849,7 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
                     watch('typeOfLeaveDetails.leaveName') === LeaveName.FORCED ||
                     watch('typeOfLeaveDetails.leaveName') === LeaveName.VACATION ||
                     watch('typeOfLeaveDetails.leaveName') === LeaveName.SPECIAL_PRIVILEGE ||
+                    watch('typeOfLeaveDetails.leaveName') === LeaveName.WELLNESS ||
                     watch('typeOfLeaveDetails.leaveName') === LeaveName.SOLO_PARENT ||
                     watch('typeOfLeaveDetails.leaveName') === LeaveName.SICK ? (
                       <div className="flex flex-col gap-1 w-full bg-slate-100 text-sm p-2 mt-1">
@@ -1871,6 +1914,7 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
                 watch('typeOfLeaveDetails.leaveName') === LeaveName.VACATION ||
                 watch('typeOfLeaveDetails.leaveName') === LeaveName.SICK ||
                 watch('typeOfLeaveDetails.leaveName') === LeaveName.SPECIAL_PRIVILEGE ||
+                watch('typeOfLeaveDetails.leaveName') === LeaveName.WELLNESS ||
                 watch('typeOfLeaveDetails.leaveName') === LeaveName.MONETIZATION ||
                 watch('typeOfLeaveDetails.leaveName') === LeaveName.TERMINAL ? (
                   <div className="w-full pb-4 pt-2">
@@ -1893,6 +1937,11 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
                               <label className="hidden sm:block">Special Privilege</label>
                               <label className="block sm:hidden">SPL</label>
                             </td>
+                          ) : null}
+
+                          {watch('typeOfLeaveDetails.leaveName') !== LeaveName.MONETIZATION &&
+                          watch('typeOfLeaveDetails.leaveName') !== LeaveName.TERMINAL ? (
+                            <td className="border border-slate-200 text-center text-sm p-1">Wellness</td>
                           ) : null}
                         </tr>
                         <tr className="border border-slate-200">
@@ -1919,6 +1968,12 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
                               {Number(specialPrivilegeLeaveBalance).toFixed(3)}
                             </td>
                           ) : null}
+                          {watch('typeOfLeaveDetails.leaveName') !== LeaveName.MONETIZATION &&
+                          watch('typeOfLeaveDetails.leaveName') !== LeaveName.TERMINAL ? (
+                            <td className="border border-slate-200 p-1 text-center text-sm">
+                              {Number(wellnessLeaveBalance).toFixed(3)}
+                            </td>
+                          ) : null}
                         </tr>
                         {watch('typeOfLeaveDetails.leaveName') == LeaveName.VACATION ||
                         watch('typeOfLeaveDetails.leaveName') == LeaveName.FORCED ? (
@@ -1935,9 +1990,16 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
                               {pendingForcedLeaveDateCount}
                             </td>
 
-                            <td className="border border-slate-200 p-1 text-center text-sm">--</td>
+                            <td className="border border-slate-200 p-1 text-center text-sm">
+                              {pendingSickLeaveDateCount}
+                            </td>
 
-                            <td className="border border-slate-200 p-1 text-center text-sm">--</td>
+                            <td className="border border-slate-200 p-1 text-center text-sm">
+                              {pendingSplLeaveDateCount}
+                            </td>
+                            <td className="border border-slate-200 p-1 text-center text-sm">
+                              {pendingWellnessLeaveDateCount}
+                            </td>
                           </tr>
                         ) : null}
                         <tr>
@@ -1994,12 +2056,22 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
                               ? 0
                               : null}
                           </td>
+
+                          {/* SPL */}
                           {watch('typeOfLeaveDetails.leaveName') !== LeaveName.MONETIZATION &&
                           watch('typeOfLeaveDetails.leaveName') !== LeaveName.TERMINAL ? (
                             <td className="border border-slate-200 p-1 text-center text-sm">
                               {watch('typeOfLeaveDetails.leaveName') === LeaveName.SPECIAL_PRIVILEGE
                                 ? leaveDates.length
                                 : 0}
+                            </td>
+                          ) : null}
+
+                          {/* WELLNESS */}
+                          {watch('typeOfLeaveDetails.leaveName') !== LeaveName.MONETIZATION &&
+                          watch('typeOfLeaveDetails.leaveName') !== LeaveName.TERMINAL ? (
+                            <td className="border border-slate-200 p-1 text-center text-sm">
+                              {watch('typeOfLeaveDetails.leaveName') === LeaveName.WELLNESS ? leaveDates.length : 0}
                             </td>
                           ) : null}
                         </tr>
@@ -2097,6 +2169,7 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
                               : Number(sickLeaveBalance).toFixed(3)}
                           </td>
 
+                          {/* SPL */}
                           {watch('typeOfLeaveDetails.leaveName') !== LeaveName.MONETIZATION &&
                           watch('typeOfLeaveDetails.leaveName') !== LeaveName.TERMINAL ? (
                             <td
@@ -2110,6 +2183,23 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
                               {watch('typeOfLeaveDetails.leaveName') === LeaveName.SPECIAL_PRIVILEGE
                                 ? Number(finalSpecialPrivilegeBalance).toFixed(3)
                                 : Number(specialPrivilegeLeaveBalance).toFixed(3)}
+                            </td>
+                          ) : null}
+
+                          {/* WELLNESS */}
+                          {watch('typeOfLeaveDetails.leaveName') !== LeaveName.MONETIZATION &&
+                          watch('typeOfLeaveDetails.leaveName') !== LeaveName.TERMINAL ? (
+                            <td
+                              className={`${
+                                Number(finalWellnessLeaveBalance) < 0 &&
+                                watch('typeOfLeaveDetails.leaveName') === LeaveName.WELLNESS
+                                  ? 'bg-red-300'
+                                  : ''
+                              } border border-slate-200 p-1 text-center text-sm`}
+                            >
+                              {watch('typeOfLeaveDetails.leaveName') === LeaveName.WELLNESS
+                                ? Number(finalWellnessLeaveBalance).toFixed(3)
+                                : Number(wellnessLeaveBalance).toFixed(3)}
                             </td>
                           ) : null}
                         </tr>
@@ -2192,6 +2282,10 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
                       watch('typeOfLeaveDetails.leaveName') === LeaveName.SPECIAL_PRIVILEGE
                     ? true
                     : leaveDates.length > 3 && watch('typeOfLeaveDetails.leaveName') === LeaveName.SPECIAL_PRIVILEGE
+                    ? true
+                    : finalWellnessLeaveBalance < 0 && watch('typeOfLeaveDetails.leaveName') === LeaveName.WELLNESS
+                    ? true
+                    : leaveDates.length > 3 && watch('typeOfLeaveDetails.leaveName') === LeaveName.WELLNESS
                     ? true
                     : overlappingLeaveCount > 0 &&
                       (watch('typeOfLeaveDetails.leaveName') === LeaveName.MATERNITY ||

@@ -399,7 +399,9 @@ export const OvertimeSummaryReportPdf = ({
                               backgroundColor: `${
                                 overtime?.overtimes[0]?.hoursRendered >= 0 &&
                                 overtime?.overtimes[0]?.hoursRendered !== null
-                                  ? 'cyan'
+                                  ? overtime?.overtimes[0]?.isHoliday
+                                    ? 'lime'
+                                    : 'cyan'
                                   : ''
                               }`,
                             },
@@ -419,7 +421,9 @@ export const OvertimeSummaryReportPdf = ({
                               backgroundColor: `${
                                 overtime?.overtimes[1]?.hoursRendered >= 0 &&
                                 overtime?.overtimes[1]?.hoursRendered !== null
-                                  ? 'cyan'
+                                  ? overtime?.overtimes[1]?.isHoliday
+                                    ? 'lime'
+                                    : 'cyan'
                                   : ''
                               }`,
                             },
@@ -439,7 +443,9 @@ export const OvertimeSummaryReportPdf = ({
                               backgroundColor: `${
                                 overtime?.overtimes[2]?.hoursRendered >= 0 &&
                                 overtime?.overtimes[2]?.hoursRendered !== null
-                                  ? 'cyan'
+                                  ? overtime?.overtimes[2]?.isHoliday
+                                    ? 'lime'
+                                    : 'cyan'
                                   : ''
                               }`,
                             },
@@ -459,7 +465,9 @@ export const OvertimeSummaryReportPdf = ({
                               backgroundColor: `${
                                 overtime?.overtimes[3]?.hoursRendered >= 0 &&
                                 overtime?.overtimes[3]?.hoursRendered !== null
-                                  ? 'cyan'
+                                  ? overtime?.overtimes[3]?.isHoliday
+                                    ? 'lime'
+                                    : 'cyan'
                                   : ''
                               }`,
                             },
@@ -479,7 +487,9 @@ export const OvertimeSummaryReportPdf = ({
                               backgroundColor: `${
                                 overtime?.overtimes[4]?.hoursRendered >= 0 &&
                                 overtime?.overtimes[4]?.hoursRendered !== null
-                                  ? 'cyan'
+                                  ? overtime?.overtimes[4]?.isHoliday
+                                    ? 'lime'
+                                    : 'cyan'
                                   : ''
                               }`,
                             },
@@ -499,7 +509,9 @@ export const OvertimeSummaryReportPdf = ({
                               backgroundColor: `${
                                 overtime?.overtimes[5]?.hoursRendered >= 0 &&
                                 overtime?.overtimes[5]?.hoursRendered !== null
-                                  ? 'cyan'
+                                  ? overtime?.overtimes[5]?.isHoliday
+                                    ? 'lime'
+                                    : 'cyan'
                                   : ''
                               }`,
                             },
@@ -519,7 +531,9 @@ export const OvertimeSummaryReportPdf = ({
                               backgroundColor: `${
                                 overtime?.overtimes[6]?.hoursRendered >= 0 &&
                                 overtime?.overtimes[6]?.hoursRendered !== null
-                                  ? 'cyan'
+                                  ? overtime?.overtimes[6]?.isHoliday
+                                    ? 'lime'
+                                    : 'cyan'
                                   : ''
                               }`,
                             },
@@ -539,7 +553,9 @@ export const OvertimeSummaryReportPdf = ({
                               backgroundColor: `${
                                 overtime?.overtimes[7]?.hoursRendered >= 0 &&
                                 overtime?.overtimes[7]?.hoursRendered !== null
-                                  ? 'cyan'
+                                  ? overtime?.overtimes[7]?.isHoliday
+                                    ? 'lime'
+                                    : 'cyan'
                                   : ''
                               }`,
                             },
@@ -559,7 +575,9 @@ export const OvertimeSummaryReportPdf = ({
                               backgroundColor: `${
                                 overtime?.overtimes[8]?.hoursRendered >= 0 &&
                                 overtime?.overtimes[8]?.hoursRendered !== null
-                                  ? 'cyan'
+                                  ? overtime?.overtimes[8]?.isHoliday
+                                    ? 'lime'
+                                    : 'cyan'
                                   : ''
                               }`,
                             },
@@ -579,7 +597,9 @@ export const OvertimeSummaryReportPdf = ({
                               backgroundColor: `${
                                 overtime?.overtimes[9]?.hoursRendered >= 0 &&
                                 overtime?.overtimes[9]?.hoursRendered !== null
-                                  ? 'cyan'
+                                  ? overtime?.overtimes[9]?.isHoliday
+                                    ? 'lime'
+                                    : 'cyan'
                                   : ''
                               }`,
                             },
@@ -599,7 +619,9 @@ export const OvertimeSummaryReportPdf = ({
                               backgroundColor: `${
                                 overtime?.overtimes[10]?.hoursRendered >= 0 &&
                                 overtime?.overtimes[10]?.hoursRendered !== null
-                                  ? 'cyan'
+                                  ? overtime?.overtimes[10]?.isHoliday
+                                    ? 'lime'
+                                    : 'cyan'
                                   : ''
                               }`,
                             },
@@ -619,7 +641,9 @@ export const OvertimeSummaryReportPdf = ({
                               backgroundColor: `${
                                 overtime?.overtimes[11]?.hoursRendered >= 0 &&
                                 overtime?.overtimes[11]?.hoursRendered !== null
-                                  ? 'cyan'
+                                  ? overtime?.overtimes[11]?.isHoliday
+                                    ? 'lime'
+                                    : 'cyan'
                                   : ''
                               }`,
                             },
@@ -639,7 +663,9 @@ export const OvertimeSummaryReportPdf = ({
                               backgroundColor: `${
                                 overtime?.overtimes[12]?.hoursRendered >= 0 &&
                                 overtime?.overtimes[12]?.hoursRendered !== null
-                                  ? 'cyan'
+                                  ? overtime?.overtimes[12]?.isHoliday
+                                    ? 'lime'
+                                    : 'cyan'
                                   : ''
                               }`,
                             },
@@ -659,7 +685,9 @@ export const OvertimeSummaryReportPdf = ({
                               backgroundColor: `${
                                 overtime?.overtimes[13]?.hoursRendered >= 0 &&
                                 overtime?.overtimes[13]?.hoursRendered !== null
-                                  ? 'cyan'
+                                  ? overtime?.overtimes[13]?.isHoliday
+                                    ? 'lime'
+                                    : 'cyan'
                                   : ''
                               }`,
                             },
@@ -679,7 +707,9 @@ export const OvertimeSummaryReportPdf = ({
                               backgroundColor: `${
                                 overtime?.overtimes[14]?.hoursRendered >= 0 &&
                                 overtime?.overtimes[14]?.hoursRendered !== null
-                                  ? 'cyan'
+                                  ? overtime?.overtimes[14]?.isHoliday
+                                    ? 'lime'
+                                    : 'cyan'
                                   : ''
                               }`,
                             },
@@ -699,7 +729,9 @@ export const OvertimeSummaryReportPdf = ({
                               backgroundColor: `${
                                 overtime?.overtimes[15]?.hoursRendered >= 0 &&
                                 overtime?.overtimes[15]?.hoursRendered !== null
-                                  ? 'cyan'
+                                  ? overtime?.overtimes[15]?.isHoliday
+                                    ? 'lime'
+                                    : 'cyan'
                                   : ''
                               }`,
                             },

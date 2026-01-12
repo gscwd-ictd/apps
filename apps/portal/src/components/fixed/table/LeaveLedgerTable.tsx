@@ -25,6 +25,7 @@ dayjs.extend(duration);
 
 type LeaveLedgerTableProps = {
   employeeData: EmployeeDetails;
+  selectedYear: string;
 };
 
 type RemarksAndLeaveDates = {
@@ -32,7 +33,7 @@ type RemarksAndLeaveDates = {
   remarks: string;
 };
 
-export const LeaveLedgerTable: FunctionComponent<LeaveLedgerTableProps> = ({ employeeData }) => {
+export const LeaveLedgerTable: FunctionComponent<LeaveLedgerTableProps> = ({ employeeData, selectedYear }) => {
   const { getLeaveLedger, getLeaveLedgerFail, getLeaveLedgerSuccess, leaveLedger, leaveLedgerModalIsOpen } =
     useLeaveLedgerStore((state) => ({
       leaveLedger: state.leaveLedger,
@@ -62,6 +63,9 @@ export const LeaveLedgerTable: FunctionComponent<LeaveLedgerTableProps> = ({ emp
   // special privilege leave balance
   const [specialPrivilegeLeaveBalance, setSpecialPrivilegeLeaveBalance] = useState<number>(0);
 
+  // wellness leave balance
+  const [wellnessLeaveBalance, setWellnessLeaveBalance] = useState<number>(0);
+
   // remarks and leave dates
   const [remarksAndLeaveDates, setRemarksAndLeaveDates] = useState<RemarksAndLeaveDates>({
     leaveDates: [],
@@ -70,8 +74,7 @@ export const LeaveLedgerTable: FunctionComponent<LeaveLedgerTableProps> = ({ emp
 
   // leave dates and remarks modal
   const [modalRemarksIsOpen, setModalRemarksIsOpen] = useState<boolean>(false);
-  const yearNow = format(new Date(), 'yyyy');
-  const leaveLedgerUrl = `${process.env.NEXT_PUBLIC_EMPLOYEE_MONITORING_URL}/v1/leave/ledger/${employeeData.user._id}/${employeeData.employmentDetails.companyId}/${yearNow}`;
+  const leaveLedgerUrl = `${process.env.NEXT_PUBLIC_EMPLOYEE_MONITORING_URL}/v1/leave/ledger/${employeeData.user._id}/${employeeData.employmentDetails.companyId}/${selectedYear}`;
 
   const {
     data: swrLeaveLedger,
@@ -90,6 +93,13 @@ export const LeaveLedgerTable: FunctionComponent<LeaveLedgerTableProps> = ({ emp
       revalidateOnFocus: false,
     }
   );
+
+  // Refetch if data is updated
+  useEffect(() => {
+    if (!isEmpty(selectedYear)) {
+      mutateLeaveLedger();
+    }
+  }, [selectedYear]);
 
   // Initial zustand state update
   useEffect(() => {
@@ -139,6 +149,7 @@ export const LeaveLedgerTable: FunctionComponent<LeaveLedgerTableProps> = ({ emp
     setVacationLeaveBalance(lastIndexValue?.vacationLeaveBalance ?? 0);
     setSickLeaveBalance(lastIndexValue?.sickLeaveBalance ?? 0);
     setSpecialPrivilegeLeaveBalance(lastIndexValue?.specialPrivilegeLeaveBalance ?? 0);
+    setWellnessLeaveBalance(lastIndexValue?.wellnessLeaveBalance ?? 0);
   };
 
   // value color
@@ -165,9 +176,9 @@ export const LeaveLedgerTable: FunctionComponent<LeaveLedgerTableProps> = ({ emp
       ) : (
         <>
           <div className="w-full grid-cols-4 gap-5 pb-5 sm:flex sm:flex-col lg:flex lg:flex-row">
-            <div className="h-[6rem] w-full">
+            <div className="h-[7rem] w-full">
               <CardMiniStats
-                className="p-2 border rounded-md shadow hover:cursor-pointer"
+                className="pt-2 pb-2 pl-2 border rounded-md shadow hover:cursor-pointer"
                 icon={<i className="text-4xl text-white bx bxs-hand-right"></i>}
                 title="Forced Leave"
                 titleClassName="text-gray-100"
@@ -178,9 +189,9 @@ export const LeaveLedgerTable: FunctionComponent<LeaveLedgerTableProps> = ({ emp
               />
             </div>
 
-            <div className="h-[6rem] w-full">
+            <div className="h-[7rem] w-full">
               <CardMiniStats
-                className="p-2 border rounded-md shadow hover:cursor-pointer"
+                className="pt-2 pb-2 pl-2 border rounded-md shadow hover:cursor-pointer"
                 icon={<i className="text-4xl text-white bx bx-run"></i>}
                 title="Vacation Leave"
                 titleClassName="text-gray-100"
@@ -191,7 +202,7 @@ export const LeaveLedgerTable: FunctionComponent<LeaveLedgerTableProps> = ({ emp
               />
             </div>
 
-            <div className="h-[6rem] w-full">
+            <div className="h-[7rem] w-full">
               <CardMiniStats
                 className="p-2 border rounded-md shadow hover:cursor-pointer"
                 icon={<i className="text-4xl text-white bx bxs-band-aid "></i>}
@@ -204,9 +215,9 @@ export const LeaveLedgerTable: FunctionComponent<LeaveLedgerTableProps> = ({ emp
               />
             </div>
 
-            <div className="h-[6rem] w-full">
+            <div className="h-[7rem] w-full">
               <CardMiniStats
-                className="p-2 border rounded-md shadow hover:cursor-pointer"
+                className="pt-2 pb-2 pl-2 border rounded-md shadow hover:cursor-pointer"
                 icon={<i className="text-4xl text-white bx bxs-offer"></i>}
                 title="Special Privilege Leave"
                 titleClassName="text-gray-100"
@@ -214,6 +225,19 @@ export const LeaveLedgerTable: FunctionComponent<LeaveLedgerTableProps> = ({ emp
                 bgColor="bg-cyan-600 "
                 isLoading={swrIsLoading}
                 value={specialPrivilegeLeaveBalance ?? 0}
+              />
+            </div>
+
+            <div className="h-[7rem] w-full">
+              <CardMiniStats
+                className="pt-2 pb-2 pl-2 border rounded-md shadow hover:cursor-pointer"
+                icon={<i className="text-4xl text-white bx bxs-spa"></i>}
+                title="Wellness Leave"
+                titleClassName="text-gray-100"
+                valueClassName="text-white"
+                bgColor="bg-indigo-600 "
+                isLoading={swrIsLoading}
+                value={wellnessLeaveBalance ?? 0}
               />
             </div>
           </div>
@@ -232,10 +256,15 @@ export const LeaveLedgerTable: FunctionComponent<LeaveLedgerTableProps> = ({ emp
                   <th className="px-2 py-2 font-semibold text-center text-gray-900 uppercase">VL Bal.</th>
                   <th className="px-2 py-2 font-semibold text-center text-gray-900 uppercase">SL</th>
                   <th className="px-2 py-2 font-semibold text-center text-gray-900 uppercase">SL Bal.</th>
-                  <th className="px-2 py-2 font-semibold text-center text-gray-900 uppercase">SLB</th>
-                  <th className="px-2 py-2 font-semibold text-center text-gray-900 uppercase">SLB Bal.</th>
+
                   <th className="px-2 py-2 font-semibold text-center text-gray-900 uppercase">SPL</th>
                   <th className="px-2 py-2 font-semibold text-center text-gray-900 uppercase">SPL Bal.</th>
+                  <th className="px-2 py-2 font-semibold text-center text-gray-900 uppercase">WL</th>
+                  <th className="px-2 py-2 font-semibold text-center text-gray-900 uppercase">WL Bal.</th>
+
+                  <th className="px-2 py-2 font-semibold text-center text-gray-900 uppercase">SLB</th>
+                  <th className="px-2 py-2 font-semibold text-center text-gray-900 uppercase">SLB Bal.</th>
+
                   <th className="px-2 py-2 font-semibold text-center text-gray-900 uppercase break-words">View More</th>
                 </tr>
               </thead>
@@ -264,14 +293,7 @@ export const LeaveLedgerTable: FunctionComponent<LeaveLedgerTableProps> = ({ emp
                           {!isEmpty(entry.sickLeave) ? valueColorizer(entry.sickLeave, entry.actionType) : null}
                         </td>
                         <td className="items-center p-2 break-words text-start">{entry.sickLeaveBalance ?? '0.000'}</td>
-                        <td className="items-center p-2 break-words text-start">
-                          {!isEmpty(entry.specialLeaveBenefit)
-                            ? valueColorizer(entry.specialLeaveBenefit, entry.actionType)
-                            : null}
-                        </td>
-                        <td className="items-center p-2 break-words text-start">
-                          {entry.specialLeaveBenefitBalance ?? '0.000'}
-                        </td>
+
                         <td className="items-center p-2 break-words text-start">
                           {!isEmpty(entry.specialPrivilegeLeave)
                             ? valueColorizer(entry.specialPrivilegeLeave, entry.actionType)
@@ -279,6 +301,20 @@ export const LeaveLedgerTable: FunctionComponent<LeaveLedgerTableProps> = ({ emp
                         </td>
                         <td className="items-center p-2 break-words text-start">
                           {entry.specialPrivilegeLeaveBalance ?? '0.000'}
+                        </td>
+                        <td className="items-center p-2 break-words text-start">
+                          {!isEmpty(entry.wellnessLeave) ? valueColorizer(entry.wellnessLeave, entry.actionType) : null}
+                        </td>
+                        <td className="items-center p-2 break-words text-start">
+                          {entry.wellnessLeaveBalance ?? '0.000'}
+                        </td>
+                        <td className="items-center p-2 break-words text-start">
+                          {!isEmpty(entry.specialLeaveBenefit)
+                            ? valueColorizer(entry.specialLeaveBenefit, entry.actionType)
+                            : null}
+                        </td>
+                        <td className="items-center p-2 break-words text-start">
+                          {entry.specialLeaveBenefitBalance ?? '0.000'}
                         </td>
                         <td className="items-center p-2 break-words text-start">
                           <div className="flex justify-center">
