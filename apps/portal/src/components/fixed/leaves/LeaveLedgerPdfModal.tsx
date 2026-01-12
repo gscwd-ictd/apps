@@ -1,4 +1,4 @@
-import { LoadingSpinner, Modal } from '@gscwd-apps/oneui';
+import { Button, LoadingSpinner, Modal } from '@gscwd-apps/oneui';
 import { FunctionComponent } from 'react';
 import { isEmpty } from 'lodash';
 import LeaveLedgerPdf from './LeaveLedgerPdf';
@@ -66,7 +66,11 @@ const LeaveLedgerPdfModal: FunctionComponent<LeaveLedgerPdfModalProps> = ({
           <div></div>
         </Modal.Body>
         <Modal.Footer>
-          <div className="flex justify-end w-full"></div>
+          <div className="flex justify-end gap-2 px-4">
+            <Button variant={'default'} size={'md'} loading={false} onClick={(e) => closeModalAction()} type="submit">
+              Close
+            </Button>
+          </div>
         </Modal.Footer>
       </Modal>
     </>

@@ -579,6 +579,7 @@ export const LeaveCompletedModal = ({ modalState, setModalState, closeModalActio
                         leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.FORCED ||
                         leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.SPECIAL_PRIVILEGE ||
                         leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.SICK ||
+                        leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.WELLNESS ||
                         leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName ===
                           LeaveName.SPECIAL_LEAVE_BENEFITS_FOR_WOMEN ||
                         (leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.STUDY &&
@@ -600,7 +601,8 @@ export const LeaveCompletedModal = ({ modalState, setModalState, closeModalActio
                                 leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.VACATION ||
                                 leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.FORCED ||
                                 leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName ===
-                                  LeaveName.SPECIAL_PRIVILEGE
+                                  LeaveName.SPECIAL_PRIVILEGE ||
+                                leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.WELLNESS
                                   ? leaveIndividualDetail?.leaveApplicationDetails?.location
                                   : leaveIndividualDetail.leaveApplicationBasicInfo?.leaveName === LeaveName.SICK
                                   ? leaveIndividualDetail?.leaveApplicationDetails?.illness

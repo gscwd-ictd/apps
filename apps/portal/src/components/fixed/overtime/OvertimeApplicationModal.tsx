@@ -60,6 +60,7 @@ export const OvertimeApplicationModal = ({ modalState, setModalState, closeModal
   // set state for employee store
   const employeeDetails = useEmployeeStore((state) => state.employeeDetails);
   const [selectedEmployees, setSelectedEmployees] = useState<Array<SelectOption>>([]);
+  const [isApplying, setIsApplying] = useState<boolean>(false); //disable apply button during submission
 
   // React hook form
   const { reset, register, handleSubmit, watch, setValue } = useForm<OvertimeForm>({
@@ -129,6 +130,7 @@ export const OvertimeApplicationModal = ({ modalState, setModalState, closeModal
   };
 
   const handlePostResult = async (data: OvertimeForm) => {
+    setIsApplying(true);
     if (overtimeDetails) {
       let newData = {
         id: overtimeDetails?.id,
@@ -141,20 +143,24 @@ export const OvertimeApplicationModal = ({ modalState, setModalState, closeModal
       const { error, result } = await putPortal('/overtime-applications/', newData);
       if (error) {
         putOvertimeFail(result);
+        setIsApplying(false);
       } else {
         putOvertimeSuccess(result);
         reset();
         closeModalAction();
+        setIsApplying(false);
       }
     } else {
       postOvertime();
       const { error, result } = await postPortal('/v1/overtime/', data);
       if (error) {
         postOvertimeFail(result);
+        setIsApplying(false);
       } else {
         postOvertimeSuccess(result);
         reset();
         closeModalAction();
+        setIsApplying(false);
       }
     }
   };
@@ -288,7 +294,7 @@ export const OvertimeApplicationModal = ({ modalState, setModalState, closeModal
               variant={'primary'}
               size={'md'}
               loading={false}
-              disabled={selectedEmployees.length <= 0 ? true : false}
+              disabled={selectedEmployees.length <= 0 ? true : isApplying ? true : false}
               form="ApplyOvertimeForm"
               type="submit"
             >

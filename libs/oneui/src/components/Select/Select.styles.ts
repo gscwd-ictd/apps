@@ -9,7 +9,9 @@ export const listBtnClass = (className: string | undefined) => {
 };
 
 export const listOptionsClass = () => {
-  return cls('py-2 w-full bg-white border rounded-lg shadow-lg shadow-slate-200 focus:outline-none overflow-clip');
+  return cls(
+    'py-2 w-full bg-white border rounded-lg shadow shadow-slate-200 focus:outline-none z-[9999] absolute top-full'
+  );
 };
 
 export const ulClass = () => {

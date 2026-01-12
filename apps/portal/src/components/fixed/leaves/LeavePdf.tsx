@@ -469,7 +469,8 @@ export const LeavePdf = ({
                     <Text style={styles.checkbox}>
                       {leaveDetails.leaveApplicationBasicInfo.leaveName === LeaveName.MONETIZATION ||
                       leaveDetails.leaveApplicationBasicInfo.leaveName === LeaveName.LEAVE_WITHOUT_PAY ||
-                      leaveDetails.leaveApplicationBasicInfo.leaveName === LeaveName.TERMINAL
+                      leaveDetails.leaveApplicationBasicInfo.leaveName === LeaveName.TERMINAL ||
+                      leaveDetails.leaveApplicationBasicInfo.leaveName === LeaveName.WELLNESS
                         ? 'X'
                         : null}
                     </Text>
@@ -494,6 +495,9 @@ export const LeavePdf = ({
                     >
                       {leaveDetails.leaveApplicationBasicInfo.leaveName === LeaveName.LEAVE_WITHOUT_PAY
                         ? 'Leave Without Pay'
+                        : null}
+                      {leaveDetails.leaveApplicationBasicInfo.leaveName === LeaveName.WELLNESS
+                        ? 'Wellness Leave'
                         : null}
                     </Text>
                     <Text style={{ padding: 5 }}>__________________________________</Text>

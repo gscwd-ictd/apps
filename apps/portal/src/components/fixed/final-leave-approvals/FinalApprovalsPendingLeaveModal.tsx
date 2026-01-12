@@ -445,6 +445,7 @@ export const FinalApprovalsPendingLeaveModal = ({
                         leaveIndividualDetail?.leaveName === LeaveName.VACATION ||
                         leaveIndividualDetail?.leaveName === LeaveName.FORCED ||
                         leaveIndividualDetail?.leaveName === LeaveName.SPECIAL_PRIVILEGE ||
+                        leaveIndividualDetail?.leaveName === LeaveName.WELLNESS ||
                         leaveIndividualDetail?.leaveName === LeaveName.SICK ||
                         leaveIndividualDetail?.leaveName === LeaveName.SPECIAL_LEAVE_BENEFITS_FOR_WOMEN ||
                         (leaveIndividualDetail?.leaveName === LeaveName.STUDY &&
@@ -457,7 +458,8 @@ export const FinalApprovalsPendingLeaveModal = ({
                               <label className=" text-md font-medium">
                                 {leaveIndividualDetail?.leaveName === LeaveName.LEAVE_WITHOUT_PAY ||
                                 leaveIndividualDetail?.leaveName === LeaveName.VACATION ||
-                                leaveIndividualDetail?.leaveName === LeaveName.SPECIAL_PRIVILEGE
+                                leaveIndividualDetail?.leaveName === LeaveName.SPECIAL_PRIVILEGE ||
+                                leaveIndividualDetail?.leaveName === LeaveName.WELLNESS
                                   ? leaveIndividualDetail.inPhilippines
                                     ? leaveIndividualDetail.inPhilippines
                                     : leaveIndividualDetail.abroad

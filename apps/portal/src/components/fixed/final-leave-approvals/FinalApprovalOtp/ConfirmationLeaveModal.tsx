@@ -5,6 +5,7 @@ import { AlertNotification, Button, LoadingSpinner, Modal } from '@gscwd-apps/on
 import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
 import { LeaveStatus } from 'libs/utils/src/lib/enums/leave.enum';
 import { useFinalLeaveApprovalStore } from 'apps/portal/src/store/final-leave-approvals.store';
+import { useEffect, useState } from 'react';
 
 type ConfirmationModalProps = {
   modalState: boolean;
@@ -39,7 +40,10 @@ export const ConfirmationLeaveModal = ({
     loadingLeaveResponse: state.loading.loadingLeaveResponse,
   }));
 
+  const [isApplying, setIsApplying] = useState<boolean>(false); //disable apply button during submission
+
   const handleSubmit = () => {
+    setIsApplying(true);
     let finalRemarks;
     if (action == LeaveStatus.APPROVED) {
       finalRemarks = null;
@@ -64,6 +68,7 @@ export const ConfirmationLeaveModal = ({
     const { error, result } = await patchPortalUrl('/leave-application', data);
     if (error) {
       patchLeaveFail(result);
+      setIsApplying(false);
     } else {
       patchLeaveSuccess(result);
       closeModalAction(); // close confirmation of decline modal
@@ -71,6 +76,7 @@ export const ConfirmationLeaveModal = ({
         setPendingLeaveModalIsOpen(false); // close leave pending modal
         setApprovedLeaveModalIsOpen(false);
       }, 200);
+      setIsApplying(false);
     }
   };
 
@@ -114,7 +120,13 @@ export const ConfirmationLeaveModal = ({
         <Modal.Footer>
           <div className="flex justify-end gap-2 px-4">
             <div className="min-w-[6rem] max-w-auto flex gap-4">
-              <Button variant={'primary'} size={'md'} loading={false} onClick={(e) => handleSubmit()}>
+              <Button
+                variant={'primary'}
+                size={'md'}
+                loading={false}
+                onClick={(e) => handleSubmit()}
+                disabled={isApplying ? true : false}
+              >
                 Yes
               </Button>
               <Button variant={'danger'} size={'md'} loading={false} onClick={closeModalAction}>

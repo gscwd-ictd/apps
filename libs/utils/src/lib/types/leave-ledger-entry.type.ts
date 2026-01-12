@@ -15,6 +15,8 @@ export type LeaveLedgerEntry = {
   specialPrivilegeLeaveBalance: number;
   specialLeaveBenefit: number;
   specialLeaveBenefitBalance: number;
+  wellnessLeave: number;
+  wellnessLeaveBalance: number;
   actionType: ActionType;
   leaveDates: Array<string>;
   remarks: string;

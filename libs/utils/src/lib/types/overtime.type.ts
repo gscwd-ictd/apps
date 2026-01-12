@@ -226,6 +226,7 @@ export type OvertimeSummaryEmployee = {
 export type OvertimeDayDetails = {
   day: number;
   hoursRendered: number | null;
+  isHoliday?: boolean | null;
 };
 
 //used in combined OT authorization and accomplishment pdf

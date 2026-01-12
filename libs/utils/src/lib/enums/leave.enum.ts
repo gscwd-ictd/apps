@@ -47,6 +47,7 @@ export enum LeaveName {
   MONETIZATION = 'Monetization',
   LEAVE_WITHOUT_PAY = 'Leave Without Pay',
   TERMINAL = 'Terminal Leave',
+  WELLNESS = 'Wellness Leave',
 }
 
 export enum MonetizationType {
