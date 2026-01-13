@@ -42,7 +42,7 @@ export const LeaveLedgerModal = ({ modalState, setModalState, closeModalAction }
 
   useEffect(() => {
     setSelectedYear(format(new Date(), 'yyyy'));
-  }, []);
+  }, [modalState]);
 
   const { windowWidth } = UseWindowDimensions();
 
