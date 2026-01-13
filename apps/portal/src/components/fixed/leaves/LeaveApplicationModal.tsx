@@ -2349,6 +2349,8 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
                     : // disable currently posting submission to avoid multiple submissions
                     isApplying
                     ? true
+                    : watch('typeOfLeaveDetails.leaveName') === LeaveName.WELLNESS // disable wellness leave for now
+                    ? true
                     : false
                 }
               >

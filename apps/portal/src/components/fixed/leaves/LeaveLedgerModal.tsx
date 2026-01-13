@@ -36,16 +36,6 @@ export const LeaveLedgerModal = ({ modalState, setModalState, closeModalAction }
 
   const years = [{ year: `${yearNow}` }, { year: `${Number(yearNow) - 1}` }] as Year[];
 
-  //year select
-  const yearList: ListDef<Year> = {
-    key: 'year',
-    render: (info, state) => (
-      <div className={`${state.active ? 'bg-indigo-200' : state.selected ? 'bg-slate-200 ' : ''} pl-4 cursor-pointer`}>
-        {info.year}
-      </div>
-    ),
-  };
-
   const onChangeYear = (year: string) => {
     setSelectedYear(year);
   };
@@ -83,13 +73,16 @@ export const LeaveLedgerModal = ({ modalState, setModalState, closeModalAction }
           <div className="flex flex-col px-4">
             <div className="flex items-center justify-end gap-2 pb-2">
               <div className="overflow-visible relative">
-                <Select
-                  className="w-36 md:w-28"
-                  data={years}
-                  initial={years[0]}
-                  listDef={yearList}
-                  onSelect={(selectedItem) => onChangeYear(selectedItem.year)}
-                />
+                <select
+                  className="border-slate-300 text-slate-500 h-9 w-36 md:w-28 rounded px-2 py-0"
+                  onChange={(e: any) => onChangeYear(e.target.value)}
+                >
+                  {years.map((item: Year, idx: number) => (
+                    <option value={item.year} key={idx}>
+                      {item.year}
+                    </option>
+                  ))}
+                </select>
               </div>
 
               <Button onClick={(e) => setLeaveLedgerPdfModalIsOpen(true)} size={`md`}>
