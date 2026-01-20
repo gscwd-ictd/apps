@@ -489,7 +489,8 @@ export const LeavePdf = ({ leaveDetails, selectedLeaveLedger, vlEntry, slEntry }
                         <Text style={styles.checkbox}>
                           {leaveDetails.leaveApplicationBasicInfo?.leaveName === LeaveName.MONETIZATION ||
                           leaveDetails.leaveApplicationBasicInfo?.leaveName === LeaveName.LEAVE_WITHOUT_PAY ||
-                          leaveDetails.leaveApplicationBasicInfo?.leaveName === LeaveName.TERMINAL
+                          leaveDetails.leaveApplicationBasicInfo?.leaveName === LeaveName.TERMINAL ||
+                          leaveDetails.leaveApplicationBasicInfo?.leaveName === LeaveName.WELLNESS
                             ? 'X'
                             : null}
                         </Text>
@@ -514,6 +515,9 @@ export const LeavePdf = ({ leaveDetails, selectedLeaveLedger, vlEntry, slEntry }
                         >
                           {leaveDetails.leaveApplicationBasicInfo.leaveName === LeaveName.LEAVE_WITHOUT_PAY
                             ? 'Leave Without Pay'
+                            : null}
+                          {leaveDetails.leaveApplicationBasicInfo.leaveName === LeaveName.WELLNESS
+                            ? 'Wellness Leave'
                             : null}
                         </Text>
                         <Text style={{ padding: 5 }}>__________________________________</Text>
@@ -684,7 +688,7 @@ export const LeavePdf = ({ leaveDetails, selectedLeaveLedger, vlEntry, slEntry }
                             ? 'X'
                             : null}
                         </Text>
-                        <Text style={styles.leaveLabel}>Completion of Mater's Degree</Text>
+                        <Text style={styles.leaveLabel}>Completion of Master's Degree</Text>
                       </View>
                       <View style={styles.leaveLabelContainer2}>
                         <Text style={styles.checkbox}>
