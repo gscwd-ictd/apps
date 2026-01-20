@@ -86,6 +86,8 @@ export default function Index({ employeeData }: InferGetServerSidePropsType<type
         sickLeaveBalance,
         specialPrivilegeLeave,
         specialPrivilegeLeaveBalance,
+        wellnessLeave,
+        wellnessLeaveBalance,
         specialLeaveBenefit,
         specialLeaveBenefitBalance,
         remarks,
@@ -100,6 +102,8 @@ export default function Index({ employeeData }: InferGetServerSidePropsType<type
         SickLeaveBalance: sickLeaveBalance,
         SpecialPrivilegeLeave: specialPrivilegeLeave,
         SpecialPrivilegeLeaveBalance: specialPrivilegeLeaveBalance,
+        WellnessLeave: wellnessLeave,
+        WellnessLeaveBalance: wellnessLeaveBalance,
         SpecialLeaveBenefit: specialLeaveBenefit,
         SpecialLeaveBenefitBalance: specialLeaveBenefitBalance,
         Remarks: remarks,
@@ -114,10 +118,9 @@ export default function Index({ employeeData }: InferGetServerSidePropsType<type
       ws,
       [
         [],
-        // [, , , , , , , , , , , ,],
-        ['GENERAL SANTOS CITY WATER DISTRICT', , , , , , , , , , , ,],
-        ['E. Ferdnandez St., Lagao General Santos City', , , , , , , , , , , ,],
-        ['LEAVE LEDGER', , , , , , , , , , , ,],
+        ['GENERAL SANTOS CITY WATER DISTRICT', , , , , , , , , , , , , ,],
+        ['E. Ferdnandez St., Lagao General Santos City', , , , , , , , , , , , , ,],
+        ['LEAVE LEDGER', , , , , , , , , , , , , ,],
       ],
       { origin: 'A1' }
     );
@@ -126,11 +129,11 @@ export default function Index({ employeeData }: InferGetServerSidePropsType<type
     XLSX.utils.sheet_add_aoa(
       ws,
       [
-        ['NAME', `${employeeData.fullName.toUpperCase() || ''}`, , , , , , , , , , ,],
-        ['DESIGNATION', `${employeeData.assignment.positionTitle.toUpperCase() || ''}`, , , , , , , , , , ,],
-        ['OFFICE', `${employeeData.assignment.officeName || ''}`, , , , , , , , , , ,],
-        ['DEPARTMENT', `${employeeData.assignment.departmentName || ''}`, , , , , , , , , , ,],
-        ['DIVISION', `${employeeData.assignment.divisionName || ''}`, , , , , , , , , , ,],
+        ['NAME', `${employeeData.fullName.toUpperCase() || ''}`, , , , , , , , , , , , ,],
+        ['DESIGNATION', `${employeeData.assignment.positionTitle.toUpperCase() || ''}`, , , , , , , , , , , , ,],
+        ['OFFICE', `${employeeData.assignment.officeName || ''}`, , , , , , , , , , , , ,],
+        ['DEPARTMENT', `${employeeData.assignment.departmentName || ''}`, , , , , , , , , , , , ,],
+        ['DIVISION', `${employeeData.assignment.divisionName || ''}`, , , , , , , , , , , , ,],
       ],
       { origin: 'A7' }
     );
@@ -152,6 +155,8 @@ export default function Index({ employeeData }: InferGetServerSidePropsType<type
           'SICK LEAVE BALANCE',
           'SPECIAL PRIVILEGE LEAVE',
           'SPECIAL PRIVILEGE LEAVE BALANCE',
+          'WELLNESS LEAVE',
+          'WELLNESS LEAVE BALANCE',
           'SPECIAL LEAVE BENEFIT',
           'SPECIAL LEAVE BENEFIT BALANCE',
           'REMARKS',
@@ -174,12 +179,14 @@ export default function Index({ employeeData }: InferGetServerSidePropsType<type
       { wch: 9 }, // J
       { wch: 9 }, // K
       { wch: 9 }, // L
-      { wch: 25 }, // M wrapped text
+      { wch: 9 }, // M
+      { wch: 9 }, // N
+      { wch: 25 }, // O wrapped text
     ];
     ws['!cols'] = wscols;
 
     // STYLING
-    const columnLetterArray = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M'];
+    const columnLetterArray = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O'];
 
     // document header
     ws['A2'].s = {
@@ -281,6 +288,8 @@ export default function Index({ employeeData }: InferGetServerSidePropsType<type
           `${lastIndexValue.sickLeaveBalance ?? 0}`,
           '',
           `${lastIndexValue.specialPrivilegeLeaveBalance ?? 0}`,
+          '',
+          `${lastIndexValue.wellnessLeaveBalance ?? 0}`,
           '',
           `${lastIndexValue.specialLeaveBenefit ?? 0}`,
           '',
@@ -384,6 +393,25 @@ export default function Index({ employeeData }: InferGetServerSidePropsType<type
           },
         };
       } else if (letter === 'L') {
+        // wellness leave balance
+        ws[`${letter + lastRowIndex}`].s = {
+          font: {
+            sz: 11,
+            bold: true,
+          },
+          alignment: { horizontal: 'center', vertical: 'center' },
+          border: {
+            top: { style: 'thin', color: { rgb: '000000' } },
+            bottom: { style: 'thin', color: { rgb: '000000' } },
+            left: { style: 'thin', color: { rgb: '000000' } },
+            right: { style: 'thin', color: { rgb: '000000' } },
+          },
+          fill: {
+            patternType: 'solid',
+            fgColor: { rgb: '387EFF' },
+          },
+        };
+      } else if (letter === 'N') {
         // special benefit leave balance
         ws[`${letter + lastRowIndex}`].s = {
           font: {
@@ -417,9 +445,9 @@ export default function Index({ employeeData }: InferGetServerSidePropsType<type
     // merged columns
     const merge = [
       // Center document header
-      { s: { c: 0, r: 1 }, e: { c: 12, r: 1 } },
-      { s: { c: 0, r: 2 }, e: { c: 12, r: 2 } },
-      { s: { c: 0, r: 3 }, e: { c: 12, r: 3 } },
+      { s: { c: 0, r: 1 }, e: { c: 14, r: 1 } },
+      { s: { c: 0, r: 2 }, e: { c: 14, r: 2 } },
+      { s: { c: 0, r: 3 }, e: { c: 14, r: 3 } },
 
       // Employee details
       { s: { c: 1, r: 6 }, e: { c: 4, r: 6 } }, // Name

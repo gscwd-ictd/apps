@@ -669,7 +669,7 @@ export const LeavePdf = ({
                         ? 'X'
                         : null}
                     </Text>
-                    <Text style={styles.leaveLabel}>Completion of Mater's Degree</Text>
+                    <Text style={styles.leaveLabel}>Completion of Master's Degree</Text>
                   </View>
                   <View style={styles.leaveLabelContainer2}>
                     <Text style={styles.checkbox}>

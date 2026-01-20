@@ -256,7 +256,7 @@ export const LeaveLedgerTable: FunctionComponent<LeaveLedgerTableProps> = ({ emp
 
       {/* Leave Ledger Table */}
       <div className="w-full overflow-auto  max-h-[28rem]">
-        <table className="w-full border table-fixed bg-slate-50">
+        <table className="w-full border table-auto bg-slate-50">
           <thead className="sticky top-0 bg-slate-50">
             <tr className="text-xs divide-x divide-y border-y">
               <th className="px-2 py-2 font-semibold text-center text-gray-900 uppercase">Period</th>
