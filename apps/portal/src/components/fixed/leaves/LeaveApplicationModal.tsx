@@ -1093,7 +1093,17 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
                   {monthNow === '12' && watch('typeOfLeaveDetails.leaveName') === LeaveName.FORCED ? (
                     <AlertNotification
                       alertType="warning"
-                      notifMessage="Forced Leaves cannot be applied during December."
+                      notifMessage="Forced Leaves cannot be filed during December."
+                      dismissible={false}
+                      className="mb-1"
+                    />
+                  ) : null}
+
+                  {/* Disable Wellness Leave Application during December */}
+                  {monthNow === '12' && watch('typeOfLeaveDetails.leaveName') === LeaveName.WELLNESS ? (
+                    <AlertNotification
+                      alertType="warning"
+                      notifMessage="Wellness Leaves cannot be filed during December."
                       dismissible={false}
                       className="mb-1"
                     />
@@ -1422,10 +1432,6 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
                           ) : watch('typeOfLeaveDetails.leaveName') === LeaveName.STUDY ? (
                             <>
                               Study:<span className="text-red-600">*</span>
-                            </>
-                          ) : watch('typeOfLeaveDetails.leaveName') === LeaveName.WELLNESS ? (
-                            <>
-                              Purpose:<span className="text-red-600">*</span>
                             </>
                           ) : watch('typeOfLeaveDetails.leaveName') === LeaveName.OTHERS ? (
                             <>
@@ -1775,7 +1781,6 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
                     watch('typeOfLeaveDetails.leaveName') === LeaveName.VACATION ||
                     watch('typeOfLeaveDetails.leaveName') === LeaveName.FORCED ||
                     watch('typeOfLeaveDetails.leaveName') === LeaveName.SPECIAL_PRIVILEGE ||
-                    watch('typeOfLeaveDetails.leaveName') === LeaveName.WELLNESS ||
                     watch('typeOfLeaveDetails.leaveName') === LeaveName.SICK ||
                     watch('typeOfLeaveDetails.leaveName') === LeaveName.SPECIAL_LEAVE_BENEFITS_FOR_WOMEN ||
                     (watch('typeOfLeaveDetails.leaveName') === LeaveName.STUDY && selectedStudy === 'other') ? (
@@ -1784,9 +1789,7 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
                         watch('typeOfLeaveDetails.leaveName') === LeaveName.VACATION ||
                         watch('typeOfLeaveDetails.leaveName') === LeaveName.FORCED ||
                         watch('typeOfLeaveDetails.leaveName') === LeaveName.SPECIAL_PRIVILEGE ||
-                        watch('typeOfLeaveDetails.leaveName') === LeaveName.WELLNESS
-                          ? { ...register('location') }
-                          : watch('typeOfLeaveDetails.leaveName') === LeaveName.SICK
+                        watch('typeOfLeaveDetails.leaveName') === LeaveName.SICK
                           ? { ...register('illness') }
                           : watch('typeOfLeaveDetails.leaveName') === LeaveName.STUDY
                           ? { ...register('studyLeaveOther') }
@@ -1799,10 +1802,8 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
                           watch('typeOfLeaveDetails.leaveName') === LeaveName.VACATION ||
                           watch('typeOfLeaveDetails.leaveName') === LeaveName.FORCED ||
                           watch('typeOfLeaveDetails.leaveName') === LeaveName.SPECIAL_PRIVILEGE ||
-                          watch('typeOfLeaveDetails.leaveName') === LeaveName.WELLNESS
-                            ? 'Specify Leave Details'
-                            : watch('typeOfLeaveDetails.leaveName') === LeaveName.SICK ||
-                              watch('typeOfLeaveDetails.leaveName') === LeaveName.SPECIAL_LEAVE_BENEFITS_FOR_WOMEN
+                          watch('typeOfLeaveDetails.leaveName') === LeaveName.SICK ||
+                          watch('typeOfLeaveDetails.leaveName') === LeaveName.SPECIAL_LEAVE_BENEFITS_FOR_WOMEN
                             ? 'Specify Illness'
                             : watch('typeOfLeaveDetails.leaveName') === LeaveName.STUDY && selectedStudy === 'other'
                             ? 'Specify Study Leave Purpose'
@@ -1849,7 +1850,6 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
                     watch('typeOfLeaveDetails.leaveName') === LeaveName.FORCED ||
                     watch('typeOfLeaveDetails.leaveName') === LeaveName.VACATION ||
                     watch('typeOfLeaveDetails.leaveName') === LeaveName.SPECIAL_PRIVILEGE ||
-                    watch('typeOfLeaveDetails.leaveName') === LeaveName.WELLNESS ||
                     watch('typeOfLeaveDetails.leaveName') === LeaveName.SOLO_PARENT ||
                     watch('typeOfLeaveDetails.leaveName') === LeaveName.SICK ? (
                       <div className="flex flex-col gap-1 w-full bg-slate-100 text-sm p-2 mt-1">

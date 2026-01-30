@@ -189,13 +189,13 @@ const Index = () => {
       header: 'Leave Benefit',
       cell: (info) => UseRenderLeaveType(info.getValue()),
     }),
-    // columnHelper.accessor('leaveDates', {
-    //   header: 'Leave Dates',
-    //   filterFn: 'arrIncludes',
-    //   enableSorting: false,
-    //   enableGlobalFilter: false,
-    //   cell: (info) => renderRowLeaveDates(info.getValue()),
-    // }),
+    columnHelper.accessor('leaveDates', {
+      header: 'Leave Dates',
+      filterFn: 'arrIncludes',
+      enableSorting: false,
+      enableGlobalFilter: false,
+      cell: (info) => renderRowLeaveDates(info.getValue()),
+    }),
     columnHelper.accessor('status', {
       header: 'Status',
       cell: (info) => UseRenderLeaveStatus(info.getValue()),

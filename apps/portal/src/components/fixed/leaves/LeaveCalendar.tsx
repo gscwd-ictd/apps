@@ -158,7 +158,6 @@ export default function Calendar({
         leaveName === LeaveName.FORCED ||
         leaveName === LeaveName.SOLO_PARENT ||
         leaveName === LeaveName.SPECIAL_PRIVILEGE ||
-        leaveName === LeaveName.WELLNESS ||
         leaveName === LeaveName.SICK) &&
       futureLeaveCount <= 0
     ) {
@@ -176,7 +175,6 @@ export default function Calendar({
         (leaveName === LeaveName.LEAVE_WITHOUT_PAY ||
           leaveName === LeaveName.SICK ||
           leaveName === LeaveName.SPECIAL_PRIVILEGE ||
-          leaveName === LeaveName.WELLNESS ||
           leaveName === LeaveName.SOLO_PARENT) &&
         isLateFiling &&
         selectedDates.filter((dates) => dayjs(`${dates}`).diff(`${lastDateOfDuty}`, 'day') < 0).length > 0 &&
@@ -191,8 +189,7 @@ export default function Calendar({
           leaveName === LeaveName.FORCED ||
           leaveName === LeaveName.SOLO_PARENT ||
           leaveName === LeaveName.SICK ||
-          leaveName === LeaveName.SPECIAL_PRIVILEGE ||
-          leaveName === LeaveName.WELLNESS) &&
+          leaveName === LeaveName.SPECIAL_PRIVILEGE) &&
         selectedDates.filter((dates) => dayjs(`${dates}`).diff(`${today}`, 'day') > 10).length > 0
       ) {
         setSelectedDates(selectedDates.filter((dates) => dayjs(`${dates}`).diff(`${today}`, 'day') <= 10));
@@ -205,18 +202,23 @@ export default function Calendar({
       setSelectedDay(day);
       const specifiedDate = format(day, 'yyyy-MM-dd');
 
-      if (leaveName === LeaveName.FORCED && DateFormatter(day, 'MM') === '12') {
+      if ((leaveName === LeaveName.FORCED || leaveName === LeaveName.WELLNESS) && DateFormatter(day, 'MM') === '12') {
         //do nothing
-        //if filing for FL, cannot select December dates
+        //if filing for FL/WELLNESS, cannot select December dates
       } else if (
-        (leaveName === LeaveName.FORCED ||
-          leaveName === LeaveName.SPECIAL_PRIVILEGE ||
-          leaveName === LeaveName.WELLNESS) &&
+        (leaveName === LeaveName.FORCED || leaveName === LeaveName.SPECIAL_PRIVILEGE) &&
         DateFormatter(day, 'YYYY') > dayjs(swrUnavailableDates?.dateTimeNow).format('YYYY')
       ) {
         //do nothing
         //will not add date to array
         //if filing for FL/SPL, cannot select next year dates if filing on current year
+      } else if (
+        leaveName === LeaveName.WELLNESS &&
+        DateFormatter(day, 'YYYY') != dayjs(swrUnavailableDates?.dateTimeNow).format('YYYY')
+      ) {
+        //do nothing
+        //will not add date to array
+        //if filing for WELLNESS, cannot select previous/next year dates if filing on current year
       }
       //check if selected date exist in array - returns true/false
       else if (selectedDates.includes(specifiedDate)) {
@@ -237,10 +239,9 @@ export default function Calendar({
               leaveName === LeaveName.FORCED ||
               leaveName === LeaveName.SOLO_PARENT ||
               leaveName === LeaveName.SPECIAL_PRIVILEGE ||
-              leaveName === LeaveName.WELLNESS ||
+              // leaveName === LeaveName.WELLNESS ||
               leaveName === LeaveName.SICK) &&
             dayjs(`${specifiedDate}`).diff(`${today}`, 'day') > 10 &&
-            // !isLateFiling &&
             (futureLeaveCount > 0 ||
               selectedDates.filter(
                 (dates) =>
@@ -249,7 +250,6 @@ export default function Calendar({
           ) {
             setSelectedDates((selectedDates) => [...selectedDates, specifiedDate]);
           }
-
           //for VL within 10 days from today and not late filing
           else if (
             leaveName === LeaveName.VACATION &&
@@ -285,7 +285,7 @@ export default function Calendar({
           else if (
             (leaveName === LeaveName.LEAVE_WITHOUT_PAY ||
               leaveName === LeaveName.SPECIAL_PRIVILEGE ||
-              leaveName === LeaveName.WELLNESS ||
+              // leaveName === LeaveName.WELLNESS ||
               leaveName === LeaveName.SICK ||
               leaveName === LeaveName.VACATION ||
               leaveName === LeaveName.FORCED ||
@@ -294,22 +294,13 @@ export default function Calendar({
             isLateFiling
           ) {
             setSelectedDates((selectedDates) => [...selectedDates, specifiedDate]);
-          }
-          //for VL, FL, Solo Parent, within 10 days from today and the past days and is late filing
-          // else if (
-          //   (leaveName === LeaveName.VACATION ||
-          //     leaveName === LeaveName.FORCED ||
-          //     leaveName === LeaveName.SOLO_PARENT) &&
-          //   dayjs(`${specifiedDate}`).diff(`${today}`, 'day') <= 10 &&
-          //   isLateFiling
-          // ) {
-          //   setSelectedDates((selectedDates) => [...selectedDates, specifiedDate]);
-          // }
-          else if (
+          } else if (
             leaveName === LeaveName.PATERNITY ||
             leaveName === LeaveName.VAWC ||
             leaveName === LeaveName.SPECIAL_EMERGENCY_CALAMITY
           ) {
+            setSelectedDates((selectedDates) => [...selectedDates, specifiedDate]);
+          } else if (leaveName === LeaveName.WELLNESS) {
             setSelectedDates((selectedDates) => [...selectedDates, specifiedDate]);
           }
         }
@@ -533,7 +524,7 @@ export default function Calendar({
                             //disable date selection starting from 10th day from current day for FL/SOLO/SPL - added allow all dates if a date with the 10 days is selected
                             (leaveName === LeaveName.LEAVE_WITHOUT_PAY ||
                               leaveName === LeaveName.SPECIAL_PRIVILEGE ||
-                              leaveName === LeaveName.WELLNESS ||
+                              // leaveName === LeaveName.WELLNESS ||
                               leaveName === LeaveName.FORCED ||
                               leaveName === LeaveName.SICK ||
                               leaveName === LeaveName.SOLO_PARENT) &&
@@ -546,12 +537,22 @@ export default function Calendar({
                               ).length <= 0 &&
                               'text-slate-300',
 
-                            //disable FL for December dates
-                            leaveName === LeaveName.FORCED && DateFormatter(day, 'MM') === '12' && 'text-slate-300',
+                            //disable FL/WELLNESS for December dates
+                            leaveName === LeaveName.FORCED ||
+                              (leaveName === LeaveName.WELLNESS &&
+                                DateFormatter(day, 'MM') === '12' &&
+                                'text-slate-300'),
 
-                            //disable FL/SPL from selecting next year dates if filing from current year
-                            (leaveName === LeaveName.FORCED || leaveName === LeaveName.SPECIAL_PRIVILEGE) &&
+                            //disable FL/SPL/Wellness from selecting next year dates if filing from current year
+                            (leaveName === LeaveName.FORCED ||
+                              leaveName === LeaveName.SPECIAL_PRIVILEGE ||
+                              leaveName === LeaveName.WELLNESS) &&
                               DateFormatter(day, 'YYYY') > dayjs(swrUnavailableDates?.dateTimeNow).format('YYYY') &&
+                              'text-slate-300',
+
+                            //disable Wellness from selecting previous year dates if filing from current year
+                            leaveName === LeaveName.WELLNESS &&
+                              DateFormatter(day, 'YYYY') < dayjs(swrUnavailableDates?.dateTimeNow).format('YYYY') &&
                               'text-slate-300',
 
                             //disable date selection starting from 10th day from current day for VL ONLY - added allow all dates if a date with the 10 days is selected
@@ -568,7 +569,7 @@ export default function Calendar({
                             //disable date selection for past dates from last day of duty for SPL/SICK ONLY
                             (leaveName === LeaveName.LEAVE_WITHOUT_PAY ||
                               leaveName === LeaveName.SPECIAL_PRIVILEGE ||
-                              leaveName === LeaveName.WELLNESS ||
+                              // leaveName === LeaveName.WELLNESS ||
                               leaveName === LeaveName.SICK ||
                               leaveName === LeaveName.SOLO_PARENT) &&
                               DateFormatter(day, 'YYYY-MM-DD') <= DateFormatter(lastDateOfDuty, 'YYYY-MM-DD') &&
