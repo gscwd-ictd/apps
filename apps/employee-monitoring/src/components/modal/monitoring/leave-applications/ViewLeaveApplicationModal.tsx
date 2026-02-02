@@ -695,7 +695,8 @@ const ViewLeaveApplicationModal: FunctionComponent<ViewLeaveApplicationModalProp
                     rowData.leaveName === LeaveName.VACATION ||
                     rowData.leaveName === LeaveName.FORCED ||
                     rowData.leaveName === LeaveName.SICK ||
-                    rowData.leaveName === LeaveName.SPECIAL_PRIVILEGE ? (
+                    rowData.leaveName === LeaveName.SPECIAL_PRIVILEGE ||
+                    rowData.leaveName === LeaveName.WELLNESS ? (
                       <div className="w-full pb-4">
                         <span className="text-slate-500 text-md">
                           Your {rowData.leaveName} Credits at the time of this application:
@@ -801,12 +802,11 @@ const ViewLeaveApplicationModal: FunctionComponent<ViewLeaveApplicationModalProp
                                   {rowData.status === LeaveStatus.FOR_HRMO_CREDIT_CERTIFICATION ||
                                   rowData.status === LeaveStatus.FOR_SUPERVISOR_APPROVAL ||
                                   rowData.status === LeaveStatus.FOR_HRDM_APPROVAL
-                                    ? Number(
-                                        parseFloat(`${leaveLedger[leaveLedger.length - 1]?.sickLeaveBalance}`).toFixed(
-                                          3
-                                        )
-                                      ) - Number(parseFloat(`${rowData.leaveDates?.length}`).toFixed(3))
-                                    : selectedLeaveLedger[0]?.sickLeaveBalance}
+                                    ? (
+                                        parseFloat(`${leaveLedger[leaveLedger.length - 1]?.sickLeaveBalance}`) -
+                                        parseFloat(`${rowData.leaveDates?.length}`)
+                                      ).toFixed(3)
+                                    : Number(selectedLeaveLedger[0]?.sickLeaveBalance).toFixed(3)}
                                 </td>
                               </tr>
                             ) : null}
@@ -844,12 +844,49 @@ const ViewLeaveApplicationModal: FunctionComponent<ViewLeaveApplicationModalProp
                                   {rowData.status === LeaveStatus.FOR_HRMO_CREDIT_CERTIFICATION ||
                                   rowData.status === LeaveStatus.FOR_SUPERVISOR_APPROVAL ||
                                   rowData.status === LeaveStatus.FOR_HRDM_APPROVAL
-                                    ? Number(
+                                    ? (
                                         parseFloat(
                                           `${leaveLedger[leaveLedger.length - 1]?.specialPrivilegeLeaveBalance}`
+                                        ) - parseFloat(`${rowData.leaveDates?.length}`)
+                                      ).toFixed(3)
+                                    : Number(selectedLeaveLedger[0]?.specialPrivilegeLeaveBalance).toFixed(3)}
+                                </td>
+                              </tr>
+                            ) : null}
+
+                            {/* WELLNESS */}
+                            {rowData.leaveName === LeaveName.WELLNESS ? (
+                              <tr className="border border-slate-400">
+                                <td className="border border-slate-400 text-center">
+                                  {rowData.status === LeaveStatus.FOR_HRMO_CREDIT_CERTIFICATION ||
+                                  rowData.status === LeaveStatus.FOR_SUPERVISOR_APPROVAL ||
+                                  rowData.status === LeaveStatus.FOR_HRDM_APPROVAL
+                                    ? Number(
+                                        parseFloat(
+                                          `${leaveLedger[leaveLedger.length - 1]?.wellnessLeaveBalance}`
                                         ).toFixed(3)
-                                      ) - Number(parseFloat(`${rowData.leaveDates?.length}`).toFixed(3))
-                                    : selectedLeaveLedger[0]?.specialPrivilegeLeaveBalance}
+                                      ).toFixed(3)
+                                    : (
+                                        Number(
+                                          parseFloat(`${selectedLeaveLedger[0]?.wellnessLeaveBalance}`).toFixed(3)
+                                        ) +
+                                        Number(parseFloat(`${selectedLeaveLedger[0]?.wellnessLeave}`).toFixed(3)) * -1
+                                      ).toFixed(3)}
+                                </td>
+
+                                <td className="border border-slate-400 text-center">
+                                  {rowData.leaveDates?.length.toFixed(3)}
+                                </td>
+
+                                <td className="border border-slate-400 text-center bg-green-100">
+                                  {rowData.status === LeaveStatus.FOR_HRMO_CREDIT_CERTIFICATION ||
+                                  rowData.status === LeaveStatus.FOR_SUPERVISOR_APPROVAL ||
+                                  rowData.status === LeaveStatus.FOR_HRDM_APPROVAL
+                                    ? (
+                                        parseFloat(`${leaveLedger[leaveLedger.length - 1]?.wellnessLeaveBalance}`) -
+                                        parseFloat(`${rowData.leaveDates?.length}`)
+                                      ).toFixed(3)
+                                    : Number(selectedLeaveLedger[0]?.wellnessLeaveBalance).toFixed(3)}
                                 </td>
                               </tr>
                             ) : null}

@@ -123,10 +123,12 @@ export const FinalApprovalsPendingLeaveModal = ({
     forcedLeaveBalance,
     sickLeaveBalance,
     specialPrivilegeLeaveBalance,
+    wellnessLeaveBalance,
     setVacationLeaveBalance,
     setForcedLeaveBalance,
     setSickLeaveBalance,
     setSpecialPrivilegeLeaveBalance,
+    setWellnessLeaveBalance,
     setSelectedLeaveLedger,
     getLeaveLedger,
     getLeaveLedgerSuccess,
@@ -138,10 +140,12 @@ export const FinalApprovalsPendingLeaveModal = ({
     forcedLeaveBalance: state.forcedLeaveBalance,
     sickLeaveBalance: state.sickLeaveBalance,
     specialPrivilegeLeaveBalance: state.specialPrivilegeLeaveBalance,
+    wellnessLeaveBalance: state.wellnessLeaveBalance,
     setVacationLeaveBalance: state.setVacationLeaveBalance,
     setForcedLeaveBalance: state.setForcedLeaveBalance,
     setSickLeaveBalance: state.setSickLeaveBalance,
     setSpecialPrivilegeLeaveBalance: state.setSpecialPrivilegeLeaveBalance,
+    setWellnessLeaveBalance: state.setWellnessLeaveBalance,
     setSelectedLeaveLedger: state.setSelectedLeaveLedger,
     getLeaveLedger: state.getLeaveLedger,
     getLeaveLedgerSuccess: state.getLeaveLedgerSuccess,
@@ -155,6 +159,7 @@ export const FinalApprovalsPendingLeaveModal = ({
     setVacationLeaveBalance(lastIndexValue.vacationLeaveBalance ?? 0);
     setSickLeaveBalance(lastIndexValue.sickLeaveBalance ?? 0);
     setSpecialPrivilegeLeaveBalance(lastIndexValue.specialPrivilegeLeaveBalance ?? 0);
+    setWellnessLeaveBalance(lastIndexValue.wellnessLeaveBalance ?? 0);
   };
 
   const leaveLedgerUrl = `${process.env.NEXT_PUBLIC_EMPLOYEE_MONITORING_URL}/v1/leave/ledger/${
@@ -445,7 +450,7 @@ export const FinalApprovalsPendingLeaveModal = ({
                         leaveIndividualDetail?.leaveName === LeaveName.VACATION ||
                         leaveIndividualDetail?.leaveName === LeaveName.FORCED ||
                         leaveIndividualDetail?.leaveName === LeaveName.SPECIAL_PRIVILEGE ||
-                        leaveIndividualDetail?.leaveName === LeaveName.WELLNESS ||
+                        // leaveIndividualDetail?.leaveName === LeaveName.WELLNESS ||
                         leaveIndividualDetail?.leaveName === LeaveName.SICK ||
                         leaveIndividualDetail?.leaveName === LeaveName.SPECIAL_LEAVE_BENEFITS_FOR_WOMEN ||
                         (leaveIndividualDetail?.leaveName === LeaveName.STUDY &&
@@ -458,9 +463,10 @@ export const FinalApprovalsPendingLeaveModal = ({
                               <label className=" text-md font-medium">
                                 {leaveIndividualDetail?.leaveName === LeaveName.LEAVE_WITHOUT_PAY ||
                                 leaveIndividualDetail?.leaveName === LeaveName.VACATION ||
-                                leaveIndividualDetail?.leaveName === LeaveName.SPECIAL_PRIVILEGE ||
-                                leaveIndividualDetail?.leaveName === LeaveName.WELLNESS
-                                  ? leaveIndividualDetail.inPhilippines
+                                leaveIndividualDetail?.leaveName === LeaveName.SPECIAL_PRIVILEGE
+                                  ? // ||
+                                    // leaveIndividualDetail?.leaveName === LeaveName.WELLNESS
+                                    leaveIndividualDetail.inPhilippines
                                     ? leaveIndividualDetail.inPhilippines
                                     : leaveIndividualDetail.abroad
                                   : //SICK LEAVE
@@ -602,7 +608,8 @@ export const FinalApprovalsPendingLeaveModal = ({
                     {leaveIndividualDetail?.leaveName === LeaveName.VACATION ||
                     leaveIndividualDetail?.leaveName === LeaveName.FORCED ||
                     leaveIndividualDetail?.leaveName === LeaveName.SICK ||
-                    leaveIndividualDetail?.leaveName === LeaveName.SPECIAL_PRIVILEGE ? (
+                    leaveIndividualDetail?.leaveName === LeaveName.SPECIAL_PRIVILEGE ||
+                    leaveIndividualDetail?.leaveName === LeaveName.WELLNESS ? (
                       <div className="w-full pb-4 mt-2">
                         <span className="text-slate-500 text-md">
                           Employee's{' '}
@@ -613,6 +620,8 @@ export const FinalApprovalsPendingLeaveModal = ({
                             ? 'SL'
                             : leaveIndividualDetail?.leaveName === LeaveName.SPECIAL_PRIVILEGE
                             ? 'SPL'
+                            : leaveIndividualDetail?.leaveName === LeaveName.WELLNESS
+                            ? 'WL'
                             : 'Leave'}{' '}
                           Credits at the time of this application:
                         </span>
@@ -632,6 +641,8 @@ export const FinalApprovalsPendingLeaveModal = ({
                                   ? sickLeaveBalance
                                   : leaveIndividualDetail?.leaveName === LeaveName.SPECIAL_PRIVILEGE
                                   ? specialPrivilegeLeaveBalance
+                                  : leaveIndividualDetail?.leaveName === LeaveName.WELLNESS
+                                  ? wellnessLeaveBalance
                                   : 'N/A'}
                               </td>
                               <td className="border border-slate-400 text-center">
@@ -651,6 +662,10 @@ export const FinalApprovalsPendingLeaveModal = ({
                                   ? (
                                       parseFloat(`${specialPrivilegeLeaveBalance}`) -
                                       leaveIndividualDetail?.leaveDates?.length
+                                    ).toFixed(3)
+                                  : leaveIndividualDetail?.leaveName === LeaveName.WELLNESS
+                                  ? (
+                                      parseFloat(`${wellnessLeaveBalance}`) - leaveIndividualDetail?.leaveDates?.length
                                     ).toFixed(3)
                                   : 'N/A'}
                               </td>
