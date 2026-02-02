@@ -1923,13 +1923,22 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
                       <tbody>
                         <tr className="border border-slate-200">
                           <td className="border border-slate-200"></td>
-                          <td className="border border-slate-200 text-center text-sm p-1">Vacation</td>
+                          <td className="border border-slate-200 text-center text-sm p-1">
+                            <label className="hidden sm:block">Vacation</label>
+                            <label className="block sm:hidden">VL</label>
+                          </td>
                           {watch('typeOfLeaveDetails.leaveName') !== LeaveName.MONETIZATION &&
                           watch('typeOfLeaveDetails.leaveName') !== LeaveName.TERMINAL ? (
-                            <td className="border border-slate-200 text-center text-sm p-1">Forced</td>
+                            <td className="border border-slate-200 text-center text-sm p-1">
+                              <label className="hidden sm:block">Forced</label>
+                              <label className="block sm:hidden">FL</label>
+                            </td>
                           ) : null}
 
-                          <td className="border border-slate-200 text-center text-sm p-1">Sick</td>
+                          <td className="border border-slate-200 text-center text-sm p-1">
+                            <label className="hidden sm:block">Sick</label>
+                            <label className="block sm:hidden">SL</label>
+                          </td>
 
                           {watch('typeOfLeaveDetails.leaveName') !== LeaveName.MONETIZATION &&
                           watch('typeOfLeaveDetails.leaveName') !== LeaveName.TERMINAL ? (
@@ -1941,7 +1950,10 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
 
                           {watch('typeOfLeaveDetails.leaveName') !== LeaveName.MONETIZATION &&
                           watch('typeOfLeaveDetails.leaveName') !== LeaveName.TERMINAL ? (
-                            <td className="border border-slate-200 text-center text-sm p-1">Wellness</td>
+                            <td className="border border-slate-200 text-center text-sm p-1">
+                              <label className="hidden sm:block">Wellness</label>
+                              <label className="block sm:hidden">WL</label>
+                            </td>
                           ) : null}
                         </tr>
                         <tr className="border border-slate-200">
