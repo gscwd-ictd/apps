@@ -357,7 +357,7 @@ export const ApprovalsCompletedLeaveModal = ({
                         leaveIndividualDetail?.leaveName === LeaveName.FORCED ||
                         leaveIndividualDetail?.leaveName === LeaveName.SPECIAL_PRIVILEGE ||
                         leaveIndividualDetail?.leaveName === LeaveName.SICK ||
-                        leaveIndividualDetail?.leaveName === LeaveName.WELLNESS ||
+                        // leaveIndividualDetail?.leaveName === LeaveName.WELLNESS ||
                         leaveIndividualDetail?.leaveName === LeaveName.SPECIAL_LEAVE_BENEFITS_FOR_WOMEN ||
                         (leaveIndividualDetail?.leaveName === LeaveName.STUDY &&
                           leaveIndividualDetail?.studyLeaveOther) ? (
@@ -372,9 +372,10 @@ export const ApprovalsCompletedLeaveModal = ({
                                 {leaveIndividualDetail?.leaveName === LeaveName.LEAVE_WITHOUT_PAY ||
                                 leaveIndividualDetail?.leaveName === LeaveName.VACATION ||
                                 leaveIndividualDetail?.leaveName === LeaveName.FORCED ||
-                                leaveIndividualDetail?.leaveName === LeaveName.SPECIAL_PRIVILEGE ||
-                                leaveIndividualDetail?.leaveName === LeaveName.WELLNESS
-                                  ? leaveIndividualDetail.inPhilippines
+                                leaveIndividualDetail?.leaveName === LeaveName.SPECIAL_PRIVILEGE
+                                  ? // ||
+                                    // leaveIndividualDetail?.leaveName === LeaveName.WELLNESS
+                                    leaveIndividualDetail.inPhilippines
                                     ? leaveIndividualDetail.inPhilippines
                                     : leaveIndividualDetail.abroad
                                   : //SICK LEAVE
@@ -547,7 +548,8 @@ export const ApprovalsCompletedLeaveModal = ({
                     {(leaveIndividualDetail?.leaveName === LeaveName.VACATION ||
                       leaveIndividualDetail?.leaveName === LeaveName.FORCED ||
                       leaveIndividualDetail?.leaveName === LeaveName.SICK ||
-                      leaveIndividualDetail?.leaveName === LeaveName.SPECIAL_PRIVILEGE) &&
+                      leaveIndividualDetail?.leaveName === LeaveName.SPECIAL_PRIVILEGE ||
+                      leaveIndividualDetail?.leaveName === LeaveName.WELLNESS) &&
                     leaveIndividualDetail?.status === LeaveStatus.APPROVED ? (
                       <div className="w-full pb-4">
                         <span className="text-slate-500 text-md">
@@ -559,6 +561,8 @@ export const ApprovalsCompletedLeaveModal = ({
                             ? 'SL'
                             : leaveIndividualDetail?.leaveName === LeaveName.SPECIAL_PRIVILEGE
                             ? 'SPL'
+                            : leaveIndividualDetail?.leaveName === LeaveName.WELLNESS
+                            ? 'WL'
                             : 'Leave'}{' '}
                           Credits at the time of this application:
                         </span>
@@ -591,6 +595,11 @@ export const ApprovalsCompletedLeaveModal = ({
                                       parseFloat(`${selectedLeaveLedger[0]?.specialPrivilegeLeaveBalance}`) +
                                       parseFloat(`${selectedLeaveLedger[0]?.specialPrivilegeLeave}`) * -1
                                     ).toFixed(3)
+                                  : leaveIndividualDetail?.leaveName === LeaveName.WELLNESS
+                                  ? (
+                                      parseFloat(`${selectedLeaveLedger[0]?.wellnessLeaveBalance}`) +
+                                      parseFloat(`${selectedLeaveLedger[0]?.wellnessLeave}`) * -1
+                                    ).toFixed(3)
                                   : 'N/A'}
                               </td>
                               <td className="border border-slate-400 text-center">
@@ -607,6 +616,8 @@ export const ApprovalsCompletedLeaveModal = ({
                                   ? selectedLeaveLedger[0]?.sickLeaveBalance
                                   : leaveIndividualDetail?.leaveName === LeaveName.SPECIAL_PRIVILEGE
                                   ? selectedLeaveLedger[0]?.specialPrivilegeLeaveBalance
+                                  : leaveIndividualDetail?.leaveName === LeaveName.WELLNESS
+                                  ? selectedLeaveLedger[0]?.wellnessLeaveBalance
                                   : 'N/A'}
                               </td>
                             </tr>

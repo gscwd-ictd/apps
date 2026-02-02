@@ -534,7 +534,7 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
       dataToSend = {
         leaveBenefitsId: data.typeOfLeaveDetails.id,
         employeeId: data.employeeId,
-        inPhilippines: data.location,
+        // inPhilippines: data.location,
         leaveApplicationDates: data.leaveApplicationDates,
         isLateFiling: data.isLateFiling,
         lateFilingJustification: data.lateFilingJustification,
@@ -2348,8 +2348,6 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
                     ? true
                     : // disable currently posting submission to avoid multiple submissions
                     isApplying
-                    ? true
-                    : watch('typeOfLeaveDetails.leaveName') === LeaveName.WELLNESS // disable wellness leave for now
                     ? true
                     : false
                 }

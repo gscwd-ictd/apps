@@ -60,12 +60,14 @@ export const LeavePendingModal = ({ modalState, setModalState, closeModalAction 
     forcedLeaveBalance,
     sickLeaveBalance,
     specialPrivilegeLeaveBalance,
+    wellnessLeaveBalance,
     errorLeaveLedger,
 
     setVacationLeaveBalance,
     setForcedLeaveBalance,
     setSickLeaveBalance,
     setSpecialPrivilegeLeaveBalance,
+    setWellnessLeaveBalance,
     getLeaveLedger,
     getLeaveLedgerSuccess,
     getLeaveLedgerFail,
@@ -74,12 +76,14 @@ export const LeavePendingModal = ({ modalState, setModalState, closeModalAction 
     forcedLeaveBalance: state.forcedLeaveBalance,
     sickLeaveBalance: state.sickLeaveBalance,
     specialPrivilegeLeaveBalance: state.specialPrivilegeLeaveBalance,
+    wellnessLeaveBalance: state.wellnessLeaveBalance,
     errorLeaveLedger: state.error.errorLeaveLedger,
 
     setVacationLeaveBalance: state.setVacationLeaveBalance,
     setForcedLeaveBalance: state.setForcedLeaveBalance,
     setSickLeaveBalance: state.setSickLeaveBalance,
     setSpecialPrivilegeLeaveBalance: state.setSpecialPrivilegeLeaveBalance,
+    setWellnessLeaveBalance: state.setWellnessLeaveBalance,
     getLeaveLedger: state.getLeaveLedger,
     getLeaveLedgerSuccess: state.getLeaveLedgerSuccess,
     getLeaveLedgerFail: state.getLeaveLedgerFail,
@@ -140,6 +144,7 @@ export const LeavePendingModal = ({ modalState, setModalState, closeModalAction 
     setVacationLeaveBalance(lastIndexValue.vacationLeaveBalance ?? 0);
     setSickLeaveBalance(lastIndexValue.sickLeaveBalance ?? 0);
     setSpecialPrivilegeLeaveBalance(lastIndexValue.specialPrivilegeLeaveBalance ?? 0);
+    setWellnessLeaveBalance(lastIndexValue.wellnessLeaveBalance ?? 0);
   };
 
   // Initial zustand state update
@@ -403,7 +408,6 @@ export const LeavePendingModal = ({ modalState, setModalState, closeModalAction 
                         leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.FORCED ||
                         leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.SPECIAL_PRIVILEGE ||
                         leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.SICK ||
-                        leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.WELLNESS ||
                         leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName ===
                           LeaveName.SPECIAL_LEAVE_BENEFITS_FOR_WOMEN ||
                         (leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.STUDY &&
@@ -419,8 +423,7 @@ export const LeavePendingModal = ({ modalState, setModalState, closeModalAction 
                                 leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.VACATION ||
                                 leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.FORCED ||
                                 leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName ===
-                                  LeaveName.SPECIAL_PRIVILEGE ||
-                                leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.WELLNESS
+                                  LeaveName.SPECIAL_PRIVILEGE
                                   ? leaveIndividualDetail?.leaveApplicationDetails?.location
                                   : leaveIndividualDetail.leaveApplicationBasicInfo?.leaveName === LeaveName.SICK
                                   ? leaveIndividualDetail?.leaveApplicationDetails?.illness
@@ -601,7 +604,8 @@ export const LeavePendingModal = ({ modalState, setModalState, closeModalAction 
                     leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.VACATION) ||
                   leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.FORCED ||
                   leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.SICK ||
-                  leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.SPECIAL_PRIVILEGE ? (
+                  leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.SPECIAL_PRIVILEGE ||
+                  leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.WELLNESS ? (
                     <div className="w-full pb-4 mt-2">
                       <span className="text-slate-500 text-md">
                         Your current{' '}
@@ -612,6 +616,8 @@ export const LeavePendingModal = ({ modalState, setModalState, closeModalAction 
                           ? 'SL'
                           : leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.SPECIAL_PRIVILEGE
                           ? 'SPL'
+                          : leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.WELLNESS
+                          ? 'WL'
                           : 'Leave'}{' '}
                         Leave Credits:
                       </span>
@@ -632,6 +638,8 @@ export const LeavePendingModal = ({ modalState, setModalState, closeModalAction 
                                 : leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName ===
                                   LeaveName.SPECIAL_PRIVILEGE
                                 ? specialPrivilegeLeaveBalance
+                                : leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.WELLNESS
+                                ? wellnessLeaveBalance
                                 : 'N/A'}
                             </td>
                             <td className="border border-slate-400 text-center">
@@ -653,6 +661,11 @@ export const LeavePendingModal = ({ modalState, setModalState, closeModalAction 
                                   LeaveName.SPECIAL_PRIVILEGE
                                 ? (
                                     parseFloat(`${specialPrivilegeLeaveBalance}`) -
+                                    leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveDates?.length
+                                  ).toFixed(3)
+                                : leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.WELLNESS
+                                ? (
+                                    parseFloat(`${wellnessLeaveBalance}`) -
                                     leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveDates?.length
                                   ).toFixed(3)
                                 : 'N/A'}

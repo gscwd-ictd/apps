@@ -579,7 +579,6 @@ export const LeaveCompletedModal = ({ modalState, setModalState, closeModalActio
                         leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.FORCED ||
                         leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.SPECIAL_PRIVILEGE ||
                         leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.SICK ||
-                        leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.WELLNESS ||
                         leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName ===
                           LeaveName.SPECIAL_LEAVE_BENEFITS_FOR_WOMEN ||
                         (leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.STUDY &&
@@ -601,8 +600,7 @@ export const LeaveCompletedModal = ({ modalState, setModalState, closeModalActio
                                 leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.VACATION ||
                                 leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.FORCED ||
                                 leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName ===
-                                  LeaveName.SPECIAL_PRIVILEGE ||
-                                leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.WELLNESS
+                                  LeaveName.SPECIAL_PRIVILEGE
                                   ? leaveIndividualDetail?.leaveApplicationDetails?.location
                                   : leaveIndividualDetail.leaveApplicationBasicInfo?.leaveName === LeaveName.SICK
                                   ? leaveIndividualDetail?.leaveApplicationDetails?.illness
@@ -802,11 +800,12 @@ export const LeaveCompletedModal = ({ modalState, setModalState, closeModalActio
                   leaveIndividualDetail?.leaveApplicationBasicInfo?.status !== LeaveStatus.CANCELLED &&
                   leaveIndividualDetail?.leaveApplicationBasicInfo?.status !== LeaveStatus.DISAPPROVED_BY_HRDM &&
                   leaveIndividualDetail?.leaveApplicationBasicInfo?.status !== LeaveStatus.DISAPPROVED_BY_HRMO ? (
-                    leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.VACATION ||
-                    leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.FORCED ||
-                    leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.SICK ||
-                    (leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.SPECIAL_PRIVILEGE &&
-                      completedLeaveModalIsOpen) ? (
+                    (leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.VACATION ||
+                      leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.FORCED ||
+                      leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.SICK ||
+                      leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.SPECIAL_PRIVILEGE ||
+                      leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.WELLNESS) &&
+                    completedLeaveModalIsOpen ? (
                       <div className="w-full pb-4">
                         <span className="text-slate-500 text-md">
                           Your{' '}
@@ -818,6 +817,8 @@ export const LeaveCompletedModal = ({ modalState, setModalState, closeModalActio
                             : leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName ===
                               LeaveName.SPECIAL_PRIVILEGE
                             ? 'SPL'
+                            : leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.WELLNESS
+                            ? 'WL'
                             : 'Leave'}{' '}
                           Credits at the time of this application:
                         </span>
@@ -852,6 +853,11 @@ export const LeaveCompletedModal = ({ modalState, setModalState, closeModalActio
                                       parseFloat(`${selectedLeaveLedger[0]?.specialPrivilegeLeaveBalance}`) +
                                       parseFloat(`${selectedLeaveLedger[0]?.specialPrivilegeLeave}`) * -1
                                     ).toFixed(3)
+                                  : leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.WELLNESS
+                                  ? (
+                                      parseFloat(`${selectedLeaveLedger[0]?.wellnessLeaveBalance}`) +
+                                      parseFloat(`${selectedLeaveLedger[0]?.wellnessLeave}`) * -1
+                                    ).toFixed(3)
                                   : 'N/A'}
                               </td>
                               <td className="border border-slate-400 text-center">
@@ -873,6 +879,8 @@ export const LeaveCompletedModal = ({ modalState, setModalState, closeModalActio
                                   : leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName ===
                                     LeaveName.SPECIAL_PRIVILEGE
                                   ? selectedLeaveLedger[0]?.specialPrivilegeLeaveBalance
+                                  : leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.WELLNESS
+                                  ? selectedLeaveLedger[0]?.wellnessLeaveBalance
                                   : 'N/A'}
                               </td>
                             </tr>

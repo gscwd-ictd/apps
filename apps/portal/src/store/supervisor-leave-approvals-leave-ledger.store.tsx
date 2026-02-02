@@ -28,6 +28,7 @@ export type LeaveLedgerState = {
   vacationLeaveBalance: number;
   forcedLeaveBalance: number;
   sickLeaveBalance: number;
+  wellnessLeaveBalance: number;
   specialPrivilegeLeaveBalance: number;
 
   selectedLeaveLedger: Array<LeaveLedgerEntry>;
@@ -55,6 +56,7 @@ export type LeaveLedgerState = {
   setForcedLeaveBalance: (forcedLeaveBalance: number) => void;
   setSickLeaveBalance: (sickLeaveBalance: number) => void;
   setSpecialPrivilegeLeaveBalance: (specialPrivilegeLeaveBalance: number) => void;
+  setWellnessLeaveBalance: (wellnessLeaveBalance: number) => void;
 
   getLeaveLedger: (loading: boolean) => void;
   getLeaveLedgerSuccess: (loading: boolean, response) => void;
@@ -68,6 +70,7 @@ export const useSupervisorLeaveApprovalLeaveLedgerStore = create<LeaveLedgerStat
     forcedLeaveBalance: 0,
     sickLeaveBalance: 0,
     specialPrivilegeLeaveBalance: 0,
+    wellnessLeaveBalance: 0,
     selectedLeaveLedger: [] as Array<LeaveLedgerEntry>,
 
     selectedLeaveBenefit: {} as MutatedLeaveBenefit,
@@ -104,6 +107,10 @@ export const useSupervisorLeaveApprovalLeaveLedgerStore = create<LeaveLedgerStat
 
     setSpecialPrivilegeLeaveBalance: (specialPrivilegeLeaveBalance: number) => {
       set((state) => ({ ...state, specialPrivilegeLeaveBalance }));
+    },
+
+    setWellnessLeaveBalance: (wellnessLeaveBalance: number) => {
+      set((state) => ({ ...state, wellnessLeaveBalance }));
     },
 
     //GET LEAVE ACTIONS
