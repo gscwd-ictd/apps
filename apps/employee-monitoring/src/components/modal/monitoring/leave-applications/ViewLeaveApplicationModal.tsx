@@ -481,20 +481,24 @@ const ViewLeaveApplicationModal: FunctionComponent<ViewLeaveApplicationModalProp
                       </>
                     ) : null}
 
-                    {/* VACATION LEAVE */}
-                    {!isEmpty(leaveApplicationDetails.leaveApplicationDetails?.inPhilippinesOrAbroad) ? (
+                    {/* VL OR SPL */}
+                    {leaveApplicationDetails?.leaveApplicationBasicInfo?.leaveName === LeaveName.VACATION ||
+                    leaveApplicationDetails?.leaveApplicationBasicInfo?.leaveName === LeaveName.SPECIAL_PRIVILEGE ? (
                       <>
                         <LabelValue
                           label="Location"
                           direction="top-to-bottom"
                           textSize="md"
-                          value={leaveApplicationDetails.leaveApplicationDetails?.inPhilippinesOrAbroad}
+                          value={
+                            leaveApplicationDetails.leaveApplicationDetails?.inPhilippinesOrAbroad ||
+                            'Within the Philippines'
+                          }
                         />
                         <LabelValue
-                          label="Leave Details"
+                          label="Specific Details"
                           direction="top-to-bottom"
                           textSize="md"
-                          value={leaveApplicationDetails.leaveApplicationDetails?.location}
+                          value={leaveApplicationDetails.leaveApplicationDetails?.location || '--'}
                         />
                       </>
                     ) : null}
