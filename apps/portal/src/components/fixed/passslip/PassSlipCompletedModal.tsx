@@ -1,6 +1,6 @@
 /* eslint-disable react/jsx-no-undef */
 /* eslint-disable @nx/enforce-module-boundaries */
-import { AlertNotification, Button, Modal } from '@gscwd-apps/oneui';
+import { AlertNotification, Button, Modal, ToastNotification } from '@gscwd-apps/oneui';
 import { HiX } from 'react-icons/hi';
 import { usePassSlipStore } from '../../../store/passslip.store';
 import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
@@ -12,6 +12,13 @@ import { GetDateDifference } from 'libs/utils/src/lib/functions/GetDateDifferenc
 import { DateTimeFormatter } from 'libs/utils/src/lib/functions/DateTimeFormatter';
 import { useEmployeeStore } from 'apps/portal/src/store/employee.store';
 import { UserRole } from 'libs/utils/src/lib/enums/user-roles.enum';
+import useSWR from 'swr';
+import { format } from 'date-fns';
+import { fetchWithToken } from '../../../utils/hoc/fetcher';
+import { useEffect } from 'react';
+import { useLeaveStore } from '../../../../src/store/leave.store';
+import { LeaveName } from 'libs/utils/src/lib/enums/leave.enum';
+import { isEmpty } from 'lodash';
 
 type PassSlipCompletedModalProps = {
   modalState: boolean;
@@ -36,6 +43,16 @@ export const PassSlipCompletedModal = ({
 
   const { windowWidth } = UseWindowDimensions();
 
+  const { serverDate, setServerDate, getUnavailableDates, getUnavailableSuccess, getUnavailableFail } = useLeaveStore(
+    (state) => ({
+      serverDate: state.serverDate,
+      setServerDate: state.setServerDate,
+      getUnavailableDates: state.getUnavailableDates,
+      getUnavailableSuccess: state.getUnavailableSuccess,
+      getUnavailableFail: state.getUnavailableFail,
+    })
+  );
+
   // for cancel pass slip button
   const modalAction = async (e) => {
     e.preventDefault();
@@ -47,8 +64,43 @@ export const PassSlipCompletedModal = ({
     setDisputePassSlipModalIsOpen(false);
   };
 
+  //for getting current server time
+  const unavailableDatesUrl = `${process.env.NEXT_PUBLIC_EMPLOYEE_MONITORING_URL}/v1/leave-application/unavailable-dates/${employeeDetails.employmentDetails.userId}`;
+  const {
+    data: swrUnavailableDates,
+    isLoading: swrUnavailableIsLoading,
+    error: swrUnavailableError,
+  } = useSWR(employeeDetails.employmentDetails.userId ? unavailableDatesUrl : null, fetchWithToken, {
+    shouldRetryOnError: true,
+    revalidateOnFocus: true,
+    refreshInterval: 3000,
+  });
+
+  // Initial zustand state update
+  useEffect(() => {
+    if (swrUnavailableIsLoading) {
+      getUnavailableDates(swrUnavailableIsLoading);
+    }
+  }, [swrUnavailableIsLoading]);
+
+  // Upon success/fail of swr request, zustand state will be updated
+  useEffect(() => {
+    if (!isEmpty(swrUnavailableDates)) {
+      getUnavailableSuccess(swrUnavailableIsLoading, swrUnavailableDates);
+      setServerDate(swrUnavailableDates?.dateTimeNow); //server date saved on store
+    }
+
+    if (!isEmpty(swrUnavailableError)) {
+      getUnavailableFail(swrUnavailableIsLoading, swrUnavailableError.message);
+    }
+  }, [swrUnavailableDates, swrUnavailableError]);
+
   return (
     <>
+      {!isEmpty(swrUnavailableError) ? (
+        <ToastNotification toastType="error" notifMessage="Failed to get Server Date!" />
+      ) : null}
+
       <Modal size={windowWidth > 1024 ? 'sm' : 'full'} open={modalState} setOpen={setModalState}>
         <Modal.Header>
           <h3 className="font-semibold text-gray-700">
@@ -68,11 +120,14 @@ export const PassSlipCompletedModal = ({
             <div className="w-full flex flex-col gap-2 px-4 rounded">
               <div className="w-full flex flex-col gap-0">
                 {passSlip.status === PassSlipStatus.APPROVED ? (
+                  //results are usually in days, so we add 1 to include the current day
                   <AlertNotification
                     alertType="success"
                     notifMessage={`Approved ${
-                      GetDateDifference(`${passSlip.dateOfApplication}`, `${dayjs().format('YYYY-MM-DD HH:mm:ss')} `)
-                        .days
+                      GetDateDifference(
+                        `${passSlip.dateOfApplication}`,
+                        `${dayjs(serverDate).format('YYYY-MM-DD HH:mm:ss')} `
+                      ).days + 1
                     } days ago`}
                     dismissible={false}
                   />
@@ -91,8 +146,10 @@ export const PassSlipCompletedModal = ({
                         : 'Approved'
                     }
                       ${
-                        GetDateDifference(`${passSlip.dateOfApplication}`, `${dayjs().format('YYYY-MM-DD HH:mm:ss')} `)
-                          .days
+                        GetDateDifference(
+                          `${passSlip.dateOfApplication}`,
+                          `${dayjs(serverDate).format('YYYY-MM-DD HH:mm:ss')} `
+                        ).days + 1
                       } days ago`}
                     dismissible={false}
                   />
@@ -316,15 +373,21 @@ export const PassSlipCompletedModal = ({
         <Modal.Footer>
           <div className="flex justify-end gap-2 px-4">
             <div className="w-full justify-end flex gap-2">
-              {((passSlip.status === PassSlipStatus.APPROVED ||
-                passSlip.status === PassSlipStatus.AWAITING_MEDICAL_CERTIFICATE ||
-                passSlip.status === PassSlipStatus.APPROVED_WITHOUT_MEDICAL_CERTIFICATE ||
-                passSlip.status === PassSlipStatus.APPROVED_WITH_MEDICAL_CERTIFICATE) &&
+              {(serverDate &&
+                passSlip.dateOfApplication &&
+                (passSlip.status === PassSlipStatus.APPROVED ||
+                  passSlip.status === PassSlipStatus.AWAITING_MEDICAL_CERTIFICATE ||
+                  passSlip.status === PassSlipStatus.APPROVED_WITHOUT_MEDICAL_CERTIFICATE ||
+                  passSlip.status === PassSlipStatus.APPROVED_WITH_MEDICAL_CERTIFICATE) &&
                 passSlip.natureOfBusiness != NatureOfBusiness.HALF_DAY &&
                 passSlip.natureOfBusiness != NatureOfBusiness.UNDERTIME &&
                 !passSlip.disputeRemarks &&
                 passSlip.timeIn &&
-                GetDateDifference(`${passSlip.dateOfApplication}`, `${dayjs().format('YYYY-MM-DD HH:mm:ss')} `).days <=
+                GetDateDifference(
+                  `${dayjs(passSlip.dateOfApplication).format('YYYY-MM-DD HH:mm:ss')}`,
+                  `${dayjs(serverDate).format('YYYY-MM-DD HH:mm:ss')} `
+                ).days +
+                  1 <=
                   3) ||
               (passSlip.status === PassSlipStatus.UNUSED &&
                 passSlip.natureOfBusiness != NatureOfBusiness.HALF_DAY &&
