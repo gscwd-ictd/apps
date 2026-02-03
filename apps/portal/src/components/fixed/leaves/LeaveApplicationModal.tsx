@@ -1271,6 +1271,16 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
                     />
                   ) : null}
 
+                  {/* Monetization Must have a minimum of 10 days to convert > */}
+                  {leaveBalanceInput < 10 && watch('typeOfLeaveDetails.leaveName') === LeaveName.MONETIZATION ? (
+                    <AlertNotification
+                      alertType="warning"
+                      notifMessage="Leave Balance to Convert must be at least 10."
+                      dismissible={false}
+                      className="mb-1"
+                    />
+                  ) : null}
+
                   {/* Monetization Notif for insufficient Sick Leave */}
                   {finalSickLeaveBalance < 15 &&
                   lessSl > 0 &&
@@ -2362,6 +2372,8 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
                     ? true
                     : // disable currently posting submission to avoid multiple submissions
                     isApplying
+                    ? true
+                    : leaveBalanceInput < 10 && watch('typeOfLeaveDetails.leaveName') === LeaveName.MONETIZATION
                     ? true
                     : false
                 }
