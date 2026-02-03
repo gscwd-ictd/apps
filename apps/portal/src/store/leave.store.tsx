@@ -13,7 +13,7 @@ import {
 } from '../../../../libs/utils/src/lib/types/leave-application.type';
 import { devtools } from 'zustand/middleware';
 import axios, { AxiosResponse } from 'axios';
-import { LeaveName } from 'libs/utils/src/lib/enums/leave.enum';
+import { LeaveName, LeaveStatus } from 'libs/utils/src/lib/enums/leave.enum';
 
 export type LeavesState = {
   leaves: {
@@ -256,7 +256,9 @@ export const useLeaveStore = create<LeavesState>()(
           ...state.error,
           errorLeaves: '',
         },
-        monetizationList: response.completed.filter((item) => item.leaveName === LeaveName.MONETIZATION),
+        monetizationList: response.completed.filter(
+          (item) => item.leaveName === LeaveName.MONETIZATION && item.status === LeaveStatus.APPROVED
+        ),
       }));
     },
     getLeaveListFail: (loading: boolean, error: string) => {
