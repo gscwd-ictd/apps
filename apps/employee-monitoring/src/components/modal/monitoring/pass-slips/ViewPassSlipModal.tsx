@@ -396,14 +396,37 @@ const ViewPassSlipModal: FunctionComponent<ViewPassSlipModalProps> = ({
                 )}
 
                 {!isEmpty(rowData.disputeRemarks) ? (
-                  <div className="grid grid-cols-1 grid-rows-1 px-5 sm:gap-2 md:gap:2 lg:gap-0">
-                    <LabelValue
-                      label="Dispute Remarks"
-                      direction="top-to-bottom"
-                      textSize="md"
-                      value={rowData.disputeRemarks ? rowData.disputeRemarks : 'N/A'}
-                    />
-                  </div>
+                  <>
+                    <hr />
+
+                    <div className="grid grid-cols-1 grid-rows-1 px-5 sm:gap-2 md:gap:2 lg:gap-0">
+                      <LabelValue
+                        label="Dispute Remarks"
+                        direction="top-to-bottom"
+                        textSize="md"
+                        value={rowData.disputeRemarks ? rowData.disputeRemarks : 'N/A'}
+                      />
+                    </div>
+
+                    <div className="grid px-5 sm:grid-rows-2 sm:grid-cols-1 md:grid-rows-2 md:grid-cols-1 lg:grid-rows-1 lg:grid-cols-2 sm:gap-2 md:gap:2 lg:gap-0">
+                      <LabelValue
+                        label="Updated Time Out"
+                        direction="top-to-bottom"
+                        textSize="md"
+                        value={UseConvertDayToTime(rowData.encodedTimeOut) ?? '--'}
+                      />
+
+                      {rowData.natureOfBusiness === NatureOfBusiness.HALF_DAY ||
+                      rowData.natureOfBusiness === NatureOfBusiness.UNDERTIME ? null : (
+                        <LabelValue
+                          label="Updated Time In"
+                          direction="top-to-bottom"
+                          textSize="md"
+                          value={UseConvertDayToTime(rowData.encodedTimeIn) ?? '--'}
+                        />
+                      )}
+                    </div>
+                  </>
                 ) : null}
 
                 {rowData.isMedical === true && rowData.status === PassSlipStatus.AWAITING_MEDICAL_CERTIFICATE ? (
