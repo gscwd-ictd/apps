@@ -1788,8 +1788,9 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
                         {...(watch('typeOfLeaveDetails.leaveName') === LeaveName.LEAVE_WITHOUT_PAY ||
                         watch('typeOfLeaveDetails.leaveName') === LeaveName.VACATION ||
                         watch('typeOfLeaveDetails.leaveName') === LeaveName.FORCED ||
-                        watch('typeOfLeaveDetails.leaveName') === LeaveName.SPECIAL_PRIVILEGE ||
-                        watch('typeOfLeaveDetails.leaveName') === LeaveName.SICK
+                        watch('typeOfLeaveDetails.leaveName') === LeaveName.SPECIAL_PRIVILEGE
+                          ? { ...register('location') }
+                          : watch('typeOfLeaveDetails.leaveName') === LeaveName.SICK
                           ? { ...register('illness') }
                           : watch('typeOfLeaveDetails.leaveName') === LeaveName.STUDY
                           ? { ...register('studyLeaveOther') }
@@ -1801,9 +1802,10 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
                         placeholder={`${
                           watch('typeOfLeaveDetails.leaveName') === LeaveName.VACATION ||
                           watch('typeOfLeaveDetails.leaveName') === LeaveName.FORCED ||
-                          watch('typeOfLeaveDetails.leaveName') === LeaveName.SPECIAL_PRIVILEGE ||
-                          watch('typeOfLeaveDetails.leaveName') === LeaveName.SICK ||
-                          watch('typeOfLeaveDetails.leaveName') === LeaveName.SPECIAL_LEAVE_BENEFITS_FOR_WOMEN
+                          watch('typeOfLeaveDetails.leaveName') === LeaveName.SPECIAL_PRIVILEGE
+                            ? 'Specify Leave Details'
+                            : watch('typeOfLeaveDetails.leaveName') === LeaveName.SICK ||
+                              watch('typeOfLeaveDetails.leaveName') === LeaveName.SPECIAL_LEAVE_BENEFITS_FOR_WOMEN
                             ? 'Specify Illness'
                             : watch('typeOfLeaveDetails.leaveName') === LeaveName.STUDY && selectedStudy === 'other'
                             ? 'Specify Study Leave Purpose'
