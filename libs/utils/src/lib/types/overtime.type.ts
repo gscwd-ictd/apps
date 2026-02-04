@@ -113,6 +113,7 @@ export type OvertimeAccomplishment = {
   entriesForTheDay: Array<string>;
   actualHrs: string;
   approvedBy: string;
+  otSupervisorName: string;
 };
 
 //for pdf
