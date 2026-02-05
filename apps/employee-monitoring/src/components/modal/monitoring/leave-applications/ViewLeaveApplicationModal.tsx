@@ -483,7 +483,9 @@ const ViewLeaveApplicationModal: FunctionComponent<ViewLeaveApplicationModalProp
 
                     {/* VL OR SPL */}
                     {leaveApplicationDetails?.leaveApplicationBasicInfo?.leaveName === LeaveName.VACATION ||
-                    leaveApplicationDetails?.leaveApplicationBasicInfo?.leaveName === LeaveName.SPECIAL_PRIVILEGE ? (
+                    leaveApplicationDetails?.leaveApplicationBasicInfo?.leaveName === LeaveName.SPECIAL_PRIVILEGE ||
+                    leaveApplicationDetails?.leaveApplicationBasicInfo?.leaveName === LeaveName.FORCED ||
+                    leaveApplicationDetails?.leaveApplicationBasicInfo?.leaveName === LeaveName.LEAVE_WITHOUT_PAY ? (
                       <>
                         <LabelValue
                           label="Location"
