@@ -343,7 +343,7 @@ export const PassSlipApplicationModal = ({
 
                 <div className="w-full flex gap-2 justify-start items-center pb-2">
                   <span className="text-slate-500 text-md font-medium">Date:</span>
-                  <div className="text-slate-500 text-md">{DateFormatter(serverDate, 'MM-DD-YYYY')}</div>
+                  <div className="text-slate-500 text-md">{DateFormatter(serverDate ?? dateToday, 'MM-DD-YYYY')}</div>
                 </div>
 
                 <div
