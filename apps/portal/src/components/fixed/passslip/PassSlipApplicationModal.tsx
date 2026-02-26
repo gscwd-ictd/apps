@@ -19,6 +19,7 @@ import { fetchWithToken } from 'apps/portal/src/utils/hoc/fetcher';
 import { useLeaveLedgerStore } from 'apps/portal/src/store/leave-ledger.store';
 import { LeaveLedgerEntry } from 'libs/utils/src/lib/types/leave-ledger-entry.type';
 import { UserRole } from 'libs/utils/src/lib/enums/user-roles.enum';
+import { useLeaveStore } from 'apps/portal/src/store/leave.store';
 
 type PassSlipApplicationModalProps = {
   modalState: boolean;
@@ -105,6 +106,11 @@ export const PassSlipApplicationModal = ({
       getLeaveLedgerFail: state.getLeaveLedgerFail,
     })
   );
+
+  //get server date, swr fetching is located in the PassSlipCompletedModal
+  const { serverDate } = useLeaveStore((state) => ({
+    serverDate: state.serverDate,
+  }));
 
   const [forcedLeaveBalance, setForcedLeaveBalance] = useState<number>(0);
   const [vacationLeaveBalance, setVacationLeaveBalance] = useState<number>(0);
@@ -337,7 +343,7 @@ export const PassSlipApplicationModal = ({
 
                 <div className="w-full flex gap-2 justify-start items-center pb-2">
                   <span className="text-slate-500 text-md font-medium">Date:</span>
-                  <div className="text-slate-500 text-md">{DateFormatter(dateToday, 'MM-DD-YYYY')}</div>
+                  <div className="text-slate-500 text-md">{DateFormatter(serverDate, 'MM-DD-YYYY')}</div>
                 </div>
 
                 <div

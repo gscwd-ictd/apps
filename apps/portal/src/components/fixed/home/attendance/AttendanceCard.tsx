@@ -12,9 +12,12 @@ import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
 interface Props {
   timeLogData: EmployeeDtrWithSchedule;
   swrFaceScanIsLoading: boolean;
+  dateNow: string;
 }
-export const AttendanceCard: React.FC<Props> = ({ timeLogData, swrFaceScanIsLoading }) => {
-  const now = dayjs().toDate().toDateString();
+export const AttendanceCard: React.FC<Props> = ({ timeLogData, swrFaceScanIsLoading, dateNow }) => {
+  const now = dayjs(dateNow ?? '')
+    .toDate()
+    .toDateString();
   const isLate = UseLateChecker(timeLogData?.dtr?.timeIn, timeLogData?.schedule?.timeIn); //change to scheduled timeIn prop when ready
   const isUnderTime = UseUndertimeChecker(timeLogData?.dtr?.timeOut, timeLogData?.schedule?.timeOut); //change to scheduled timeOut prop when ready
   const isLunchInLate = UseLateLunchInChecker(timeLogData?.dtr?.lunchIn, timeLogData?.schedule?.lunchIn); //change to scheduled timeOut prop when ready
