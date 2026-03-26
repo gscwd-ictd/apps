@@ -35,6 +35,8 @@ import dayjs from 'dayjs';
 import { usePassSlipStore } from '../../store/passslip.store';
 import { useAnnouncementsStore } from '../../store/announcements.store';
 import { UserRole } from 'libs/utils/src/lib/enums/user-roles.enum';
+import { useLeaveStore } from '../../store/leave.store';
+import { DateFormatter } from 'libs/utils/src/lib/functions/DateFormatter';
 
 export type NavDetails = {
   fullName: string;
@@ -136,6 +138,30 @@ export default function Dashboard({ userDetails }: InferGetServerSidePropsType<t
     setWellnessLeaveBalance(lastIndexValue.wellnessLeaveBalance ?? 0);
   };
 
+  const { serverDate, setServerDate } = useLeaveStore((state) => ({
+    serverDate: state.serverDate,
+    setServerDate: state.setServerDate,
+  }));
+
+  //for getting current server time
+  const unavailableDatesUrl = `${process.env.NEXT_PUBLIC_EMPLOYEE_MONITORING_URL}/v1/leave-application/unavailable-dates/${userDetails.employmentDetails.userId}`;
+  const {
+    data: swrUnavailableDates,
+    isLoading: swrUnavailableIsLoading,
+    error: swrUnavailableError,
+  } = useSWR(userDetails.employmentDetails.userId ? unavailableDatesUrl : null, fetchWithToken, {
+    shouldRetryOnError: true,
+    revalidateOnFocus: true,
+    refreshInterval: 3000,
+  });
+
+  // Upon success/fail of swr request, zustand state will be updated
+  useEffect(() => {
+    if (!isEmpty(swrUnavailableDates)) {
+      setServerDate(swrUnavailableDates?.dateTimeNow); //server date saved on store
+    }
+  }, [swrUnavailableDates, swrUnavailableError]);
+
   //fetch leave monetization settings (monetization constant)
   const leaveMonetizationUrl = `${process.env.NEXT_PUBLIC_EMPLOYEE_MONITORING_URL}/v1/ems-settings/monetization`;
 
@@ -199,7 +225,7 @@ export default function Dashboard({ userDetails }: InferGetServerSidePropsType<t
 
   const faceScanUrl = `${process.env.NEXT_PUBLIC_EMPLOYEE_MONITORING_URL}/v1/daily-time-record/employees/${
     userDetails.employmentDetails.companyId
-  }/${format(new Date(), 'yyyy-MM-dd')}`;
+  }/${DateFormatter(serverDate, 'YYYY-MM-DD')}`;
   // use useSWR, provide the URL and fetchWithSession function as a parameter
 
   const {
@@ -207,7 +233,7 @@ export default function Dashboard({ userDetails }: InferGetServerSidePropsType<t
     isLoading: swrFaceScanIsLoading,
     error: swrFaceScanError,
     mutate: mutateFaceScanUrl,
-  } = useSWR(userDetails.employmentDetails.companyId ? faceScanUrl : null, fetchWithToken, {
+  } = useSWR(userDetails.employmentDetails.companyId && serverDate ? faceScanUrl : null, fetchWithToken, {
     shouldRetryOnError: true,
     revalidateOnFocus: true,
   });
@@ -464,7 +490,11 @@ export default function Dashboard({ userDetails }: InferGetServerSidePropsType<t
                     />
                   </div>
                   <div className="order-2 col-span-2 md:col-span-2 md:order-3 lg:col-span-2 lg:order-2">
-                    <AttendanceCard timeLogData={swrFaceScan} swrFaceScanIsLoading={swrFaceScanIsLoading} />
+                    <AttendanceCard
+                      timeLogData={swrFaceScan}
+                      swrFaceScanIsLoading={swrFaceScanIsLoading}
+                      dateNow={serverDate}
+                    />
                   </div>
                   <div className="order-8 col-span-2 row-span-4 md:col-span-4 md:order-8 lg:col-span-2 lg:order-3">
                     <Carousel />
