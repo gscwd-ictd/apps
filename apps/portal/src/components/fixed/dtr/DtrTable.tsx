@@ -1,5 +1,5 @@
 /* eslint-disable @nx/enforce-module-boundaries */
-import { Button, LoadingSpinner } from '@gscwd-apps/oneui';
+import { Button, LoadingSpinner, ToastNotification } from '@gscwd-apps/oneui';
 import { EmployeeDetails } from '../../../../src/types/employee.type';
 import { useDtrStore } from '../../../store/dtr.store';
 import { UseLateChecker } from 'libs/utils/src/lib/functions/LateChecker';
@@ -8,13 +8,17 @@ import dayjs from 'dayjs';
 import { UseTwelveHourFormat } from 'libs/utils/src/lib/functions/TwelveHourFormatter';
 import { HiPencilAlt } from 'react-icons/hi';
 import { EmployeeDtrWithSchedule } from 'libs/utils/src/lib/types/dtr.type';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import UpdateTimeLogModal from './UpdateTimeLogModal';
 import { HolidayTypes } from 'libs/utils/src/lib/enums/holiday-types.enum';
 import { DateFormatter } from 'libs/utils/src/lib/functions/DateFormatter';
 import { UseLateLunchInChecker } from 'libs/utils/src/lib/functions/LateLunchInChecker';
 import { DtrPdfModal } from './DtrPdfModal';
 import { ScheduleBases } from 'libs/utils/src/lib/enums/schedule.enum';
+import { fetchWithToken } from 'apps/portal/src/utils/hoc/fetcher';
+import useSWR from 'swr';
+import { isEmpty } from 'lodash';
+import { useLeaveStore } from 'apps/portal/src/store/leave.store';
 
 type DtrTableProps = {
   employeeDetails: EmployeeDetails;
@@ -45,8 +49,48 @@ export const DtrTable = ({ employeeDetails }: DtrTableProps) => {
 
   // close dtr pdf modal function
   const closeDtrPdfModal = () => setDtrPdfModalIsOpen(false);
+
+  const {
+    getUnavailableDates,
+    getUnavailableSuccess,
+    getUnavailableFail,
+    setOverlappingLeaveCount,
+    setServerDate,
+    serverDate,
+  } = useLeaveStore((state) => ({
+    getUnavailableDates: state.getUnavailableDates,
+    getUnavailableSuccess: state.getUnavailableSuccess,
+    getUnavailableFail: state.getUnavailableFail,
+    setOverlappingLeaveCount: state.setOverlappingLeaveCount,
+    setServerDate: state.setServerDate,
+    serverDate: state.serverDate,
+  }));
+
+  //for getting current server time
+  const unavailableDatesUrl = `${process.env.NEXT_PUBLIC_EMPLOYEE_MONITORING_URL}/v1/leave-application/unavailable-dates/${employeeDetails.employmentDetails.userId}`;
+  const {
+    data: swrUnavailableDates,
+    isLoading: swrUnavailableIsLoading,
+    error: swrUnavailableError,
+  } = useSWR(employeeDetails.employmentDetails.userId ? unavailableDatesUrl : null, fetchWithToken, {
+    shouldRetryOnError: true,
+    revalidateOnFocus: true,
+    refreshInterval: 3000,
+  });
+
+  // Upon success/fail of swr request, zustand state will be updated
+  useEffect(() => {
+    if (!isEmpty(swrUnavailableDates)) {
+      setServerDate(swrUnavailableDates?.dateTimeNow); //server date saved on store
+    }
+  }, [swrUnavailableDates]);
+
   return (
     <>
+      {!isEmpty(swrUnavailableError) ? (
+        <ToastNotification toastType="error" notifMessage="Failed to get Server Date!" />
+      ) : null}
+
       <DtrPdfModal
         modalState={dtrPdfModalIsOpen}
         setModalState={setDtrPdfModalIsOpen}
@@ -64,21 +108,9 @@ export const DtrTable = ({ employeeDetails }: DtrTableProps) => {
       {dtrIsLoading ? (
         <div className="w-full h-[90%] static flex flex-col justify-center items-center place-items-center">
           <LoadingSpinner size={'lg'} />
-          {/* <SpinnerDotted
-            speed={70}
-            thickness={70}
-            className="flex w-full h-full transition-all "
-            color="slateblue"
-            size={100}
-          /> */}
         </div>
       ) : !dtrIsLoading && employeeDtr?.dtrDays?.length > 0 ? (
         <>
-          {/* <div className="flex justify-end w-full pt-4">
-            <Button variant={'primary'} size={'md'} loading={false} onClick={() => setDtrPdfModalIsOpen(true)}>
-              View PDF
-            </Button>
-          </div> */}
           <div className="flex overflow-x-hidden w-full md:w-full flex-col">
             <div className="overflow-x-auto w-full md:w-full">
               {employeeDetails.employmentDetails.scheduleBase === ScheduleBases.OFFICE ? (
@@ -116,6 +148,7 @@ export const DtrTable = ({ employeeDetails }: DtrTableProps) => {
                     {employeeDtr?.dtrDays?.length > 0 ? (
                       employeeDtr.dtrDays.map((logs, index) => {
                         let undertimeForWorkSuspension = false;
+
                         if (logs.dtr.remarks.includes('Work Suspension')) {
                           //get only the time from the remarks ex. (Work Suspension (08:00AM))
                           const workSuspensionTimeOut = `${
@@ -286,8 +319,12 @@ export const DtrTable = ({ employeeDetails }: DtrTableProps) => {
                             >
                               <Button
                                 variant={
-                                  DateFormatter(logs.day, 'YYYY-MM-DD') <
-                                  dayjs(dayjs().toDate().toDateString()).format('YYYY-MM-DD')
+                                  serverDate
+                                    ? DateFormatter(logs.day, 'YYYY-MM-DD') < DateFormatter(serverDate, 'YYYY-MM-DD')
+                                      ? 'primary'
+                                      : 'danger'
+                                    : DateFormatter(logs.day, 'YYYY-MM-DD') <
+                                      dayjs(dayjs().toDate().toDateString()).format('YYYY-MM-DD')
                                     ? 'primary'
                                     : 'danger'
                                 }
@@ -295,8 +332,12 @@ export const DtrTable = ({ employeeDetails }: DtrTableProps) => {
                                 loading={false}
                                 onClick={() => openEditActionModal(logs)}
                                 disabled={
-                                  DateFormatter(logs.day, 'YYYY-MM-DD') <
-                                  dayjs(dayjs().toDate().toDateString()).format('YYYY-MM-DD')
+                                  serverDate
+                                    ? DateFormatter(logs.day, 'YYYY-MM-DD') < DateFormatter(serverDate, 'YYYY-MM-DD')
+                                      ? false
+                                      : true
+                                    : DateFormatter(logs.day, 'YYYY-MM-DD') <
+                                      dayjs(dayjs().toDate().toDateString()).format('YYYY-MM-DD')
                                     ? false
                                     : true
                                 }
@@ -529,8 +570,12 @@ export const DtrTable = ({ employeeDetails }: DtrTableProps) => {
                             >
                               <Button
                                 variant={
-                                  DateFormatter(logs.day, 'YYYY-MM-DD') <
-                                  dayjs(dayjs().toDate().toDateString()).format('YYYY-MM-DD')
+                                  serverDate
+                                    ? DateFormatter(logs.day, 'YYYY-MM-DD') < DateFormatter(serverDate, 'YYYY-MM-DD')
+                                      ? 'primary'
+                                      : 'danger'
+                                    : DateFormatter(logs.day, 'YYYY-MM-DD') <
+                                      dayjs(dayjs().toDate().toDateString()).format('YYYY-MM-DD')
                                     ? 'primary'
                                     : 'danger'
                                 }
@@ -538,8 +583,12 @@ export const DtrTable = ({ employeeDetails }: DtrTableProps) => {
                                 loading={false}
                                 onClick={() => openEditActionModal(logs)}
                                 disabled={
-                                  DateFormatter(logs.day, 'YYYY-MM-DD') <
-                                  dayjs(dayjs().toDate().toDateString()).format('YYYY-MM-DD')
+                                  serverDate
+                                    ? DateFormatter(logs.day, 'YYYY-MM-DD') < DateFormatter(serverDate, 'YYYY-MM-DD')
+                                      ? false
+                                      : true
+                                    : DateFormatter(logs.day, 'YYYY-MM-DD') <
+                                      dayjs(dayjs().toDate().toDateString()).format('YYYY-MM-DD')
                                     ? false
                                     : true
                                 }

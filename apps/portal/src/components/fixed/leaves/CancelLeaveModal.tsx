@@ -320,7 +320,8 @@ export const CancelLeaveModal = ({ modalState, setModalState, closeModalAction }
                             'MM-DD-YYYY'
                           )) ||
                       (!isEmpty(remarks) &&
-                        (leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.FORCED ||
+                        (leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.WELLNESS ||
+                          leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.FORCED ||
                           leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.LEAVE_WITHOUT_PAY ||
                           leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.PATERNITY ||
                           leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.SICK ||
