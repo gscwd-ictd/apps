@@ -258,29 +258,6 @@ export const OvertimeSummaryModal = ({ modalState, setModalState, closeModalActi
 
               <div className={`md:flex-row md:items-center flex-col items-start flex gap-0 md:gap-3 justify-between`}>
                 <label className="text-slate-500 text-md font-medium whitespace-nowrap">
-                  Year: <span className="text-red-600">*</span>
-                </label>
-                <div className="w-full md:w-80">
-                  <select
-                    className="text-slate-500 h-12 w-full md:w-80 rounded text-md border-slate-300"
-                    required
-                    onChange={(e) => onChangeYear(e.target.value as unknown as number)}
-                    defaultValue={''}
-                  >
-                    {/* <option value={''} disabled>
-                      Select Year
-                    </option> */}
-                    {yearList.map((item: Item, idx: number) => (
-                      <option value={item.value} key={idx}>
-                        {item.label}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-              </div>
-
-              <div className={`md:flex-row md:items-center flex-col items-start flex gap-0 md:gap-3 justify-between`}>
-                <label className="text-slate-500 text-md font-medium whitespace-nowrap">
                   Period: <span className="text-red-600">*</span>
                 </label>
                 <div className="w-full md:w-80">
@@ -294,6 +271,29 @@ export const OvertimeSummaryModal = ({ modalState, setModalState, closeModalActi
                       Select Period
                     </option>
                     {periodList.map((item: Item, idx: number) => (
+                      <option value={item.value} key={idx}>
+                        {item.label}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+
+              <div className={`md:flex-row md:items-center flex-col items-start flex gap-0 md:gap-3 justify-between`}>
+                <label className="text-slate-500 text-md font-medium whitespace-nowrap">
+                  Year: <span className="text-red-600">*</span>
+                </label>
+                <div className="w-full md:w-80">
+                  <select
+                    className="text-slate-500 h-12 w-full md:w-80 rounded text-md border-slate-300"
+                    required
+                    onChange={(e) => onChangeYear(e.target.value as unknown as number)}
+                    defaultValue={''}
+                  >
+                    {/* <option value={''} disabled>
+                      Select Year
+                    </option> */}
+                    {yearList.map((item: Item, idx: number) => (
                       <option value={item.value} key={idx}>
                         {item.label}
                       </option>

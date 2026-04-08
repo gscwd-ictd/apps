@@ -319,13 +319,6 @@ export default function OvertimeApprovals({ employeeDetails }: InferGetServerSid
             {swrOvertimeListIsLoading ? (
               <div className="w-full h-96 static flex flex-col justify-center items-center place-items-center">
                 <LoadingSpinner size={'lg'} />
-                {/* <SpinnerDotted
-                  speed={70}
-                  thickness={70}
-                  className="w-full flex h-full transition-all "
-                  color="slateblue"
-                  size={100}
-                /> */}
               </div>
             ) : (
               <ContentBody>
