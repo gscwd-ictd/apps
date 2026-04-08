@@ -88,6 +88,7 @@ export const useDataTable = <T>(options: DataTableOptions<T>, type: ApprovalType
   const tableData = useMemo(() => data, [data]);
 
   const table = useReactTable({
+    autoResetPageIndex: false, // prevent page index from resetting to 0 when data changes
     data: tableData,
     columns: tableColumns,
     filterFns: {
