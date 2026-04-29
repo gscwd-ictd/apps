@@ -316,17 +316,30 @@ export const PassSlipCompletedModal = ({
                 </div>
 
                 {passSlip.natureOfBusiness == NatureOfBusiness.OFFICIAL_BUSINESS ? (
-                  <div className="flex flex-col justify-start items-start w-full px-0.5 pb-3  ">
-                    <label className="text-slate-500 text-md whitespace-nowrap pb-0.5 ">
-                      {passSlip?.status === PassSlipStatus.DISAPPROVED_BY_HRMO
-                        ? `Date Disapproved by HRMO:`
-                        : 'Date Approved by HRMO:'}
-                    </label>
+                  <>
+                    <div className="flex flex-col justify-start items-start w-full px-0.5 pb-3  ">
+                      <label className="text-slate-500 text-md whitespace-nowrap pb-0.5 ">
+                        {passSlip?.status === PassSlipStatus.DISAPPROVED_BY_HRMO
+                          ? `Date Disapproved by HRMO:`
+                          : 'Date Approved by HRMO:'}
+                      </label>
 
-                    <div className="w-auto ml-5">
-                      <label className=" text-md font-medium">{DateTimeFormatter(passSlip?.hrmoApprovalDate)}</label>
+                      <div className="w-auto ml-5">
+                        <label className=" text-md font-medium">{DateTimeFormatter(passSlip?.hrmoApprovalDate)}</label>
+                      </div>
                     </div>
-                  </div>
+
+                    {passSlip?.hrmoDisapprovalRemarks ? (
+                      <div className="flex flex-col justify-start items-start w-full px-0.5 pb-3  ">
+                        <label className="text-slate-500 text-md whitespace-nowrap pb-0.5 ">
+                          HRMO Disapproval Remarks:
+                        </label>
+                        <div className="w-auto ml-5">
+                          <label className=" text-md font-medium">{passSlip?.hrmoDisapprovalRemarks}</label>
+                        </div>
+                      </div>
+                    ) : null}
+                  </>
                 ) : null}
 
                 <div className="flex flex-col justify-start items-start w-full px-0.5 pb-3  ">
