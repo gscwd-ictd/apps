@@ -41,7 +41,7 @@ export const SelectedPublication = ({ publication }: SelectedPublicationProps) =
             <div className="flex w-full align-text-top pt-[0.2rem]">
               <p className="flex justify-start font-normal text-xs text-gray-100 w-[25%]">With Exam:</p>
               <p className="flex justify-start font-normal text-sm text-white w-[75%] pl-10">
-                {publication.itemNumber === '0' ? 'No' : 'Yes'}
+                {publication.withExam === 0 ? 'No' : 'Yes'}
               </p>
             </div>
 
