@@ -12,6 +12,7 @@ import { isEmpty } from 'lodash';
 import dayjs from 'dayjs';
 import OvertimeSummaryReportPdf from './OvertimeSummaryReportPdf';
 import { UseCapitalizer } from 'apps/employee-monitoring/src/utils/functions/Capitalizer';
+import OvertimeSummaryReportPdfEdit from './OvertimeSummaryReportPdfEdit';
 
 type ModalProps = {
   modalState: boolean;
@@ -120,12 +121,18 @@ export const OvertimeSummaryReportModal = ({ modalState, setModalState, closeMod
               </PDFDownloadLink>
 
               <PDFViewer width={'100%'} height={1000} showToolbar className="hidden md:block ">
-                <OvertimeSummaryReportPdf
+                <OvertimeSummaryReportPdfEdit
                   selectedMonth={selectedMonth}
                   selectedPeriod={selectedPeriod}
                   selectedEmployeeType={selectedEmployeeType}
                   overtimeSummaryReport={overtimeSummaryReport}
                 />
+                {/* <OvertimeSummaryReportPdf
+                  selectedMonth={selectedMonth}
+                  selectedPeriod={selectedPeriod}
+                  selectedEmployeeType={selectedEmployeeType}
+                  overtimeSummaryReport={overtimeSummaryReport}
+                /> */}
               </PDFViewer>
             </div>
           ) : (
