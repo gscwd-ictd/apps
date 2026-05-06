@@ -197,6 +197,13 @@ export type OvertimeSummary = {
   overallSubstituteDutyOTAmount: number;
   overallNightDifferentialAmount: number;
   overallTotalOTAmount: number;
+
+  //new fields
+
+  overallTotalRegularOTAmountOld?: number;
+  overallTotalOffOTAmountOld?: number;
+  overallTotalOTAmountOld: number;
+  differenceOverallTotalOTAmountAndOld?: number;
 };
 
 export type Signatory = {
@@ -222,6 +229,14 @@ export type OvertimeSummaryEmployee = {
   nightDifferentialAmount: number;
   totalOvertimeAmount: number; //total overtime amount
   totalOTHoursRendered: number; //total no. ot hours
+
+  //new fields
+  regularOTAmountOld?: number;
+  differenceRegularOTAmountAndOld?: number;
+  offOTAmountOld?: number;
+  differenceOffOTAmountAndOld?: number;
+  totalOvertimeAmountOld?: number;
+  differenceTotalOvertimeOld?: number;
 };
 
 export type OvertimeDayDetails = {
