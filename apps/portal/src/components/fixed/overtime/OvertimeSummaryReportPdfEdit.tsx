@@ -316,7 +316,7 @@ export const OvertimeSummaryReportPdfEdit = ({
                     { width: 50, borderStyle: 'solid', borderBottomWidth: 1, borderTopWidth: 1 },
                   ]}
                 >
-                  <Text style={styles.tableCell}>TOTAL OVERTIME AMOUNT</Text>
+                  <Text style={[styles.tableCell, { fontFamily: 'Helvetica-Bold' }]}>TOTAL OVERTIME AMOUNT</Text>
                 </View>
 
                 <View
@@ -746,7 +746,9 @@ export const OvertimeSummaryReportPdfEdit = ({
                       {/* <Text style={styles.tableCell}>{overtime?.substituteAmount.toLocaleString()}</Text> */}
                     </View>
                     <View style={[styles.tableCol, { width: 50 }]}>
-                      <Text style={styles.tableCell}>{overtime?.totalOvertimeAmount}</Text>
+                      <Text style={[styles.tableCell, { fontFamily: 'Helvetica-Bold' }]}>
+                        {overtime?.totalOvertimeAmount}
+                      </Text>
                       {/* <Text style={styles.tableCell}>{overtime?.totalOvertimeAmount.toLocaleString()}</Text> */}
                     </View>
                     <View style={[styles.tableCol, { width: 55 }]}>
@@ -834,7 +836,9 @@ export const OvertimeSummaryReportPdfEdit = ({
                 </View>
 
                 <View style={[styles.tableCol, { width: 50 }]}>
-                  <Text style={styles.tableCell}>{overtimeSummaryReport?.overallTotalOTAmount}</Text>
+                  <Text style={[styles.tableCell, { fontFamily: 'Helvetica-Bold' }]}>
+                    {overtimeSummaryReport?.overallTotalOTAmount}
+                  </Text>
                   {/* <Text style={styles.tableCell}>{overtimeSummaryReport?.overallTotalOTAmount?.toLocaleString()}</Text> */}
                 </View>
                 <View style={[styles.tableCol, { width: 55 }]}>
