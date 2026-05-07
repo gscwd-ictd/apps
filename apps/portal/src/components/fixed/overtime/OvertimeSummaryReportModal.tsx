@@ -63,6 +63,14 @@ export const OvertimeSummaryReportModal = ({ modalState, setModalState, closeMod
     }
   );
 
+  const changeJoToProjectBased = (employeeType: string) => {
+    if (employeeType === 'job order') {
+      return 'project-based';
+    } else {
+      return employeeType;
+    }
+  };
+
   // Initial zustand state update
   useEffect(() => {
     if (swrOvertimeSummaryIsLoading) {
@@ -105,12 +113,12 @@ export const OvertimeSummaryReportModal = ({ modalState, setModalState, closeMod
                   <OvertimeSummaryReportPdf
                     selectedMonth={selectedMonth}
                     selectedPeriod={selectedPeriod}
-                    selectedEmployeeType={selectedEmployeeType}
+                    selectedEmployeeType={changeJoToProjectBased(selectedEmployeeType)}
                     overtimeSummaryReport={overtimeSummaryReport}
                   />
                 }
                 fileName={`${UseCapitalizer(
-                  selectedEmployeeType
+                  changeJoToProjectBased(selectedEmployeeType)
                 )} ${selectedMonth}-${selectedYear} Overtime Summary.pdf`}
                 className="md:hidden text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
               >
@@ -124,7 +132,7 @@ export const OvertimeSummaryReportModal = ({ modalState, setModalState, closeMod
                 <OvertimeSummaryReportPdfEdit
                   selectedMonth={selectedMonth}
                   selectedPeriod={selectedPeriod}
-                  selectedEmployeeType={selectedEmployeeType}
+                  selectedEmployeeType={changeJoToProjectBased(selectedEmployeeType)}
                   overtimeSummaryReport={overtimeSummaryReport}
                 />
                 {/* <OvertimeSummaryReportPdf
