@@ -266,9 +266,7 @@ export const OvertimeSummaryReportPdf = ({
                     { width: 40, borderStyle: 'solid', borderBottomWidth: 1, borderTopWidth: 1 },
                   ]}
                 >
-                  <Text style={styles.tableCell}>
-                    AMOUNT (A X B{selectedEmployeeType !== 'job order' ? ' X 1.25' : ' X 1.25'})
-                  </Text>
+                  <Text style={styles.tableCell}>AMOUNT (A X B X 1.25)</Text>
                 </View>
 
                 <View
@@ -286,9 +284,7 @@ export const OvertimeSummaryReportPdf = ({
                     { width: 40, borderStyle: 'solid', borderBottomWidth: 1, borderTopWidth: 1 },
                   ]}
                 >
-                  <Text style={styles.tableCell}>
-                    AMOUNT (A X C{selectedEmployeeType !== 'job order' ? ' X 1.5' : ' X 1.5'})
-                  </Text>
+                  <Text style={styles.tableCell}>AMOUNT (A X C X 1.5)</Text>
                 </View>
                 <View
                   style={[
@@ -305,9 +301,7 @@ export const OvertimeSummaryReportPdf = ({
                   ]}
                 >
                   <Text style={[styles.tableCell, { marginBottom: -10 }]}>SUBSTITUTE AMOUNT</Text>
-                  <Text style={[styles.tableCell, {}]}>
-                    (A X D{selectedEmployeeType !== 'job order' ? ' X 1.25' : ' X 1.25'})
-                  </Text>
+                  <Text style={[styles.tableCell, {}]}>(A X D X 1.25)</Text>
                 </View>
 
                 {/* <View style={styles.tableCol_dates_main}>

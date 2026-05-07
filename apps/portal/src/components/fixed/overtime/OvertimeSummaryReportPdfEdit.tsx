@@ -266,9 +266,7 @@ export const OvertimeSummaryReportPdfEdit = ({
                     { width: 40, borderStyle: 'solid', borderBottomWidth: 1, borderTopWidth: 1 },
                   ]}
                 >
-                  <Text style={styles.tableCell}>
-                    AMOUNT (A X B{selectedEmployeeType !== 'job order' ? ' X 1.25' : ' X 1.25'})
-                  </Text>
+                  <Text style={styles.tableCell}>AMOUNT (A X B X 1.25)</Text>
                 </View>
 
                 <View
@@ -286,9 +284,7 @@ export const OvertimeSummaryReportPdfEdit = ({
                     { width: 40, borderStyle: 'solid', borderBottomWidth: 1, borderTopWidth: 1 },
                   ]}
                 >
-                  <Text style={styles.tableCell}>
-                    AMOUNT (A X C{selectedEmployeeType !== 'job order' ? ' X 1.5' : ' X 1.5'})
-                  </Text>
+                  <Text style={styles.tableCell}>AMOUNT (A X C X 1.5)</Text>
                 </View>
                 <View
                   style={[
@@ -305,9 +301,7 @@ export const OvertimeSummaryReportPdfEdit = ({
                   ]}
                 >
                   <Text style={[styles.tableCell, { marginBottom: -4 }]}>SUBSTITUTE AMOUNT</Text>
-                  <Text style={[styles.tableCell, {}]}>
-                    (A X D{selectedEmployeeType !== 'job order' ? ' X 1.25' : ' X 1.25'})
-                  </Text>
+                  <Text style={[styles.tableCell, {}]}>(A X D X 1.25)</Text>
                 </View>
 
                 <View
@@ -753,7 +747,7 @@ export const OvertimeSummaryReportPdfEdit = ({
                     </View>
                     <View style={[styles.tableCol, { width: 55 }]}>
                       <Text style={styles.tableCell}>
-                        {selectedEmployeeType !== 'job order' ? '' : overtime?.totalOvertimeAmountOld}
+                        {selectedEmployeeType !== 'project-based' ? '' : overtime?.totalOvertimeAmountOld}
                       </Text>
                       {/* <Text style={styles.tableCell}>
                         {selectedEmployeeType !== 'job order' ? '' : overtime?.totalOvertimeAmountOld.toLocaleString()}
@@ -761,7 +755,7 @@ export const OvertimeSummaryReportPdfEdit = ({
                     </View>
                     <View style={[styles.tableCol, { width: 50 }]}>
                       <Text style={styles.tableCell}>
-                        {selectedEmployeeType !== 'job order' ? '' : overtime?.differenceTotalOvertimeOld}
+                        {selectedEmployeeType !== 'project-based' ? '' : overtime?.differenceTotalOvertimeOld}
                       </Text>
                       {/* <Text style={styles.tableCell}>
                         {selectedEmployeeType !== 'job order'

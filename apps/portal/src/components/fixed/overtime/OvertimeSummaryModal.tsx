@@ -50,7 +50,7 @@ const periodList: Array<SelectOption> = [
 const employeeTypeList: Array<SelectOption> = [
   { label: 'Permanent', value: 'permanent' },
   { label: 'Casual', value: 'casual' },
-  { label: 'Job Order', value: 'job order' },
+  { label: 'Project-Based', value: 'job order' },
 ];
 
 export const OvertimeSummaryModal = ({ modalState, setModalState, closeModalAction }: ModalProps) => {
