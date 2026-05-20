@@ -188,6 +188,9 @@ export type OvertimeState = {
   setTab: (tab: number) => void;
 
   emptyResponseAndError: () => void;
+
+  duplicateEmployees: Array<string>;
+  setDuplicateEmployees: (duplicateEmployees: Array<string>) => void;
 };
 
 export const useOvertimeStore = create<OvertimeState>()(
@@ -229,6 +232,7 @@ export const useOvertimeStore = create<OvertimeState>()(
       errorOvertimeAuthorizationAccomplishmentReport: '',
       errorRemoveEmployee: '',
       errorNightDifferentialReport: '',
+      errorDuplicateEmployee: '',
     },
 
     overtimeDetails: {} as OvertimeDetails,
@@ -963,6 +967,14 @@ export const useOvertimeStore = create<OvertimeState>()(
           errorOvertime: '',
           errorRemoveEmployee: '',
         },
+      }));
+    },
+
+    duplicateEmployees: [],
+    setDuplicateEmployees: (duplicateEmployees: Array<string>) => {
+      set((state) => ({
+        ...state,
+        duplicateEmployees,
       }));
     },
   }))

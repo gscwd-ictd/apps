@@ -9,7 +9,7 @@ import { useEmployeeStore } from '../../../store/employee.store';
 import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
 import { useOvertimeStore } from 'apps/portal/src/store/overtime.store';
 import { MySelectList } from '../../modular/inputs/SelectList';
-import { EmployeeOvertimeDetail, OvertimeForm } from 'libs/utils/src/lib/types/overtime.type';
+import { EmployeeOvertimeDetail, OvertimeDetails, OvertimeForm } from 'libs/utils/src/lib/types/overtime.type';
 import { OvertimeStatus } from 'libs/utils/src/lib/enums/overtime.enum';
 import dayjs from 'dayjs';
 import CancelOvertimeModal from './CancelOvertimeModal';
@@ -23,6 +23,7 @@ type ModalProps = {
 export const OvertimeApplicationModal = ({ modalState, setModalState, closeModalAction }: ModalProps) => {
   //zustand initialization to access Leave store
   const {
+    overtime,
     applyOvertimeModalIsOpen,
     loadingResponse,
     employeeList,
@@ -39,7 +40,9 @@ export const OvertimeApplicationModal = ({ modalState, setModalState, closeModal
     pendingOvertimeModalIsOpen,
     cancelOvertimeModalIsOpen,
     setCancelOvertimeModalIsOpen,
+    setDuplicateEmployees,
   } = useOvertimeStore((state) => ({
+    overtime: state.overtime, //overtime list
     applyOvertimeModalIsOpen: state.applyOvertimeModalIsOpen,
     loadingResponse: state.loading.loadingResponse,
     employeeList: state.employeeList,
@@ -55,6 +58,7 @@ export const OvertimeApplicationModal = ({ modalState, setModalState, closeModal
     pendingOvertimeModalIsOpen: state.pendingOvertimeModalIsOpen,
     cancelOvertimeModalIsOpen: state.cancelOvertimeModalIsOpen,
     setCancelOvertimeModalIsOpen: state.setCancelOvertimeModalIsOpen,
+    setDuplicateEmployees: state.setDuplicateEmployees,
   }));
 
   // set state for employee store
@@ -125,12 +129,59 @@ export const OvertimeApplicationModal = ({ modalState, setModalState, closeModal
     }
   }, [pendingOvertimeModalIsOpen]);
 
+  // const getConflictingEmployees = (
+  //   formData: OvertimeForm,
+  //   existingOvertimes: Array<OvertimeDetails>,
+  //   currentOvertimeId?: string
+  // ) => {
+  //   const plannedDate = new Date(formData.plannedDate).toDateString();
+
+  //   const conflicts: Array<string> = [];
+
+  //   existingOvertimes.forEach((ot) => {
+  //     // Ignore current overtime when editing
+  //     if (currentOvertimeId && ot.id === currentOvertimeId) {
+  //       return;
+  //     }
+
+  //     // Ignore cancelled/disapproved overtime
+  //     if (ot.status === OvertimeStatus.CANCELLED || ot.status === OvertimeStatus.DISAPPROVED) {
+  //       return;
+  //     }
+
+  //     const overtimeDate = new Date(ot.plannedDate).toDateString();
+
+  //     // Skip if different date
+  //     if (plannedDate !== overtimeDate) {
+  //       return;
+  //     }
+
+  //     ot.employees.forEach((emp) => {
+  //       if (formData.employees.includes(emp.employeeId) && !conflicts.includes(emp.fullName)) {
+  //         conflicts.push(emp.fullName);
+  //       }
+  //     });
+  //   });
+
+  //   return conflicts;
+  // };
+
   const onSubmit: SubmitHandler<OvertimeForm> = (data: OvertimeForm) => {
+    setDuplicateEmployees([]);
     handlePostResult(data);
   };
 
   const handlePostResult = async (data: OvertimeForm) => {
     setIsApplying(true);
+
+    // front end checking of duplicate employees existing in other OT applications - limited to supervisor's list only
+    // const conflictingEmployees = getConflictingEmployees(data, overtime.overtimes, overtimeDetails?.id);
+    // if (conflictingEmployees.length > 0) {
+    //   setDuplicateEmployees(conflictingEmployees);
+    //   setIsApplying(false);
+    //   return;
+    // }
+
     if (overtimeDetails) {
       let newData = {
         id: overtimeDetails?.id,
@@ -142,10 +193,17 @@ export const OvertimeApplicationModal = ({ modalState, setModalState, closeModal
       putOvertime();
       const { error, result } = await putPortal('/overtime-applications/', newData);
       if (error) {
-        putOvertimeFail(result);
+        putOvertimeFail(`${result}`);
         setIsApplying(false);
+        console.log('nag error during edit', result.replaceAll('•', '\n•'));
+      } else if (result.message) {
+        //duplicate employee error from backend
+        putOvertimeFail(result.message);
+        setIsApplying(false);
+        console.log('nag error during edit 2', result);
       } else {
         putOvertimeSuccess(result);
+        console.log('nag success during edit', result);
         reset();
         closeModalAction();
         setIsApplying(false);
@@ -156,6 +214,7 @@ export const OvertimeApplicationModal = ({ modalState, setModalState, closeModal
       if (error) {
         postOvertimeFail(result);
         setIsApplying(false);
+        console.log('nag error during create', result);
       } else {
         postOvertimeSuccess(result);
         reset();
