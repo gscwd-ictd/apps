@@ -5,13 +5,7 @@ import 'react-toastify/dist/ReactToastify.css';
 
 type ToastType = 'info' | 'warning' | 'error' | 'success' | '';
 
-type ToastPosition =
-  | 'top-right'
-  | 'top-center'
-  | 'top-left'
-  | 'bottom-right'
-  | 'bottom-center'
-  | 'bottom-left';
+type ToastPosition = 'top-right' | 'top-center' | 'top-left' | 'bottom-right' | 'bottom-center' | 'bottom-left';
 type ToastTheme = 'light' | 'dark' | 'colored';
 
 type ToastNotificationProps = {
@@ -69,6 +63,7 @@ export const ToastNotification: FunctionComponent<ToastNotificationProps> = ({
   return (
     <div>
       <ToastContainer
+        className={'whitespace-pre-line'}
         position={ToastDefaultOptions.position}
         autoClose={ToastDefaultOptions.autoClose}
         hideProgressBar={hideProgressBar}

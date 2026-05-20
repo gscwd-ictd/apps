@@ -46,7 +46,7 @@ export const CompetencyDropdown = ({ index }: CompetencyDropDownProps) => {
     error: swrErrorCompetencies,
     mutate: swrMutateCompetencies,
   } = useSWR(
-    selectedPosition.salaryGrade && selectedPosition.salaryGrade >= 20
+    selectedPosition.salaryGrade && selectedPosition.salaryGrade > 20
       ? `/competency-proficiency-level/single/managerial/${selectedPosition.positionId}/`
       : `/competency-proficiency-level/single/functional/${selectedPosition.positionId}/`,
     fetcherHRIS,
@@ -91,7 +91,7 @@ export const CompetencyDropdown = ({ index }: CompetencyDropDownProps) => {
   // swr get success or fail
   useEffect(() => {
     if (!isEmpty(swrCompetencies)) {
-      if (selectedPosition.salaryGrade && selectedPosition.salaryGrade >= 20) {
+      if (selectedPosition.salaryGrade && selectedPosition.salaryGrade > 20) {
         getCompetenciesSuccess(swrCompetencies.data.managerial);
       } else {
         getCompetenciesSuccess(swrCompetencies.data.functional);

@@ -49,6 +49,7 @@ export default function Overtime({ employeeDetails }: InferGetServerSidePropsTyp
     errorNightDiffEmployeeList,
     errorNightDifferentialReport,
     overtimes,
+    errorResponse,
     setOvertimeSummaryModalIsOpen,
     setPendingOvertimeModalIsOpen,
     setCompletedOvertimeModalIsOpen,
@@ -68,6 +69,7 @@ export default function Overtime({ employeeDetails }: InferGetServerSidePropsTyp
     getNightDiffEmployeeList,
     getNightDiffEmployeeListSuccess,
     getNightDiffEmployeeListFail,
+    duplicateEmployees,
   } = useOvertimeStore((state) => ({
     removeEmployeeResponse: state.response.removeEmployeeResponse,
     errorRemoveEmployee: state.error.errorRemoveEmployee,
@@ -85,6 +87,7 @@ export default function Overtime({ employeeDetails }: InferGetServerSidePropsTyp
     errorNightDiffEmployeeList: state.error.errorNightDiffEmployeeList,
     errorNightDifferentialReport: state.error.errorNightDifferentialReport,
     overtimes: state.overtime.overtimes,
+    errorResponse: state.error.errorResponse,
     setOvertimeSummaryModalIsOpen: state.setOvertimeSummaryModalIsOpen,
     setPendingOvertimeModalIsOpen: state.setPendingOvertimeModalIsOpen,
     setCompletedOvertimeModalIsOpen: state.setCompletedOvertimeModalIsOpen,
@@ -104,6 +107,7 @@ export default function Overtime({ employeeDetails }: InferGetServerSidePropsTyp
     getNightDiffEmployeeList: state.getNightDiffEmployeeList,
     getNightDiffEmployeeListSuccess: state.getNightDiffEmployeeListSuccess,
     getNightDiffEmployeeListFail: state.getNightDiffEmployeeListFail,
+    duplicateEmployees: state.duplicateEmployees,
   }));
 
   const router = useRouter();
@@ -426,6 +430,16 @@ export default function Overtime({ employeeDetails }: InferGetServerSidePropsTyp
         />
       ) : null}
 
+      {/* Create Overtime Application Error */}
+      {!isEmpty(errorResponse) ? (
+        <ToastNotification
+          toastType="error"
+          notifMessage={`
+            ${errorResponse.replace(/:\s*/g, ':\n').replace(/\s*•\s*/g, '\n• ')}
+           `}
+        />
+      ) : null}
+
       {/* Employee Individual Accomplishment PDF Report Error*/}
       {!isEmpty(errorAccomplishmentReport) ? (
         <ToastNotification
@@ -470,6 +484,15 @@ export default function Overtime({ employeeDetails }: InferGetServerSidePropsTyp
           notifMessage={`${errorNightDifferentialReport}: Failed to load Night Shift Differential Report.`}
         />
       ) : null}
+
+      {/* {!isEmpty(duplicateEmployees) ? (
+        <ToastNotification
+          toastType="error"
+          notifMessage={`The following employees already have an overtime application for this date: •${duplicateEmployees.join(
+            ' •'
+          )}`}
+        />
+      ) : null} */}
 
       <EmployeeProvider employeeData={employee}>
         <Head>
