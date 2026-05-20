@@ -485,14 +485,14 @@ export default function Overtime({ employeeDetails }: InferGetServerSidePropsTyp
         />
       ) : null}
 
-      {!isEmpty(duplicateEmployees) ? (
+      {/* {!isEmpty(duplicateEmployees) ? (
         <ToastNotification
           toastType="error"
           notifMessage={`The following employees already have an overtime application for this date: •${duplicateEmployees.join(
             ' •'
           )}`}
         />
-      ) : null}
+      ) : null} */}
 
       <EmployeeProvider employeeData={employee}>
         <Head>
