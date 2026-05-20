@@ -195,15 +195,12 @@ export const OvertimeApplicationModal = ({ modalState, setModalState, closeModal
       if (error) {
         putOvertimeFail(`${result}`);
         setIsApplying(false);
-        console.log('nag error during edit', result.replaceAll('•', '\n•'));
       } else if (result.message) {
         //duplicate employee error from backend
         putOvertimeFail(result.message);
         setIsApplying(false);
-        console.log('nag error during edit 2', result);
       } else {
         putOvertimeSuccess(result);
-        console.log('nag success during edit', result);
         reset();
         closeModalAction();
         setIsApplying(false);
@@ -214,7 +211,6 @@ export const OvertimeApplicationModal = ({ modalState, setModalState, closeModal
       if (error) {
         postOvertimeFail(result);
         setIsApplying(false);
-        console.log('nag error during create', result);
       } else {
         postOvertimeSuccess(result);
         reset();
