@@ -135,6 +135,7 @@ export default function Calendar({
       leaveName === LeaveName.LEAVE_WITHOUT_PAY ||
       leaveName === LeaveName.SICK ||
       leaveName === LeaveName.SPECIAL_PRIVILEGE ||
+      leaveName === LeaveName.WELLNESS ||
       leaveName === LeaveName.SOLO_PARENT
     ) {
       //remove past dates up to last date of duty
@@ -158,7 +159,8 @@ export default function Calendar({
         leaveName === LeaveName.FORCED ||
         leaveName === LeaveName.SOLO_PARENT ||
         leaveName === LeaveName.SPECIAL_PRIVILEGE ||
-        leaveName === LeaveName.SICK) &&
+        leaveName === LeaveName.SICK ||
+        leaveName === LeaveName.WELLNESS) &&
       futureLeaveCount <= 0
     ) {
       //check if there are only past dates selected for VL, FL - legit late filing
@@ -174,6 +176,7 @@ export default function Calendar({
       else if (
         (leaveName === LeaveName.LEAVE_WITHOUT_PAY ||
           leaveName === LeaveName.SICK ||
+          leaveName === LeaveName.WELLNESS ||
           leaveName === LeaveName.SPECIAL_PRIVILEGE ||
           leaveName === LeaveName.SOLO_PARENT) &&
         isLateFiling &&
@@ -285,7 +288,7 @@ export default function Calendar({
           else if (
             (leaveName === LeaveName.LEAVE_WITHOUT_PAY ||
               leaveName === LeaveName.SPECIAL_PRIVILEGE ||
-              // leaveName === LeaveName.WELLNESS ||
+              leaveName === LeaveName.WELLNESS ||
               leaveName === LeaveName.SICK ||
               leaveName === LeaveName.VACATION ||
               leaveName === LeaveName.FORCED ||
@@ -300,7 +303,8 @@ export default function Calendar({
             leaveName === LeaveName.SPECIAL_EMERGENCY_CALAMITY
           ) {
             setSelectedDates((selectedDates) => [...selectedDates, specifiedDate]);
-          } else if (leaveName === LeaveName.WELLNESS) {
+          } else if (leaveName === LeaveName.WELLNESS && dayjs(`${specifiedDate}`).diff(`${today}`, 'day') >= 0) {
+            //allow selecting of future days from today for wellness leave (except for next year and december - found on another condition)
             setSelectedDates((selectedDates) => [...selectedDates, specifiedDate]);
           }
         }
@@ -569,7 +573,7 @@ export default function Calendar({
                             //disable date selection for past dates from last day of duty for SPL/SICK ONLY
                             (leaveName === LeaveName.LEAVE_WITHOUT_PAY ||
                               leaveName === LeaveName.SPECIAL_PRIVILEGE ||
-                              // leaveName === LeaveName.WELLNESS ||
+                              leaveName === LeaveName.WELLNESS ||
                               leaveName === LeaveName.SICK ||
                               leaveName === LeaveName.SOLO_PARENT) &&
                               DateFormatter(day, 'YYYY-MM-DD') <= DateFormatter(lastDateOfDuty, 'YYYY-MM-DD') &&

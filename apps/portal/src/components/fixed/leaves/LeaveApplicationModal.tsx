@@ -1863,7 +1863,8 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
                     watch('typeOfLeaveDetails.leaveName') === LeaveName.VACATION ||
                     watch('typeOfLeaveDetails.leaveName') === LeaveName.SPECIAL_PRIVILEGE ||
                     watch('typeOfLeaveDetails.leaveName') === LeaveName.SOLO_PARENT ||
-                    watch('typeOfLeaveDetails.leaveName') === LeaveName.SICK ? (
+                    watch('typeOfLeaveDetails.leaveName') === LeaveName.SICK ||
+                    watch('typeOfLeaveDetails.leaveName') === LeaveName.WELLNESS ? (
                       <div className="flex flex-col gap-1 w-full bg-slate-100 text-sm p-2 mt-1">
                         <div className="flex gap-2 items-center justify-start rounded ">
                           <label className="text-sm font-medium text-slate-500 whitespace-nowrap">
