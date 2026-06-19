@@ -12,6 +12,8 @@ import { isEmpty } from 'lodash';
 import { HiExclamationCircle } from 'react-icons/hi';
 import { useSWRConfig } from 'swr';
 import { AssignUpdatedDrcs, UpdateFinalDrcs } from '../utils/drcFunctions';
+import { useEffect, useState } from 'react';
+import { SpinnerCircular } from 'spinners-react';
 
 export const DrcAlertConfirmation = () => {
   // use alert confirmation store
@@ -52,6 +54,8 @@ export const DrcAlertConfirmation = () => {
   // use alert success store
   const openAlertSuccess = useAlertSuccessStore((state) => state.setOpen);
 
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+
   // use position store
   const { selectedPosition, postPosition, postPositionFail, postPositionSuccess, emptySelectedPosition } =
     usePositionStore((state) => ({
@@ -64,11 +68,16 @@ export const DrcAlertConfirmation = () => {
 
   const { mutate } = useSWRConfig();
 
+  useEffect(() => {
+    setIsLoading(false);
+  }, [confirmationIsOpen]);
+
   // use employee store
   const employee = useEmployeeStore((state) => state.employeeDetails);
 
   const onSubmitConfirm = async () => {
     if (action === Actions.CREATE) {
+      setIsLoading(true);
       const drcsForPosting = await UpdateFinalDrcs(selectedDnrs);
       postPosition();
       const postDrcs = await handlePostData(drcsForPosting);
@@ -78,6 +87,7 @@ export const DrcAlertConfirmation = () => {
         postPositionFail(postDrcs.result);
 
         postDrcsFail(postDrcs.result);
+        setIsLoading(false);
       } else {
         // set value from returned response
         // post drcs success
@@ -116,7 +126,7 @@ export const DrcAlertConfirmation = () => {
 
         // closeModal
         closeModal();
-
+        setIsLoading(false);
         // empty selected position upon success
         emptySelectedPosition();
 
@@ -127,11 +137,13 @@ export const DrcAlertConfirmation = () => {
         cancelDrcPage();
       }
     } else if (action === Actions.UPDATE) {
+      setIsLoading(true);
       // handleUpdateData(selectedDnrs.core,selectedDnrs.support, availableDnrs)
       const drcsForUpdate = await AssignUpdatedDrcs(selectedDnrs.core, selectedDnrs.support, availableDnrs);
 
       const updateDrcs = await handleUpdateData(drcsForUpdate);
       if (updateDrcs.error === true) {
+        setIsLoading(false);
         //asdasd
       } else {
         // mutate available drcs
@@ -167,7 +179,7 @@ export const DrcAlertConfirmation = () => {
 
         // closeModal
         closeModal();
-
+        setIsLoading(false);
         // empty selected position upon success
         emptySelectedPosition();
 
@@ -212,7 +224,7 @@ export const DrcAlertConfirmation = () => {
 
   return (
     <>
-      <Alert open={confirmationIsOpen} setOpen={setConfIsOpen}>
+      <Alert open={confirmationIsOpen} setOpen={setConfIsOpen} closeOnBackdrop={false}>
         <Alert.Description>
           <div className="flex-row items-center w-full h-auto p-5">
             <div className="w-full text-lg font-normal text-left text-slate-700 ">
@@ -234,17 +246,25 @@ export const DrcAlertConfirmation = () => {
         <Alert.Footer alignEnd>
           <div className="flex gap-2">
             <button
+              disabled={isLoading ? true : false}
               onClick={closeConf}
               className="w-[6rem] px-3 py-2 bg-white border border-gray-300 rounded text-gray-700 active:bg-gray-100"
             >
-              <span>No</span>
+              <span className="flex items-center justify-center gap-2">
+                {isLoading ? <SpinnerCircular className="text-white w-5 h-5" /> : 'No'}
+              </span>
             </button>
 
             <button
               onClick={onSubmitConfirm}
-              className="w-[6rem] px-3 py-2 bg-indigo-400 rounded text-white active:bg-indigo-500"
+              disabled={isLoading ? true : false}
+              className={`w-[6rem] px-3 py-2 ${
+                isLoading ? 'bg-indigo-200' : 'bg-indigo-400'
+              } rounded text-white active:bg-indigo-500`}
             >
-              <span>Yes</span>
+              <span className="flex items-center justify-center gap-2">
+                {isLoading ? <SpinnerCircular className="text-white w-5 h-5" /> : 'Yes'}
+              </span>
             </button>
           </div>
         </Alert.Footer>
