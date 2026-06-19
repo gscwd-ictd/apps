@@ -2,12 +2,7 @@ import { Dialog, Transition } from '@headlessui/react';
 import { Fragment, FunctionComponent, ReactNode } from 'react';
 import { FadeAndScale } from '../FadeAndScale';
 import { FadeInOut } from '../FadeInOut';
-import {
-  promptPanelStyles,
-  promptContainerStyles,
-  promptOverlayStyles,
-  promptFooterStyles,
-} from './Alert.styles';
+import { promptPanelStyles, promptContainerStyles, promptOverlayStyles, promptFooterStyles } from './Alert.styles';
 
 type Props = {
   children: ReactNode | Array<ReactNode>;
@@ -26,16 +21,18 @@ type AlertComposition = {
 export type AlertProps = Props & {
   open: boolean;
   setOpen: (state: boolean) => void;
+  closeOnBackdrop?: boolean;
 };
 
 export const Alert: FunctionComponent<AlertProps> & AlertComposition = ({
   open,
   setOpen,
+  closeOnBackdrop = true,
   children,
 }) => {
   return (
     <Transition appear show={open} as={Fragment}>
-      <Dialog as="div" className="relative z-50" onClose={() => setOpen(false)}>
+      <Dialog as="div" className="relative z-50" onClose={closeOnBackdrop ? () => setOpen(false) : () => null}>
         <FadeInOut>
           <div className={promptOverlayStyles()} />
         </FadeInOut>
@@ -45,9 +42,7 @@ export const Alert: FunctionComponent<AlertProps> & AlertComposition = ({
         <div className="fixed inset-0 overflow-y-auto">
           <div className={promptContainerStyles()}>
             <FadeAndScale>
-              <Dialog.Panel className={promptPanelStyles()}>
-                {children}
-              </Dialog.Panel>
+              <Dialog.Panel className={promptPanelStyles()}>{children}</Dialog.Panel>
             </FadeAndScale>
           </div>
         </div>

@@ -12,8 +12,9 @@ const styles = StyleSheet.create({
   page: {
     fontFamily: 'Helvetica',
     backgroundColor: '#ffffff',
-    paddingTop: 10,
-    paddingBottom: 25,
+    // paddingTop: 10,
+    // paddingBottom: 25,
+    padding: '22 27 22 27',
   },
   rowContainer: {
     flexDirection: 'row',
@@ -21,7 +22,7 @@ const styles = StyleSheet.create({
     marginTop: 5,
   },
   bodyBorder: {
-    marginHorizontal: 50,
+    margin: '0 0 0 0',
   },
 
   // Table Styles
@@ -144,9 +145,46 @@ export const PdDocument = (props) => {
     const content = positionDutyResponsibilities?.duties.core.map((duty, index) =>
       // skip the first item as it is already rendered with the table header
       index === 0 ? (
-        <></>
+        <View key={index}>
+          <View
+            style={[
+              styles.rowContainerTable,
+              styles.borderAll,
+              { height: 30, justifyContent: 'center', alignItems: 'center' },
+            ]}
+          >
+            <View style={[styles.w14, styles.tHeadSecondLevel, styles.borderRight, { height: 30 }]}>
+              <Text>Percentage</Text>
+              <Text>of Work</Text>
+            </View>
+
+            <View style={[styles.w60, styles.tHeadSecondLevel, styles.borderRight, { height: 30, padding: '8 0 0 0' }]}>
+              <Text>Duties and Responsibilities</Text>
+            </View>
+
+            <View style={[styles.w26, styles.tHeadSecondLevel, { height: 30, padding: '8 0 0 0' }]}>
+              <Text>Competency/Level</Text>
+            </View>
+          </View>
+
+          {/* render the first core duty to be wrapped with the table header */}
+          <View style={[styles.rowContainerTable, styles.borderAll]}>
+            <View style={[styles.w14, styles.tData, styles.borderRight]}>
+              <Text style={[styles.horizontalCenter, styles.verticalCenter]}>
+                {positionDutyResponsibilities?.duties.core[0].percentage}
+              </Text>
+            </View>
+            <View style={[styles.w60, styles.tData, styles.borderRight]}>
+              <Text>{positionDutyResponsibilities?.duties?.core[0].description}</Text>
+            </View>
+            <View style={[styles.w26, styles.tData, styles.horizontalCenter]}>
+              <Text>{positionDutyResponsibilities?.duties?.core[0].competency} / </Text>
+              <Text>{positionDutyResponsibilities?.duties?.core[0].level}</Text>
+            </View>
+          </View>
+        </View>
       ) : (
-        <View style={[styles.rowContainerTable, styles.borderAll]} key={index} wrap={false}>
+        <View style={[styles.rowContainerTable, styles.borderAll, styles.bodyText]} key={index}>
           <View style={[styles.w14, styles.tData, styles.borderRight]}>
             <Text style={[styles.horizontalCenter, styles.verticalCenter]}>{duty.percentage}</Text>
           </View>
@@ -283,287 +321,168 @@ export const PdDocument = (props) => {
       subject="Position Description - HRD-014-3"
       title={'Position Description for ' + jobDescription?.itemNumber}
     >
-      <Page size="A4" style={styles.page}>
-        <Header />
+      <Page size="FOLIO" style={styles.page} debug={false}>
+        <View style={[styles.bodyBorder]} wrap={true}>
+          <Header />
 
-        <View style={[styles.bodyBorder]}>
-          {/* Document Title */}
-          <View style={[styles.documentTitle]}>
-            <Text>POSITION DESCRIPTION</Text>
-          </View>
-
-          <View style={[styles.bodyText]}>
-            {/* JOB DESCRIPTION */}
-            <View>
-              {/* Item Number */}
-              <View style={[styles.rowContainer]}>
-                <View style={[styles.w30]}>
-                  <Text>Item Number</Text>
-                </View>
-
-                <View style={[styles.w10]}>
-                  <Text>:</Text>
-                </View>
-
-                <View style={[styles.w60]}>
-                  <Text>{jobDescription?.itemNumber || 'N/A'}</Text>
-                </View>
-              </View>
-
-              {/* Job Title */}
-              <View style={[styles.rowContainer]}>
-                <View style={[styles.w30]}>
-                  <Text>Position Title</Text>
-                </View>
-
-                <View style={[styles.w10]}>
-                  <Text>:</Text>
-                </View>
-
-                <View style={[styles.w60]}>
-                  <Text>{jobDescription?.positionTitle || 'N/A'}</Text>
-                </View>
-              </View>
-
-              {/* Office */}
-              <View style={[styles.rowContainer]}>
-                <View style={[styles.w30]}>
-                  <Text>Office</Text>
-                </View>
-
-                <View style={[styles.w10]}>
-                  <Text>:</Text>
-                </View>
-
-                <View style={[styles.w60]}>
-                  <Text>{jobDescription?.assignedTo.office.name || 'N/A'}</Text>
-                </View>
-              </View>
-
-              {/* Department */}
-              <View style={[styles.rowContainer]}>
-                <View style={[styles.w30]}>
-                  <Text>Department</Text>
-                </View>
-
-                <View style={[styles.w10]}>
-                  <Text>:</Text>
-                </View>
-
-                <View style={[styles.w60]}>
-                  <Text>{jobDescription?.assignedTo.department.name || 'N/A'}</Text>
-                </View>
-              </View>
-
-              {/* Division */}
-              <View style={[styles.rowContainer]}>
-                <View style={[styles.w30]}>
-                  <Text>Division</Text>
-                </View>
-
-                <View style={[styles.w10]}>
-                  <Text>:</Text>
-                </View>
-
-                <View style={[styles.w60]}>
-                  <Text>{jobDescription?.assignedTo.division.name || 'N/A'}</Text>
-                </View>
-              </View>
-
-              {/* Reports to */}
-              <View style={[styles.rowContainer]}>
-                <View style={[styles.w30]}>
-                  <Text>Reports to</Text>
-                </View>
-
-                <View style={[styles.w10]}>
-                  <Text>:</Text>
-                </View>
-
-                <View style={[styles.w60]}>
-                  <Text>{jobDescription?.reportsTo || 'N/A'}</Text>
-                </View>
-              </View>
-
-              {/* Salary Grade */}
-              <View style={[styles.rowContainer]}>
-                <View style={[styles.w30]}>
-                  <Text>Salary Grade</Text>
-                </View>
-
-                <View style={[styles.w10]}>
-                  <Text>:</Text>
-                </View>
-
-                <View style={[styles.w60]}>
-                  <Text>{jobDescription?.salary.salaryGrade || 0}</Text>
-                </View>
-              </View>
-
-              {/* Nature of Appointment */}
-              <View style={[styles.rowContainer]}>
-                <View style={[styles.w30]}>
-                  <Text>Nature of Appointment</Text>
-                </View>
-
-                <View style={[styles.w10]}>
-                  <Text>:</Text>
-                </View>
-
-                <View style={[styles.w60]}>
-                  <Text>{capitalizeFirstLetter(jobDescription?.natureOfAppointment) || 'N/A'}</Text>
-                </View>
-              </View>
-
-              {/* Org struct description */}
-              <View>
-                <Text style={[styles.headerText]}>
-                  Describe briefly the general function of Office/Department/Division
-                </Text>
-                <Text>{jobDescription?.description || 'N/A'}</Text>
-              </View>
-
-              {/* Job Summary */}
-              <View>
-                <Text style={[styles.headerText]}>
-                  Describe briefly the general function of the position (Job Summary)
-                </Text>
-                <Text>{jobDescription?.summary || 'N/A'}</Text>
-              </View>
+          <View>
+            {/* Document Title */}
+            <View style={[styles.documentTitle]}>
+              <Text>POSITION DESCRIPTION</Text>
             </View>
 
-            {/* DUTIES AND RESPONSIBILITIES */}
-            <View>
+            <View style={[styles.bodyText]}>
+              {/* JOB DESCRIPTION */}
               <View>
-                <Text style={[styles.headerText]}>Statement of Duties and Responsibilities</Text>
-
-                {/* CORE */}
-                <View>
-                  {/* <View style={[styles.tHeadFirstLevel]}>
-                    <Text>CORE</Text>
-                  </View> */}
-                  <View wrap={false}>
-                    <View style={[styles.rowContainerTable, styles.borderAll]}>
-                      <View style={[styles.w14, styles.tHeadSecondLevel, styles.borderRight]}>
-                        <Text>Percentage of Work</Text>
-                      </View>
-
-                      <View style={[styles.w60, styles.tHeadSecondLevel, styles.borderRight]}>
-                        <Text>Duties and Responsibilities</Text>
-                      </View>
-
-                      <View style={[styles.w26, styles.tHeadSecondLevel]}>
-                        <Text>Competency/Level</Text>
-                      </View>
-                    </View>
-
-                    {/* render the first core duty to be wrapped with the table header */}
-                    <View style={[styles.rowContainerTable, styles.borderAll]} wrap={false}>
-                      <View style={[styles.w14, styles.tData, styles.borderRight]}>
-                        <Text style={[styles.horizontalCenter, styles.verticalCenter]}>
-                          {positionDutyResponsibilities?.duties.core[0].percentage}
-                        </Text>
-                      </View>
-                      <View style={[styles.w60, styles.tData, styles.borderRight]}>
-                        <Text>{positionDutyResponsibilities?.duties?.core[0].description}</Text>
-                      </View>
-                      <View style={[styles.w26, styles.tData, styles.horizontalCenter]}>
-                        <Text>{positionDutyResponsibilities?.duties?.core[0].competency} / </Text>
-                        <Text>{positionDutyResponsibilities?.duties?.core[0].level}</Text>
-                      </View>
-                    </View>
+                {/* Item Number */}
+                <View style={[styles.rowContainer]}>
+                  <View style={[styles.w30]}>
+                    <Text>Item Number</Text>
                   </View>
+
+                  <View style={[styles.w10]}>
+                    <Text>:</Text>
+                  </View>
+
+                  <View style={[styles.w60]}>
+                    <Text>{jobDescription?.itemNumber || 'N/A'}</Text>
+                  </View>
+                </View>
+
+                {/* Job Title */}
+                <View style={[styles.rowContainer]}>
+                  <View style={[styles.w30]}>
+                    <Text>Position Title</Text>
+                  </View>
+
+                  <View style={[styles.w10]}>
+                    <Text>:</Text>
+                  </View>
+
+                  <View style={[styles.w60]}>
+                    <Text>{jobDescription?.positionTitle || 'N/A'}</Text>
+                  </View>
+                </View>
+
+                {/* Office */}
+                <View style={[styles.rowContainer]}>
+                  <View style={[styles.w30]}>
+                    <Text>Office</Text>
+                  </View>
+
+                  <View style={[styles.w10]}>
+                    <Text>:</Text>
+                  </View>
+
+                  <View style={[styles.w60]}>
+                    <Text>{jobDescription?.assignedTo.office.name || 'N/A'}</Text>
+                  </View>
+                </View>
+
+                {/* Department */}
+                <View style={[styles.rowContainer]}>
+                  <View style={[styles.w30]}>
+                    <Text>Department</Text>
+                  </View>
+
+                  <View style={[styles.w10]}>
+                    <Text>:</Text>
+                  </View>
+
+                  <View style={[styles.w60]}>
+                    <Text>{jobDescription?.assignedTo.department.name || 'N/A'}</Text>
+                  </View>
+                </View>
+
+                {/* Division */}
+                <View style={[styles.rowContainer]}>
+                  <View style={[styles.w30]}>
+                    <Text>Division</Text>
+                  </View>
+
+                  <View style={[styles.w10]}>
+                    <Text>:</Text>
+                  </View>
+
+                  <View style={[styles.w60]}>
+                    <Text>{jobDescription?.assignedTo.division.name || 'N/A'}</Text>
+                  </View>
+                </View>
+
+                {/* Reports to */}
+                <View style={[styles.rowContainer]}>
+                  <View style={[styles.w30]}>
+                    <Text>Reports to</Text>
+                  </View>
+
+                  <View style={[styles.w10]}>
+                    <Text>:</Text>
+                  </View>
+
+                  <View style={[styles.w60]}>
+                    <Text>{jobDescription?.reportsTo || 'N/A'}</Text>
+                  </View>
+                </View>
+
+                {/* Salary Grade */}
+                <View style={[styles.rowContainer]}>
+                  <View style={[styles.w30]}>
+                    <Text>Salary Grade</Text>
+                  </View>
+
+                  <View style={[styles.w10]}>
+                    <Text>:</Text>
+                  </View>
+
+                  <View style={[styles.w60]}>
+                    <Text>{jobDescription?.salary.salaryGrade || 0}</Text>
+                  </View>
+                </View>
+
+                {/* Nature of Appointment */}
+                <View style={[styles.rowContainer]}>
+                  <View style={[styles.w30]}>
+                    <Text>Nature of Appointment</Text>
+                  </View>
+
+                  <View style={[styles.w10]}>
+                    <Text>:</Text>
+                  </View>
+
+                  <View style={[styles.w60]}>
+                    <Text>{capitalizeFirstLetter(jobDescription?.natureOfAppointment) || 'N/A'}</Text>
+                  </View>
+                </View>
+
+                {/* Org struct description */}
+                <View>
+                  <Text style={[styles.headerText]}>
+                    Describe briefly the general function of Office/Department/Division
+                  </Text>
+                  <Text>{jobDescription?.description || 'N/A'}</Text>
+                </View>
+
+                {/* Job Summary */}
+                <View>
+                  <Text style={[styles.headerText]}>
+                    Describe briefly the general function of the position (Job Summary)
+                  </Text>
+                  <Text>{jobDescription?.summary || 'N/A'}</Text>
+                </View>
+              </View>
+
+              {/* DUTIES AND RESPONSIBILITIES */}
+              <View>
+                <View>
+                  <Text style={[styles.headerText]}>Statement of Duties and Responsibilities</Text>
+
+                  {/* CORE */}
 
                   {/* render the remaining core duties */}
                   {renderCoreDuties()}
 
-                  {/* <View
-                    style={[styles.rowContainerTable, styles.borderAll]}
-                    wrap={false}
-                  >
-                    <View
-                      style={[styles.w14, styles.tData, styles.borderRight]}
-                    >
-                      <Text
-                        style={[styles.horizontalCenter, styles.verticalCenter]}
-                      >
-                        30.00
-                      </Text>
-                    </View>
-                    <View
-                      style={[styles.w60, styles.tData, styles.borderRight]}
-                    >
-                      <Text>
-                        Spearheads in the implementation of the maintenance of
-                        heavy/light equipment, including water tanks, boom
-                        trucks, dump trucks, and backhoe loaders to ensure its
-                        availability in the engineering- operation. Conducts
-                        maintenance servicing of heavy/ light machinery and
-                        equipment based on the running hours schedule provided
-                        to ensure productive operation of the
-                        machinery/equipment. Operates machinery and equipment,
-                        such as water tanks, boom trucks, dump trucks, and
-                        backhoe loaders, according to its operating procedure
-                        and safety guidelines to ensure optimal performanc
-                      </Text>
-                    </View>
-                    <View
-                      style={[
-                        styles.w26,
-                        styles.tData,
-                        styles.horizontalCenter,
-                      ]}
-                    >
-                      <Text>Customer Assistance and Request Handling / </Text>
-                      <Text>ADVANCED</Text>
-                    </View>
-                  </View>
-
-                  <View
-                    style={[styles.rowContainerTable, styles.borderAll]}
-                    wrap={false}
-                  >
-                    <View
-                      style={[styles.w14, styles.tData, styles.borderRight]}
-                    >
-                      <Text
-                        style={[styles.horizontalCenter, styles.verticalCenter]}
-                      >
-                        30.00
-                      </Text>
-                    </View>
-                    <View
-                      style={[styles.w60, styles.tData, styles.borderRight]}
-                    >
-                      <Text>
-                        Spearheads in the implementation of the maintenance of
-                        heavy/light equipment, including water tanks, boom
-                        trucks, dump trucks, and backhoe loaders to ensure its
-                        availability in the engineering- operation. Conducts
-                        maintenance servicing of heavy/ light machinery and
-                        equipment based on the running hours schedule provided
-                        to ensure productive operation of the
-                        machinery/equipment. Operates machinery and equipment,
-                        such as water tanks, boom trucks, dump trucks, and
-                        backhoe loaders, according to its operating procedure
-                        and safety guidelines to ensure optimal performanc
-                      </Text>
-                    </View>
-                    <View
-                      style={[
-                        styles.w26,
-                        styles.tData,
-                        styles.horizontalCenter,
-                      ]}
-                    >
-                      <Text>Customer Assistance and Request Handling / </Text>
-                      <Text>ADVANCED</Text>
-                    </View>
-                  </View> */}
-                </View>
-
-                {/* SUPPORT */}
-                {/* <View style={[styles.tableBorder, { marginTop: 10 }]}>
+                  {/* SUPPORT */}
+                  {/* <View style={[styles.tableBorder, { marginTop: 10 }]}>
                   <View style={[styles.tHeadFirstLevel]}>
                     <Text>SUPPORT</Text>
                   </View>
@@ -594,13 +513,14 @@ export const PdDocument = (props) => {
 
                   {renderSupportDuties()}
                 </View> */}
+                </View>
               </View>
             </View>
           </View>
         </View>
       </Page>
 
-      <Page size="A4" style={styles.page}>
+      <Page size="FOLIO" style={styles.page}>
         <Header />
 
         <View style={[styles.bodyBorder]}>
@@ -685,10 +605,10 @@ export const PdDocument = (props) => {
 
                 <View wrap={false}>
                   <View style={[styles.rowContainerTable, styles.borderAll]}>
-                    <View style={[styles.w60, styles.tHeadSecondLevel, styles.borderRight]}>
+                    <View style={[styles.w60, styles.tHeadSecondLevel, styles.borderRight, { paddingBottom: 4 }]}>
                       <Text>Competency</Text>
                     </View>
-                    <View style={[styles.w40, styles.tHeadSecondLevel]}>
+                    <View style={[styles.w40, styles.tHeadSecondLevel, { paddingBottom: 4 }]}>
                       <Text>Required Proficiency Level</Text>
                     </View>
                   </View>
