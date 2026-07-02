@@ -5,6 +5,7 @@ import { AllApplicantsList } from './AllApplicantsList';
 import { AppEndPds } from './AppEndPds';
 import { SelectedApplicantCard } from './SelectedApplicantCard';
 import { SelectedPublication } from './SelectedPublication';
+import { AlertNotification } from '@gscwd-apps/oneui';
 
 export const AppEndSelectApplicants = () => {
   const applicantList = useAppEndStore((state) => state.applicantList);
@@ -21,9 +22,16 @@ export const AppEndSelectApplicants = () => {
 
   return (
     <>
-      <div>
+      <div className="mb-3">
         <SelectedPublication publication={selectedPublication} />
       </div>
+
+      <AlertNotification
+        alertType="info"
+        notifMessage={`Please be advised that all endorsed applicants are subject to final review, modification, or approval by the General manager or HRD Manager to ensure consistency with our Recruitment Selection, and Placement policies.`}
+        dismissible={false}
+      />
+
       <div className="flex justify-between w-full grid-cols-2">
         <div className="col-span-1 px-5 mt-5 mb-2 font-light text-gray-500">Select applicants for short-listing</div>
         <div className="col-span-1 px-5 mt-5 mb-2 font-light text-gray-500">
