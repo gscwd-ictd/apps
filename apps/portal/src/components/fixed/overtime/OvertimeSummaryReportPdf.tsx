@@ -877,7 +877,7 @@ export const OvertimeSummaryReportPdf = ({
                     marginRight: 155,
                   }}
                 >
-                  Approved by:
+                  {overtimeSummaryReport?.signatories?.approvedBy?.position !== 'Chairman' ? 'Approved by:' : ''}
                 </Text>
               </View>
               {/* SIGNATURES */}
@@ -985,16 +985,20 @@ export const OvertimeSummaryReportPdf = ({
                     gap: 0,
                   }}
                 >
-                  <Image
-                    style={{ width: 80, marginBottom: -10 }}
-                    src={
-                      process.env.NEXT_PUBLIC_IMAGE_SERVER_URL +
-                      overtimeSummaryReport?.signatories?.approvedBy?.signature
-                        ? process.env.NEXT_PUBLIC_IMAGE_SERVER_URL +
-                          overtimeSummaryReport?.signatories?.approvedBy?.signature
-                        : '/'
-                    }
-                  />
+                  {overtimeSummaryReport?.signatories?.approvedBy?.position !== 'Chairman' ? (
+                    <Image
+                      style={{ width: 80, marginBottom: -10 }}
+                      src={
+                        process.env.NEXT_PUBLIC_IMAGE_SERVER_URL +
+                        overtimeSummaryReport?.signatories?.approvedBy?.signature
+                          ? process.env.NEXT_PUBLIC_IMAGE_SERVER_URL +
+                            overtimeSummaryReport?.signatories?.approvedBy?.signature
+                          : '/'
+                      }
+                    />
+                  ) : (
+                    ''
+                  )}
 
                   <Text
                     style={{
@@ -1003,16 +1007,24 @@ export const OvertimeSummaryReportPdf = ({
                       textAlign: 'center',
                     }}
                   >
-                    {overtimeSummaryReport?.signatories?.approvedBy?.name}
+                    {overtimeSummaryReport?.signatories?.approvedBy?.position !== 'Chairman'
+                      ? overtimeSummaryReport?.signatories?.approvedBy?.name
+                      : ''}
                   </Text>
-                  <Text>_______________________________</Text>
+                  <Text>
+                    {overtimeSummaryReport?.signatories?.approvedBy?.position !== 'Chairman'
+                      ? '_______________________________'
+                      : ''}
+                  </Text>
                   <Text
                     style={{
                       marginTop: 2,
                       textAlign: 'center',
                     }}
                   >
-                    {overtimeSummaryReport?.signatories?.approvedBy?.position}
+                    {overtimeSummaryReport?.signatories?.approvedBy?.position !== 'Chairman'
+                      ? overtimeSummaryReport?.signatories?.approvedBy?.position
+                      : ''}{' '}
                   </Text>
                 </View>
               </View>

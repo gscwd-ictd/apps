@@ -809,9 +809,10 @@ export const LeaveCompletedModal = ({ modalState, setModalState, closeModalActio
                       <div className="w-full pb-4">
                         <span className="text-slate-500 text-md">
                           Your{' '}
-                          {leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.VACATION ||
-                          leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.FORCED
+                          {leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.VACATION
                             ? 'VL'
+                            : leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.FORCED
+                            ? 'VL and FL'
                             : leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.SICK
                             ? 'SL'
                             : leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName ===
@@ -870,10 +871,7 @@ export const LeaveCompletedModal = ({ modalState, setModalState, closeModalActio
                                   ? (
                                       parseFloat(`${selectedLeaveLedger[0]?.vacationLeaveBalance}`) -
                                       leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveDates?.length
-                                    )
-                                      // +
-                                      // parseFloat(`${selectedLeaveLedger[0]?.forcedLeaveBalance}`)
-                                      .toFixed(3)
+                                    ).toFixed(3)
                                   : leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.SICK
                                   ? selectedLeaveLedger[0]?.sickLeaveBalance
                                   : leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName ===
@@ -884,6 +882,23 @@ export const LeaveCompletedModal = ({ modalState, setModalState, closeModalActio
                                   : 'N/A'}
                               </td>
                             </tr>
+                            {/* SHOW ADDITIONAL FL CREDITS IF FORCED LEAVE */}
+                            {leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.FORCED ? (
+                              <tr className="border border-slate-400">
+                                <td className="border border-slate-400 text-center">
+                                  {(
+                                    parseFloat(`${selectedLeaveLedger[0]?.forcedLeaveBalance}`) +
+                                    parseFloat(`${selectedLeaveLedger[0]?.forcedLeave}`) * -1
+                                  ).toFixed(3)}
+                                </td>
+                                <td className="border border-slate-400 text-center">
+                                  {leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveDates?.length.toFixed(3)}
+                                </td>
+                                <td className="border border-slate-400 text-center bg-green-100">
+                                  {parseFloat(`${selectedLeaveLedger[0]?.forcedLeaveBalance}`).toFixed(3)}
+                                </td>
+                              </tr>
+                            ) : null}
                           </tbody>
                         </table>
                       </div>
