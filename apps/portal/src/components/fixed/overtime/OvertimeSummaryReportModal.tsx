@@ -129,18 +129,20 @@ export const OvertimeSummaryReportModal = ({ modalState, setModalState, closeMod
               </PDFDownloadLink>
 
               <PDFViewer width={'100%'} height={1000} showToolbar className="hidden md:block ">
-                <OvertimeSummaryReportPdfEdit
+                {/* with total overtime amount old and difference */}
+                {/* <OvertimeSummaryReportPdfEdit
                   selectedMonth={selectedMonth}
                   selectedPeriod={selectedPeriod}
                   selectedEmployeeType={changeJoToProjectBased(selectedEmployeeType)}
                   overtimeSummaryReport={overtimeSummaryReport}
-                />
-                {/* <OvertimeSummaryReportPdf
+                /> */}
+                {/* original pdf */}
+                <OvertimeSummaryReportPdf
                   selectedMonth={selectedMonth}
                   selectedPeriod={selectedPeriod}
                   selectedEmployeeType={selectedEmployeeType}
                   overtimeSummaryReport={overtimeSummaryReport}
-                /> */}
+                />
               </PDFViewer>
             </div>
           ) : (

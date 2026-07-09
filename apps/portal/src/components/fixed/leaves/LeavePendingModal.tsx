@@ -609,9 +609,10 @@ export const LeavePendingModal = ({ modalState, setModalState, closeModalAction 
                     <div className="w-full pb-4 mt-2">
                       <span className="text-slate-500 text-md">
                         Your current{' '}
-                        {leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.VACATION ||
-                        leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.FORCED
+                        {leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.VACATION
                           ? 'VL'
+                          : leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.FORCED
+                          ? 'VL and FL'
                           : leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.SICK
                           ? 'SL'
                           : leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.SPECIAL_PRIVILEGE
@@ -671,6 +672,21 @@ export const LeavePendingModal = ({ modalState, setModalState, closeModalAction 
                                 : 'N/A'}
                             </td>
                           </tr>
+                          {/* SHOW ADDITIONAL FL CREDITS IF FORCED LEAVE */}
+                          {leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName === LeaveName.FORCED ? (
+                            <tr className="border-slate-400">
+                              <td className="border border-slate-400 text-center">{forcedLeaveBalance}</td>
+                              <td className="border border-slate-400 text-center">
+                                {leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveDates?.length.toFixed(3)}
+                              </td>
+                              <td className="border border-slate-400 text-center bg-green-100">
+                                {(
+                                  parseFloat(`${forcedLeaveBalance}`) -
+                                  leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveDates?.length
+                                ).toFixed(3)}
+                              </td>
+                            </tr>
+                          ) : null}
                         </tbody>
                       </table>
                     </div>

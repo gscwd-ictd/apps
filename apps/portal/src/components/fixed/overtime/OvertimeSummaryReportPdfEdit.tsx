@@ -887,7 +887,7 @@ export const OvertimeSummaryReportPdfEdit = ({
                     marginRight: 155,
                   }}
                 >
-                  Approved by:
+                  {overtimeSummaryReport?.signatories?.approvedBy?.position !== 'Chairman' ? 'Approved by:' : ''}
                 </Text>
               </View>
               {/* SIGNATURES */}
@@ -984,6 +984,7 @@ export const OvertimeSummaryReportPdfEdit = ({
                     {overtimeSummaryReport?.signatories?.notedBy?.position}
                   </Text>
                 </View>
+
                 <View
                   style={{
                     width: 200,
@@ -995,35 +996,41 @@ export const OvertimeSummaryReportPdfEdit = ({
                     gap: 0,
                   }}
                 >
-                  <Image
-                    style={{ width: 80, marginBottom: -10 }}
-                    src={
-                      process.env.NEXT_PUBLIC_IMAGE_SERVER_URL +
-                      overtimeSummaryReport?.signatories?.approvedBy?.signature
-                        ? process.env.NEXT_PUBLIC_IMAGE_SERVER_URL +
+                  {overtimeSummaryReport?.signatories?.approvedBy?.position !== 'Chairman' ? (
+                    <>
+                      <Image
+                        style={{ width: 80, marginBottom: -10 }}
+                        src={
+                          process.env.NEXT_PUBLIC_IMAGE_SERVER_URL +
                           overtimeSummaryReport?.signatories?.approvedBy?.signature
-                        : '/'
-                    }
-                  />
+                            ? process.env.NEXT_PUBLIC_IMAGE_SERVER_URL +
+                              overtimeSummaryReport?.signatories?.approvedBy?.signature
+                            : '/'
+                        }
+                      />
 
-                  <Text
-                    style={{
-                      marginBottom: -8,
-                      width: 165,
-                      textAlign: 'center',
-                    }}
-                  >
-                    {overtimeSummaryReport?.signatories?.approvedBy?.name}
-                  </Text>
-                  <Text>_______________________________</Text>
-                  <Text
-                    style={{
-                      marginTop: 2,
-                      textAlign: 'center',
-                    }}
-                  >
-                    {overtimeSummaryReport?.signatories?.approvedBy?.position}
-                  </Text>
+                      <Text
+                        style={{
+                          marginBottom: -8,
+                          width: 165,
+                          textAlign: 'center',
+                        }}
+                      >
+                        {overtimeSummaryReport?.signatories?.approvedBy?.name}
+                      </Text>
+                      <Text>_______________________________</Text>
+                      <Text
+                        style={{
+                          marginTop: 2,
+                          textAlign: 'center',
+                        }}
+                      >
+                        {overtimeSummaryReport?.signatories?.approvedBy?.position}
+                      </Text>
+                    </>
+                  ) : (
+                    ''
+                  )}
                 </View>
               </View>
             </View>

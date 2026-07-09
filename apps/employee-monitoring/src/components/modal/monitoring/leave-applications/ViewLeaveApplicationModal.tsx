@@ -705,7 +705,8 @@ const ViewLeaveApplicationModal: FunctionComponent<ViewLeaveApplicationModalProp
                     rowData.leaveName === LeaveName.WELLNESS ? (
                       <div className="w-full pb-4">
                         <span className="text-slate-500 text-md">
-                          Your {rowData.leaveName} Credits at the time of this application:
+                          Your {rowData.leaveName === LeaveName.FORCED ? 'FL and VL' : rowData.leaveName} Credits at the
+                          time of this application:
                         </span>
                         <table className="mt-2 bg-slate-50 text-slate-600 border-collapse border-spacing-0 border border-slate-400 w-full rounded-md">
                           <tbody>
@@ -717,38 +718,76 @@ const ViewLeaveApplicationModal: FunctionComponent<ViewLeaveApplicationModalProp
 
                             {/* FORCED */}
                             {rowData.leaveName === LeaveName.FORCED ? (
-                              <tr className="border border-slate-400">
-                                <td className="border border-slate-400 text-center">
-                                  {rowData.status === LeaveStatus.FOR_HRMO_CREDIT_CERTIFICATION ||
-                                  rowData.status === LeaveStatus.FOR_SUPERVISOR_APPROVAL ||
-                                  rowData.status === LeaveStatus.FOR_HRDM_APPROVAL
-                                    ? parseFloat(
-                                        `${leaveLedger[leaveLedger.length - 1]?.vacationLeaveBalance}`
-                                      ).toFixed(3)
-                                    : (
-                                        parseFloat(`${selectedLeaveLedger[0]?.vacationLeaveBalance}`) +
-                                        parseFloat(`${selectedLeaveLedger[0]?.vacationLeave}`) * -1
-                                      ).toFixed(3)}
-                                </td>
+                              <>
+                                <tr className="border border-slate-400">
+                                  <td className="border border-slate-400 text-center">
+                                    {rowData.status === LeaveStatus.FOR_HRMO_CREDIT_CERTIFICATION ||
+                                    rowData.status === LeaveStatus.FOR_SUPERVISOR_APPROVAL ||
+                                    rowData.status === LeaveStatus.FOR_HRDM_APPROVAL
+                                      ? parseFloat(
+                                          `${leaveLedger[leaveLedger.length - 1]?.forcedLeaveBalance}`
+                                        ).toFixed(3)
+                                      : (
+                                          parseFloat(`${selectedLeaveLedger[0]?.forcedLeaveBalance}`) +
+                                          parseFloat(`${selectedLeaveLedger[0]?.forcedLeave}`) * -1
+                                        ).toFixed(3)}
+                                  </td>
 
-                                <td className="border border-slate-400 text-center">
-                                  {rowData.leaveDates?.length.toFixed(3)}
-                                </td>
+                                  <td className="border border-slate-400 text-center">
+                                    {rowData.leaveDates?.length.toFixed(3)}
+                                  </td>
 
-                                <td className="border border-slate-400 text-center bg-green-100">
-                                  {rowData.status === LeaveStatus.FOR_HRMO_CREDIT_CERTIFICATION ||
-                                  rowData.status === LeaveStatus.FOR_SUPERVISOR_APPROVAL ||
-                                  rowData.status === LeaveStatus.FOR_HRDM_APPROVAL
-                                    ? (
-                                        parseFloat(`${leaveLedger[leaveLedger.length - 1]?.vacationLeaveBalance}`) -
-                                        parseFloat(`${rowData.leaveDates?.length}`)
-                                      ).toFixed(3)
-                                    : (
-                                        parseFloat(`${selectedLeaveLedger[0]?.vacationLeaveBalance}`) -
-                                        parseFloat(`${rowData.leaveDates?.length}`)
-                                      ).toFixed(3)}
-                                </td>
-                              </tr>
+                                  <td className="border border-slate-400 text-center bg-green-100">
+                                    {
+                                      rowData.status === LeaveStatus.FOR_HRMO_CREDIT_CERTIFICATION ||
+                                      rowData.status === LeaveStatus.FOR_SUPERVISOR_APPROVAL ||
+                                      rowData.status === LeaveStatus.FOR_HRDM_APPROVAL
+                                        ? (
+                                            parseFloat(`${leaveLedger[leaveLedger.length - 1]?.forcedLeaveBalance}`) -
+                                            parseFloat(`${rowData.leaveDates?.length}`)
+                                          ).toFixed(3)
+                                        : parseFloat(`${selectedLeaveLedger[0]?.forcedLeaveBalance}`).toFixed(3)
+                                      // (
+                                      //     parseFloat(`${selectedLeaveLedger[0]?.forcedLeaveBalance}`) -
+                                      //     parseFloat(`${rowData.leaveDates?.length}`)
+                                      //   ).toFixed(3)
+                                    }
+                                  </td>
+                                </tr>
+
+                                <tr className="border border-slate-400">
+                                  <td className="border border-slate-400 text-center">
+                                    {rowData.status === LeaveStatus.FOR_HRMO_CREDIT_CERTIFICATION ||
+                                    rowData.status === LeaveStatus.FOR_SUPERVISOR_APPROVAL ||
+                                    rowData.status === LeaveStatus.FOR_HRDM_APPROVAL
+                                      ? parseFloat(
+                                          `${leaveLedger[leaveLedger.length - 1]?.vacationLeaveBalance}`
+                                        ).toFixed(3)
+                                      : (
+                                          parseFloat(`${selectedLeaveLedger[0]?.vacationLeaveBalance}`) +
+                                          parseFloat(`${selectedLeaveLedger[0]?.vacationLeave}`) * -1
+                                        ).toFixed(3)}
+                                  </td>
+
+                                  <td className="border border-slate-400 text-center">
+                                    {rowData.leaveDates?.length.toFixed(3)}
+                                  </td>
+
+                                  <td className="border border-slate-400 text-center bg-green-100">
+                                    {rowData.status === LeaveStatus.FOR_HRMO_CREDIT_CERTIFICATION ||
+                                    rowData.status === LeaveStatus.FOR_SUPERVISOR_APPROVAL ||
+                                    rowData.status === LeaveStatus.FOR_HRDM_APPROVAL
+                                      ? (
+                                          parseFloat(`${leaveLedger[leaveLedger.length - 1]?.vacationLeaveBalance}`) -
+                                          parseFloat(`${rowData.leaveDates?.length}`)
+                                        ).toFixed(3)
+                                      : (
+                                          parseFloat(`${selectedLeaveLedger[0]?.vacationLeaveBalance}`) -
+                                          parseFloat(`${rowData.leaveDates?.length}`)
+                                        ).toFixed(3)}
+                                  </td>
+                                </tr>
+                              </>
                             ) : null}
 
                             {/* VACATION  */}
