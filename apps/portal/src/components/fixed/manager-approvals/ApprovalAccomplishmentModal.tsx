@@ -18,11 +18,15 @@ import { DateFormatter } from 'libs/utils/src/lib/functions/DateFormatter';
 import { DateTimeFormatter } from 'libs/utils/src/lib/functions/DateTimeFormatter';
 import { ManagerConfirmationApproval } from 'libs/utils/src/lib/enums/approval.enum';
 import { ConfirmationApprovalModal } from './ApprovalOtp/ConfirmationApprovalModal';
+import dayjs from 'dayjs';
+import { EmployeeDtrWithSchedule } from 'libs/utils/src/lib/types/dtr.type';
+import { UserRole } from 'libs/utils/src/lib/enums/user-roles.enum';
 
 type ModalProps = {
   modalState: boolean;
   setModalState: React.Dispatch<React.SetStateAction<boolean>>;
   closeModalAction: () => void;
+  companyId: string;
 };
 
 const approvalAction: Array<SelectOption> = [
@@ -30,7 +34,7 @@ const approvalAction: Array<SelectOption> = [
   { label: 'Disapprove', value: `${OvertimeAccomplishmentStatus.DISAPPROVED}` },
 ];
 
-export const ApprovalAccomplishmentModal = ({ modalState, setModalState, closeModalAction }: ModalProps) => {
+export const ApprovalAccomplishmentModal = ({ modalState, setModalState, closeModalAction, companyId }: ModalProps) => {
   const {
     overtimeAccomplishmentModalIsOpen,
     overtimeAccomplishmentEmployeeId,
@@ -66,6 +70,9 @@ export const ApprovalAccomplishmentModal = ({ modalState, setModalState, closeMo
   const employeeDetails = useEmployeeStore((state) => state.employeeDetails);
   const { windowWidth } = UseWindowDimensions();
   const [isBeyondActualHours, setIsBeyondActualHours] = useState<boolean>(false);
+  const [encodedHours, setEncodedHours] = useState<number>(0);
+  const [finalEncodedHours, setFinalEncodedHours] = useState<number>(0);
+  const [selectedOvertimeDay, setSelectedOvertimeDay] = useState<EmployeeDtrWithSchedule>();
   // const [pwdArray, setPwdArray] = useState<string[]>();
   // const [password, setPassword] = useState<string>('');
   // const [captchaPassword, setCaptchaPassword] = useState<string>('');
@@ -189,6 +196,187 @@ export const ApprovalAccomplishmentModal = ({ modalState, setModalState, closeMo
       e.target.focus();
     }, 0);
   };
+
+  // const employeeDtrUrl = `${process.env.NEXT_PUBLIC_EMPLOYEE_MONITORING_URL}/v1/daily-time-record/employees/${
+  //   swrOvertimeAccomplishment?.employeeId
+  // }/${dayjs(swrOvertimeAccomplishment?.plannedDate).format('YYYY')}/${dayjs(
+  //   swrOvertimeAccomplishment?.plannedDate
+  // ).format('MM')}`;
+  // use useSWR, provide the URL and fetchWithSession function as a parameter
+  // daily-time-record/employees/2002-002/2026/05
+  const {
+    data: swrEmployeeDtr,
+    isLoading: swrEmployeeDtrIsLoading,
+    error: swrEmployeeDtrError,
+    mutate: mutateEmployeeDtr,
+  } = useSWR(
+    modalState && companyId && accomplishmentDetails.plannedDate
+      ? `${process.env.NEXT_PUBLIC_EMPLOYEE_MONITORING_URL}/v1/daily-time-record/employees/${companyId}/${dayjs(
+          accomplishmentDetails?.plannedDate
+        ).format('YYYY')}/${dayjs(accomplishmentDetails?.plannedDate).format('MM')}`
+      : null,
+    fetchWithToken,
+    {
+      shouldRetryOnError: true,
+      revalidateOnFocus: true,
+      errorRetryInterval: 3000,
+    }
+  );
+
+  useEffect(() => {
+    console.log('swrdtr', swrEmployeeDtr);
+    //after fetching employee dtr, filter dtr array to overtime day and set it to selectedOvertimeDay state
+    const result = swrEmployeeDtr?.dtrDays.find(
+      (item) => item.day === DateFormatter(accomplishmentDetails.plannedDate, 'YYYY-MM-DD')
+    );
+    setSelectedOvertimeDay(result); // set the selected employee dtr day based on the accomplishment details
+  }, [swrEmployeeDtr]);
+
+  useEffect(() => {
+    console.log(selectedOvertimeDay);
+  }, [selectedOvertimeDay]);
+
+  useEffect(() => {
+    const encodedTimeIn = dayjs(`${accomplishmentDetails?.encodedTimeIn}`);
+    const encodedTimeOut = dayjs(`${accomplishmentDetails?.encodedTimeOut}`);
+    let totalHours: number;
+
+    //get difference between 2 time
+    if (encodedTimeOut.isAfter(encodedTimeIn)) {
+      totalHours = Number(encodedTimeOut.diff(encodedTimeIn, 'hour', true).toFixed(2));
+    }
+
+    setEncodedHours(totalHours);
+  }, [accomplishmentDetails?.encodedTimeIn, accomplishmentDetails?.encodedTimeOut]);
+
+  // compute encoded overtime duration based on encoded time IN and OUT
+  //apply every 3hrs work & 1hr break rule
+  useEffect(() => {
+    if (!isEmpty(swrEmployeeDtr) && !isEmpty(selectedOvertimeDay) && !isEmpty(encodedHours)) {
+      //OT CONDITIONS FOR CASUAL/PERMANENT
+      if (
+        employeeDetails.employmentDetails.userRole !== UserRole.COS &&
+        employeeDetails.employmentDetails.userRole !== UserRole.COS_JO &&
+        employeeDetails.employmentDetails.userRole !== UserRole.JOB_ORDER
+      ) {
+        let numberOfBreaks: number; // for 3-1 rule
+        //if holiday or rest day
+        if (selectedOvertimeDay?.isHoliday || selectedOvertimeDay?.isRestDay) {
+          //if scheduled OT
+
+          //8-1 rule - is Holiday or Rest Day
+          if (encodedHours > 4 && encodedHours < 10) {
+            let temporaryHours = encodedHours - 1;
+            setFinalEncodedHours(Number(temporaryHours.toFixed(2)));
+          }
+
+          //3-1 rule beyond 9 hours
+          else if (encodedHours >= 10) {
+            numberOfBreaks = Number(((encodedHours - 9) / 4).toFixed(2)); // for 3-1 rule
+            let temporaryHours = Number(encodedHours - 1 - Math.floor(numberOfBreaks));
+            setFinalEncodedHours(Number(temporaryHours.toFixed(2)));
+          } else {
+            setFinalEncodedHours(encodedHours);
+          }
+        } else if (selectedOvertimeDay?.suspensionHours > 0) {
+          //OT during work suspension
+
+          if (selectedOvertimeDay?.suspensionHours >= 8) {
+            //8-1 rule - is Holiday or Rest Day
+            if (encodedHours > 4 && encodedHours < 10) {
+              let temporaryHours = encodedHours - 1;
+              setFinalEncodedHours(Number(temporaryHours.toFixed(2)));
+            }
+
+            //3-1 rule beyond 9 hours
+            else if (encodedHours >= 10) {
+              numberOfBreaks = Number(((encodedHours - 9) / 4).toFixed(2)); // for 3-1 rule
+              let temporaryHours = Number(encodedHours - 1 - Math.floor(numberOfBreaks));
+              setFinalEncodedHours(Number(temporaryHours.toFixed(2)));
+            } else {
+              setFinalEncodedHours(encodedHours);
+            }
+          } else {
+            //work suspension is less than 8 hours
+            //3-1 rule only
+            if (encodedHours >= 4) {
+              numberOfBreaks = Number((encodedHours / 4).toFixed(2)); // for 3-1 rule
+              let temporaryHours = Number(encodedHours - Math.floor(numberOfBreaks));
+              setFinalEncodedHours(Number(temporaryHours.toFixed(2)));
+            }
+            //no break time (less than 4 hours)
+            else {
+              setFinalEncodedHours(encodedHours);
+            }
+          }
+        }
+        //if regular work day - 3-1 rule only
+        else {
+          //if scheduled OT
+          if (encodedHours >= 4) {
+            numberOfBreaks = Number((encodedHours / 4).toFixed(2)); // for 3-1 rule
+            let temporaryHours = Number(encodedHours - Math.floor(numberOfBreaks));
+            setFinalEncodedHours(Number(temporaryHours.toFixed(2)));
+          }
+          //no break time (less than 4 hours)
+          else {
+            setFinalEncodedHours(encodedHours);
+          }
+        }
+      }
+      //OT CONDITIONS FOR JO, COS, COS-JO
+      else {
+        //if JO, COS, COS-JO, no need to apply 3-1 rule
+        //if holiday or rest day
+        if (selectedOvertimeDay?.isHoliday || selectedOvertimeDay?.isRestDay) {
+          //if scheduled OT
+          //8-1 rule - is Holiday or Rest Day
+          if (encodedHours > 4 && encodedHours < 10) {
+            let temporaryHours = encodedHours - 1;
+            setFinalEncodedHours(Number(temporaryHours.toFixed(2)));
+          }
+          // beyond 9 hours but no 3-1 rule
+          else if (encodedHours >= 10) {
+            let temporaryHours = Number(encodedHours - 1);
+            setFinalEncodedHours(Number(temporaryHours.toFixed(2)));
+          } else {
+            setFinalEncodedHours(encodedHours);
+          }
+        } else if (selectedOvertimeDay?.suspensionHours > 0) {
+          //OT during work suspension
+
+          if (selectedOvertimeDay?.suspensionHours >= 8) {
+            //8-1 rule - same as Holiday or Rest Day
+            if (encodedHours > 4 && encodedHours < 10) {
+              let temporaryHours = encodedHours - 1;
+              setFinalEncodedHours(Number(temporaryHours.toFixed(2)));
+            }
+            // beyond 9 hours but no 3-1 rule
+            else if (encodedHours >= 10) {
+              let temporaryHours = Number(encodedHours - 1);
+              setFinalEncodedHours(Number(temporaryHours.toFixed(2)));
+            } else {
+              setFinalEncodedHours(encodedHours);
+            }
+          }
+          //work suspension is less than 8 hours
+          else {
+            // 4 or more hours OT = 1 hr break
+            if (encodedHours >= 4) {
+              let temporaryHours = Number(encodedHours - 1);
+              setFinalEncodedHours(Number(temporaryHours.toFixed(2)));
+            }
+            // 3 or less hours = actual hours
+            else {
+              setFinalEncodedHours(encodedHours);
+            }
+          }
+        } else {
+          setFinalEncodedHours(encodedHours);
+        }
+      }
+    }
+  }, [swrEmployeeDtr, selectedOvertimeDay]);
 
   return (
     <>
@@ -367,7 +555,10 @@ export const ApprovalAccomplishmentModal = ({ modalState, setModalState, closeMo
                         </label>
                         <label className="text-md font-medium">
                           Total Hours:
-                          {` ${accomplishmentDetails?.computedEncodedHours?.toFixed(2)} Hour(s)`}
+                          {/* old BE computed hours */}
+                          {/* {` ${accomplishmentDetails?.computedEncodedHours?.toFixed(2)} Hour(s)`} */}
+                          {/* new FE computed hours */}
+                          {` ${finalEncodedHours?.toFixed(2)} Hour(s)`}
                         </label>
                       </div>
                     </div>

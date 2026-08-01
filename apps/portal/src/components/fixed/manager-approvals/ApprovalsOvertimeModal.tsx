@@ -61,6 +61,8 @@ export const OvertimeModal = ({ modalState, setModalState, closeModalAction }: M
     overtimeAccomplishmentEmployeeName,
     removeEmployeeModalIsOpen,
     setRemoveEmployeeModalIsOpen,
+    overtimeAccomplishmentEmployeeCompanyId,
+    setOvertimeAccomplishmentEmployeeCompanyId,
   } = useApprovalStore((state) => ({
     overtimeDetails: state.overtimeDetails,
     approvedOvertimeModalIsOpen: state.approvedOvertimeModalIsOpen,
@@ -86,6 +88,8 @@ export const OvertimeModal = ({ modalState, setModalState, closeModalAction }: M
     overtimeAccomplishmentEmployeeName: state.overtimeAccomplishmentEmployeeName,
     removeEmployeeModalIsOpen: state.removeEmployeeModalIsOpen,
     setRemoveEmployeeModalIsOpen: state.setRemoveEmployeeModalIsOpen,
+    overtimeAccomplishmentEmployeeCompanyId: state.overtimeAccomplishmentEmployeeCompanyId,
+    setOvertimeAccomplishmentEmployeeCompanyId: state.setOvertimeAccomplishmentEmployeeCompanyId,
   }));
   const employeeDetails = useEmployeeStore((state) => state.employeeDetails);
   const [reason, setReason] = useState<string>('');
@@ -236,11 +240,12 @@ export const OvertimeModal = ({ modalState, setModalState, closeModalAction }: M
     setOvertimeAccomplishmentModalIsOpen(false);
   };
 
-  const handleEmployeeAccomplishment = (employeeId: string, employeeName: string) => {
+  const handleEmployeeAccomplishment = (employeeId: string, employeeName: string, employeeCompanyId: string) => {
     setOvertimeAccomplishmentEmployeeId(employeeId);
     setOvertimeAccomplishmentEmployeeName(employeeName);
     setOvertimeAccomplishmentApplicationId(overtimeDetails.id);
     setOvertimeAccomplishmentModalIsOpen(true);
+    setOvertimeAccomplishmentEmployeeCompanyId(employeeCompanyId);
   };
 
   const handleCancelOvertime = () => {
@@ -550,7 +555,11 @@ export const OvertimeModal = ({ modalState, setModalState, closeModalAction }: M
                                     size={'sm'}
                                     loading={false}
                                     onClick={(e) =>
-                                      handleEmployeeAccomplishment(employee.employeeId, employee.fullName)
+                                      handleEmployeeAccomplishment(
+                                        employee.employeeId,
+                                        employee.fullName,
+                                        employee.companyId
+                                      )
                                     }
                                   >
                                     Accomplishment
@@ -680,6 +689,7 @@ export const OvertimeModal = ({ modalState, setModalState, closeModalAction }: M
             modalState={overtimeAccomplishmentModalIsOpen}
             setModalState={setOvertimeAccomplishmentModalIsOpen}
             closeModalAction={closeAccomplishmentModal}
+            companyId={overtimeAccomplishmentEmployeeCompanyId}
           />
         </Modal.Body>
         <Modal.Footer>

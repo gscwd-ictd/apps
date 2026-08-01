@@ -135,6 +135,9 @@ export type ApprovalState = {
   overtimeAccomplishmentEmployeeId: string;
   setOvertimeAccomplishmentEmployeeId: (overtimeAccomplishmentEmployeeId: string) => void;
 
+  overtimeAccomplishmentEmployeeCompanyId: string;
+  setOvertimeAccomplishmentEmployeeCompanyId: (overtimeAccomplishmentEmployeeCompanyId: string) => void;
+
   overtimeAccomplishmentEmployeeName: string;
   setOvertimeAccomplishmentEmployeeName: (overtimeAccomplishmentEmployeeName: string) => void;
 
@@ -379,6 +382,11 @@ export const useApprovalStore = create<ApprovalState>()(
     overtimeAccomplishmentEmployeeId: '',
     setOvertimeAccomplishmentEmployeeId: (overtimeAccomplishmentEmployeeId: string) => {
       set((state) => ({ ...state, overtimeAccomplishmentEmployeeId }));
+    },
+
+    overtimeAccomplishmentEmployeeCompanyId: '',
+    setOvertimeAccomplishmentEmployeeCompanyId: (overtimeAccomplishmentEmployeeCompanyId: string) => {
+      set((state) => ({ ...state, overtimeAccomplishmentEmployeeCompanyId }));
     },
 
     overtimeAccomplishmentEmployeeName: '',
