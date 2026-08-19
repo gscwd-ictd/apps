@@ -7,7 +7,6 @@ import useSWR from 'swr';
 import fetcherHRIS from 'apps/portal/src/utils/helpers/fetchers/FetcherHRIS';
 import { isEmpty } from 'lodash';
 import LoadingVisual from '../loading/LoadingVisual';
-import ordinal from 'ordinal-number-suffix';
 
 type AppSelectionPsbDetailsAlertProps = {
   alertState: boolean;
