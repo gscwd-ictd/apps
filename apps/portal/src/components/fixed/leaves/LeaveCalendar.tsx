@@ -225,12 +225,24 @@ export default function Calendar({
       }
       //check if selected date exist in array - returns true/false
       else if (selectedDates.includes(specifiedDate)) {
-        //removes date
-        setSelectedDates(
-          selectedDates.filter(function (e) {
-            return e !== specifiedDate;
-          })
-        );
+        if (leaveName === LeaveName.TERMINAL) {
+          //do nothing, selected date doesn't get removed even if date is clicked again to make sure there's always a value for it
+        } else {
+          //removes date
+          setSelectedDates(
+            selectedDates.filter(function (e) {
+              return e !== specifiedDate;
+            })
+          );
+        }
+      } else if (
+        leaveName === LeaveName.TERMINAL &&
+        swrUnavailableDates?.unavailableDates?.some((item) => item.date === specifiedDate && item.type === 'Holiday')
+      ) {
+        //for TERMINAL LEAVE special case when it can select holidays but not leaves
+        // TERMINAL only allows one selected date
+        setSelectedDates([specifiedDate]);
+        setLeaveDateFrom(specifiedDate);
       } else {
         //adds date to array
         //if selected date is not found in unavailable dates array
@@ -306,6 +318,11 @@ export default function Calendar({
           } else if (leaveName === LeaveName.WELLNESS && dayjs(`${specifiedDate}`).diff(`${today}`, 'day') >= 0) {
             //allow selecting of future days from today for wellness leave (except for next year and december - found on another condition)
             setSelectedDates((selectedDates) => [...selectedDates, specifiedDate]);
+          } else if (leaveName === LeaveName.TERMINAL) {
+            // clicking a date that is not a holiday/leave
+            // TERMINAL only allows one selected date
+            setSelectedDates([specifiedDate]);
+            setLeaveDateFrom(specifiedDate);
           }
         }
       }
@@ -595,6 +612,8 @@ export default function Calendar({
                               swrUnavailableDates?.unavailableDates?.some(
                                 (item) => item.date === format(day, 'yyyy-MM-dd') && item.type === 'Holiday'
                               ) &&
+                              !selectedDates.includes(format(day, 'yyyy-MM-dd')) &&
+                              leaveName === LeaveName.TERMINAL &&
                               'text-red-600 bg-red-300 rounded-full',
                             swrUnavailableDates?.unavailableDates &&
                               swrUnavailableDates?.unavailableDates?.some(
@@ -621,6 +640,8 @@ export default function Calendar({
                             'mx-auto flex h-8 w-8 items-center justify-center rounded-full',
                             selectedDates.includes(format(day, 'yyyy-MM-dd'))
                               ? 'bg-indigo-200 rounded-full text-gray-900'
+                              : selectedDates.includes(format(day, 'yyyy-MM-dd')) && leaveName === LeaveName.TERMINAL
+                              ? 'bg-indigo-200 rounded-full text-gray-900 pulse'
                               : ''
                           )}
                         >
