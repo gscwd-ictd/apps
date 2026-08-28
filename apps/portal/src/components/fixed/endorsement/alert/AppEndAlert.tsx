@@ -1,11 +1,5 @@
 /* eslint-disable @nx/enforce-module-boundaries */
-import {
-  Alert,
-  AlertNotification,
-  Button,
-  LoadingSpinner,
-  ToastNotification,
-} from '@gscwd-apps/oneui';
+import { Alert, AlertNotification, Button, LoadingSpinner, ToastNotification } from '@gscwd-apps/oneui';
 import { useAppEndStore } from 'apps/portal/src/store/endorsement.store';
 import { Applicant } from 'apps/portal/src/types/applicant.type';
 import { patchData } from 'apps/portal/src/utils/hoc/axios';
@@ -43,9 +37,7 @@ const AppEndAlert = () => {
     loadingPublication: state.publicationLoading.loadingPublication,
   }));
   // gets an array of strings of ids of all selected applicants
-  const getArrayOfIdsFromSelectedApplicants = async (
-    applicants: Array<Applicant>
-  ) => {
+  const getArrayOfIdsFromSelectedApplicants = async (applicants: Array<Applicant>) => {
     const applicantIds: Array<string> = [];
     const updatedApplicants = [...applicants];
     updatedApplicants.map((applicant) => {
@@ -83,9 +75,7 @@ const AppEndAlert = () => {
 
   // handle on submit
   const handleSubmit = async (selectedApplicants: Array<Applicant>) => {
-    const applicantIdsForPosting = await getArrayOfIdsFromSelectedApplicants(
-      selectedApplicants
-    );
+    const applicantIdsForPosting = await getArrayOfIdsFromSelectedApplicants(selectedApplicants);
 
     const postingApplicantIds = {
       postingApplicantIds: applicantIdsForPosting,
@@ -107,9 +97,7 @@ const AppEndAlert = () => {
   return (
     <>
       {/* Error Notifications */}
-      {!isEmpty(errorPublication) ? (
-        <ToastNotification toastType="error" notifMessage={errorPublication} />
-      ) : null}
+      {!isEmpty(errorPublication) ? <ToastNotification toastType="error" notifMessage={errorPublication} /> : null}
 
       <Alert open={alert.isOpen} setOpen={openAlert}>
         <Alert.Description>
@@ -126,11 +114,11 @@ const AppEndAlert = () => {
           <AppEndAlertController page={alert.page} />
         </Alert.Description>
         <Alert.Footer alignEnd>
-          <div className="flex gap-2">
+          <div className="flex justify-end flex-col-reverse md:flex-row gap-3 md:gap-2 w-full">
             {alert.page === 1 && (
               <button
                 onClick={() => setAlert({ ...alert, isOpen: false })}
-                className="w-[6rem] disabled:bg-white disabled:cursor-not-allowed text-gray-700 text-opacity-85 bg-white border border-gray-300 px-3 text-sm transition-all ease-in-out duration-100 font-semibold tracking-wide py-2 rounded whitespace-nowrap focus:outline-none focus:ring-4 focus:ring-gray-200 focus:bg-gray-100  hover:shadow-lg active:shadow-md active:ring-0 active:scale-95"
+                className="w-full md:w-[6rem] disabled:bg-white disabled:cursor-not-allowed text-gray-700 text-opacity-85 bg-white border border-gray-300 px-3 text-sm transition-all ease-in-out duration-100 font-semibold tracking-wide py-2 rounded whitespace-nowrap focus:outline-none focus:ring-4 focus:ring-gray-200 focus:bg-gray-100  hover:shadow-lg active:shadow-md active:ring-0 active:scale-95"
               >
                 No
               </button>
@@ -138,7 +126,7 @@ const AppEndAlert = () => {
 
             <button
               onClick={alertAction}
-              className="min-w-[6rem] max-w-auto disabled:bg-indigo-400 disabled:cursor-not-allowed text-white text-opacity-85 bg-indigo-500 px-3 text-sm transition-all ease-in-out duration-100 font-semibold tracking-wide py-2 rounded whitespace-nowrap focus:outline-none focus:ring-4 hover:shadow-lg active:shadow-md active:ring-0 active:scale-95"
+              className="w-full md:w-[6rem] max-w-auto disabled:bg-indigo-400 disabled:cursor-not-allowed text-white text-opacity-85 bg-indigo-500 px-3 text-sm transition-all ease-in-out duration-100 font-semibold tracking-wide py-2 rounded whitespace-nowrap focus:outline-none focus:ring-4 hover:shadow-lg active:shadow-md active:ring-0 active:scale-95"
             >
               {alert.page === 1 ? 'Yes' : 'Got it, Thanks!'}
             </button>

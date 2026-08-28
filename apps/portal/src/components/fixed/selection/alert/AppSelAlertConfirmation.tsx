@@ -25,9 +25,7 @@ export const AppSelAlertConfirmation = () => {
   }));
 
   // gets an array of strings of ids of all selected applicants
-  const getArrayOfIdsFromSelectedApplicants = async (
-    applicants: Array<Applicant>
-  ) => {
+  const getArrayOfIdsFromSelectedApplicants = async (applicants: Array<Applicant>) => {
     const applicantIds: Array<string> = [];
     const updatedApplicants = [...applicants];
     updatedApplicants.map((applicant) => {
@@ -38,9 +36,7 @@ export const AppSelAlertConfirmation = () => {
 
   // confirm alert action
   const alertConfirmationAction = async () => {
-    const applicantIds = await getArrayOfIdsFromSelectedApplicants(
-      selectedApplicants
-    );
+    const applicantIds = await getArrayOfIdsFromSelectedApplicants(selectedApplicants);
 
     const postingApplicantIds = {
       postingApplicantIds: applicantIds,
@@ -52,9 +48,7 @@ export const AppSelAlertConfirmation = () => {
   };
 
   // handle patch
-  const handlePatchPublication = async (postingApplicantIds: {
-    postingApplicantIds: Array<string>;
-  }) => {
+  const handlePatchPublication = async (postingApplicantIds: { postingApplicantIds: Array<string> }) => {
     const { error, result } = await patchData(
       `${process.env.NEXT_PUBLIC_HRIS_URL}/applicant-endorsement/appointing-authority-selection/${selectedPublication.vppId}`, //* Changed
       postingApplicantIds
@@ -66,10 +60,7 @@ export const AppSelAlertConfirmation = () => {
 
   return (
     <>
-      <Alert
-        open={alertConfirmationIsOpen}
-        setOpen={setAlertConfirmationIsOpen}
-      >
+      <Alert open={alertConfirmationIsOpen} setOpen={setAlertConfirmationIsOpen}>
         <Alert.Description>
           <div className="flex-row w-full h-auto items-center text-slate-700 px-5 rounded  p-5">
             {selectedApplicants.length === 0 && (
@@ -80,10 +71,7 @@ export const AppSelAlertConfirmation = () => {
                     <span className="text-2xl uppercase">Warning</span>
                   </div>
 
-                  <div className="mt-2">
-                    {' '}
-                    You have not selected any applicant
-                  </div>
+                  <div className="mt-2"> You have not selected any applicant</div>
                 </div>
               </div>
             )}
@@ -91,41 +79,26 @@ export const AppSelAlertConfirmation = () => {
             {selectedApplicants.length >= 1 && (
               <div className="flex flex-col  justify-center text-xl ">
                 <div className="flex w-full rounded-lg gap-2 ">
-                  <HiInformationCircle
-                    size={30}
-                    color="orange"
-                    className="animate-pulse"
-                  />
-                  <span className="text-2xl uppercase font-semibold tracking-wide text-gray-800">
-                    Action
-                  </span>
+                  <HiInformationCircle size={30} color="orange" className="animate-pulse" />
+                  <span className="text-2xl uppercase font-semibold tracking-wide text-gray-800">Action</span>
                 </div>
                 <hr />
                 <div className="flex flex-col items-center mt-2">
                   <div className="text-left  text-lg w-full">
                     <span className="">You have selected </span>
                     <span className="text-black text-xl font-medium">
-                      {selectedApplicants.length}{' '}
-                      {selectedApplicants.length > 1
-                        ? 'applicants'
-                        : 'applicant'}
+                      {selectedApplicants.length} {selectedApplicants.length > 1 ? 'applicants' : 'applicant'}
                     </span>{' '}
                     {selectedApplicants.length > 0 &&
                       selectedApplicants.map((applicant, idx) => {
                         return (
-                          <div
-                            key={idx}
-                            className="flex gap-2 w-full text-md text-gray-600 font-medium"
-                          >
+                          <div key={idx} className="flex gap-2 w-full text-md text-gray-600 font-medium">
                             • {applicant.applicantName}
                           </div>
                         );
                       })}
                     <div className="pt-5">
-                      For{' '}
-                      <span className="text-black text-xl font-medium">
-                        {selectedPublication.positionTitle}
-                      </span>{' '}
+                      For <span className="text-black text-xl font-medium">{selectedPublication.positionTitle}</span>{' '}
                       position.
                     </div>
                   </div>
@@ -139,17 +112,17 @@ export const AppSelAlertConfirmation = () => {
           </div>
         </Alert.Description>
         <Alert.Footer alignEnd>
-          <div className="flex gap-2">
+          <div className="flex justify-end flex-col-reverse md:flex-row gap-3 md:gap-2 w-full">
             <button
               onClick={() => setAlertConfirmationIsOpen(false)}
-              className="w-[5rem] disabled:bg-white disabled:cursor-not-allowed text-gray-700 text-opacity-85 bg-white border border-gray-300 px-3 text-sm transition-all ease-in-out duration-100 font-semibold tracking-wide py-2 rounded whitespace-nowrap focus:outline-none focus:ring-4 hover:shadow-lg active:shadow-md active:ring-0 active:scale-95"
+              className="w-full md:w-[5rem] disabled:bg-white disabled:cursor-not-allowed text-gray-700 text-opacity-85 bg-white border border-gray-300 px-3 text-sm transition-all ease-in-out duration-100 font-semibold tracking-wide py-2 rounded whitespace-nowrap focus:outline-none focus:ring-4 hover:shadow-lg active:shadow-md active:ring-0 active:scale-95"
             >
               No
             </button>
 
             <button
               onClick={alertConfirmationAction}
-              className="min-w-[5rem] max-w-auto disabled:bg-indigo-400 disabled:cursor-not-allowed text-white text-opacity-85 bg-indigo-500 px-3 text-sm transition-all ease-in-out duration-100 font-semibold tracking-wide py-2 rounded whitespace-nowrap focus:outline-none focus:ring-4 hover:shadow-lg active:shadow-md active:ring-0 active:scale-95"
+              className="w-full md:w-[5rem] disabled:bg-indigo-400 disabled:cursor-not-allowed text-white text-opacity-85 bg-indigo-500 px-3 text-sm transition-all ease-in-out duration-100 font-semibold tracking-wide py-2 rounded whitespace-nowrap focus:outline-none focus:ring-4 hover:shadow-lg active:shadow-md active:ring-0 active:scale-95"
             >
               Yes
             </button>

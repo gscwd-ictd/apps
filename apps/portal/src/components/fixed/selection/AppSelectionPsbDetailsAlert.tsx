@@ -7,7 +7,6 @@ import useSWR from 'swr';
 import fetcherHRIS from 'apps/portal/src/utils/helpers/fetchers/FetcherHRIS';
 import { isEmpty } from 'lodash';
 import LoadingVisual from '../loading/LoadingVisual';
-import ordinal from 'ordinal-number-suffix';
 
 type AppSelectionPsbDetailsAlertProps = {
   alertState: boolean;
@@ -52,6 +51,11 @@ export const AppSelectionPsbDetailsAlert = ({
     }
   );
 
+  const closeAlertFunction = () => {
+    closeAlertAction();
+    setAlertState(!alertState);
+  };
+
   useEffect(() => {
     if (swrIsLoading) {
       getPsbDetails();
@@ -61,11 +65,7 @@ export const AppSelectionPsbDetailsAlert = ({
   useEffect(() => {
     if (!isEmpty(swrPsbDetails)) {
       // swrPsbDetails.data.map
-      getPsbDetailsSuccess(
-        swrPsbDetails.data,
-        applicantList,
-        selectedApplicantDetails
-      );
+      getPsbDetailsSuccess(swrPsbDetails.data, applicantList, selectedApplicantDetails);
     }
 
     if (!isEmpty(swrError)) {
@@ -80,11 +80,14 @@ export const AppSelectionPsbDetailsAlert = ({
   const { windowWidth } = UseWindowDimensions();
 
   return (
-    <Modal
-      open={alertState}
-      setOpen={setAlertState}
-      size={`${windowWidth > 1024 ? 'lg' : 'full'}`}
-    >
+    <Modal open={alertState} setOpen={setAlertState} size={`${windowWidth > 1024 ? 'lg' : 'full'}`}>
+      <Modal.Header>
+        <div className="w-full flex justify-between">
+          <h3 className="px-5 font-semibold text-gray-700 flex flex-col w-full "></h3>
+          <i role="button" className="bx bx-x text-2xl" onClick={closeAlertFunction}></i>
+        </div>
+      </Modal.Header>
+
       <Modal.Body>
         {swrIsLoading ? (
           <LoadingVisual />
@@ -99,9 +102,7 @@ export const AppSelectionPsbDetailsAlert = ({
                   </span>
 
                   <div className="flex gap-2">
-                    <div className="text-lg font-semibold text-gray-800 ">
-                      Rank {selectedApplicantDetails.rank}
-                    </div>
+                    <div className="text-lg font-semibold text-gray-800 ">Rank {selectedApplicantDetails.rank}</div>
                     <span className="text-lg"> • </span>
 
                     <span className="text-lg text-gray-500 font-medium">
@@ -123,16 +124,12 @@ export const AppSelectionPsbDetailsAlert = ({
                           <span className="text-gray-700"> • </span>
                           <span className="font-semibold">{psb.psbName}</span>
                           <span className="text-gray-700"> • </span>
-                          <span className="text-gray-700 font-medium">
-                            {psb.score}
-                          </span>
+                          <span className="text-gray-700 font-medium">{psb.score}</span>
                         </div>
                         <div className="text-gray-700 pt-5">
                           {!isEmpty(psb.remarks) ? (
                             <div className="text-md flex flex-col gap-2 ">
-                              <span className="font-light px-2 text-justify">
-                                ❝{psb.remarks}❞
-                              </span>
+                              <span className="font-light px-2 text-justify">❝{psb.remarks}❞</span>
                             </div>
                           ) : (
                             <div className="text-lg flex gap-2">
@@ -148,6 +145,17 @@ export const AppSelectionPsbDetailsAlert = ({
           </div>
         )}
       </Modal.Body>
+
+      <Modal.Footer>
+        <div className="flex justify-end gap-2 px-4">
+          <button
+            className="w-[6rem]  disabled:bg-white disabled:cursor-not-allowed text-gray-700 text-opacity-85 bg-white border border-gray-300 px-3 text-sm transition-all ease-in-out duration-100 font-semibold tracking-wide py-2 rounded whitespace-nowrap focus:outline-none focus:ring-4 hover:shadow-lg active:shadow-md active:ring-0 active:scale-95"
+            onClick={closeAlertFunction}
+          >
+            Close
+          </button>
+        </div>
+      </Modal.Footer>
     </Modal>
   );
 };

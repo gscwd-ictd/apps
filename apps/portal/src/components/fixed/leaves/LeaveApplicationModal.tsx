@@ -1150,6 +1150,19 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
                       className="mb-1"
                     />
                   ) : null}
+
+                  {/* Notifications */}
+                  {isEmpty(leaveDates) &&
+                  !isEmpty(watch('typeOfLeaveDetails.leaveName')) &&
+                  watch('typeOfLeaveDetails.leaveName') == LeaveName.TERMINAL ? (
+                    <AlertNotification
+                      alertType="warning"
+                      notifMessage="Please select final date of duty."
+                      dismissible={false}
+                      className="mb-1"
+                    />
+                  ) : null}
+
                   {/* Empty date of leaves */}
                   {leaveDateTo < leaveDateFrom &&
                   (watch('typeOfLeaveDetails.leaveName') == LeaveName.MATERNITY ||
@@ -1361,7 +1374,7 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
                       onChange={(e) => handleTypeOfLeave(e.target.value as unknown as string)}
                     >
                       <option value="" disabled>
-                        Select Type Of Leave:
+                        Select Type Of Leave
                       </option>
 
                       {
@@ -1464,7 +1477,7 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
                             {...register('inPhilippinesOrAbroad')}
                           >
                             <option value="" disabled>
-                              Select Location:
+                              Select Location
                             </option>
                             {leaveLocation.map((item: Item, idx: number) => (
                               <option value={item.value} key={idx}>
@@ -1483,7 +1496,7 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
                             {...register('hospital')}
                           >
                             <option value="" disabled>
-                              Select Hosptitalization:
+                              Select Hosptitalization
                             </option>
                             {leaveHospital.map((item: Item, idx: number) => (
                               <option value={item.value} key={idx}>
@@ -1503,7 +1516,7 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
                             onChange={(e) => handleStudy(e.target.value as unknown as string)}
                           >
                             <option value="" disabled>
-                              Select Study Purpose:
+                              Select Study Purpose
                             </option>
                             {leaveStudy.map((item: Item, idx: number) => (
                               <option value={item.value} key={idx}>
@@ -1522,7 +1535,7 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
                             {...register('other')}
                           >
                             <option value="" disabled>
-                              Select Other:
+                              Select Other
                             </option>
                             {leaveOther.map((item: Item, idx: number) => (
                               <option value={item.value} key={idx}>
@@ -1538,7 +1551,9 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
                       <>
                         <div className="flex flex-row justify-between items-center w-full">
                           <div className="flex flex-row justify-between items-center w-full">
-                            <label className="pt-2 pr-2 text-slate-500 text-md font-medium">Monetization Type:</label>
+                            <label className="pt-2 pr-2 text-slate-500 text-md font-medium">
+                              Monetization Type:<span className="text-red-600">*</span>
+                            </label>
                           </div>
 
                           <div className="flex gap-2 w-full items-center">
@@ -1568,7 +1583,7 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
                             <div className="flex flex-row justify-between items-center w-full">
                               <div className="flex flex-row justify-between items-center w-full">
                                 <label className="pt-2 pr-2 text-slate-500 text-md font-medium">
-                                  Leave Balance to Convert:
+                                  Leave Balance to Convert:<span className="text-red-600">*</span>
                                 </label>
                               </div>
 
@@ -1595,7 +1610,7 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
                             <div className="flex flex-row justify-between items-center w-full">
                               <div className="flex flex-row justify-between items-center w-full">
                                 <label className="pt-2 pr-2 text-slate-500 text-md font-medium">
-                                  Monthly Salary Grade Amount:
+                                  Monthly Salary Grade Amount:<span className="text-red-600">*</span>
                                 </label>
                               </div>
 
@@ -1616,7 +1631,7 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
                             <div className="flex flex-row justify-between items-center w-full">
                               <div className="flex flex-row justify-between items-center w-full">
                                 <label className="pt-2 pr-2 text-slate-500 text-md font-medium">
-                                  Monetization Amount:
+                                  Monetization Amount:<span className="text-red-600">*</span>
                                 </label>
                               </div>
 
@@ -1640,20 +1655,28 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
 
                     {watch('typeOfLeaveDetails.leaveName') === LeaveName.TERMINAL ? (
                       <>
-                        <div className="flex flex-row justify-between items-center w-full">
+                        <div className="flex flex-col justify-between items-center w-full">
                           <div className="flex flex-row justify-between items-center w-full">
-                            <label className="pt-2 pr-2 text-slate-500 text-md font-medium">Last Day of Duty:</label>
+                            <label className="pt-2 pr-2 text-slate-500 text-md font-medium">
+                              Last Day of Duty:<span className="text-red-600">*</span>
+                            </label>
                           </div>
 
                           <div className="flex gap-2 w-full items-center">
-                            <div className="w-full">
-                              <input
+                            <div className="w-full p-4 bg-gray-50 rounded">
+                              {/* <input
                                 required
                                 type="date"
                                 value={leaveDateFrom ? leaveDateFrom : ''}
                                 className="text-slate-500 text-md border-slate-300 rounded w-full h-12"
                                 onChange={(e) => setLeaveDateFrom(e.target.value as unknown as string)}
                                 max={terminalMaxDate}
+                              /> */}
+                              <Calendar
+                                type={'single'}
+                                clickableDate={true}
+                                leaveName={watch('typeOfLeaveDetails.leaveName')}
+                                isLateFiling={lateFiling}
                               />
                             </div>
                           </div>
@@ -1662,7 +1685,7 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
                         <div className="flex flex-row justify-between items-center w-full">
                           <div className="flex flex-row justify-between items-center w-full">
                             <label className="pt-2 pr-2 text-slate-500 text-md font-medium">
-                              Leave Balance to Convert:
+                              Leave Balance to Convert:<span className="text-red-600">*</span>
                             </label>
                           </div>
 
@@ -1684,7 +1707,7 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
                         <div className="flex flex-row justify-between items-center w-full">
                           <div className="flex flex-col justify-between items-start w-full">
                             <div className="pt-2 pr-2 text-slate-500 text-md font-medium">
-                              Unearned Credits for the Month:
+                              Unearned Credits for the Month:<span className="text-red-600">*</span>
                             </div>
                             <div className="pr-2 text-slate-500 text-xs font-medium">Vacation Leave + Sick Leave</div>
                           </div>
@@ -1715,7 +1738,7 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
                         <div className="flex flex-row justify-between items-center w-full">
                           <div className="flex flex-row justify-between items-center w-full">
                             <label className="pt-2 pr-2 text-slate-500 text-md font-medium">
-                              Monthly Salary Grade Amount:
+                              Monthly Salary Grade Amount:<span className="text-red-600">*</span>
                             </label>
                           </div>
 
@@ -1736,7 +1759,9 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
 
                         <div className="flex flex-row justify-between items-center w-full">
                           <div className="flex flex-row justify-between items-center w-full">
-                            <label className="pt-2 pr-2 text-slate-500 text-md font-medium">Total Amount:</label>
+                            <label className="pt-2 pr-2 text-slate-500 text-md font-medium">
+                              Total Amount:<span className="text-red-600">*</span>
+                            </label>
                           </div>
 
                           <div className="flex gap-2 w-full items-center">
@@ -1759,7 +1784,9 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
                     watch('other') === 'Monetization of Leave Balance' ? (
                       <div className="flex flex-row justify-between items-center w-full">
                         <div className="flex flex-row justify-between items-center w-full">
-                          <label className="pt-2 text-slate-500 text-md font-medium">Commutation</label>
+                          <label className="pt-2 text-slate-500 text-md font-medium">
+                            Commutation<span className="text-red-600">*</span>
+                          </label>
                         </div>
 
                         <div className="flex gap-2 w-full items-center">
@@ -1773,7 +1800,7 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
                                 {...register('commutation')}
                               >
                                 <option value="" disabled>
-                                  Select Other:
+                                  Select Other
                                 </option>
                                 {leaveCommutation.map((item: Item, idx: number) => (
                                   <option value={item.value} key={idx}>
