@@ -119,6 +119,7 @@ export const OvertimeSummaryReportPdf = ({
   selectedEmployeeType,
   overtimeSummaryReport,
 }: PdfProps): JSX.Element => {
+  console.log(overtimeSummaryReport?.signatories?.approvedBy?.signature);
   return (
     <>
       {/* <PDFViewer width={'100%'} height={1000} showToolbar> */}
@@ -991,8 +992,10 @@ export const OvertimeSummaryReportPdf = ({
                       src={
                         process.env.NEXT_PUBLIC_IMAGE_SERVER_URL +
                         overtimeSummaryReport?.signatories?.approvedBy?.signature
-                          ? process.env.NEXT_PUBLIC_IMAGE_SERVER_URL +
-                            overtimeSummaryReport?.signatories?.approvedBy?.signature
+                          ? overtimeSummaryReport?.signatories?.approvedBy?.name === 'Turija, Cornelio T. , CE' //convert papa corn to sir jhunie for signatory
+                            ? process.env.NEXT_PUBLIC_IMAGE_SERVER_URL + 'BESANA-SIGNATURE.png'
+                            : process.env.NEXT_PUBLIC_IMAGE_SERVER_URL +
+                              overtimeSummaryReport?.signatories?.approvedBy?.signature
                           : '/'
                       }
                     />
@@ -1008,7 +1011,9 @@ export const OvertimeSummaryReportPdf = ({
                     }}
                   >
                     {overtimeSummaryReport?.signatories?.approvedBy?.position !== 'Chairman'
-                      ? overtimeSummaryReport?.signatories?.approvedBy?.name
+                      ? overtimeSummaryReport?.signatories?.approvedBy?.name === 'Turija, Cornelio T. , CE' //convert papa corn to sir jhunie for signatory
+                        ? 'Besana, Rogelio A. , Jr., CE,RMP'
+                        : overtimeSummaryReport?.signatories?.approvedBy?.name
                       : ''}
                   </Text>
                   <Text>
@@ -1023,7 +1028,9 @@ export const OvertimeSummaryReportPdf = ({
                     }}
                   >
                     {overtimeSummaryReport?.signatories?.approvedBy?.position !== 'Chairman'
-                      ? overtimeSummaryReport?.signatories?.approvedBy?.position
+                      ? overtimeSummaryReport?.signatories?.approvedBy?.name === 'Turija, Cornelio T. , CE' //convert papa corn to sir jhunie for signatory
+                        ? 'Assistant General Manager'
+                        : overtimeSummaryReport?.signatories?.approvedBy?.position
                       : ''}{' '}
                   </Text>
                 </View>
