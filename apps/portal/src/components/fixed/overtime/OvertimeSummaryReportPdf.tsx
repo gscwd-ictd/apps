@@ -119,7 +119,6 @@ export const OvertimeSummaryReportPdf = ({
   selectedEmployeeType,
   overtimeSummaryReport,
 }: PdfProps): JSX.Element => {
-  console.log(overtimeSummaryReport?.signatories?.approvedBy?.signature);
   return (
     <>
       {/* <PDFViewer width={'100%'} height={1000} showToolbar> */}
