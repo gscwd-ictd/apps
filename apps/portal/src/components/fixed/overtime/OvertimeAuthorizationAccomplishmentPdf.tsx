@@ -699,8 +699,11 @@ export const OvertimeAuthorizationAccomplishmentPdf = ({
                     src={
                       process.env.NEXT_PUBLIC_IMAGE_SERVER_URL +
                       overtimeAuthorizationAccomplishmentReport?.signatories?.approvedBy?.signature
-                        ? process.env.NEXT_PUBLIC_IMAGE_SERVER_URL +
-                          overtimeAuthorizationAccomplishmentReport?.signatories?.approvedBy?.signature
+                        ? overtimeAuthorizationAccomplishmentReport?.signatories?.approvedBy?.name ===
+                          'Turija, Cornelio T. , CE' //convert papa corn to sir jhunie for signatory
+                          ? process.env.NEXT_PUBLIC_IMAGE_SERVER_URL + 'BESANA-SIGNATURE.png'
+                          : process.env.NEXT_PUBLIC_IMAGE_SERVER_URL +
+                            overtimeAuthorizationAccomplishmentReport?.signatories?.approvedBy?.signature
                         : '/'
                     }
                   />
@@ -712,7 +715,12 @@ export const OvertimeAuthorizationAccomplishmentPdf = ({
                       textAlign: 'center',
                     }}
                   >
-                    {overtimeAuthorizationAccomplishmentReport?.signatories?.approvedBy?.name}
+                    {overtimeAuthorizationAccomplishmentReport?.signatories?.approvedBy?.name
+                      ? overtimeAuthorizationAccomplishmentReport?.signatories?.approvedBy?.name ===
+                        'Turija, Cornelio T. , CE' //convert papa corn to sir jhunie for signatory
+                        ? 'Besana, Rogelio A. , Jr., CE,RMP'
+                        : overtimeAuthorizationAccomplishmentReport?.signatories?.approvedBy?.name
+                      : ''}
                   </Text>
                   <Text>_______________________________</Text>
                   <Text
@@ -721,7 +729,12 @@ export const OvertimeAuthorizationAccomplishmentPdf = ({
                       textAlign: 'center',
                     }}
                   >
-                    {overtimeAuthorizationAccomplishmentReport?.signatories?.approvedBy?.position}
+                    {overtimeAuthorizationAccomplishmentReport?.signatories?.approvedBy?.position
+                      ? overtimeAuthorizationAccomplishmentReport?.signatories?.approvedBy?.name ===
+                        'Turija, Cornelio T. , CE' //convert papa corn to sir jhunie for signatory
+                        ? 'Assistant General Manager'
+                        : overtimeAuthorizationAccomplishmentReport?.signatories?.approvedBy?.position
+                      : ''}
                   </Text>
                 </View>
               </View>

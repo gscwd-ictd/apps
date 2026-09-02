@@ -937,8 +937,10 @@ export const NightDifferentialReportPdf = ({
                     src={
                       process.env.NEXT_PUBLIC_IMAGE_SERVER_URL +
                       nightDifferentialReport?.signatories?.approvedBySignature
-                        ? process.env.NEXT_PUBLIC_IMAGE_SERVER_URL +
-                          nightDifferentialReport?.signatories?.approvedBySignature
+                        ? nightDifferentialReport?.signatories?.approvedByName === 'Turija, Cornelio T. , CE' //convert papa corn to sir jhunie for signatory
+                          ? process.env.NEXT_PUBLIC_IMAGE_SERVER_URL + 'BESANA-SIGNATURE.png'
+                          : process.env.NEXT_PUBLIC_IMAGE_SERVER_URL +
+                            nightDifferentialReport?.signatories?.approvedBySignature
                         : '/'
                     }
                   />
@@ -950,7 +952,11 @@ export const NightDifferentialReportPdf = ({
                       textAlign: 'center',
                     }}
                   >
-                    {nightDifferentialReport?.signatories?.approvedByName}
+                    {nightDifferentialReport?.signatories?.approvedByName
+                      ? nightDifferentialReport?.signatories?.approvedByName === 'Turija, Cornelio T. , CE' //convert papa corn to sir jhunie for signatory
+                        ? 'Besana, Rogelio A. , Jr., CE,RMP'
+                        : nightDifferentialReport?.signatories?.approvedByName
+                      : ''}
                   </Text>
                   <Text>_______________________________</Text>
                   <Text
@@ -959,7 +965,11 @@ export const NightDifferentialReportPdf = ({
                       textAlign: 'center',
                     }}
                   >
-                    {nightDifferentialReport?.signatories?.approvedByPosition}
+                    {nightDifferentialReport?.signatories?.approvedByPosition
+                      ? nightDifferentialReport?.signatories?.approvedByName === 'Turija, Cornelio T. , CE' //convert papa corn to sir jhunie for signatory
+                        ? 'Assistant General Manager'
+                        : nightDifferentialReport?.signatories?.approvedByPosition
+                      : ''}
                   </Text>
                 </View>
               </View>
