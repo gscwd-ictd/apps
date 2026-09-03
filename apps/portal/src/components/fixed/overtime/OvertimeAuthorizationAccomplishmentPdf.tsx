@@ -584,7 +584,9 @@ export const OvertimeAuthorizationAccomplishmentPdf = ({
                     marginRight: 155,
                   }}
                 >
-                  Approved by:
+                  {overtimeAuthorizationAccomplishmentReport?.signatories?.approvedBy?.position !== 'Chairman'
+                    ? 'Approved by:'
+                    : ''}
                 </Text>
               </View>
 
@@ -694,48 +696,54 @@ export const OvertimeAuthorizationAccomplishmentPdf = ({
                     gap: 0,
                   }}
                 >
-                  <Image
-                    style={{ width: 80, marginBottom: -10 }}
-                    src={
-                      process.env.NEXT_PUBLIC_IMAGE_SERVER_URL +
-                      overtimeAuthorizationAccomplishmentReport?.signatories?.approvedBy?.signature
-                        ? overtimeAuthorizationAccomplishmentReport?.signatories?.approvedBy?.name ===
-                          'Turija, Cornelio T. , CE' //convert papa corn to sir jhunie for signatory
-                          ? process.env.NEXT_PUBLIC_IMAGE_SERVER_URL + 'BESANA-SIGNATURE.png'
-                          : process.env.NEXT_PUBLIC_IMAGE_SERVER_URL +
-                            overtimeAuthorizationAccomplishmentReport?.signatories?.approvedBy?.signature
-                        : '/'
-                    }
-                  />
+                  {overtimeAuthorizationAccomplishmentReport?.signatories?.approvedBy?.position !== 'Chairman' ? (
+                    <>
+                      <Image
+                        style={{ width: 80, marginBottom: -10 }}
+                        src={
+                          process.env.NEXT_PUBLIC_IMAGE_SERVER_URL +
+                          overtimeAuthorizationAccomplishmentReport?.signatories?.approvedBy?.signature
+                            ? overtimeAuthorizationAccomplishmentReport?.signatories?.approvedBy?.name ===
+                              'Turija, Cornelio T. , CE' //convert papa corn to sir jhunie for signatory
+                              ? process.env.NEXT_PUBLIC_IMAGE_SERVER_URL + 'BESANA-SIGNATURE.png'
+                              : process.env.NEXT_PUBLIC_IMAGE_SERVER_URL +
+                                overtimeAuthorizationAccomplishmentReport?.signatories?.approvedBy?.signature
+                            : '/'
+                        }
+                      />
 
-                  <Text
-                    style={{
-                      marginBottom: -8,
-                      width: 165,
-                      textAlign: 'center',
-                    }}
-                  >
-                    {overtimeAuthorizationAccomplishmentReport?.signatories?.approvedBy?.name
-                      ? overtimeAuthorizationAccomplishmentReport?.signatories?.approvedBy?.name ===
-                        'Turija, Cornelio T. , CE' //convert papa corn to sir jhunie for signatory
-                        ? 'Besana, Rogelio A. , Jr., CE,RMP'
-                        : overtimeAuthorizationAccomplishmentReport?.signatories?.approvedBy?.name
-                      : ''}
-                  </Text>
-                  <Text>_______________________________</Text>
-                  <Text
-                    style={{
-                      marginTop: 2,
-                      textAlign: 'center',
-                    }}
-                  >
-                    {overtimeAuthorizationAccomplishmentReport?.signatories?.approvedBy?.position
-                      ? overtimeAuthorizationAccomplishmentReport?.signatories?.approvedBy?.name ===
-                        'Turija, Cornelio T. , CE' //convert papa corn to sir jhunie for signatory
-                        ? 'Assistant General Manager'
-                        : overtimeAuthorizationAccomplishmentReport?.signatories?.approvedBy?.position
-                      : ''}
-                  </Text>
+                      <Text
+                        style={{
+                          marginBottom: -8,
+                          width: 165,
+                          textAlign: 'center',
+                        }}
+                      >
+                        {overtimeAuthorizationAccomplishmentReport?.signatories?.approvedBy?.name
+                          ? overtimeAuthorizationAccomplishmentReport?.signatories?.approvedBy?.name ===
+                            'Turija, Cornelio T. , CE' //convert papa corn to sir jhunie for signatory
+                            ? 'Besana, Rogelio A. , Jr., CE,RMP'
+                            : overtimeAuthorizationAccomplishmentReport?.signatories?.approvedBy?.name
+                          : ''}
+                      </Text>
+                      <Text>_______________________________</Text>
+                      <Text
+                        style={{
+                          marginTop: 2,
+                          textAlign: 'center',
+                        }}
+                      >
+                        {overtimeAuthorizationAccomplishmentReport?.signatories?.approvedBy?.position
+                          ? overtimeAuthorizationAccomplishmentReport?.signatories?.approvedBy?.name ===
+                            'Turija, Cornelio T. , CE' //convert papa corn to sir jhunie for signatory
+                            ? 'Assistant General Manager'
+                            : overtimeAuthorizationAccomplishmentReport?.signatories?.approvedBy?.position
+                          : ''}
+                      </Text>
+                    </>
+                  ) : (
+                    ''
+                  )}
                 </View>
               </View>
             </View>

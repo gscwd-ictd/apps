@@ -823,7 +823,7 @@ export const NightDifferentialReportPdf = ({
                     marginRight: 155,
                   }}
                 >
-                  Approved by:
+                  {nightDifferentialReport?.signatories?.approvedByPosition !== 'Chairman' ? 'Approved by:' : ''}
                 </Text>
               </View>
               {/* SIGNATURES */}
@@ -932,45 +932,51 @@ export const NightDifferentialReportPdf = ({
                     gap: 0,
                   }}
                 >
-                  <Image
-                    style={{ width: 80, marginBottom: -10 }}
-                    src={
-                      process.env.NEXT_PUBLIC_IMAGE_SERVER_URL +
-                      nightDifferentialReport?.signatories?.approvedBySignature
-                        ? nightDifferentialReport?.signatories?.approvedByName === 'Turija, Cornelio T. , CE' //convert papa corn to sir jhunie for signatory
-                          ? process.env.NEXT_PUBLIC_IMAGE_SERVER_URL + 'BESANA-SIGNATURE.png'
-                          : process.env.NEXT_PUBLIC_IMAGE_SERVER_URL +
-                            nightDifferentialReport?.signatories?.approvedBySignature
-                        : '/'
-                    }
-                  />
+                  {nightDifferentialReport?.signatories?.approvedByPosition !== 'Chairman' ? (
+                    <>
+                      <Image
+                        style={{ width: 80, marginBottom: -10 }}
+                        src={
+                          process.env.NEXT_PUBLIC_IMAGE_SERVER_URL +
+                          nightDifferentialReport?.signatories?.approvedBySignature
+                            ? nightDifferentialReport?.signatories?.approvedByName === 'Turija, Cornelio T. , CE' //convert papa corn to sir jhunie for signatory
+                              ? process.env.NEXT_PUBLIC_IMAGE_SERVER_URL + 'BESANA-SIGNATURE.png'
+                              : process.env.NEXT_PUBLIC_IMAGE_SERVER_URL +
+                                nightDifferentialReport?.signatories?.approvedBySignature
+                            : '/'
+                        }
+                      />
 
-                  <Text
-                    style={{
-                      marginBottom: -8,
-                      width: 165,
-                      textAlign: 'center',
-                    }}
-                  >
-                    {nightDifferentialReport?.signatories?.approvedByName
-                      ? nightDifferentialReport?.signatories?.approvedByName === 'Turija, Cornelio T. , CE' //convert papa corn to sir jhunie for signatory
-                        ? 'Besana, Rogelio A. , Jr., CE,RMP'
-                        : nightDifferentialReport?.signatories?.approvedByName
-                      : ''}
-                  </Text>
-                  <Text>_______________________________</Text>
-                  <Text
-                    style={{
-                      marginTop: 2,
-                      textAlign: 'center',
-                    }}
-                  >
-                    {nightDifferentialReport?.signatories?.approvedByPosition
-                      ? nightDifferentialReport?.signatories?.approvedByName === 'Turija, Cornelio T. , CE' //convert papa corn to sir jhunie for signatory
-                        ? 'Assistant General Manager'
-                        : nightDifferentialReport?.signatories?.approvedByPosition
-                      : ''}
-                  </Text>
+                      <Text
+                        style={{
+                          marginBottom: -8,
+                          width: 165,
+                          textAlign: 'center',
+                        }}
+                      >
+                        {nightDifferentialReport?.signatories?.approvedByName
+                          ? nightDifferentialReport?.signatories?.approvedByName === 'Turija, Cornelio T. , CE' //convert papa corn to sir jhunie for signatory
+                            ? 'Besana, Rogelio A. , Jr., CE,RMP'
+                            : nightDifferentialReport?.signatories?.approvedByName
+                          : ''}
+                      </Text>
+                      <Text>_______________________________</Text>
+                      <Text
+                        style={{
+                          marginTop: 2,
+                          textAlign: 'center',
+                        }}
+                      >
+                        {nightDifferentialReport?.signatories?.approvedByPosition
+                          ? nightDifferentialReport?.signatories?.approvedByName === 'Turija, Cornelio T. , CE' //convert papa corn to sir jhunie for signatory
+                            ? 'Assistant General Manager'
+                            : nightDifferentialReport?.signatories?.approvedByPosition
+                          : ''}
+                      </Text>
+                    </>
+                  ) : (
+                    ''
+                  )}
                 </View>
               </View>
             </View>
