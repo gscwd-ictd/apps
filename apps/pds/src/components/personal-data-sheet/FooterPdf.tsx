@@ -25,7 +25,7 @@ Font.register({
 export const FooterPdf = (): JSX.Element => {
   return (
     <View style={[styles.footerText]}>
-      <Text>CS FORM 212 (Revised 2025), Page </Text>
+      <Text>CS FORM 212 (Revised 2026), Page </Text>
       <Text render={({ pageNumber, totalPages }) => `${pageNumber} of 4`} fixed />
     </View>
   );

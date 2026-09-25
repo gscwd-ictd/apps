@@ -542,18 +542,18 @@ export const PdsDocument = ({ formatDate, pds }: Data): JSX.Element => {
         </View>
 
         {/* Monthly Salary */}
-        {/* <View style={[styles.borderRight, styles.inputValue, styles.horizontalCenter, styles.w5_6, { padding: 0 }]}>
+        <View style={[styles.borderRight, styles.inputValue, styles.horizontalCenter, styles.w5_6, { padding: 0 }]}>
           <View style={[styles.verticalCenter]}>
             <Text>{experience.monthlySalary || 'N/A'}</Text>
           </View>
-        </View> */}
+        </View>
 
         {/* Salary Grade / Increment */}
-        {/* <View style={[styles.borderRight, styles.inputValue, styles.horizontalCenter, styles.w5_6, { padding: 1 }]}>
+        <View style={[styles.borderRight, styles.inputValue, styles.horizontalCenter, styles.w5_6, { padding: 1 }]}>
           <View style={[styles.verticalCenter]}>
             <Text>{experience.salaryGrade || 'N/A'}</Text>
           </View>
-        </View> */}
+        </View>
 
         {/* Status of Appointment */}
         <View
@@ -1049,7 +1049,7 @@ export const PdsDocument = ({ formatDate, pds }: Data): JSX.Element => {
     <>
       <Document
         author="General Santos City Water District"
-        subject="CS Form No. 212. Revised 2025"
+        subject="CS Form No. 212. Revised 2026"
         title="Personal Data Sheet"
       >
         {/* Page 1 */}
@@ -1060,7 +1060,7 @@ export const PdsDocument = ({ formatDate, pds }: Data): JSX.Element => {
             </View>
             <View style={styles.csFormContainer}>
               <Text style={styles.csForm}>CS Form No. 212</Text>
-              <Text style={styles.revised2017}>Revised 2025</Text>
+              <Text style={styles.revised2017}>Revised 2026</Text>
             </View>
             <View>
               <Text style={styles.line4Child1}>
@@ -1421,19 +1421,17 @@ export const PdsDocument = ({ formatDate, pds }: Data): JSX.Element => {
                   </View>
                 </View>
 
-                {/* REMOVED AS OF REVISED 2025 */}
                 {/* Monthly Salary */}
-                {/* <View
+                <View
                   style={[styles.borderRight, styles.inputKey, styles.horizontalCenter, styles.w5_6, { padding: 0 }]}
                 >
                   <View style={[styles.verticalCenter]}>
                     <Text style={{ fontSize: 5.7 }}>MONTHLY SALARY</Text>
                   </View>
-                </View> */}
+                </View>
 
-                {/* REMOVED AS OF REVISED 2025 */}
                 {/* Salary Grade / Increment */}
-                {/* <View
+                <View
                   style={[styles.borderRight, styles.inputKey, styles.horizontalCenter, styles.w5_6, { padding: 1 }]}
                 >
                   <View style={[styles.verticalCenter]}>
@@ -1441,7 +1439,7 @@ export const PdsDocument = ({ formatDate, pds }: Data): JSX.Element => {
                       SALARY/ JOB/ PAY GRADE (if applicable)& STEP (Format &quot;00-0&quot;)/ INCREMENT
                     </Text>
                   </View>
-                </View> */}
+                </View>
 
                 {/* Status of Appointment */}
                 <View

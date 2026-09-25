@@ -309,7 +309,7 @@ export const WorkExp = (): JSX.Element => {
                   </div>
                 </div>
 
-                {/* <div className="w-full mt-10">
+                <div className="w-full mt-10">
                   <InputReactForm
                     id="workexpsalary"
                     name="workexpsalary"
@@ -322,7 +322,7 @@ export const WorkExp = (): JSX.Element => {
                     isError={errors.monthlySalary ? true : false}
                     errorMessage={errors.monthlySalary?.message}
                   />
-                </div> */}
+                </div>
 
                 <div className="grid-cols-2 gap-8 mt-10 sm:grid md:grid lg:flex">
                   <div className="w-full col-span-1 mb-10">
@@ -341,7 +341,7 @@ export const WorkExp = (): JSX.Element => {
                       muted={editIsClicked ? true : false}
                     />
                   </div>
-                  {/* 
+
                   <div className="w-full col-span-1 mb-10">
                     <InputReactForm
                       id="workexpsalarygrade"
@@ -361,7 +361,8 @@ export const WorkExp = (): JSX.Element => {
                       isError={errors.salaryGrade ? true : false}
                       errorMessage={errors.salaryGrade?.message}
                     />
-                  </div> */}
+                  </div>
+
                   <div className="w-full col-span-1 mb-10">
                     <SelectListRF
                       id="workexpapptstat"
@@ -397,8 +398,8 @@ export const WorkExp = (): JSX.Element => {
                     <TableHeader label="Position Title" headerWidth="w-[25%]" className="pl-4" />
                     <TableHeader label="Company Name" headerWidth="w-[30%]" />
                     <TableHeader label="Inclusive Date" headerWidth="w-[10%]" />
-                    {/* <TableHeader label="Monthly Salary" headerWidth="w-[5%]" /> */}
-                    {/* <TableHeader label="Salary Grade" headerWidth="w-[10%]" /> */}
+                    <TableHeader label="Monthly Salary" headerWidth="w-[5%]" />
+                    <TableHeader label="Salary Grade" headerWidth="w-[10%]" />
                     <TableHeader label="Appointment Status" headerWidth="w-[10%]" />
                     <TableHeader label="Gov't Service?" headerWidth="w-[10%]" />
                     <TableHeader label="Actions" headerWidth="w-[15%]" alignment="center" />
