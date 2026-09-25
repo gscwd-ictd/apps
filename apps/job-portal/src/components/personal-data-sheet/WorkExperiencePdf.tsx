@@ -130,34 +130,18 @@ export const WorkExperiencePdf = ({ formatDate, workExperience }: WorkExperience
         </View>
 
         {/* Monthly Salary */}
-        {/* <View
-          style={[
-            styles.borderRight,
-            styles.inputValue,
-            styles.horizontalCenter,
-            styles.w5_6,
-            { padding: 0 },
-          ]}
-        >
+        <View style={[styles.borderRight, styles.inputValue, styles.horizontalCenter, styles.w5_6, { padding: 0 }]}>
           <View style={[styles.verticalCenter]}>
             <Text>{experience.monthlySalary || 'N/A'}</Text>
           </View>
-        </View> */}
+        </View>
 
         {/* Salary Grade / Increment */}
-        {/* <View
-          style={[
-            styles.borderRight,
-            styles.inputValue,
-            styles.horizontalCenter,
-            styles.w5_6,
-            { padding: 1 },
-          ]}
-        >
+        <View style={[styles.borderRight, styles.inputValue, styles.horizontalCenter, styles.w5_6, { padding: 1 }]}>
           <View style={[styles.verticalCenter]}>
             <Text>{experience.salaryGrade || 'N/A'}</Text>
           </View>
-        </View> */}
+        </View>
 
         {/* Status of Appointment */}
         <View
@@ -236,18 +220,18 @@ export const WorkExperiencePdf = ({ formatDate, workExperience }: WorkExperience
           </View>
 
           {/* Monthly Salary */}
-          {/* <View style={[styles.borderRight, styles.inputValue, styles.horizontalCenter, styles.w5_6, { padding: 0 }]}>
+          <View style={[styles.borderRight, styles.inputValue, styles.horizontalCenter, styles.w5_6, { padding: 0 }]}>
             <View style={[styles.verticalCenter]}>
               <Text>N/A</Text>
             </View>
-          </View> */}
+          </View>
 
           {/* Salary Grade / Increment */}
-          {/* <View style={[styles.borderRight, styles.inputValue, styles.horizontalCenter, styles.w5_6, { padding: 1 }]}>
+          <View style={[styles.borderRight, styles.inputValue, styles.horizontalCenter, styles.w5_6, { padding: 1 }]}>
             <View style={[styles.verticalCenter]}>
               <Text>N/A</Text>
             </View>
-          </View> */}
+          </View>
 
           {/* Status of Appointment */}
           <View
@@ -329,37 +313,20 @@ export const WorkExperiencePdf = ({ formatDate, workExperience }: WorkExperience
         </View>
 
         {/* Monthly Salary */}
-        {/* <View
-          style={[
-            styles.borderRight,
-            styles.inputKey,
-            styles.horizontalCenter,
-            styles.w5_6,
-            { padding: 0 },
-          ]}
-        >
+        <View style={[styles.borderRight, styles.inputKey, styles.horizontalCenter, styles.w5_6, { padding: 0 }]}>
           <View style={[styles.verticalCenter]}>
             <Text style={{ fontSize: 5.7 }}>MONTHLY SALARY</Text>
           </View>
-        </View> */}
+        </View>
 
         {/* Salary Grade / Increment */}
-        {/* <View
-          style={[
-            styles.borderRight,
-            styles.inputKey,
-            styles.horizontalCenter,
-            styles.w5_6,
-            { padding: 1 },
-          ]}
-        >
+        <View style={[styles.borderRight, styles.inputKey, styles.horizontalCenter, styles.w5_6, { padding: 1 }]}>
           <View style={[styles.verticalCenter]}>
             <Text style={{ fontSize: 4.7 }}>
-              SALARY/ JOB/ PAY GRADE (if applicable)& STEP (Format
-              &quot;00-0&quot;)/ INCREMENT
+              SALARY/ JOB/ PAY GRADE (if applicable)& STEP (Format &quot;00-0&quot;)/ INCREMENT
             </Text>
           </View>
-        </View> */}
+        </View>
 
         {/* Status of Appointment */}
         <View style={[styles.borderRight, styles.inputKey, styles.horizontalCenter, styles.w9_5, { padding: 0 }]}>
