@@ -341,7 +341,7 @@ export const WorkExp = (): JSX.Element => {
                       muted={editIsClicked ? true : false}
                     />
                   </div>
-                  {/* 
+
                   <div className="w-full col-span-1 mb-10">
                     <InputReactForm
                       id="workexpsalarygrade"
@@ -361,7 +361,8 @@ export const WorkExp = (): JSX.Element => {
                       isError={errors.salaryGrade ? true : false}
                       errorMessage={errors.salaryGrade?.message}
                     />
-                  </div> */}
+                  </div>
+
                   <div className="w-full col-span-1 mb-10">
                     <SelectListRF
                       id="workexpapptstat"
