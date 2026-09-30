@@ -16,7 +16,7 @@ import { PassSlipTabs } from '../../../components/fixed/passslip/PassSlipTabs';
 import { PassSlipTabWindow } from '../../../components/fixed/passslip/PassSlipTabWindow';
 import { usePassSlipStore } from '../../../store/passslip.store';
 import React from 'react';
-import 'react-toastify/dist/ReactToastify.css';
+// import 'react-toastify/dist/ReactToastify.css';
 import PassSlipApplicationModal from '../../../components/fixed/passslip/PassSlipApplicationModal';
 import PassSlipPendingModal from '../../../components/fixed/passslip/PassSlipPendingModal';
 import PassSlipCompletedModal from '../../../components/fixed/passslip/PassSlipCompletedModal';
@@ -303,13 +303,6 @@ export default function PassSlip({ employeeDetails }: InferGetServerSidePropsTyp
             {swrIsLoading ? (
               <div className="w-full h-96 static flex flex-col justify-center items-center place-items-center">
                 <LoadingSpinner size={'lg'} />
-                {/* <SpinnerDotted
-                  speed={70}
-                  thickness={70}
-                  className="flex w-full h-full transition-all "
-                  color="slateblue"
-                  size={100}
-                /> */}
               </div>
             ) : (
               <ContentBody>

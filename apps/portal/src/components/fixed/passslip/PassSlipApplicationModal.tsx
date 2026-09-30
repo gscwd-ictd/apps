@@ -11,7 +11,7 @@ import { SelectOption } from 'libs/utils/src/lib/types/select.type';
 import { format } from 'date-fns';
 import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
 import { DateFormatter } from 'libs/utils/src/lib/functions/DateFormatter';
-import { NatureOfBusiness } from 'libs/utils/src/lib/enums/pass-slip.enum';
+import { NatureOfBusiness, PassSlipStatus } from 'libs/utils/src/lib/enums/pass-slip.enum';
 import { useTimeLogStore } from 'apps/portal/src/store/timelogs.store';
 import useSWR from 'swr';
 import { isEmpty } from 'lodash';
@@ -37,6 +37,7 @@ const natureOfBusiness: Array<SelectOption> = [
   { label: NatureOfBusiness.HALF_DAY, value: NatureOfBusiness.HALF_DAY },
   { label: NatureOfBusiness.UNDERTIME, value: NatureOfBusiness.UNDERTIME },
   { label: NatureOfBusiness.OFFICIAL_BUSINESS, value: NatureOfBusiness.OFFICIAL_BUSINESS },
+  { label: NatureOfBusiness.WELLNESS_PASS, value: NatureOfBusiness.WELLNESS_PASS },
 ];
 
 const obTransportation: Array<SelectOption> = [
@@ -81,6 +82,7 @@ export const PassSlipApplicationModal = ({
 
     errorPassSlipsList,
     errorSupervisorList,
+    passSlips,
   } = usePassSlipStore((state) => ({
     loadingResponse: state.loading.loadingResponse,
     passSlipsForApproval: state.passSlips.forApproval,
@@ -96,6 +98,7 @@ export const PassSlipApplicationModal = ({
 
     errorPassSlipsList: state.error.errorPassSlips,
     errorSupervisorList: state.error.errorSupervisors,
+    passSlips: state.passSlips,
   }));
 
   const { errorLeaveLedger, getLeaveLedger, getLeaveLedgerSuccess, getLeaveLedgerFail } = useLeaveLedgerStore(
@@ -117,6 +120,43 @@ export const PassSlipApplicationModal = ({
   const [sickLeaveBalance, setSickLeaveBalance] = useState<number>(0);
   const [specialPrivilegeLeaveBalance, setSpecialPrivilegeLeaveBalance] = useState<number>(0);
   const [isApplying, setIsApplying] = useState<boolean>(false); //disable apply button during submission
+
+  // Check if the employee has already used a Wellness Pass
+  // within the current quarter based on the server date.
+  const hasUsedWellnessPassThisQuarter = (() => {
+    if (!serverDate || !passSlips?.completed.length) {
+      return false;
+    }
+
+    // Server date is formatted as MM-DD-YYYY
+    const formattedServerDate = DateFormatter(serverDate, 'MM-DD-YYYY');
+
+    const [serverMonth, , serverYear] = formattedServerDate.split('-').map(Number);
+
+    // Q1 = Jan-Mar
+    // Q2 = Apr-Jun
+    // Q3 = Jul-Sep
+    // Q4 = Oct-Dec
+    const quarterStartMonth = Math.floor((serverMonth - 1) / 3) * 3 + 1;
+    const quarterEndMonth = quarterStartMonth + 2;
+
+    return passSlips?.completed.some((passSlip) => {
+      if (
+        passSlip.natureOfBusiness !== NatureOfBusiness.WELLNESS_PASS ||
+        passSlip.status !== PassSlipStatus.APPROVED ||
+        !passSlip.dateOfApplication
+      ) {
+        return false;
+      }
+
+      // PassSlip dateOfApplication is YYYY-MM-DD
+      const [applicationYear, applicationMonth] = passSlip.dateOfApplication.split('-').map(Number);
+
+      return (
+        applicationYear === serverYear && applicationMonth >= quarterStartMonth && applicationMonth <= quarterEndMonth
+      );
+    });
+  })();
 
   // get the latest balance by last index value
   const getLatestBalance = (leaveLedger: Array<LeaveLedgerEntry>) => {
@@ -181,6 +221,9 @@ export const PassSlipApplicationModal = ({
       watch('natureOfBusiness') === NatureOfBusiness.UNDERTIME
     ) {
       setValue('estimateHours', 0);
+    } else if (watch('natureOfBusiness') === NatureOfBusiness.WELLNESS_PASS) {
+      setValue('estimateHours', 4);
+      setValue('isMedical', '1');
     }
 
     if (watch('natureOfBusiness') !== NatureOfBusiness.OFFICIAL_BUSINESS) {
@@ -300,6 +343,14 @@ export const PassSlipApplicationModal = ({
                     dismissible={false}
                   />
                 ) : null} */}
+
+                {hasUsedWellnessPassThisQuarter && watch('natureOfBusiness') === NatureOfBusiness.WELLNESS_PASS ? (
+                  <AlertNotification
+                    alertType="warning"
+                    notifMessage="Your Wellness Pass for this quarter has already been used."
+                    dismissible={false}
+                  />
+                ) : null}
 
                 {employeeDetails.employmentDetails.userRole != UserRole.JOB_ORDER &&
                 employeeDetails.employmentDetails.userRole != UserRole.COS &&
@@ -536,7 +587,7 @@ export const PassSlipApplicationModal = ({
                 disabled={
                   !isEmpty(errorPassSlipsList) || !isEmpty(errorSupervisorList) || !isEmpty(errorLeaveLedger)
                     ? true
-                    : !allowedToApplyForNew || passSlipsForApproval.length >= 1
+                    : !allowedToApplyForNew || passSlipsForApproval.length >= 1 || hasUsedWellnessPassThisQuarter
                     ? true
                     : isApplying
                     ? true
