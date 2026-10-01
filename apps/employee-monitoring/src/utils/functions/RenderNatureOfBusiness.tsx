@@ -17,6 +17,8 @@ function UseRenderNatureOfBusiness(value: NatureOfBusiness) {
           ? 'Half Day'
           : value === NatureOfBusiness.UNDERTIME
           ? 'Undertime'
+          : value === NatureOfBusiness.WELLNESS_PASS
+          ? 'Wellness Pass'
           : null
       }
     />

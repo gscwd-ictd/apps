@@ -3,6 +3,7 @@ export enum NatureOfBusiness {
   PERSONAL_BUSINESS = 'Personal Business',
   UNDERTIME = 'Undertime',
   HALF_DAY = 'Half Day',
+  WELLNESS_PASS = 'Wellness Pass',
 }
 
 export enum ObTransportation {

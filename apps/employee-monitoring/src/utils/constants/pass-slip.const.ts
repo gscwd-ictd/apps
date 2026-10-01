@@ -6,6 +6,7 @@ export const natureOfBusiness: Array<SelectOption> = [
   { label: 'Half Day', value: 'Half Day' },
   { label: 'Undertime', value: 'Undertime' },
   { label: 'Official Business', value: 'Official Business' },
+  { label: 'Wellness Pass', value: 'Wellness Pass' },
 ];
 
 export const obTransportation: Array<SelectOption> = [
