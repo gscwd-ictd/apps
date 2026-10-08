@@ -587,7 +587,9 @@ export const PassSlipApplicationModal = ({
                 disabled={
                   !isEmpty(errorPassSlipsList) || !isEmpty(errorSupervisorList) || !isEmpty(errorLeaveLedger)
                     ? true
-                    : !allowedToApplyForNew || passSlipsForApproval.length >= 1 || hasUsedWellnessPassThisQuarter
+                    : !allowedToApplyForNew ||
+                      passSlipsForApproval.length >= 1 ||
+                      (hasUsedWellnessPassThisQuarter && watch('natureOfBusiness') === NatureOfBusiness.WELLNESS_PASS)
                     ? true
                     : isApplying
                     ? true
