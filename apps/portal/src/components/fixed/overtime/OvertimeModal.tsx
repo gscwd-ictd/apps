@@ -403,6 +403,16 @@ export const OvertimeModal = ({ modalState, setModalState, closeModalAction }: M
                     >
                       Authorization
                     </Button>
+                    {/* supervisor can cancel even after approval by the next higher head */}
+                    <Button
+                      variant={'warning'}
+                      size={'md'}
+                      loading={false}
+                      onClick={(e) => setCancelOvertimeModalIsOpen(true)}
+                      type="button"
+                    >
+                      Cancel Overtime
+                    </Button>
                   </>
                 ) : null}
                 <Button

@@ -5,6 +5,7 @@ import { EmployeeDtrWithScheduleAndSummary } from 'libs/utils/src/lib/types/dtr.
 import GscwdLogo from 'apps/employee-monitoring/public/gscwd-logo.png';
 import React, { FunctionComponent, useEffect, useState } from 'react';
 import dayjs from 'dayjs';
+import { effectiveTimeOut, isFullySuspended, workSuspensionLabel } from '../../utils/functions/WorkSuspensionDtr';
 import { isEmpty } from 'lodash';
 import { HolidayTypes } from 'libs/utils/src/lib/enums/holiday-types.enum';
 import { EmployeeWithDetails } from 'libs/utils/src/lib/types/employee.type';
@@ -382,6 +383,7 @@ export const DtrPdf: FunctionComponent<DtrPdfProps> = ({ employeeData, employeeD
                       // time in color
                       if (
                         compareIfLate(log.day, log.dtr.timeIn, log.schedule.timeIn) === true &&
+                        !isFullySuspended(log) &&
                         log.isRestDay === false &&
                         log.isHoliday === false
                       ) {
@@ -420,7 +422,8 @@ export const DtrPdf: FunctionComponent<DtrPdfProps> = ({ employeeData, employeeD
 
                       // time out color
                       if (
-                        compareIfEarly(log.day, log.dtr.timeOut, log.schedule.timeOut) === true &&
+                        compareIfEarly(log.day, log.dtr.timeOut, effectiveTimeOut(log)) === true &&
+                        !isFullySuspended(log) &&
                         log.isRestDay === false &&
                         log.isHoliday === false
                       ) {
@@ -457,7 +460,7 @@ export const DtrPdf: FunctionComponent<DtrPdfProps> = ({ employeeData, employeeD
 
                           {/* REMARKS */}
                           <View style={[styles.tableData, styles.w25]}>
-                            <Text style={[styles.tableDataText]}>{log.dtr.remarks}</Text>
+                            <Text style={[styles.tableDataText]}>{[log.dtr.remarks, workSuspensionLabel(log)].filter(Boolean).join(' / ')}</Text>
                           </View>
 
                           {/* TIME IN */}
@@ -541,12 +544,12 @@ export const DtrPdf: FunctionComponent<DtrPdfProps> = ({ employeeData, employeeD
                         : (logBgColor = white);
 
                       // time in color
-                      compareIfLate(log.day, log.dtr.timeIn, log.schedule.timeIn) === true
+                      compareIfLate(log.day, log.dtr.timeIn, log.schedule.timeIn) === true && !isFullySuspended(log)
                         ? (timeInColor = yellow)
                         : (timeInColor = '');
 
                       // time out color
-                      compareIfEarly(log.day, log.dtr.timeOut, log.schedule.timeOut) === true
+                      compareIfEarly(log.day, log.dtr.timeOut, effectiveTimeOut(log)) === true && !isFullySuspended(log)
                         ? (timeOutColor = yellow)
                         : (timeOutColor = '');
 
@@ -560,7 +563,7 @@ export const DtrPdf: FunctionComponent<DtrPdfProps> = ({ employeeData, employeeD
                           key={index}
                         >
                           <View style={[styles.tableData, styles.w25]}>
-                            <Text style={{ margin: 'auto 0' }}>{log.dtr.remarks}</Text>
+                            <Text style={{ margin: 'auto 0' }}>{[log.dtr.remarks, workSuspensionLabel(log)].filter(Boolean).join(' / ')}</Text>
                           </View>
 
                           {/* TIME IN */}
