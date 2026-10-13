@@ -33,6 +33,8 @@ export type EmployeeDtrWithSchedule = {
   isHoliday: boolean;
   isRestDay: boolean;
   suspensionHours: number;
+  /** new-rule work suspension on this date (null for none / legacy) */
+  workSuspension?: { id: string; name: string; type: 'WHOLE_DAY' | 'TIME_OF_DAY'; startTime: string | null } | null;
   isOt?: boolean;
   hasPendingDtrCorrection: boolean;
   leaveDateStatus?: LeaveDateStatus; //for leave cancellation checker

@@ -1,6 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @nx/enforce-module-boundaries */
 import dayjs from 'dayjs';
+import { effectiveTimeOut, isFullySuspended, workSuspensionLabel } from '../../utils/functions/WorkSuspensionDtr';
 import { Fragment, FunctionComponent, useEffect, useState } from 'react';
 import useSWR from 'swr';
 import { useDtrStore } from '../../store/dtr.store';
@@ -227,6 +228,7 @@ export const EmployeeDtrTable: FunctionComponent<EmployeeDtrTableProps> = ({ emp
                       // time in color
                       if (
                         compareIfLate(logs.day, logs.dtr.timeIn, logs.schedule.timeIn) === true &&
+                        !isFullySuspended(logs) &&
                         logs.isRestDay === false &&
                         logs.isHoliday === false
                       ) {
@@ -265,7 +267,8 @@ export const EmployeeDtrTable: FunctionComponent<EmployeeDtrTableProps> = ({ emp
 
                       // time out color
                       if (
-                        compareIfEarly(logs.day, logs.dtr.timeOut, logs.schedule.timeOut) === true &&
+                        compareIfEarly(logs.day, logs.dtr.timeOut, effectiveTimeOut(logs)) === true &&
+                        !isFullySuspended(logs) &&
                         logs.isRestDay === false &&
                         logs.isHoliday === false
                       ) {
@@ -326,7 +329,7 @@ export const EmployeeDtrTable: FunctionComponent<EmployeeDtrTableProps> = ({ emp
                             <td
                               className={`py-2 text-xs text-center break-words  ${checkIfHoliday(logs.holidayType)} `}
                             >
-                              {logs.dtr.remarks ? logs.dtr.remarks : '-'}
+                              {[logs.dtr.remarks, workSuspensionLabel(logs)].filter(Boolean).join(' / ') || '-'}
                             </td>
                             <td className="py-2 text-center ">
                               <div className="flex justify-center gap-1">
@@ -418,12 +421,12 @@ export const EmployeeDtrTable: FunctionComponent<EmployeeDtrTableProps> = ({ emp
                     let timeOutColor = '';
 
                     // time in color
-                    compareIfLate(logs.day, logs.dtr.timeIn, logs.schedule.timeIn) === true
+                    compareIfLate(logs.day, logs.dtr.timeIn, logs.schedule.timeIn) === true && !isFullySuspended(logs)
                       ? (timeInColor = underTime)
                       : (timeInColor = normal);
 
                     // time out color
-                    compareIfEarly(logs.day, logs.dtr.timeOut, logs.schedule.timeOut) === true
+                    compareIfEarly(logs.day, logs.dtr.timeOut, effectiveTimeOut(logs)) === true && !isFullySuspended(logs)
                       ? (timeOutColor = underTime)
                       : (timeOutColor = normal);
 
@@ -481,7 +484,7 @@ export const EmployeeDtrTable: FunctionComponent<EmployeeDtrTableProps> = ({ emp
                         {/* REMARKS */}
                         <div className="col-span-2 border">
                           <span className="flex items-center justify-center w-full h-full text-center break-words">
-                            {logs.dtr.remarks ? logs.dtr.remarks : '-'}
+                            {[logs.dtr.remarks, workSuspensionLabel(logs)].filter(Boolean).join(' / ') || '-'}
                           </span>
                         </div>
 

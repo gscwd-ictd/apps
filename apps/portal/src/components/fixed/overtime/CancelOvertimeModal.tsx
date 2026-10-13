@@ -6,6 +6,7 @@ import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
 import { patchPortal } from 'apps/portal/src/utils/helpers/portal-axios-helper';
 import { useOvertimeStore } from 'apps/portal/src/store/overtime.store';
 import { OvertimeStatus } from 'libs/utils/src/lib/enums/overtime.enum';
+import { useEmployeeStore } from 'apps/portal/src/store/employee.store';
 
 type ModalProps = {
   modalState: boolean;
@@ -31,19 +32,16 @@ export const CancelOvertimeModal = ({ modalState, setModalState, closeModalActio
     cancelOvertimeFail: state.cancelOvertimeFail,
   }));
 
+  const employeeDetails = useEmployeeStore((state) => state.employeeDetails);
   const [remarks, setRemarks] = useState<string>('');
 
   const handleCancel = async () => {
-    const data = {
-      overtimeApplicationId: overtimeDetails.id,
-      remarks: remarks,
-      status: OvertimeStatus.CANCELLED,
-    };
+    if (remarks.trim() === '') return;
     cancelOvertime();
-    const { error, result } = await patchPortal(
-      `/v1/overtime/immediate-supervisor/${data.overtimeApplicationId}/cancel`,
-      null
-    );
+    const { error, result } = await patchPortal(`/v1/overtime/immediate-supervisor/${overtimeDetails.id}/cancel`, {
+      immediateSupervisorEmployeeId: employeeDetails.employmentDetails.userId,
+      remarks: remarks.trim(),
+    });
     if (error) {
       cancelOvertimeFail(result);
     } else {
@@ -75,13 +73,28 @@ export const CancelOvertimeModal = ({ modalState, setModalState, closeModalActio
         </Modal.Header>
         <Modal.Body>
           <div className="w-full h-full flex flex-col gap-2 text-lg text-center px-4">
-            {`Are you sure you want to cancel this application?`}
+            {overtimeDetails?.status === OvertimeStatus.APPROVED
+              ? `This overtime is already approved. Cancelling removes it from overtime reports. Continue?`
+              : `Are you sure you want to cancel this application?`}
+            <textarea
+              className="w-full p-2 mt-2 text-base border rounded resize-none border-gray-300"
+              rows={3}
+              placeholder="Reason for cancelling (required)"
+              value={remarks}
+              onChange={(e) => setRemarks(e.target.value)}
+            />
           </div>
         </Modal.Body>
         <Modal.Footer>
           <div className="flex justify-end gap-2 px-4">
             <div className="min-w-[6rem] max-w-auto flex gap-2">
-              <Button variant={'primary'} size={'md'} loading={false} onClick={(e) => handleCancel()}>
+              <Button
+                variant={'primary'}
+                size={'md'}
+                loading={false}
+                disabled={remarks.trim() === ''}
+                onClick={(e) => handleCancel()}
+              >
                 Yes
               </Button>
               <Button variant={'danger'} size={'md'} loading={false} onClick={closeModalAction}>
