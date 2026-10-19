@@ -53,7 +53,8 @@ const Index = () => {
   const rows: Array<WorkSuspension> = useMemo(() => workSuspensions?.data ?? [], [workSuspensions]);
 
   useEffect(() => {
-    if (workSuspensionsError) setToast({ type: 'error', message: errorByStatus(workSuspensionsError?.response?.status) });
+    if (workSuspensionsError)
+      setToast({ type: 'error', message: errorByStatus(workSuspensionsError?.response?.status) });
   }, [workSuspensionsError]);
 
   // clear toast after 5 s
@@ -137,7 +138,11 @@ const Index = () => {
           : '-',
     }),
     columnHelper.accessor('isArchived', { header: () => 'Status', cell: (info) => renderStatus(info.row.original) }),
-    columnHelper.display({ id: 'actions', header: () => 'Actions', cell: (props) => renderRowActions(props.row.original) }),
+    columnHelper.display({
+      id: 'actions',
+      header: () => 'Actions',
+      cell: (props) => renderRowActions(props.row.original),
+    }),
   ];
 
   const { table } = useDataTable({ columns, data: rows, columnVisibility: { id: false } });
@@ -154,13 +159,14 @@ const Index = () => {
               <LoadingSpinner size="lg" />
             ) : (
               <div className="flex flex-row flex-wrap">
-                <div className="flex items-center order-1 w-1/2 gap-2">
+                {/* DataTable renders the search box as order-1 w-1/2; page actions go in the order-2 w-1/2 slot */}
+                <div className="flex items-center justify-end order-2 w-1/2 gap-2 table-actions-wrapper">
                   <label htmlFor="year" className="text-sm text-gray-700">
                     Year
                   </label>
                   <select
                     id="year"
-                    className="p-2 text-sm border border-gray-300 rounded"
+                    className="p-2 w-[10%] text-xs border border-gray-300 rounded-md"
                     value={year}
                     onChange={(e) => setYear(Number(e.target.value))}
                   >
@@ -170,8 +176,6 @@ const Index = () => {
                       </option>
                     ))}
                   </select>
-                </div>
-                <div className="flex justify-end order-2 w-1/2 table-actions-wrapper">
                   <button
                     type="button"
                     className="text-white bg-blue-700 hover:bg-blue-800 focus:outline-none font-medium rounded-md text-xs p-2.5 text-center inline-flex items-center mr-2"
