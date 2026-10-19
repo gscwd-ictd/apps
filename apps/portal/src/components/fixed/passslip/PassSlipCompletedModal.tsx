@@ -315,7 +315,8 @@ export const PassSlipCompletedModal = ({
                   </div>
                 </div>
 
-                {passSlip.natureOfBusiness == NatureOfBusiness.OFFICIAL_BUSINESS ? (
+                {passSlip.natureOfBusiness == NatureOfBusiness.OFFICIAL_BUSINESS ||
+                passSlip.natureOfBusiness == NatureOfBusiness.WELLNESS_PASS ? (
                   <>
                     <div className="flex flex-col justify-start items-start w-full px-0.5 pb-3  ">
                       <label className="text-slate-500 text-md whitespace-nowrap pb-0.5 ">

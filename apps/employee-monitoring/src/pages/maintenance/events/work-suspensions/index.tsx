@@ -166,7 +166,7 @@ const Index = () => {
                   </label>
                   <select
                     id="year"
-                    className="p-2 text-xs border border-gray-300 rounded-md"
+                    className="p-2 w-[10%] text-xs border border-gray-300 rounded-md"
                     value={year}
                     onChange={(e) => setYear(Number(e.target.value))}
                   >

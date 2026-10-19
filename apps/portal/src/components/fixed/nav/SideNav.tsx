@@ -271,8 +271,12 @@ export const SideNav = ({ employeeDetails }: NavDetails) => {
 
   useEffect(() => {
     let pendingTraining = [];
-    pendingTraining = swrTrainingMessages?.filter((e) => e.nomineeStatus === NomineeStatus.PENDING);
-    setcurrentPendingTrainingCount(pendingTraining?.length);
+    if (swrTrainingMessages) {
+      pendingTraining = swrTrainingMessages?.filter((e) => e.nomineeStatus === NomineeStatus.PENDING);
+      setcurrentPendingTrainingCount(pendingTraining?.length);
+    } else {
+      setcurrentPendingTrainingCount(0);
+    }
   }, [putResponseApply, swrTrainingMessages]);
 
   useEffect(() => {

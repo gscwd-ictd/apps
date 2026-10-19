@@ -17,6 +17,7 @@ import { DtrCorrectionStatus } from 'libs/utils/src/lib/enums/dtr.enum';
 import { useEmployeeStore } from 'apps/portal/src/store/employee.store';
 import useSWR from 'swr';
 import { fetchWithToken } from 'apps/portal/src/utils/hoc/fetcher';
+import { ScheduleBases } from 'libs/utils/src/lib/enums/schedule.enum';
 
 type EditDailySchedModalProps = {
   modalState: boolean;
@@ -280,7 +281,12 @@ const UpdateTimeLogModal: FunctionComponent<EditDailySchedModalProps> = ({
                             setValue('timeIn', e.target.value, {
                               shouldValidate: true,
                             });
-                            trigger(); // triggers all validations for inputs
+                            if (
+                              employeeDetails?.employmentDetails.scheduleBase !== ScheduleBases.FIELD &&
+                              employeeDetails?.employmentDetails.scheduleBase !== ScheduleBases.PUMPING_STATION
+                            ) {
+                              trigger(); // triggers all validations for inputs
+                            }
                           },
                         }),
                       }}
@@ -295,7 +301,8 @@ const UpdateTimeLogModal: FunctionComponent<EditDailySchedModalProps> = ({
                             : 'bg-inherit'
                         }
                       `}
-                      disabled={rowData.dtr?.timeIn ? true : rowData?.dtrCorrection?.status ? true : false}
+                      disabled={rowData?.dtrCorrection?.status ? true : false}
+                      // disabled={rowData.dtr?.timeIn ? true : rowData?.dtrCorrection?.status ? true : false}
                     />
                   </div>
                 </div>
@@ -407,7 +414,12 @@ const UpdateTimeLogModal: FunctionComponent<EditDailySchedModalProps> = ({
                             setValue('timeOut', e.target.value, {
                               shouldValidate: true,
                             });
-                            trigger(); // trigger all validations for all inputs
+                            if (
+                              employeeDetails?.employmentDetails.scheduleBase !== ScheduleBases.FIELD &&
+                              employeeDetails?.employmentDetails.scheduleBase !== ScheduleBases.PUMPING_STATION
+                            ) {
+                              trigger(); // triggers all validations for inputs
+                            }
                           },
                         }),
                       }}
@@ -422,7 +434,8 @@ const UpdateTimeLogModal: FunctionComponent<EditDailySchedModalProps> = ({
                             : 'bg-inherit'
                         }
                       `}
-                      disabled={rowData?.dtr?.timeOut ? true : rowData?.dtrCorrection?.status ? true : false}
+                      disabled={rowData?.dtrCorrection?.status ? true : false}
+                      // disabled={rowData?.dtr?.timeOut ? true : rowData?.dtrCorrection?.status ? true : false}
                     />
                   </div>
                 </div>
