@@ -156,13 +156,13 @@ export const OvertimeSummaryReportPdf = ({
                   <Text style={styles.tableCell}>NO.</Text>
                 </View>
                 <View style={[styles.tableCol, { borderStyle: 'solid', borderBottomWidth: 1, borderTopWidth: 1 }]}>
-                  <Text style={{ margin: 'auto', textAlign: 'center', fontSize: 8, width: 134 }}>NAME</Text>
+                  <Text style={{ margin: 'auto', textAlign: 'center', fontSize: 8, width: 114 }}>NAME</Text>
                 </View>
 
                 <View
                   style={[
                     styles.tableCol,
-                    { width: 52, borderStyle: 'solid', borderBottomWidth: 1, borderTopWidth: 1 },
+                    { width: 46, borderStyle: 'solid', borderBottomWidth: 1, borderTopWidth: 1 },
                   ]}
                 >
                   <Text style={styles.tableCell}>
@@ -254,7 +254,7 @@ export const OvertimeSummaryReportPdf = ({
                 <View
                   style={[
                     styles.tableCol,
-                    { width: 40, borderStyle: 'solid', borderBottomWidth: 1, borderTopWidth: 1 },
+                    { width: 38, borderStyle: 'solid', borderBottomWidth: 1, borderTopWidth: 1 },
                   ]}
                 >
                   <Text style={styles.tableCell}>TOTAL REGULAR HOURS OT (B)</Text>
@@ -272,7 +272,7 @@ export const OvertimeSummaryReportPdf = ({
                 <View
                   style={[
                     styles.tableCol,
-                    { width: 50, borderStyle: 'solid', borderBottomWidth: 1, borderTopWidth: 1 },
+                    { width: 45, borderStyle: 'solid', borderBottomWidth: 1, borderTopWidth: 1 },
                   ]}
                 >
                   <Text style={styles.tableCell}>TOTAL HOLIDAY / DAY-OFF OT HOURS (C)</Text>
@@ -297,11 +297,26 @@ export const OvertimeSummaryReportPdf = ({
                 <View
                   style={[
                     styles.tableCol,
-                    { width: 55, borderStyle: 'solid', borderBottomWidth: 1, borderTopWidth: 1 },
+                    { width: 48, borderStyle: 'solid', borderBottomWidth: 1, borderTopWidth: 1 },
                   ]}
                 >
-                  <Text style={[styles.tableCell, { marginBottom: -10 }]}>SUBSTITUTE AMOUNT</Text>
-                  <Text style={[styles.tableCell, {}]}>(A X D X 1.25)</Text>
+                  <Text style={styles.tableCell}>SUBSTITUTE AMOUNT (A X D X 1.25)</Text>
+                </View>
+                <View
+                  style={[
+                    styles.tableCol,
+                    { width: 36, borderStyle: 'solid', borderBottomWidth: 1, borderTopWidth: 1 },
+                  ]}
+                >
+                  <Text style={styles.tableCell}>WORK SUSPENSION OT HOURS (E)</Text>
+                </View>
+                <View
+                  style={[
+                    styles.tableCol,
+                    { width: 42, borderStyle: 'solid', borderBottomWidth: 1, borderTopWidth: 1 },
+                  ]}
+                >
+                  <Text style={styles.tableCell}>AMOUNT (A X E X 1.5)</Text>
                 </View>
 
                 {/* <View style={styles.tableCol_dates_main}>
@@ -354,7 +369,7 @@ export const OvertimeSummaryReportPdf = ({
                 <View
                   style={[
                     styles.tableCol,
-                    { width: 60, borderStyle: 'solid', borderBottomWidth: 1, borderTopWidth: 1 },
+                    { width: 47, borderStyle: 'solid', borderBottomWidth: 1, borderTopWidth: 1 },
                   ]}
                 >
                   <Text style={styles.tableCell}>TOTAL OVERTIME AMOUNT</Text>
@@ -368,12 +383,12 @@ export const OvertimeSummaryReportPdf = ({
                       <Text style={styles.tableCell}>{idx + 1}</Text>
                     </View>
                     <View style={styles.tableCol}>
-                      <Text style={{ margin: 'auto', textAlign: 'left', fontSize: 8, width: 134 }}>
+                      <Text style={{ margin: 'auto', textAlign: 'left', fontSize: 8, width: 114 }}>
                         {overtime?.employeeFullName}
                       </Text>
                     </View>
 
-                    <View style={[styles.tableCol, { width: 52 }]}>
+                    <View style={[styles.tableCol, { width: 46 }]}>
                       <Text style={styles.tableCell}>{overtime?.monthlyRate?.toLocaleString()}</Text>
                     </View>
 
@@ -395,6 +410,8 @@ export const OvertimeSummaryReportPdf = ({
                                 overtime?.overtimes[0]?.hoursRendered !== null
                                   ? overtime?.overtimes[0]?.isHoliday
                                     ? 'lime'
+                                    : overtime?.overtimes[0]?.suspensionHrs > 0
+                                    ? '#FFB347'
                                     : 'cyan'
                                   : ''
                               }`,
@@ -417,6 +434,8 @@ export const OvertimeSummaryReportPdf = ({
                                 overtime?.overtimes[1]?.hoursRendered !== null
                                   ? overtime?.overtimes[1]?.isHoliday
                                     ? 'lime'
+                                    : overtime?.overtimes[1]?.suspensionHrs > 0
+                                    ? '#FFB347'
                                     : 'cyan'
                                   : ''
                               }`,
@@ -439,6 +458,8 @@ export const OvertimeSummaryReportPdf = ({
                                 overtime?.overtimes[2]?.hoursRendered !== null
                                   ? overtime?.overtimes[2]?.isHoliday
                                     ? 'lime'
+                                    : overtime?.overtimes[2]?.suspensionHrs > 0
+                                    ? '#FFB347'
                                     : 'cyan'
                                   : ''
                               }`,
@@ -461,6 +482,8 @@ export const OvertimeSummaryReportPdf = ({
                                 overtime?.overtimes[3]?.hoursRendered !== null
                                   ? overtime?.overtimes[3]?.isHoliday
                                     ? 'lime'
+                                    : overtime?.overtimes[3]?.suspensionHrs > 0
+                                    ? '#FFB347'
                                     : 'cyan'
                                   : ''
                               }`,
@@ -483,6 +506,8 @@ export const OvertimeSummaryReportPdf = ({
                                 overtime?.overtimes[4]?.hoursRendered !== null
                                   ? overtime?.overtimes[4]?.isHoliday
                                     ? 'lime'
+                                    : overtime?.overtimes[4]?.suspensionHrs > 0
+                                    ? '#FFB347'
                                     : 'cyan'
                                   : ''
                               }`,
@@ -505,6 +530,8 @@ export const OvertimeSummaryReportPdf = ({
                                 overtime?.overtimes[5]?.hoursRendered !== null
                                   ? overtime?.overtimes[5]?.isHoliday
                                     ? 'lime'
+                                    : overtime?.overtimes[5]?.suspensionHrs > 0
+                                    ? '#FFB347'
                                     : 'cyan'
                                   : ''
                               }`,
@@ -527,6 +554,8 @@ export const OvertimeSummaryReportPdf = ({
                                 overtime?.overtimes[6]?.hoursRendered !== null
                                   ? overtime?.overtimes[6]?.isHoliday
                                     ? 'lime'
+                                    : overtime?.overtimes[6]?.suspensionHrs > 0
+                                    ? '#FFB347'
                                     : 'cyan'
                                   : ''
                               }`,
@@ -549,6 +578,8 @@ export const OvertimeSummaryReportPdf = ({
                                 overtime?.overtimes[7]?.hoursRendered !== null
                                   ? overtime?.overtimes[7]?.isHoliday
                                     ? 'lime'
+                                    : overtime?.overtimes[7]?.suspensionHrs > 0
+                                    ? '#FFB347'
                                     : 'cyan'
                                   : ''
                               }`,
@@ -571,6 +602,8 @@ export const OvertimeSummaryReportPdf = ({
                                 overtime?.overtimes[8]?.hoursRendered !== null
                                   ? overtime?.overtimes[8]?.isHoliday
                                     ? 'lime'
+                                    : overtime?.overtimes[8]?.suspensionHrs > 0
+                                    ? '#FFB347'
                                     : 'cyan'
                                   : ''
                               }`,
@@ -593,6 +626,8 @@ export const OvertimeSummaryReportPdf = ({
                                 overtime?.overtimes[9]?.hoursRendered !== null
                                   ? overtime?.overtimes[9]?.isHoliday
                                     ? 'lime'
+                                    : overtime?.overtimes[9]?.suspensionHrs > 0
+                                    ? '#FFB347'
                                     : 'cyan'
                                   : ''
                               }`,
@@ -615,6 +650,8 @@ export const OvertimeSummaryReportPdf = ({
                                 overtime?.overtimes[10]?.hoursRendered !== null
                                   ? overtime?.overtimes[10]?.isHoliday
                                     ? 'lime'
+                                    : overtime?.overtimes[10]?.suspensionHrs > 0
+                                    ? '#FFB347'
                                     : 'cyan'
                                   : ''
                               }`,
@@ -637,6 +674,8 @@ export const OvertimeSummaryReportPdf = ({
                                 overtime?.overtimes[11]?.hoursRendered !== null
                                   ? overtime?.overtimes[11]?.isHoliday
                                     ? 'lime'
+                                    : overtime?.overtimes[11]?.suspensionHrs > 0
+                                    ? '#FFB347'
                                     : 'cyan'
                                   : ''
                               }`,
@@ -659,6 +698,8 @@ export const OvertimeSummaryReportPdf = ({
                                 overtime?.overtimes[12]?.hoursRendered !== null
                                   ? overtime?.overtimes[12]?.isHoliday
                                     ? 'lime'
+                                    : overtime?.overtimes[12]?.suspensionHrs > 0
+                                    ? '#FFB347'
                                     : 'cyan'
                                   : ''
                               }`,
@@ -681,6 +722,8 @@ export const OvertimeSummaryReportPdf = ({
                                 overtime?.overtimes[13]?.hoursRendered !== null
                                   ? overtime?.overtimes[13]?.isHoliday
                                     ? 'lime'
+                                    : overtime?.overtimes[13]?.suspensionHrs > 0
+                                    ? '#FFB347'
                                     : 'cyan'
                                   : ''
                               }`,
@@ -703,6 +746,8 @@ export const OvertimeSummaryReportPdf = ({
                                 overtime?.overtimes[14]?.hoursRendered !== null
                                   ? overtime?.overtimes[14]?.isHoliday
                                     ? 'lime'
+                                    : overtime?.overtimes[14]?.suspensionHrs > 0
+                                    ? '#FFB347'
                                     : 'cyan'
                                   : ''
                               }`,
@@ -725,6 +770,8 @@ export const OvertimeSummaryReportPdf = ({
                                 overtime?.overtimes[15]?.hoursRendered !== null
                                   ? overtime?.overtimes[15]?.isHoliday
                                     ? 'lime'
+                                    : overtime?.overtimes[15]?.suspensionHrs > 0
+                                    ? '#FFB347'
                                     : 'cyan'
                                   : ''
                               }`,
@@ -742,7 +789,7 @@ export const OvertimeSummaryReportPdf = ({
                       <Text style={styles.tableCell}>{overtime?.totalOTHoursRendered.toFixed(2)}</Text>
                     </View>
 
-                    <View style={[styles.tableCol, { width: 40 }]}>
+                    <View style={[styles.tableCol, { width: 38 }]}>
                       <Text style={styles.tableCell}>{overtime?.totalRegularOTHoursRendered.toFixed(2)}</Text>
                     </View>
 
@@ -750,7 +797,7 @@ export const OvertimeSummaryReportPdf = ({
                       <Text style={styles.tableCell}>{overtime?.regularOTAmount.toLocaleString()}</Text>
                     </View>
 
-                    <View style={[styles.tableCol, { width: 50 }]}>
+                    <View style={[styles.tableCol, { width: 45 }]}>
                       <Text style={styles.tableCell}>{overtime?.totalOffOTHoursRendered.toFixed(2)}</Text>
                     </View>
 
@@ -760,8 +807,14 @@ export const OvertimeSummaryReportPdf = ({
                     <View style={[styles.tableCol, { width: 45 }]}>
                       <Text style={styles.tableCell}>{overtime?.substituteDutyOTHours.toFixed(2)}</Text>
                     </View>
-                    <View style={[styles.tableCol, { width: 55 }]}>
+                    <View style={[styles.tableCol, { width: 48 }]}>
                       <Text style={styles.tableCell}>{overtime?.substituteAmount.toLocaleString()}</Text>
+                    </View>
+                    <View style={[styles.tableCol, { width: 36 }]}>
+                      <Text style={styles.tableCell}>{Number(overtime?.suspensionOTHrs ?? 0).toFixed(2)}</Text>
+                    </View>
+                    <View style={[styles.tableCol, { width: 42 }]}>
+                      <Text style={styles.tableCell}>{(overtime?.suspensionOTAmount ?? 0).toLocaleString()}</Text>
                     </View>
                     {/* <View style={[styles.tableCol, { width: 41 }]}>
                       <Text style={styles.tableCell}>{overtime?.nightDifferentialHrs.toFixed(2)}</Text>
@@ -771,7 +824,7 @@ export const OvertimeSummaryReportPdf = ({
                         {overtime?.nightDifferentialAmount.toLocaleString()}
                       </Text>
                     </View> */}
-                    <View style={[styles.tableCol, { width: 60 }]}>
+                    <View style={[styles.tableCol, { width: 47 }]}>
                       <Text style={styles.tableCell}>{overtime?.totalOvertimeAmount.toLocaleString()}</Text>
                     </View>
                   </View>
@@ -782,12 +835,12 @@ export const OvertimeSummaryReportPdf = ({
                           <Text style={styles.tableCell}>1</Text>
                         </View> */}
                 <View style={[styles.tableCol, { borderLeftWidth: 1 }]}>
-                  <Text style={{ margin: 'auto', textAlign: 'left', fontSize: 8, width: 153, paddingLeft: 5 }}>
+                  <Text style={{ margin: 'auto', textAlign: 'left', fontSize: 8, width: 133, paddingLeft: 5 }}>
                     TOTAL
                   </Text>
                 </View>
 
-                <View style={[styles.tableCol, { width: 52 }]}>
+                <View style={[styles.tableCol, { width: 46 }]}>
                   <Text style={styles.tableCell}></Text>
                 </View>
 
@@ -809,7 +862,7 @@ export const OvertimeSummaryReportPdf = ({
                   <Text style={styles.tableCell}></Text>
                 </View>
 
-                <View style={[styles.tableCol, { width: 40 }]}>
+                <View style={[styles.tableCol, { width: 38 }]}>
                   <Text style={styles.tableCell}></Text>
                 </View>
 
@@ -819,7 +872,7 @@ export const OvertimeSummaryReportPdf = ({
                   </Text>
                 </View>
 
-                <View style={[styles.tableCol, { width: 50 }]}>
+                <View style={[styles.tableCol, { width: 45 }]}>
                   <Text style={styles.tableCell}></Text>
                 </View>
 
@@ -831,9 +884,17 @@ export const OvertimeSummaryReportPdf = ({
                 <View style={[styles.tableCol, { width: 45 }]}>
                   <Text style={styles.tableCell}></Text>
                 </View>
-                <View style={[styles.tableCol, { width: 55 }]}>
+                <View style={[styles.tableCol, { width: 48 }]}>
                   <Text style={styles.tableCell}>
                     {overtimeSummaryReport?.overallSubstituteDutyOTAmount?.toLocaleString()}
+                  </Text>
+                </View>
+                <View style={[styles.tableCol, { width: 36 }]}>
+                  <Text style={styles.tableCell}></Text>
+                </View>
+                <View style={[styles.tableCol, { width: 42 }]}>
+                  <Text style={styles.tableCell}>
+                    {(overtimeSummaryReport?.overallTotalSuspensionOTAmount ?? 0).toLocaleString()}
                   </Text>
                 </View>
                 {/* <View style={[styles.tableCol, { width: 41 }]}>
@@ -844,10 +905,44 @@ export const OvertimeSummaryReportPdf = ({
                     {overtimeSummaryReport?.overallNightDifferentialAmount?.toLocaleString()}
                   </Text>
                 </View> */}
-                <View style={[styles.tableCol, { width: 60 }]}>
+                <View style={[styles.tableCol, { width: 47 }]}>
                   <Text style={styles.tableCell}>{overtimeSummaryReport?.overallTotalOTAmount?.toLocaleString()}</Text>
                 </View>
               </View>
+            </View>
+
+            {/* LEGEND */}
+            <View
+              wrap={false}
+              style={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap', paddingTop: 6, fontSize: 7 }}
+            >
+              <Text style={{ marginRight: 6 }}>LEGEND:</Text>
+              {[
+                { color: 'cyan', label: 'Regular day OT (1.25x)' },
+                {
+                  color: '#FFB347',
+                  label:
+                    'Work suspension day OT (1.5x from suspension start until 12 midnight; whole day: 12:00 AM to 12 midnight)',
+                },
+                { color: 'lime', label: 'Holiday / day-off OT (1.5x)' },
+              ].map((item) => (
+                <View
+                  key={item.label}
+                  style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', marginRight: 12 }}
+                >
+                  <View
+                    style={{
+                      width: 8,
+                      height: 8,
+                      backgroundColor: item.color,
+                      borderWidth: 0.5,
+                      borderColor: '#000',
+                      marginRight: 3,
+                    }}
+                  />
+                  <Text>{item.label}</Text>
+                </View>
+              ))}
             </View>
 
             {/* SIGNATORIES */}
