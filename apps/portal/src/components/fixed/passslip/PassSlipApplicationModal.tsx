@@ -1,5 +1,6 @@
 /* eslint-disable @nx/enforce-module-boundaries */
 import { useEffect, useState } from 'react';
+import dayjs from 'dayjs';
 import { AlertNotification, Button, LoadingSpinner, Modal } from '@gscwd-apps/oneui';
 import { useEmployeeStore } from '../../../../src/store/employee.store';
 import { usePassSlipStore } from '../../../../src/store/passslip.store';
@@ -100,6 +101,11 @@ export const PassSlipApplicationModal = ({
     errorSupervisorList: state.error.errorSupervisors,
     passSlips: state.passSlips,
   }));
+
+  // only today's pending requests block a new application (a previous day's leftover must not)
+  const pendingTodayCount = (passSlipsForApproval ?? []).filter((passSlip) =>
+    dayjs(passSlip.dateOfApplication).isSame(dayjs(), 'day')
+  ).length;
 
   const { errorLeaveLedger, getLeaveLedger, getLeaveLedgerSuccess, getLeaveLedgerFail } = useLeaveLedgerStore(
     (state) => ({
@@ -327,7 +333,7 @@ export const PassSlipApplicationModal = ({
                   dismissible={false}
                 />
 
-                {!allowedToApplyForNew || passSlipsForApproval.length >= 1 ? (
+                {!allowedToApplyForNew || pendingTodayCount >= 1 ? (
                   <AlertNotification
                     alertType="warning"
                     notifMessage="You already have an active Pass Slip request."
@@ -588,7 +594,7 @@ export const PassSlipApplicationModal = ({
                   !isEmpty(errorPassSlipsList) || !isEmpty(errorSupervisorList) || !isEmpty(errorLeaveLedger)
                     ? true
                     : !allowedToApplyForNew ||
-                      passSlipsForApproval.length >= 1 ||
+                      pendingTodayCount >= 1 ||
                       (hasUsedWellnessPassThisQuarter && watch('natureOfBusiness') === NatureOfBusiness.WELLNESS_PASS)
                     ? true
                     : isApplying
