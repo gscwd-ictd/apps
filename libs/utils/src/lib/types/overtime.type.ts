@@ -195,6 +195,7 @@ export type OvertimeSummary = {
   overallTotalRegularOTAmount: number;
   overallTotalOffOTAmount: number;
   overallSubstituteDutyOTAmount: number;
+  overallTotalSuspensionOTAmount?: number; // work suspension OT amount (A x E x 1.5)
   overallNightDifferentialAmount: number;
   overallTotalOTAmount: number;
 
@@ -225,6 +226,9 @@ export type OvertimeSummaryEmployee = {
   offOTAmount: number; //amount A x C x 1.5
   substituteDutyOTHours: number;
   substituteAmount: number;
+  regularOTHrs?: number; // regular-day OT hours paid 1.25x
+  suspensionOTHrs?: number; // work suspension OT hours (E), paid 1.5x
+  suspensionOTAmount?: number; // amount A x E x 1.5
   nightDifferentialHrs: number;
   nightDifferentialAmount: number;
   totalOvertimeAmount: number; //total overtime amount
@@ -243,6 +247,7 @@ export type OvertimeDayDetails = {
   day: number;
   hoursRendered: number | null;
   isHoliday?: boolean | null;
+  suspensionHrs?: number; // part of hoursRendered inside the work suspension window
 };
 
 //used in combined OT authorization and accomplishment pdf
