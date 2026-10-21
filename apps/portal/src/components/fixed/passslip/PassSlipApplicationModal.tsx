@@ -1,5 +1,6 @@
 /* eslint-disable @nx/enforce-module-boundaries */
 import { useEffect, useState } from 'react';
+import dayjs from 'dayjs';
 import { AlertNotification, Button, LoadingSpinner, Modal } from '@gscwd-apps/oneui';
 import { useEmployeeStore } from '../../../../src/store/employee.store';
 import { usePassSlipStore } from '../../../../src/store/passslip.store';
@@ -100,6 +101,11 @@ export const PassSlipApplicationModal = ({
     errorSupervisorList: state.error.errorSupervisors,
     passSlips: state.passSlips,
   }));
+
+  // only today's pending requests block a new application (a previous day's leftover must not)
+  const pendingTodayCount = (passSlipsForApproval ?? []).filter((passSlip) =>
+    dayjs(passSlip.dateOfApplication).isSame(dayjs(), 'day')
+  ).length;
 
   const { errorLeaveLedger, getLeaveLedger, getLeaveLedgerSuccess, getLeaveLedgerFail } = useLeaveLedgerStore(
     (state) => ({
@@ -321,13 +327,17 @@ export const PassSlipApplicationModal = ({
                   />
                 ) : null}
 
-                <AlertNotification
-                  alertType="info"
-                  notifMessage={`Current Vacation Leave Credits: ${vacationLeaveBalance}`}
-                  dismissible={false}
-                />
+                {employeeDetails.employmentDetails.userRole != UserRole.JOB_ORDER &&
+                employeeDetails.employmentDetails.userRole != UserRole.COS &&
+                employeeDetails.employmentDetails.userRole != UserRole.COS_JO ? (
+                  <AlertNotification
+                    alertType="info"
+                    notifMessage={`Current Vacation Leave Credits: ${vacationLeaveBalance}`}
+                    dismissible={false}
+                  />
+                ) : null}
 
-                {!allowedToApplyForNew || passSlipsForApproval.length >= 1 ? (
+                {!allowedToApplyForNew || pendingTodayCount >= 1 ? (
                   <AlertNotification
                     alertType="warning"
                     notifMessage="You already have an active Pass Slip request."
@@ -406,7 +416,8 @@ export const PassSlipApplicationModal = ({
                   </label>
 
                   <div className="w-full xl:w-64">
-                    <select
+                    {/* OLD SELECT */}
+                    {/* <select
                       id="natureOfBusiness"
                       className="text-slate-500 h-12 w-full rounded-md text-md border-slate-300"
                       required
@@ -420,6 +431,33 @@ export const PassSlipApplicationModal = ({
                           {item.label}
                         </option>
                       ))}
+                    </select> */}
+
+                    <select
+                      id="natureOfBusiness"
+                      className="text-slate-500 h-12 w-full rounded-md text-md border-slate-300"
+                      required
+                      {...register('natureOfBusiness')}
+                    >
+                      <option value="" disabled>
+                        Select Nature of Business
+                      </option>
+
+                      {natureOfBusiness
+                        .filter(
+                          (item: Item) =>
+                            !(
+                              (employeeDetails.employmentDetails.userRole === UserRole.JOB_ORDER ||
+                                employeeDetails.employmentDetails.userRole === UserRole.COS ||
+                                employeeDetails.employmentDetails.userRole === UserRole.COS_JO) &&
+                              item.value === NatureOfBusiness.WELLNESS_PASS
+                            )
+                        )
+                        .map((item: Item, idx: number) => (
+                          <option value={item.value} key={idx}>
+                            {item.label}
+                          </option>
+                        ))}
                     </select>
                   </div>
                 </div>
@@ -588,7 +626,7 @@ export const PassSlipApplicationModal = ({
                   !isEmpty(errorPassSlipsList) || !isEmpty(errorSupervisorList) || !isEmpty(errorLeaveLedger)
                     ? true
                     : !allowedToApplyForNew ||
-                      passSlipsForApproval.length >= 1 ||
+                      pendingTodayCount >= 1 ||
                       (hasUsedWellnessPassThisQuarter && watch('natureOfBusiness') === NatureOfBusiness.WELLNESS_PASS)
                     ? true
                     : isApplying
