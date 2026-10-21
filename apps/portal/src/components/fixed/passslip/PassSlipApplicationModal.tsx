@@ -327,11 +327,15 @@ export const PassSlipApplicationModal = ({
                   />
                 ) : null}
 
-                <AlertNotification
-                  alertType="info"
-                  notifMessage={`Current Vacation Leave Credits: ${vacationLeaveBalance}`}
-                  dismissible={false}
-                />
+                {employeeDetails.employmentDetails.userRole != UserRole.JOB_ORDER &&
+                employeeDetails.employmentDetails.userRole != UserRole.COS &&
+                employeeDetails.employmentDetails.userRole != UserRole.COS_JO ? (
+                  <AlertNotification
+                    alertType="info"
+                    notifMessage={`Current Vacation Leave Credits: ${vacationLeaveBalance}`}
+                    dismissible={false}
+                  />
+                ) : null}
 
                 {!allowedToApplyForNew || pendingTodayCount >= 1 ? (
                   <AlertNotification
@@ -412,7 +416,8 @@ export const PassSlipApplicationModal = ({
                   </label>
 
                   <div className="w-full xl:w-64">
-                    <select
+                    {/* OLD SELECT */}
+                    {/* <select
                       id="natureOfBusiness"
                       className="text-slate-500 h-12 w-full rounded-md text-md border-slate-300"
                       required
@@ -426,6 +431,33 @@ export const PassSlipApplicationModal = ({
                           {item.label}
                         </option>
                       ))}
+                    </select> */}
+
+                    <select
+                      id="natureOfBusiness"
+                      className="text-slate-500 h-12 w-full rounded-md text-md border-slate-300"
+                      required
+                      {...register('natureOfBusiness')}
+                    >
+                      <option value="" disabled>
+                        Select Nature of Business
+                      </option>
+
+                      {natureOfBusiness
+                        .filter(
+                          (item: Item) =>
+                            !(
+                              (employeeDetails.employmentDetails.userRole === UserRole.JOB_ORDER ||
+                                employeeDetails.employmentDetails.userRole === UserRole.COS ||
+                                employeeDetails.employmentDetails.userRole === UserRole.COS_JO) &&
+                              item.value === NatureOfBusiness.WELLNESS_PASS
+                            )
+                        )
+                        .map((item: Item, idx: number) => (
+                          <option value={item.value} key={idx}>
+                            {item.label}
+                          </option>
+                        ))}
                     </select>
                   </div>
                 </div>
