@@ -91,6 +91,17 @@ const leaveCommutation: Array<SelectOption> = [
   },
 ];
 
+
+/**
+ * Forced Leave and Wellness Leave credits are forfeited 1 week after November 30 (the week is for
+ * pending approvals), so new applications are closed after November 30.
+ */
+const isClosedAfterNovember = (leaveName?: string | null) => {
+  if (leaveName !== LeaveName.FORCED && leaveName !== LeaveName.WELLNESS) return false;
+  const today = new Date();
+  return today.getMonth() === 11; // December
+};
+
 export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAction }: LeaveApplicationModalProps) => {
   //get month now (1 = January, 2 = Feb...)
   const monthNow = format(new Date(), 'M');
@@ -749,6 +760,8 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
           watch('typeOfLeaveDetails.leaveName') == LeaveName.ADOPTION)
       ) {
         handlePostError('Please select an acceptable date of Leave.');
+      } else if (isClosedAfterNovember(watch('typeOfLeaveDetails.leaveName'))) {
+        handlePostError(`${watch('typeOfLeaveDetails.leaveName')} applications are closed after November 30.`);
       } else if (hasPendingLeave) {
         handlePostError('You have a pending Leave application conflict.');
       } else if (
@@ -1381,8 +1394,13 @@ export const LeaveApplicationModal = ({ modalState, setModalState, closeModalAct
                         // typeOfLeave
                         allowedLeaveBenefits?.length > 0
                           ? allowedLeaveBenefits.map((item: LeaveBenefitOptions, idx: number) => (
-                              <option value={`{"id":"${item.id}", "leaveName":"${item.leaveName}"}`} key={idx}>
+                              <option
+                                value={`{"id":"${item.id}", "leaveName":"${item.leaveName}"}`}
+                                key={idx}
+                                disabled={isClosedAfterNovember(item.leaveName)}
+                              >
                                 {item.leaveName}
+                                {isClosedAfterNovember(item.leaveName) ? ' (closed after November 30)' : ''}
                               </option>
                             ))
                           : null
