@@ -6,6 +6,8 @@ export type Report = {
   monthYear?: string;
   employeeId?: string;
   passSlipType?: string;
+  year?: string;
+  wellnessPeriod?: string;
 };
 
 export type EmployeeSignatory = {
@@ -58,6 +60,8 @@ export type EmployeeDroPbPs = {
   noOfMinConsumed: string;
   conversion: string;
   timeInTimeOut: string;
+  natureOfBusiness?: string;
+  ledgerDebit?: string | null;
 };
 export type DetailedReportOnPbPassSlip = {
   report: Array<EmployeeDroPbPs>;
@@ -183,6 +187,8 @@ export type EmployeeDroPbPsCJ = {
   noOfMinConsumed: string;
   conversion: string;
   timeInTimeOut: string;
+  natureOfBusiness?: string;
+  ledgerDebit?: string | null;
 };
 export type DetailedReportOnPbPassSlipCosJo = {
   report: Array<EmployeeDroPbPsCJ>;
@@ -215,5 +221,22 @@ export type EmployeeRoLaLf = {
 };
 export type ReportOnLeaveApplicationLateFiling = {
   report: Array<EmployeeRoLaLf>;
+  signatory: ReportSignatories;
+};
+
+// Report on Wellness Pass = RoWp
+export type EmployeeRoWp = {
+  employeeId: string;
+  name: string;
+  noOfTimes: number;
+  wellnessDates: Array<{ date: string; timeOutIn: string; minutes: number; hours: string }>;
+  dates: string;
+  totalMinutes: number;
+  accumulatedHours: string;
+  excessMinutes: number;
+  chargedToLeave: string;
+};
+export type ReportOnWellnessPass = {
+  report: Array<EmployeeRoWp>;
   signatory: ReportSignatories;
 };

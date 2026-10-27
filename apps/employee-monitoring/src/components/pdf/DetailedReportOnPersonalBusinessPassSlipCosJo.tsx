@@ -145,19 +145,22 @@ export const DetailedReportOnPersonalBusinessPassSlipCosJoPdf: FunctionComponent
                   <View style={[styles.rowContainer, styles.borderTop, styles.rowBorder]} fixed>
                     {/* NUMBER */}
                     <View style={[styles.tableHeader, styles.w5]}></View>
-                    <View style={[styles.tableHeader, styles.w30, { fontSize: 7 }]}>
+                    <View style={[styles.tableHeader, { width: '25%' }, { fontSize: 7 }]}>
                       <Text style={[styles.tableHeaderText, styles.upperText, styles.boldText]}>Names</Text>
                     </View>
-                    <View style={[styles.tableHeader, styles.w16_25]}>
+                    <View style={[styles.tableHeader, styles.w13]}>
                       <Text style={[styles.tableHeaderText]}>Date</Text>
                     </View>
-                    <View style={[styles.tableHeader, styles.w16_25]}>
+                    <View style={[styles.tableHeader, styles.w13]}>
+                      <Text style={[styles.tableHeaderText]}>Type</Text>
+                    </View>
+                    <View style={[styles.tableHeader, styles.w15]}>
                       <Text style={[styles.tableHeaderText]}>No. Of Minutes Consumed</Text>
                     </View>
-                    <View style={[styles.tableHeader, styles.w16_25]}>
+                    <View style={[styles.tableHeader, styles.w15]}>
                       <Text style={[styles.tableHeaderText]}>Conversion (mins / 60) x .125</Text>
                     </View>
-                    <View style={[styles.tableHeader, styles.w16_25, { borderRight: 'none' }]}>
+                    <View style={[styles.tableHeader, { width: '14%' }, { borderRight: 'none' }]}>
                       <Text style={[styles.tableHeaderText]}>Time Out & Time In</Text>
                     </View>
                   </View>
@@ -174,22 +177,25 @@ export const DetailedReportOnPersonalBusinessPassSlipCosJoPdf: FunctionComponent
                             <View style={[styles.tableData, styles.w5]}>
                               <Text style={[styles.tableDataText]}>{index + 1}</Text>
                             </View>
-                            <View style={[styles.tableData, styles.w30, { alignItems: 'flex-start' }]}>
+                            <View style={[styles.tableData, { width: '25%' }, { alignItems: 'flex-start' }]}>
                               <Text style={[styles.tableDataText, { textAlign: 'left' }]}>
                                 {pbPassSlipData.name || '-'}
                               </Text>
                             </View>
 
-                            <View style={[styles.tableData, styles.w16_25]}>
+                            <View style={[styles.tableData, styles.w13]}>
                               <Text style={[styles.tableDataText]}>{pbPassSlipData.psDate || ''}</Text>
                             </View>
-                            <View style={[styles.tableData, styles.w16_25]}>
+                            <View style={[styles.tableData, styles.w13]}>
+                              <Text style={[styles.tableDataText]}>{pbPassSlipData.natureOfBusiness || ''}</Text>
+                            </View>
+                            <View style={[styles.tableData, styles.w15]}>
                               <Text style={[styles.tableDataText]}>{pbPassSlipData.noOfMinConsumed || ''}</Text>
                             </View>
-                            <View style={[styles.tableData, styles.w16_25]}>
+                            <View style={[styles.tableData, styles.w15]}>
                               <Text style={[styles.tableDataText]}>{pbPassSlipData.conversion || ''}</Text>
                             </View>
-                            <View style={[styles.tableData, styles.w16_25, { borderRight: 'none' }]}>
+                            <View style={[styles.tableData, { width: '14%' }, { borderRight: 'none' }]}>
                               <Text style={[styles.tableDataText]}>{pbPassSlipData.timeInTimeOut || ''}</Text>
                             </View>
                           </View>
