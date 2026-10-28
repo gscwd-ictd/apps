@@ -1,7 +1,7 @@
 import { Can } from 'apps/employee-monitoring/src/context/casl/CaslContext';
 import { Navigate } from '../../components/router/navigate';
 import { SubmitHandler, useForm } from 'react-hook-form';
-import { Reports } from '../../utils/constants/reports.const';
+import { Reports, WellnessPassPeriods, wellnessPassPeriodRange } from '../../utils/constants/reports.const';
 import { Report } from 'apps/employee-monitoring/src/utils/types/report.type';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
@@ -138,7 +138,25 @@ const yupSchema = yup.object().shape({
     })
     .nullable(),
   employeeId: yup.string().nullable(),
+  // Report on Wellness Pass
+  year: yup
+    .string()
+    .nullable()
+    .when('reportName', {
+      is: (report: string) => report === Reports[14].value,
+      then: yup.string().required('Year is required').nullable(),
+    }),
+  wellnessPeriod: yup
+    .string()
+    .nullable()
+    .when('reportName', {
+      is: (report: string) => report === Reports[14].value,
+      then: yup.string().required('Select a period').nullable(),
+    }),
 });
+
+const currentYear = new Date().getFullYear();
+const yearOptions = Array.from({ length: 5 }, (_, i) => ({ label: `${currentYear - i}`, value: `${currentYear - i}` }));
 
 export default function Index() {
   // fetch data for list of employees
@@ -174,6 +192,8 @@ export default function Index() {
       monthYear: null,
       employeeId: null,
       passSlipType: null,
+      year: `${currentYear}`,
+      wellnessPeriod: null,
     },
     resolver: yupResolver(yupSchema),
   });
@@ -205,6 +225,17 @@ export default function Index() {
     )}&date_to=${ConvertFullMonthNameToDigit(data.dateTo)}&pass_slip=${
       !isEmpty(data.passSlipType) ? data.passSlipType : ''
     }`;
+
+    // Report on Wellness Pass: quarter / all year of the selected year
+    if (data.reportName === Reports[14].value) {
+      const { dateFrom, dateTo } = wellnessPassPeriodRange(Number(data.year), data.wellnessPeriod);
+      const paramWellness = `&date_from=${dateFrom}&date_to=${dateTo}&period=${data.wellnessPeriod}&year=${
+        data.year
+      }&employee_id=${!isEmpty(data.employeeId) ? data.employeeId : ''}`;
+      window.open(url + paramWellness, '_blank', 'noopener,noreferrer');
+      reset();
+      return;
+    }
 
     // condition if param needs to be month & year OR date to & date from
     if (
@@ -244,6 +275,17 @@ export default function Index() {
 
   // register the right fields depending on the report params
   useEffect(() => {
+    if (watchReportName === Reports[14].value) {
+      register('year');
+      register('wellnessPeriod');
+      register('employeeId');
+
+      unregister('dateFrom');
+      unregister('dateTo');
+      unregister('monthYear');
+      unregister('passSlipType');
+      return;
+    }
     if (
       watchReportName === Reports[5].value ||
       watchReportName === Reports[6].value ||
@@ -328,10 +370,54 @@ export default function Index() {
                     />
                   </div>
 
-                  {watchReportName === Reports[5].value ||
-                  watchReportName === Reports[6].value ||
-                  watchReportName === Reports[7].value ||
-                  watchReportName === Reports[8].value ? (
+                  {watchReportName === Reports[14].value ? (
+                    <div>
+                      <div className="grid grid-cols-2 gap-2">
+                        {/* Year */}
+                        <div>
+                          <SelectListRF
+                            id="year"
+                            selectList={yearOptions}
+                            controller={{ ...register('year') }}
+                            label="Year"
+                            isError={errors.year ? true : false}
+                            errorMessage={errors.year?.message}
+                            required
+                          />
+                        </div>
+
+                        {/* Quarter / All Year */}
+                        <div>
+                          <SelectListRF
+                            id="wellnessPeriod"
+                            selectList={WellnessPassPeriods}
+                            controller={{ ...register('wellnessPeriod') }}
+                            label="Period"
+                            isError={errors.wellnessPeriod ? true : false}
+                            errorMessage={errors.wellnessPeriod?.message}
+                            required
+                          />
+                        </div>
+
+                        {/* employee (empty = all) */}
+                        <div className="mb-6">
+                          <SelectListRF
+                            id="employeeId"
+                            selectList={EmployeeOptions}
+                            controller={{ ...register('employeeId') }}
+                            label="Employee"
+                            isError={errors.employeeId ? true : false}
+                            errorMessage={errors.employeeId?.message}
+                            disabled={employeesLoading}
+                            isLoading={employeesLoading}
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  ) : watchReportName === Reports[5].value ||
+                    watchReportName === Reports[6].value ||
+                    watchReportName === Reports[7].value ||
+                    watchReportName === Reports[8].value ? (
                     <div>
                       <div className="grid grid-cols-2 gap-2">
                         {/* Date From input */}
