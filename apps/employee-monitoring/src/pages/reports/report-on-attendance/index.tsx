@@ -12,6 +12,7 @@ import { useReportsStore } from 'apps/employee-monitoring/src/store/report.store
 import { LoadingSpinner, ToastNotification } from '@gscwd-apps/oneui';
 import { Navigate } from 'apps/employee-monitoring/src/components/router/navigate';
 import { UseLoadingProgressStore } from 'apps/employee-monitoring/src/store/loading.store';
+import ReportProgressBar from 'apps/employee-monitoring/src/components/progress/ReportProgressBar';
 
 const Index = () => {
   const router = useRouter();
@@ -24,7 +25,9 @@ const Index = () => {
     error: swrError,
     isLoading: swrIsLoading,
   } = useSWR(
-    `${process.env.NEXT_PUBLIC_EMPLOYEE_MONITORING_BE_DOMAIN}/reports/?report=${router.query.reportName}&date_from=${router.query.date_from}&date_to=${router.query.date_to}`,
+    `${process.env.NEXT_PUBLIC_EMPLOYEE_MONITORING_BE_DOMAIN}/reports/?report=${router.query.reportName}&date_from=${
+      router.query.date_from
+    }&date_to=${router.query.date_to}&org_id=${router.query.org_id ?? ''}`,
     fetcherEMS,
     {
       shouldRetryOnError: false,
@@ -84,7 +87,7 @@ const Index = () => {
           <div className="flex flex-col w-full gap-6 px-5">
             <Card>
               {swrIsLoading ? (
-                <LoadingSpinner size="lg" />
+                <ReportProgressBar isLoading={swrIsLoading} label="Generating Report on Attendance" />
               ) : (
                 <ReportOnAttendancePdf reportOnAttendanceData={ReportOnAttendanceDoc} />
               )}

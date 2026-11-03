@@ -6,6 +6,7 @@ export type Report = {
   monthYear?: string;
   employeeId?: string;
   passSlipType?: string;
+  orgId?: string;
   year?: string;
   wellnessPeriod?: string;
 };
@@ -31,7 +32,9 @@ export type EmployeeAttendanceRoa = {
   numberOfTimesHalfDay?: number;
   daysHalfDay?: string;
   datesLate?: string;
-  noAttendance?: number;
+  datesUndertime?: string;
+  noAttendance?: string;
+  numberOfNoAttendance?: number;
 };
 export type ReportOnAttendance = {
   report: Array<EmployeeAttendanceRoa>;

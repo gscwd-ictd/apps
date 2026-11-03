@@ -141,6 +141,9 @@ export const ReportOnAttendancePdf: FunctionComponent<ReportOnAttendancePdfProps
                     FOR THE PERIOD OF {DateFormatter(`${router.query.date_from}`, 'MMMM DD, YYYY')} -{' '}
                     {DateFormatter(`${router.query.date_to}`, 'MMMM DD, YYYY')}
                   </Text>
+                  {router.query.org_name ? (
+                    <Text style={[styles.documentTitle, styles.upperText]}>{`${router.query.org_name}`}</Text>
+                  ) : null}
                 </View>
 
                 {/* ATTENDANCE TABLE */}
@@ -159,10 +162,10 @@ export const ReportOnAttendancePdf: FunctionComponent<ReportOnAttendancePdfProps
                       <Text style={[styles.tableHeaderText]}>No. of times Undertime</Text>
                     </View>
                     <View style={[styles.tableHeader, styles.w7]}>
-                      <Text style={[styles.tableHeaderText]}>Total Minutes Late</Text>
+                      <Text style={[styles.tableHeaderText]}>Total Minutes Late & Undertime</Text>
                     </View>
                     <View style={[styles.tableHeader, styles.w10]}>
-                      <Text style={[styles.tableHeaderText]}>Conversion (mins / 60) x .125</Text>
+                      <Text style={[styles.tableHeaderText]}>Conversion (leave credits deducted)</Text>
                     </View>
                     <View style={[styles.tableHeader, styles.w7]}>
                       <Text style={[styles.tableHeaderText]}>No. of times Half day</Text>
@@ -212,7 +215,9 @@ export const ReportOnAttendancePdf: FunctionComponent<ReportOnAttendancePdfProps
                             </View>
 
                             <View style={[styles.tableData, styles.w10]}>
-                              <Text style={[styles.tableDataText]}>{attendanceData.conversion || ''}</Text>
+                              <Text style={[styles.tableDataText]}>
+                                {Number(attendanceData.conversion) > 0 ? attendanceData.conversion : ''}
+                              </Text>
                             </View>
 
                             <View style={[styles.tableData, styles.w7]}>
@@ -224,7 +229,9 @@ export const ReportOnAttendancePdf: FunctionComponent<ReportOnAttendancePdfProps
                             </View>
 
                             <View style={[styles.tableData, styles.w14]}>
-                              <Text style={[styles.tableDataText]}>{attendanceData.datesLate || ''}</Text>
+                              <Text style={[styles.tableDataText]}>
+                                {[attendanceData.datesLate, attendanceData.datesUndertime].filter(Boolean).join(', ')}
+                              </Text>
                             </View>
 
                             <View style={[styles.tableData, styles.w7, { borderRight: 'none' }]}>
