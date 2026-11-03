@@ -60,6 +60,11 @@ const yupSchema = yup.object().shape({
         // Report on Summary of Rehabilitation Leave
         else if (report === Reports[10].value) {
           return true;
+        }
+
+        // Report on Employee Tardiness
+        else if (report === Reports[15].value) {
+          return true;
         } else return false;
       },
       then: yup.date().required('Starting date is required').nullable(),
@@ -103,6 +108,11 @@ const yupSchema = yup.object().shape({
 
         // Report on Summary of Rehabilitation Leave
         else if (report === Reports[10].value) {
+          return true;
+        }
+
+        // Report on Employee Tardiness
+        else if (report === Reports[15].value) {
           return true;
         } else return false;
       },
@@ -159,7 +169,7 @@ const yupSchema = yup.object().shape({
 const currentYear = new Date().getFullYear();
 
 // reports that can be limited to an Office / Department / Division (none chosen = all employees)
-const ORG_FILTERED_REPORTS: Array<string> = [Reports[0].value as string];
+const ORG_FILTERED_REPORTS: Array<string> = [Reports[0].value as string, Reports[15].value as string];
 const yearOptions = Array.from({ length: 5 }, (_, i) => ({ label: `${currentYear - i}`, value: `${currentYear - i}` }));
 
 export default function Index() {

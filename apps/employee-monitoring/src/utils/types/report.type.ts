@@ -227,6 +227,26 @@ export type ReportOnLeaveApplicationLateFiling = {
   signatory: ReportSignatories;
 };
 
+// Report on Employee Tardiness = RoEt
+export type EmployeeRoEt = {
+  employeeId: string;
+  companyId: string;
+  name: string;
+  dtrDate: string;
+  scheduleTimeIn: string | null;
+  scheduleLunchIn: string | null;
+  timeIn: string | null;
+  lunchOut: string | null;
+  lunchIn: string | null;
+  timeOut: string | null;
+  minutesLate: number;
+  conversion: string;
+};
+export type ReportOnEmployeeTardiness = {
+  report: Array<EmployeeRoEt>;
+  signatory: ReportSignatories;
+};
+
 // Report on Wellness Pass = RoWp
 export type EmployeeRoWp = {
   employeeId: string;
