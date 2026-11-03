@@ -55,24 +55,18 @@ const UpdatePassSlipModal: FunctionComponent<UpdatePassSlipModalProps> = ({
   const PassSlipTimeLogsSchema = yup
     .object()
     .shape({
+      // time out is needed for every nature (Half Day / Undertime deduct from the time out)
       timeOut: yup
         .string()
         .nullable()
-        .when('$natureOfBusiness', {
-          is: (natureOfBusiness: NatureOfBusiness) =>
-            natureOfBusiness !== NatureOfBusiness.HALF_DAY && natureOfBusiness !== NatureOfBusiness.UNDERTIME,
-          then: yup
-            .string()
-            .nullable()
-            .required('Time out is required')
-            .matches(timeRegex, 'Time out must be a valid time')
-            .test('time-out-test', 'Time out must be before time in', function (value) {
-              const timeIn = this.parent.timeIn;
-              if (!timeIn) {
-                return true;
-              }
-              return value < timeIn;
-            }),
+        .required('Time out is required')
+        .matches(timeRegex, 'Time out must be a valid time')
+        .test('time-out-test', 'Time out must be before time in', function (value) {
+          const timeIn = this.parent.timeIn;
+          if (!timeIn || !value) {
+            return true;
+          }
+          return value < timeIn;
         }),
       timeIn: yup
         .string()
