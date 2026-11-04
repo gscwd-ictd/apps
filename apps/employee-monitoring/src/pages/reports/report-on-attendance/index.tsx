@@ -4,6 +4,7 @@ import { isEmpty } from 'lodash';
 import useSWR from 'swr';
 import fetcherEMS from '../../../utils/fetcher/FetcherEMS';
 import { useRouter } from 'next/router';
+import ReportExcelButton from 'apps/employee-monitoring/src/components/buttons/ReportExcelButton';
 
 import { Card } from 'apps/employee-monitoring/src/components/cards/Card';
 import { BreadCrumbs } from 'apps/employee-monitoring/src/components/navigations/BreadCrumbs';
@@ -12,6 +13,7 @@ import { useReportsStore } from 'apps/employee-monitoring/src/store/report.store
 import { LoadingSpinner, ToastNotification } from '@gscwd-apps/oneui';
 import { Navigate } from 'apps/employee-monitoring/src/components/router/navigate';
 import { UseLoadingProgressStore } from 'apps/employee-monitoring/src/store/loading.store';
+import ReportProgressBar from 'apps/employee-monitoring/src/components/progress/ReportProgressBar';
 
 const Index = () => {
   const router = useRouter();
@@ -24,7 +26,9 @@ const Index = () => {
     error: swrError,
     isLoading: swrIsLoading,
   } = useSWR(
-    `${process.env.NEXT_PUBLIC_EMPLOYEE_MONITORING_BE_DOMAIN}/reports/?report=${router.query.reportName}&date_from=${router.query.date_from}&date_to=${router.query.date_to}`,
+    `${process.env.NEXT_PUBLIC_EMPLOYEE_MONITORING_BE_DOMAIN}/reports/?report=${router.query.reportName}&date_from=${
+      router.query.date_from
+    }&date_to=${router.query.date_to}&org_id=${router.query.org_id ?? ''}`,
     fetcherEMS,
     {
       shouldRetryOnError: false,
@@ -84,9 +88,12 @@ const Index = () => {
           <div className="flex flex-col w-full gap-6 px-5">
             <Card>
               {swrIsLoading ? (
-                <LoadingSpinner size="lg" />
+                <ReportProgressBar isLoading={swrIsLoading} label="Generating Report on Attendance" />
               ) : (
-                <ReportOnAttendancePdf reportOnAttendanceData={ReportOnAttendanceDoc} />
+                <>
+                  <ReportExcelButton title="Report on Attendance" reportDoc={ReportOnAttendanceDoc} />
+                  <ReportOnAttendancePdf reportOnAttendanceData={ReportOnAttendanceDoc} />
+                </>
               )}
             </Card>
           </div>

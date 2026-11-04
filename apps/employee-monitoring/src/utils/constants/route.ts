@@ -34,6 +34,8 @@ export const Paths = [
   '/settings/system-logs', // 27
   '/settings/announcements', // 28
   '/reports', // 29
+  '/employees/inactive', // 30
+  '/monitoring/time-log-corrections', // 31
 ];
 
 // export const UpdatedPaths: Array<Path> = [

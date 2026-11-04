@@ -3,6 +3,7 @@ import { isEmpty } from 'lodash';
 import useSWR from 'swr';
 import fetcherEMS from '../../../utils/fetcher/FetcherEMS';
 import { useRouter } from 'next/router';
+import ReportExcelButton from 'apps/employee-monitoring/src/components/buttons/ReportExcelButton';
 
 import { Card } from 'apps/employee-monitoring/src/components/cards/Card';
 import { BreadCrumbs } from 'apps/employee-monitoring/src/components/navigations/BreadCrumbs';
@@ -59,7 +60,10 @@ const Index = () => {
               {isLoading || isEmpty(data) ? (
                 <LoadingSpinner size="lg" />
               ) : (
-                <ReportOnWellnessPassPdf reportOnWellnessPassDoc={data.data as ReportOnWellnessPass} />
+                <>
+                  <ReportExcelButton title="Report on Wellness Pass" reportDoc={data.data as ReportOnWellnessPass} />
+                  <ReportOnWellnessPassPdf reportOnWellnessPassDoc={data.data as ReportOnWellnessPass} />
+                </>
               )}
             </Card>
           </div>

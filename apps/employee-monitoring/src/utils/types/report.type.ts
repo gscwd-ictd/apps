@@ -6,6 +6,7 @@ export type Report = {
   monthYear?: string;
   employeeId?: string;
   passSlipType?: string;
+  orgId?: string;
   year?: string;
   wellnessPeriod?: string;
 };
@@ -31,7 +32,9 @@ export type EmployeeAttendanceRoa = {
   numberOfTimesHalfDay?: number;
   daysHalfDay?: string;
   datesLate?: string;
-  noAttendance?: number;
+  datesUndertime?: string;
+  noAttendance?: string;
+  numberOfNoAttendance?: number;
 };
 export type ReportOnAttendance = {
   report: Array<EmployeeAttendanceRoa>;
@@ -221,6 +224,26 @@ export type EmployeeRoLaLf = {
 };
 export type ReportOnLeaveApplicationLateFiling = {
   report: Array<EmployeeRoLaLf>;
+  signatory: ReportSignatories;
+};
+
+// Report on Employee Tardiness = RoEt
+export type EmployeeRoEt = {
+  employeeId: string;
+  companyId: string;
+  name: string;
+  dtrDate: string;
+  scheduleTimeIn: string | null;
+  scheduleLunchIn: string | null;
+  timeIn: string | null;
+  lunchOut: string | null;
+  lunchIn: string | null;
+  timeOut: string | null;
+  minutesLate: number;
+  conversion: string;
+};
+export type ReportOnEmployeeTardiness = {
+  report: Array<EmployeeRoEt>;
   signatory: ReportSignatories;
 };
 

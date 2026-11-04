@@ -60,6 +60,11 @@ const yupSchema = yup.object().shape({
         // Report on Summary of Rehabilitation Leave
         else if (report === Reports[10].value) {
           return true;
+        }
+
+        // Report on Employee Tardiness
+        else if (report === Reports[15].value) {
+          return true;
         } else return false;
       },
       then: yup.date().required('Starting date is required').nullable(),
@@ -104,6 +109,11 @@ const yupSchema = yup.object().shape({
         // Report on Summary of Rehabilitation Leave
         else if (report === Reports[10].value) {
           return true;
+        }
+
+        // Report on Employee Tardiness
+        else if (report === Reports[15].value) {
+          return true;
         } else return false;
       },
       then: yup.date().required('Ending date is required').nullable(),
@@ -138,6 +148,7 @@ const yupSchema = yup.object().shape({
     })
     .nullable(),
   employeeId: yup.string().nullable(),
+  orgId: yup.string().nullable(),
   // Report on Wellness Pass
   year: yup
     .string()
@@ -156,6 +167,9 @@ const yupSchema = yup.object().shape({
 });
 
 const currentYear = new Date().getFullYear();
+
+// reports that can be limited to an Office / Department / Division (none chosen = all employees)
+const ORG_FILTERED_REPORTS: Array<string> = [Reports[0].value as string, Reports[15].value as string];
 const yearOptions = Array.from({ length: 5 }, (_, i) => ({ label: `${currentYear - i}`, value: `${currentYear - i}` }));
 
 export default function Index() {
@@ -168,6 +182,16 @@ export default function Index() {
     shouldRetryOnError: false,
     revalidateOnFocus: false,
   });
+
+  // offices / departments / divisions for reports that can be filtered by organization
+  const { data: organizations, isLoading: organizationsLoading } = useSWR('/organization/dropdown', fetcherHRMS, {
+    shouldRetryOnError: false,
+    revalidateOnFocus: false,
+  });
+  const organizationOptions: Array<{ label: string; value: string }> = isEmpty(organizations?.data)
+    ? []
+    : organizations.data;
+  const isOrgFilteredReport = (reportName: string) => ORG_FILTERED_REPORTS.includes(reportName);
 
   // zustand initialization for employees
   const { EmployeeOptions, SetEmployeeOptions } = useEmployeeStore((state) => ({
@@ -192,6 +216,7 @@ export default function Index() {
       monthYear: null,
       employeeId: null,
       passSlipType: null,
+      orgId: null,
       year: `${currentYear}`,
       wellnessPeriod: null,
     },
@@ -261,7 +286,12 @@ export default function Index() {
       window.open(url + paramToFromUnusedPS, '_blank', 'noopener,noreferrer');
       reset();
     } else {
-      window.open(url + paramToFrom, '_blank', 'noopener,noreferrer');
+      const orgName = organizationOptions.find((org) => org.value === data.orgId)?.label ?? '';
+      const paramOrg =
+        isOrgFilteredReport(data.reportName) && !isEmpty(data.orgId)
+          ? `&org_id=${data.orgId}&org_name=${encodeURIComponent(orgName)}`
+          : '';
+      window.open(url + paramToFrom + paramOrg, '_blank', 'noopener,noreferrer');
       reset();
     }
   };
@@ -319,6 +349,8 @@ export default function Index() {
     } else {
       register('dateFrom');
       register('dateTo');
+      if (isOrgFilteredReport(watchReportName)) register('orgId');
+      else unregister('orgId');
 
       unregister('monthYear');
       unregister('employeeId');
@@ -549,6 +581,22 @@ export default function Index() {
                             required
                           />
                         </div>
+
+                        {/* Office / Department / Division (optional) */}
+                        {isOrgFilteredReport(watchReportName) ? (
+                          <div className="mb-6">
+                            <SelectListRF
+                              id="orgId"
+                              selectList={organizationOptions}
+                              controller={{ ...register('orgId') }}
+                              label="Office / Department / Division (leave blank for all employees)"
+                              isError={errors.orgId ? true : false}
+                              errorMessage={errors.orgId?.message}
+                              disabled={organizationsLoading}
+                              isLoading={organizationsLoading}
+                            />
+                          </div>
+                        ) : null}
                       </div>
                     </div>
                   )}

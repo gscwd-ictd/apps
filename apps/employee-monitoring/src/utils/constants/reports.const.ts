@@ -77,6 +77,11 @@ export const Reports: Array<SelectOption> = [
     label: 'Report on Wellness Pass',
     value: 'report on wellness pass',
   },
+  // 15
+  {
+    label: 'Report on Employee Tardiness',
+    value: 'report on employee tardiness',
+  },
 ];
 
 export const WellnessPassPeriods: Array<SelectOption> = [

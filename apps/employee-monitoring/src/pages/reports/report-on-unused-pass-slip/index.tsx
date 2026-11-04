@@ -4,6 +4,7 @@ import { isEmpty } from 'lodash';
 import useSWR from 'swr';
 import fetcherEMS from '../../../utils/fetcher/FetcherEMS';
 import { useRouter } from 'next/router';
+import ReportExcelButton from 'apps/employee-monitoring/src/components/buttons/ReportExcelButton';
 
 import { Card } from 'apps/employee-monitoring/src/components/cards/Card';
 import { BreadCrumbs } from 'apps/employee-monitoring/src/components/navigations/BreadCrumbs';
@@ -83,7 +84,10 @@ const Index = () => {
               {swrIsLoading ? (
                 <LoadingSpinner size="lg" />
               ) : (
-                <ReportOnUnusedPassSlipPdf reportOnUnusedPassSlipDoc={ReportOnUnusedPassSlipDoc} />
+                <>
+                  <ReportExcelButton title="Report on Unused Pass Slip" reportDoc={ReportOnUnusedPassSlipDoc} />
+                  <ReportOnUnusedPassSlipPdf reportOnUnusedPassSlipDoc={ReportOnUnusedPassSlipDoc} />
+                </>
               )}
             </Card>
           </div>
