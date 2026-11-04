@@ -203,6 +203,17 @@ export const SideNavigation = () => {
             />
           </Can>
 
+          {/**TIME LOG CORRECTIONS */}
+          <Can I="access" this="Time_log_corrections">
+            <Sidebar.Item
+              display="Time Log Corrections"
+              className="text-sm"
+              selected={pathname === Paths[31] ? true : false}
+              icon={<i className="text-xl bx bx-time-five"></i>}
+              path={Paths[31]}
+            />
+          </Can>
+
           {/**PASS SLIPS */}
           <Can I="access" this="Pass_slips">
             <Sidebar.Item

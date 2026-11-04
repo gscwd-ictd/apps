@@ -1,0 +1,21 @@
+export type TimeLogCorrection = {
+  id: string;
+  dtrId: string;
+  companyId: string;
+  employeeId: string | null;
+  employeeFullName: string | null;
+  assignment: string | null;
+  dtrDate: string;
+  dtrTimeIn: string | null;
+  correctedTimeIn: string | null;
+  dtrLunchOut: string | null;
+  correctedLunchOut: string | null;
+  dtrLunchIn: string | null;
+  correctedLunchIn: string | null;
+  dtrTimeOut: string | null;
+  correctedTimeOut: string | null;
+  status: 'for approval' | 'approved' | 'disapproved' | string;
+  remarks: string | null;
+  dateFiled: string | null;
+  dateActed: string | null;
+};
