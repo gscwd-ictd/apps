@@ -107,13 +107,31 @@ export const SideNavigation = () => {
             <Sidebar.Item
               display="Employees"
               className="text-sm"
-              selected={pathname === Paths[1] ? true : false}
-              icon={
+              icon={<i className="text-xl bx bxs-user-account"></i>}
+              path=""
+              hasSubItem
+              selected={pathname === Paths[1] || pathname === Paths[30]}
+              subItems={
                 <>
-                  <i className="text-xl bx bxs-user-account"></i>
+                  {/* ACTIVE ROLL */}
+                  <Sidebar.Item
+                    display="Active Roll"
+                    className={`${isCollapsed ? 'text-sm' : 'text-sm pl-5'}`}
+                    selected={pathname === Paths[1] ? true : false}
+                    icon={<i className="text-xl bx bxs-user-check"></i>}
+                    path={Paths[1]}
+                  />
+
+                  {/* INACTIVE ROLL */}
+                  <Sidebar.Item
+                    display="Inactive Roll"
+                    className={`${isCollapsed ? 'text-sm' : 'text-sm pl-5'}`}
+                    selected={pathname === Paths[30] ? true : false}
+                    icon={<i className="text-xl bx bxs-user-x"></i>}
+                    path={Paths[30]}
+                  />
                 </>
               }
-              path={Paths[1]}
             />
           </Can>
 
