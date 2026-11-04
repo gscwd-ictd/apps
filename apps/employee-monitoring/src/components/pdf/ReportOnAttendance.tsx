@@ -230,7 +230,16 @@ export const ReportOnAttendancePdf: FunctionComponent<ReportOnAttendancePdfProps
 
                             <View style={[styles.tableData, styles.w14]}>
                               <Text style={[styles.tableDataText]}>
-                                {[attendanceData.datesLate, attendanceData.datesUndertime].filter(Boolean).join(', ')}
+                                {[
+                                  ...new Set(
+                                    [attendanceData.datesLate, attendanceData.datesUndertime]
+                                      .filter(Boolean)
+                                      .join(', ')
+                                      .split(', ')
+                                  ),
+                                ]
+                                  .sort()
+                                  .join(', ')}
                               </Text>
                             </View>
 

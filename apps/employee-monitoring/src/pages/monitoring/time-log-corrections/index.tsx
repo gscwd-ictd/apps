@@ -12,6 +12,7 @@ import { TimeLogCorrection } from 'apps/employee-monitoring/src/utils/types/time
 import dayjs from 'dayjs';
 import { isEmpty } from 'lodash';
 import { useMemo, useState } from 'react';
+import { LabelInput } from 'apps/employee-monitoring/src/components/inputs/LabelInput';
 import useSWR from 'swr';
 
 const STATUSES = [
@@ -114,46 +115,46 @@ export default function Index() {
 
           <div className="sm:px-2 md:px-2 lg:px-5">
             <Card>
-              <div className="flex flex-wrap items-end gap-3 mb-4 text-sm">
-                <label className="flex flex-col">
-                  <span className="text-gray-500">DTR date from</span>
-                  <input
-                    type="date"
-                    className="border rounded px-2 py-1"
-                    value={dateFrom}
-                    onChange={(e) => setDateFrom(e.target.value)}
-                  />
-                </label>
-                <label className="flex flex-col">
-                  <span className="text-gray-500">DTR date to</span>
-                  <input
-                    type="date"
-                    className="border rounded px-2 py-1"
-                    value={dateTo}
-                    onChange={(e) => setDateTo(e.target.value)}
-                  />
-                </label>
-                <label className="flex flex-col">
-                  <span className="text-gray-500">Status</span>
-                  <select
-                    className="border rounded px-2 py-1"
-                    value={status}
-                    onChange={(e) => setStatus(e.target.value)}
-                  >
-                    {STATUSES.map((s) => (
-                      <option key={s.value} value={s.value}>
-                        {s.label}
-                      </option>
-                    ))}
-                  </select>
-                </label>
-                <span className="ml-auto text-gray-500">{rows.length} request(s)</span>
-              </div>
-
               {isLoading ? (
                 <LoadingSpinner size="lg" />
               ) : (
-                <DataTable model={table} showGlobalFilter={true} showColumnFilter={false} paginate={true} />
+                <div className="flex flex-row flex-wrap justify-between">
+                  {/* filters: same input style and position as the Travel Orders page */}
+                  <div className="flex items-center justify-end order-2 w-1/2 gap-2 table-actions-wrapper">
+                    <LabelInput
+                      id="dateFrom"
+                      type="date"
+                      title="DTR date from"
+                      value={dateFrom}
+                      max={dateTo}
+                      onChange={(e) => setDateFrom(e.target.value)}
+                    />
+                    <span className="text-xs text-gray-500">to</span>
+                    <LabelInput
+                      id="dateTo"
+                      type="date"
+                      title="DTR date to"
+                      value={dateTo}
+                      min={dateFrom}
+                      onChange={(e) => setDateTo(e.target.value)}
+                    />
+                    <select
+                      id="status"
+                      title="Status"
+                      value={status}
+                      onChange={(e) => setStatus(e.target.value)}
+                      className="rounded-lg bg-gray-50 border border-gray-300 focus:ring-blue-500 focus:border-blue-500 hover:cursor-pointer outline-none text-xs text-gray-900 h-[2.5rem] p-2.5"
+                    >
+                      {STATUSES.map((s) => (
+                        <option key={s.value} value={s.value}>
+                          {s.label === 'All' ? 'All Status' : s.label}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+
+                  <DataTable model={table} showGlobalFilter={true} showColumnFilter={false} paginate={true} />
+                </div>
               )}
             </Card>
           </div>
