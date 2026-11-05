@@ -78,6 +78,11 @@ export const OvertimeAccomplishmentModal = ({ modalState, setModalState, closeMo
     setConfirmOvertimeAccomplishmentModalIsOpen(false);
   };
 
+  // OT start date is fixed to the planned date; OT end must be on or after it
+  const plannedDateOnly = overtimeAccomplishmentDetails?.plannedDate
+    ? dayjs(overtimeAccomplishmentDetails.plannedDate).format('YYYY-MM-DD')
+    : '';
+
   const { setValue, register, trigger, getValues, handleSubmit, reset, watch } = useForm<any>({
     mode: 'onChange',
     reValidateMode: 'onBlur',
@@ -89,6 +94,11 @@ export const OvertimeAccomplishmentModal = ({ modalState, setModalState, closeMo
       accomplishments: overtimeAccomplishmentDetails.remarks,
     },
   });
+
+  const overtimeEndDateError =
+    watch('encodedTimeOut') && plannedDateOnly && dayjs(watch('encodedTimeOut')).format('YYYY-MM-DD') < plannedDateOnly
+      ? `Overtime End must be on or after the planned date (${dayjs(plannedDateOnly).format('MM-DD-YYYY')}).`
+      : null;
 
   const onSubmit: SubmitHandler<OvertimeAccomplishmentPatch> = (data: OvertimeAccomplishmentPatch) => {
     setOvertimeAccomplishmentPatchDetails(data);
@@ -147,13 +157,16 @@ export const OvertimeAccomplishmentModal = ({ modalState, setModalState, closeMo
     } else {
       setValue('employeeId', overtimeAccomplishmentDetails.employeeId);
       setValue('overtimeApplicationId', overtimeAccomplishmentDetails.overtimeApplicationId);
+      // start date = planned date; time from the encoded start, else the face scan time IN
+      const startTime = overtimeAccomplishmentDetails?.encodedTimeIn
+        ? dayjs(overtimeAccomplishmentDetails?.encodedTimeIn).format('HH:mm')
+        : overtimeAccomplishmentDetails?.ivmsTimeIn
+        ? dayjs(overtimeAccomplishmentDetails?.ivmsTimeIn).format('HH:mm')
+        : null;
+      setValue('encodedTimeInTime', startTime);
       setValue(
         'encodedTimeIn',
-        overtimeAccomplishmentDetails?.encodedTimeIn
-          ? dayjs(overtimeAccomplishmentDetails?.encodedTimeIn).format('YYYY-MM-DDTHH:mm')
-          : overtimeAccomplishmentDetails?.ivmsTimeIn
-          ? dayjs(overtimeAccomplishmentDetails?.ivmsTimeOut).format('YYYY-MM-DDThh:mm')
-          : null
+        startTime ? `${dayjs(overtimeAccomplishmentDetails?.plannedDate).format('YYYY-MM-DD')}T${startTime}` : null
       );
       setValue(
         'encodedTimeOut',
@@ -664,10 +677,11 @@ export const OvertimeAccomplishmentModal = ({ modalState, setModalState, closeMo
                             <div className="w-full">
                               <div className="w-full flex flex-col md:flex-row lg:flex-col xl:flex-row gap-2 items-center justify-between">
                                 <div className="w-full">
+                                  <input type="hidden" {...register('encodedTimeIn')} />
                                   <LabelInput
-                                    id={'encodedTimeIn'}
-                                    type={'datetime-local'}
-                                    label={'Overtime Start'}
+                                    id={'encodedTimeInTime'}
+                                    type={'time'}
+                                    label={`Overtime Start (${dayjs(overtimeAccomplishmentDetails?.plannedDate).format('MM-DD-YYYY')})`}
                                     className="w-full font-medium"
                                     textSize="sm"
                                     disabled={
@@ -676,24 +690,11 @@ export const OvertimeAccomplishmentModal = ({ modalState, setModalState, closeMo
                                         ? true
                                         : false
                                     }
-                                    defaultValue={
-                                      overtimeAccomplishmentDetails?.encodedTimeIn
-                                        ? dayjs(overtimeAccomplishmentDetails?.encodedTimeIn).format('YYYY-MM-DDTHH:mm')
-                                        : overtimeAccomplishmentDetails?.ivmsTimeIn
-                                        ? dayjs(overtimeAccomplishmentDetails?.ivmsTimeIn).format('YYYY-MM-DDThh:mm')
-                                        : null
-                                    }
-                                    // defaultValue={
-                                    //   overtimeAccomplishmentDetails?.encodedTimeIn
-                                    //     ? dayjs(overtimeAccomplishmentDetails?.encodedTimeIn).format('YYYY-MM-DDThh:mm')
-                                    //     : overtimeAccomplishmentDetails?.ivmsTimeIn
-                                    //     ? dayjs(overtimeAccomplishmentDetails?.ivmsTimeIn).format('YYYY-MM-DDThh:mm')
-                                    //     : null
-                                    // }
                                     controller={{
-                                      ...register('encodedTimeIn', {
+                                      ...register('encodedTimeInTime', {
                                         onChange: (e) => {
-                                          setValue('encodedTimeIn', e.target.value, {
+                                          // the start date is always the planned date; only the time is encoded
+                                          setValue('encodedTimeIn', e.target.value ? `${plannedDateOnly}T${e.target.value}` : null, {
                                             shouldValidate: true,
                                           });
                                           trigger(); // triggers all validations for inputs
@@ -707,6 +708,7 @@ export const OvertimeAccomplishmentModal = ({ modalState, setModalState, closeMo
                                     id={'encodedTimeOut'}
                                     type="datetime-local"
                                     label={'Overtime End'}
+                                    min={`${plannedDateOnly}T00:00`}
                                     className="w-full font-medium"
                                     textSize="sm"
                                     disabled={
@@ -886,6 +888,11 @@ export const OvertimeAccomplishmentModal = ({ modalState, setModalState, closeMo
               </div>
             </form>
           )}
+          {overtimeEndDateError ? (
+            <div className="px-5 pb-2">
+              <AlertNotification alertType="error" notifMessage={overtimeEndDateError} dismissible={false} />
+            </div>
+          ) : null}
         </Modal.Body>
         <Modal.Footer>
           <div className="flex justify-end gap-2 px-4">
@@ -912,7 +919,8 @@ export const OvertimeAccomplishmentModal = ({ modalState, setModalState, closeMo
                       !dtr.timeOut &&
                       !dtr.lunchIn &&
                       !dtr.lunchOut) ||
-                    dayjs(watch('encodedTimeIn')).isAfter(dayjs(watch('encodedTimeOut')))
+                    dayjs(watch('encodedTimeIn')).isAfter(dayjs(watch('encodedTimeOut'))) ||
+                    !!overtimeEndDateError
                       ? true
                       : false
                   }
