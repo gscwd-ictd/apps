@@ -101,7 +101,10 @@ export const OvertimeAccomplishmentModal = ({ modalState, setModalState, closeMo
       : null;
 
   const onSubmit: SubmitHandler<OvertimeAccomplishmentPatch> = (data: OvertimeAccomplishmentPatch) => {
-    setOvertimeAccomplishmentPatchDetails(data);
+    // encodedTimeInTime is only the time input of the form (the start date is the planned date); do not send it
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { encodedTimeInTime, ...payload } = data as OvertimeAccomplishmentPatch & { encodedTimeInTime?: string };
+    setOvertimeAccomplishmentPatchDetails(payload);
     setConfirmOvertimeAccomplishmentModalIsOpen(true);
   };
 
@@ -173,7 +176,7 @@ export const OvertimeAccomplishmentModal = ({ modalState, setModalState, closeMo
         overtimeAccomplishmentDetails?.encodedTimeOut
           ? dayjs(overtimeAccomplishmentDetails?.encodedTimeOut).format('YYYY-MM-DDTHH:mm')
           : overtimeAccomplishmentDetails?.ivmsTimeOut
-          ? dayjs(overtimeAccomplishmentDetails?.ivmsTimeOut).format('YYYY-MM-DDThh:mm')
+          ? dayjs(overtimeAccomplishmentDetails?.ivmsTimeOut).format('YYYY-MM-DDTHH:mm')
           : null
       );
       setValue('accomplishments', overtimeAccomplishmentDetails.accomplishments);
@@ -681,7 +684,9 @@ export const OvertimeAccomplishmentModal = ({ modalState, setModalState, closeMo
                                   <LabelInput
                                     id={'encodedTimeInTime'}
                                     type={'time'}
-                                    label={`Overtime Start (${dayjs(overtimeAccomplishmentDetails?.plannedDate).format('MM-DD-YYYY')})`}
+                                    label={`Overtime Start (${dayjs(overtimeAccomplishmentDetails?.plannedDate).format(
+                                      'MM-DD-YYYY'
+                                    )})`}
                                     className="w-full font-medium"
                                     textSize="sm"
                                     disabled={
@@ -694,9 +699,13 @@ export const OvertimeAccomplishmentModal = ({ modalState, setModalState, closeMo
                                       ...register('encodedTimeInTime', {
                                         onChange: (e) => {
                                           // the start date is always the planned date; only the time is encoded
-                                          setValue('encodedTimeIn', e.target.value ? `${plannedDateOnly}T${e.target.value}` : null, {
-                                            shouldValidate: true,
-                                          });
+                                          setValue(
+                                            'encodedTimeIn',
+                                            e.target.value ? `${plannedDateOnly}T${e.target.value}` : null,
+                                            {
+                                              shouldValidate: true,
+                                            }
+                                          );
                                           trigger(); // triggers all validations for inputs
                                         },
                                       }),
@@ -720,10 +729,10 @@ export const OvertimeAccomplishmentModal = ({ modalState, setModalState, closeMo
                                     defaultValue={
                                       overtimeAccomplishmentDetails?.encodedTimeOut
                                         ? dayjs(overtimeAccomplishmentDetails?.encodedTimeOut).format(
-                                            'YYYY-MM-DDThh:mm'
+                                            'YYYY-MM-DDTHH:mm'
                                           )
                                         : overtimeAccomplishmentDetails?.ivmsTimeOut
-                                        ? dayjs(overtimeAccomplishmentDetails?.ivmsTimeOut).format('YYYY-MM-DDThh:mm')
+                                        ? dayjs(overtimeAccomplishmentDetails?.ivmsTimeOut).format('YYYY-MM-DDTHH:mm')
                                         : null
                                     }
                                     controller={{
