@@ -508,12 +508,16 @@ export const WorkExp = (): JSX.Element => {
                             periodLabel2={work.to}
                             className="break-words"
                           />
-                          {/* <TableDimension isText={true} className="px-1" label={work.monthlySalary} /> */}
-                          {/* <TableDimension
+                          <TableDimension
+                            isText={true}
+                            className="px-1"
+                            label={work.monthlySalary ? work.monthlySalary : 'N/A'}
+                          />
+                          <TableDimension
                             isText={true}
                             className="px-1"
                             label={work.salaryGrade ? work.salaryGrade : 'N/A'}
-                          /> */}
+                          />
                           <TableDimension isText={true} className="px-1" label={work.appointmentStatus} />
                           <TableDimension
                             isText={true}
