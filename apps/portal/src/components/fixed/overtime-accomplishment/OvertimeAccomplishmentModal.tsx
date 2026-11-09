@@ -678,8 +678,15 @@ export const OvertimeAccomplishmentModal = ({ modalState, setModalState, closeMo
                             </div>
                           ) : (
                             <div className="w-full">
+                              <AlertNotification
+                                alertType="warning"
+                                notifMessage={
+                                  'During submission, encoded hours is only an estimated value. The final hours will be computed after submission.'
+                                }
+                                dismissible={false}
+                              />
                               <div className="w-full flex flex-col md:flex-row lg:flex-col xl:flex-row gap-2 items-center justify-between">
-                                <div className="w-full">
+                                <div className="w-full md:w-2/5">
                                   <input type="hidden" {...register('encodedTimeIn')} />
                                   <LabelInput
                                     id={'encodedTimeInTime'}
@@ -712,7 +719,7 @@ export const OvertimeAccomplishmentModal = ({ modalState, setModalState, closeMo
                                     }}
                                   />
                                 </div>
-                                <div className="w-full">
+                                <div className="w-full md:w-2/5">
                                   <LabelInput
                                     id={'encodedTimeOut'}
                                     type="datetime-local"
@@ -747,7 +754,7 @@ export const OvertimeAccomplishmentModal = ({ modalState, setModalState, closeMo
                                     }}
                                   />
                                 </div>
-                                <div className="w-full">
+                                <div className="w-full md:w-1/5">
                                   <LabelInput
                                     id={'encodedHours'}
                                     type="text"
