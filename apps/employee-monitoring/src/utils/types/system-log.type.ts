@@ -7,6 +7,8 @@ export type SystemLog = {
   method: string;
   route: string;
   body: object;
+  /** what the user did, in plain words */
+  action: string;
 };
 
 export type SystemLogId = Pick<SystemLog, 'id'>;
