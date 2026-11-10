@@ -123,7 +123,7 @@ const ViewSystemLogModal: FunctionComponent<ViewSystemLogModalProps> = ({
                           label="Time Logged"
                           direction="top-to-bottom"
                           textSize="md"
-                          value={dayjs(SystemLogDetails.dateLogged).format('hh:mm A')}
+                          value={SystemLogDetails.dateLogged ? dayjs(SystemLogDetails.dateLogged).format('hh:mm A') : ''}
                         />
                       </div>
                       <LabelValue
@@ -133,23 +133,29 @@ const ViewSystemLogModal: FunctionComponent<ViewSystemLogModalProps> = ({
                         value={SystemLogDetails.userFullName}
                       />
                       <LabelValue
-                        label="Method"
+                        label="Action"
                         direction="top-to-bottom"
                         textSize="md"
-                        value={SystemLogDetails.method}
+                        value={SystemLogDetails.action}
                       />
-                      <LabelValue
-                        label="Route"
-                        direction="top-to-bottom"
-                        textSize="md"
-                        value={SystemLogDetails.route}
-                      />
-                      <LabelValue
-                        label="Body"
-                        direction="top-to-bottom"
-                        textSize="md"
-                        value={JSON.stringify(SystemLogDetails.body)}
-                      />
+                      <details className="mt-2 text-sm text-gray-500">
+                        <summary className="cursor-pointer select-none">Technical details (for ICT)</summary>
+                        <div className="mt-2 grid gap-2 break-all">
+                          <div>
+                            <span className="font-medium">Request:</span> {SystemLogDetails.method} {SystemLogDetails.route}
+                          </div>
+                          <pre className="whitespace-pre-wrap bg-gray-50 border rounded p-2 text-xs max-h-64 overflow-auto">
+                            {(() => {
+                              try {
+                                const body = SystemLogDetails.body as unknown;
+                                return JSON.stringify(typeof body === 'string' ? JSON.parse(body) : body, null, 2);
+                              } catch {
+                                return String(SystemLogDetails.body ?? '');
+                              }
+                            })()}
+                          </pre>
+                        </div>
+                      </details>
                     </div>
                   )}
                 </div>
