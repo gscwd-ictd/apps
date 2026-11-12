@@ -192,6 +192,7 @@ export default function Calendar({
           leaveName === LeaveName.FORCED ||
           leaveName === LeaveName.SOLO_PARENT ||
           leaveName === LeaveName.SICK ||
+          leaveName === LeaveName.WELLNESS ||
           leaveName === LeaveName.SPECIAL_PRIVILEGE) &&
         selectedDates.filter((dates) => dayjs(`${dates}`).diff(`${today}`, 'day') > 10).length > 0
       ) {
@@ -613,14 +614,19 @@ export default function Calendar({
                                   dayjs(`${dates}`).diff(`${today}`, 'day') <= 10
                               ).length <= 0 &&
                               'text-slate-300',
+
+                            //set red text for today
                             swrUnavailableDates?.dateTimeNow === format(day, 'yyyy-MM-dd') && 'text-red-500',
+
+                            //set red bg for holidays
                             swrUnavailableDates?.unavailableDates &&
                               swrUnavailableDates?.unavailableDates?.some(
                                 (item) => item.date === format(day, 'yyyy-MM-dd') && item.type === 'Holiday'
                               ) &&
                               !selectedDates.includes(format(day, 'yyyy-MM-dd')) &&
-                              leaveName === LeaveName.TERMINAL &&
                               'text-red-600 bg-red-300 rounded-full',
+
+                            //set to green bg for leaves and not holidays
                             swrUnavailableDates?.unavailableDates &&
                               swrUnavailableDates?.unavailableDates?.some(
                                 (item) => item.date === format(day, 'yyyy-MM-dd') && item.type === 'Leave'
