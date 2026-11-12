@@ -254,7 +254,7 @@ export default function Calendar({
               leaveName === LeaveName.FORCED ||
               leaveName === LeaveName.SOLO_PARENT ||
               leaveName === LeaveName.SPECIAL_PRIVILEGE ||
-              // leaveName === LeaveName.WELLNESS ||
+              leaveName === LeaveName.WELLNESS ||
               leaveName === LeaveName.SICK) &&
             dayjs(`${specifiedDate}`).diff(`${today}`, 'day') > 10 &&
             (futureLeaveCount > 0 ||
@@ -315,8 +315,13 @@ export default function Calendar({
             leaveName === LeaveName.SPECIAL_EMERGENCY_CALAMITY
           ) {
             setSelectedDates((selectedDates) => [...selectedDates, specifiedDate]);
-          } else if (leaveName === LeaveName.WELLNESS && dayjs(`${specifiedDate}`).diff(`${today}`, 'day') >= 0) {
-            //allow selecting of future days from today for wellness leave (except for next year and december - found on another condition)
+          } else if (
+            leaveName === LeaveName.WELLNESS &&
+            dayjs(`${specifiedDate}`).diff(`${today}`, 'day') >= 0 &&
+            dayjs(`${specifiedDate}`).diff(`${today}`, 'day') <= 10
+          ) {
+            //allow selecting of future days (up to to 10th days) from today for wellness leave (except for next year and december - found on another condition)
+            //set back to limit up to 10 days from today again - nov 12, 2026
             setSelectedDates((selectedDates) => [...selectedDates, specifiedDate]);
           } else if (leaveName === LeaveName.TERMINAL) {
             // clicking a date that is not a holiday/leave
@@ -543,9 +548,10 @@ export default function Calendar({
                               'text-slate-300',
 
                             //disable date selection starting from 10th day from current day for FL/SOLO/SPL - added allow all dates if a date with the 10 days is selected
+                            // added wellness leave again nov 12, 2026
                             (leaveName === LeaveName.LEAVE_WITHOUT_PAY ||
                               leaveName === LeaveName.SPECIAL_PRIVILEGE ||
-                              // leaveName === LeaveName.WELLNESS ||
+                              leaveName === LeaveName.WELLNESS ||
                               leaveName === LeaveName.FORCED ||
                               leaveName === LeaveName.SICK ||
                               leaveName === LeaveName.SOLO_PARENT) &&
