@@ -1,5 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 import { AlertNotification, LoadingSpinner, Modal, ToastNotification } from '@gscwd-apps/oneui';
+import { actualYearMaxDate, actualYearMinDate } from 'apps/employee-monitoring/src/utils/functions/ActualYearRange';
 import { LabelInput } from 'apps/employee-monitoring/src/components/inputs/LabelInput';
 import { EmployeeScheduleForm, useScheduleSheetStore } from 'apps/employee-monitoring/src/store/schedule-sheet.store';
 import { Dispatch, FunctionComponent, SetStateAction, useContext, useEffect, useState } from 'react';
@@ -323,6 +324,7 @@ const AddEmpSchedModal: FunctionComponent<AddEmpSchedModalProps> = ({
                         id="stationSsStartDate"
                         name="dtrDates.dateFrom"
                         type="date"
+                        max={actualYearMaxDate()}
                         label="Start Date"
                         controller={{
                           ...register('dtrDates.dateFrom'),
@@ -336,6 +338,8 @@ const AddEmpSchedModal: FunctionComponent<AddEmpSchedModalProps> = ({
                         id="stationSsEndDate"
                         name="dtrDates.dateTo"
                         type="date"
+                        max={actualYearMaxDate()}
+                        min={actualYearMinDate()}
                         label="End Date"
                         controller={{
                           ...register('dtrDates.dateTo'),

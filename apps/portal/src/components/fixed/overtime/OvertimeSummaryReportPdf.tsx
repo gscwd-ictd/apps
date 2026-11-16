@@ -136,7 +136,13 @@ export const OvertimeSummaryReportPdf = ({
               <View style={styles.controlNumber}>{/* <Text>NO. 1</Text> */}</View>
               <PdfHeader />
               <Text style={styles.pdfTitle}>{overtimeSummaryReport?.assignedTo?.toUpperCase()}</Text>
-              <Text style={styles.pdfTitle}>OVERTIME SUMMARY FOR {selectedEmployeeType?.toUpperCase()} EMPLOYEES</Text>
+              <Text style={styles.pdfTitle}>
+                OVERTIME SUMMARY FOR{' '}
+                {selectedEmployeeType && selectedEmployeeType === 'job order'
+                  ? 'PROJECT-BASED'
+                  : selectedEmployeeType?.toUpperCase()}{' '}
+                EMPLOYEES
+              </Text>
               <Text style={[styles.pdfTitle, { paddingBottom: 10 }]}>
                 PERIOD COVERED:{' '}
                 <Text style={[styles.pdfTitle, { paddingLeft: 3, paddingRight: 3, textDecoration: 'underline' }]}>

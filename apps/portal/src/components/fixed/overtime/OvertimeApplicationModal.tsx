@@ -277,6 +277,9 @@ export const OvertimeApplicationModal = ({ modalState, setModalState, closeModal
                       required
                       type="date"
                       className="border-slate-300 text-slate-500 h-12 text-md w-full md:w-60 rounded"
+                      // actual year only (last year to next year): typo years like 0026 broke the face scan lookups
+                      min={`${new Date().getFullYear() - 1}-01-01`}
+                      max={`${new Date().getFullYear() + 1}-12-31`}
                       // defaultValue={
                       //   overtimeDetails?.plannedDate
                       //     ? dayjs(overtimeDetails?.plannedDate).format('YYYY-MM-DDThh:mm')
