@@ -1,4 +1,5 @@
 import { LoadingSpinner, Modal } from '@gscwd-apps/oneui';
+import { actualYearMaxDate, actualYearMinDate } from 'apps/employee-monitoring/src/utils/functions/ActualYearRange';
 import { LabelInput } from 'apps/employee-monitoring/src/components/inputs/LabelInput';
 import { ScheduleSheetForm, useScheduleSheetStore } from 'apps/employee-monitoring/src/store/schedule-sheet.store';
 import { Dispatch, FunctionComponent, SetStateAction, useEffect, useState } from 'react';
@@ -344,6 +345,7 @@ const AddFieldSsModal: FunctionComponent<AddFieldSsModalProps> = ({ modalState, 
                         id="fieldsStartDate"
                         name="dtrDates.dateFrom"
                         type="date"
+                        max={actualYearMaxDate()}
                         label="Start Date"
                         controller={{
                           ...register('dtrDates.dateFrom', {
@@ -362,6 +364,8 @@ const AddFieldSsModal: FunctionComponent<AddFieldSsModalProps> = ({ modalState, 
                         id="fieldSsEndDate"
                         name="dtrDates.dateTo"
                         type="date"
+                        max={actualYearMaxDate()}
+                        min={actualYearMinDate()}
                         label="End Date"
                         controller={{
                           ...register('dtrDates.dateTo', {
