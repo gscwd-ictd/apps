@@ -36,6 +36,7 @@ export const Paths = [
   '/reports', // 29
   '/employees/inactive', // 30
   '/monitoring/time-log-corrections', // 31
+  '/charts', // 32
 ];
 
 // export const UpdatedPaths: Array<Path> = [

@@ -150,6 +150,21 @@ export const SideNavigation = () => {
             />
           </Can>
 
+          {/**Charts */}
+          <Can I="access" this="Charts">
+            <Sidebar.Item
+              display="Charts"
+              className="text-sm"
+              selected={pathname === Paths[32] ? true : false}
+              icon={
+                <>
+                  <i className="text-xl bx bxs-bar-chart-alt-2"></i>
+                </>
+              }
+              path={Paths[32]}
+            />
+          </Can>
+
           {/**Monitoring Header */}
           {ability.can('access', 'Scheduling_sheets') ||
           ability.can('access', 'Leave_applications') ||
