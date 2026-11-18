@@ -1,5 +1,14 @@
 export type OrgLevel = 'office' | 'department' | 'division';
-export type ChartType = 'tardiness' | 'undertime' | 'leave' | 'lwop' | 'pass-slip' | 'tlc' | 'overtime' | 'jo-tardiness' | 'jo-undertime';
+export type ChartType =
+  | 'tardiness'
+  | 'undertime'
+  | 'leave'
+  | 'lwop'
+  | 'pass-slip'
+  | 'tlc'
+  | 'overtime'
+  | 'jo-tardiness'
+  | 'jo-undertime';
 
 /** GET /stats/charts/:type */
 export type OrgCount = { orgId: string; orgCode: string; orgName: string; category: string | null; count: number };
@@ -38,8 +47,20 @@ export const PASS_SLIP_CATEGORIES = [
 ];
 
 export const CHART_TABS: ChartTabConfig[] = [
-  { type: 'tardiness', tab: 'Tardiness', unit: 'Tardiness', clickModal: true, note: 'Days with a tardiness deduction (permanent and casual employees).' },
-  { type: 'undertime', tab: 'Undertimes', unit: 'Undertime', clickModal: true, note: 'Days with an undertime deduction (permanent and casual employees).' },
+  {
+    type: 'tardiness',
+    tab: 'Tardiness',
+    unit: 'Tardiness',
+    clickModal: true,
+    note: 'Days with a tardiness deduction (permanent and casual employees).',
+  },
+  {
+    type: 'undertime',
+    tab: 'Undertimes',
+    unit: 'Undertime',
+    clickModal: true,
+    note: 'Days with an undertime deduction (permanent and casual employees).',
+  },
   {
     type: 'jo-tardiness',
     tab: 'Tardiness (Job Order)',
@@ -126,7 +147,7 @@ export const CHART_COLORS = [
 ];
 
 export const selectClass =
-  'rounded-lg bg-gray-50 border border-gray-300 focus:ring-blue-500 focus:border-blue-500 hover:cursor-pointer outline-none text-xs text-gray-900 h-[2.5rem] p-2.5';
+  'rounded-lg bg-gray-50 border border-gray-300 focus:ring-blue-500 focus:border-blue-500 hover:cursor-pointer outline-none text-xs text-gray-900 h-[2.5rem] py-2.5 pl-2.5 pr-9';
 
 export const excelButtonClass =
   'inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-green-600 rounded-lg hover:bg-green-700 disabled:bg-gray-300 disabled:cursor-not-allowed';
