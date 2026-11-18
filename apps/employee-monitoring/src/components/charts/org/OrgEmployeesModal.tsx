@@ -12,14 +12,17 @@ type Props = {
   config: ChartTabConfig;
   level: OrgLevel;
   levelLabel: string;
-  year: number;
+  dateFrom: string;
+  dateTo: string;
+  /** e.g. Jan 01, 2026 - Nov 18, 2026 */
+  period: string;
   org: SelectedOrg | null;
   setOrg: (org: SelectedOrg | null) => void;
 };
 
 /** clicked bar -> number of <unit> per employee of that office / department / division */
-export const OrgEmployeesModal = ({ config, level, levelLabel, year, org, setOrg }: Props) => {
-  const params = new URLSearchParams({ level, year: String(year) });
+export const OrgEmployeesModal = ({ config, level, levelLabel, dateFrom, dateTo, period, org, setOrg }: Props) => {
+  const params = new URLSearchParams({ level, dateFrom, dateTo });
   if (org) params.set('orgId', org.orgId);
   if (org?.category) params.set('category', org.category);
 
@@ -38,7 +41,7 @@ export const OrgEmployeesModal = ({ config, level, levelLabel, year, org, setOrg
           <span className="px-5">
             {what} — {org?.orgCode}
             <span className="block text-sm font-normal text-gray-500">
-              {org?.orgName} · {year}
+              {org?.orgName} · {period}
             </span>
           </span>
           <button
@@ -62,8 +65,8 @@ export const OrgEmployeesModal = ({ config, level, levelLabel, year, org, setOrg
               rows={rows}
               countLabel={`No. of ${what}`}
               orgLabel={levelLabel}
-              excelTitle={[`${what.toUpperCase()} PER EMPLOYEE`, `${org?.orgName ?? ''} (${org?.orgCode ?? ''})`, `Year ${year}`]}
-              excelFileName={`${what} ${org?.orgCode ?? ''} ${year}`}
+              excelTitle={[`${what.toUpperCase()} PER EMPLOYEE`, `${org?.orgName ?? ''} (${org?.orgCode ?? ''})`, period]}
+              excelFileName={`${what} ${org?.orgCode ?? ''} ${dateFrom} to ${dateTo}`}
             />
           )}
         </div>
