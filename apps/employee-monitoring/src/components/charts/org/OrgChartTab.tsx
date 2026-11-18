@@ -18,7 +18,15 @@ import { Bar } from 'react-chartjs-2';
 import { LoadingSpinner } from '@gscwd-apps/oneui';
 import { LabelInput } from '../../inputs/LabelInput';
 import fetcherEMS from '../../../utils/fetcher/FetcherEMS';
-import { CHART_COLORS, ChartTabConfig, EmployeeCount, ORG_LEVELS, OrgCount, OrgLevel, selectClass } from './chart-config';
+import {
+  CHART_COLORS,
+  ChartTabConfig,
+  EmployeeCount,
+  ORG_LEVELS,
+  OrgCount,
+  OrgLevel,
+  selectClass,
+} from './chart-config';
 import { OrgEmployeesModal, SelectedOrg } from './OrgEmployeesModal';
 import { EmployeeCountTable, toEmployeeRows } from './EmployeeCountTable';
 
@@ -55,7 +63,13 @@ export const OrgChartTab = ({ config }: { config: ChartTabConfig }) => {
   const bars: OrgBar[] = useMemo(() => {
     const map = new Map<string, OrgBar>();
     ((data?.data ?? []) as OrgCount[]).forEach((r) => {
-      const bar = map.get(r.orgId) ?? { orgId: r.orgId, orgCode: r.orgCode, orgName: r.orgName, total: 0, byCategory: {} };
+      const bar = map.get(r.orgId) ?? {
+        orgId: r.orgId,
+        orgCode: r.orgCode,
+        orgName: r.orgName,
+        total: 0,
+        byCategory: {},
+      };
       bar.total += r.count;
       const cat = config.stacked ? r.category ?? '' : ''; // unstacked: one bar per org (LWOP rows carry a category)
       bar.byCategory[cat] = (bar.byCategory[cat] ?? 0) + r.count;
@@ -72,7 +86,12 @@ export const OrgChartTab = ({ config }: { config: ChartTabConfig }) => {
     const totals: Record<string, number> = {};
     bars.forEach((b) => Object.entries(b.byCategory).forEach(([c, n]) => (totals[c] = (totals[c] ?? 0) + n)));
     const fixed = (config.categories ?? []).map((c) => c.value).filter((c) => totals[c]);
-    return [...fixed, ...Object.keys(totals).filter((c) => !fixed.includes(c)).sort((a, b) => totals[b] - totals[a])];
+    return [
+      ...fixed,
+      ...Object.keys(totals)
+        .filter((c) => !fixed.includes(c))
+        .sort((a, b) => totals[b] - totals[a]),
+    ];
   }, [bars, config]);
 
   const chartData = {
@@ -97,7 +116,8 @@ export const OrgChartTab = ({ config }: { config: ChartTabConfig }) => {
       title: { display: true, text: `${config.unit} per ${levelLabel} (${period})` },
       tooltip: {
         callbacks: {
-          title: (items) => (items[0] ? `${bars[items[0].dataIndex]?.orgName} (${bars[items[0].dataIndex]?.orgCode})` : ''),
+          title: (items) =>
+            items[0] ? `${bars[items[0].dataIndex]?.orgName} (${bars[items[0].dataIndex]?.orgCode})` : '',
           footer: (items) => (config.stacked && items[0] ? `Total: ${bars[items[0].dataIndex]?.total ?? 0}` : ''),
         },
       },
@@ -115,7 +135,10 @@ export const OrgChartTab = ({ config }: { config: ChartTabConfig }) => {
     },
   };
 
-  const topRows = useMemo(() => toEmployeeRows((topData?.data ?? []) as EmployeeCount[], topCategory || undefined), [topData, topCategory]);
+  const topRows = useMemo(
+    () => toEmployeeRows((topData?.data ?? []) as EmployeeCount[], topCategory || undefined),
+    [topData, topCategory]
+  );
   const topCategoryLabel = config.categories?.find((c) => c.value === topCategory)?.label;
 
   return (
@@ -124,14 +147,24 @@ export const OrgChartTab = ({ config }: { config: ChartTabConfig }) => {
       <div className="flex flex-row flex-wrap items-center justify-between gap-2">
         <p className="text-sm text-gray-500">{config.note}</p>
         <div className="flex flex-row flex-wrap items-end gap-2">
-          <select title="Group by" value={level} onChange={(e) => setLevel(e.target.value as OrgLevel)} className={selectClass}>
+          <select
+            title="Group by"
+            value={level}
+            onChange={(e) => setLevel(e.target.value as OrgLevel)}
+            className={selectClass}
+          >
             {ORG_LEVELS.map((l) => (
               <option key={l.value} value={l.value}>
                 Per {l.label}
               </option>
             ))}
           </select>
-          <select title="Sort" value={sort} onChange={(e) => setSort(e.target.value as 'count' | 'name')} className={selectClass}>
+          <select
+            title="Sort"
+            value={sort}
+            onChange={(e) => setSort(e.target.value as 'count' | 'name')}
+            className={selectClass}
+          >
             <option value="count">Highest count first</option>
             <option value="name">Alphabetical (code)</option>
           </select>
@@ -163,10 +196,13 @@ export const OrgChartTab = ({ config }: { config: ChartTabConfig }) => {
         ) : error ? (
           <p className="text-sm text-red-500">Could not load the chart. Please try again.</p>
         ) : bars.length === 0 ? (
-          <p className="py-10 text-sm text-center text-gray-500">No {config.unit.toLowerCase()} from {period}.</p>
+          <p className="py-10 text-sm text-center text-gray-500">
+            No {config.unit.toLowerCase()} from {period}.
+          </p>
         ) : (
           <>
-            <div className="relative w-full h-[26rem]">
+            {/* fills the screen below the tabs and filters (never shorter than 26rem) */}
+            <div className="relative w-full h-[calc(100vh-18rem)] min-h-[26rem]">
               <Bar data={chartData} options={options} />
             </div>
             {config.clickModal ? (
@@ -187,7 +223,12 @@ export const OrgChartTab = ({ config }: { config: ChartTabConfig }) => {
               {config.unit} ({period})
             </span>
             {config.categories?.length ? (
-              <select title="Sort by" value={topCategory} onChange={(e) => setTopCategory(e.target.value)} className={selectClass}>
+              <select
+                title="Sort by"
+                value={topCategory}
+                onChange={(e) => setTopCategory(e.target.value)}
+                className={selectClass}
+              >
                 <option value="">Sort by Total</option>
                 {config.categories.map((c) => (
                   <option key={c.value} value={c.value}>
@@ -205,8 +246,13 @@ export const OrgChartTab = ({ config }: { config: ChartTabConfig }) => {
               countLabel={`No. of ${config.unit}`}
               orgLabel={levelLabel}
               categories={config.categories}
-              excelTitle={[`EMPLOYEES WITH THE HIGHEST ${(topCategory ? `${topCategory} ` : '') + config.unit.toUpperCase()}`, period]}
-              excelFileName={`Top ${topCategoryLabel ? `${topCategoryLabel} ` : ''}${config.unit} ${dateFrom} to ${dateTo}`}
+              excelTitle={[
+                `EMPLOYEES WITH THE HIGHEST ${(topCategory ? `${topCategory} ` : '') + config.unit.toUpperCase()}`,
+                period,
+              ]}
+              excelFileName={`Top ${topCategoryLabel ? `${topCategoryLabel} ` : ''}${
+                config.unit
+              } ${dateFrom} to ${dateTo}`}
             />
           )}
         </div>
