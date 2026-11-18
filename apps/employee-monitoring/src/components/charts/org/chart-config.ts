@@ -1,5 +1,5 @@
 export type OrgLevel = 'office' | 'department' | 'division';
-export type ChartType = 'tardiness' | 'undertime' | 'leave' | 'lwop' | 'pass-slip' | 'tlc' | 'overtime';
+export type ChartType = 'tardiness' | 'undertime' | 'leave' | 'lwop' | 'pass-slip' | 'tlc' | 'overtime' | 'jo-tardiness' | 'jo-undertime';
 
 /** GET /stats/charts/:type */
 export type OrgCount = { orgId: string; orgCode: string; orgName: string; category: string | null; count: number };
@@ -38,8 +38,22 @@ export const PASS_SLIP_CATEGORIES = [
 ];
 
 export const CHART_TABS: ChartTabConfig[] = [
-  { type: 'tardiness', tab: 'Tardiness', unit: 'Tardiness', clickModal: true, note: 'Days with a tardiness deduction.' },
-  { type: 'undertime', tab: 'Undertimes', unit: 'Undertime', clickModal: true, note: 'Days with an undertime deduction.' },
+  { type: 'tardiness', tab: 'Tardiness', unit: 'Tardiness', clickModal: true, note: 'Days with a tardiness deduction (permanent and casual employees).' },
+  { type: 'undertime', tab: 'Undertimes', unit: 'Undertime', clickModal: true, note: 'Days with an undertime deduction (permanent and casual employees).' },
+  {
+    type: 'jo-tardiness',
+    tab: 'Tardiness (Job Order)',
+    unit: 'Tardiness',
+    clickModal: true,
+    note: 'Job order employees: days with a late time in, from the DTR time logs and schedule.',
+  },
+  {
+    type: 'jo-undertime',
+    tab: 'Undertimes (Job Order)',
+    unit: 'Undertime',
+    clickModal: true,
+    note: 'Job order employees: days with an early time out, from the DTR time logs and schedule.',
+  },
   {
     type: 'leave',
     tab: 'Leave Type Distribution',
