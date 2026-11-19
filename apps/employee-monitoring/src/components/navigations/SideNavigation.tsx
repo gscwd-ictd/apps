@@ -550,6 +550,7 @@ export const SideNavigation = () => {
           ability.can('access', 'Modules') ||
           ability.can('access', 'Users') ||
           ability.can('access', 'Officer_of_the_day') ||
+          ability.can('access', 'Hr_pass_slip_approvers') ||
           ability.can('access', 'System_logs') ||
           ability.can('access', 'Announcements') ? (
             <Sidebar.Header className={`py-2`}>
@@ -616,6 +617,21 @@ export const SideNavigation = () => {
                 </>
               }
               path={Paths[26]}
+            />
+          </Can>
+
+          {/**Settings HR PASS SLIP APPROVERS */}
+          <Can I="access" this="Hr_pass_slip_approvers">
+            <Sidebar.Item
+              display="HR Pass Slip Approvers"
+              className="text-sm"
+              selected={pathname === Paths[33] ? true : false}
+              icon={
+                <>
+                  <i className="text-xl bx bxs-user-check"></i>
+                </>
+              }
+              path={Paths[33]}
             />
           </Can>
 

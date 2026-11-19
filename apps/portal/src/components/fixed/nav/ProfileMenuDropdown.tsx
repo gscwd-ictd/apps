@@ -1,5 +1,6 @@
 /* eslint-disable @nx/enforce-module-boundaries */
 import { Menu, Transition } from '@headlessui/react';
+import { useHrPassSlipApprover } from 'apps/portal/src/utils/hooks/useHrPassSlipApprover';
 import { useRouter } from 'next/router';
 import { Fragment, useEffect, useState } from 'react';
 import {
@@ -94,6 +95,9 @@ export const ProfileMenuDropdown = ({
       }, 3000);
     }
   }, [responseChangePassword]);
+
+  // HR Pass Slip Approver (EMS Settings): sees the Approvals menu
+  const hrPassSlipApprover = useHrPassSlipApprover(employeeDetails?.employmentDetails?.userId);
 
   const { employeeSalaryGrade, setEmployeeSalaryGrade } = useEmployeeStore((state) => ({
     employeeSalaryGrade: state.employeeSalaryGrade,
@@ -378,7 +382,7 @@ export const ProfileMenuDropdown = ({
                       // Officer of the Day OR SG16+
                       employeeDetails.employmentDetails.officerOfTheDay.length > 0 ||
                       employeeSalaryGrade >= 16 ||
-                      employeeDetails.employmentDetails.userId === 'af7bbec8-b26e-11ed-a79b-000c29f95a80' ? (
+                      hrPassSlipApprover ? (
                         <>
                           <Menu.Item>
                             {({ active }) => (

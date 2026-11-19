@@ -1,4 +1,5 @@
 import Head from 'next/head';
+import { isHrPassSlipApprover } from 'apps/portal/src/utils/hooks/useHrPassSlipApprover';
 import { useEffect, useState } from 'react';
 import SideNav from '../../../components/fixed/nav/SideNav';
 import { ContentBody } from '../../../components/modular/custom/containers/ContentBody';
@@ -21,6 +22,7 @@ import { isEqual } from 'lodash';
 export default function Approvals({
   employeeDetails,
   finalSalaryGrade,
+  hrPassSlipApprover,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const { pendingApprovalsCount } = useApprovalStore((state) => ({
     pendingApprovalsCount: state.pendingApprovalsCount,
@@ -79,7 +81,7 @@ export default function Approvals({
                 {/* show pass slip link if user is SG16+, an Officer of the Day, or not Rank and File */}
                 {finalSalaryGrade >= 16 ||
                 employeeDetails.employmentDetails.officerOfTheDay.length > 0 ||
-                employeeDetails.employmentDetails.userId === 'af7bbec8-b26e-11ed-a79b-000c29f95a80' ||
+                hrPassSlipApprover ||
                 employeeDetails.employmentDetails.userRole !== UserRole.RANK_AND_FILE ||
                 employeeDetails.employmentDetails.userRole !== UserRole.JOB_ORDER ||
                 employeeDetails.employmentDetails.userRole !== UserRole.COS ||
@@ -177,6 +179,9 @@ export default function Approvals({
 export const getServerSideProps: GetServerSideProps = withCookieSession(async (context: GetServerSidePropsContext) => {
   const employeeDetails = getUserDetails();
 
+  // HR Pass Slip Approver (EMS Settings > HR Pass Slip Approvers)
+  const hrPassSlipApprover = await isHrPassSlipApprover(employeeDetails.employmentDetails.userId);
+
   //convert salary grade to number
   const finalSalaryGrade = SalaryGradeConverter(employeeDetails.employmentDetails.salaryGrade);
 
@@ -188,7 +193,7 @@ export const getServerSideProps: GetServerSideProps = withCookieSession(async (c
       employeeDetails.employmentDetails.userRole === UserRole.COS_JO) &&
     employeeDetails.employmentDetails.officerOfTheDay.length <= 0 &&
     finalSalaryGrade < 16 &&
-    employeeDetails.employmentDetails.userId !== 'af7bbec8-b26e-11ed-a79b-000c29f95a80' //charlene pe
+    !hrPassSlipApprover // HR Pass Slip Approver (EMS Settings)
   ) {
     // if true, the employee is not allowed to access this page
     return {
@@ -198,6 +203,6 @@ export const getServerSideProps: GetServerSideProps = withCookieSession(async (c
       },
     };
   } else {
-    return { props: { employeeDetails, finalSalaryGrade } };
+    return { props: { employeeDetails, finalSalaryGrade, hrPassSlipApprover } };
   }
 });
