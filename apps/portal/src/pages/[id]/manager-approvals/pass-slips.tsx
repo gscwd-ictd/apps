@@ -1,4 +1,5 @@
 import Head from 'next/head';
+import { isHrPassSlipApprover } from 'apps/portal/src/utils/hooks/useHrPassSlipApprover';
 import { useEffect } from 'react';
 import SideNav from '../../../components/fixed/nav/SideNav';
 import { ContentBody } from '../../../components/modular/custom/containers/ContentBody';
@@ -331,6 +332,9 @@ export default function PassSlipApprovals({ employeeDetails }: InferGetServerSid
 export const getServerSideProps: GetServerSideProps = withCookieSession(async (context: GetServerSidePropsContext) => {
   const employeeDetails = getUserDetails();
 
+  // HR Pass Slip Approver (EMS Settings > HR Pass Slip Approvers)
+  const hrPassSlipApprover = await isHrPassSlipApprover(employeeDetails.employmentDetails.userId);
+
   //convert salary grade to number
   const finalSalaryGrade = SalaryGradeConverter(employeeDetails.employmentDetails.salaryGrade);
 
@@ -342,7 +346,7 @@ export const getServerSideProps: GetServerSideProps = withCookieSession(async (c
       employeeDetails.employmentDetails.userRole === UserRole.COS_JO) &&
     employeeDetails.employmentDetails.officerOfTheDay.length <= 0 &&
     finalSalaryGrade < 16 &&
-    employeeDetails.employmentDetails.userId !== 'af7bbec8-b26e-11ed-a79b-000c29f95a80' //charlene pe
+    !hrPassSlipApprover // HR Pass Slip Approver (EMS Settings)
   ) {
     // if true, the employee is not allowed to access this page
     return {

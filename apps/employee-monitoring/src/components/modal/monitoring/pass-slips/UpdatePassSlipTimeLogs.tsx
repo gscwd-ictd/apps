@@ -4,7 +4,10 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import { isEmpty } from 'lodash';
 
-import { patchEmpMonitoring } from 'apps/employee-monitoring/src/utils/helper/employee-monitoring-axios-helper';
+import {
+  getEmpMonitoring,
+  patchEmpMonitoring,
+} from 'apps/employee-monitoring/src/utils/helper/employee-monitoring-axios-helper';
 
 // store and type
 import { usePassSlipStore } from 'apps/employee-monitoring/src/store/pass-slip.store';
@@ -42,6 +45,8 @@ const UpdatePassSlipModal: FunctionComponent<UpdatePassSlipModalProps> = ({
   formData,
 }) => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  // no schedule on the pass slip date -> no leave deduction can be posted; HR is asked before saving
+  const [noSchedulePayload, setNoSchedulePayload] = useState<Partial<PassSlip> | null>(null);
 
   // zustand store initialization
   const { UpdatePassSlipTimeLogs, UpdatePassSlipTimeLogsSuccess, UpdatePassSlipTimeLogsFail } = usePassSlipStore(
@@ -118,6 +123,22 @@ const UpdatePassSlipModal: FunctionComponent<UpdatePassSlipModalProps> = ({
       timeIn: data.timeIn,
     };
 
+    // PB / Half Day / Undertime of a permanent or casual employee needs a schedule for the leave deduction
+    const { error, result } = await getEmpMonitoring(`/pass-slip/hr/time-record/${formData.id}/schedule-check`);
+    if (!error && result?.needsSchedule) {
+      setNoSchedulePayload(payload);
+      return;
+    }
+
+    UpdatePassSlipTimeLogs();
+    handleUpdatePassSlipTimeLogs(payload);
+  };
+
+  // "Save anyway" on the no-schedule prompt
+  const saveWithoutSchedule = () => {
+    const payload = noSchedulePayload;
+    setNoSchedulePayload(null);
+    if (!payload) return;
     UpdatePassSlipTimeLogs();
     handleUpdatePassSlipTimeLogs(payload);
   };
@@ -160,6 +181,7 @@ const UpdatePassSlipModal: FunctionComponent<UpdatePassSlipModalProps> = ({
   // If modal is closed, reset input values
   useEffect(() => {
     if (!modalState) {
+      setNoSchedulePayload(null);
       reset({
         id: formData.id,
         timeOut: formData.timeOut ? formData.timeOut.slice(0, 5) : '',
@@ -199,6 +221,41 @@ const UpdatePassSlipModal: FunctionComponent<UpdatePassSlipModalProps> = ({
                   notifMessage="Submitting request"
                   dismissible={true}
                 />
+              ) : null}
+              {/* no schedule prompt */}
+              {noSchedulePayload ? (
+                <div className="flex flex-col gap-3 p-4 text-sm text-yellow-800 border border-yellow-300 rounded-lg bg-yellow-50">
+                  <div className="flex gap-2">
+                    <i className="text-lg bx bxs-error"></i>
+                    <div>
+                      <p className="font-semibold">
+                        No schedule on {dayjs(formData.dateOfApplication).format('MMMM DD, YYYY')}
+                      </p>
+                      <p>
+                        {formData.employeeName} has no schedule on this date, so no leave deduction can be posted for
+                        this pass slip. Set the employee&apos;s schedule first, then submit again. If you save anyway,
+                        the deduction is posted by the nightly ledger job once a schedule is set (within 30 days of the
+                        pass slip date).
+                      </p>
+                    </div>
+                  </div>
+                  <div className="flex justify-end gap-2">
+                    <button
+                      type="button"
+                      className="px-3 py-2 text-xs text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-100"
+                      onClick={() => setNoSchedulePayload(null)}
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      type="button"
+                      className="px-3 py-2 text-xs text-white bg-yellow-500 rounded-md hover:bg-yellow-600"
+                      onClick={saveWithoutSchedule}
+                    >
+                      Save anyway
+                    </button>
+                  </div>
+                </div>
               ) : null}
               <div className="flex flex-row gap-5 items-center p-3">
                 <Image
@@ -273,7 +330,7 @@ const UpdatePassSlipModal: FunctionComponent<UpdatePassSlipModalProps> = ({
               type="submit"
               form="updatePassSlipTimeLogs"
               className="ml-1 text-gray-400 disabled:cursor-not-allowed"
-              disabled={isLoading || patchFormLoading}
+              disabled={isLoading || patchFormLoading || !!noSchedulePayload}
               loading={isLoading || patchFormLoading}
             >
               <span className="text-xs font-normal">Submit</span>

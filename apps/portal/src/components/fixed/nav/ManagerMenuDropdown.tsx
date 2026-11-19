@@ -1,5 +1,6 @@
 /* eslint-disable @nx/enforce-module-boundaries */
 import { Menu, Transition } from '@headlessui/react';
+import { useHrPassSlipApprover } from 'apps/portal/src/utils/hooks/useHrPassSlipApprover';
 import { useApprovalStore } from 'apps/portal/src/store/approvals.store';
 import { OfficerOfTheDay } from 'apps/portal/src/types/employee.type';
 import { UserRole } from 'apps/portal/src/utils/enums/userRoles';
@@ -33,6 +34,8 @@ export const ManagerMenuDropdown = ({
   }));
 
   const router = useRouter();
+  // HR Pass Slip Approver (EMS Settings): sees the pass slip approvals
+  const hrPassSlipApprover = useHrPassSlipApprover(employeeId);
 
   // const { employeeSalaryGrade, setEmployeeSalaryGrade } = useEmployeeStore((state) => ({
   //   employeeSalaryGrade: state.employeeSalaryGrade,
@@ -82,9 +85,9 @@ export const ManagerMenuDropdown = ({
                   pendingApprovalsCount.pendingDtrCorrectionsApprovals > 0 ||
                   pendingApprovalsCount.pendingOvertimeAccomplishmentsApprovalCount > 0) ? (
                 <span className="absolute w-3 h-3 -mt-5 ml-9 bg-red-600 rounded-full select-none" />
-              ) : //if SG16 or maam Em is logged in and is Rank and File -- Pass Slip Approvals page notifs only
+              ) : //if SG16 or an HR Pass Slip Approver is logged in and is Rank and File -- Pass Slip Approvals page notifs only
               (isEqual(userRole, UserRole.RANK_AND_FILE) || isEqual(userRole, UserRole.JOB_ORDER)) &&
-                (salaryGrade >= 16 || employeeId === 'af7bbec8-b26e-11ed-a79b-000c29f95a80') &&
+                (salaryGrade >= 16 || hrPassSlipApprover) &&
                 isEmpty(errorPendingApprovalsCount) &&
                 pendingApprovalsCount.pendingPassSlipsCount > 0 ? (
                 <span className="absolute w-3 h-3 -mt-5 ml-9 bg-red-600 rounded-full select-none" />
@@ -137,7 +140,7 @@ export const ManagerMenuDropdown = ({
                   // Officer of the Day OR SG16+
                   officerOfTheDay?.length > 0 ||
                   salaryGrade >= 16 ||
-                  employeeId === 'af7bbec8-b26e-11ed-a79b-000c29f95a80' ? (
+                  hrPassSlipApprover ? (
                     <Menu.Item>
                       {({ active }) => (
                         <button
@@ -177,9 +180,9 @@ export const ManagerMenuDropdown = ({
                               pendingApprovalsCount.pendingOvertimeAccomplishmentsApprovalCount > 0 ||
                               pendingApprovalsCount.pendingDtrCorrectionsApprovals > 0) ? (
                               <span className="absolute w-3 h-3 right-4 z-30 bg-red-600 rounded-full select-none" />
-                            ) : //if SG 16 or maam Em is logged in and is Rank and File -- Pass Slip Approvals page notifs only
+                            ) : //if SG 16 or an HR Pass Slip Approver is logged in and is Rank and File -- Pass Slip Approvals page notifs only
                             (isEqual(userRole, UserRole.RANK_AND_FILE) || isEqual(userRole, UserRole.JOB_ORDER)) &&
-                              (salaryGrade >= 16 || employeeId === 'af7bbec8-b26e-11ed-a79b-000c29f95a80') &&
+                              (salaryGrade >= 16 || hrPassSlipApprover) &&
                               isEmpty(errorPendingApprovalsCount) &&
                               pendingApprovalsCount.pendingPassSlipsCount > 0 ? (
                               <span className="absolute w-3 h-3 right-4 z-30 bg-red-600 rounded-full select-none" />

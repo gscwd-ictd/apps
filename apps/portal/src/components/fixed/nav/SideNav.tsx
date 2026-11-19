@@ -1,5 +1,6 @@
 /* eslint-disable @nx/enforce-module-boundaries */
 import { useRouter } from 'next/router';
+import { useHrPassSlipApprover } from 'apps/portal/src/utils/hooks/useHrPassSlipApprover';
 import { HiOutlineBell, HiOutlineHome, HiOutlineNewspaper, HiOutlineQuestionMarkCircle } from 'react-icons/hi';
 import { ProfileMenuDropdown } from './ProfileMenuDropdown';
 import { SideNavLink } from './SideNavLink';
@@ -49,6 +50,9 @@ export const SideNav = ({ employeeDetails }: NavDetails) => {
       getPendingApprovalsCountFail: state.getPendingApprovalsCountFail,
     })
   );
+
+  // HR Pass Slip Approver (EMS Settings): sees the Approvals menu
+  const hrPassSlipApprover = useHrPassSlipApprover(employeeDetails?.employmentDetails?.userId);
 
   const { employeeSalaryGrade, setEmployeeSalaryGrade } = useEmployeeStore((state) => ({
     employeeSalaryGrade: state.employeeSalaryGrade,
@@ -332,7 +336,7 @@ export const SideNav = ({ employeeDetails }: NavDetails) => {
                 // Officer of the Day OR SG16+
                 employeeDetails.employmentDetails.officerOfTheDay.length > 0 ||
                 employeeSalaryGrade >= 16 ||
-                employeeDetails.employmentDetails.userId === 'af7bbec8-b26e-11ed-a79b-000c29f95a80' ? (
+                hrPassSlipApprover ? (
                   <>
                     <li className="ml-10 lg:ml-0">
                       <ManagerMenuDropdown
