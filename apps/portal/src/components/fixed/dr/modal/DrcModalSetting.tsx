@@ -8,13 +8,9 @@ import { DutiesResponsibilities, DutyResponsibility } from 'apps/portal/src/type
 import fetcherHRIS from 'apps/portal/src/utils/helpers/fetchers/FetcherHRIS';
 import { isEmpty } from 'lodash';
 import { useEffect, useState } from 'react';
-import { HiPuzzle } from 'react-icons/hi';
 import useSWR from 'swr';
-import { Button } from '../../../modular/common/forms/Button';
 import LoadingVisual from '../../loading/LoadingVisual';
-import { SelectedCoreDrcs } from './DrcSelectedCores';
-import { SelectedSupportDrcs } from './DrcSelectedSupports';
-import BadgePill from '../../../modular/badges/BadgePill';
+import { DrcCoreEditor } from './DrcCoreEditor';
 
 export const DrcModalSetting = () => {
   // get from position store
@@ -273,125 +269,22 @@ export const DrcModalSetting = () => {
           <div className="font-semibold text-sm">{selectedPosition.employeeName}</div>
         )}
 
-        {/** HERE */}
-        <div className="flex flex-col w-full mt-5">
-          <section>
-            <div className="flex flex-col items-end justify-between md:flex-row ">
-              <div className="flex w-full md:min-w-[22rem] md:max-w-[30rem] font-normal items-center ">
-                Core Duties, Responsibilities, & Competencies
-                <HiPuzzle />
-              </div>
-
-              {swrAvailableDnrsIsLoading ? (
-                <LoadingVisual size={5} />
-              ) : (
-                <>
-                  {action === Actions.VIEW ? null : (
-                    <Button
-                      btnLabel={
-                        availableDnrs.length === 0
-                          ? 'No more duties available in pool, please contact the HR to add more duties'
-                          : selectedPosition.hasOngoingPrf === 0 || selectedPosition.hasOngoingPrf === undefined
-                          ? '+ Add Core'
-                          : 'Cannot Add'
-                      }
-                      btnVariant="white"
-                      className="w-auto lg:min-w-[16rem] border-none text-indigo-600 "
-                      isDisabled={
-                        availableDnrs.length === 0 ? true : selectedPosition.hasOngoingPrf === 1 ? true : false
-                      }
-                      onClick={() => openDrcModalSelection(DrcTypes.CORE)}
-                    />
-                  )}
-                </>
-              )}
+        {/* core duties, responsibilities & competencies on one screen (support duties are not used yet) */}
+        <div className="w-full mt-5 font-normal">
+          {swrAvailableDnrsIsLoading || swrExistingDnrsIsLoading ? (
+            <div className="flex justify-center w-full py-16">
+              <LoadingVisual size={12} />
             </div>
-            {/**Core Duties Box */}
-            <div className="w-full  mt-2 mb-5 h-[14rem]  bg-slate-50 rounded  overflow-y-scroll overflow-x-auto">
-              <>
-                {/* <h1 className="text-2xl font-normal text-gray-300">No selected core duties & responsibilities</h1> */}
-                {swrExistingDnrsIsLoading ? (
-                  <div className="flex justify-center w-full h-full place-items-center">
-                    {<LoadingVisual size={12} />}{' '}
-                  </div>
-                ) : (
-                  <>
-                    {selectedDnrs.core.length === 0 ? (
-                      <>
-                        <div className="flex items-center justify-center h-full">
-                          <h1 className="text-2xl font-normal text-gray-300">
-                            No selected core duties, responsibilities, & competencies
-                          </h1>
-                        </div>
-                      </>
-                    ) : (
-                      <div className="w-full">
-                        <SelectedCoreDrcs />
-                      </div>
-                    )}
-                  </>
-                )}
-              </>
-            </div>
-          </section>
-          <section>
-            <div className="flex flex-col items-end justify-between md:flex-row ">
-              <div className="flex w-full md:min-w-[22rem] md:max-w-[30rem] font-normal items-center ">
-                Support Duties, Responsibilities, & Competencies <HiPuzzle />
-              </div>
-
-              {swrAvailableDnrsIsLoading ? (
-                <LoadingVisual size={5} />
-              ) : (
-                <>
-                  {action === Actions.VIEW ? null : (
-                    <Button
-                      btnLabel={
-                        availableDnrs.length === 0
-                          ? 'No more duties available in pool, please contact the HR to add more duties'
-                          : selectedPosition.hasOngoingPrf === 0 || selectedPosition.hasOngoingPrf === undefined
-                          ? '+ Add Support'
-                          : 'Cannot Add'
-                      }
-                      btnVariant="white"
-                      isDisabled={
-                        availableDnrs.length === 0 ? true : selectedPosition.hasOngoingPrf === 1 ? true : false
-                      }
-                      className="w-auto lg:min-w-[16rem] border-none text-indigo-600"
-                      onClick={() => openDrcModalSelection(DrcTypes.SUPPORT)}
-                    />
-                  )}
-                </>
-              )}
-            </div>
-            {/** Support Duties Box */}
-            <div className="w-full mt-2 mb-5 h-[14rem] bg-slate-50 rounded  overflow-y-scroll overflow-x-auto">
-              <>
-                {/* <h1 className="text-2xl font-normal text-gray-300">No selected support duties & responsibilities</h1> */}
-                {swrExistingDnrsIsLoading ? (
-                  <div className="flex justify-center w-full h-full place-items-center">
-                    {<LoadingVisual size={12} />}{' '}
-                  </div>
-                ) : (
-                  <>
-                    {selectedDnrs.support.length === 0 ? (
-                      <>
-                        <div className="flex items-center justify-center h-full">
-                          <h1 className="text-2xl font-normal text-gray-300">
-                            No selected support duties, responsibilities, & competencies
-                          </h1>
-                        </div>
-                      </>
-                    ) : (
-                      <div className="w-full">
-                        <SelectedSupportDrcs />
-                      </div>
-                    )}
-                  </>
-                )}
-              </>
-            </div>
-          </section>
+          ) : (
+            <>
+              {selectedPosition.hasOngoingPrf === 1 && action !== Actions.VIEW ? (
+                <div className="px-3 py-2 mb-3 text-sm text-amber-700 rounded bg-amber-50">
+                  This position has an ongoing position request; its duties cannot be changed until the request is done.
+                </div>
+              ) : null}
+              <DrcCoreEditor />
+            </>
+          )}
         </div>
       </div>
     </div>
