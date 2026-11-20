@@ -142,7 +142,7 @@ const DrcModal: FunctionComponent = () => {
                 {modal.page === 1 ? (
                   'Select a position title'
                 ) : modal.page === 2 ? (
-                  'Add core or support'
+                  'Select core duties, then set a competency and percentage for each'
                 ) : modal.page === 3 ? (
                   <>
                     <div>{selectedPosition.positionTitle}</div>

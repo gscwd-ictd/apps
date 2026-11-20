@@ -10,6 +10,7 @@ import { HiPencilAlt } from 'react-icons/hi';
 import { EmployeeDtrWithSchedule } from 'libs/utils/src/lib/types/dtr.type';
 import { useEffect, useState } from 'react';
 import UpdateTimeLogModal from './UpdateTimeLogModal';
+import { DtrMobileList } from './DtrMobileList';
 import { HolidayTypes } from 'libs/utils/src/lib/enums/holiday-types.enum';
 import { DateFormatter } from 'libs/utils/src/lib/functions/DateFormatter';
 import { UseLateLunchInChecker } from 'libs/utils/src/lib/functions/LateLunchInChecker';
@@ -112,7 +113,14 @@ export const DtrTable = ({ employeeDetails }: DtrTableProps) => {
       ) : !dtrIsLoading && employeeDtr?.dtrDays?.length > 0 ? (
         <>
           <div className="flex overflow-x-hidden w-full md:w-full flex-col">
-            <div className="overflow-x-auto w-full md:w-full">
+            {/* phones: one card per day */}
+            <DtrMobileList
+              dtrDays={employeeDtr.dtrDays}
+              isOffice={employeeDetails.employmentDetails.scheduleBase === ScheduleBases.OFFICE}
+              serverDate={serverDate}
+              onEdit={openEditActionModal}
+            />
+            <div className="hidden md:block overflow-x-auto w-full md:w-full">
               {employeeDetails.employmentDetails.scheduleBase === ScheduleBases.OFFICE ? (
                 <table className="w-screen md:w-full border-0 border-separate bg-slate-50 border-spacing-0">
                   <thead className="border-0">
