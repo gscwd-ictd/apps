@@ -126,7 +126,17 @@ export const ConfirmationApprovalModal = ({
     setOvertimeAccomplishmentModalIsOpen: state.setOvertimeAccomplishmentModalIsOpen,
   }));
 
+  // cancelling a pass slip: the reason is required
+  const [cancelRemarks, setCancelRemarks] = useState<string>('');
+  const isPassSlipCancel =
+    confirmName === ManagerConfirmationApproval.PASSSLIP && actionPassSlip === PassSlipStatus.CANCELLED;
+  const reasonIsValid = !isPassSlipCancel || cancelRemarks.trim().length >= 5;
+  useEffect(() => {
+    if (modalState) setCancelRemarks('');
+  }, [modalState]);
+
   const handleSubmit = () => {
+    if (!reasonIsValid) return;
     let data;
     if (confirmName === ManagerConfirmationApproval.LEAVE) {
       data = {
@@ -139,6 +149,7 @@ export const ConfirmationApprovalModal = ({
       data = {
         passSlipId: tokenId,
         status: actionPassSlip,
+        ...(isPassSlipCancel ? { cancelRemarks: cancelRemarks.trim(), cancelledBy: employeeId } : {}),
       };
       patchPassSlip();
     } else if (confirmName === ManagerConfirmationApproval.OVERTIME) {
@@ -345,6 +356,20 @@ export const ConfirmationApprovalModal = ({
                 this Pass Slip Application?
               </label>
             ) : null}
+            {isPassSlipCancel ? (
+              <div className="flex flex-col gap-1 text-left">
+                <label className="text-sm text-slate-600">
+                  Reason for cancelling <span className="text-red-600">*</span>
+                </label>
+                <textarea
+                  rows={3}
+                  className="w-full text-md text-slate-700 border-slate-300 rounded resize-none"
+                  placeholder="State the reason (at least 5 characters)"
+                  value={cancelRemarks}
+                  onChange={(e) => setCancelRemarks(e.target.value)}
+                />
+              </div>
+            ) : null}
 
             {/* OVERTIME APPLICATION APPROVAL MESSAGE */}
             {confirmName === ManagerConfirmationApproval.OVERTIME ? (
@@ -506,7 +531,13 @@ export const ConfirmationApprovalModal = ({
                 </Button>
               ) : (
                 <>
-                  <Button variant={'primary'} size={'md'} loading={false} onClick={(e) => handleSubmit()}>
+                  <Button
+                    variant={'primary'}
+                    size={'md'}
+                    loading={false}
+                    disabled={!reasonIsValid}
+                    onClick={(e) => handleSubmit()}
+                  >
                     Yes
                   </Button>
                   <Button variant={'danger'} size={'md'} loading={false} onClick={closeModalAction}>
