@@ -45,6 +45,8 @@ export type PassSlip = {
   supervisorApprovalDate: string | null;
   hrmoApprovalDate: string | null;
   hrmoDisapprovalRemarks: string | null;
+  cancelRemarks?: string | null; //reason given when cancelled
+  cancelledAt?: string | null;
   isDeductibleToPay?: boolean; //if deductible to pay
 } & PassSlipApplicationForm;
 

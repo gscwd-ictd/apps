@@ -357,6 +357,20 @@ export const PassSlipCompletedModal = ({
                   </div>
                 </div>
 
+                {passSlip?.status === PassSlipStatus.CANCELLED && passSlip?.cancelRemarks ? (
+                  <div className="flex flex-col justify-start items-start w-full px-0.5 pb-3  ">
+                    <label className="text-slate-500 text-md whitespace-nowrap pb-0.5 ">Reason for Cancelling:</label>
+                    <div className="w-auto ml-5">
+                      <label className=" text-md font-medium">{passSlip.cancelRemarks}</label>
+                      {passSlip.cancelledAt ? (
+                        <label className="block text-sm text-slate-500">
+                          {DateTimeFormatter(passSlip.cancelledAt)}
+                        </label>
+                      ) : null}
+                    </div>
+                  </div>
+                ) : null}
+
                 {passSlip.status === PassSlipStatus.FOR_DISPUTE || passSlip.disputeRemarks ? (
                   <div className={`flex flex-col`}>
                     <div className="flex flex-col sm:flex-col justify-start items-start w-full px-0.5 pb-3 ">

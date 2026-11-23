@@ -8,6 +8,7 @@ import { UseTwelveHourFormat } from 'libs/utils/src/lib/functions/TwelveHourForm
 import { ConfirmationApprovalModal } from './ApprovalOtp/ConfirmationApprovalModal';
 import { ManagerConfirmationApproval } from 'libs/utils/src/lib/enums/approval.enum';
 import { DateTimeFormatter } from 'libs/utils/src/lib/functions/DateTimeFormatter';
+import { useEmployeeStore } from '../../../store/employee.store';
 
 type PassSlipCompletedModalProps = {
   modalState: boolean;
@@ -25,6 +26,7 @@ export const ApprovalsCompletedPassSlipModal = ({
     setConfirmApplicationModalIsOpen: state.setConfirmApplicationModalIsOpen,
     confirmApplicationModalIsOpen: state.confirmApplicationModalIsOpen,
   }));
+  const employeeDetails = useEmployeeStore((state) => state.employeeDetails);
 
   // cancel action for Decline Application Modal
   const closeDeclineModal = async () => {
@@ -135,6 +137,7 @@ export const ApprovalsCompletedPassSlipModal = ({
                 closeModalAction={closeDeclineModal}
                 actionPassSlip={PassSlipStatus.CANCELLED}
                 tokenId={passSlip.id}
+                employeeId={employeeDetails?.employmentDetails?.userId}
                 confirmName={ManagerConfirmationApproval.PASSSLIP}
               />
 
@@ -244,6 +247,20 @@ export const ApprovalsCompletedPassSlipModal = ({
                     </label>
                   </div>
                 </div>
+
+                {passSlip?.status === PassSlipStatus.CANCELLED && passSlip?.cancelRemarks ? (
+                  <div className="flex flex-col justify-start items-start w-full px-0.5 pb-3  ">
+                    <label className="text-slate-500 text-md whitespace-nowrap pb-0.5 ">Reason for Cancelling:</label>
+                    <div className="w-auto ml-5">
+                      <label className=" text-md font-medium">{passSlip.cancelRemarks}</label>
+                      {passSlip.cancelledAt ? (
+                        <label className="block text-sm text-slate-500">
+                          {DateTimeFormatter(passSlip.cancelledAt)}
+                        </label>
+                      ) : null}
+                    </div>
+                  </div>
+                ) : null}
 
                 {passSlip.disputeRemarks ? (
                   <div className={`flex flex-col`}>
