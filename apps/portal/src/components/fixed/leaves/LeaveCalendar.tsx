@@ -33,6 +33,8 @@ type CalendarProps = {
   type: string; // single or range
   leaveName: string;
   isLateFiling?: boolean;
+  /** editing a leave application: its own dates are not unavailable */
+  editLeaveApplicationId?: string;
 };
 
 export default function Calendar({
@@ -40,6 +42,7 @@ export default function Calendar({
   clickableDate = true,
   leaveName,
   isLateFiling = false,
+  editLeaveApplicationId,
 }: CalendarProps) {
   const [isSearchingForLastDay, setIsSearchingForLastDay] = useState<boolean>(false);
   const tempToday = startOfToday(); //date now based on machine time
@@ -72,7 +75,7 @@ export default function Calendar({
     leaveDateFrom: state.leaveDateFrom,
     leaveDateTo: state.leaveDateTo,
     overlappingLeaveCount: state.overlappingLeaveCount,
-    applyLeaveModalIsOpen: state.applyLeaveModalIsOpen,
+    applyLeaveModalIsOpen: state.applyLeaveModalIsOpen || !!editLeaveApplicationId,
     setLeaveDateFrom: state.setLeaveDateFrom,
     setLeaveDateTo: state.setLeaveDateTo,
     setLeaveDates: state.setLeaveDates,
@@ -84,7 +87,11 @@ export default function Calendar({
   }));
 
   //fetch unavailable dates (current leaves/holidays)
-  const unavailableDatesUrl = `${process.env.NEXT_PUBLIC_EMPLOYEE_MONITORING_URL}/v1/leave-application/unavailable-dates/${employeeDetails.employmentDetails.userId}`;
+  const unavailableDatesUrl = `${
+    process.env.NEXT_PUBLIC_EMPLOYEE_MONITORING_URL
+  }/v1/leave-application/unavailable-dates/${employeeDetails.employmentDetails.userId}${
+    editLeaveApplicationId ? `?exclude=${editLeaveApplicationId}` : ''
+  }`;
   const {
     data: swrUnavailableDates,
     isLoading: swrIsLoading,
