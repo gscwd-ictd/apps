@@ -10,6 +10,7 @@ import UseWindowDimensions from 'libs/utils/src/lib/functions/WindowDimensions';
 import { LeaveName, LeaveStatus, MonetizationType } from 'libs/utils/src/lib/enums/leave.enum';
 import { useLeaveLedgerStore } from 'apps/portal/src/store/leave-ledger.store';
 import CancelLeaveModal from './CancelLeaveModal';
+import { EditLeaveModal, isLeaveEditable } from './EditLeaveModal';
 import { DateFormatter } from 'libs/utils/src/lib/functions/DateFormatter';
 import { DateTimeFormatter } from 'libs/utils/src/lib/functions/DateTimeFormatter';
 import { JustificationLetterPdfModal } from './JustificationLetterPdfModal';
@@ -91,6 +92,7 @@ export const LeavePendingModal = ({ modalState, setModalState, closeModalAction 
 
   const employeeDetails = useEmployeeStore((state) => state.employeeDetails);
   const [moreLeaveDates, setMoreLeaveDates] = useState<boolean>(false);
+  const [editLeaveModalIsOpen, setEditLeaveModalIsOpen] = useState<boolean>(false);
 
   const getLeaveDetail = async (leaveId: string) => {
     try {
@@ -199,6 +201,14 @@ export const LeavePendingModal = ({ modalState, setModalState, closeModalAction 
           </h3>
         </Modal.Header>
         <Modal.Body>
+          {/* Edit Leave Application Modal (until certified by the HRMO) */}
+          <EditLeaveModal
+            modalState={editLeaveModalIsOpen}
+            setModalState={setEditLeaveModalIsOpen}
+            closeModalAction={() => setEditLeaveModalIsOpen(false)}
+            onSaved={() => getLeaveDetail(leaveId)}
+          />
+
           {/* Cancel Leave Application Modal */}
           <CancelLeaveModal
             modalState={cancelLeaveModalIsOpen}
@@ -831,6 +841,15 @@ export const LeavePendingModal = ({ modalState, setModalState, closeModalAction 
                     onClick={(e) => setJustificationLetterPdfModalIsOpen(true)}
                   >
                     Justification
+                  </Button>
+                ) : null}
+
+                {isLeaveEditable(
+                  leaveIndividualDetail?.leaveApplicationBasicInfo?.status,
+                  leaveIndividualDetail?.leaveApplicationBasicInfo?.leaveName
+                ) ? (
+                  <Button variant={'info'} size={'md'} loading={false} onClick={() => setEditLeaveModalIsOpen(true)}>
+                    Edit
                   </Button>
                 ) : null}
 
