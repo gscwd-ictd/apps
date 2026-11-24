@@ -395,6 +395,36 @@ const ViewPassSlipModal: FunctionComponent<ViewPassSlipModalProps> = ({
                   </div>
                 )}
 
+                {rowData.status === PassSlipStatus.CANCELLED ? (
+                  <>
+                    <hr />
+                    <div className="grid grid-cols-1 grid-rows-1 px-5 sm:gap-2 md:gap:2 lg:gap-0">
+                      <LabelValue
+                        label="Reason for Cancellation"
+                        direction="top-to-bottom"
+                        textSize="md"
+                        value={rowData.cancelRemarks ? rowData.cancelRemarks : 'No reason recorded'}
+                      />
+                    </div>
+                    {rowData.cancelledByName || rowData.cancelledAt ? (
+                      <div className="grid px-5 sm:grid-rows-2 sm:grid-cols-1 md:grid-rows-2 md:grid-cols-1 lg:grid-rows-1 lg:grid-cols-2 sm:gap-2 md:gap:2 lg:gap-0">
+                        <LabelValue
+                          label="Cancelled By"
+                          direction="top-to-bottom"
+                          textSize="md"
+                          value={rowData.cancelledByName ?? '--'}
+                        />
+                        <LabelValue
+                          label="Date Cancelled"
+                          direction="top-to-bottom"
+                          textSize="md"
+                          value={rowData.cancelledAt ? DateTimeFormatter(rowData.cancelledAt) : '--'}
+                        />
+                      </div>
+                    ) : null}
+                  </>
+                ) : null}
+
                 {!isEmpty(rowData.disputeRemarks) ? (
                   <>
                     <hr />

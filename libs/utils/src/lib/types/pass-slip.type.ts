@@ -47,6 +47,7 @@ export type PassSlip = {
   hrmoDisapprovalRemarks: string | null;
   cancelRemarks?: string | null; //reason given when cancelled
   cancelledAt?: string | null;
+  cancelledByName?: string | null; //EMS: who cancelled (employee or manager)
   isDeductibleToPay?: boolean; //if deductible to pay
 } & PassSlipApplicationForm;
 
